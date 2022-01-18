@@ -1,0 +1,89 @@
+template_shaped:
+  #合成表的命名空间ID,只能使用英文小写字母,".", "_", "/"和数字
+  key: 'oasis.recipe.template'
+  #合成表的合成物品
+  result: 'NETHER_STAR'
+  #合成表合成物品的数量,锻造台配方此项无效
+  resultAmount: 1
+  #合成物品的自定义名字,为空时不自定义名称,锻造台配方此项无效
+  customName: '&aTemplate Item'
+  #合成表的类型,shaped为有序,shapeless为无序,furnace为熔炉,smithing为锻造台
+  type: 'shaped'
+  #被合成出的物品拥有的附魔,锻造台配方此项无效
+  enchants:
+    - 'SHARPNESS 5'
+    - 'MENDING 1'
+  #被合成出物品所具有的Lore,锻造台配方此项无效
+  lore:
+    - '&7Test'
+  #合成出物品所带的CustomModelData,锻造台配方此项无效
+  customModelData: 1
+  #合成出物品所带的属性修饰符,格式为'类型 数值 加点方式 位置',锻造台配方此项无效
+  #加点可选有NUMBER(数值)和SCALE(比例),位置可选HAND(主手),HEAD(头),CHEST(身体),LEGS(腿部),FEET(脚部)和OFF_HAND(副手)
+  attributes:
+    - 'GENERIC_MAX_HEALTH 100 NUMBER HAND'
+  #设置物品隐藏的属性,锻造台配方此项无效
+  #可选ENCHANTS(附魔),ATTRIBUTES(属性),DYE(染色),DESTROYS(可破坏),PLACED_ON(可放置),POTION_EFFECTS(药水效果),UNBREAKABLE(无法破坏)
+  hide:
+    - 'ENCHANTS'
+  #合成出的物品是否具有无法破坏的修饰符,锻造台配方此项无效
+  unbreakable: true
+  #设置合成需要花费多少等级,数据只支持整数,只有工作台配方支持
+  spendLvl: 10
+  #设置合成需要花费多少金钱,数据只支持整数,只有工作台配方支持
+  spendMoney: 10
+  #设置合成需要花费多少金钱,数据只支持整数,只有工作台配方支持
+  spendPoints: 10
+  #检测玩家是否拥有合成的权限
+  perm: 'oasis.recipe.template'
+  #合成表的合成物品
+  items:
+    - 'BEDROCK BEDROCK BEDROCK'
+    - 'AIR AIR AIR'
+    - 'AIR AIR AIR'
+
+template_shapeless:
+  key: 'oasis.recipe.template2'
+  result: 'NETHER_STAR'
+  resultAmount: 1
+  customName: '&aTemplate Item'
+  type: 'shapeless'
+  #合成表所需物品,顺序无关,只取前9个物品
+  items:
+    - BEDROCK
+
+template_cooking:
+  key: 'oasis.recipe.template3'
+  result: 'NETHER_STAR'
+  resultAmount: 1
+  customName: '&aTemplate Item'
+  #烧炼类配方,有furnace(熔炉),campfire("营火"),blasting("高炉"),smoking("烟熏炉")四类
+  type: 'furnace'
+  #熔炉的烧炼物品,只取第一个物品,当有名字和lore判断时,物品必须完全符合名字和lore的设定才能使用
+  #请注意，&符号在这里不会被转义，请使用§符号
+  items:
+    - 'BEDROCK name:test lore:test'
+  #熔炉配方的特有属性,设定烧炼后给予多少经验值
+  exp: 0
+  #熔炉配方的特有属性,设定配方烧炼的时间
+  time: 10
+
+template_smithing:
+  key: 'oasis.recipe.template4'
+  result: 'DIAMOND_SWORD'
+  type: 'smithing'
+  #锻造台合成配方,第一行为第一个槽,第二行为第二个槽,第二行支持名字和lore判断
+  items:
+    - 'IRON_SWORD'
+    - 'BEDROCK name:test lore:test'
+
+template_stoneCutting:
+  key: 'oasis.recipe.template5'
+  result: 'NETHER_STAR'
+  resultAmount: 1
+  customName: '&aTemplate Item'
+  #切石机配方
+  type: 'stoneCutting'
+  #切石机的原料,只取第一个物品,支持名字和lore判断
+  items:
+    - 'BEDROCK name:test lore:test'

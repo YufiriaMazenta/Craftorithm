@@ -1,0 +1,30 @@
+version: ${project.version}
+#设定合成表是否在玩家合成时进行检测
+#设定为false时,合成表将不进行对应项的检测
+#例如,将exp设置为false,则合成表的spendExp配置将不会生效
+recipeCheck:
+  exp: true
+  vault: true
+  points: true
+  permission: true
+
+messages:
+  #玩家无法合成时的提示标题
+  cannotCraft:
+    title: '&c你暂时无法合成%item%'
+    subtitle: '&4合成条件未满足'
+  #使用命令的一些消息
+  commands:
+    noPerm: '&c你没有使用该命令的权限'
+    noArgs: '&c请输入子命令以执行'
+    nullArg: '&c不存在的子命令'
+    reload: '&a插件重载成功'
+    version: '&a插件版本: %version%'
+    missingParam: '&c缺少参数，请检查输入是否正确'
+  #插件加载过程中的一些消息
+  load:
+    finish: '&a插件加载完毕'
+    vaultSuccess: '&a发现经济插件,已挂钩'
+    vaultFailed: '&c未发现经济插件,金钱检查将不会生效'
+    pointsSuccess: '&a发现点券插件,已挂钩'
+    pointsFailed: '&c未发现点券插件,点券检查将不会生效'
