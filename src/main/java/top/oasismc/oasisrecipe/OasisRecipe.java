@@ -50,7 +50,7 @@ public final class OasisRecipe extends JavaPlugin {
                     e.printStackTrace();
                 }
             }
-        }.runTaskLater(this, 20);
+        }.runTaskLater(this, 60);
     }
 
     public void sendMsg(CommandSender sender, String key) {

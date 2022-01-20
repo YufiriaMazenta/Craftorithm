@@ -49,7 +49,7 @@
                 <version>2.4</version>
                 <configuration>
                     <archive>
-                        <manifestFile>mf/MANIFEST.MF</manifestFile>
+                        <manifestFile>src/mf/MANIFEST.MF</manifestFile>
                         <addMavenDescriptor>false</addMavenDescriptor>
                     </archive>
                 </configuration>
