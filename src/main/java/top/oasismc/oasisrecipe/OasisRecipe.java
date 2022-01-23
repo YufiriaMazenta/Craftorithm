@@ -23,7 +23,7 @@ public final class OasisRecipe extends JavaPlugin {
         loadCommands();
         loadListener();
         regRecipes();
-        info(color(getConfig().getString("messages.load.finish", "messages.load.finish")));
+        info(getConfig().getString("messages.load.finish", "messages.load.finish"));
     }
 
     @Override
@@ -73,7 +73,7 @@ public final class OasisRecipe extends JavaPlugin {
     }
 
     public static void info(String text) {
-        Bukkit.getLogger().info("[OasisRecipe] INFO | " + text);
+        Bukkit.getConsoleSender().sendMessage(color("&8[&3Oasis&bRecipe&8] &bINFO &8| &r" + text));
     }
 
 }

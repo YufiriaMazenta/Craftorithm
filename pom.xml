@@ -6,7 +6,7 @@
 
     <groupId>top.oasismc</groupId>
     <artifactId>OasisRecipe</artifactId>
-    <version>0.0.1.20220118.beta</version>
+    <version>0.0.1.20220123.beta</version>
     <packaging>jar</packaging>
 
     <name>OasisRecipe</name>

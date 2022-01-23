@@ -11,11 +11,11 @@ import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import top.oasismc.oasisrecipe.OasisRecipe;
 import top.oasismc.oasisrecipe.config.ConfigFile;
-import sun.misc.Unsafe;
 
 import java.util.*;
 
-import static top.oasismc.oasisrecipe.OasisRecipe.*;
+import static top.oasismc.oasisrecipe.OasisRecipe.color;
+import static top.oasismc.oasisrecipe.OasisRecipe.info;
 
 public class RecipeManager {
 
