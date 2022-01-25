@@ -1,5 +1,5 @@
 name: OasisRecipe
-version: ${project.version}
+version: ${version}
 main: top.oasismc.oasisrecipe.OasisRecipe
 api-version: 1.13
 load: STARTUP
