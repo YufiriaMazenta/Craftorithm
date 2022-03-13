@@ -226,7 +226,7 @@ public class RecipeManager {
                 int index2 = attr.indexOf(" ", index1 + 1);
                 int index3 = attr.indexOf(" ", index2 + 1);
                 String type = attr.substring(0, index1);
-                int value = Integer.parseInt(attr.substring(index1 + 1, index2));
+                double value = Double.parseDouble(attr.substring(index1 + 1, index2));
                 String addType = attr.substring(index2 + 1, index3);
                 String slot = attr.substring(index3 + 1);
                 meta.addAttributeModifier(
