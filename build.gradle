@@ -44,7 +44,7 @@ dependencies {
 
 group = 'top.oasismc'
 version = '0.0.2'
-def pluginVersion = version + '.20220312'
+def pluginVersion = version + '.20220314'
 archivesBaseName = 'OasisRecipe'
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
@@ -65,6 +65,9 @@ processResources {
     inputs.properties props
     filteringCharset 'UTF-8'
     filesMatching('plugin.yml') {
+        expand props
+    }
+    filesMatching('config.yml') {
         expand props
     }
 }
