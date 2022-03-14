@@ -1,8 +1,15 @@
 package top.oasismc.oasisrecipe.cmd;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.RecipeChoice;
+import top.oasismc.oasisrecipe.OasisRecipe;
+import top.oasismc.oasisrecipe.item.ItemUtil;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -55,6 +62,9 @@ public class PluginCommand implements TabExecutor {
         regSubCommand("version", sender -> {
             getPlugin().sendMsg(sender, "commands.version");
         });
+//        regSubCommand("import", sender -> {
+//            //TODO
+//        });
     }
 
     public void regSubCommand(String subCommand, Consumer<CommandSender> consumer) {
@@ -94,6 +104,7 @@ public class PluginCommand implements TabExecutor {
 
     public void reloadPlugin() {
         getPlugin().reloadConfig();
+        ItemUtil.getItemFile().reloadConfig();
         getManager().getRecipeFile().reloadConfig();
         getManager().reloadRecipes();
     }
