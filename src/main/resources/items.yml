@@ -1,0 +1,32 @@
+#请注意，items.yml中某些可在results.yml使用的参数无法生效！
+#案例中使用的属性即为全部可用属性
+item1:
+  #物品的类型
+  material: BEDROCK
+  #物品的数量
+  amount: 1
+  #物品的名称
+  name: '&a基岩'
+  #物品的lore
+  lore:
+    - '&a用于合成下界之星'
+  #物品的附魔
+  enchants:
+    - 'SHARPNESS 5'
+  #物品是否具有无法破坏的修饰符
+  unbreakable: true
+  #设置物品隐藏的属性
+  #可选ENCHANTS(附魔),ATTRIBUTES(属性),DYE(染色),DESTROYS(可破坏),PLACED_ON(可放置),POTION_EFFECTS(药水效果),UNBREAKABLE(无法破坏)
+  hides:
+    - 'UNBREAKABLE'
+
+item2:
+  material: IRON_SWORD
+  amount: 1
+  name: '&a铁剑'
+  lore:
+    - '&a铁剑'
+  enchants:
+    - 'SHARPNESS 5'
+  #物品损失的耐久，无耐久的物品此配置无效，超过物品本身耐久的值会导致问题
+  durability: 1000

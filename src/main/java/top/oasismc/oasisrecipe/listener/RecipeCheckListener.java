@@ -13,6 +13,7 @@ import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.inventory.*;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import top.oasismc.oasisrecipe.OasisRecipe;
+import top.oasismc.oasisrecipe.item.ItemUtil;
 
 import java.util.Set;
 
@@ -194,10 +195,14 @@ public class RecipeCheckListener implements Listener {
         YamlConfiguration config = (YamlConfiguration) getManager().getRecipeFile().getConfig();
 
         String title = color(OasisRecipe.getPlugin().getConfig().getString(titleKey, titleKey));
-        String itemName = config.getString(recipeName + ".customName");
-        ItemStack item = config.getItemStack(recipeName + ".result");
-        if (itemName == null || itemName.equals(""))
-            itemName = item.getItemMeta().getLocalizedName();
+        String result = getManager().getRecipeFile().getConfig().getString(recipeName + ".result", "");
+        result = result.substring(result.indexOf(':') + 1);
+        String itemName = (ItemUtil.getResultFile().getConfig().getString(result + ".name", ""));
+        if (itemName.equals("")) {
+            ItemStack item = ItemUtil.getItemFromConfig(result);
+            if (item.getItemMeta() != null)
+                itemName = item.getItemMeta().getLocalizedName();
+        }
         title = title.replace("%item%", color(itemName));
 
         String subTitle = color(OasisRecipe.getPlugin().getConfig().getString(subTitleKey, subTitleKey));

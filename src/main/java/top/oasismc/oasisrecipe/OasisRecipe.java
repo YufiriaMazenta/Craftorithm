@@ -45,6 +45,7 @@ public final class OasisRecipe extends JavaPlugin {
             @Override
             public void run() {
                 try {
+                    Class.forName("top.oasismc.oasisrecipe.item.ItemUtil");
                     Class.forName("top.oasismc.oasisrecipe.recipe.RecipeManager");
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
