@@ -1,4 +1,4 @@
-version: ${project.version}
+version: ${version}
 #设定合成表是否在玩家合成时进行检测
 #设定为false时,合成表将不进行对应项的检测
 #例如,将exp设置为false,则合成表的spendExp配置将不会生效
