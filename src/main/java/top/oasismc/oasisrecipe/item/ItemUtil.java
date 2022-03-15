@@ -4,7 +4,6 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
@@ -12,7 +11,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
-import top.oasismc.oasisrecipe.OasisRecipe;
 import top.oasismc.oasisrecipe.config.ConfigFile;
 
 import java.util.List;
@@ -65,7 +63,7 @@ public class ItemUtil {
                                 UUID.randomUUID(),
                                 type,
                                 value,
-                                AttributeModifier.Operation.valueOf("ADD_" + addType),
+                                AttributeModifier.Operation.valueOf(addType),
                                 EquipmentSlot.valueOf(slot)
                         )
                 );
