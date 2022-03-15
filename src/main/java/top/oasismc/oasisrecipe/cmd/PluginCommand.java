@@ -75,6 +75,7 @@ public class PluginCommand implements TabExecutor {
                 return;
             }
             importItem((Player) sender, args);
+            getPlugin().sendMsg(sender, "commands.import");
         }, Arrays.asList("items", "results"));
     }
 
