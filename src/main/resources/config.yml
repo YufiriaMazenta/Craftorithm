@@ -21,6 +21,7 @@ messages:
     reload: '&a插件重载成功'
     version: '&a插件版本: %version%'
     missingParam: '&c缺少参数，请检查输入是否正确'
+    playerOnly: '此命令只能玩家使用!'
   #插件加载过程中的一些消息
   load:
     finish: '&a插件加载完毕'

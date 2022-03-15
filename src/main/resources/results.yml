@@ -11,9 +11,10 @@ result1:
   lore:
     - '&a下界合金剑'
   #合成出物品所带的属性修饰符,格式为'类型 数值 加点方式 位置',锻造台配方此项无效
-  #加点可选有NUMBER(数值)和SCALE(比例),位置可选HAND(主手),HEAD(头),CHEST(身体),LEGS(腿部),FEET(脚部)和OFF_HAND(副手)
+  #加点可选有ADD_NUMBER, ADD_SCALE和MULTIPLY_SCALAR_1
+  #位置可选HAND(主手),HEAD(头),CHEST(身体),LEGS(腿部),FEET(脚部)和OFF_HAND(副手)
   attributes:
-    - 'GENERIC_ATTACK_DAMAGE 100 NUMBER HAND'
+    - 'GENERIC_ATTACK_DAMAGE 100 ADD_NUMBER HAND'
   #物品的附魔
   enchants:
     - 'MENDING 1'
@@ -32,7 +33,7 @@ result2:
   lore:
     - '&a下界合金剑'
   attributes:
-    - 'GENERIC_ATTACK_DAMAGE 100 NUMBER HAND'
+    - 'GENERIC_ATTACK_DAMAGE 100 ADD_NUMBER HAND'
   enchants:
     - 'MENDING 1'
   hides:
