@@ -136,7 +136,8 @@ public class PluginCommand implements TabExecutor {
                         });
                         config.getConfig().set(args[2] + ".attributes", attributes);
                     }
-                    config.getConfig().set(args[2] + ".customModelData", meta.getCustomModelData());
+                    if (meta.hasCustomModelData())
+                        config.getConfig().set(args[2] + ".customModelData", meta.getCustomModelData());
                     break;
             }
             config.getConfig().set(args[2] + ".material", item.getType().name());

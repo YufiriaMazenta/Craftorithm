@@ -17,7 +17,8 @@ import top.oasismc.oasisrecipe.item.ItemUtil;
 
 import java.util.Set;
 
-import static top.oasismc.oasisrecipe.OasisRecipe.*;
+import static top.oasismc.oasisrecipe.OasisRecipe.color;
+import static top.oasismc.oasisrecipe.OasisRecipe.info;
 import static top.oasismc.oasisrecipe.recipe.RecipeManager.getManager;
 
 
