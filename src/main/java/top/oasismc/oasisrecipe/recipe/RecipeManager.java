@@ -6,7 +6,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.*;
 import top.oasismc.oasisrecipe.OasisRecipe;
 import top.oasismc.oasisrecipe.config.ConfigFile;
-import top.oasismc.oasisrecipe.item.ItemUtil;
 
 import java.util.ArrayList;
 import java.util.List;
