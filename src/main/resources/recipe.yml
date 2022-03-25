@@ -58,3 +58,17 @@ template_stoneCutting:
   #切石机的原料,只取第一个物品
   items:
     - 'items:item1'
+template_random_furnace:
+  key: 'oasis.recipe.template6'
+  #在此处配置每个结果的概率, 若概率总和超过1, 则超过1部分的概率将无效
+  #若概率总和小于1, 则小于1的部分将烧炼出空物品
+  result:
+    - 'results:result1 0.5'
+    - 'results:result2 0.4'
+    - 'STONE 0.1'
+  #furnace(熔炉),campfire("营火"),blasting("高炉"),smoking("烟熏炉")均支持随机配方
+  type: 'random_furnace'
+  items:
+    - 'GRASS_BLOCK'
+  exp: 0
+  time: 10
