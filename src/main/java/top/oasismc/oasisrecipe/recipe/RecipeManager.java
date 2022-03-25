@@ -10,6 +10,7 @@ import top.oasismc.oasisrecipe.config.ConfigFile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import static top.oasismc.oasisrecipe.OasisRecipe.color;
 import static top.oasismc.oasisrecipe.OasisRecipe.info;
@@ -59,6 +60,10 @@ public class RecipeManager {
                 case "smoking":
                 case "campfire":
                 case "blasting":
+                case "random_furnace":
+                case "random_smoking":
+                case "random_campfire":
+                case "random_blasting":
                 case "stoneCutting":
                     choices[0] = getChoiceFromStr(choiceList.get(0));
                     break;
@@ -69,6 +74,10 @@ public class RecipeManager {
             }//获取配方的合成物品
 
             String resultStr = config.getString(recipeName + ".result", "Null");
+            if (config.getString(recipeName + ".type", "shaped").startsWith("random_")) {
+                resultStr = config.getStringList(recipeName + ".result").get(0);
+                resultStr = resultStr.substring(0, resultStr.indexOf(" "));
+            }
             ItemStack result = getItemFromConfig(resultStr);//获取合成的物品
 
             switch (config.getString(recipeName + ".type", "shaped")) {
@@ -82,6 +91,10 @@ public class RecipeManager {
                 case "smoking":
                 case "campfire":
                 case "blasting":
+                case "random_furnace":
+                case "random_smoking":
+                case "random_campfire":
+                case "random_blasting":
                     int exp = config.getInt(recipeName + ".exp", 0);
                     int cookTime = config.getInt(recipeName + ".time", 10) * 20;
                     addCookingRecipe(key, result, choices[0], exp, cookTime, config.getString(recipeName + ".type", "furnace"));
@@ -166,19 +179,47 @@ public class RecipeManager {
         CookingRecipe<?> recipe = null;
         switch (type) {
             case "furnace":
+            case "random_furnace":
                 recipe = new FurnaceRecipe(recipeKey, result, item, exp, cookingTime);
                 break;
             case "smoking":
+            case "random_smoking":
                 recipe = new SmokingRecipe(recipeKey, result, item, exp, cookingTime);
                 break;
             case "blasting":
+            case "random_blasting":
                 recipe = new BlastingRecipe(recipeKey, result, item, exp, cookingTime);
                 break;
             case "campfire":
+            case "random_campfire":
                 recipe = new CampfireRecipe(recipeKey, result, item, exp, cookingTime);
                 break;
         }
         Bukkit.getServer().addRecipe(recipe);
+    }
+
+    public String getRecipeName(Recipe recipe) {
+        Set<String> recipes = getManager().getRecipeFile().getConfig().getKeys(false);
+        NamespacedKey namespacedKey = null;
+        if (recipe instanceof ShapedRecipe) {
+            namespacedKey = ((ShapedRecipe) recipe).getKey();
+        } else if (recipe instanceof ShapelessRecipe){
+            namespacedKey = ((ShapelessRecipe) recipe).getKey();
+        } else if (recipe instanceof SmithingRecipe) {
+            namespacedKey = ((SmithingRecipe) recipe).getKey();
+        } else if (recipe instanceof FurnaceRecipe) {
+            namespacedKey = ((FurnaceRecipe) recipe).getKey();
+        }
+        if (namespacedKey == null) {
+            return null;
+        }
+        for (String key : recipes) {
+            String keyName = getManager().getRecipeFile().getConfig().getString(key + ".key", "");
+            if (namespacedKey.getKey().equals(keyName)) {
+                return key;
+            }
+        }
+        return null;
     }
 
     public ConfigFile getRecipeFile() {

@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import top.oasismc.oasisrecipe.cmd.PluginCommand;
+import top.oasismc.oasisrecipe.listener.FurnaceSmeltListener;
 import top.oasismc.oasisrecipe.listener.RecipeCheckListener;
 
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
@@ -37,6 +38,7 @@ public final class OasisRecipe extends JavaPlugin {
     }
 
     private void loadListener() {
+        Bukkit.getPluginManager().registerEvents(FurnaceSmeltListener.getListener(), this);
         Bukkit.getPluginManager().registerEvents(RecipeCheckListener.getListener(), this);
     }
 

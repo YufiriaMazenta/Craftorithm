@@ -63,7 +63,7 @@ public class RecipeCheckListener implements Listener {
             return;
         }//检查点击者是否是玩家
         Player player = (Player) event.getWhoClicked();
-        String recipeName = getRecipeName(event.getRecipe());
+        String recipeName = getManager().getRecipeName(event.getRecipe());
         if (conditionNotSatisfied("perm", recipeName, event, player))
             return;
         if (conditionNotSatisfied("exp", recipeName, event, player))
@@ -153,37 +153,15 @@ public class RecipeCheckListener implements Listener {
         return false;
     }
 
-    private String getRecipeName(Recipe recipe) {
-        Set<String> recipes = getManager().getRecipeFile().getConfig().getKeys(false);
-        NamespacedKey namespacedKey = null;
-        if (recipe instanceof ShapedRecipe) {
-            namespacedKey = ((ShapedRecipe) recipe).getKey();
-        } else if (recipe instanceof ShapelessRecipe){
-            namespacedKey = ((ShapelessRecipe) recipe).getKey();
-        } else if (recipe instanceof SmithingRecipe) {
-            namespacedKey = ((SmithingRecipe) recipe).getKey();
-        }
-        if (namespacedKey == null) {
-            return null;
-        }
-        for (String key : recipes) {
-            String keyName = getManager().getRecipeFile().getConfig().getString(key + ".key", "");
-            if (namespacedKey.getKey().equals(keyName)) {
-                return key;
-            }
-        }
-        return null;
-    }
-
     private boolean loadVault() {
         if (Bukkit.getPluginManager().getPlugin("Vault") == null) {
             return false;
         }
-        RegisteredServiceProvider<Economy> rsp = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
-        if (rsp == null) {
+        RegisteredServiceProvider<Economy> vaultRsp = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
+        if (vaultRsp == null) {
             return false;
         }
-        economy = rsp.getProvider();
+        economy = vaultRsp.getProvider();
         return true;
     }
 
