@@ -23,7 +23,7 @@ public final class OasisRecipe extends JavaPlugin {
         saveDefaultConfig();
         loadCommands();
         loadListener();
-        regRecipes();
+        regStaticClass();
         info(getConfig().getString("messages.load.finish", "messages.load.finish"));
     }
 
@@ -42,11 +42,12 @@ public final class OasisRecipe extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(RecipeCheckListener.getListener(), this);
     }
 
-    private void regRecipes() {
+    private void regStaticClass() {
         new BukkitRunnable() {
             @Override
             public void run() {
                 try {
+                    Class.forName("top.oasismc.oasisrecipe.api.RecipeRegistrar");
                     Class.forName("top.oasismc.oasisrecipe.item.ItemUtil");
                     Class.forName("top.oasismc.oasisrecipe.recipe.RecipeManager");
                 } catch (ClassNotFoundException e) {
