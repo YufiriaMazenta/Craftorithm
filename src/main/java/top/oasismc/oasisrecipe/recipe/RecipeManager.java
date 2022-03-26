@@ -1,16 +1,15 @@
 package top.oasismc.oasisrecipe.recipe;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.*;
+import org.bukkit.plugin.Plugin;
 import top.oasismc.oasisrecipe.OasisRecipe;
 import top.oasismc.oasisrecipe.config.ConfigFile;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 import static top.oasismc.oasisrecipe.OasisRecipe.color;
 import static top.oasismc.oasisrecipe.OasisRecipe.info;
@@ -230,6 +229,37 @@ public class RecipeManager {
         Bukkit.resetRecipes();
         getKeyList().clear();
         loadRecipesFromConfig();
+        loadRecipeFromOtherPlugins();
+    }
+
+    private void loadRecipeFromOtherPlugins() {
+        Plugin playerIntensify = Bukkit.getPluginManager().getPlugin("PlayerIntensify");
+        if (playerIntensify != null) {
+            loadRecipeFromPlayerIntensify(playerIntensify);
+        }
+    }
+
+    private void loadRecipeFromPlayerIntensify(Plugin plugin) {
+        List<Material> materials = new ArrayList<>();
+        materials.add(Material.NETHERITE_SWORD);
+        materials.add(Material.DIAMOND_SWORD);
+        materials.add(Material.GOLDEN_SWORD);
+        materials.add(Material.IRON_SWORD);
+        materials.add(Material.STONE_SWORD);
+        materials.add(Material.WOODEN_SWORD);
+        materials.add(Material.NETHERITE_AXE);
+        materials.add(Material.NETHERITE_HELMET);
+        materials.add(Material.NETHERITE_CHESTPLATE);
+        materials.add(Material.NETHERITE_LEGGINGS);
+        materials.add(Material.NETHERITE_BOOTS);
+        materials.add(Material.SHIELD);
+        materials.add(Material.TRIDENT);
+        materials.add(Material.BOW);
+        for (Material material : materials) {
+            FurnaceRecipe furnaceRecipe = new FurnaceRecipe(new NamespacedKey(plugin, plugin.getName() + "." + material.name()), new ItemStack(material), Material.COAL, 0.0F, 120);
+            furnaceRecipe.setInput(material);
+            OasisRecipe.getPlugin().getServer().addRecipe(furnaceRecipe);
+        }
     }
 
 }
