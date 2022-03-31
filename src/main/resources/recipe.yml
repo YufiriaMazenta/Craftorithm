@@ -66,9 +66,9 @@ template_random_furnace:
     - 'results:result1 0.5'
     - 'results:result2 0.4'
     - 'STONE 0.1'
-  #furnace(熔炉),campfire("营火"),blasting("高炉"),smoking("烟熏炉")均支持随机配方
+  #furnace(熔炉),blasting("高炉"),smoking("烟熏炉")均支持随机配方
   type: 'random_furnace'
   items:
-    - 'GRASS_BLOCK'
+    - 'COMMAND_BLOCK'
   exp: 0
   time: 10
