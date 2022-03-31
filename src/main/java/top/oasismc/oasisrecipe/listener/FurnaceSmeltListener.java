@@ -63,7 +63,9 @@ public class FurnaceSmeltListener implements Listener {
         if (sum < 1.0) {
             probabilityMap.put(new ItemStack(Material.AIR), 1.0);
         }
-        return new ArrayList<>(probabilityMap.entrySet());
+        List<Map.Entry<ItemStack, Double>> probabilityList = new ArrayList<>(probabilityMap.entrySet());
+        probabilityList.sort(Map.Entry.comparingByValue());
+        return probabilityList;
     }
 
 }
