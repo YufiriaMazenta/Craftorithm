@@ -62,7 +62,6 @@ public class RecipeManager {
                 case "blasting":
                 case "random_furnace":
                 case "random_smoking":
-                case "random_campfire":
                 case "random_blasting":
                 case "stoneCutting":
                     choices[0] = getChoiceFromStr(choiceList.get(0));
@@ -93,7 +92,6 @@ public class RecipeManager {
                 case "blasting":
                 case "random_furnace":
                 case "random_smoking":
-                case "random_campfire":
                 case "random_blasting":
                     int exp = config.getInt(recipeName + ".exp", 0);
                     int cookTime = config.getInt(recipeName + ".time", 10) * 20;
@@ -191,7 +189,6 @@ public class RecipeManager {
                 recipe = new BlastingRecipe(recipeKey, result, item, exp, cookingTime);
                 break;
             case "campfire":
-            case "random_campfire":
                 recipe = new CampfireRecipe(recipeKey, result, item, exp, cookingTime);
                 break;
         }
