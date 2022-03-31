@@ -207,8 +207,8 @@ public class RecipeManager {
             namespacedKey = ((ShapelessRecipe) recipe).getKey();
         } else if (recipe instanceof SmithingRecipe) {
             namespacedKey = ((SmithingRecipe) recipe).getKey();
-        } else if (recipe instanceof FurnaceRecipe) {
-            namespacedKey = ((FurnaceRecipe) recipe).getKey();
+        } else if (recipe instanceof CookingRecipe) {
+            namespacedKey = ((CookingRecipe<?>) recipe).getKey();
         }
         if (namespacedKey == null) {
             return null;
