@@ -1,7 +1,6 @@
 package top.oasismc.oasisrecipe.recipe;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.*;
@@ -14,8 +13,8 @@ import java.util.*;
 
 import static top.oasismc.oasisrecipe.OasisRecipe.color;
 import static top.oasismc.oasisrecipe.OasisRecipe.info;
-import static top.oasismc.oasisrecipe.item.ItemUtil.getChoiceFromStr;
-import static top.oasismc.oasisrecipe.item.ItemUtil.getItemFromConfig;
+import static top.oasismc.oasisrecipe.item.ItemLoader.getChoiceFromStr;
+import static top.oasismc.oasisrecipe.item.ItemLoader.getItemFromConfig;
 
 public class RecipeManager {
 

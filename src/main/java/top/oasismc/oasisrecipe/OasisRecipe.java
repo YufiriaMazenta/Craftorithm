@@ -3,7 +3,6 @@ package top.oasismc.oasisrecipe;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import top.oasismc.oasisrecipe.cmd.PluginCommand;
 import top.oasismc.oasisrecipe.listener.FurnaceSmeltListener;
 import top.oasismc.oasisrecipe.listener.RecipeCheckListener;
@@ -23,7 +22,7 @@ public final class OasisRecipe extends JavaPlugin {
         saveDefaultConfig();
         loadCommands();
         loadListener();
-        regStaticClass();
+        loadConfigs();
         info(getConfig().getString("messages.load.finish", "messages.load.finish"));
     }
 
@@ -42,19 +41,8 @@ public final class OasisRecipe extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(RecipeCheckListener.getListener(), this);
     }
 
-    private void regStaticClass() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                try {
-                    Class.forName("top.oasismc.oasisrecipe.api.RecipeRegistrar");
-                    Class.forName("top.oasismc.oasisrecipe.item.ItemUtil");
-                    Class.forName("top.oasismc.oasisrecipe.recipe.RecipeManager");
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-        }.runTaskLater(this, 60);
+    private void loadConfigs() {
+        PluginCommand.getCommand().reloadPlugin();
     }
 
     public void sendMsg(CommandSender sender, String key) {

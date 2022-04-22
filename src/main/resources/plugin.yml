@@ -2,7 +2,7 @@ name: OasisRecipe
 version: ${version}
 main: top.oasismc.oasisrecipe.OasisRecipe
 api-version: 1.13
-load: STARTUP
+load: POSTWORLD
 softdepend: [ Vault, LuckPerms, PlayerPoints ]
 authors: [ ChiyodaXiaoYi, StringStream_ ]
 commands:

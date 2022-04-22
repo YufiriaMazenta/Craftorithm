@@ -8,10 +8,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.FurnaceStartSmeltEvent;
 import org.bukkit.inventory.ItemStack;
-import top.oasismc.oasisrecipe.OasisRecipe;
-import top.oasismc.oasisrecipe.item.ItemUtil;
+import top.oasismc.oasisrecipe.item.ItemLoader;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static top.oasismc.oasisrecipe.recipe.RecipeManager.getManager;
 
@@ -56,7 +58,7 @@ public class FurnaceSmeltListener implements Listener {
         for (String result : results) {
             String item = result.substring(0, result.indexOf(" "));
             double probability = Double.parseDouble(result.substring(result.indexOf(" ") + 1));
-            ItemStack itemStack = ItemUtil.getItemFromConfig(item);
+            ItemStack itemStack = ItemLoader.getItemFromConfig(item);
             sum += probability;
             probabilityMap.put(itemStack, sum);
         }

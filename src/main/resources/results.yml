@@ -1,3 +1,5 @@
+#本配置文件用于定义合成表的结果
+
 result1:
   #物品的种类
   material: NETHERITE_SWORD
@@ -40,3 +42,16 @@ result2:
     - 'ATTRIBUTES'
   #物品损失的耐久，无耐久的物品此配置无效，超过物品本身耐久的值会导致问题
   durability: 100
+potion:
+  material: POTION
+  name: '&a神奇的药水'
+  lore:
+    - '&7这是一瓶神奇的药水!'
+  #物品的药水效果
+  #写法:"药水类型 时间(秒) 等级"
+  potion:
+    - 'FIRE_RESISTANCE 20 0'
+  potionColor: 0x000000
+skull:
+  material: PLAYER_HEAD
+  skullOwner: ChiyodaXiaoYi

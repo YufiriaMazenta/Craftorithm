@@ -1,5 +1,7 @@
-#请注意，items.yml中某些可在results.yml使用的参数无法生效！
-#案例中使用的属性即为全部可用属性
+#本配置文件用于定义合成表的合成物品
+
+#请注意，items.yml中不可使用attributes标签
+#作为合成物品时
 item1:
   #物品的类型
   material: BEDROCK
@@ -30,3 +32,18 @@ item2:
     - 'SHARPNESS 5'
   #物品损失的耐久，无耐久的物品此配置无效，超过物品本身耐久的值会导致问题
   durability: 1000
+
+potion:
+  material: POTION
+  name: '&a神奇的药水'
+  lore:
+    - '&7这是一瓶神奇的药水!'
+  #物品的药水效果
+  #写法:"药水类型 时间(秒) 等级"
+  potion:
+    - 'FIRE_RESISTANCE 20 0'
+  potionColor: 0x000000
+
+skull:
+  material: PLAYER_HEAD
+  skullOwner: ChiyodaXiaoYi

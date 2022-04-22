@@ -65,4 +65,6 @@ public class ConfigFile {
         }
     }
 
+    public String getPath() { return path; }
+
 }
