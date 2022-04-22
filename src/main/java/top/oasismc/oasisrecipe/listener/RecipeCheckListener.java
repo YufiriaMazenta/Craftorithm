@@ -3,19 +3,24 @@ package top.oasismc.oasisrecipe.listener;
 import net.milkbowl.vault.economy.Economy;
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
-import org.bukkit.inventory.*;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import top.oasismc.oasisrecipe.OasisRecipe;
-import top.oasismc.oasisrecipe.item.ItemUtil;
+import top.oasismc.oasisrecipe.item.ItemLoader;
 
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
 
 import static top.oasismc.oasisrecipe.OasisRecipe.color;
 import static top.oasismc.oasisrecipe.OasisRecipe.info;
@@ -24,10 +29,12 @@ import static top.oasismc.oasisrecipe.recipe.RecipeManager.getManager;
 
 public class RecipeCheckListener implements Listener {
 
-    private final boolean isVaultLoaded;
-    private final boolean isPlayerPointsLoaded;
+    private boolean isVaultLoaded;
+    private boolean isPlayerPointsLoaded;
     private Economy economy;
     private PlayerPoints playerPoints;
+    private final Map<String, BiFunction<String, CraftItemEvent, Boolean>> checkFuncMap;
+    private final Map<UUID, Set<Consumer<Player>>> operationListMap;
 
     private static final RecipeCheckListener listener;
 
@@ -36,16 +43,87 @@ public class RecipeCheckListener implements Listener {
     }
 
     private RecipeCheckListener() {
+        checkFuncMap = new ConcurrentHashMap<>();
+        operationListMap = new ConcurrentHashMap<>();
+        regDefCheckFunc();
+    }
+
+    public static RecipeCheckListener getListener() {
+        return listener;
+    }
+
+
+    private void regDefCheckFunc() {
         isVaultLoaded = loadVault();
+        regCheckFunc("spendLvl", (recipeName, event) -> {
+            String value = getManager().getRecipeFile().getConfig().getString(recipeName + ".spendLvl", "");
+            if (value.equals(""))
+                return true;
+            int needLvl;
+            try {
+                needLvl = Integer.parseInt(value);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+            Player player = (Player) event.getWhoClicked();
+            if (player.getLevel() < needLvl)
+                return false;
+            operationListMap.get(player.getUniqueId()).add(player1 -> player1.setLevel(player1.getLevel() - needLvl));
+            return true;
+        });
+
+        regCheckFunc("perm", (recipeName, event) -> {
+            String value = getManager().getRecipeFile().getConfig().getString(recipeName + ".perm", "");
+            if (value.equals(""))
+                return true;
+            return event.getWhoClicked().hasPermission(value);
+        });
+
         String messageKey;
         if (isVaultLoaded) {
+            regCheckFunc("spendMoney", (recipeName, event) -> {
+                String value = getManager().getRecipeFile().getConfig().getString(recipeName + ".spendMoney", "");
+                if (value.equals(""))
+                    return true;
+                double needMoney;
+                try {
+                    needMoney = Double.parseDouble(value);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return false;
+                }
+                Player player = (Player) event.getWhoClicked();
+                if (economy.getBalance(player) < needMoney)
+                    return false;
+                operationListMap.get(player.getUniqueId()).add(player1 -> economy.withdrawPlayer(player1, needMoney));
+                return true;
+            });
             messageKey = "messages.load.vaultSuccess";
         } else {
             messageKey = "messages.load.vaultFailed";
         }
         info(color(OasisRecipe.getPlugin().getConfig().getString(messageKey, messageKey)));
+
         isPlayerPointsLoaded = loadPlayerPoints();
         if (isPlayerPointsLoaded) {
+            regCheckFunc("spendPoints", (recipeName, event) -> {
+                String value = getManager().getRecipeFile().getConfig().getString(recipeName + ".spendPoints", "");
+                if (value.equals(""))
+                    return true;
+                int needPoints;
+                try {
+                    needPoints = Integer.parseInt(value);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return false;
+                }
+                Player player = (Player) event.getWhoClicked();
+                if (playerPoints.getAPI().look(player.getUniqueId()) < needPoints)
+                    return false;
+                operationListMap.get(player.getUniqueId()).add(player1 -> playerPoints.getAPI().take(player1.getUniqueId(), needPoints));
+                return true;
+            });
             messageKey = "messages.load.pointsSuccess";
         } else {
             messageKey = "messages.load.pointsFailed";
@@ -53,104 +131,32 @@ public class RecipeCheckListener implements Listener {
         info(color(OasisRecipe.getPlugin().getConfig().getString(messageKey, messageKey)));
     }
 
-    public static RecipeCheckListener getListener() {
-        return listener;
+    public void regCheckFunc(String key, BiFunction<String, CraftItemEvent, Boolean> checkFunc) {
+        checkFuncMap.put(key, checkFunc);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void craftCheck(CraftItemEvent event) {
         if (!(event.getWhoClicked() instanceof Player)) {
             return;
         }//检查点击者是否是玩家
-        Player player = (Player) event.getWhoClicked();
         String recipeName = getManager().getRecipeName(event.getRecipe());
-        if (conditionNotSatisfied("perm", recipeName, event, player))
-            return;
-        if (conditionNotSatisfied("exp", recipeName, event, player))
-            return;
-        if (conditionNotSatisfied("vault", recipeName, event, player))
-            return;
-        conditionNotSatisfied("points", recipeName, event, player);
-    }
-
-    private boolean conditionNotSatisfied(String checkType, String recipeName, CraftItemEvent event, Player player) {
-        if (!OasisRecipe.getPlugin().getConfig().getBoolean("recipeCheck." + checkType, true)) {
-            return false;
+        UUID uuid = event.getWhoClicked().getUniqueId();
+        operationListMap.put(uuid, new HashSet<>());
+        for (String key : checkFuncMap.keySet()) {
+            if (!checkFuncMap.get(key).apply(recipeName, event)) {
+                event.setResult(Event.Result.DENY);
+                break;
+            }
         }
-        //检查是否开启检测
-
-        String node = "";
-        switch (checkType) {
-            case "vault":
-                if (!isVaultLoaded) return false;
-                node = "spendMoney";
-                break;
-            case "points":
-                if (!isPlayerPointsLoaded) return false;
-                node = "spendPoints";
-                break;
-            case "exp":
-                node = "spendLvl";
-                break;
-            case "perm":
-                node = "perm";
-                break;
-        }//检查软依赖是否加载,生成对应的节点名
-        if (node.equals("")) {
-            return true;
-        }//假设节点不存在,则返回
-
-        int intValue = 0;
-        String value = getManager().getRecipeFile().getConfig().getString(recipeName + "." + node, "");
-        //获取节点值
-        if (value.equals("")) {
-            return false;
-        }//若获取到对应节点值为空,则返回
-        if (!checkType.equals("perm")) {
-            double tmpValue = Double.parseDouble(value);
-            intValue = (int) tmpValue;
-            intValue *= event.getRecipe().getResult().getAmount();
-        }//若类型不为perm,计算总共需要的值,否则直接将字符串作为值
-
-        int playerValue = 0;
-        switch (checkType) {
-            case "exp":
-                playerValue = player.getLevel();
-                break;
-            case "vault":
-                playerValue = (int) economy.getBalance(player);
-                break;
-            case "points":
-                playerValue = playerPoints.getAPI().look(player.getUniqueId());
-                break;
-        }//获取玩家拥有的值
-
-        boolean canCraft;
-        if (!checkType.equals("perm")) {
-            canCraft = !(playerValue < intValue);
-        } else {
-            canCraft = player.hasPermission(value);
-        }//判断玩家能否合成,当类型为perm时,检测权限;若为其他则检测值
-
-        if (!canCraft) {
-            event.setCancelled(true);
-            event.getWhoClicked().closeInventory();
-            sendTitle((Player) event.getWhoClicked(), "messages.cannotCraft.title", "messages.cannotCraft.subtitle", recipeName);
-            return true;
-        }//若不能合成则关闭合成界面并提醒
-
-        switch (checkType) {
-            case "exp":
-                player.setLevel(playerValue - intValue);
-                break;
-            case "vault":
-                economy.withdrawPlayer(player, intValue);
-                break;
-            case "points":
-                playerPoints.getAPI().take(player.getUniqueId(), intValue);
-                break;
+        if (event.getResult().equals(Event.Result.DENY)) {
+            operationListMap.remove(uuid);
+            return;
         }
-        return false;
+        for (Consumer<Player> consumer : operationListMap.get(uuid)) {
+            consumer.accept((Player) event.getWhoClicked());
+        }
+        operationListMap.remove(uuid);
     }
 
     private boolean loadVault() {
@@ -171,14 +177,12 @@ public class RecipeCheckListener implements Listener {
     }
 
     private void sendTitle(Player player, String titleKey, String subTitleKey, String recipeName) {
-        YamlConfiguration config = (YamlConfiguration) getManager().getRecipeFile().getConfig();
-
         String title = color(OasisRecipe.getPlugin().getConfig().getString(titleKey, titleKey));
         String result = getManager().getRecipeFile().getConfig().getString(recipeName + ".result", "");
         result = result.substring(result.indexOf(':') + 1);
-        String itemName = (ItemUtil.getResultFile().getConfig().getString(result + ".name", ""));
+        String itemName = (ItemLoader.getResultFile().getConfig().getString(result + ".name", ""));
         if (itemName.equals("")) {
-            ItemStack item = ItemUtil.getItemFromConfig(result);
+            ItemStack item = ItemLoader.getItemFromConfig(result);
             if (item.getItemMeta() != null)
                 itemName = item.getItemMeta().getLocalizedName();
         }

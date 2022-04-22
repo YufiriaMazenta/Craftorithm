@@ -1,18 +1,14 @@
 package top.oasismc.oasisrecipe.cmd;
 
-import com.google.common.collect.Multimap;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import top.oasismc.oasisrecipe.config.ConfigFile;
-import top.oasismc.oasisrecipe.item.ItemUtil;
+import top.oasismc.oasisrecipe.item.ItemLoader;
+import top.oasismc.oasisrecipe.item.nbt.NBTManager;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -117,62 +113,25 @@ public class PluginCommand implements TabExecutor {
     public void importItem(Player player, String[] args) {
         ItemStack item = player.getInventory().getItemInMainHand();
         ItemMeta meta = item.getItemMeta();
-        if (meta != null) {
-            ConfigFile config = ItemUtil.getItemFile();
-            switch (args[1]) {
-                case "RESULTS":
-                case "results":
-                    config = ItemUtil.getResultFile();
-                    List<String> attributes = new ArrayList<>();
-                    Multimap<Attribute, AttributeModifier> attrMap = meta.getAttributeModifiers();
-                    if (attrMap != null) {
-                        attrMap.forEach((attr, attrModifier) -> {
-                            String attrStr = "";
-                            attrStr += attr.name() + " ";
-                            attrStr += attrModifier.getAmount() + " ";
-                            attrStr += attrModifier.getOperation() + " ";
-                            attrStr += attrModifier.getSlot();
-                            attributes.add(attrStr);
-                        });
-                        config.getConfig().set(args[2] + ".attributes", attributes);
-                    }
-                    if (meta.hasCustomModelData())
-                        config.getConfig().set(args[2] + ".customModelData", meta.getCustomModelData());
-                    break;
-            }
-            config.getConfig().set(args[2] + ".material", item.getType().name());
-            config.getConfig().set(args[2] + ".amount", item.getAmount());
-            if (meta.hasDisplayName())
-                config.getConfig().set(args[2] + ".name", meta.getDisplayName());
-            config.getConfig().set(args[2] + ".unbreakable", meta.isUnbreakable());
-            List<String> enchants = new ArrayList<>();
-            if (meta.hasEnchants()) {
-                meta.getEnchants().forEach((enchant, lvl) -> {
-                    String type = enchant.toString();
-                    type = type.substring(type.indexOf(", ") + 2, type.length() - 1);
-                    enchants.add(type + " " + lvl);
-                });
-            }
-            config.getConfig().set(args[2] + ".enchants", enchants);
-            List<String> lore = meta.getLore();
-            if (lore != null)
-                config.getConfig().set(args[2] + ".lore", lore);
-            List<String> flags = new ArrayList<>();
-            for (ItemFlag flag : meta.getItemFlags()) {
-                flags.add(flag.name().substring(5));
-            }
-            if (flags.size() != 0)
-                config.getConfig().set(args[2] + ".hides", flags);
-            if (meta instanceof Damageable)
-                config.getConfig().set(args[2] + ".durability", ((Damageable) meta).getDamage());
-            config.saveConfig();
+        ConfigFile configFile;
+        switch (args[1]) {
+            case "RESULTS":
+            case "results":
+                configFile = ItemLoader.getResultFile();
+                break;
+            case "items":
+            case "ITEMS":
+            default:
+                configFile = ItemLoader.getItemFile();
+                break;
         }
+        NBTManager.importItem(args[2], item, configFile);
     }
 
     public void reloadPlugin() {
         getPlugin().reloadConfig();
-        ItemUtil.getItemFile().reloadConfig();
-        ItemUtil.getResultFile().reloadConfig();
+        ItemLoader.getItemFile().reloadConfig();
+        ItemLoader.getResultFile().reloadConfig();
         getManager().getRecipeFile().reloadConfig();
         getManager().reloadRecipes();
     }
