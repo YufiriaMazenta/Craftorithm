@@ -9,10 +9,6 @@ recipeCheck:
   permission: true
 
 messages:
-  #玩家无法合成时的提示标题
-  cannotCraft:
-    title: '&c你暂时无法合成%item%'
-    subtitle: '&4合成条件未满足'
   #使用命令的一些消息
   commands:
     noPerm: '&c你没有使用该命令的权限'
