@@ -8,6 +8,9 @@ recipeCheck:
   points: true
   permission: true
 
+#是否屏蔽原版配方
+removeVanillaRecipe: false
+
 messages:
   #使用命令的一些消息
   commands:

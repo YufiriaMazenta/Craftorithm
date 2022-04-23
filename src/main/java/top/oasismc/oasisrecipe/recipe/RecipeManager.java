@@ -224,9 +224,20 @@ public class RecipeManager {
 
     public void reloadRecipes() {
         Bukkit.resetRecipes();
+        removeVanillaRecipe();
         getKeyList().clear();
         loadRecipesFromConfig();
         loadRecipeFromOtherPlugins();
+    }
+
+    private void removeVanillaRecipe() {
+        if (OasisRecipe.getPlugin().getConfig().getBoolean("removeVanillaRecipe")) {
+            Iterator<Recipe> recipeIterator = Bukkit.recipeIterator();
+            while (recipeIterator.hasNext()) {
+                recipeIterator.next();
+                recipeIterator.remove();
+            }
+        }
     }
 
     private void loadRecipeFromOtherPlugins() {

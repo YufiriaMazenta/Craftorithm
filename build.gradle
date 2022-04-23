@@ -43,8 +43,8 @@ dependencies {
 }
 
 group = 'top.oasismc'
-version = '0.0.5'
-def pluginVersion = version + '.20220423'
+version = '0.0.6'
+def pluginVersion = version + '.20220424'
 archivesBaseName = 'OasisRecipe'
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 

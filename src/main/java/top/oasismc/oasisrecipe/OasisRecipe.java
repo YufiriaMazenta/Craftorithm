@@ -3,7 +3,9 @@ package top.oasismc.oasisrecipe;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
+import top.oasismc.oasisrecipe.bstat.Metrics;
 import top.oasismc.oasisrecipe.cmd.PluginCommand;
+import top.oasismc.oasisrecipe.config.ConfigUpdater;
 import top.oasismc.oasisrecipe.listener.FurnaceSmeltListener;
 import top.oasismc.oasisrecipe.listener.RecipeCheckListener;
 
@@ -19,6 +21,7 @@ public final class OasisRecipe extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        loadBStat();
         saveDefaultConfig();
         loadCommands();
         loadListener();
@@ -29,6 +32,10 @@ public final class OasisRecipe extends JavaPlugin {
     @Override
     public void onDisable() {
         Bukkit.resetRecipes();
+    }
+
+    private void loadBStat() {
+        new Metrics(this, 15016);
     }
 
     private void loadCommands() {
@@ -42,6 +49,7 @@ public final class OasisRecipe extends JavaPlugin {
     }
 
     private void loadConfigs() {
+        ConfigUpdater.getInstance().updateConfig();
         PluginCommand.getCommand().reloadPlugin();
     }
 
