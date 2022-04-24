@@ -67,6 +67,7 @@ template_random_furnace:
     - 'results:result2 0.4'
     - 'STONE 0.1'
   #furnace(熔炉),blasting("高炉"),smoking("烟熏炉")均支持随机配方
+  #随机配方只支持1.18+
   type: 'random_furnace'
   items:
     - 'COMMAND_BLOCK'
