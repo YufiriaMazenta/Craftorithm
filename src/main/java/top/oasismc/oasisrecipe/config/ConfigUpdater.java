@@ -25,7 +25,15 @@ public class ConfigUpdater {
         addConfig("recipeCheck.vault", true);
         addConfig("recipeCheck.points", true);
         addConfig("recipeCheck.permission", true);
-        addConfig("removeVanillaRecipe", false);
+        addConfig("removeVanillaRecipe.crafting_table", false);
+        addConfig("removeVanillaRecipe.furnace", false);
+        addConfig("removeVanillaRecipe.blasting", false);
+        addConfig("removeVanillaRecipe.smoking", false);
+        addConfig("removeVanillaRecipe.campfire", false);
+        addConfig("removeVanillaRecipe.smithing", false);
+        addConfig("removeVanillaRecipe.stoneCutting", false);
+        addConfig("removeVanillaRecipe.merchant", false);
+        addConfig("removeVanillaRecipe.others", false);
     }
 
     public void updateConfig() {

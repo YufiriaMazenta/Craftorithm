@@ -9,7 +9,25 @@ recipeCheck:
   permission: true
 
 #是否屏蔽原版配方
-removeVanillaRecipe: false
+removeVanillaRecipe:
+  #工作台配方
+  crafting_table: false
+  #熔炉配方
+  furnace: false
+  #高炉配方
+  blasting: false
+  #烟熏炉配方
+  smoking: false
+  #营火配方
+  campfire: false
+  #锻造台配方
+  smithing: false
+  #切石机配方
+  stoneCutting: false
+  #村民交易配方
+  merchant: false
+  #复杂配方, 例如织布机等除了以上列出的类型的配方
+  others: false
 
 messages:
   #使用命令的一些消息
