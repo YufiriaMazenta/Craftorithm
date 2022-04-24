@@ -2,6 +2,7 @@ package top.oasismc.oasisrecipe.item.nbt;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
+import top.oasismc.oasisrecipe.OasisRecipe;
 import top.oasismc.oasisrecipe.config.ConfigFile;
 import top.oasismc.oasisrecipe.item.nbt.api.NBTTag;
 import top.oasismc.oasisrecipe.item.nbt.impl.*;
@@ -31,7 +32,8 @@ public class NBTManager {
     private static void regDefTags() {
         regTag(CustomNameTag.getInstance());
         regTag(AttributesTag.getInstance());
-        regTag(CustomModelDataTag.getInstance());
+        if (OasisRecipe.getPlugin().getVanillaVersion() >= 14)
+            regTag(CustomModelDataTag.getInstance());
         regTag(DamageableTag.getInstance());
         regTag(EnchantsTag.getInstance());
         regTag(ItemFlagTag.getInstance());

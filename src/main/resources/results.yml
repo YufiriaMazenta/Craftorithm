@@ -2,16 +2,16 @@
 
 result1:
   #物品的种类
-  material: NETHERITE_SWORD
+  material: DIAMOND_SWORD
   #物品的数量
   amount: 1
-  #物品的自定义模型数值
+  #物品的自定义模型数值, 1.14+才可使用此标签
   customModelData: 10000
   #物品的名称
-  name: '&a下界合金剑'
+  name: '&a钻石剑'
   #物品的lore
   lore:
-    - '&a下界合金剑'
+    - '&a钻石剑'
   #合成出物品所带的属性修饰符,格式为'类型 数值 加点方式 位置',锻造台配方此项无效
   #加点可选有ADD_NUMBER, ADD_SCALE和MULTIPLY_SCALAR_1
   #位置可选HAND(主手),HEAD(头),CHEST(身体),LEGS(腿部),FEET(脚部)和OFF_HAND(副手)
@@ -28,12 +28,12 @@ result1:
   unbreakable: true
 
 result2:
-  material: NETHERITE_SWORD
+  material: DIAMOND_SWORD
   amount: 1
   customModelData: 10000
-  name: '&a下界合金剑'
+  name: '&a钻石剑'
   lore:
-    - '&a下界合金剑'
+    - '&a钻石剑'
   attributes:
     - 'GENERIC_ATTACK_DAMAGE 100 ADD_NUMBER HAND'
   enchants:

@@ -89,17 +89,27 @@ public class RecipeManager {
                 case "smoking":
                 case "campfire":
                 case "blasting":
-                case "random_furnace":
-                case "random_smoking":
-                case "random_blasting":
                     int exp = config.getInt(recipeName + ".exp", 0);
                     int cookTime = config.getInt(recipeName + ".time", 10) * 20;
                     addCookingRecipe(key, result, choices[0], exp, cookTime, config.getString(recipeName + ".type", "furnace"));
                     break;
+                case "random_furnace":
+                case "random_smoking":
+                case "random_blasting":
+                    if (OasisRecipe.getPlugin().getVanillaVersion() < 18)
+                        break;
+                    exp = config.getInt(recipeName + ".exp", 0);
+                    cookTime = config.getInt(recipeName + ".time", 10) * 20;
+                    addCookingRecipe(key, result, choices[0], exp, cookTime, config.getString(recipeName + ".type", "furnace"));
+                    break;
                 case "smithing":
+                    if (OasisRecipe.getPlugin().getVanillaVersion() < 14)
+                        break;
                     addSmithingRecipe(key, result, choices[0], choices[1]);
                     break;
                 case "stoneCutting":
+                    if (OasisRecipe.getPlugin().getVanillaVersion() < 14)
+                        break;
                     addStoneCuttingRecipe(key, result, choices[0]);
                     break;
             }
@@ -108,6 +118,10 @@ public class RecipeManager {
             info(color("&cSome errors occurred while loading the " + recipeName + " recipe, please check your config file"));
             e.printStackTrace();
         }
+    }
+
+    private void loadCookingRecipe(YamlConfiguration config, String recipeName) {
+
     }
 
     public RecipeChoice[] getShapedRecipeItems(List<String> items) {
@@ -173,10 +187,11 @@ public class RecipeManager {
 
     public void addCookingRecipe(String key, ItemStack result, RecipeChoice item, int exp, int cookingTime, String type) {
         NamespacedKey recipeKey = new NamespacedKey(OasisRecipe.getPlugin(), key);
-        CookingRecipe<?> recipe = null;
+        Recipe recipe;
         switch (type) {
             case "furnace":
             case "random_furnace":
+            default:
                 recipe = new FurnaceRecipe(recipeKey, result, item, exp, cookingTime);
                 break;
             case "smoking":

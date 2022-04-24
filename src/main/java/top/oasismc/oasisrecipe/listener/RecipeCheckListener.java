@@ -26,11 +26,8 @@ import static top.oasismc.oasisrecipe.OasisRecipe.color;
 import static top.oasismc.oasisrecipe.OasisRecipe.info;
 import static top.oasismc.oasisrecipe.recipe.RecipeManager.getManager;
 
-
 public class RecipeCheckListener implements Listener {
 
-    private boolean isVaultLoaded;
-    private boolean isPlayerPointsLoaded;
     private Economy economy;
     private PlayerPoints playerPoints;
     private final Map<String, BiFunction<String, CraftItemEvent, Boolean>> checkFuncMap;
@@ -54,7 +51,7 @@ public class RecipeCheckListener implements Listener {
 
 
     private void regDefCheckFunc() {
-        isVaultLoaded = loadVault();
+        boolean isVaultLoaded = loadVault();
         regCheckFunc("spendLvl", (recipeName, event) -> {
             String value = getManager().getRecipeFile().getConfig().getString(recipeName + ".spendLvl", "");
             if (value.equals(""))
@@ -105,7 +102,7 @@ public class RecipeCheckListener implements Listener {
         }
         info(color(OasisRecipe.getPlugin().getConfig().getString(messageKey, messageKey)));
 
-        isPlayerPointsLoaded = loadPlayerPoints();
+        boolean isPlayerPointsLoaded = loadPlayerPoints();
         if (isPlayerPointsLoaded) {
             regCheckFunc("spendPoints", (recipeName, event) -> {
                 String value = getManager().getRecipeFile().getConfig().getString(recipeName + ".spendPoints", "");
@@ -174,22 +171,6 @@ public class RecipeCheckListener implements Listener {
     private boolean loadPlayerPoints() {
         playerPoints = (PlayerPoints) Bukkit.getPluginManager().getPlugin("PlayerPoints");
         return playerPoints != null;
-    }
-
-    private void sendTitle(Player player, String titleKey, String subTitleKey, String recipeName) {
-        String title = color(OasisRecipe.getPlugin().getConfig().getString(titleKey, titleKey));
-        String result = getManager().getRecipeFile().getConfig().getString(recipeName + ".result", "");
-        result = result.substring(result.indexOf(':') + 1);
-        String itemName = (ItemLoader.getResultFile().getConfig().getString(result + ".name", ""));
-        if (itemName.equals("")) {
-            ItemStack item = ItemLoader.getItemFromConfig(result);
-            if (item.getItemMeta() != null)
-                itemName = item.getItemMeta().getLocalizedName();
-        }
-        title = title.replace("%item%", color(itemName));
-
-        String subTitle = color(OasisRecipe.getPlugin().getConfig().getString(subTitleKey, subTitleKey));
-        player.sendTitle(title, subTitle, 10, 70, 20);
     }
 
 }

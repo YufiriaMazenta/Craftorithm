@@ -14,6 +14,7 @@ import static org.bukkit.ChatColor.translateAlternateColorCodes;
 public final class OasisRecipe extends JavaPlugin {
 
     private static OasisRecipe PLUGIN;
+    private int vanillaVersion;
 
     public OasisRecipe() {
         PLUGIN = this;
@@ -22,6 +23,7 @@ public final class OasisRecipe extends JavaPlugin {
     @Override
     public void onEnable() {
         loadBStat();
+        loadVanillaVersion();
         saveDefaultConfig();
         loadCommands();
         loadListener();
@@ -34,6 +36,14 @@ public final class OasisRecipe extends JavaPlugin {
         Bukkit.resetRecipes();
     }
 
+    private void loadVanillaVersion() {
+        String versionStr = Bukkit.getBukkitVersion();
+        int index1 = versionStr.indexOf(".");
+        int index2 = versionStr.indexOf(".", index1 + 1);
+        vanillaVersion = Integer.parseInt(versionStr.substring(index1 + 1, index2));
+        info("&aLoad 1." + vanillaVersion + " Adapter");
+    }
+
     private void loadBStat() {
         new Metrics(this, 15016);
     }
@@ -44,7 +54,8 @@ public final class OasisRecipe extends JavaPlugin {
     }
 
     private void loadListener() {
-        Bukkit.getPluginManager().registerEvents(FurnaceSmeltListener.getListener(), this);
+        if (getVanillaVersion() >= 18)
+            Bukkit.getPluginManager().registerEvents(FurnaceSmeltListener.getListener(), this);
         Bukkit.getPluginManager().registerEvents(RecipeCheckListener.getListener(), this);
     }
 
@@ -74,6 +85,10 @@ public final class OasisRecipe extends JavaPlugin {
 
     public static void info(String text) {
         Bukkit.getConsoleSender().sendMessage(color("&8[&3Oasis&bRecipe&8] &bINFO &8| &r" + text));
+    }
+
+    public int getVanillaVersion() {
+        return vanillaVersion;
     }
 
 }
