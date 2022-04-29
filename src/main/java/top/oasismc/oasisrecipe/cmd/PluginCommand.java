@@ -9,26 +9,23 @@ import org.bukkit.inventory.meta.ItemMeta;
 import top.oasismc.oasisrecipe.config.ConfigFile;
 import top.oasismc.oasisrecipe.item.ItemLoader;
 import top.oasismc.oasisrecipe.item.nbt.NBTManager;
+import top.oasismc.oasisrecipe.recipe.RecipeManager;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 
 import static top.oasismc.oasisrecipe.OasisRecipe.getPlugin;
-import static top.oasismc.oasisrecipe.recipe.RecipeManager.getManager;
 
-public class PluginCommand implements TabExecutor {
+public enum PluginCommand implements TabExecutor {
+
+    INSTANCE;
 
     private final List<String> subCommandList;
     private final Map<String, BiConsumer<CommandSender, String[]>> subCommandMap;
     private final Map<String, List<String>> subCommandArgListMap;
-    private static final PluginCommand command;
 
-    static {
-        command = new PluginCommand();
-    }
-
-    private PluginCommand() {
+    PluginCommand() {
         subCommandList = new ArrayList<>();
         subCommandMap = new ConcurrentHashMap<>();
         subCommandArgListMap = new ConcurrentHashMap<>();
@@ -98,10 +95,6 @@ public class PluginCommand implements TabExecutor {
             return Collections.singletonList("");
     }
 
-    public static PluginCommand getCommand() {
-        return command;
-    }
-
     public List<String> getSubCommandList() {
         return subCommandList;
     }
@@ -132,8 +125,8 @@ public class PluginCommand implements TabExecutor {
         getPlugin().reloadConfig();
         ItemLoader.getItemFile().reloadConfig();
         ItemLoader.getResultFile().reloadConfig();
-        getManager().getRecipeFile().reloadConfig();
-        getManager().reloadRecipes();
+        RecipeManager.INSTANCE.getRecipeFile().reloadConfig();
+        RecipeManager.INSTANCE.reloadRecipes();
     }
 
 }

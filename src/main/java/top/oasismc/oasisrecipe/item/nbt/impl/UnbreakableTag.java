@@ -5,13 +5,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import top.oasismc.oasisrecipe.item.nbt.api.NBTTag;
 
-public class UnbreakableTag implements NBTTag {
+public enum UnbreakableTag implements NBTTag {
 
-    private static final UnbreakableTag TAG = new UnbreakableTag();
+    INSTANCE;
 
     private final String key;
 
-    private UnbreakableTag() { key = "unbreakable"; }
+    UnbreakableTag() { key = "unbreakable"; }
 
     @Override
     public void importTag(String itemName, ItemStack item, YamlConfiguration config) {
@@ -28,10 +28,6 @@ public class UnbreakableTag implements NBTTag {
     @Override
     public String getKey() {
         return key;
-    }
-
-    public static NBTTag getInstance() {
-        return TAG;
     }
 
 }

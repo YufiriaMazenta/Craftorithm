@@ -9,13 +9,13 @@ import top.oasismc.oasisrecipe.item.nbt.api.NBTTag;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemFlagTag implements NBTTag {
+public enum ItemFlagTag implements NBTTag {
 
-    private static final ItemFlagTag TAG = new ItemFlagTag();
+    INSTANCE;
 
     private final String key;
 
-    private ItemFlagTag() { key = "hides"; }
+    ItemFlagTag() { key = "hides"; }
 
     @Override
     public void importTag(String itemName, ItemStack item, YamlConfiguration config) {
@@ -44,10 +44,6 @@ public class ItemFlagTag implements NBTTag {
     @Override
     public String getKey() {
         return key;
-    }
-
-    public static NBTTag getInstance() {
-        return TAG;
     }
 
 }

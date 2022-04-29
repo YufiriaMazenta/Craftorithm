@@ -9,29 +9,27 @@ import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.FurnaceStartSmeltEvent;
 import org.bukkit.inventory.ItemStack;
 import top.oasismc.oasisrecipe.item.ItemLoader;
+import top.oasismc.oasisrecipe.recipe.RecipeManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static top.oasismc.oasisrecipe.recipe.RecipeManager.getManager;
+public enum FurnaceSmeltListener implements Listener {
 
-public class FurnaceSmeltListener implements Listener {
+    INSTANCE;
 
-    private static final FurnaceSmeltListener listener = new FurnaceSmeltListener();
     private final Map<Block, String> furnaceMap;
 
-    private FurnaceSmeltListener() {
+    FurnaceSmeltListener() {
         furnaceMap = new HashMap<>();
     }
 
-    public static FurnaceSmeltListener getListener() {return listener;}
-
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onFurnaceStartSmelt(FurnaceStartSmeltEvent event) {
-        String recipeName = getManager().getRecipeName(event.getRecipe());
-        if (getManager().getRecipeFile().getConfig().getString(recipeName + ".type", "shaped").startsWith("random_")) {
+        String recipeName = RecipeManager.INSTANCE.getRecipeName(event.getRecipe());
+        if (RecipeManager.INSTANCE.getRecipeFile().getConfig().getString(recipeName + ".type", "shaped").startsWith("random_")) {
             furnaceMap.put(event.getBlock(), recipeName);
         }
     }
@@ -39,7 +37,7 @@ public class FurnaceSmeltListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onFurnaceSmelt(FurnaceSmeltEvent event) {
         if (furnaceMap.containsKey(event.getBlock())) {
-            List<String> resultList = getManager().getRecipeFile().getConfig().getStringList(furnaceMap.get(event.getBlock()) + ".result");
+            List<String> resultList = RecipeManager.INSTANCE.getRecipeFile().getConfig().getStringList(furnaceMap.get(event.getBlock()) + ".result");
             List<Map.Entry<ItemStack, Double>> probabilityList = getProbability(resultList);
             double random = Math.random();
             for (Map.Entry<ItemStack, Double> entry : probabilityList) {
