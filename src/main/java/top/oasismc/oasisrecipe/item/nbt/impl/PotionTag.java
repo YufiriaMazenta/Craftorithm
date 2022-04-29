@@ -14,13 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class PotionTag implements NBTTag {
+public enum PotionTag implements NBTTag {
 
-    private static final PotionTag TAG = new PotionTag();
+    INSTANCE;
 
     private final String key;
 
-    private PotionTag() { key = "potion"; }
+    PotionTag() { key = "potion"; }
 
     @Override
     public void importTag(String itemName, ItemStack item, YamlConfiguration config) {
@@ -67,10 +67,6 @@ public class PotionTag implements NBTTag {
             PotionEffect effect = new PotionEffect(effectType, time * 20, level);
             meta.addCustomEffect(effect, true);
         });
-    }
-
-    public static NBTTag getInstance() {
-        return TAG;
     }
 
 }

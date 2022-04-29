@@ -49,19 +49,19 @@ public final class OasisRecipe extends JavaPlugin {
     }
 
     private void loadCommands() {
-        Bukkit.getPluginCommand("oasisrecipe").setExecutor(PluginCommand.getCommand());
-        Bukkit.getPluginCommand("oasisrecipe").setTabCompleter(PluginCommand.getCommand());
+        Bukkit.getPluginCommand("oasisrecipe").setExecutor(PluginCommand.INSTANCE);
+        Bukkit.getPluginCommand("oasisrecipe").setTabCompleter(PluginCommand.INSTANCE);
     }
 
     private void loadListener() {
         if (getVanillaVersion() >= 18)
-            Bukkit.getPluginManager().registerEvents(FurnaceSmeltListener.getListener(), this);
-        Bukkit.getPluginManager().registerEvents(RecipeCheckListener.getListener(), this);
+            Bukkit.getPluginManager().registerEvents(FurnaceSmeltListener.INSTANCE, this);
+        Bukkit.getPluginManager().registerEvents(RecipeCheckListener.INSTANCE, this);
     }
 
     private void loadConfigs() {
-        ConfigUpdater.getInstance().updateConfig();
-        PluginCommand.getCommand().reloadPlugin();
+        ConfigUpdater.INSTANCE.updateConfig();
+        PluginCommand.INSTANCE.reloadPlugin();
     }
 
     public void sendMsg(CommandSender sender, String key) {

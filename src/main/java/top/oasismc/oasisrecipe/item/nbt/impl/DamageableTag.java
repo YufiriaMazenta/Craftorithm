@@ -6,13 +6,13 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import top.oasismc.oasisrecipe.item.nbt.api.NBTTag;
 
-public class DamageableTag implements NBTTag {
+public enum DamageableTag implements NBTTag {
 
-    private static final DamageableTag TAG = new DamageableTag();
+    INSTANCE;
 
     private final String key;
 
-    private DamageableTag() {this.key = "durability"; }
+    DamageableTag() {this.key = "durability"; }
 
     @Override
     public void importTag(String itemName, ItemStack item, YamlConfiguration config) {
@@ -34,7 +34,4 @@ public class DamageableTag implements NBTTag {
     public String getKey() {
         return key;
     }
-
-    public static NBTTag getInstance() { return TAG; }
-
 }

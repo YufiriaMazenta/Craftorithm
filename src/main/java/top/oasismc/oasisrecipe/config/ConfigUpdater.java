@@ -5,13 +5,13 @@ import top.oasismc.oasisrecipe.OasisRecipe;
 
 import java.util.*;
 
-public class ConfigUpdater {
+public enum ConfigUpdater {
 
-    private static final ConfigUpdater UPDATER = new ConfigUpdater();
+    INSTANCE;
 
     private final Map<String, Object> defConfigMap;
 
-    private ConfigUpdater() {
+    ConfigUpdater() {
         defConfigMap = new HashMap<>();
         loadDefConfigs();
     }
@@ -47,7 +47,5 @@ public class ConfigUpdater {
         config.set("version", OasisRecipe.getPlugin().getDescription().getVersion());
         OasisRecipe.getPlugin().saveConfig();
     }
-
-    public static ConfigUpdater getInstance() { return UPDATER; }
 
 }

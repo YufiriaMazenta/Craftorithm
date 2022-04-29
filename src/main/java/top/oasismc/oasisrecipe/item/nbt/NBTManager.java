@@ -30,18 +30,18 @@ public class NBTManager {
     }
 
     private static void regDefTags() {
-        regTag(CustomNameTag.getInstance());
-        regTag(AttributesTag.getInstance());
+        regTag(CustomNameTag.INSTANCE);
+        regTag(AttributesTag.INSTANCE);
         if (OasisRecipe.getPlugin().getVanillaVersion() >= 14)
-            regTag(CustomModelDataTag.getInstance());
-        regTag(DamageableTag.getInstance());
-        regTag(EnchantsTag.getInstance());
-        regTag(ItemFlagTag.getInstance());
-        regTag(LoreTag.getInstance());
-        regTag(PotionColorTag.getInstance());
-        regTag(PotionTag.getInstance());
-        regTag(SkullOwnerTag.getInstance());
-        regTag(UnbreakableTag.getInstance());
+            regTag(CustomModelDataTag.INSTANCE);
+        regTag(DamageableTag.INSTANCE);
+        regTag(EnchantsTag.INSTANCE);
+        regTag(ItemFlagTag.INSTANCE);
+        regTag(LoreTag.INSTANCE);
+        regTag(PotionColorTag.INSTANCE);
+        regTag(PotionTag.INSTANCE);
+        regTag(SkullOwnerTag.INSTANCE);
+        regTag(UnbreakableTag.INSTANCE);
     }
 
     public static void loadNBT2Item(String itemName, ItemStack item, ConfigFile config) {
@@ -62,7 +62,7 @@ public class NBTManager {
         if (item.getItemMeta() != null) {
             Set<String> tagSet = nbtTagMap.keySet();
             if (config.getPath().equals("items.yml"))
-                tagSet.remove(AttributesTag.getInstance().getKey());
+                tagSet.remove(AttributesTag.INSTANCE.getKey());
             for (String tag : tagSet) {
                 nbtTagMap.get(tag).importTag(itemName, item, (YamlConfiguration) config.getConfig());
             }

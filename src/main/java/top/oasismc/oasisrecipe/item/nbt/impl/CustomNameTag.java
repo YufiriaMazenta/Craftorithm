@@ -7,13 +7,13 @@ import top.oasismc.oasisrecipe.item.nbt.api.NBTTag;
 
 import static top.oasismc.oasisrecipe.OasisRecipe.color;
 
-public class CustomNameTag implements NBTTag {
+public enum CustomNameTag implements NBTTag {
 
-    private static final CustomNameTag TAG = new CustomNameTag();
+    INSTANCE;
 
     private final String key;
 
-    private CustomNameTag() {this.key = "name";}
+    CustomNameTag() {this.key = "name";}
 
     @Override
     public void importTag(String itemName, ItemStack item, YamlConfiguration config) {
@@ -35,10 +35,6 @@ public class CustomNameTag implements NBTTag {
     @Override
     public String getKey() {
         return key;
-    }
-
-    public static NBTTag getInstance() {
-        return TAG;
     }
 
 }

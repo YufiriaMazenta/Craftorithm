@@ -7,13 +7,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import top.oasismc.oasisrecipe.item.nbt.api.NBTTag;
 
-public class PotionColorTag implements NBTTag {
+public enum PotionColorTag implements NBTTag {
 
-    private static final PotionColorTag TAG = new PotionColorTag();
+    INSTANCE;
 
     private final String key;
 
-    private PotionColorTag() { key = "potionColor"; }
+    PotionColorTag() { key = "potionColor"; }
 
     @Override
     public void importTag(String itemName, ItemStack item, YamlConfiguration config) {
@@ -39,10 +39,6 @@ public class PotionColorTag implements NBTTag {
     @Override
     public String getKey() {
         return key;
-    }
-
-    public static NBTTag getInstance() {
-        return TAG;
     }
 
 }

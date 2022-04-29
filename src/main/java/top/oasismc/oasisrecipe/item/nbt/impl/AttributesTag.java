@@ -13,9 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class AttributesTag implements NBTTag {
+public enum AttributesTag implements NBTTag {
 
-    private static final AttributesTag TAG = new AttributesTag();
+    INSTANCE;
 
     private final String key;
 
@@ -72,10 +72,6 @@ public class AttributesTag implements NBTTag {
                 );
             } catch (Exception e) { e.printStackTrace(); }
         }
-    }
-
-    public static NBTTag getInstance() {
-        return TAG;
     }
 
 }

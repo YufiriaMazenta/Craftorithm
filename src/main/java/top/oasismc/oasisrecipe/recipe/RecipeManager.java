@@ -17,18 +17,15 @@ import static top.oasismc.oasisrecipe.OasisRecipe.info;
 import static top.oasismc.oasisrecipe.item.ItemLoader.getChoiceFromStr;
 import static top.oasismc.oasisrecipe.item.ItemLoader.getItemFromConfig;
 
-public class RecipeManager {
+public enum RecipeManager {
+
+    INSTANCE;
 
     private final ConfigFile recipeFile;
     private final List<String> keyList;
     private final Map<Class<? extends Recipe>, Consumer<Iterator<? extends Recipe>>> removeRecipeMap;
-    private static final RecipeManager manager;
 
-    static {
-        manager = new RecipeManager();
-    }
-
-    private RecipeManager() {
+    RecipeManager() {
         removeRecipeMap = new HashMap<>();
         loadRemoveRecipeMap();
         recipeFile = new ConfigFile("recipe.yml");
@@ -53,10 +50,6 @@ public class RecipeManager {
 
     public void regRemoveRecipeType(Class<? extends Recipe> key, Consumer<Iterator<? extends Recipe>> action) {
         removeRecipeMap.put(key, action);
-    }
-
-    public static RecipeManager getManager() {
-        return manager;
     }
 
     public void loadRecipesFromConfig() {
@@ -230,7 +223,7 @@ public class RecipeManager {
     }
 
     public String getRecipeName(Recipe recipe) {
-        Set<String> recipes = getManager().getRecipeFile().getConfig().getKeys(false);
+        Set<String> recipes = getRecipeFile().getConfig().getKeys(false);
         NamespacedKey namespacedKey = null;
         if (recipe instanceof ShapedRecipe) {
             namespacedKey = ((ShapedRecipe) recipe).getKey();
@@ -245,7 +238,7 @@ public class RecipeManager {
             return null;
         }
         for (String key : recipes) {
-            String keyName = getManager().getRecipeFile().getConfig().getString(key + ".key", "");
+            String keyName = getRecipeFile().getConfig().getString(key + ".key", "");
             if (namespacedKey.getKey().equals(keyName)) {
                 return key;
             }

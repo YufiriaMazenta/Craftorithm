@@ -9,13 +9,13 @@ import java.util.List;
 
 import static top.oasismc.oasisrecipe.OasisRecipe.color;
 
-public class LoreTag implements NBTTag {
+public enum LoreTag implements NBTTag {
 
-    private static final LoreTag TAG = new LoreTag();
+    INSTANCE;
 
     private final String key;
 
-    private LoreTag() { key = "lore"; }
+    LoreTag() { key = "lore"; }
 
     @Override
     public void importTag(String itemName, ItemStack item, YamlConfiguration config) {
@@ -46,10 +46,6 @@ public class LoreTag implements NBTTag {
             loreList.set(i, coloredLore);
         }
         meta.setLore(loreList);
-    }
-
-    public static NBTTag getInstance() {
-        return TAG;
     }
 
 }

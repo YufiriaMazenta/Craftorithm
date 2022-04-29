@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import top.oasismc.oasisrecipe.OasisRecipe;
 import top.oasismc.oasisrecipe.item.ItemLoader;
+import top.oasismc.oasisrecipe.recipe.RecipeManager;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -24,36 +25,26 @@ import java.util.function.Consumer;
 
 import static top.oasismc.oasisrecipe.OasisRecipe.color;
 import static top.oasismc.oasisrecipe.OasisRecipe.info;
-import static top.oasismc.oasisrecipe.recipe.RecipeManager.getManager;
 
-public class RecipeCheckListener implements Listener {
+public enum RecipeCheckListener implements Listener {
+
+    INSTANCE;
 
     private Economy economy;
     private PlayerPoints playerPoints;
     private final Map<String, BiFunction<String, CraftItemEvent, Boolean>> checkFuncMap;
     private final Map<UUID, Set<Consumer<Player>>> operationListMap;
 
-    private static final RecipeCheckListener listener;
-
-    static {
-        listener = new RecipeCheckListener();
-    }
-
-    private RecipeCheckListener() {
+    RecipeCheckListener() {
         checkFuncMap = new ConcurrentHashMap<>();
         operationListMap = new ConcurrentHashMap<>();
         regDefCheckFunc();
     }
 
-    public static RecipeCheckListener getListener() {
-        return listener;
-    }
-
-
     private void regDefCheckFunc() {
         boolean isVaultLoaded = loadVault();
         regCheckFunc("spendLvl", (recipeName, event) -> {
-            String value = getManager().getRecipeFile().getConfig().getString(recipeName + ".spendLvl", "");
+            String value = RecipeManager.INSTANCE.getRecipeFile().getConfig().getString(recipeName + ".spendLvl", "");
             if (value.equals(""))
                 return true;
             int needLvl;
@@ -71,7 +62,7 @@ public class RecipeCheckListener implements Listener {
         });
 
         regCheckFunc("perm", (recipeName, event) -> {
-            String value = getManager().getRecipeFile().getConfig().getString(recipeName + ".perm", "");
+            String value = RecipeManager.INSTANCE.getRecipeFile().getConfig().getString(recipeName + ".perm", "");
             if (value.equals(""))
                 return true;
             return event.getWhoClicked().hasPermission(value);
@@ -80,7 +71,7 @@ public class RecipeCheckListener implements Listener {
         String messageKey;
         if (isVaultLoaded) {
             regCheckFunc("spendMoney", (recipeName, event) -> {
-                String value = getManager().getRecipeFile().getConfig().getString(recipeName + ".spendMoney", "");
+                String value = RecipeManager.INSTANCE.getRecipeFile().getConfig().getString(recipeName + ".spendMoney", "");
                 if (value.equals(""))
                     return true;
                 double needMoney;
@@ -105,7 +96,7 @@ public class RecipeCheckListener implements Listener {
         boolean isPlayerPointsLoaded = loadPlayerPoints();
         if (isPlayerPointsLoaded) {
             regCheckFunc("spendPoints", (recipeName, event) -> {
-                String value = getManager().getRecipeFile().getConfig().getString(recipeName + ".spendPoints", "");
+                String value = RecipeManager.INSTANCE.getRecipeFile().getConfig().getString(recipeName + ".spendPoints", "");
                 if (value.equals(""))
                     return true;
                 int needPoints;
@@ -137,7 +128,7 @@ public class RecipeCheckListener implements Listener {
         if (!(event.getWhoClicked() instanceof Player)) {
             return;
         }//检查点击者是否是玩家
-        String recipeName = getManager().getRecipeName(event.getRecipe());
+        String recipeName = RecipeManager.INSTANCE.getRecipeName(event.getRecipe());
         UUID uuid = event.getWhoClicked().getUniqueId();
         operationListMap.put(uuid, new HashSet<>());
         for (String key : checkFuncMap.keySet()) {

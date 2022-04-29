@@ -5,13 +5,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import top.oasismc.oasisrecipe.item.nbt.api.NBTTag;
 
-public class CustomModelDataTag implements NBTTag {
+public enum CustomModelDataTag implements NBTTag {
 
-    private static final CustomModelDataTag TAG = new CustomModelDataTag();
+    INSTANCE;
 
     private final String key;
 
-    private CustomModelDataTag() { key = "customModelData"; }
+    CustomModelDataTag() { key = "customModelData"; }
 
     @Override
     public void importTag(String itemName, ItemStack item, YamlConfiguration config) {
@@ -31,10 +31,6 @@ public class CustomModelDataTag implements NBTTag {
     @Override
     public String getKey() {
         return key;
-    }
-
-    public static NBTTag getInstance() {
-        return TAG;
     }
 
 }

@@ -11,13 +11,13 @@ import top.oasismc.oasisrecipe.item.nbt.api.NBTTag;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnchantsTag implements NBTTag {
+public enum EnchantsTag implements NBTTag {
 
-    private static final EnchantsTag TAG = new EnchantsTag();
+    INSTANCE;
 
     private final String key;
 
-    private EnchantsTag() { key = "enchants"; }
+    EnchantsTag() { key = "enchants"; }
 
     @Override
     public void importTag(String itemName, ItemStack item, YamlConfiguration config) {
@@ -71,10 +71,6 @@ public class EnchantsTag implements NBTTag {
                 meta.addEnchant(enchantType, enchantLevel, true);
             }
         }
-    }
-
-    public static NBTTag getInstance() {
-        return TAG;
     }
 
 }

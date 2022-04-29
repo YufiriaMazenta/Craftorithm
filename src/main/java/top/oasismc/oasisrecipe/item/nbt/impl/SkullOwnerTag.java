@@ -8,13 +8,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import top.oasismc.oasisrecipe.item.nbt.api.NBTTag;
 
-public class SkullOwnerTag implements NBTTag {
+public enum SkullOwnerTag implements NBTTag {
 
-    private static final SkullOwnerTag TAG = new SkullOwnerTag();
+    INSTANCE;
 
     private final String key;
 
-    private SkullOwnerTag() { key = "skullOwner"; }
+    SkullOwnerTag() { key = "skullOwner"; }
 
     @Override
     public void importTag(String itemName, ItemStack item, YamlConfiguration config) {
@@ -41,10 +41,6 @@ public class SkullOwnerTag implements NBTTag {
     @Override
     public String getKey() {
         return key;
-    }
-
-    public static NBTTag getInstance() {
-        return TAG;
     }
 
 }
