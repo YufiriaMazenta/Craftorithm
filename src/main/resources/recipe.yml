@@ -1,7 +1,7 @@
 template_shaped:
   #合成表的命名空间ID,只能使用英文小写字母,".", "_", "/"和数字，为使用/recipe命令解锁配方时的ID
   key: 'oasis.recipe.template'
-  #合成表的合成物品，使用results:开头可以调用results.yml文件定义的物品
+  #合成表的合成物品，使用results:开头可以调用results.yml文件定义的物品, 使用ItemsAdder:开头可以调用ItemsAdder物品
   result: 'results:result1'
   #合成表合成物品的数量,锻造台配方此项无效
   #合成表的类型,shaped为有序,shapeless为无序,furnace为熔炉,smithing为锻造台
@@ -14,7 +14,7 @@ template_shaped:
   spendPoints: 10
   #检测玩家是否拥有合成的权限
   perm: 'oasis.recipe.template'
-  #合成表的合成物品，使用items:开头可以调用item.yml文件定义的物品，
+  #合成表的合成物品，使用items:开头可以调用item.yml文件定义的物品, 使用ItemsAdder:开头可以调用ItemsAdder物品
   items:
     - 'items:item1 items:item1 items:item1'
     - 'AIR AIR AIR'
