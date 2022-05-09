@@ -9,10 +9,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import top.oasismc.oasisrecipe.OasisRecipe;
-import top.oasismc.oasisrecipe.item.ItemLoader;
 import top.oasismc.oasisrecipe.recipe.RecipeManager;
 
 import java.util.HashSet;
