@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import top.oasismc.oasisrecipe.bstat.Metrics;
 import top.oasismc.oasisrecipe.cmd.PluginCommand;
 import top.oasismc.oasisrecipe.config.ConfigUpdater;
+import top.oasismc.oasisrecipe.item.ItemLoader;
 import top.oasismc.oasisrecipe.listener.FurnaceSmeltListener;
 import top.oasismc.oasisrecipe.listener.RecipeCheckListener;
 
@@ -25,9 +26,10 @@ public final class OasisRecipe extends JavaPlugin {
         loadBStat();
         loadVanillaVersion();
         saveDefaultConfig();
-        loadCommands();
-        loadListener();
         loadConfigs();
+        loadCommands();
+        hookItemsAdder();
+        loadListener();
         info(getConfig().getString("messages.load.finish", "messages.load.finish"));
     }
 
@@ -57,11 +59,23 @@ public final class OasisRecipe extends JavaPlugin {
         if (getVanillaVersion() >= 18)
             Bukkit.getPluginManager().registerEvents(FurnaceSmeltListener.INSTANCE, this);
         Bukkit.getPluginManager().registerEvents(RecipeCheckListener.INSTANCE, this);
+        if (Bukkit.getPluginManager().getPlugin("ItemsAdder") != null)
+            Bukkit.getPluginManager().registerEvents(ItemLoader.INSTANCE, this);
     }
 
     private void loadConfigs() {
         ConfigUpdater.INSTANCE.updateConfig();
         PluginCommand.INSTANCE.reloadPlugin();
+    }
+
+    private void hookItemsAdder() {
+        String messageKey;
+        if (Bukkit.getPluginManager().getPlugin("ItemsAdder") != null) {
+            messageKey = "messages.load.itemsAdderSuccess";
+        } else {
+            messageKey = "messages.load.itemsAdderFailed";
+        }
+        OasisRecipe.info(color(OasisRecipe.getPlugin().getConfig().getString(messageKey, messageKey)));
     }
 
     public void sendMsg(CommandSender sender, String key) {

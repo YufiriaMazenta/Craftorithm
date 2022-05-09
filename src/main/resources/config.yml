@@ -47,3 +47,5 @@ messages:
     vaultFailed: '&c未发现经济插件,金钱检查将不会生效'
     pointsSuccess: '&a发现点券插件,已挂钩'
     pointsFailed: '&c未发现点券插件,点券检查将不会生效'
+    itemsAdderSuccess: '&a发现ItemsAdder,已挂钩'
+    itemsAdderFailed: '&c未发现ItemsAdder'
