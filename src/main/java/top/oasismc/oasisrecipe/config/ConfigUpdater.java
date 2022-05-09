@@ -3,7 +3,9 @@ package top.oasismc.oasisrecipe.config;
 import org.bukkit.configuration.file.YamlConfiguration;
 import top.oasismc.oasisrecipe.OasisRecipe;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public enum ConfigUpdater {
 
@@ -35,7 +37,7 @@ public enum ConfigUpdater {
         addConfig("removeVanillaRecipe.merchant", false);
         addConfig("removeVanillaRecipe.others", false);
         addConfig("messages.load.itemsAdderSuccess", "&a发现ItemsAdder,已挂钩");
-        addConfig("messages.load.itemsAdderFailed", "&c未发现ItemsAdder,ItemsAdder标签解析将不会生效");
+        addConfig("messages.load.itemsAdderFailed", "&c未发现ItemsAdder");
     }
 
     public void updateConfig() {
