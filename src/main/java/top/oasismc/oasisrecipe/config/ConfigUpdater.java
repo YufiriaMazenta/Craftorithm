@@ -34,6 +34,8 @@ public enum ConfigUpdater {
         addConfig("removeVanillaRecipe.stoneCutting", false);
         addConfig("removeVanillaRecipe.merchant", false);
         addConfig("removeVanillaRecipe.others", false);
+        addConfig("messages.load.itemsAdderSuccess", "&a发现ItemsAdder,已挂钩");
+        addConfig("messages.load.itemsAdderFailed", "&c未发现ItemsAdder,ItemsAdder标签解析将不会生效");
     }
 
     public void updateConfig() {
