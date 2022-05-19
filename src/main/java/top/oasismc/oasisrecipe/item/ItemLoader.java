@@ -2,21 +2,52 @@ package top.oasismc.oasisrecipe.item;
 
 import dev.lone.itemsadder.api.CustomStack;
 import dev.lone.itemsadder.api.Events.ItemsAdderLoadDataEvent;
+import dev.lone.itemsadder.api.ItemsAdder;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
+import top.oasismc.oasisrecipe.OasisRecipe;
 import top.oasismc.oasisrecipe.config.ConfigFile;
 import top.oasismc.oasisrecipe.item.nbt.NBTManager;
+import top.oasismc.oasisrecipe.recipe.RecipeManager;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public enum ItemLoader implements Listener {
 
     INSTANCE;
 
+    private Map<String, ItemStack> itemsAdderItemMap;
+
+    ItemLoader() {
+        itemsAdderItemMap = new ConcurrentHashMap<>();
+    }
+
     @EventHandler
     public void onItemsAdderLoad(ItemsAdderLoadDataEvent event) {
         itemsAdderLoaded = true;
+        Bukkit.getScheduler().callSyncMethod(OasisRecipe.getPlugin(), () -> {
+            RecipeManager.INSTANCE.reloadRecipes();
+            return null;
+        });
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onFurnaceSmelt(FurnaceSmeltEvent event) {
+        if (!itemsAdderLoaded)
+            return;
+        ItemStack sourceItem = event.getSource();
+
+        if (CustomStack.byItemStack(sourceItem) != null) {
+            String key = CustomStack.byItemStack(sourceItem).getId();
+            event.setResult(itemsAdderItemMap.get(key));
+        }
     }
 
     private static boolean itemsAdderLoaded = false;
@@ -32,6 +63,19 @@ public enum ItemLoader implements Listener {
     }
 
     public static ItemStack getItemFromConfig(String itemName) {
+        //ItemsAdder兼容
+        if (itemName.startsWith("ItemsAdder:")) {
+            if (!itemsAdderLoaded)
+                throw new IllegalArgumentException("ItemsAdder plugin not loading");
+            itemName = itemName.substring(itemName.indexOf(":") + 1);
+            CustomStack stack = CustomStack.getInstance(itemName);
+            if (stack != null) {
+                return stack.getItemStack();
+            } else {
+                throw new IllegalArgumentException(itemName + " is not a valid ItemsAdder item");
+            }
+        }
+
         if (!itemName.startsWith("items:") && !itemName.startsWith("results:")) {
             Material material = Material.matchMaterial(itemName);
             if (material == null)
@@ -59,21 +103,9 @@ public enum ItemLoader implements Listener {
     }
 
     public static RecipeChoice getChoiceFromStr(String str) {
-        if (str.startsWith("items:") || str.startsWith("results:")) {
+        if (str.startsWith("items:") || str.startsWith("results:") || str.startsWith("ItemsAdder:")) {
             ItemStack item = getItemFromConfig(str);
             return new RecipeChoice.ExactChoice(item);
-        }
-
-        if (str.startsWith("ItemsAdder:")) {
-            if (!itemsAdderLoaded)
-                throw new IllegalArgumentException("ItemsAdder plugin not loading");
-            str = str.substring(str.indexOf(":") + 1);
-            CustomStack stack = CustomStack.getInstance(str);
-            if (stack != null) {
-                return new RecipeChoice.ExactChoice(stack.getItemStack());
-            } else {
-                throw new IllegalArgumentException(str + " is not a valid ItemsAdder item");
-            }
         }
 
         Material material = Material.matchMaterial(str);
@@ -81,6 +113,18 @@ public enum ItemLoader implements Listener {
             return new RecipeChoice.MaterialChoice(Material.BEDROCK);
         else
             return new RecipeChoice.MaterialChoice(material);
+    }
+
+    public boolean isItemsAdderLoaded() {
+        return itemsAdderLoaded;
+    }
+
+    public Map<String, ItemStack> getItemsAdderItemMap() {
+        return itemsAdderItemMap;
+    }
+
+    public void setItemsAdderItemMap(Map<String, ItemStack> itemsAdderItemMap) {
+        this.itemsAdderItemMap = itemsAdderItemMap;
     }
 
 }

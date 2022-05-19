@@ -1,11 +1,11 @@
 package top.oasismc.oasisrecipe.cmd;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import top.oasismc.oasisrecipe.config.ConfigFile;
 import top.oasismc.oasisrecipe.item.ItemLoader;
 import top.oasismc.oasisrecipe.item.nbt.NBTManager;
@@ -105,7 +105,6 @@ public enum PluginCommand implements TabExecutor {
 
     public void importItem(Player player, String[] args) {
         ItemStack item = player.getInventory().getItemInMainHand();
-        ItemMeta meta = item.getItemMeta();
         ConfigFile configFile;
         switch (args[1]) {
             case "RESULTS":
@@ -126,7 +125,13 @@ public enum PluginCommand implements TabExecutor {
         ItemLoader.getItemFile().reloadConfig();
         ItemLoader.getResultFile().reloadConfig();
         RecipeManager.INSTANCE.getRecipeFile().reloadConfig();
-        RecipeManager.INSTANCE.reloadRecipes();
+        if (Bukkit.getPluginManager().getPlugin("ItemsAdder") == null) {
+            RecipeManager.INSTANCE.reloadRecipes();
+        } else {
+            if (ItemLoader.INSTANCE.isItemsAdderLoaded()) {
+                RecipeManager.INSTANCE.reloadRecipes();
+            }
+        }
     }
 
 }

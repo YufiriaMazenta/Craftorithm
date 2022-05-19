@@ -8,6 +8,7 @@ import org.bukkit.plugin.Plugin;
 import top.oasismc.oasisrecipe.OasisRecipe;
 import top.oasismc.oasisrecipe.api.RecipeRegistrar;
 import top.oasismc.oasisrecipe.config.ConfigFile;
+import top.oasismc.oasisrecipe.item.ItemLoader;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -30,7 +31,6 @@ public enum RecipeManager {
         loadRemoveRecipeMap();
         recipeFile = new ConfigFile("recipe.yml");
         keyList = new ArrayList<>();
-        loadRecipesFromConfig();
     }
 
     private void loadRemoveRecipeMap() {
@@ -62,14 +62,14 @@ public enum RecipeManager {
     public void addRecipe(String recipeName, YamlConfiguration config) {
         try {
             String key = Objects.requireNonNull(config.getString(recipeName + ".key")).toLowerCase();
-            List<String> choiceList = config.getStringList(recipeName + ".items");
-            RecipeChoice[] choices = new RecipeChoice[choiceList.size()];
+            List<String> choiceStrList = config.getStringList(recipeName + ".items");
+            RecipeChoice[] choices = new RecipeChoice[choiceStrList.size()];
             switch (config.getString(recipeName + ".type", "shaped")) {
                 case "shaped":
-                    choices = getShapedRecipeItems(choiceList);
+                    choices = getShapedRecipeItems(choiceStrList);
                     break;
                 case "shapeless":
-                    choices = getShapelessRecipeItems(choiceList);
+                    choices = getShapelessRecipeItems(choiceStrList);
                     break;
                 case "furnace":
                 case "smoking":
@@ -79,11 +79,11 @@ public enum RecipeManager {
                 case "random_smoking":
                 case "random_blasting":
                 case "stoneCutting":
-                    choices[0] = getChoiceFromStr(choiceList.get(0));
+                    choices[0] = getChoiceFromStr(choiceStrList.get(0));
                     break;
                 case "smithing":
-                    choices[0] = getChoiceFromStr(choiceList.get(0));
-                    choices[1] = getChoiceFromStr(choiceList.get(1));
+                    choices[0] = getChoiceFromStr(choiceStrList.get(0));
+                    choices[1] = getChoiceFromStr(choiceStrList.get(1));
                     break;
             }//获取配方的合成物品
 
@@ -105,6 +105,11 @@ public enum RecipeManager {
                 case "smoking":
                 case "campfire":
                 case "blasting":
+                    if (choiceStrList.get(0).startsWith("ItemsAdder:")) {
+                        String itemsAdderId = choiceStrList.get(0);
+                        itemsAdderId = itemsAdderId.substring(itemsAdderId.indexOf(":") + 1);
+                        ItemLoader.INSTANCE.getItemsAdderItemMap().put(itemsAdderId, result);
+                    }
                     int exp = config.getInt(recipeName + ".exp", 0);
                     int cookTime = config.getInt(recipeName + ".time", 10) * 20;
                     addCookingRecipe(key, result, choices[0], exp, cookTime, config.getString(recipeName + ".type", "furnace"));
