@@ -40,6 +40,8 @@ messages:
     missingParam: '&c缺少参数，请检查输入是否正确'
     playerOnly: '&c此命令只能玩家使用!'
     import: '&a导入成功'
+    notExist: '&c配方不存在'
+    removed: '&a配方已移除'
   #插件加载过程中的一些消息
   load:
     finish: '&a插件加载完毕'

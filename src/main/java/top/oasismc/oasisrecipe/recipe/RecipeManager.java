@@ -7,6 +7,7 @@ import org.bukkit.inventory.*;
 import org.bukkit.plugin.Plugin;
 import top.oasismc.oasisrecipe.OasisRecipe;
 import top.oasismc.oasisrecipe.api.RecipeRegistrar;
+import top.oasismc.oasisrecipe.cmd.subcmd.RemoveCommand;
 import top.oasismc.oasisrecipe.config.ConfigFile;
 import top.oasismc.oasisrecipe.item.ItemLoader;
 
@@ -24,32 +25,10 @@ public enum RecipeManager {
 
     private final ConfigFile recipeFile;
     private final List<String> keyList;
-    private final Map<Class<? extends Recipe>, Consumer<Iterator<? extends Recipe>>> removeRecipeMap;
 
     RecipeManager() {
-        removeRecipeMap = new HashMap<>();
-        loadRemoveRecipeMap();
         recipeFile = new ConfigFile("recipe.yml");
         keyList = new ArrayList<>();
-    }
-
-    private void loadRemoveRecipeMap() {
-        Consumer<Iterator<? extends Recipe>> craftingTableAction = recipeIterator -> removeRecipe("removeVanillaRecipe.crafting_table", recipeIterator);
-        regRemoveRecipeType(ShapedRecipe.class, craftingTableAction);
-        regRemoveRecipeType(ShapelessRecipe.class, craftingTableAction);
-        regRemoveRecipeType(FurnaceRecipe.class, recipeIterator -> removeRecipe("removeVanillaRecipe.furnace", recipeIterator));
-        regRemoveRecipeType(MerchantRecipe.class, recipeIterator -> removeRecipe("removeVanillaRecipe.merchant", recipeIterator));
-        if (OasisRecipe.getPlugin().getVanillaVersion() >= 14) {
-            regRemoveRecipeType(BlastingRecipe.class, recipeIterator -> removeRecipe("removeVanillaRecipe.blasting", recipeIterator));
-            regRemoveRecipeType(CampfireRecipe.class, recipeIterator -> removeRecipe("removeVanillaRecipe.campfire", recipeIterator));
-            regRemoveRecipeType(SmokingRecipe.class, recipeIterator -> removeRecipe("removeVanillaRecipe.smoking", recipeIterator));
-            regRemoveRecipeType(StonecuttingRecipe.class, recipeIterator -> removeRecipe("removeVanillaRecipe.stoneCutting", recipeIterator));
-            regRemoveRecipeType(SmithingRecipe.class, recipeIterator -> removeRecipe("removeVanillaRecipe.smithing", recipeIterator));
-        }
-    }
-
-    public void regRemoveRecipeType(Class<? extends Recipe> key, Consumer<Iterator<? extends Recipe>> action) {
-        removeRecipeMap.put(key, action);
     }
 
     public void loadRecipesFromConfig() {
@@ -263,19 +242,10 @@ public enum RecipeManager {
         loadRecipeFromOtherPlugins();
     }
 
-
-    private void removeRecipe(String key, Iterator<? extends Recipe> recipeIterator) {
-        if (OasisRecipe.getPlugin().getConfig().getBoolean(key))
-            recipeIterator.remove();
-    }
-
     private void removeVanillaRecipes() {
-        Iterator<? extends Recipe> recipeIterator = Bukkit.recipeIterator();
-        while (recipeIterator.hasNext()) {
-            Recipe recipe = recipeIterator.next();
-            removeRecipeMap.getOrDefault(recipe.getClass(), iterator -> {
-                removeRecipe("removeVanillaRecipe.others", iterator);
-            }).accept(recipeIterator);
+        List<String> removedRecipes = RemoveCommand.getRemovedRecipeConfig().getConfig().getStringList("recipes");
+        for (String keyStr : removedRecipes) {
+            ((RemoveCommand) RemoveCommand.INSTANCE).removeRecipe(keyStr);
         }
     }
 

@@ -2,7 +2,6 @@ package top.oasismc.oasisrecipe.item;
 
 import dev.lone.itemsadder.api.CustomStack;
 import dev.lone.itemsadder.api.Events.ItemsAdderLoadDataEvent;
-import dev.lone.itemsadder.api.ItemsAdder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;

@@ -38,6 +38,8 @@ public enum ConfigUpdater {
         addConfig("removeVanillaRecipe.others", false);
         addConfig("messages.load.itemsAdderSuccess", "&a发现ItemsAdder,已挂钩");
         addConfig("messages.load.itemsAdderFailed", "&c未发现ItemsAdder");
+        addConfig("messages.commands.notExist", "&c配方不存在");
+        addConfig("messages.commands.removed", "&a配方已移除");
     }
 
     public void updateConfig() {
