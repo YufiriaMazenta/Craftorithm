@@ -28,6 +28,7 @@ public final class ImportCommand extends AbstractSubCommand {
                 ItemStack item = ((Player) sender).getInventory().getItemInMainHand();
                 ConfigFile configFile = ItemLoader.getResultFile();
                 NBTManager.importItem(args.get(0), item, configFile);
+                OasisRecipe.getPlugin().sendMsg(sender, "commands.import");
                 return true;
             }
         });
@@ -41,6 +42,7 @@ public final class ImportCommand extends AbstractSubCommand {
                 ItemStack item = ((Player) sender).getInventory().getItemInMainHand();
                 ConfigFile configFile = ItemLoader.getItemFile();
                 NBTManager.importItem(args.get(0), item, configFile);
+                OasisRecipe.getPlugin().sendMsg(sender, "commands.import");
                 return true;
             }
         });

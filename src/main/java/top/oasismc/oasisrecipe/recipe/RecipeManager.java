@@ -12,7 +12,6 @@ import top.oasismc.oasisrecipe.config.ConfigFile;
 import top.oasismc.oasisrecipe.item.ItemLoader;
 
 import java.util.*;
-import java.util.function.Consumer;
 
 import static top.oasismc.oasisrecipe.OasisRecipe.color;
 import static top.oasismc.oasisrecipe.OasisRecipe.info;
@@ -236,10 +235,10 @@ public enum RecipeManager {
 
     public void reloadRecipes() {
         Bukkit.resetRecipes();
-        removeVanillaRecipes();
         getKeyList().clear();
         loadRecipesFromConfig();
         loadRecipeFromOtherPlugins();
+        removeVanillaRecipes();
     }
 
     private void removeVanillaRecipes() {
@@ -247,6 +246,7 @@ public enum RecipeManager {
         for (String keyStr : removedRecipes) {
             ((RemoveCommand) RemoveCommand.INSTANCE).removeRecipe(keyStr);
         }
+        ((RemoveCommand) RemoveCommand.INSTANCE).reloadRecipeSet();
     }
 
     private void loadRecipeFromOtherPlugins() {
