@@ -243,10 +243,7 @@ public enum RecipeManager {
 
     private void removeVanillaRecipes() {
         List<String> removedRecipes = RemoveCommand.getRemovedRecipeConfig().getConfig().getStringList("recipes");
-        for (String keyStr : removedRecipes) {
-            ((RemoveCommand) RemoveCommand.INSTANCE).removeRecipe(keyStr);
-        }
-        ((RemoveCommand) RemoveCommand.INSTANCE).reloadRecipeSet();
+        ((RemoveCommand) RemoveCommand.INSTANCE).removeRecipes(removedRecipes);
     }
 
     private void loadRecipeFromOtherPlugins() {
