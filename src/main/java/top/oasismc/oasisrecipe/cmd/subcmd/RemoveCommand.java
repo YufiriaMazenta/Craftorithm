@@ -76,12 +76,9 @@ public class RemoveCommand extends AbstractSubCommand {
 
     public boolean removeRecipe(String keyStr) {
         NamespacedKey key = NamespacedKey.fromString(keyStr);
-        Recipe recipe = recipeMap.get(key);
-        if (recipe == null) {
-            OasisRecipe.getPlugin().sendMsg(Bukkit.getConsoleSender(), "commands.notExist");
-            return false;
-        }
         Iterator<Recipe> recipeIterator = Bukkit.recipeIterator();
+        if (key == null)
+            return false;
         while (recipeIterator.hasNext()) {
             Recipe recipe1 = recipeIterator.next();
             NamespacedKey key1 = getRecipeKey(recipe1);
