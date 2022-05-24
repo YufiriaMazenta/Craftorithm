@@ -9,6 +9,7 @@ commands:
   oasisrecipe:
     aliases:
       - or
+    permission: oasis.command.oasisrecipe
 permissions:
   oasis.command.oasisrecipe:
     default: op

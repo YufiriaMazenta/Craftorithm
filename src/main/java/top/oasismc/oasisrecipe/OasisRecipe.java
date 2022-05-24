@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import top.oasismc.oasisrecipe.bstat.Metrics;
 import top.oasismc.oasisrecipe.cmd.PluginCommand;
+import top.oasismc.oasisrecipe.cmd.subcmd.ReloadCommand;
 import top.oasismc.oasisrecipe.config.ConfigUpdater;
 import top.oasismc.oasisrecipe.item.ItemLoader;
 import top.oasismc.oasisrecipe.listener.FurnaceSmeltListener;
@@ -65,7 +66,7 @@ public final class OasisRecipe extends JavaPlugin {
 
     private void loadConfigs() {
         ConfigUpdater.INSTANCE.updateConfig();
-        PluginCommand.INSTANCE.reloadPlugin();
+        ReloadCommand.reloadPlugin();
     }
 
     private void hookItemsAdder() {
