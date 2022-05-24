@@ -35,7 +35,6 @@ public class RemoveCommand extends AbstractSubCommand {
         }
         if (removeRecipe(args.get(0))) {
             OasisRecipe.getPlugin().sendMsg(sender, "commands.removed");
-            reloadRecipeSet();
         }
         else
             OasisRecipe.getPlugin().sendMsg(sender, "commands.notExist");
@@ -74,6 +73,36 @@ public class RemoveCommand extends AbstractSubCommand {
         return removedRecipeConfig;
     }
 
+    public void removeRecipes(List<String> keyStrList) {
+        List<NamespacedKey> keyList = new ArrayList<>();
+        for (String str : keyStrList) {
+            NamespacedKey key = NamespacedKey.fromString(str);
+            if (key != null)
+                keyList.add(key);
+        }
+        if (keyList.size() < 1)
+            return;
+        Iterator<Recipe> recipeIterator = Bukkit.recipeIterator();
+        while (recipeIterator.hasNext()) {
+            Recipe recipe1 = recipeIterator.next();
+            NamespacedKey key1 = getRecipeKey(recipe1);
+            if (key1 == null)
+                continue;
+            if (keyList.contains(key1)) {
+                recipeIterator.remove();
+                List<String> removedList = removedRecipeConfig.getConfig().getStringList("recipes");
+                if (!removedList.contains(key1.toString()))
+                    removedList.add(key1.toString());
+                removedRecipeConfig.getConfig().set("recipes", removedList);
+                keyList.remove(key1);
+                if (keyList.size() <= 0)
+                    break;
+            }
+        }
+        reloadRecipeSet();
+        removedRecipeConfig.saveConfig();
+    }
+
     public boolean removeRecipe(String keyStr) {
         NamespacedKey key = NamespacedKey.fromString(keyStr);
         Iterator<Recipe> recipeIterator = Bukkit.recipeIterator();
@@ -89,6 +118,7 @@ public class RemoveCommand extends AbstractSubCommand {
                     removedList.add(keyStr);
                 removedRecipeConfig.getConfig().set("recipes", removedList);
                 removedRecipeConfig.saveConfig();
+                reloadRecipeSet();
                 return true;
             }
         }
