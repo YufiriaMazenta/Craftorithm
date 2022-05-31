@@ -22,7 +22,7 @@ public enum LoreTag implements NBTTag {
         ItemMeta meta = item.getItemMeta();
         List<String> lore = meta.getLore();
         if (lore != null)
-            config.set(itemName + ".lore", lore);
+            config.set(itemName + "." + key, lore);
     }
 
     @Override
@@ -38,7 +38,7 @@ public enum LoreTag implements NBTTag {
     }
 
     private void addLore2Meta(ItemMeta meta, String itemName, YamlConfiguration config) {
-        List<String> loreList = config.getStringList(itemName + ".lore");
+        List<String> loreList = config.getStringList(itemName + "." + key);
         if (loreList.size() == 0)
             return;
         for (int i = 0; i < loreList.size(); i++) {

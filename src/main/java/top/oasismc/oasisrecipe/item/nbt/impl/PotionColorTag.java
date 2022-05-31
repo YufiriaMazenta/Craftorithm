@@ -21,7 +21,7 @@ public enum PotionColorTag implements NBTTag {
         if (meta instanceof PotionMeta) {
             Color color = ((PotionMeta) meta).getColor();
             if (color != null) {
-                config.set(itemName + ".potionColor", color.asRGB());
+                config.set(itemName + "." + key, color.asRGB());
             }
         }
     }
@@ -30,7 +30,7 @@ public enum PotionColorTag implements NBTTag {
     public void loadTag(String itemName, ItemStack item, YamlConfiguration config) {
         ItemMeta meta = item.getItemMeta();
         if (meta instanceof PotionMeta) {
-            int color = config.getInt(itemName + ".potionColor", 0x000000);
+            int color = config.getInt(itemName + "." + key, 0x000000);
             ((PotionMeta) meta).setColor(Color.fromRGB(color));
         }
         item.setItemMeta(meta);

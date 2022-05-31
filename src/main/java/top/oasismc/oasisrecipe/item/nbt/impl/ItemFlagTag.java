@@ -25,13 +25,13 @@ public enum ItemFlagTag implements NBTTag {
             flags.add(flag.name().substring(5));
         }
         if (flags.size() != 0)
-            config.set(itemName + ".hides", flags);
+            config.set(itemName + "." + key, flags);
     }
 
     @Override
     public void loadTag(String itemName, ItemStack item, YamlConfiguration config) {
         ItemMeta meta = item.getItemMeta();
-        for (String flag : config.getStringList(itemName + ".hides")) {
+        for (String flag : config.getStringList(itemName + "." + key)) {
             try {
                 meta.addItemFlags(ItemFlag.valueOf("HIDE_" + flag));
             } catch (IllegalArgumentException e) {

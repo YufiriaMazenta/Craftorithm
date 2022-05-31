@@ -18,14 +18,14 @@ public enum DamageableTag implements NBTTag {
     public void importTag(String itemName, ItemStack item, YamlConfiguration config) {
         ItemMeta meta = item.getItemMeta();
         if (meta instanceof Damageable)
-            config.set(itemName + ".durability", ((Damageable) meta).getDamage());
+            config.set(itemName + "." + key, ((Damageable) meta).getDamage());
     }
 
     @Override
     public void loadTag(String itemName, ItemStack item, YamlConfiguration config) {
         ItemMeta meta = item.getItemMeta();
         if (meta instanceof Damageable) {
-            ((Damageable) meta).setDamage(config.getInt(itemName + ".durability", 0));
+            ((Damageable) meta).setDamage(config.getInt(itemName + "." + key, 0));
         }
         item.setItemMeta(meta);
     }

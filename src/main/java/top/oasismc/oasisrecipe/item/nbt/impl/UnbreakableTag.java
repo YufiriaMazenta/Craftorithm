@@ -15,13 +15,13 @@ public enum UnbreakableTag implements NBTTag {
 
     @Override
     public void importTag(String itemName, ItemStack item, YamlConfiguration config) {
-        config.set(itemName + ".unbreakable", item.getItemMeta().isUnbreakable());
+        config.set(itemName + "." + key, item.getItemMeta().isUnbreakable());
     }
 
     @Override
     public void loadTag(String itemName, ItemStack item, YamlConfiguration config) {
         ItemMeta meta = item.getItemMeta();
-        meta.setUnbreakable(config.getBoolean(itemName + ".unbreakable"));
+        meta.setUnbreakable(config.getBoolean(itemName + "." + key));
         item.setItemMeta(meta);
     }
 

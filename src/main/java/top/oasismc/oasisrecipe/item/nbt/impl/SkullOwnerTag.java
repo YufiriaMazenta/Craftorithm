@@ -22,7 +22,7 @@ public enum SkullOwnerTag implements NBTTag {
         if (meta instanceof SkullMeta) {
             OfflinePlayer offlinePlayer = ((SkullMeta) meta).getOwningPlayer();
             if (offlinePlayer != null) {
-                config.set(itemName + ".skullOwner", offlinePlayer.getName());
+                config.set(itemName + "." + key, offlinePlayer.getName());
             }
         }
     }
@@ -31,7 +31,7 @@ public enum SkullOwnerTag implements NBTTag {
     public void loadTag(String itemName, ItemStack item, YamlConfiguration config) {
         ItemMeta meta = item.getItemMeta();
         if (meta instanceof SkullMeta) {
-            String skullName = config.getString(itemName + ".skullOwner");
+            String skullName = config.getString(itemName + "." + key);
             if (skullName != null)
                 ((SkullMeta) meta).setOwningPlayer(Bukkit.getOfflinePlayer(skullName));
         }
