@@ -19,7 +19,7 @@ public enum AttributesTag implements NBTTag {
 
     private final String key;
 
-    private AttributesTag() { key = "attributes"; }
+    AttributesTag() { key = "attributes"; }
 
     @Override
     public void importTag(String itemName, ItemStack item, YamlConfiguration config) {
@@ -30,7 +30,7 @@ public enum AttributesTag implements NBTTag {
             attrMap.forEach((attr, attrModifier) -> {
                 attributes.add(attr.name() + " " + attrModifier.getAmount() + " " + attrModifier.getOperation() + " " + attrModifier.getSlot());
             });
-            config.set(itemName + ".attributes", attributes);
+            config.set(itemName + "." + key, attributes);
         }
     }
 
@@ -47,7 +47,7 @@ public enum AttributesTag implements NBTTag {
     }
 
     private void addAttribute2Meta(ItemMeta meta, String itemName, YamlConfiguration config) {
-        List<String> attrs = config.getStringList(itemName + ".attributes");
+        List<String> attrs = config.getStringList(itemName + "." + key);
         if (attrs.size() == 0) {
             return;
         }

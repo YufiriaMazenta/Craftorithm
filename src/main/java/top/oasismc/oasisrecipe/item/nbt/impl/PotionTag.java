@@ -30,7 +30,7 @@ public enum PotionTag implements NBTTag {
             for (PotionEffect effect : ((PotionMeta) meta).getCustomEffects()) {
                 potions.add(effect.getType().getKey().getKey() + " " + effect.getDuration() + " " + effect.getAmplifier());
             }
-            config.set(itemName + ".potion", potions);
+            config.set(itemName + "." + key, potions);
         }
     }
 
@@ -49,7 +49,7 @@ public enum PotionTag implements NBTTag {
     }
 
     private void addPotionEffect(PotionMeta meta, String itemName, YamlConfiguration config) {
-        List<String> potions = config.getStringList(itemName + ".potion");
+        List<String> potions = config.getStringList(itemName + "." + key);
         if (potions.size() == 0) {
             return;
         }

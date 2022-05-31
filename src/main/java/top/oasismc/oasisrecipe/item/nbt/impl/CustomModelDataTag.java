@@ -17,14 +17,14 @@ public enum CustomModelDataTag implements NBTTag {
     public void importTag(String itemName, ItemStack item, YamlConfiguration config) {
         ItemMeta meta = item.getItemMeta();
         if (meta.hasCustomModelData())
-            config.set(itemName + ".customModelData", meta.getCustomModelData());
+            config.set(itemName + "." + key, meta.getCustomModelData());
     }
 
     @Override
     public void loadTag(String itemName, ItemStack item, YamlConfiguration config) {
         ItemMeta meta = item.getItemMeta();
-        if (config.getInt(itemName + ".customModelData") != 0)
-            meta.setCustomModelData(config.getInt(itemName + ".customModelData"));
+        if (config.getInt(itemName + "." + key) != 0)
+            meta.setCustomModelData(config.getInt(itemName + "." + key));
         item.setItemMeta(meta);
     }
 

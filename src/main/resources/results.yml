@@ -55,3 +55,12 @@ potion:
 skull:
   material: PLAYER_HEAD
   skullOwner: ChiyodaXiaoYi
+template_enchant_book:
+  material: ENCHANTED_BOOK
+  #特定于专门存储附魔的物品, 而非被附魔的物品，例如附魔书
+  #合成物品(即items.yml)可用
+  enchantStorage:
+    - 'MENDING 1'
+template_compass:
+  material: COMPASS
+  location: 'world, 0, 0, 0'

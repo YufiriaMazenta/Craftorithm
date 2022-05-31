@@ -42,6 +42,9 @@ public class NBTManager {
         regTag(PotionTag.INSTANCE);
         regTag(SkullOwnerTag.INSTANCE);
         regTag(UnbreakableTag.INSTANCE);
+        regTag(EnchantStorageTag.INSTANCE);
+        regTag(CompassTag.INSTANCE);
+        regTag(ArmorColorTag.INSTANCE);
     }
 
     public static void loadNBT2Item(String itemName, ItemStack item, ConfigFile config) {
