@@ -31,7 +31,7 @@ public enum CompassTag implements NBTTag {
         joiner.add(loc.getWorld().getName())
                 .add(", ").add(loc.getX() + "")
                 .add(", ").add(loc.getY() + "")
-                .add(loc.getZ() + "");
+                .add(", ").add(loc.getZ() + "");
         config.set(itemName + "." + key, joiner.toString());
     }
 
@@ -51,7 +51,7 @@ public enum CompassTag implements NBTTag {
         double x = Double.parseDouble(locStr.substring(index1 + 1, index2));
         int index3 = locStr.indexOf(',', index2 + 1);
         double y = Double.parseDouble(locStr.substring(index2 + 1, index3));
-        double z = Double.parseDouble(locStr.substring(index3));
+        double z = Double.parseDouble(locStr.substring(index3 + 1));
         Location loc = new Location(world, x, y, z);
         ((CompassMeta) meta).setLodestone(loc);
         item.setItemMeta(meta);
