@@ -43,7 +43,8 @@ public class NBTManager {
         regTag(SkullOwnerTag.INSTANCE);
         regTag(UnbreakableTag.INSTANCE);
         regTag(EnchantStorageTag.INSTANCE);
-        regTag(CompassTag.INSTANCE);
+        if (OasisRecipe.getPlugin().getVanillaVersion() >= 16)
+            regTag(CompassTag.INSTANCE);
         regTag(ArmorColorTag.INSTANCE);
     }
 
