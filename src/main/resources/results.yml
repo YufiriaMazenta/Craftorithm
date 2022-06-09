@@ -64,3 +64,6 @@ template_enchant_book:
 template_compass:
   material: COMPASS
   location: 'world, 0, 0, 0'
+template_leather_armor:
+  material: LEATHER_HELMET
+  armorColor: 0x000000

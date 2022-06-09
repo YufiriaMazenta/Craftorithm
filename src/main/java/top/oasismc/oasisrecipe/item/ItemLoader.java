@@ -109,7 +109,7 @@ public enum ItemLoader implements Listener {
 
         Material material = Material.matchMaterial(str);
         if (material == null)
-            return new RecipeChoice.MaterialChoice(Material.BEDROCK);
+            throw new IllegalArgumentException(str + " is a non-existent item type");
         else
             return new RecipeChoice.MaterialChoice(material);
     }
