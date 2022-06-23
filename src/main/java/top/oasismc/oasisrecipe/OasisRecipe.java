@@ -43,7 +43,12 @@ public final class OasisRecipe extends JavaPlugin {
         String versionStr = Bukkit.getBukkitVersion();
         int index1 = versionStr.indexOf(".");
         int index2 = versionStr.indexOf(".", index1 + 1);
-        vanillaVersion = Integer.parseInt(versionStr.substring(index1 + 1, index2));
+        versionStr = versionStr.substring(index1 + 1, index2);
+        try {
+            vanillaVersion = Integer.parseInt(versionStr);
+        } catch (NumberFormatException e) {
+            vanillaVersion = Integer.parseInt(versionStr.substring(0, versionStr.indexOf("-")));
+        }
         info("&aLoad 1." + vanillaVersion + " Adapter");
     }
 
