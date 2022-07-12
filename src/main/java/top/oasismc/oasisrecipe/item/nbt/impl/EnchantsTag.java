@@ -25,8 +25,7 @@ public enum EnchantsTag implements NBTTag {
         List<String> enchants = new ArrayList<>();
         if (meta.hasEnchants()) {
             meta.getEnchants().forEach((enchant, lvl) -> {
-                String type = enchant.toString();
-                type = type.substring(type.indexOf(", ") + 2, type.length() - 1);
+                String type = enchant.getKey().getKey();
                 enchants.add(type + " " + lvl);
             });
         }
