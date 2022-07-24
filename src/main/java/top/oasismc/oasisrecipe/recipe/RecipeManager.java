@@ -239,6 +239,7 @@ public enum RecipeManager {
         loadRecipesFromConfig();
         loadRecipeFromOtherPlugins();
         removeVanillaRecipes();
+        ((RemoveCommand) RemoveCommand.INSTANCE).reloadRecipeMap();
     }
 
     private void removeVanillaRecipes() {

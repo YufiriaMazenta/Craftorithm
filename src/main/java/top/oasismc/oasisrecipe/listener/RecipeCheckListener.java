@@ -3,20 +3,18 @@ package top.oasismc.oasisrecipe.listener;
 import net.milkbowl.vault.economy.Economy;
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import top.oasismc.oasisrecipe.OasisRecipe;
+import top.oasismc.oasisrecipe.annotation.Untested;
 import top.oasismc.oasisrecipe.recipe.RecipeManager;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -30,7 +28,7 @@ public enum RecipeCheckListener implements Listener {
 
     private Economy economy;
     private PlayerPoints playerPoints;
-    private final Map<String, BiFunction<String, CraftItemEvent, Boolean>> checkFuncMap;
+    private final Map<String, BiFunction<String, Player, Boolean>> checkFuncMap;
     private final Map<UUID, Set<Consumer<Player>>> operationListMap;
 
     RecipeCheckListener() {
@@ -41,9 +39,9 @@ public enum RecipeCheckListener implements Listener {
 
     private void regDefCheckFunc() {
         boolean isVaultLoaded = loadVault();
-        regCheckFunc("spendLvl", (recipeName, event) -> {
+        regCheckFunc("spendLvl", (recipeName, player) -> {
             String value = RecipeManager.INSTANCE.getRecipeFile().getConfig().getString(recipeName + ".spendLvl", "");
-            if (value.equals(""))
+            if (value.isEmpty())
                 return true;
             int needLvl;
             try {
@@ -52,25 +50,24 @@ public enum RecipeCheckListener implements Listener {
                 e.printStackTrace();
                 return false;
             }
-            Player player = (Player) event.getWhoClicked();
             if (player.getLevel() < needLvl)
                 return false;
             operationListMap.get(player.getUniqueId()).add(player1 -> player1.setLevel(player1.getLevel() - needLvl));
             return true;
         });
 
-        regCheckFunc("perm", (recipeName, event) -> {
+        regCheckFunc("perm", (recipeName, player) -> {
             String value = RecipeManager.INSTANCE.getRecipeFile().getConfig().getString(recipeName + ".perm", "");
-            if (value.equals(""))
+            if (value.isEmpty())
                 return true;
-            return event.getWhoClicked().hasPermission(value);
+            return player.hasPermission(value);
         });
 
         String messageKey;
         if (isVaultLoaded) {
-            regCheckFunc("spendMoney", (recipeName, event) -> {
+            regCheckFunc("spendMoney", (recipeName, player) -> {
                 String value = RecipeManager.INSTANCE.getRecipeFile().getConfig().getString(recipeName + ".spendMoney", "");
-                if (value.equals(""))
+                if (value.isEmpty())
                     return true;
                 double needMoney;
                 try {
@@ -79,7 +76,6 @@ public enum RecipeCheckListener implements Listener {
                     e.printStackTrace();
                     return false;
                 }
-                Player player = (Player) event.getWhoClicked();
                 if (economy.getBalance(player) < needMoney)
                     return false;
                 operationListMap.get(player.getUniqueId()).add(player1 -> economy.withdrawPlayer(player1, needMoney));
@@ -93,9 +89,9 @@ public enum RecipeCheckListener implements Listener {
 
         boolean isPlayerPointsLoaded = loadPlayerPoints();
         if (isPlayerPointsLoaded) {
-            regCheckFunc("spendPoints", (recipeName, event) -> {
+            regCheckFunc("spendPoints", (recipeName, player) -> {
                 String value = RecipeManager.INSTANCE.getRecipeFile().getConfig().getString(recipeName + ".spendPoints", "");
-                if (value.equals(""))
+                if (value.isEmpty())
                     return true;
                 int needPoints;
                 try {
@@ -104,7 +100,6 @@ public enum RecipeCheckListener implements Listener {
                     e.printStackTrace();
                     return false;
                 }
-                Player player = (Player) event.getWhoClicked();
                 if (playerPoints.getAPI().look(player.getUniqueId()) < needPoints)
                     return false;
                 operationListMap.get(player.getUniqueId()).add(player1 -> playerPoints.getAPI().take(player1.getUniqueId(), needPoints));
@@ -117,32 +112,58 @@ public enum RecipeCheckListener implements Listener {
         info(color(OasisRecipe.getPlugin().getConfig().getString(messageKey, messageKey)));
     }
 
-    public void regCheckFunc(String key, BiFunction<String, CraftItemEvent, Boolean> checkFunc) {
+    public void regCheckFunc(String key, BiFunction<String, Player, Boolean> checkFunc) {
         checkFuncMap.put(key, checkFunc);
     }
 
+    @Untested
     @EventHandler(priority = EventPriority.LOWEST)
-    public void craftCheck(CraftItemEvent event) {
-        if (!(event.getWhoClicked() instanceof Player)) {
+    public void craftCheck(PrepareItemCraftEvent event) {
+        if (event.getRecipe() == null)
             return;
-        }//检查点击者是否是玩家
         String recipeName = RecipeManager.INSTANCE.getRecipeName(event.getRecipe());
-        UUID uuid = event.getWhoClicked().getUniqueId();
-        operationListMap.put(uuid, new HashSet<>());
-        for (String key : checkFuncMap.keySet()) {
-            if (!checkFuncMap.get(key).apply(recipeName, event)) {
-                event.setResult(Event.Result.DENY);
-                break;
+        boolean canCraft = true;
+        List<UUID> viewPlayers = new ArrayList<>();
+        for (HumanEntity human : event.getViewers()) {
+            if (!(human instanceof Player))
+                continue;
+            Player player = ((Player) human);
+            UUID uuid = player.getUniqueId();
+            viewPlayers.add(uuid);
+            operationListMap.put(uuid, new HashSet<>());
+            for (String key : checkFuncMap.keySet()) {
+                if (!checkFuncMap.get(key).apply(recipeName, player)) {
+                    event.getInventory().setResult(null);
+                    canCraft = false;
+                    break;
+                }
             }
+            if (!canCraft)
+                break;
         }
-        if (event.getResult().equals(Event.Result.DENY)) {
-            operationListMap.remove(uuid);
+
+        if (!canCraft) {
+            for (UUID uuid : viewPlayers) {
+                operationListMap.remove(uuid);
+            }
             return;
         }
-        for (Consumer<Player> consumer : operationListMap.get(uuid)) {
-            consumer.accept((Player) event.getWhoClicked());
+
+        for (UUID uuid : viewPlayers) {
+            Player player = Bukkit.getPlayer(uuid);
+            if (player == null)
+                continue;
+            for (Consumer<Player> consumer : operationListMap.get(uuid)) {
+                consumer.accept(player);
+            }
+            operationListMap.remove(uuid);
         }
-        operationListMap.remove(uuid);
+    }
+
+    @EventHandler
+    public void craft(PrepareItemCraftEvent event) {
+
+
     }
 
     private boolean loadVault() {
