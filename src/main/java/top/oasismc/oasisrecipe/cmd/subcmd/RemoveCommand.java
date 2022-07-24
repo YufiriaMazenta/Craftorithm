@@ -3,9 +3,7 @@ package top.oasismc.oasisrecipe.cmd.subcmd;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
-import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.ShapedRecipe;
 import top.oasismc.oasisrecipe.OasisRecipe;
 import top.oasismc.oasisrecipe.api.ISubCommand;
 import top.oasismc.oasisrecipe.cmd.AbstractSubCommand;
@@ -43,6 +41,7 @@ public class RemoveCommand extends AbstractSubCommand {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, List<String> args) {
+        System.out.println(args);
         if (args.size() <= 1) {
             List<String> arrayList = new ArrayList<>();
             for (NamespacedKey key : recipeMap.keySet()) {
@@ -55,7 +54,7 @@ public class RemoveCommand extends AbstractSubCommand {
         return super.onTabComplete(sender, args);
     }
 
-    public void reloadRecipeSet() {
+    public void reloadRecipeMap() {
         Iterator<Recipe> recipeIterator = Bukkit.recipeIterator();
         recipeMap.clear();
         while (recipeIterator.hasNext()) {
@@ -99,7 +98,6 @@ public class RemoveCommand extends AbstractSubCommand {
                     break;
             }
         }
-        reloadRecipeSet();
         removedRecipeConfig.saveConfig();
     }
 
@@ -118,7 +116,7 @@ public class RemoveCommand extends AbstractSubCommand {
                     removedList.add(keyStr);
                 removedRecipeConfig.getConfig().set("recipes", removedList);
                 removedRecipeConfig.saveConfig();
-                reloadRecipeSet();
+                reloadRecipeMap();
                 return true;
             }
         }

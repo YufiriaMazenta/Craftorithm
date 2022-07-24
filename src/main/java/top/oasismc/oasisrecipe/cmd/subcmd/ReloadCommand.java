@@ -34,9 +34,10 @@ public final class ReloadCommand extends AbstractSubCommand {
         if (Bukkit.getPluginManager().getPlugin("ItemsAdder") == null) {
             RecipeManager.INSTANCE.reloadRecipes();
         } else {
-            if (ItemLoader.INSTANCE.isItemsAdderLoaded()) {
-                RecipeManager.INSTANCE.reloadRecipes();
+            if (!ItemLoader.INSTANCE.isItemsAdderLoaded()) {
+                return;
             }
+            RecipeManager.INSTANCE.reloadRecipes();
         }
     }
 

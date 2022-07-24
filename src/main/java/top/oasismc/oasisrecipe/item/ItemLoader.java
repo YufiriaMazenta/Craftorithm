@@ -5,12 +5,13 @@ import dev.lone.itemsadder.api.Events.ItemsAdderLoadDataEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
+import org.bukkit.plugin.Plugin;
 import top.oasismc.oasisrecipe.OasisRecipe;
+import top.oasismc.oasisrecipe.annotation.Untested;
 import top.oasismc.oasisrecipe.config.ConfigFile;
 import top.oasismc.oasisrecipe.item.nbt.NBTManager;
 import top.oasismc.oasisrecipe.recipe.RecipeManager;
@@ -28,26 +29,30 @@ public enum ItemLoader implements Listener {
         itemsAdderItemMap = new ConcurrentHashMap<>();
     }
 
+    @Untested
     @EventHandler
     public void onItemsAdderLoad(ItemsAdderLoadDataEvent event) {
         itemsAdderLoaded = true;
         Bukkit.getScheduler().callSyncMethod(OasisRecipe.getPlugin(), () -> {
+            Plugin itemsAdderPlugin = Bukkit.getPluginManager().getPlugin("ItemsAdder");
+            if (itemsAdderPlugin != null)
+                FurnaceSmeltEvent.getHandlerList().unregister(itemsAdderPlugin);
             RecipeManager.INSTANCE.reloadRecipes();
             return null;
         });
     }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onFurnaceSmelt(FurnaceSmeltEvent event) {
-        if (!itemsAdderLoaded)
-            return;
-        ItemStack sourceItem = event.getSource();
-
-        if (CustomStack.byItemStack(sourceItem) != null) {
-            String key = CustomStack.byItemStack(sourceItem).getId();
-            event.setResult(itemsAdderItemMap.get(key));
-        }
-    }
+//
+//    @EventHandler(priority = EventPriority.MONITOR)
+//    public void onFurnaceSmelt(FurnaceSmeltEvent event) {
+//        if (!itemsAdderLoaded)
+//            return;
+//        ItemStack sourceItem = event.getSource();
+//
+//        if (CustomStack.byItemStack(sourceItem) != null) {
+//            String key = CustomStack.byItemStack(sourceItem).getId();
+//            event.setResult(itemsAdderItemMap.get(key));
+//        }
+//    }
 
     private static boolean itemsAdderLoaded = false;
     private static final ConfigFile itemFile = new ConfigFile("items.yml");
