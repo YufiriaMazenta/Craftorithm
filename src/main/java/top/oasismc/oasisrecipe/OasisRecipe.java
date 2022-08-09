@@ -3,7 +3,12 @@ package top.oasismc.oasisrecipe;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 import top.oasismc.oasisrecipe.bstat.Metrics;
 import top.oasismc.oasisrecipe.cmd.PluginCommand;
 import top.oasismc.oasisrecipe.cmd.subcmd.ReloadCommand;
@@ -14,13 +19,14 @@ import top.oasismc.oasisrecipe.listener.CraftRecipeListener;
 import top.oasismc.oasisrecipe.listener.SmithingListener;
 import top.oasismc.oasisrecipe.script.action.ActionDispatcher;
 import top.oasismc.oasisrecipe.script.condition.ConditionDispatcher;
+import top.oasismc.oasisrecipe.update.UpdateUtil;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
-public final class OasisRecipe extends JavaPlugin {
+public final class OasisRecipe extends JavaPlugin implements Listener {
 
     private static OasisRecipe INSTANCE;
     private int vanillaVersion;
@@ -75,6 +81,7 @@ public final class OasisRecipe extends JavaPlugin {
 
     private void loadListener() {
         Bukkit.getPluginManager().registerEvents(CraftRecipeListener.INSTANCE, this);
+        Bukkit.getPluginManager().registerEvents(this, this);
         if (getVanillaVersion() >= 14)
             Bukkit.getPluginManager().registerEvents(SmithingListener.INSTANCE, this);
         if (getVanillaVersion() >= 18)
@@ -155,6 +162,13 @@ public final class OasisRecipe extends JavaPlugin {
 
     public void setConditionDispatcher(ConditionDispatcher conditionDispatcher) {
         this.conditionDispatcher = conditionDispatcher;
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        if (event.getPlayer().isOp()) {
+            UpdateUtil.checkUpdate(event.getPlayer());
+        }
     }
 
 }

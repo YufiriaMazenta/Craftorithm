@@ -1,4 +1,5 @@
 version: ${version}
+check_update: true
 
 messages:
   #使用命令的一些消息
@@ -23,3 +24,5 @@ messages:
     pointsFailed: '&c未发现点券插件,点券检查将不会生效'
     itemsAdderSuccess: '&a发现ItemsAdder,已挂钩'
     itemsAdderFailed: '&c未发现ItemsAdder'
+  update:
+    new_version: '&a有新版本更新, 请在 &3https://github.com/ChiyodaXiaoYi/OasisRecipe/releases/latest &a查看'
