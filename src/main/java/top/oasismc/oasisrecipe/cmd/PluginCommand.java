@@ -28,14 +28,14 @@ public enum PluginCommand implements TabExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         List<String> argList = Arrays.asList(args);
         if (argList.size() < 1) {
-            OasisRecipe.getPlugin().sendMsg(sender, "commands.noArgs");
+            OasisRecipe.getInstance().sendMsg(sender, "commands.noArgs");
             return true;
         }
         ISubCommand subCommand = subCommandMap.get(argList.get(0));
         if (subCommand != null)
             return subCommand.onCommand(sender, argList.subList(1, argList.size()));
         else {
-            OasisRecipe.getPlugin().sendMsg(sender, "commands.noArgs");
+            OasisRecipe.getInstance().sendMsg(sender, "commands.noArgs");
             return true;
         }
     }

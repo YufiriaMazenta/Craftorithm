@@ -11,29 +11,18 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.plugin.Plugin;
 import top.oasismc.oasisrecipe.OasisRecipe;
-import top.oasismc.oasisrecipe.annotation.Untested;
 import top.oasismc.oasisrecipe.config.ConfigFile;
 import top.oasismc.oasisrecipe.item.nbt.NBTManager;
 import top.oasismc.oasisrecipe.recipe.RecipeManager;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public enum ItemLoader implements Listener {
 
     INSTANCE;
 
-    private Map<String, ItemStack> itemsAdderItemMap;
-
-    ItemLoader() {
-        itemsAdderItemMap = new ConcurrentHashMap<>();
-    }
-
-    @Untested
     @EventHandler
     public void onItemsAdderLoad(ItemsAdderLoadDataEvent event) {
         itemsAdderLoaded = true;
-        Bukkit.getScheduler().callSyncMethod(OasisRecipe.getPlugin(), () -> {
+        Bukkit.getScheduler().callSyncMethod(OasisRecipe.getInstance(), () -> {
             Plugin itemsAdderPlugin = Bukkit.getPluginManager().getPlugin("ItemsAdder");
             if (itemsAdderPlugin != null)
                 FurnaceSmeltEvent.getHandlerList().unregister(itemsAdderPlugin);
@@ -41,18 +30,6 @@ public enum ItemLoader implements Listener {
             return null;
         });
     }
-//
-//    @EventHandler(priority = EventPriority.MONITOR)
-//    public void onFurnaceSmelt(FurnaceSmeltEvent event) {
-//        if (!itemsAdderLoaded)
-//            return;
-//        ItemStack sourceItem = event.getSource();
-//
-//        if (CustomStack.byItemStack(sourceItem) != null) {
-//            String key = CustomStack.byItemStack(sourceItem).getId();
-//            event.setResult(itemsAdderItemMap.get(key));
-//        }
-//    }
 
     private static boolean itemsAdderLoaded = false;
     private static final ConfigFile itemFile = new ConfigFile("items.yml");
@@ -121,14 +98,6 @@ public enum ItemLoader implements Listener {
 
     public boolean isItemsAdderLoaded() {
         return itemsAdderLoaded;
-    }
-
-    public Map<String, ItemStack> getItemsAdderItemMap() {
-        return itemsAdderItemMap;
-    }
-
-    public void setItemsAdderItemMap(Map<String, ItemStack> itemsAdderItemMap) {
-        this.itemsAdderItemMap = itemsAdderItemMap;
     }
 
 }

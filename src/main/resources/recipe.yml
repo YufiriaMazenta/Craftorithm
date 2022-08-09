@@ -3,22 +3,28 @@ template_shaped:
   key: 'oasis.recipe.template'
   #合成表的合成物品，使用results:开头可以调用results.yml文件定义的物品, 使用ItemsAdder:开头可以调用ItemsAdder物品
   result: 'results:result1'
-  #合成表合成物品的数量,锻造台配方此项无效
-  #合成表的类型,shaped为有序,shapeless为无序,furnace为熔炉,smithing为锻造台
+  #合成表的类型
   type: 'shaped'
-  #设置合成需要花费多少等级,数据只支持整数,只有工作台配方支持
-  spendLvl: 10
-  #设置合成需要花费多少金钱,数据只支持整数,只有工作台配方支持
-  spendMoney: 10
-  #设置合成需要花费多少金钱,数据只支持整数,只有工作台配方支持
-  spendPoints: 10
-  #检测玩家是否拥有合成的权限
-  perm: 'oasis.recipe.template'
   #合成表的合成物品，使用items:开头可以调用item.yml文件定义的物品, 使用ItemsAdder:开头可以调用ItemsAdder物品
   items:
     - 'items:item1 items:item1 items:item1'
     - 'AIR AIR AIR'
     - 'AIR AIR AIR'
+  #设置合成的权限检测
+  conditions:
+    - 'perm oasis.recipe.test'
+    - '&money >= *10.0'
+    - '&points >= *10'
+    - '&!level >= *10'
+    - '&chunk slime'
+    - '&effect BAD_OMEN >= *1'
+    - '&random >= 0.5'
+  #配方合成之后执行的动作
+  actions:
+    - 'take-level 10'
+    - 'take-money 10.0'
+    - 'take-points 10'
+    - 'command me hello'
 
 template_shapeless:
   key: 'oasis.recipe.template2'
@@ -73,3 +79,15 @@ template_random_furnace:
     - 'COMMAND_BLOCK'
   exp: 0
   time: 10
+template_multiple:
+  key: 'oasis.recipe.template7'
+  type: 'shapeless'
+  result: 'STONE'
+  multiple: true
+  items:
+    a:
+      - 'BEDROCK'
+    b:
+      - 'COMMAND_BLOCK'
+    c:
+      - 'STRUCTURE_BLOCK'

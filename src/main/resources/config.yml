@@ -1,12 +1,4 @@
 version: ${version}
-#设定合成表是否在玩家合成时进行检测
-#设定为false时,合成表将不进行对应项的检测
-#例如,将exp设置为false,则合成表的spendExp配置将不会生效
-recipeCheck:
-  exp: true
-  vault: true
-  points: true
-  permission: true
 
 messages:
   #使用命令的一些消息
@@ -15,6 +7,7 @@ messages:
     noArgs: '&c请输入子命令以执行'
     nullArg: '&c不存在的子命令'
     reload: '&a插件重载成功'
+    reload_config: '&a配置文件重载成功'
     version: '&a插件版本: %version%'
     missingParam: '&c缺少参数，请检查输入是否正确'
     playerOnly: '&c此命令只能玩家使用!'

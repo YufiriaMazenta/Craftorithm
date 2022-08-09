@@ -1,7 +1,9 @@
 package top.oasismc.oasisrecipe.recipe;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.*;
 import org.bukkit.plugin.Plugin;
@@ -9,9 +11,9 @@ import top.oasismc.oasisrecipe.OasisRecipe;
 import top.oasismc.oasisrecipe.api.RecipeRegistrar;
 import top.oasismc.oasisrecipe.cmd.subcmd.RemoveCommand;
 import top.oasismc.oasisrecipe.config.ConfigFile;
-import top.oasismc.oasisrecipe.item.ItemLoader;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static top.oasismc.oasisrecipe.OasisRecipe.color;
 import static top.oasismc.oasisrecipe.OasisRecipe.info;
@@ -33,7 +35,10 @@ public enum RecipeManager {
     public void loadRecipesFromConfig() {
         YamlConfiguration config = (YamlConfiguration) recipeFile.getConfig();
         for (String recipeName : config.getKeys(false)) {
-            addRecipe(recipeName, config);
+            if (config.getBoolean(recipeName + ".multiple", false))
+                addMultipleRecipe(recipeName, config);
+            else
+                addRecipe(recipeName, config);
         }
     }
 
@@ -41,29 +46,7 @@ public enum RecipeManager {
         try {
             String key = Objects.requireNonNull(config.getString(recipeName + ".key")).toLowerCase();
             List<String> choiceStrList = config.getStringList(recipeName + ".items");
-            RecipeChoice[] choices = new RecipeChoice[choiceStrList.size()];
-            switch (config.getString(recipeName + ".type", "shaped")) {
-                case "shaped":
-                    choices = getShapedRecipeItems(choiceStrList);
-                    break;
-                case "shapeless":
-                    choices = getShapelessRecipeItems(choiceStrList);
-                    break;
-                case "furnace":
-                case "smoking":
-                case "campfire":
-                case "blasting":
-                case "random_furnace":
-                case "random_smoking":
-                case "random_blasting":
-                case "stoneCutting":
-                    choices[0] = getChoiceFromStr(choiceStrList.get(0));
-                    break;
-                case "smithing":
-                    choices[0] = getChoiceFromStr(choiceStrList.get(0));
-                    choices[1] = getChoiceFromStr(choiceStrList.get(1));
-                    break;
-            }//获取配方的合成物品
+            RecipeChoice[] choices = getChoices(recipeName, config, choiceStrList);
 
             String resultStr = config.getString(recipeName + ".result", "Null");
             if (config.getString(recipeName + ".type", "shaped").startsWith("random_")) {
@@ -73,21 +56,16 @@ public enum RecipeManager {
             ItemStack result = getItemFromConfig(resultStr);//获取合成的物品
 
             switch (config.getString(recipeName + ".type", "shaped")) {
-                case "shaped"://有序
+                case "shaped":
                     addShapedRecipe(key, result, choices);
                     break;
-                case "shapeless"://无序
+                case "shapeless":
                     addShapelessRecipe(key, result, choices);
                     break;
                 case "furnace":
                 case "smoking":
                 case "campfire":
                 case "blasting":
-                    if (choiceStrList.get(0).startsWith("ItemsAdder:")) {
-                        String itemsAdderId = choiceStrList.get(0);
-                        itemsAdderId = itemsAdderId.substring(itemsAdderId.indexOf(":") + 1);
-                        ItemLoader.INSTANCE.getItemsAdderItemMap().put(itemsAdderId, result);
-                    }
                     int exp = config.getInt(recipeName + ".exp", 0);
                     int cookTime = config.getInt(recipeName + ".time", 10) * 20;
                     addCookingRecipe(key, result, choices[0], exp, cookTime, config.getString(recipeName + ".type", "furnace"));
@@ -95,19 +73,19 @@ public enum RecipeManager {
                 case "random_furnace":
                 case "random_smoking":
                 case "random_blasting":
-                    if (OasisRecipe.getPlugin().getVanillaVersion() < 18)
+                    if (OasisRecipe.getInstance().getVanillaVersion() < 18)
                         break;
                     exp = config.getInt(recipeName + ".exp", 0);
                     cookTime = config.getInt(recipeName + ".time", 10) * 20;
                     addCookingRecipe(key, result, choices[0], exp, cookTime, config.getString(recipeName + ".type", "furnace"));
                     break;
                 case "smithing":
-                    if (OasisRecipe.getPlugin().getVanillaVersion() < 14)
+                    if (OasisRecipe.getInstance().getVanillaVersion() < 14)
                         break;
                     addSmithingRecipe(key, result, choices[0], choices[1]);
                     break;
                 case "stoneCutting":
-                    if (OasisRecipe.getPlugin().getVanillaVersion() < 14)
+                    if (OasisRecipe.getInstance().getVanillaVersion() < 14)
                         break;
                     addStoneCuttingRecipe(key, result, choices[0]);
                     break;
@@ -119,6 +97,105 @@ public enum RecipeManager {
         }
     }
 
+    public void addMultipleRecipe(String recipeName, YamlConfiguration config) {
+        try {
+            String key = Objects.requireNonNull(config.getString(recipeName + ".key")).toLowerCase();
+            ConfigurationSection section = config.getConfigurationSection(recipeName + ".items");
+            Validate.notNull(section, "The recipe must set the crafting item");
+            Map<String, RecipeChoice[]> choicesMap = new ConcurrentHashMap<>();
+            for (String sectionKey : section.getKeys(false)) {
+                List<String> choiceStrList = section.getStringList(sectionKey);
+                RecipeChoice[] choices = getChoices(recipeName, config, choiceStrList);
+                choicesMap.put(sectionKey, choices);
+            }
+
+            String resultStr = config.getString(recipeName + ".result", "Null");
+            if (config.getString(recipeName + ".type", "shaped").startsWith("random_")) {
+                resultStr = config.getStringList(recipeName + ".result").get(0);
+                resultStr = resultStr.substring(0, resultStr.indexOf(" "));
+            }
+            ItemStack result = getItemFromConfig(resultStr);//获取合成的物品
+
+            switch (config.getString(recipeName + ".type", "shaped")) {
+                case "shaped":
+                    for (String s : choicesMap.keySet()) {
+                        addShapedRecipe(key + "." + s, result, choicesMap.get(s));
+                    }
+                    break;
+                case "shapeless":
+                    for (String s : choicesMap.keySet()) {
+                        addShapelessRecipe(key + "." + s, result, choicesMap.get(s));
+                    }
+                    break;
+                case "furnace":
+                case "smoking":
+                case "campfire":
+                case "blasting":
+                    int exp = config.getInt(recipeName + ".exp", 0);
+                    int cookTime = config.getInt(recipeName + ".time", 10) * 20;
+                    for (String s : choicesMap.keySet()) {
+                        addCookingRecipe(key + "." + s, result, choicesMap.get(s)[0], exp, cookTime, config.getString(recipeName + ".type", "furnace"));
+                    }
+                    break;
+                case "random_furnace":
+                case "random_smoking":
+                case "random_blasting":
+                    if (OasisRecipe.getInstance().getVanillaVersion() < 18)
+                        break;
+                    exp = config.getInt(recipeName + ".exp", 0);
+                    cookTime = config.getInt(recipeName + ".time", 10) * 20;
+                    for (String s : choicesMap.keySet()) {
+                        addCookingRecipe(key + "." + s, result, choicesMap.get(s)[0], exp, cookTime, config.getString(recipeName + ".type", "furnace"));
+                    }
+                    break;
+                case "smithing":
+                    if (OasisRecipe.getInstance().getVanillaVersion() < 14)
+                        break;
+                    for (String s : choicesMap.keySet()) {
+                        addSmithingRecipe(key + "." + s, result, choicesMap.get(s)[0], choicesMap.get(s)[1]);
+                    }
+                    break;
+                case "stoneCutting":
+                    if (OasisRecipe.getInstance().getVanillaVersion() < 14)
+                        break;
+                    for (String s : choicesMap.keySet()) {
+                        addStoneCuttingRecipe(key + "." + s, result, choicesMap.get(s)[0]);
+                    }
+                    break;
+            }
+            keyList.add(config.getString(recipeName + ".key"));
+        } catch (Exception e) {
+            info(color("&cSome errors occurred while loading the " + recipeName + " recipe, please check your config file"));
+            e.printStackTrace();
+        }
+    }
+
+    private RecipeChoice[] getChoices(String recipeName, YamlConfiguration config, List<String> choiceStrList) {
+        RecipeChoice[] choices = new RecipeChoice[choiceStrList.size()];
+        switch (config.getString(recipeName + ".type", "shaped")) {
+            case "shaped":
+                choices = getShapedRecipeItems(choiceStrList);
+                break;
+            case "shapeless":
+                choices = getShapelessRecipeItems(choiceStrList);
+                break;
+            case "furnace":
+            case "smoking":
+            case "campfire":
+            case "blasting":
+            case "random_furnace":
+            case "random_smoking":
+            case "random_blasting":
+            case "stoneCutting":
+                choices[0] = getChoiceFromStr(choiceStrList.get(0));
+                break;
+            case "smithing":
+                choices[0] = getChoiceFromStr(choiceStrList.get(0));
+                choices[1] = getChoiceFromStr(choiceStrList.get(1));
+                break;
+        }
+        return choices;
+    }
 
     public RecipeChoice[] getShapedRecipeItems(List<String> items) {
         RecipeChoice[] choices = new RecipeChoice[9];
@@ -148,19 +225,19 @@ public enum RecipeManager {
     }
 
     public void addStoneCuttingRecipe(String key, ItemStack result, RecipeChoice item) {
-        NamespacedKey recipeKey = new NamespacedKey(OasisRecipe.getPlugin(), key);
+        NamespacedKey recipeKey = new NamespacedKey(OasisRecipe.getInstance(), key);
         StonecuttingRecipe recipe = new StonecuttingRecipe(recipeKey, result, item);
         Bukkit.getServer().addRecipe(recipe);
     }
 
     public void addSmithingRecipe(String key, ItemStack result, RecipeChoice base, RecipeChoice addition) {
-        NamespacedKey recipeKey = new NamespacedKey(OasisRecipe.getPlugin(), key);
+        NamespacedKey recipeKey = new NamespacedKey(OasisRecipe.getInstance(), key);
         SmithingRecipe recipe = new SmithingRecipe(recipeKey, result, base, addition);
         Bukkit.getServer().addRecipe(recipe);
     }
 
     public void addShapedRecipe(String key, ItemStack result, RecipeChoice[] itemList) {
-        NamespacedKey recipeKey = new NamespacedKey(OasisRecipe.getPlugin(), key);
+        NamespacedKey recipeKey = new NamespacedKey(OasisRecipe.getInstance(), key);
         ShapedRecipe recipe = new ShapedRecipe(recipeKey, result);
         recipe = recipe.shape("abc", "def", "ghi");
         int i = 0;
@@ -173,7 +250,7 @@ public enum RecipeManager {
     }
 
     public void addShapelessRecipe(String key, ItemStack result, RecipeChoice[] itemList) {
-        NamespacedKey recipeKey = new NamespacedKey(OasisRecipe.getPlugin(), key);
+        NamespacedKey recipeKey = new NamespacedKey(OasisRecipe.getInstance(), key);
         ShapelessRecipe recipe = new ShapelessRecipe(recipeKey, result);
         for (RecipeChoice choice : itemList) {
             recipe.addIngredient(choice);
@@ -182,7 +259,7 @@ public enum RecipeManager {
     }
 
     public void addCookingRecipe(String key, ItemStack result, RecipeChoice item, int exp, int cookingTime, String type) {
-        NamespacedKey recipeKey = new NamespacedKey(OasisRecipe.getPlugin(), key);
+        NamespacedKey recipeKey = new NamespacedKey(OasisRecipe.getInstance(), key);
         Recipe recipe;
         switch (type) {
             case "furnace":
@@ -251,7 +328,7 @@ public enum RecipeManager {
         Map<Plugin, List<Recipe>> pluginRecipeMap = RecipeRegistrar.getPluginRecipeMap();
         for (Plugin plugin : pluginRecipeMap.keySet()) {
             for (Recipe recipe : pluginRecipeMap.get(plugin)) {
-                OasisRecipe.getPlugin().getServer().addRecipe(recipe);
+                OasisRecipe.getInstance().getServer().addRecipe(recipe);
             }
         }
     }

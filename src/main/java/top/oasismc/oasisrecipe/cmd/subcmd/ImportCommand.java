@@ -22,13 +22,13 @@ public final class ImportCommand extends AbstractSubCommand {
             @Override
             public boolean onCommand(CommandSender sender, List<String> args) {
                 if (args.size() < 1) {
-                    OasisRecipe.getPlugin().sendMsg(sender, "commands.missingParam");
+                    OasisRecipe.getInstance().sendMsg(sender, "commands.missingParam");
                     return true;
                 }
                 ItemStack item = ((Player) sender).getInventory().getItemInMainHand();
                 ConfigFile configFile = ItemLoader.getResultFile();
                 NBTManager.importItem(args.get(0), item, configFile);
-                OasisRecipe.getPlugin().sendMsg(sender, "commands.import");
+                OasisRecipe.getInstance().sendMsg(sender, "commands.import");
                 return true;
             }
         });
@@ -36,13 +36,13 @@ public final class ImportCommand extends AbstractSubCommand {
             @Override
             public boolean onCommand(CommandSender sender, List<String> args) {
                 if (args.size() < 1) {
-                    OasisRecipe.getPlugin().sendMsg(sender, "commands.missingParam");
+                    OasisRecipe.getInstance().sendMsg(sender, "commands.missingParam");
                     return true;
                 }
                 ItemStack item = ((Player) sender).getInventory().getItemInMainHand();
                 ConfigFile configFile = ItemLoader.getItemFile();
                 NBTManager.importItem(args.get(0), item, configFile);
-                OasisRecipe.getPlugin().sendMsg(sender, "commands.import");
+                OasisRecipe.getInstance().sendMsg(sender, "commands.import");
                 return true;
             }
         });
@@ -51,7 +51,7 @@ public final class ImportCommand extends AbstractSubCommand {
     @Override
     public boolean onCommand(CommandSender sender, List<String> args) {
         if (!(sender instanceof Player)){
-            OasisRecipe.getPlugin().sendMsg(sender, "commands.playerOnly");
+            OasisRecipe.getInstance().sendMsg(sender, "commands.playerOnly");
             return true;
         }
         return super.onCommand(sender, args);

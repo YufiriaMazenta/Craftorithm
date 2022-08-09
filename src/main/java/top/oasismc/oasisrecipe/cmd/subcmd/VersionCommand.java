@@ -17,7 +17,7 @@ public class VersionCommand extends AbstractSubCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, List<String> args) {
-        OasisRecipe.getPlugin().sendMsg(sender, "commands.version");
+        OasisRecipe.getInstance().sendMsg(sender, "commands.version");
         return true;
     }
 }
