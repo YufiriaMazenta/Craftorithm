@@ -4,13 +4,12 @@ import com.google.common.base.Charsets;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
+import top.oasismc.oasisrecipe.OasisRecipe;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
-import static top.oasismc.oasisrecipe.OasisRecipe.getPlugin;
 
 public class ConfigFile {
 
@@ -20,7 +19,7 @@ public class ConfigFile {
 
     //构造函数，将对应路径的配置文件读取或创建
     public ConfigFile(String path) {
-        this(path, getPlugin());
+        this(path, OasisRecipe.getInstance());
     }
     
     public ConfigFile(String path, Plugin plugin) {
@@ -33,7 +32,7 @@ public class ConfigFile {
     //创建默认配置文件
     public void createDefaultConfig() {
         if (!configFile.exists()) {
-            getPlugin().saveResource(path, false);
+            OasisRecipe.getInstance().saveResource(path, false);
         }
         reloadConfig();
     }
@@ -49,7 +48,7 @@ public class ConfigFile {
     //重载配置文件
     public void reloadConfig() {
         config = YamlConfiguration.loadConfiguration(configFile);
-        final InputStream defConfigStream = getPlugin().getResource(path);
+        final InputStream defConfigStream = OasisRecipe.getInstance().getResource(path);
         if (defConfigStream == null) {
             return;
         }

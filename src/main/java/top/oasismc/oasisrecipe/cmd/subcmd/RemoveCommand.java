@@ -28,20 +28,19 @@ public class RemoveCommand extends AbstractSubCommand {
     @Override
     public boolean onCommand(CommandSender sender, List<String> args) {
         if (args.size() < 1) {
-            OasisRecipe.getPlugin().sendMsg(sender, "commands.missingParam");
+            OasisRecipe.getInstance().sendMsg(sender, "commands.missingParam");
             return true;
         }
         if (removeRecipe(args.get(0))) {
-            OasisRecipe.getPlugin().sendMsg(sender, "commands.removed");
+            OasisRecipe.getInstance().sendMsg(sender, "commands.removed");
         }
         else
-            OasisRecipe.getPlugin().sendMsg(sender, "commands.notExist");
+            OasisRecipe.getInstance().sendMsg(sender, "commands.notExist");
         return true;
     }
 
     @Override
     public List<String> onTabComplete(CommandSender sender, List<String> args) {
-        System.out.println(args);
         if (args.size() <= 1) {
             List<String> arrayList = new ArrayList<>();
             for (NamespacedKey key : recipeMap.keySet()) {

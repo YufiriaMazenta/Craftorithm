@@ -32,7 +32,7 @@ public class NBTManager {
     private static void regDefTags() {
         regTag(CustomNameTag.INSTANCE);
         regTag(AttributesTag.INSTANCE);
-        if (OasisRecipe.getPlugin().getVanillaVersion() >= 14)
+        if (OasisRecipe.getInstance().getVanillaVersion() >= 14)
             regTag(CustomModelDataTag.INSTANCE);
         regTag(DamageableTag.INSTANCE);
         regTag(EnchantsTag.INSTANCE);
@@ -43,7 +43,7 @@ public class NBTManager {
         regTag(SkullOwnerTag.INSTANCE);
         regTag(UnbreakableTag.INSTANCE);
         regTag(EnchantStorageTag.INSTANCE);
-        if (OasisRecipe.getPlugin().getVanillaVersion() >= 16)
+        if (OasisRecipe.getInstance().getVanillaVersion() >= 16)
             regTag(CompassTag.INSTANCE);
         regTag(ArmorColorTag.INSTANCE);
     }

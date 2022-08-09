@@ -23,35 +23,23 @@ public enum ConfigUpdater {
     }
 
     private void loadDefConfigs() {
-        addConfig("recipeCheck.exp", true);
-        addConfig("recipeCheck.vault", true);
-        addConfig("recipeCheck.points", true);
-        addConfig("recipeCheck.permission", true);
-        addConfig("removeVanillaRecipe.crafting_table", false);
-        addConfig("removeVanillaRecipe.furnace", false);
-        addConfig("removeVanillaRecipe.blasting", false);
-        addConfig("removeVanillaRecipe.smoking", false);
-        addConfig("removeVanillaRecipe.campfire", false);
-        addConfig("removeVanillaRecipe.smithing", false);
-        addConfig("removeVanillaRecipe.stoneCutting", false);
-        addConfig("removeVanillaRecipe.merchant", false);
-        addConfig("removeVanillaRecipe.others", false);
         addConfig("messages.load.itemsAdderSuccess", "&a发现ItemsAdder,已挂钩");
         addConfig("messages.load.itemsAdderFailed", "&c未发现ItemsAdder");
         addConfig("messages.commands.notExist", "&c配方不存在");
         addConfig("messages.commands.removed", "&a配方已移除");
+        addConfig("messages.commands.reload_config", "&a配置文件重载成功");
     }
 
     public void updateConfig() {
-        YamlConfiguration config = (YamlConfiguration) OasisRecipe.getPlugin().getConfig();
+        YamlConfiguration config = (YamlConfiguration) OasisRecipe.getInstance().getConfig();
         Set<String> configKeySet = config.getKeys(true);
         Set<String> updateKeys = defConfigMap.keySet();
         updateKeys.removeAll(configKeySet);
         for (String key : updateKeys) {
             config.set(key, defConfigMap.get(key));
         }
-        config.set("version", OasisRecipe.getPlugin().getDescription().getVersion());
-        OasisRecipe.getPlugin().saveConfig();
+        config.set("version", OasisRecipe.getInstance().getDescription().getVersion());
+        OasisRecipe.getInstance().saveConfig();
     }
 
 }

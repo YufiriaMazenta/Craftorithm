@@ -27,7 +27,7 @@ public class AbstractSubCommand implements ISubCommand {
         }
         ISubCommand subCommand = subCommandMap.get(args.get(0));
         if (subCommand == null) {
-            OasisRecipe.getPlugin().sendMsg(sender, "command.missingSubCmd");
+            OasisRecipe.getInstance().sendMsg(sender, "command.missingSubCmd");
         } else {
             subCommand.onCommand(sender, args.subList(1, args.size()));
         }

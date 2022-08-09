@@ -7,8 +7,8 @@ result1:
   amount: 1
   #物品的自定义模型数值, 1.14+才可使用此标签
   customModelData: 10000
-  #物品的名称
-  name: '&a钻石剑'
+  #物品的名称,可以使用hex颜色代码
+  name: '&#30ACFF钻石剑'
   #物品的lore
   lore:
     - '&a钻石剑'

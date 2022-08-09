@@ -1,5 +1,6 @@
 package top.oasismc.oasisrecipe;
 
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -9,28 +10,40 @@ import top.oasismc.oasisrecipe.cmd.subcmd.ReloadCommand;
 import top.oasismc.oasisrecipe.config.ConfigUpdater;
 import top.oasismc.oasisrecipe.item.ItemLoader;
 import top.oasismc.oasisrecipe.listener.FurnaceSmeltListener;
-import top.oasismc.oasisrecipe.listener.RecipeCheckListener;
+import top.oasismc.oasisrecipe.listener.CraftRecipeListener;
+import top.oasismc.oasisrecipe.listener.SmithingListener;
+import top.oasismc.oasisrecipe.script.action.ActionDispatcher;
+import top.oasismc.oasisrecipe.script.condition.ConditionDispatcher;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
 public final class OasisRecipe extends JavaPlugin {
 
-    private static OasisRecipe PLUGIN;
+    private static OasisRecipe INSTANCE;
     private int vanillaVersion;
+    private ActionDispatcher actionDispatcher;
+    private ConditionDispatcher conditionDispatcher;
+    private Pattern colorPattern;
 
     public OasisRecipe() {
-        PLUGIN = this;
+        INSTANCE = this;
     }
 
     @Override
     public void onEnable() {
-        loadBStat();
+        INSTANCE.colorPattern = Pattern.compile("&#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})");
         loadVanillaVersion();
+        loadBStat();
         saveDefaultConfig();
         loadConfigs();
         loadCommands();
+        loadScripts();
         hookItemsAdder();
         loadListener();
+        info("&aLoad 1." + vanillaVersion + " Adapter");
         info(getConfig().getString("messages.load.finish", "messages.load.finish"));
     }
 
@@ -49,7 +62,6 @@ public final class OasisRecipe extends JavaPlugin {
         } catch (NumberFormatException e) {
             vanillaVersion = Integer.parseInt(versionStr.substring(0, versionStr.indexOf("-")));
         }
-        info("&aLoad 1." + vanillaVersion + " Adapter");
     }
 
     private void loadBStat() {
@@ -62,9 +74,11 @@ public final class OasisRecipe extends JavaPlugin {
     }
 
     private void loadListener() {
+        Bukkit.getPluginManager().registerEvents(CraftRecipeListener.INSTANCE, this);
+        if (getVanillaVersion() >= 14)
+            Bukkit.getPluginManager().registerEvents(SmithingListener.INSTANCE, this);
         if (getVanillaVersion() >= 18)
             Bukkit.getPluginManager().registerEvents(FurnaceSmeltListener.INSTANCE, this);
-        Bukkit.getPluginManager().registerEvents(RecipeCheckListener.INSTANCE, this);
         if (Bukkit.getPluginManager().getPlugin("ItemsAdder") != null)
             Bukkit.getPluginManager().registerEvents(ItemLoader.INSTANCE, this);
     }
@@ -81,7 +95,12 @@ public final class OasisRecipe extends JavaPlugin {
         } else {
             messageKey = "messages.load.itemsAdderFailed";
         }
-        OasisRecipe.info(color(OasisRecipe.getPlugin().getConfig().getString(messageKey, messageKey)));
+        OasisRecipe.info(color(OasisRecipe.getInstance().getConfig().getString(messageKey, messageKey)));
+    }
+
+    private void loadScripts() {
+        actionDispatcher = ActionDispatcher.INSTANCE;
+        conditionDispatcher = ConditionDispatcher.INSTANCE;
     }
 
     public void sendMsg(CommandSender sender, String key) {
@@ -95,11 +114,22 @@ public final class OasisRecipe extends JavaPlugin {
         sender.sendMessage(color(message));
     }
 
-    public static OasisRecipe getPlugin() {
-        return PLUGIN;
+    public static OasisRecipe getInstance() {
+        return INSTANCE;
     }
 
     public static String color(String text) {
+        if (getInstance().vanillaVersion >= 16) {
+            StringBuilder strBuilder = new StringBuilder(text);
+            Matcher matcher = getInstance().colorPattern.matcher(strBuilder);
+            while (matcher.find()) {
+                String colorCode = matcher.group();
+                String colorStr = ChatColor.of(colorCode.substring(1)).toString();
+                strBuilder.replace(matcher.start(), matcher.start() + colorCode.length(), colorStr);
+                matcher = getInstance().colorPattern.matcher(strBuilder);
+            }
+            text = strBuilder.toString();
+        }
         return translateAlternateColorCodes('&', text);
     }
 
@@ -109,6 +139,22 @@ public final class OasisRecipe extends JavaPlugin {
 
     public int getVanillaVersion() {
         return vanillaVersion;
+    }
+
+    public ActionDispatcher getActionDispatcher() {
+        return actionDispatcher;
+    }
+
+    public ConditionDispatcher getConditionDispatcher() {
+        return conditionDispatcher;
+    }
+
+    public void setActionDispatcher(ActionDispatcher actionDispatcher) {
+        this.actionDispatcher = actionDispatcher;
+    }
+
+    public void setConditionDispatcher(ConditionDispatcher conditionDispatcher) {
+        this.conditionDispatcher = conditionDispatcher;
     }
 
 }
