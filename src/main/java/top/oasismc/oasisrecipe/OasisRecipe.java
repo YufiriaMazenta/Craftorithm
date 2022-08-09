@@ -166,6 +166,8 @@ public final class OasisRecipe extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
+        if (!getConfig().getBoolean("check_update"))
+            return;
         if (event.getPlayer().isOp()) {
             UpdateUtil.checkUpdate(event.getPlayer());
         }
