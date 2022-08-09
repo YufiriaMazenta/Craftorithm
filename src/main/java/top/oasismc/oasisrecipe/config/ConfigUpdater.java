@@ -29,7 +29,7 @@ public enum ConfigUpdater {
         addConfig("messages.commands.removed", "&a配方已移除");
         addConfig("messages.commands.reload_config", "&a配置文件重载成功");
         addConfig("check_update", true);
-        addConfig("messages.update.new_version", "&a有新版本更新, 请在 &3https://github.com/ChiyodaXiaoYi/OasisRecipe/releases/latest &a查看");
+        addConfig("messages.update.new_version", "&a检测到有新版本发布, 请及时更新到新版本");
     }
 
     public void updateConfig() {
