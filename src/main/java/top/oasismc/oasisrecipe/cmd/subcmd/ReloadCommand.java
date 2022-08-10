@@ -20,7 +20,7 @@ public final class ReloadCommand extends AbstractSubCommand {
             @Override
             public boolean onCommand(CommandSender sender, List<String> args) {
                 reloadConfigs();
-                OasisRecipe.getInstance().sendMsg(sender, "commands.reload_config");
+                OasisRecipe.getInstance().sendMsg(sender, "commands.reloadConfig");
                 return true;
             }
         });

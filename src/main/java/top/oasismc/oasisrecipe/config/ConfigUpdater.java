@@ -27,9 +27,9 @@ public enum ConfigUpdater {
         addConfig("messages.load.itemsAdderFailed", "&c未发现ItemsAdder");
         addConfig("messages.commands.notExist", "&c配方不存在");
         addConfig("messages.commands.removed", "&a配方已移除");
-        addConfig("messages.commands.reload_config", "&a配置文件重载成功");
-        addConfig("check_update", true);
-        addConfig("messages.update.new_version", "&a检测到有新版本发布, 请及时更新到新版本");
+        addConfig("messages.commands.reloadConfig", "&a配置文件重载成功");
+        addConfig("checkUpdate", true);
+        addConfig("messages.update.newVersion", "&a检测到有新版本发布, 请及时更新到新版本");
     }
 
     public void updateConfig() {

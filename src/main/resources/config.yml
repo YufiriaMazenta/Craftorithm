@@ -1,5 +1,5 @@
 version: ${version}
-check_update: true
+checkUpdate: true
 
 messages:
   #使用命令的一些消息
@@ -8,7 +8,7 @@ messages:
     noArgs: '&c请输入子命令以执行'
     nullArg: '&c不存在的子命令'
     reload: '&a插件重载成功'
-    reload_config: '&a配置文件重载成功'
+    reloadConfig: '&a配置文件重载成功'
     version: '&a插件版本: %version%'
     missingParam: '&c缺少参数，请检查输入是否正确'
     playerOnly: '&c此命令只能玩家使用!'
@@ -25,4 +25,4 @@ messages:
     itemsAdderSuccess: '&a发现ItemsAdder,已挂钩'
     itemsAdderFailed: '&c未发现ItemsAdder'
   update:
-    new_version: '&a检测到有新版本发布, 请及时更新到新版本'
+    newVersion: '&8[&3Oasis&bRecipe&8] &a检测到有新版本发布, 请及时更新到新版本'
