@@ -29,7 +29,7 @@ public enum ConfigUpdater {
         addConfig("messages.commands.removed", "&a配方已移除");
         addConfig("messages.commands.reloadConfig", "&a配置文件重载成功");
         addConfig("checkUpdate", true);
-        addConfig("messages.update.newVersion", "&a检测到有新版本发布, 请及时更新到新版本");
+        addConfig("messages.update.newVersion", "&8[&3Oasis&bRecipe&8] &a检测到有新版本发布, 请及时更新到新版本");
     }
 
     public void updateConfig() {
