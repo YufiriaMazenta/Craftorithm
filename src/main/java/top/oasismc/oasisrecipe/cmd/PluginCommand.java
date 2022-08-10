@@ -35,7 +35,7 @@ public enum PluginCommand implements TabExecutor {
         if (subCommand != null)
             return subCommand.onCommand(sender, argList.subList(1, argList.size()));
         else {
-            OasisRecipe.getInstance().sendMsg(sender, "commands.noArgs");
+            OasisRecipe.getInstance().sendMsg(sender, "commands.nullArg");
             return true;
         }
     }

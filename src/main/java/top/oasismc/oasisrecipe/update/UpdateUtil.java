@@ -32,7 +32,7 @@ public class UpdateUtil {
                 ver = ver.substring(0, ver.indexOf("-"));
                 if (!ver.equals(newVersion)) {
                     Bukkit.getScheduler().callSyncMethod(OasisRecipe.getInstance(), () -> {
-                        OasisRecipe.getInstance().sendMsg(sender, "update.new_version");
+                        OasisRecipe.getInstance().sendMsg(sender, "update.newVersion");
                         return null;
                     });
                 }
