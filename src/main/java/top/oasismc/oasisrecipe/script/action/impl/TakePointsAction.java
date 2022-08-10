@@ -13,7 +13,10 @@ public enum TakePointsAction implements IRecipeStatement<Integer> {
     public Integer exec(String arg, Player player) {
         int value = Integer.parseInt(arg);
         PlayerPoints points = ActionDispatcher.INSTANCE.getPlayerPoints();
-        points.getAPI().take(player.getUniqueId(), value);
+        if (value >= 0)
+            points.getAPI().take(player.getUniqueId(), value);
+        else
+            points.getAPI().give(player.getUniqueId(), - value);
         return points.getAPI().look(player.getUniqueId());
     }
 

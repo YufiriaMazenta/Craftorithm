@@ -13,7 +13,10 @@ public enum TakeMoneyAction implements IRecipeStatement<Double> {
     public Double exec(String arg, Player player) {
         double value = Double.parseDouble(arg);
         Economy economy = ActionDispatcher.INSTANCE.getEconomy();
-        economy.withdrawPlayer(player, value);
+        if (value >= 0)
+            economy.withdrawPlayer(player, value);
+        else
+            economy.depositPlayer(player, - value);
         return economy.getBalance(player);
     }
 
