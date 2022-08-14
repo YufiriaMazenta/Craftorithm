@@ -13,6 +13,8 @@ import java.net.URLConnection;
 public class UpdateUtil {
 
     public static void checkUpdate(CommandSender sender) {
+        if (!OasisRecipe.getInstance().getConfig().getBoolean("check_update"))
+            return;
         Bukkit.getScheduler().runTaskAsynchronously(OasisRecipe.getInstance(), () -> {
             try {
                 URL url = new URL("https://api.github.com/repos/ChiyodaXiaoYi/OasisRecipe/releases/latest");
@@ -27,7 +29,6 @@ public class UpdateUtil {
                 int index = newVersion.indexOf("\"tag_name\"");
                 int index2 = newVersion.indexOf("\"target_commitish\"");
                 newVersion = newVersion.substring(index + 13, index2 - 2);
-                System.out.println(newVersion);
                 String ver = OasisRecipe.getInstance().getDescription().getVersion();
                 ver = ver.substring(0, ver.indexOf("-"));
                 if (!ver.equals(newVersion)) {
