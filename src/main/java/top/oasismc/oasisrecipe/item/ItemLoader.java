@@ -2,6 +2,9 @@ package top.oasismc.oasisrecipe.item;
 
 import dev.lone.itemsadder.api.CustomStack;
 import dev.lone.itemsadder.api.Events.ItemsAdderLoadDataEvent;
+import ink.ptms.zaphkiel.ZapAPI;
+import ink.ptms.zaphkiel.Zaphkiel;
+import ink.ptms.zaphkiel.api.Item;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -46,15 +49,11 @@ public enum ItemLoader implements Listener {
     public static ItemStack getItemFromConfig(String itemName) {
         //ItemsAdder兼容
         if (itemName.startsWith("ItemsAdder:")) {
-            if (!itemsAdderLoaded)
-                throw new IllegalArgumentException("ItemsAdder plugin not loading");
-            itemName = itemName.substring(itemName.indexOf(":") + 1);
-            CustomStack stack = CustomStack.getInstance(itemName);
-            if (stack != null) {
-                return stack.getItemStack();
-            } else {
-                throw new IllegalArgumentException(itemName + " is not a valid ItemsAdder item");
-            }
+            return getItemsAdderItem(itemName);
+        }
+
+        if (itemName.startsWith("Zaphkiel:")) {
+            return getZaphkielItem(itemName);
         }
 
         if (!itemName.startsWith("items:") && !itemName.startsWith("results:")) {
@@ -98,6 +97,31 @@ public enum ItemLoader implements Listener {
 
     public boolean isItemsAdderLoaded() {
         return itemsAdderLoaded;
+    }
+
+    private static ItemStack getZaphkielItem(String itemName) {
+        Plugin plugin = Bukkit.getPluginManager().getPlugin("Zaphkiel");
+        if (plugin == null)
+            throw new IllegalArgumentException("Zaphkiel plugin not loaded");
+        ZapAPI api = Zaphkiel.INSTANCE.api();
+        itemName = itemName.substring(itemName.indexOf(":") + 1);
+        Item item = api.getItemManager().getItem(itemName);
+        if (item == null) {
+            throw new IllegalArgumentException(itemName + " is not a valid Zaphkiel item");
+        }
+        return item.buildItemStack(null);
+    }
+
+    private static ItemStack getItemsAdderItem(String itemName) {
+        if (!itemsAdderLoaded)
+            throw new IllegalArgumentException("ItemsAdder plugin not loaded");
+        itemName = itemName.substring(itemName.indexOf(":") + 1);
+        CustomStack stack = CustomStack.getInstance(itemName);
+        if (stack != null) {
+            return stack.getItemStack();
+        } else {
+            throw new IllegalArgumentException(itemName + " is not a valid ItemsAdder item");
+        }
     }
 
 }
