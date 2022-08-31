@@ -5,6 +5,11 @@ import dev.lone.itemsadder.api.Events.ItemsAdderLoadDataEvent;
 import ink.ptms.zaphkiel.ZapAPI;
 import ink.ptms.zaphkiel.Zaphkiel;
 import ink.ptms.zaphkiel.api.Item;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.bukkit.MythicBukkit;
+import io.lumine.mythic.core.items.ItemExecutor;
+import io.lumine.mythic.core.items.MythicItem;
+import io.th0rgal.oraxen.items.OraxenItems;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -16,11 +21,20 @@ import org.bukkit.plugin.Plugin;
 import top.oasismc.oasisrecipe.OasisRecipe;
 import top.oasismc.oasisrecipe.config.ConfigFile;
 import top.oasismc.oasisrecipe.item.nbt.NBTManager;
-import top.oasismc.oasisrecipe.recipe.RecipeManager;
+import top.oasismc.oasisrecipe.recipe.handler.RecipeManager;
+
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 public enum ItemLoader implements Listener {
 
     INSTANCE;
+    private final Map<String, ItemStack> itemCache;
+
+    ItemLoader() {
+        itemCache = new ConcurrentHashMap<>();
+    }
 
     @EventHandler
     public void onItemsAdderLoad(ItemsAdderLoadDataEvent event) {
@@ -56,11 +70,23 @@ public enum ItemLoader implements Listener {
             return getZaphkielItem(itemName);
         }
 
+        if (itemName.startsWith("MythicMobs:")) {
+            return getMythicMobsItem(itemName);
+        }
+
+        if (itemName.startsWith("Oraxen")) {
+            return getOraxenItem(itemName);
+        }
+
         if (!itemName.startsWith("items:") && !itemName.startsWith("results:")) {
             Material material = Material.matchMaterial(itemName);
             if (material == null)
                 throw new IllegalArgumentException(itemName + " is a non-existent item type");
             return new ItemStack(material);
+        }
+
+        if (INSTANCE.itemCache.containsKey(itemName)) {
+            return INSTANCE.itemCache.get(itemName);
         }
 
         ConfigFile config;
@@ -69,6 +95,7 @@ public enum ItemLoader implements Listener {
         } else {
             config = resultFile;
         }
+        String keyName = itemName;
         itemName = itemName.substring(itemName.indexOf(":") + 1);
 
         if (config.getConfig().getString(itemName + ".material", "Null").equals("Null"))
@@ -79,6 +106,7 @@ public enum ItemLoader implements Listener {
             throw new IllegalArgumentException(materialStr + " is a non-existent item type");
         ItemStack itemStack = new ItemStack(material, config.getConfig().getInt(itemName + ".amount", 1));
         NBTManager.loadNBT2Item(itemName, itemStack, config);
+        INSTANCE.itemCache.put(keyName, itemStack);
         return itemStack;
     }
 
@@ -93,6 +121,10 @@ public enum ItemLoader implements Listener {
             throw new IllegalArgumentException(str + " is a non-existent item type");
         else
             return new RecipeChoice.MaterialChoice(material);
+    }
+
+    public Map<String, ItemStack> getItemCache() {
+        return itemCache;
     }
 
     public boolean isItemsAdderLoaded() {
@@ -123,5 +155,31 @@ public enum ItemLoader implements Listener {
             throw new IllegalArgumentException(itemName + " is not a valid ItemsAdder item");
         }
     }
+
+    private static ItemStack getMythicMobsItem(String itemName) {
+        Plugin plugin = Bukkit.getPluginManager().getPlugin("MythicMobs");
+        if (plugin == null)
+            throw new IllegalArgumentException("MythicMobs plugin not loaded");
+        ItemExecutor executor = MythicBukkit.inst().getItemManager();
+        Optional<MythicItem> itemOptional = executor.getItem(itemName);
+        if (!itemOptional.isPresent()) {
+            throw new IllegalArgumentException(itemName + " is not a valid MythicMobs item");
+        }
+        MythicItem item = itemOptional.get();
+        int amount = item.getAmount();
+        return BukkitAdapter.adapt(itemOptional.get().generateItemStack(amount));
+    }
+
+    private static ItemStack getOraxenItem(String itemName) {
+        Plugin plugin = Bukkit.getPluginManager().getPlugin("Oraxen");
+        if (plugin == null)
+            throw new IllegalArgumentException("Oraxen plugin not loaded");
+        itemName = itemName.substring(itemName.indexOf(":") + 1);
+        if (OraxenItems.exists(itemName)) {
+            throw new IllegalArgumentException(itemName + " is not a valid Oraxen item");
+        }
+        return OraxenItems.getItemById(itemName).build();
+    }
+
 
 }

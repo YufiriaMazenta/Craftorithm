@@ -30,6 +30,9 @@ repositories {
     maven {
         url = uri('https://repo.maven.apache.org/maven2/')
     }
+    maven {
+        url = uri('https://mvn.lumine.io/repository/maven-public/')
+    }
     mavenCentral()
 }
 
@@ -40,11 +43,13 @@ dependencies {
     compileOnly 'net.luckperms:api:5.4'
     compileOnly 'me.clip:placeholderapi:2.11.1'
     compileOnly 'com.github.LoneDev6:API-ItemsAdder:3.1.0b'
+    compileOnly 'io.lumine:Mythic-Dist:5.1.3-SNAPSHOT'
+    compileOnly 'com.github.oraxen:oraxen:-SNAPSHOT'
     compileOnly files('lib/Zaphkiel-2.0.10.jar')
 }
 
 group = 'top.oasismc'
-version = '0.2.3'
+version = '0.2.4'
 def pluginVersion = version + "-" + new SimpleDateFormat("yyyyMMdd").format(System.currentTimeMillis())
 archivesBaseName = 'OasisRecipe'
 

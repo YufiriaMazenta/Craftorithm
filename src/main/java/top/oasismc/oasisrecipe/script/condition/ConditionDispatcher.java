@@ -22,6 +22,7 @@ public enum ConditionDispatcher {
     }
 
     private void regDefConditions() {
+        regCondition(AdvancementCondition.INSTANCE);
         regCondition(PermCondition.INSTANCE);
         regCondition(LevelCondition.INSTANCE);
         regCondition(TimeCondition.INSTANCE);

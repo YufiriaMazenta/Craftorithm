@@ -6,7 +6,7 @@ import top.oasismc.oasisrecipe.OasisRecipe;
 import top.oasismc.oasisrecipe.api.ISubCommand;
 import top.oasismc.oasisrecipe.cmd.AbstractSubCommand;
 import top.oasismc.oasisrecipe.item.ItemLoader;
-import top.oasismc.oasisrecipe.recipe.RecipeManager;
+import top.oasismc.oasisrecipe.recipe.handler.RecipeManager;
 
 import java.util.List;
 
@@ -50,6 +50,9 @@ public final class ReloadCommand extends AbstractSubCommand {
     }
 
     public static void reloadRecipes() {
+        //重新加载缓存的ItemStack
+        ItemLoader.INSTANCE.getItemCache().clear();
+
         if (Bukkit.getPluginManager().getPlugin("ItemsAdder") == null) {
             RecipeManager.INSTANCE.reloadRecipes();
         } else {

@@ -27,8 +27,10 @@ public enum AttributesTag implements NBTTag {
         List<String> attributes = new ArrayList<>();
         Multimap<Attribute, AttributeModifier> attrMap = meta.getAttributeModifiers();
         if (attrMap != null) {
-            attrMap.forEach((attr, attrModifier) -> {
-                attributes.add(attr.name() + " " + attrModifier.getAmount() + " " + attrModifier.getOperation() + " " + attrModifier.getSlot());
+            attrMap.asMap().forEach((attr, attrModifiers) -> {
+                for (AttributeModifier modifier : attrModifiers) {
+                    attributes.add(attr.name() + " " + modifier.getAmount() + " " + modifier.getOperation() + " " + modifier.getSlot());
+                }
             });
             config.set(itemName + "." + key, attributes);
         }
