@@ -9,7 +9,7 @@ import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.FurnaceStartSmeltEvent;
 import org.bukkit.inventory.ItemStack;
 import top.oasismc.oasisrecipe.item.ItemLoader;
-import top.oasismc.oasisrecipe.recipe.RecipeManager;
+import top.oasismc.oasisrecipe.recipe.handler.RecipeManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;

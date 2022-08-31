@@ -3,7 +3,7 @@ version: ${version}
 main: top.oasismc.oasisrecipe.OasisRecipe
 api-version: 1.13
 load: POSTWORLD
-softdepend: [ Vault, LuckPerms, PlayerPoints, ItemsAdder, PlaceholderAPI ]
+softdepend: [ Vault, LuckPerms, PlayerPoints, ItemsAdder, PlaceholderAPI, MythicMobs, Oraxen ]
 authors: [ ChiyodaXiaoYi ]
 commands:
   oasisrecipe:

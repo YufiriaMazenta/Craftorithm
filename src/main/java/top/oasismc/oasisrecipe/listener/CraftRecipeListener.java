@@ -8,7 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import top.oasismc.oasisrecipe.OasisRecipe;
-import top.oasismc.oasisrecipe.recipe.RecipeManager;
+import top.oasismc.oasisrecipe.recipe.handler.RecipeManager;
 
 import java.util.List;
 
