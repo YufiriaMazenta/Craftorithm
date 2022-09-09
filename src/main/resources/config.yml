@@ -1,5 +1,6 @@
 version: ${version}
 checkUpdate: true
+remove_all_vanilla_recipe: false
 
 messages:
   #使用命令的一些消息

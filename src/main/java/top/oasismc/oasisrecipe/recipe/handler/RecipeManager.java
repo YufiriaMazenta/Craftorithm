@@ -323,13 +323,21 @@ public enum RecipeManager {
         getKeyList().clear();
         loadRecipesFromConfig();
         loadRecipeFromOtherPlugins();
-        removeVanillaRecipes();
+        removeRecipes();
         ((RemoveCommand) RemoveCommand.INSTANCE).reloadRecipeMap();
     }
 
-    private void removeVanillaRecipes() {
+    private void removeRecipes() {
         List<String> removedRecipes = RemoveCommand.getRemovedRecipeConfig().getConfig().getStringList("recipes");
+        if (OasisRecipe.getInstance().getConfig().getBoolean("remove_all_vanilla_recipe", false)) {
+            for (NamespacedKey key : ((RemoveCommand) RemoveCommand.INSTANCE).getRecipeMap().keySet()) {
+                if (key.getNamespace().equals("minecraft")) {
+                    removedRecipes.add(key.toString());
+                }
+            }
+        }
         ((RemoveCommand) RemoveCommand.INSTANCE).removeRecipes(removedRecipes);
+
     }
 
     private void loadRecipeFromOtherPlugins() {

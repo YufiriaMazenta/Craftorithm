@@ -111,7 +111,7 @@ public enum ItemLoader implements Listener {
     }
 
     public static RecipeChoice getChoiceFromStr(String str) {
-        if (str.startsWith("items:") || str.startsWith("results:") || str.startsWith("ItemsAdder:")) {
+        if (str.contains(":")) {
             ItemStack item = getItemFromConfig(str);
             return new RecipeChoice.ExactChoice(item);
         }
