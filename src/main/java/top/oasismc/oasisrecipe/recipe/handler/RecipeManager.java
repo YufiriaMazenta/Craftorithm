@@ -332,6 +332,8 @@ public enum RecipeManager {
         if (OasisRecipe.getInstance().getConfig().getBoolean("remove_all_vanilla_recipe", false)) {
             for (NamespacedKey key : ((RemoveCommand) RemoveCommand.INSTANCE).getRecipeMap().keySet()) {
                 if (key.getNamespace().equals("minecraft")) {
+                    if (removedRecipes.contains(key.toString()))
+                        continue;
                     removedRecipes.add(key.toString());
                 }
             }
