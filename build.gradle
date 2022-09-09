@@ -49,7 +49,7 @@ dependencies {
 }
 
 group = 'top.oasismc'
-version = '0.2.4'
+version = '0.2.5'
 def pluginVersion = version + "-" + new SimpleDateFormat("yyyyMMdd").format(System.currentTimeMillis())
 archivesBaseName = 'OasisRecipe'
 
