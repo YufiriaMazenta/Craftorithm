@@ -53,7 +53,6 @@ public enum ConditionDispatcher {
     }
 
     public boolean dispatchConditions(List<String> actions, Player player) {
-        System.out.println(actions);
         if (actions.size() < 1)
             return true;
         boolean result = dispatchCondition(actions.get(0), player);
