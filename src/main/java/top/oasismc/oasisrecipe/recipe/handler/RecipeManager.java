@@ -247,7 +247,17 @@ public enum RecipeManager {
     public void addShapedRecipe(String key, ItemStack result, RecipeChoice[] itemList) {
         NamespacedKey recipeKey = new NamespacedKey(OasisRecipe.getInstance(), key);
         ShapedRecipe recipe = new ShapedRecipe(recipeKey, result);
-        recipe.shape("abc", "def", "ghi");
+        StringBuffer[] shapeArr = {new StringBuffer("abc"), new StringBuffer("def"), new StringBuffer("ghi")};
+        int tmpNum = 0;
+        for (int i = 0; i < 3; i++) {
+            for (int i1 = 0; i1 < 3; i1++) {
+                if (itemList[tmpNum].getItemStack().getType().equals(Material.AIR)) {
+                    shapeArr[i].setCharAt(i1, ' ');
+                }
+                tmpNum ++;
+            }
+        }
+        recipe.shape(shapeArr[0].toString(), shapeArr[1].toString(), shapeArr[2].toString());
         String tempStr = "abcdefghi";
         int i = 0;
         for (int j = 0; j < 9; j ++) {
