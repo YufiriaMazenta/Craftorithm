@@ -1,6 +1,4 @@
-template_shaped:
-  #合成表的命名空间ID,只能使用英文小写字母,".", "_", "/"和数字，为使用/recipe命令解锁配方时的ID
-  key: 'oasis.recipe.template'
+template_shaped: #合成配方的名字,只能使用英文小写字母,".", "_", "/"和数字
   #合成表的合成物品，使用results:开头可以调用results.yml文件定义的物品, 使用ItemsAdder:开头可以调用ItemsAdder物品
   result: 'results:result1'
   #合成表的类型
@@ -27,7 +25,6 @@ template_shaped:
     - 'command me hello'
 
 template_shapeless:
-  key: 'oasis.recipe.template2'
   result: 'results:result2'
   type: 'shapeless'
   #合成表所需物品,顺序无关,只取前9个物品
@@ -35,7 +32,6 @@ template_shapeless:
     - 'items:item2'
 
 template_cooking:
-  key: 'oasis.recipe.template3'
   result: 'results:result1'
   #烧炼类配方,有furnace(熔炉),campfire("营火"),blasting("高炉"),smoking("烟熏炉")四类
   type: 'furnace'
@@ -48,7 +44,6 @@ template_cooking:
   time: 10
 
 template_smithing:
-  key: 'oasis.recipe.template4'
   result: 'DIAMOND_SWORD'
   type: 'smithing'
   #锻造台合成配方,第一行为第一个槽,第二行为第二个槽
@@ -57,7 +52,6 @@ template_smithing:
     - 'items:item1'
 
 template_stoneCutting:
-  key: 'oasis.recipe.template5'
   result: 'results:result1'
   #切石机配方
   type: 'stoneCutting'
@@ -65,7 +59,6 @@ template_stoneCutting:
   items:
     - 'items:item1'
 template_random_furnace:
-  key: 'oasis.recipe.template6'
   #在此处配置每个结果的概率, 若概率总和超过1, 则超过1部分的概率将无效
   #若概率总和小于1, 则小于1的部分将烧炼出空物品
   result:
@@ -80,7 +73,6 @@ template_random_furnace:
   exp: 0
   time: 10
 template_multiple:
-  key: 'oasis.recipe.template7'
   type: 'shapeless'
   result: 'STONE'
   multiple: true

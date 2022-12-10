@@ -1,6 +1,5 @@
 package top.oasismc.oasisrecipe.config;
 
-import com.google.common.base.Charsets;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -8,8 +7,6 @@ import top.oasismc.oasisrecipe.OasisRecipe;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 public class ConfigFile {
 
@@ -48,11 +45,6 @@ public class ConfigFile {
     //重载配置文件
     public void reloadConfig() {
         config = YamlConfiguration.loadConfiguration(configFile);
-        final InputStream defConfigStream = OasisRecipe.getInstance().getResource(path);
-        if (defConfigStream == null) {
-            return;
-        }
-        config.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(defConfigStream, Charsets.UTF_8)));
     }
 
     //保存配置文件

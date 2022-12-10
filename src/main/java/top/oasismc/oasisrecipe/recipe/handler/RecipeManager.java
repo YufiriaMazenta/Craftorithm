@@ -45,7 +45,7 @@ public enum RecipeManager {
 
     public void addRecipe(String recipeName, YamlConfiguration config) {
         try {
-            String key = Objects.requireNonNull(config.getString(recipeName + ".key")).toLowerCase();
+            String key = ("oasis.recipe." + recipeName).toLowerCase();
             List<String> choiceStrList = config.getStringList(recipeName + ".items");
             RecipeChoice[] choices = getChoices(recipeName, config, choiceStrList);
 
@@ -100,7 +100,7 @@ public enum RecipeManager {
 
     public void addMultipleRecipe(String recipeName, YamlConfiguration config) {
         try {
-            String key = Objects.requireNonNull(config.getString(recipeName + ".key")).toLowerCase();
+            String key = ("oasis.recipe." + recipeName).toLowerCase();
             ConfigurationSection section = config.getConfigurationSection(recipeName + ".items");
             Validate.notNull(section, "The recipe must set the crafting item");
             Map<String, RecipeChoice[]> choicesMap = new ConcurrentHashMap<>();
@@ -243,15 +243,16 @@ public enum RecipeManager {
         Bukkit.getServer().addRecipe(recipe);
     }
 
+    //待优化
     public void addShapedRecipe(String key, ItemStack result, RecipeChoice[] itemList) {
         NamespacedKey recipeKey = new NamespacedKey(OasisRecipe.getInstance(), key);
         ShapedRecipe recipe = new ShapedRecipe(recipeKey, result);
-        recipe = recipe.shape("abc", "def", "ghi");
+        recipe.shape("abc", "def", "ghi");
+        String tempStr = "abcdefghi";
         int i = 0;
-        String temp = "abcdefghi";
-        for (RecipeChoice choice : itemList) {
-            if (!choice.getItemStack().getType().equals(Material.AIR))
-                recipe.setIngredient(temp.charAt(i), choice);
+        for (int j = 0; j < 9; j ++) {
+            if (!itemList[j].getItemStack().getType().equals(Material.AIR))
+                recipe.setIngredient(tempStr.charAt(i), itemList[j]);
             i++;
         }
         Bukkit.getServer().addRecipe(recipe);
