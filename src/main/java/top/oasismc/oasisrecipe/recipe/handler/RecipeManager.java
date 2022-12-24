@@ -45,7 +45,7 @@ public enum RecipeManager {
 
     public void addRecipe(String recipeName, YamlConfiguration config) {
         try {
-            String key = ("oasis.recipe." + recipeName).toLowerCase();
+            String key = recipeName.toLowerCase();
             List<String> choiceStrList = config.getStringList(recipeName + ".items");
             RecipeChoice[] choices = getChoices(recipeName, config, choiceStrList);
 
@@ -100,7 +100,7 @@ public enum RecipeManager {
 
     public void addMultipleRecipe(String recipeName, YamlConfiguration config) {
         try {
-            String key = ("oasis.recipe." + recipeName).toLowerCase();
+            String key = recipeName.toLowerCase();
             ConfigurationSection section = config.getConfigurationSection(recipeName + ".items");
             Validate.notNull(section, "The recipe must set the crafting item");
             Map<String, RecipeChoice[]> choicesMap = new ConcurrentHashMap<>();
@@ -317,8 +317,7 @@ public enum RecipeManager {
             return null;
         }
         for (String key : recipes) {
-            String keyName = getRecipeFile().getConfig().getString(key + ".key", "");
-            if (namespacedKey.getKey().equals(keyName)) {
+            if (namespacedKey.getKey().equals(key)) {
                 return key;
             }
         }
