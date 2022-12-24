@@ -52,6 +52,7 @@ group = 'top.oasismc'
 version = '0.2.7'
 def pluginVersion = version + "-" + new SimpleDateFormat("yyyyMMdd").format(System.currentTimeMillis())
 archivesBaseName = 'OasisRecipe'
+java.sourceCompatibility = JavaVersion.VERSION_17
 
 publishing {
     publications {
