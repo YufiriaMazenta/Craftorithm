@@ -19,7 +19,7 @@ public class UpdateUtil {
             try {
                 URL url = new URL("https://api.github.com/repos/ChiyodaXiaoYi/OasisRecipe/releases/latest");
                 URLConnection conn = url.openConnection();
-                String newVersion = "";
+                String newVersion;
                 conn.setConnectTimeout(15000);
                 conn.setReadTimeout(60000);
                 InputStream is = conn.getInputStream();

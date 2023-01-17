@@ -18,8 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static top.oasismc.oasisrecipe.OasisRecipe.color;
 import static top.oasismc.oasisrecipe.OasisRecipe.info;
-import static top.oasismc.oasisrecipe.item.ItemLoader.getChoiceFromStr;
-import static top.oasismc.oasisrecipe.item.ItemLoader.getItemFromConfig;
+import static top.oasismc.oasisrecipe.item.ItemUtil.getItemFromConfig;
 
 public enum RecipeManager {
 
@@ -193,36 +192,36 @@ public enum RecipeManager {
             case "random_furnace":
             case "random_smoking":
             case "random_blasting":
-            case "stoneCutting":
-                choices[0] = getChoiceFromStr(choiceStrList.get(0));
-                break;
-            case "smithing":
-                choices[0] = getChoiceFromStr(choiceStrList.get(0));
-                choices[1] = getChoiceFromStr(choiceStrList.get(1));
-                break;
+//            case "stoneCutting":
+//                choices[0] = getChoiceFromStr(choiceStrList.get(0));
+//                break;
+//            case "smithing":
+//                choices[0] = getChoiceFromStr(choiceStrList.get(0));
+//                choices[1] = getChoiceFromStr(choiceStrList.get(1));
+//                break;
         }
         return choices;
     }
 
     public RecipeChoice[] getShapedRecipeItems(List<String> items) {
         RecipeChoice[] choices = new RecipeChoice[9];
-        for(int i = 0; i < 3; i++) {
-            int space1 = items.get(i).indexOf(" ");
-            String item1 = items.get(i).substring(0, space1);
-            int space2 = items.get(i).indexOf(" ", space1 + 1);
-            String item2 = items.get(i).substring(space1 + 1, space2);
-            String item3 = items.get(i).substring(space2 + 1);
-            choices[i * 3] = getChoiceFromStr(item1);
-            choices[i * 3 + 1] = getChoiceFromStr(item2);
-            choices[i * 3 + 2] = getChoiceFromStr(item3);
-        }
+//        for(int i = 0; i < 3; i++) {
+//            int space1 = items.get(i).indexOf(" ");
+//            String item1 = items.get(i).substring(0, space1);
+//            int space2 = items.get(i).indexOf(" ", space1 + 1);
+//            String item2 = items.get(i).substring(space1 + 1, space2);
+//            String item3 = items.get(i).substring(space2 + 1);
+//            choices[i * 3] = getChoiceFromStr(item1);
+//            choices[i * 3 + 1] = getChoiceFromStr(item2);
+//            choices[i * 3 + 2] = getChoiceFromStr(item3);
+//        }
         return choices;
     }
 
     public RecipeChoice[] getShapelessRecipeItems(List<String> items) {
         RecipeChoice[] choices = new RecipeChoice[items.size()];
         for (int i = 0; i < items.size(); i++) {
-            choices[i] = getChoiceFromStr(items.get(i));
+//            choices[i] = getChoiceFromStr(items.get(i));
         }
         return choices;
     }

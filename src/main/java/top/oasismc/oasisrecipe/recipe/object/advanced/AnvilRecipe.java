@@ -1,4 +1,4 @@
-package top.oasismc.oasisrecipe.recipe.custom;
+package top.oasismc.oasisrecipe.recipe.object.advanced;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;

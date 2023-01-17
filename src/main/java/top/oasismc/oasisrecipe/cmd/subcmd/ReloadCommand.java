@@ -1,11 +1,9 @@
 package top.oasismc.oasisrecipe.cmd.subcmd;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import top.oasismc.oasisrecipe.OasisRecipe;
 import top.oasismc.oasisrecipe.api.ISubCommand;
 import top.oasismc.oasisrecipe.cmd.AbstractSubCommand;
-import top.oasismc.oasisrecipe.item.ItemLoader;
 import top.oasismc.oasisrecipe.recipe.handler.RecipeManager;
 
 import java.util.List;
@@ -43,24 +41,12 @@ public final class ReloadCommand extends AbstractSubCommand {
 
     public static void reloadConfigs() {
         OasisRecipe.getInstance().reloadConfig();
-        ItemLoader.getItemFile().reloadConfig();
-        ItemLoader.getResultFile().reloadConfig();
         RecipeManager.INSTANCE.getRecipeFile().reloadConfig();
         RemoveCommand.getRemovedRecipeConfig().reloadConfig();
     }
 
     public static void reloadRecipes() {
-        //重新加载缓存的ItemStack
-        ItemLoader.INSTANCE.getItemCache().clear();
-
-        if (Bukkit.getPluginManager().getPlugin("ItemsAdder") == null) {
-            RecipeManager.INSTANCE.reloadRecipes();
-        } else {
-            if (!ItemLoader.INSTANCE.isItemsAdderLoaded()) {
-                return;
-            }
-            RecipeManager.INSTANCE.reloadRecipes();
-        }
+        RecipeManager.INSTANCE.reloadRecipes();
     }
 
 }

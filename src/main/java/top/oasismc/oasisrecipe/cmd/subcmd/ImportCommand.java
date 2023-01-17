@@ -7,8 +7,7 @@ import top.oasismc.oasisrecipe.OasisRecipe;
 import top.oasismc.oasisrecipe.api.ISubCommand;
 import top.oasismc.oasisrecipe.cmd.AbstractSubCommand;
 import top.oasismc.oasisrecipe.config.ConfigFile;
-import top.oasismc.oasisrecipe.item.ItemLoader;
-import top.oasismc.oasisrecipe.item.nbt.NBTManager;
+import top.oasismc.oasisrecipe.item.ItemUtil;
 
 import java.util.List;
 
@@ -18,42 +17,18 @@ public final class ImportCommand extends AbstractSubCommand {
 
     private ImportCommand() {
         super("import", null);
-        regSubCommand(new AbstractSubCommand("results", null) {
-            @Override
-            public boolean onCommand(CommandSender sender, List<String> args) {
-                if (args.size() < 1) {
-                    OasisRecipe.getInstance().sendMsg(sender, "commands.missingParam");
-                    return true;
-                }
-                ItemStack item = ((Player) sender).getInventory().getItemInMainHand();
-                ConfigFile configFile = ItemLoader.getResultFile();
-                NBTManager.importItem(args.get(0), item, configFile);
-                OasisRecipe.getInstance().sendMsg(sender, "commands.import");
-                return true;
-            }
-        });
-        regSubCommand(new AbstractSubCommand("items", null) {
-            @Override
-            public boolean onCommand(CommandSender sender, List<String> args) {
-                if (args.size() < 1) {
-                    OasisRecipe.getInstance().sendMsg(sender, "commands.missingParam");
-                    return true;
-                }
-                ItemStack item = ((Player) sender).getInventory().getItemInMainHand();
-                ConfigFile configFile = ItemLoader.getItemFile();
-                NBTManager.importItem(args.get(0), item, configFile);
-                OasisRecipe.getInstance().sendMsg(sender, "commands.import");
-                return true;
-            }
-        });
     }
 
     @Override
     public boolean onCommand(CommandSender sender, List<String> args) {
-        if (!(sender instanceof Player)){
-            OasisRecipe.getInstance().sendMsg(sender, "commands.playerOnly");
+        if (args.size() < 1) {
+            OasisRecipe.getInstance().sendMsg(sender, "commands.missingParam");
             return true;
         }
-        return super.onCommand(sender, args);
+        ItemStack item = ((Player) sender).getInventory().getItemInMainHand();
+        ConfigFile configFile = new ConfigFile("items.yml");
+        ItemUtil.saveItem2Config(item, configFile, args.get(0) + ".nbt");
+        OasisRecipe.getInstance().sendMsg(sender, "commands.import");
+        return true;
     }
 }

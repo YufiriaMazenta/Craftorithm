@@ -30,7 +30,8 @@ public enum EffectCondition implements IRecipeCondition {
         try {
             type = PotionEffectType.getByName(arg);
         } catch (IllegalArgumentException e) {
-            type = PotionEffectType.getByKey(NamespacedKey.fromString(arg));
+            //提示不存在此类型
+            type = null;
         }
 
         Validate.notNull(type, "PotionEffectType " + arg + " does not exist");
