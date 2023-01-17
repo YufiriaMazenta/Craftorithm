@@ -4,7 +4,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.plugin.Plugin;
 import top.oasismc.oasisrecipe.OasisRecipe;
-import top.oasismc.oasisrecipe.item.ItemLoader;
 import top.oasismc.oasisrecipe.script.action.ActionDispatcher;
 import top.oasismc.oasisrecipe.script.condition.ConditionDispatcher;
 
@@ -27,13 +26,13 @@ public enum OasisRecipeAPI {
         return OasisRecipe.getInstance().getConditionDispatcher();
     }
 
-    public ItemStack getRecipeChoiceItem(String name) {
-        return ItemLoader.getItemFromConfig("items:" + name);
-    }
-
-    public ItemStack getRecipeResultItem(String name) {
-        return ItemLoader.getItemFromConfig("results:" + name);
-    }
+//    public ItemStack getRecipeChoiceItem(String name) {
+//        return ItemLoader.getItemFromConfig("items:" + name);
+//    }
+//
+//    public ItemStack getRecipeResultItem(String name) {
+//        return ItemLoader.getItemFromConfig("results:" + name);
+//    }
 
     public Map<Plugin, List<Recipe>> getPluginRecipeMap() {
         return Collections.unmodifiableMap(pluginRecipeMap);

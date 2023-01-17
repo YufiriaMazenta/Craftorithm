@@ -10,8 +10,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import top.oasismc.oasisrecipe.bstat.Metrics;
 import top.oasismc.oasisrecipe.cmd.PluginCommand;
 import top.oasismc.oasisrecipe.cmd.subcmd.ReloadCommand;
+import top.oasismc.oasisrecipe.config.ConfigFile;
 import top.oasismc.oasisrecipe.config.ConfigUpdater;
-import top.oasismc.oasisrecipe.item.ItemLoader;
 import top.oasismc.oasisrecipe.listener.CraftRecipeListener;
 import top.oasismc.oasisrecipe.listener.FurnaceSmeltListener;
 import top.oasismc.oasisrecipe.listener.SmithingListener;
@@ -85,8 +85,6 @@ public final class OasisRecipe extends JavaPlugin implements Listener {
             Bukkit.getPluginManager().registerEvents(SmithingListener.INSTANCE, this);
         if (getVanillaVersion() >= 18)
             Bukkit.getPluginManager().registerEvents(FurnaceSmeltListener.INSTANCE, this);
-        if (Bukkit.getPluginManager().getPlugin("ItemsAdder") != null)
-            Bukkit.getPluginManager().registerEvents(ItemLoader.INSTANCE, this);
     }
 
     private void loadConfigs() {

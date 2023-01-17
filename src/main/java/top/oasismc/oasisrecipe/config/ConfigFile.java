@@ -26,8 +26,14 @@ public class ConfigFile {
         createDefaultConfig();
     }
 
+    public ConfigFile(File file) {
+        this.configFile = file;
+        this.path = file.getPath();
+        this.config = YamlConfiguration.loadConfiguration(file);
+    }
+
     //创建默认配置文件
-    public void createDefaultConfig() {
+    private void createDefaultConfig() {
         if (!configFile.exists()) {
             OasisRecipe.getInstance().saveResource(path, false);
         }
