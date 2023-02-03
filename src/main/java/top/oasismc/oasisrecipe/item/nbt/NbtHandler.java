@@ -21,7 +21,8 @@ public class NbtHandler {
     private static final Map<String, Function<Object, IPluginNbtTag<?>>> nbtObjTypeMap;
     private static final Map<String, String> setNbt2CompoundMethodNameMap;
     private static final Map<String, String> nbtBaseClassNameMap;
-    private static final Map<String, String> setNbtList2CompoundMethodNameMap;
+    private static Class<?> nmsNbtBaseClass;
+    private static Method setNbt2CompoundMethod = null;
 
     static {
         nmsVersion = Bukkit.getServer().getClass().getPackage().getName().substring(Bukkit.getServer().getClass().getPackage().getName().lastIndexOf('.') + 1);
@@ -48,8 +49,11 @@ public class NbtHandler {
         nbtBaseClassNameMap = new HashMap<>();
         nbtBaseClassNameMap.put("v1_19_R2", "net.minecraft.nbt.NBTBase");
 
-        setNbtList2CompoundMethodNameMap = new HashMap<>();
-        setNbtList2CompoundMethodNameMap.put("v1_19_R2", "c");
+        try {
+            nmsNbtBaseClass = Class.forName(nbtBaseClassNameMap.get(nmsVersion));
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public static String getNmsVersion() {
@@ -105,6 +109,8 @@ public class NbtHandler {
                 LongArrayNbtTag longArrayNbtTag = (LongArrayNbtTag) nbtTag;
                 return longArrayNbtTag.getFullValue();
             case INT_ARRAY:
+                IntArrayNbtTag intArrayNbtTag = (IntArrayNbtTag) nbtTag;
+                return intArrayNbtTag.getFullValue();
             case STRING:
                 return nbtTag.getValue();
             case COMPOUND:
@@ -131,18 +137,15 @@ public class NbtHandler {
      */
     public static void setNbt2NmsCompound(ConfigurationSection configSection, Object nmsNbtCompoundObj) {
         String setNbt2CompoundMethodName = setNbt2CompoundMethodNameMap.get(nmsVersion);
-        Method setNbt2CompoundMethod = null;
-        Class<?> nbtBaseClass;
-        try {
-            nbtBaseClass = Class.forName(nbtBaseClassNameMap.get(getNmsVersion()));
-            setNbt2CompoundMethod = nmsNbtCompoundObj.getClass().getMethod(setNbt2CompoundMethodName, String.class, nbtBaseClass);
-        } catch (NoSuchMethodException | ClassNotFoundException e) {
-            //提示版本不兼容
-            //TODO
-            e.printStackTrace();
+        if (setNbt2CompoundMethod == null) {
+            try {
+                setNbt2CompoundMethod = nmsNbtCompoundObj.getClass().getMethod(setNbt2CompoundMethodName, String.class, nmsNbtBaseClass);
+            } catch (NoSuchMethodException e) {
+                //提示版本不兼容
+                e.printStackTrace();
+            }
+
         }
-        if (setNbt2CompoundMethod == null)
-            return;
         for (String key : configSection.getKeys(false)) {
             Object configObj = configSection.get(key);
             Object nmsNbtObj = generateNmsNbtObj(configObj);
@@ -157,33 +160,42 @@ public class NbtHandler {
     /*
     传入获取的配置文件，返回生成的NMS NBT对象
      */
-    public static Object generateNmsNbtObj(Object configObj) {
-        if (configObj == null)
+    public static Object generateNmsNbtObj(Object sourceObj) {
+        if (sourceObj == null)
             return null;
-        String configObjClassName = configObj.getClass().getSimpleName();
-        switch (configObjClassName) {
+        String sourceObjClassName = sourceObj.getClass().getSimpleName();
+        switch (sourceObjClassName) {
             case "Integer":
-                int intValue = (int) configObj;
+                int intValue = (int) sourceObj;
                 return new NumberNbtTag(intValue).toNmsNbt();
             case "Double":
-                double doubleValue = (double) configObj;
+                double doubleValue = (double) sourceObj;
                 return new NumberNbtTag(doubleValue).toNmsNbt();
             case "ArrayList":
-                List<?> listValue = (List<?>) configObj;
+                List<?> listValue = (List<?>) sourceObj;
                 if (listValue.size() < 1)
                     return null;
                 return new ListNbtTag(listValue).toNmsNbt();
             case "String":
-                return new StringNbtTag(configObj).toNmsNbt();
+                return new StringNbtTag((String) sourceObj, 0).toNmsNbt();
             case "MemorySection":
-                MemorySection sectionValue = (MemorySection) configObj;
+                MemorySection sectionValue = (MemorySection) sourceObj;
                 return new CompoundNbtTag(sectionValue).toNmsNbt();
+            default:
+                throw new IllegalArgumentException("Unsupported object type: " + sourceObjClassName);
         }
-        return null;
     }
 
     public static Map<String, Function<Object, IPluginNbtTag<?>>> getNbtObjTypeMap() {
         return nbtObjTypeMap;
+    }
+
+    public static Method getSetNbt2CompoundMethod() {
+        return setNbt2CompoundMethod;
+    }
+
+    public static Class<?> getNmsNbtBaseClass() {
+        return nmsNbtBaseClass;
     }
 
 }

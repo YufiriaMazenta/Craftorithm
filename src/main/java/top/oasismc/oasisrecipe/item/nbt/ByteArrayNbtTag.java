@@ -2,6 +2,7 @@ package top.oasismc.oasisrecipe.item.nbt;
 
 import top.oasismc.oasisrecipe.api.nbt.IPluginNbtTag;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -12,10 +13,14 @@ public class ByteArrayNbtTag implements IPluginNbtTag<byte[]> {
 
     private byte[] value;
     private static final Map<String, String> getValueMethodNameMap;
+    private static final Map<String, String> nmsByteArrayNbtClassNameMap;
 
     static {
         getValueMethodNameMap = new HashMap<>();
         getValueMethodNameMap.put("v1_19_R2", "g");
+
+        nmsByteArrayNbtClassNameMap = new HashMap<>();
+        nmsByteArrayNbtClassNameMap.put("v1_19_R2", "net.minecraft.nbt.NBTTagByteArray");
     }
 
     public ByteArrayNbtTag(Object nmsNbtObj) {
@@ -47,7 +52,17 @@ public class ByteArrayNbtTag implements IPluginNbtTag<byte[]> {
 
     @Override
     public Object toNmsNbt() {
-        return null;
+        Class<?> nmsByteArrayNbtClass;
+        Object nmsNbtObj = null;
+        try {
+            nmsByteArrayNbtClass = Class.forName(nmsByteArrayNbtClassNameMap.get(NbtHandler.getNmsVersion()));
+            Constructor<?> constructor = nmsByteArrayNbtClass.getDeclaredConstructor(byte[].class);
+            constructor.setAccessible(true);
+            nmsNbtObj = constructor.newInstance(value);
+        } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return nmsNbtObj;
     }
 
     public String getFullValue() {

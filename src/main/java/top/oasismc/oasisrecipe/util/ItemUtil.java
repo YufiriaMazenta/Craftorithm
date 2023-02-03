@@ -18,6 +18,8 @@ public class ItemUtil {
 
     private static final Map<String, String> getTagsMethodNameMap;
     private static final Map<String, String> setNbtCompound2ItemMethodNameMap;
+    private static final Map<String, String> nmsItemClassNameMap;
+    private static final Class<?> nmsItemClass;
 
     static {
         getTagsMethodNameMap = new HashMap<>();
@@ -25,6 +27,17 @@ public class ItemUtil {
 
         setNbtCompound2ItemMethodNameMap = new HashMap<>();
         setNbtCompound2ItemMethodNameMap.put("v1_19_R2", "c");
+
+        nmsItemClassNameMap = new HashMap<>();
+        nmsItemClassNameMap.put("v1_19_R2", "net.minecraft.world.item.ItemStack");
+
+        Class<?> tmpClass = null;
+        try {
+            tmpClass = Class.forName(nmsItemClassNameMap.get(NbtHandler.getNmsVersion()));
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        nmsItemClass = tmpClass;
     }
 
     /*
@@ -53,7 +66,7 @@ public class ItemUtil {
             return null;
         try {
             Class<?> craftItemClass = Class.forName("org.bukkit.craftbukkit." + NbtHandler.getNmsVersion() + ".inventory.CraftItemStack");
-            Method asBukkitCopyMethod = craftItemClass.getMethod("asBukkitCopy", ItemStack.class);
+            Method asBukkitCopyMethod = craftItemClass.getMethod("asBukkitCopy", nmsItemClass);
             return (ItemStack) asBukkitCopyMethod.invoke(null, nmsItemObj);
         } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             //提示版本不兼容
@@ -136,7 +149,7 @@ public class ItemUtil {
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
-        return null;
+        return nms2BukkitItem(nmsItem);
     }
 
 }

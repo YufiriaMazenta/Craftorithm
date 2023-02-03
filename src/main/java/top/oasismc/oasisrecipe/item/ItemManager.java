@@ -12,19 +12,19 @@ import static top.oasismc.oasisrecipe.util.FileUtil.getAllFiles;
 
 public class ItemManager {
 
-    public static final Map<String, YamlFileWrapper> itemFileMap = new HashMap<>();
-    public static final Map<String, ItemStack> itemMap = new HashMap<>();
-    public static final File itemFileFolder = new File(OasisRecipe.getInstance().getDataFolder().getPath(), "items");
+    private static final Map<String, YamlFileWrapper> itemFileMap = new HashMap<>();
+    private static final Map<String, ItemStack> itemMap = new HashMap<>();
+    private static final File itemFileFolder = new File(OasisRecipe.getInstance().getDataFolder().getPath(), "items");
 
     public static void loadItems() {
-//        loadItemFiles();
-//        for (String fileKey : itemFileMap.keySet()) {
-//            YamlFileWrapper itemFile = itemFileMap.get(fileKey);
-//            Set<String> itemKeySet = itemFile.getConfig().getKeys(false);
-//            for (String itemKey : itemKeySet) {
-//                ItemUtil.getItemFromConfig(itemFile.getConfig(), itemKey);
-//            }
-//        }
+        loadItemFiles();
+        for (String fileKey : itemFileMap.keySet()) {
+            YamlFileWrapper itemFile = itemFileMap.get(fileKey);
+            Set<String> itemKeySet = itemFile.getConfig().getKeys(false);
+            for (String itemKey : itemKeySet) {
+                itemMap.put(itemKey, ItemUtil.getItemFromConfig(itemFile.getConfig(), itemKey));
+            }
+        }
     }
 
     public static ItemStack getPluginItemStack(String itemName) {
@@ -47,6 +47,10 @@ public class ItemManager {
             key = key.replace('\\', '/');
             itemFileMap.put(key, new YamlFileWrapper(file));
         }
+    }
+
+    public static Map<String, ItemStack> getItemMap() {
+        return itemMap;
     }
 
 }
