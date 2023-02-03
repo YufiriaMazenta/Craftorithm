@@ -3,7 +3,7 @@ package top.oasismc.oasisrecipe.script.condition.impl;
 import org.bukkit.entity.Player;
 import top.oasismc.oasisrecipe.api.script.condition.IRecipeCondition;
 import top.oasismc.oasisrecipe.script.action.ActionDispatcher;
-import top.oasismc.oasisrecipe.script.util.ValueUtil;
+import top.oasismc.oasisrecipe.util.ScriptValueUtil;
 
 public enum MoneyCondition implements IRecipeCondition {
 
@@ -15,7 +15,7 @@ public enum MoneyCondition implements IRecipeCondition {
         double needValue = Double.parseDouble(arg.substring(asteriskIndex + 1));
         double playerBal = ActionDispatcher.INSTANCE.getEconomy().getBalance(player);
         String type = arg.substring(0, asteriskIndex);
-        return ValueUtil.compare(playerBal, needValue, type);
+        return ScriptValueUtil.compare(playerBal, needValue, type);
     }
 
     @Override

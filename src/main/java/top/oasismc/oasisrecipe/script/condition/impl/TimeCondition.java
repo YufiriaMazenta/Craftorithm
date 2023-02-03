@@ -2,7 +2,7 @@ package top.oasismc.oasisrecipe.script.condition.impl;
 
 import org.bukkit.entity.Player;
 import top.oasismc.oasisrecipe.api.script.condition.IRecipeCondition;
-import top.oasismc.oasisrecipe.script.util.ValueUtil;
+import top.oasismc.oasisrecipe.util.ScriptValueUtil;
 
 public enum TimeCondition implements IRecipeCondition {
 
@@ -14,7 +14,7 @@ public enum TimeCondition implements IRecipeCondition {
         long needValue = Long.parseLong(arg.substring(asteriskIndex + 1));
         long time = player.getWorld().getTime();
         String type = arg.substring(0, asteriskIndex);
-        return ValueUtil.compare(time, needValue, type);
+        return ScriptValueUtil.compare(time, needValue, type);
     }
 
     @Override

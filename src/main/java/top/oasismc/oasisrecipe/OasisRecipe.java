@@ -10,14 +10,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 import top.oasismc.oasisrecipe.bstat.Metrics;
 import top.oasismc.oasisrecipe.cmd.PluginCommand;
 import top.oasismc.oasisrecipe.cmd.subcmd.ReloadCommand;
-import top.oasismc.oasisrecipe.config.ConfigFile;
 import top.oasismc.oasisrecipe.config.ConfigUpdater;
+import top.oasismc.oasisrecipe.item.ItemManager;
 import top.oasismc.oasisrecipe.listener.CraftRecipeListener;
 import top.oasismc.oasisrecipe.listener.FurnaceSmeltListener;
 import top.oasismc.oasisrecipe.listener.SmithingListener;
+import top.oasismc.oasisrecipe.recipe.RecipeManager;
 import top.oasismc.oasisrecipe.script.action.ActionDispatcher;
 import top.oasismc.oasisrecipe.script.condition.ConditionDispatcher;
-import top.oasismc.oasisrecipe.update.UpdateUtil;
+import top.oasismc.oasisrecipe.util.UpdateUtil;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,17 +40,18 @@ public final class OasisRecipe extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         INSTANCE.colorPattern = Pattern.compile("&#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})");
+        ItemManager.loadItems();
+        RecipeManager.loadRecipes();
         loadVanillaVersion();
-        loadBStat();
         saveDefaultConfig();
         loadConfigs();
         loadCommands();
         loadScripts();
-        hookItemsAdder();
         loadListener();
         info("&aLoad 1." + vanillaVersion + " Adapter");
         info(getConfig().getString("messages.load.finish", "messages.load.finish"));
         UpdateUtil.checkUpdate(Bukkit.getConsoleSender());
+        loadBStat();
     }
 
     @Override
@@ -90,16 +92,6 @@ public final class OasisRecipe extends JavaPlugin implements Listener {
     private void loadConfigs() {
         ConfigUpdater.INSTANCE.updateConfig();
         ReloadCommand.reloadPlugin();
-    }
-
-    private void hookItemsAdder() {
-        String messageKey;
-        if (Bukkit.getPluginManager().getPlugin("ItemsAdder") != null) {
-            messageKey = "messages.load.itemsAdderSuccess";
-        } else {
-            messageKey = "messages.load.itemsAdderFailed";
-        }
-        OasisRecipe.info(color(OasisRecipe.getInstance().getConfig().getString(messageKey, messageKey)));
     }
 
     private void loadScripts() {

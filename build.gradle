@@ -42,10 +42,6 @@ dependencies {
     compileOnly 'org.black_ixx:playerpoints:3.2.5'
     compileOnly 'net.luckperms:api:5.4'
     compileOnly 'me.clip:placeholderapi:2.11.1'
-    compileOnly 'com.github.LoneDev6:API-ItemsAdder:3.1.0b'
-    compileOnly 'io.lumine:Mythic-Dist:5.1.3-SNAPSHOT'
-    compileOnly 'com.github.Th0rgal:Oraxen:-SNAPSHOT'
-    compileOnly files('lib/Zaphkiel-2.0.10.jar')
 }
 
 group = 'top.oasismc'

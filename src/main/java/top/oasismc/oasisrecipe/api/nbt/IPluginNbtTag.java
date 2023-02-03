@@ -11,4 +11,6 @@ public interface IPluginNbtTag<T> {
 
     NbtType getType();
 
+    Object toNmsNbt();
+
 }

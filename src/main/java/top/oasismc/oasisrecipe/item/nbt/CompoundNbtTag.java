@@ -1,7 +1,6 @@
 package top.oasismc.oasisrecipe.item.nbt;
 
-import top.oasismc.oasisrecipe.item.nbt.NbtType;
-import top.oasismc.oasisrecipe.item.nbt.NbtHandler;
+import org.bukkit.configuration.MemorySection;
 import top.oasismc.oasisrecipe.api.nbt.IPluginNbtTag;
 
 import java.lang.reflect.InvocationTargetException;
@@ -30,6 +29,11 @@ public class CompoundNbtTag implements IPluginNbtTag<Map<String, IPluginNbtTag<?
         this.value = getNbtValueMap(nmsNbtObj, tagKeySet);
     }
 
+    public CompoundNbtTag(MemorySection section) {
+        //TODO
+        this.value = null;
+    }
+
     @Override
     public Map<String, IPluginNbtTag<?>> getValue() {
         return value;
@@ -38,6 +42,11 @@ public class CompoundNbtTag implements IPluginNbtTag<Map<String, IPluginNbtTag<?
     @Override
     public NbtType getType() {
         return NbtType.COMPOUND;
+    }
+
+    @Override
+    public Object toNmsNbt() {
+        return null;
     }
 
     private Set<String> getCompoundKeySet(Object nmsNbtObj) {

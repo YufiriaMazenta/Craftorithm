@@ -11,24 +11,26 @@ import org.bukkit.plugin.Plugin;
 import top.oasismc.oasisrecipe.OasisRecipe;
 import top.oasismc.oasisrecipe.api.OasisRecipeAPI;
 import top.oasismc.oasisrecipe.cmd.subcmd.RemoveCommand;
-import top.oasismc.oasisrecipe.config.ConfigFile;
+import top.oasismc.oasisrecipe.config.YamlFileWrapper;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static top.oasismc.oasisrecipe.OasisRecipe.color;
 import static top.oasismc.oasisrecipe.OasisRecipe.info;
-import static top.oasismc.oasisrecipe.item.ItemUtil.getItemFromConfig;
 
-public enum RecipeManager {
+public enum OldRecipeManager {
 
     INSTANCE;
 
-    private final ConfigFile recipeFile;
+    private final YamlFileWrapper recipeFile;
     private final List<String> keyList;
 
-    RecipeManager() {
-        recipeFile = new ConfigFile("recipe.yml");
+    OldRecipeManager() {
+        recipeFile = new YamlFileWrapper("recipe.yml");
         keyList = new ArrayList<>();
     }
 
@@ -53,7 +55,7 @@ public enum RecipeManager {
                 resultStr = config.getStringList(recipeName + ".result").get(0);
                 resultStr = resultStr.substring(0, resultStr.indexOf(" "));
             }
-            ItemStack result = getItemFromConfig(resultStr);//获取合成的物品
+            ItemStack result = null;
 
             switch (config.getString(recipeName + ".type", "shaped")) {
                 case "shaped":
@@ -114,7 +116,7 @@ public enum RecipeManager {
                 resultStr = config.getStringList(recipeName + ".result").get(0);
                 resultStr = resultStr.substring(0, resultStr.indexOf(" "));
             }
-            ItemStack result = getItemFromConfig(resultStr);//获取合成的物品
+            ItemStack result = null;
 
             switch (config.getString(recipeName + ".type", "shaped")) {
                 case "shaped":
@@ -323,7 +325,7 @@ public enum RecipeManager {
         return null;
     }
 
-    public ConfigFile getRecipeFile() {
+    public YamlFileWrapper getRecipeFile() {
         return recipeFile;
     }
 

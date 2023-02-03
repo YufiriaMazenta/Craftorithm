@@ -3,7 +3,7 @@ package top.oasismc.oasisrecipe.script.condition.impl;
 import org.bukkit.entity.Player;
 import top.oasismc.oasisrecipe.api.script.condition.IRecipeCondition;
 import top.oasismc.oasisrecipe.script.action.ActionDispatcher;
-import top.oasismc.oasisrecipe.script.util.ValueUtil;
+import top.oasismc.oasisrecipe.util.ScriptValueUtil;
 
 public enum PointsCondition implements IRecipeCondition {
 
@@ -15,7 +15,7 @@ public enum PointsCondition implements IRecipeCondition {
         int needValue = Integer.parseInt(arg.substring(asteriskIndex + 1));
         int playerPoints = ActionDispatcher.INSTANCE.getPlayerPoints().getAPI().look(player.getUniqueId());
         String type = arg.substring(0, asteriskIndex);
-        return ValueUtil.compare(playerPoints, needValue, type);
+        return ScriptValueUtil.compare(playerPoints, needValue, type);
     }
 
     @Override

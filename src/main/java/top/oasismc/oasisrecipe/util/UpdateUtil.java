@@ -1,4 +1,4 @@
-package top.oasismc.oasisrecipe.update;
+package top.oasismc.oasisrecipe.util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;

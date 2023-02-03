@@ -2,7 +2,7 @@ package top.oasismc.oasisrecipe.script.condition.impl;
 
 import org.bukkit.entity.Player;
 import top.oasismc.oasisrecipe.api.script.condition.IRecipeCondition;
-import top.oasismc.oasisrecipe.script.util.ValueUtil;
+import top.oasismc.oasisrecipe.util.ScriptValueUtil;
 
 public enum RandomCondition implements IRecipeCondition {
 
@@ -14,7 +14,7 @@ public enum RandomCondition implements IRecipeCondition {
         double random = Math.random();
         double value = Double.parseDouble(arg.substring(asteriskIndex + 1));
         String type = arg.substring(0, asteriskIndex);
-        return ValueUtil.compare(random, value, type);
+        return ScriptValueUtil.compare(random, value, type);
     }
 
     @Override
