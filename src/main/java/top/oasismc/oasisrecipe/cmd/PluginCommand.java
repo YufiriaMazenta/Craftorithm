@@ -5,10 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import top.oasismc.oasisrecipe.OasisRecipe;
 import top.oasismc.oasisrecipe.api.ISubCommand;
-import top.oasismc.oasisrecipe.cmd.subcmd.ImportCommand;
-import top.oasismc.oasisrecipe.cmd.subcmd.ReloadCommand;
-import top.oasismc.oasisrecipe.cmd.subcmd.RemoveCommand;
-import top.oasismc.oasisrecipe.cmd.subcmd.VersionCommand;
+import top.oasismc.oasisrecipe.cmd.subcmd.*;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -45,6 +42,7 @@ public enum PluginCommand implements TabExecutor {
         regSubCommand(ReloadCommand.INSTANCE);
         regSubCommand(VersionCommand.INSTANCE);
         regSubCommand(RemoveCommand.INSTANCE);
+        regSubCommand(DebugCommand.INSTANCE);
     }
 
     public void regSubCommand(ISubCommand executor) {
