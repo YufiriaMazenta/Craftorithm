@@ -1,7 +1,5 @@
 package top.oasismc.oasisrecipe.item.nbt;
 
-import top.oasismc.oasisrecipe.item.nbt.NbtType;
-import top.oasismc.oasisrecipe.item.nbt.NbtHandler;
 import top.oasismc.oasisrecipe.api.nbt.IPluginNbtTag;
 
 import java.lang.reflect.InvocationTargetException;
@@ -34,6 +32,10 @@ public class StringNbtTag implements IPluginNbtTag<String> {
         this.value = value;
     }
 
+    public StringNbtTag(String strObj) {
+        this.value = strObj;
+    }
+
     @Override
     public String getValue() {
         return value;
@@ -42,6 +44,11 @@ public class StringNbtTag implements IPluginNbtTag<String> {
     @Override
     public NbtType getType() {
         return NbtType.STRING;
+    }
+
+    @Override
+    public Object toNmsNbt() {
+        return null;
     }
 
 }

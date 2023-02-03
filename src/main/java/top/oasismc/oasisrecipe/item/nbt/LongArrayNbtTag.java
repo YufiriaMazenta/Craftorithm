@@ -1,13 +1,12 @@
 package top.oasismc.oasisrecipe.item.nbt;
 
-import top.oasismc.oasisrecipe.item.nbt.NbtType;
-import top.oasismc.oasisrecipe.item.nbt.NbtHandler;
 import top.oasismc.oasisrecipe.api.nbt.IPluginNbtTag;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringJoiner;
 
 public class LongArrayNbtTag implements IPluginNbtTag<long[]> {
 
@@ -32,6 +31,10 @@ public class LongArrayNbtTag implements IPluginNbtTag<long[]> {
         }
     }
 
+    public LongArrayNbtTag(long[] longArray) {
+        this.value = longArray;
+    }
+
     @Override
     public long[] getValue() {
         return value;
@@ -41,4 +44,18 @@ public class LongArrayNbtTag implements IPluginNbtTag<long[]> {
     public NbtType getType() {
         return NbtType.LONG_ARRAY;
     }
+
+    @Override
+    public Object toNmsNbt() {
+        return null;
+    }
+
+    public String getFullValue() {
+        StringJoiner str = new StringJoiner(",", "LONG$[", "]");
+        for (long b : value) {
+            str.add(b + "");
+        }
+        return str.toString();
+    }
+
 }

@@ -8,7 +8,7 @@ import org.bukkit.event.inventory.PrepareSmithingEvent;
 import org.bukkit.event.inventory.SmithItemEvent;
 import org.bukkit.inventory.Recipe;
 import top.oasismc.oasisrecipe.OasisRecipe;
-import top.oasismc.oasisrecipe.recipe.handler.RecipeManager;
+import top.oasismc.oasisrecipe.recipe.handler.OldRecipeManager;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public enum SmithingListener implements Listener {
     @EventHandler
     public void onPrepareSmith(PrepareSmithingEvent event) {
         Recipe recipe = event.getInventory().getRecipe();
-        String recipeName = RecipeManager.INSTANCE.getRecipeName(recipe);
+        String recipeName = OldRecipeManager.INSTANCE.getRecipeName(recipe);
         if (recipeName == null)
             return;
         for (HumanEntity human : event.getViewers()) {
@@ -29,7 +29,7 @@ public enum SmithingListener implements Listener {
             }
 
             Player player = ((Player) human);
-            List<String> conditions = RecipeManager.INSTANCE.getRecipeFile().getConfig().getStringList(recipeName + ".conditions");
+            List<String> conditions = OldRecipeManager.INSTANCE.getRecipeFile().getConfig().getStringList(recipeName + ".conditions");
             try {
                 if (!OasisRecipe.getInstance().getConditionDispatcher().dispatchConditions(conditions, player)) {
                     event.setResult(null);
@@ -51,11 +51,11 @@ public enum SmithingListener implements Listener {
             return;
         }
         Recipe recipe = event.getInventory().getRecipe();
-        String recipeName = RecipeManager.INSTANCE.getRecipeName(recipe);
+        String recipeName = OldRecipeManager.INSTANCE.getRecipeName(recipe);
         if (recipeName == null)
             return;
         Player player = (Player) entity;
-        List<String> actions = RecipeManager.INSTANCE.getRecipeFile().getConfig().getStringList(recipeName + ".actions");
+        List<String> actions = OldRecipeManager.INSTANCE.getRecipeFile().getConfig().getStringList(recipeName + ".actions");
         OasisRecipe.getInstance().getActionDispatcher().dispatchActions(actions, player);
     }
 

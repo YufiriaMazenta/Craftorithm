@@ -8,14 +8,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.FurnaceStartSmeltEvent;
 import org.bukkit.inventory.ItemStack;
-import top.oasismc.oasisrecipe.recipe.handler.RecipeManager;
+import top.oasismc.oasisrecipe.recipe.handler.OldRecipeManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static top.oasismc.oasisrecipe.item.ItemUtil.getItemFromConfig;
 
 public enum FurnaceSmeltListener implements Listener {
 
@@ -29,8 +27,8 @@ public enum FurnaceSmeltListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onFurnaceStartSmelt(FurnaceStartSmeltEvent event) {
-        String recipeName = RecipeManager.INSTANCE.getRecipeName(event.getRecipe());
-        if (RecipeManager.INSTANCE.getRecipeFile().getConfig().getString(recipeName + ".type", "shaped").startsWith("random_")) {
+        String recipeName = OldRecipeManager.INSTANCE.getRecipeName(event.getRecipe());
+        if (OldRecipeManager.INSTANCE.getRecipeFile().getConfig().getString(recipeName + ".type", "shaped").startsWith("random_")) {
             furnaceMap.put(event.getBlock(), recipeName);
         }
     }
@@ -38,7 +36,7 @@ public enum FurnaceSmeltListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onFurnaceSmelt(FurnaceSmeltEvent event) {
         if (furnaceMap.containsKey(event.getBlock())) {
-            List<String> resultList = RecipeManager.INSTANCE.getRecipeFile().getConfig().getStringList(furnaceMap.get(event.getBlock()) + ".result");
+            List<String> resultList = OldRecipeManager.INSTANCE.getRecipeFile().getConfig().getStringList(furnaceMap.get(event.getBlock()) + ".result");
             List<Map.Entry<ItemStack, Double>> probabilityList = getProbability(resultList);
             double random = Math.random();
             for (Map.Entry<ItemStack, Double> entry : probabilityList) {
@@ -57,7 +55,7 @@ public enum FurnaceSmeltListener implements Listener {
         for (String result : results) {
             String item = result.substring(0, result.indexOf(" "));
             double probability = Double.parseDouble(result.substring(result.indexOf(" ") + 1));
-            ItemStack itemStack = getItemFromConfig(item);
+            ItemStack itemStack = null;//getItemFromConfig(item);
             sum += probability;
             probabilityMap.put(itemStack, sum);
         }

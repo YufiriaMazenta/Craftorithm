@@ -4,7 +4,7 @@ import org.bukkit.command.CommandSender;
 import top.oasismc.oasisrecipe.OasisRecipe;
 import top.oasismc.oasisrecipe.api.ISubCommand;
 import top.oasismc.oasisrecipe.cmd.AbstractSubCommand;
-import top.oasismc.oasisrecipe.recipe.handler.RecipeManager;
+import top.oasismc.oasisrecipe.recipe.handler.OldRecipeManager;
 
 import java.util.List;
 
@@ -41,12 +41,12 @@ public final class ReloadCommand extends AbstractSubCommand {
 
     public static void reloadConfigs() {
         OasisRecipe.getInstance().reloadConfig();
-        RecipeManager.INSTANCE.getRecipeFile().reloadConfig();
+        OldRecipeManager.INSTANCE.getRecipeFile().reloadConfig();
         RemoveCommand.getRemovedRecipeConfig().reloadConfig();
     }
 
     public static void reloadRecipes() {
-        RecipeManager.INSTANCE.reloadRecipes();
+        OldRecipeManager.INSTANCE.reloadRecipes();
     }
 
 }

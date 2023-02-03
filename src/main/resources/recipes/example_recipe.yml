@@ -16,7 +16,6 @@ items:
 
 
 #可选的配置项：
-
 conditions:
   - 'perm oasis.recipe.test'
   - '&money >= *10.0'

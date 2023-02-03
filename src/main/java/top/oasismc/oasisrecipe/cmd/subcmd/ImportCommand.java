@@ -6,8 +6,8 @@ import org.bukkit.inventory.ItemStack;
 import top.oasismc.oasisrecipe.OasisRecipe;
 import top.oasismc.oasisrecipe.api.ISubCommand;
 import top.oasismc.oasisrecipe.cmd.AbstractSubCommand;
-import top.oasismc.oasisrecipe.config.ConfigFile;
-import top.oasismc.oasisrecipe.item.ItemUtil;
+import top.oasismc.oasisrecipe.config.YamlFileWrapper;
+import top.oasismc.oasisrecipe.util.ItemUtil;
 
 import java.util.List;
 
@@ -26,8 +26,8 @@ public final class ImportCommand extends AbstractSubCommand {
             return true;
         }
         ItemStack item = ((Player) sender).getInventory().getItemInMainHand();
-        ConfigFile configFile = new ConfigFile("items.yml");
-        ItemUtil.saveItem2Config(item, configFile, args.get(0) + ".nbt");
+        YamlFileWrapper configFile = new YamlFileWrapper("items.yml");
+        ItemUtil.saveItem2Config(item, configFile, args.get(0));
         OasisRecipe.getInstance().sendMsg(sender, "commands.import");
         return true;
     }

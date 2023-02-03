@@ -1,7 +1,5 @@
 package top.oasismc.oasisrecipe.item.nbt;
 
-import top.oasismc.oasisrecipe.item.nbt.NbtHandler;
-import top.oasismc.oasisrecipe.item.nbt.NbtType;
 import top.oasismc.oasisrecipe.api.nbt.IPluginNbtTag;
 
 import java.lang.reflect.InvocationTargetException;
@@ -36,6 +34,32 @@ public class ListNbtTag implements IPluginNbtTag<List<IPluginNbtTag<?>>> {
         this.value = value;
     }
 
+    public ListNbtTag(List<?> objList) {
+        List<IPluginNbtTag<?>> nbtList = new ArrayList<>();
+        for (Object listItem : objList) {
+            String configObjClassName = listItem.getClass().getSimpleName();
+            switch (configObjClassName) {
+                case "Integer":
+                    int intValue = (int) listItem;
+                    nbtList.add(new NumberNbtTag(intValue));
+                case "Double":
+                    double doubleValue = (double) listItem;
+                    nbtList.add(new NumberNbtTag(doubleValue));
+                case "ArrayList":
+                    List<?> deepObjList = (List<?>) listItem;
+                    if (deepObjList.size() >= 1)
+                        nbtList.add(new ListNbtTag(deepObjList));
+                case "String":
+                    //TODO
+                    break;
+                case "MemorySection":
+                    //TODO
+                    break;
+            }
+        }
+        this.value = nbtList;
+    }
+
     @Override
     public List<IPluginNbtTag<?>> getValue() {
         return value;
@@ -45,4 +69,11 @@ public class ListNbtTag implements IPluginNbtTag<List<IPluginNbtTag<?>>> {
     public NbtType getType() {
         return NbtType.LIST;
     }
+
+    @Override
+    public Object toNmsNbt() {
+        //TODO
+        return null;
+    }
+
 }

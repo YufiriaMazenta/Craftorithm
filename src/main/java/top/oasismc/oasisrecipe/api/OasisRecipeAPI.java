@@ -1,6 +1,5 @@
 package top.oasismc.oasisrecipe.api;
 
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.plugin.Plugin;
 import top.oasismc.oasisrecipe.OasisRecipe;

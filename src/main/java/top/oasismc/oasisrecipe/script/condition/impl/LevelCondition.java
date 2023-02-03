@@ -2,7 +2,7 @@ package top.oasismc.oasisrecipe.script.condition.impl;
 
 import org.bukkit.entity.Player;
 import top.oasismc.oasisrecipe.api.script.condition.IRecipeCondition;
-import top.oasismc.oasisrecipe.script.util.ValueUtil;
+import top.oasismc.oasisrecipe.util.ScriptValueUtil;
 
 public enum LevelCondition implements IRecipeCondition {
 
@@ -14,7 +14,7 @@ public enum LevelCondition implements IRecipeCondition {
         int needValue = Integer.parseInt(arg.substring(asteriskIndex + 1));
         int level = player.getLevel();
         String type = arg.substring(0, asteriskIndex);
-        return ValueUtil.compare(level, needValue, type);
+        return ScriptValueUtil.compare(level, needValue, type);
     }
 
     @Override

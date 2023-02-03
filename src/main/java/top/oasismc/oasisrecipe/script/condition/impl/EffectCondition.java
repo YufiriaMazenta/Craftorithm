@@ -1,12 +1,11 @@
 package top.oasismc.oasisrecipe.script.condition.impl;
 
 import org.apache.commons.lang.Validate;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import top.oasismc.oasisrecipe.api.script.condition.IRecipeCondition;
-import top.oasismc.oasisrecipe.script.util.ValueUtil;
+import top.oasismc.oasisrecipe.util.ScriptValueUtil;
 
 public enum EffectCondition implements IRecipeCondition {
 
@@ -40,7 +39,7 @@ public enum EffectCondition implements IRecipeCondition {
         if (effect == null)
             return false;
         if (compareType != null)
-            return ValueUtil.compare(effect.getAmplifier(), value, compareType);
+            return ScriptValueUtil.compare(effect.getAmplifier(), value, compareType);
         else
             return true;
     }

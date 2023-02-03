@@ -1,13 +1,12 @@
 package top.oasismc.oasisrecipe.item.nbt;
 
-import top.oasismc.oasisrecipe.item.nbt.NbtType;
-import top.oasismc.oasisrecipe.item.nbt.NbtHandler;
 import top.oasismc.oasisrecipe.api.nbt.IPluginNbtTag;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringJoiner;
 
 public class ByteArrayNbtTag implements IPluginNbtTag<byte[]> {
 
@@ -32,6 +31,10 @@ public class ByteArrayNbtTag implements IPluginNbtTag<byte[]> {
         }
     }
 
+    public ByteArrayNbtTag(byte[] byteArray) {
+        this.value = byteArray;
+    }
+
     @Override
     public byte[] getValue() {
         return value;
@@ -40,6 +43,19 @@ public class ByteArrayNbtTag implements IPluginNbtTag<byte[]> {
     @Override
     public NbtType getType() {
         return NbtType.BYTE_ARRAY;
+    }
+
+    @Override
+    public Object toNmsNbt() {
+        return null;
+    }
+
+    public String getFullValue() {
+        StringJoiner str = new StringJoiner(",", "BYTE$[", "]");
+        for (byte b : value) {
+            str.add(b + "");
+        }
+        return str.toString();
     }
 
 }

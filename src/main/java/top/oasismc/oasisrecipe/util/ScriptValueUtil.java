@@ -1,6 +1,6 @@
-package top.oasismc.oasisrecipe.script.util;
+package top.oasismc.oasisrecipe.util;
 
-public class ValueUtil {
+public class ScriptValueUtil {
 
     public static boolean compare(int var1, int var2, String type) {
         type = type.replaceAll("\\s", "");
