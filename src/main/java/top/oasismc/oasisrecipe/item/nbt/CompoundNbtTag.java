@@ -13,16 +13,22 @@ public class CompoundNbtTag implements IPluginNbtTag<Map<String, IPluginNbtTag<?
     private static final Map<String, String> getKeySetMethodNameMap;
     private static final Map<String, String> getNbtBaseMethodNameMap;
     private static final Map<String, String> nmsNbtCompoundClassNameMap;
+    private static Method getKeySetMethod = null;
+    private static Method getNbtBaseMethod = null;
+    private static Class<?> nmsNbtCompoundClass = null;
 
     static {
         getKeySetMethodNameMap = new HashMap<>();
         getKeySetMethodNameMap.put("v1_19_R2", "e");
+        getKeySetMethodNameMap.put("v1_19_R1", "d");
 
         getNbtBaseMethodNameMap = new HashMap<>();
         getNbtBaseMethodNameMap.put("v1_19_R2", "c");
+        getNbtBaseMethodNameMap.put("v1_19_R1", "c");
 
         nmsNbtCompoundClassNameMap = new HashMap<>();
         nmsNbtCompoundClassNameMap.put("v1_19_R2", "net.minecraft.nbt.NBTTagCompound");
+        nmsNbtCompoundClassNameMap.put("v1_19_R1", "net.minecraft.nbt.NBTTagCompound");
     }
 
     public CompoundNbtTag(Object nmsNbtObj) {
@@ -108,10 +114,12 @@ public class CompoundNbtTag implements IPluginNbtTag<Map<String, IPluginNbtTag<?
 
     @Override
     public Object toNmsNbt() {
-        Class<?> nmsNbtCompoundClass;
         Object nmsNbtObj = null;
         try {
-            nmsNbtCompoundClass = Class.forName(nmsNbtCompoundClassNameMap.get(NbtHandler.getNmsVersion()));
+            if (nmsNbtCompoundClass == null) {
+                String nmsNbtCompoundClassName = nmsNbtCompoundClassNameMap.getOrDefault(NbtHandler.getNmsVersion(), "net.minecraft.nbt.NBTTagCompound");
+                nmsNbtCompoundClass = Class.forName(nmsNbtCompoundClassName);
+            }
             nmsNbtObj = nmsNbtCompoundClass.newInstance();
             Method method = NbtHandler.getSetNbt2CompoundMethod();
             for (String key : value.keySet()) {
@@ -125,10 +133,12 @@ public class CompoundNbtTag implements IPluginNbtTag<Map<String, IPluginNbtTag<?
 
     private Set<String> getCompoundKeySet(Object nmsNbtObj) {
         try {
-            Class<?> nbtTagClass = nmsNbtObj.getClass();
-            String getTagKeySetMethodName = getKeySetMethodNameMap.get(NbtHandler.getNmsVersion());
-            Method getTagKeySetMethod = nbtTagClass.getMethod(getTagKeySetMethodName);
-            return (Set<String>) getTagKeySetMethod.invoke(nmsNbtObj);
+            if (getKeySetMethod == null) {
+                Class<?> nbtTagClass = nmsNbtObj.getClass();
+                String getTagKeySetMethodName = getKeySetMethodNameMap.getOrDefault(NbtHandler.getNmsVersion(), "e");
+                getKeySetMethod = nbtTagClass.getMethod(getTagKeySetMethodName);
+            }
+            return (Set<String>) getKeySetMethod.invoke(nmsNbtObj);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             //提示版本不兼容
             e.printStackTrace();
@@ -139,10 +149,11 @@ public class CompoundNbtTag implements IPluginNbtTag<Map<String, IPluginNbtTag<?
     private Map<String, IPluginNbtTag<?>> getNbtValueMap(Object nmsNbtObj, Set<String> tagKeySet) {
         Map<String, IPluginNbtTag<?>> nbtValueMap = new HashMap<>();
         try {
-            Class<?> nmsNbtTagClass = nmsNbtObj.getClass();
-            String getNbtBaseMethodName = getNbtBaseMethodNameMap.get(NbtHandler.getNmsVersion());
-            Method getNbtBaseMethod = nmsNbtTagClass.getMethod(getNbtBaseMethodName, String.class);
-
+            if (getNbtBaseMethod == null) {
+                Class<?> nmsNbtTagClass = nmsNbtObj.getClass();
+                String getNbtBaseMethodName = getNbtBaseMethodNameMap.getOrDefault(NbtHandler.getNmsVersion(), "c");
+                getNbtBaseMethod = nmsNbtTagClass.getMethod(getNbtBaseMethodName, String.class);
+            }
             for (String compoundKey : tagKeySet) {
                 Object compoundValue = getNbtBaseMethod.invoke(nmsNbtObj, compoundKey);
                 IPluginNbtTag<?> nbtTag = NbtHandler.nmsNbt2PluginNbtObj(compoundValue);

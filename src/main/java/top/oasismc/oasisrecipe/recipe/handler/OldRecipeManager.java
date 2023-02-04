@@ -12,15 +12,13 @@ import top.oasismc.oasisrecipe.OasisRecipe;
 import top.oasismc.oasisrecipe.api.OasisRecipeAPI;
 import top.oasismc.oasisrecipe.cmd.subcmd.RemoveCommand;
 import top.oasismc.oasisrecipe.config.YamlFileWrapper;
+import top.oasismc.oasisrecipe.util.MsgUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-
-import static top.oasismc.oasisrecipe.OasisRecipe.color;
-import static top.oasismc.oasisrecipe.OasisRecipe.info;
 
 public enum OldRecipeManager {
 
@@ -94,7 +92,7 @@ public enum OldRecipeManager {
             }
             keyList.add(config.getString(recipeName + ".key"));
         } catch (Exception e) {
-            info(color("&cSome errors occurred while loading the " + recipeName + " recipe, please check your config file"));
+            MsgUtil.info("&cSome errors occurred while loading the " + recipeName + " recipe, please check your config file");
             e.printStackTrace();
         }
     }
@@ -173,7 +171,7 @@ public enum OldRecipeManager {
             }
             keyList.add(config.getString(recipeName + ".key"));
         } catch (Exception e) {
-            info(color("&cSome errors occurred while loading the " + recipeName + " recipe, please check your config file"));
+            MsgUtil.info("&cSome errors occurred while loading the " + recipeName + " recipe, please check your config file");
             e.printStackTrace();
         }
     }

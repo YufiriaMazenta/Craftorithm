@@ -14,20 +14,26 @@ public class IntArrayNbtTag implements IPluginNbtTag<int[]> {
     private int[] value;
     private static final Map<String, String> getValueMethodNameMap;
     private static final Map<String, String> nmsIntArrayNbtClassNameMap;
+    private static Method getValueMethod = null;
+    private static Constructor<?> nmsIntArrayConstructor = null;
 
     static {
         getValueMethodNameMap = new HashMap<>();
         getValueMethodNameMap.put("v1_19_R2", "g");
+        getValueMethodNameMap.put("v1_19_R1", "f");
 
         nmsIntArrayNbtClassNameMap = new HashMap<>();
         nmsIntArrayNbtClassNameMap.put("v1_19_R2", "net.minecraft.nbt.NBTTagIntArray");
+        nmsIntArrayNbtClassNameMap.put("v1_19_R1", "net.minecraft.nbt.NBTTagIntArray");
     }
 
     public IntArrayNbtTag(Object nmsNbtObj) {
         try {
-            Class<?> nmsNbtObjClass = nmsNbtObj.getClass();
-            String getValueMethodName = getValueMethodNameMap.get(NbtHandler.getNmsVersion());
-            Method getValueMethod = nmsNbtObjClass.getMethod(getValueMethodName);
+            if (getValueMethod == null) {
+                Class<?> nmsNbtObjClass = nmsNbtObj.getClass();
+                String getValueMethodName = getValueMethodNameMap.getOrDefault(NbtHandler.getNmsVersion(), "g");
+                getValueMethod = nmsNbtObjClass.getMethod(getValueMethodName);
+            }
             this.value = (int[]) getValueMethod.invoke(nmsNbtObj);
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             //提示版本不兼容
@@ -52,12 +58,14 @@ public class IntArrayNbtTag implements IPluginNbtTag<int[]> {
 
     @Override
     public Object toNmsNbt() {
-        Class<?> nmsIntArrayNbtClass;
         Object nmsNbtObj = null;
         try {
-            nmsIntArrayNbtClass = Class.forName(nmsIntArrayNbtClassNameMap.get(NbtHandler.getNmsVersion()));
-            Constructor<?> constructor = nmsIntArrayNbtClass.getConstructor(int[].class);
-            nmsNbtObj = constructor.newInstance(value);
+            if (nmsIntArrayConstructor == null) {
+                String nmsIntArrayNbtClassName = nmsIntArrayNbtClassNameMap.getOrDefault(NbtHandler.getNmsVersion(), "net.minecraft.nbt.NBTTagIntArray");
+                Class<?> nmsIntArrayNbtClass = Class.forName(nmsIntArrayNbtClassName);
+                nmsIntArrayConstructor = nmsIntArrayNbtClass.getConstructor(int[].class);
+            }
+            nmsNbtObj = nmsIntArrayConstructor.newInstance(value);
         } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }

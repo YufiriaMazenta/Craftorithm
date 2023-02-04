@@ -1,8 +1,8 @@
 package top.oasismc.oasisrecipe.cmd;
 
 import org.bukkit.command.CommandSender;
-import top.oasismc.oasisrecipe.OasisRecipe;
 import top.oasismc.oasisrecipe.api.ISubCommand;
+import top.oasismc.oasisrecipe.util.MsgUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,7 +27,7 @@ public class AbstractSubCommand implements ISubCommand {
         }
         ISubCommand subCommand = subCommandMap.get(args.get(0));
         if (subCommand == null) {
-            OasisRecipe.getInstance().sendMsg(sender, "commands.nullArg");
+            MsgUtil.sendMsg(sender, "commands.nullArg");
         } else {
             subCommand.onCommand(sender, args.subList(1, args.size()));
         }

@@ -3,9 +3,9 @@ package top.oasismc.oasisrecipe.cmd;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
-import top.oasismc.oasisrecipe.OasisRecipe;
 import top.oasismc.oasisrecipe.api.ISubCommand;
 import top.oasismc.oasisrecipe.cmd.subcmd.*;
+import top.oasismc.oasisrecipe.util.MsgUtil;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,14 +25,14 @@ public enum PluginCommand implements TabExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         List<String> argList = Arrays.asList(args);
         if (argList.size() < 1) {
-            OasisRecipe.getInstance().sendMsg(sender, "commands.noArgs");
+            MsgUtil.sendMsg(sender, "commands.noArgs");
             return true;
         }
         ISubCommand subCommand = subCommandMap.get(argList.get(0));
         if (subCommand != null)
             return subCommand.onCommand(sender, argList.subList(1, argList.size()));
         else {
-            OasisRecipe.getInstance().sendMsg(sender, "commands.nullArg");
+            MsgUtil.sendMsg(sender, "commands.nullArg");
             return true;
         }
     }

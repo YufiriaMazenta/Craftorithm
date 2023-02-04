@@ -4,10 +4,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.Recipe;
-import top.oasismc.oasisrecipe.OasisRecipe;
 import top.oasismc.oasisrecipe.api.ISubCommand;
 import top.oasismc.oasisrecipe.cmd.AbstractSubCommand;
 import top.oasismc.oasisrecipe.config.YamlFileWrapper;
+import top.oasismc.oasisrecipe.util.MsgUtil;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -28,14 +28,14 @@ public class RemoveCommand extends AbstractSubCommand {
     @Override
     public boolean onCommand(CommandSender sender, List<String> args) {
         if (args.size() < 1) {
-            OasisRecipe.getInstance().sendMsg(sender, "commands.missingParam");
+            MsgUtil.sendMsg(sender, "commands.missingParam");
             return true;
         }
         if (removeRecipe(args.get(0))) {
-            OasisRecipe.getInstance().sendMsg(sender, "commands.removed");
+            MsgUtil.sendMsg(sender, "commands.removed");
         }
         else
-            OasisRecipe.getInstance().sendMsg(sender, "commands.notExist");
+            MsgUtil.sendMsg(sender, "commands.notExist");
         return true;
     }
 

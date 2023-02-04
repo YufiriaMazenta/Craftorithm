@@ -21,13 +21,15 @@ public class NbtHandler {
     private static final Map<String, Function<Object, IPluginNbtTag<?>>> nbtObjTypeMap;
     private static final Map<String, String> setNbt2CompoundMethodNameMap;
     private static final Map<String, String> nbtBaseClassNameMap;
-    private static Class<?> nmsNbtBaseClass;
+    private static Method getNbtTagTypeMethod = null;
+    private static Class<?> nmsNbtBaseClass = null;
     private static Method setNbt2CompoundMethod = null;
 
     static {
         nmsVersion = Bukkit.getServer().getClass().getPackage().getName().substring(Bukkit.getServer().getClass().getPackage().getName().lastIndexOf('.') + 1);
         getNbtTagTypeMethodNameMap = new HashMap<>();
         getNbtTagTypeMethodNameMap.put("v1_19_R2", "c");
+        getNbtTagTypeMethodNameMap.put("v1_19_R1", "b");
 
         nbtObjTypeMap = new HashMap<>();
         nbtObjTypeMap.put("Byte", NumberNbtTag::new);
@@ -45,12 +47,15 @@ public class NbtHandler {
 
         setNbt2CompoundMethodNameMap = new HashMap<>();
         setNbt2CompoundMethodNameMap.put("v1_19_R2", "a");
+        setNbt2CompoundMethodNameMap.put("v1_19_R1", "a");
 
         nbtBaseClassNameMap = new HashMap<>();
         nbtBaseClassNameMap.put("v1_19_R2", "net.minecraft.nbt.NBTBase");
+        nbtBaseClassNameMap.put("v1_19_R1", "net.minecraft.nbt.NBTBase");
 
         try {
-            nmsNbtBaseClass = Class.forName(nbtBaseClassNameMap.get(nmsVersion));
+            String nbtBaseClassName = nbtBaseClassNameMap.getOrDefault(nmsVersion, "net.minecraft.nbt.NBTBase");
+            nmsNbtBaseClass = Class.forName(nbtBaseClassName);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -61,7 +66,7 @@ public class NbtHandler {
     }
 
     public static String getGetNbtTagTypeMethodName() {
-        return getNbtTagTypeMethodNameMap.get(NbtHandler.getNmsVersion());
+        return getNbtTagTypeMethodNameMap.getOrDefault(NbtHandler.getNmsVersion(), "c");
     }
 
     /*
@@ -70,8 +75,9 @@ public class NbtHandler {
     public static IPluginNbtTag<?> nmsNbt2PluginNbtObj(Object nmsNbtObject) {
         Class<?> nmsNbtObjClass = nmsNbtObject.getClass();
         try {
-            Method getNBTTagTypeMethod = nmsNbtObjClass.getMethod(getGetNbtTagTypeMethodName());
-            String nbtType = getNBTTagTypeMethod.invoke(nmsNbtObject).getClass().getName();
+            if (getNbtTagTypeMethod == null)
+                getNbtTagTypeMethod = nmsNbtObjClass.getMethod(getGetNbtTagTypeMethodName());
+            String nbtType = getNbtTagTypeMethod.invoke(nmsNbtObject).getClass().getName();
             int nbtTagStrIndex = nbtType.indexOf("NBTTag") + 6;
             int $StrIndex = nbtType.indexOf("$");
             nbtType = nbtType.substring(nbtTagStrIndex, $StrIndex);
@@ -136,7 +142,7 @@ public class NbtHandler {
     从配置文件读取并生成对应NMS NBT对象
      */
     public static void setNbt2NmsCompound(ConfigurationSection configSection, Object nmsNbtCompoundObj) {
-        String setNbt2CompoundMethodName = setNbt2CompoundMethodNameMap.get(nmsVersion);
+        String setNbt2CompoundMethodName = setNbt2CompoundMethodNameMap.getOrDefault(nmsVersion, "a");
         if (setNbt2CompoundMethod == null) {
             try {
                 setNbt2CompoundMethod = nmsNbtCompoundObj.getClass().getMethod(setNbt2CompoundMethodName, String.class, nmsNbtBaseClass);

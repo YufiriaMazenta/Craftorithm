@@ -5,6 +5,7 @@ import top.oasismc.oasisrecipe.OasisRecipe;
 import top.oasismc.oasisrecipe.api.ISubCommand;
 import top.oasismc.oasisrecipe.cmd.AbstractSubCommand;
 import top.oasismc.oasisrecipe.recipe.handler.OldRecipeManager;
+import top.oasismc.oasisrecipe.util.MsgUtil;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public final class ReloadCommand extends AbstractSubCommand {
             @Override
             public boolean onCommand(CommandSender sender, List<String> args) {
                 reloadConfigs();
-                OasisRecipe.getInstance().sendMsg(sender, "commands.reloadConfig");
+                MsgUtil.sendMsg(sender, "commands.reloadConfig");
                 return true;
             }
         });
@@ -28,7 +29,7 @@ public final class ReloadCommand extends AbstractSubCommand {
     public boolean onCommand(CommandSender sender, List<String> args) {
         if (args.size() < 1) {
             reloadPlugin();
-            OasisRecipe.getInstance().sendMsg(sender, "commands.reload");
+            MsgUtil.sendMsg(sender, "commands.reload");
             return true;
         }
         return super.onCommand(sender, args);
