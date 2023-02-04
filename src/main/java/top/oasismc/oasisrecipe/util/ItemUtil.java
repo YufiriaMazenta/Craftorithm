@@ -1,8 +1,10 @@
 package top.oasismc.oasisrecipe.util;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemStack;
 import top.oasismc.oasisrecipe.api.nbt.IPluginNbtTag;
 import top.oasismc.oasisrecipe.config.YamlFileWrapper;
@@ -141,6 +143,9 @@ public class ItemUtil {
             return item;
         Object nmsItem = bukkit2NmsItem(item);
         Object nmsNbtCompoundObj = getNmsItemNbtTags(item);
+        if (nmsNbtCompoundObj == null) {
+            nmsNbtCompoundObj = new CompoundNbtTag().toNmsNbt();
+        }
         NbtHandler.setNbt2NmsCompound(configSection, nmsNbtCompoundObj);
 
         //将NBTCompound设置回物品
@@ -163,6 +168,13 @@ public class ItemUtil {
         getNbtCompoundFromItemMethodNameMap.put("v1_18_R2", "t");
         getNbtCompoundFromItemMethodNameMap.put("v1_18_R1", "s");
         getNbtCompoundFromItemMethodNameMap.put("v1_17_R1", "getTag");
+        getNbtCompoundFromItemMethodNameMap.put("v1_16_R3", "getTag");
+        getNbtCompoundFromItemMethodNameMap.put("v1_16_R2", "getTag");
+        getNbtCompoundFromItemMethodNameMap.put("v1_16_R1", "getTag");
+        getNbtCompoundFromItemMethodNameMap.put("v1_15_R1", "getTag");
+        getNbtCompoundFromItemMethodNameMap.put("v1_14_R1", "getTag");
+        getNbtCompoundFromItemMethodNameMap.put("v1_13_R2", "getTag");
+        getNbtCompoundFromItemMethodNameMap.put("v1_13_R1", "getTag");
     }
 
     private static void loadSetNbtCompound2ItemMethodNameMap() {
@@ -171,6 +183,13 @@ public class ItemUtil {
         setNbtCompound2ItemMethodNameMap.put("v1_18_R2", "c");
         setNbtCompound2ItemMethodNameMap.put("v1_18_R1", "c");
         setNbtCompound2ItemMethodNameMap.put("v1_17_R1", "setTag");
+        setNbtCompound2ItemMethodNameMap.put("v1_16_R3", "setTag");
+        setNbtCompound2ItemMethodNameMap.put("v1_16_R2", "setTag");
+        setNbtCompound2ItemMethodNameMap.put("v1_16_R1", "setTag");
+        setNbtCompound2ItemMethodNameMap.put("v1_15_R1", "setTag");
+        setNbtCompound2ItemMethodNameMap.put("v1_14_R1", "setTag");
+        setNbtCompound2ItemMethodNameMap.put("v1_13_R2", "setTag");
+        setNbtCompound2ItemMethodNameMap.put("v1_13_R1", "setTag");
     }
 
     private static void loadNmsItemClassNameMap() {
@@ -179,6 +198,13 @@ public class ItemUtil {
         nmsItemClassNameMap.put("v1_18_R2", "net.minecraft.world.item.ItemStack");
         nmsItemClassNameMap.put("v1_18_R1", "net.minecraft.world.item.ItemStack");
         nmsItemClassNameMap.put("v1_17_R1", "net.minecraft.world.item.ItemStack");
+        nmsItemClassNameMap.put("v1_16_R3", "net.minecraft.server.v1_16_R3.ItemStack");
+        nmsItemClassNameMap.put("v1_16_R2", "net.minecraft.server.v1_16_R2.ItemStack");
+        nmsItemClassNameMap.put("v1_16_R1", "net.minecraft.server.v1_16_R1.ItemStack");
+        nmsItemClassNameMap.put("v1_15_R1", "net.minecraft.server.v1_15_R1.ItemStack");
+        nmsItemClassNameMap.put("v1_14_R1", "net.minecraft.server.v1_14_R1.ItemStack");
+        nmsItemClassNameMap.put("v1_13_R2", "net.minecraft.server.v1_13_R2.ItemStack");
+        nmsItemClassNameMap.put("v1_13_R1", "net.minecraft.server.v1_13_R1.ItemStack");
     }
 
 }

@@ -114,16 +114,16 @@ public class StringNbtTag implements IPluginNbtTag<String> {
         switch (prefix) {
             case "BYTE":
                 byte byteVal = Byte.parseByte(numberStr);
-                return new NumberNbtTag(byteVal).toNmsNbt();
+                return new NumberNbtTag(byteVal, 0).toNmsNbt();
             case "SHORT":
                 short shortVal = Short.parseShort(numberStr);
-                return new NumberNbtTag(shortVal).toNmsNbt();
+                return new NumberNbtTag(shortVal, 0).toNmsNbt();
             case "LONG":
                 long longVal = Long.parseLong(numberStr);
-                return new NumberNbtTag(longVal).toNmsNbt();
+                return new NumberNbtTag(longVal, 0).toNmsNbt();
             case "FLOAT":
                 float floatVal = Float.parseFloat(numberStr);
-                return new NumberNbtTag(floatVal).toNmsNbt();
+                return new NumberNbtTag(floatVal, 0).toNmsNbt();
             default:
                 return parseStringNbt();
         }
@@ -152,13 +152,27 @@ public class StringNbtTag implements IPluginNbtTag<String> {
         getValueMethodNameMap.put("v1_18_R2", "e_");
         getValueMethodNameMap.put("v1_18_R1", "e_");
         getValueMethodNameMap.put("v1_17_R1", "asString");
+        getValueMethodNameMap.put("v1_16_R3", "asString");
+        getValueMethodNameMap.put("v1_16_R2", "asString");
+        getValueMethodNameMap.put("v1_16_R1", "asString");
+        getValueMethodNameMap.put("v1_15_R1", "asString");
+        getValueMethodNameMap.put("v1_14_R1", "asString");
+        getValueMethodNameMap.put("v1_13_R2", "asString");
+        getValueMethodNameMap.put("v1_13_R1", "b_");
     }
 
     private static void loadNmsStringNbtClassNameMap() {
         nmsStringNbtClassNameMap.put("v1_19_R2", "net.minecraft.nbt.NBTTagString");
         nmsStringNbtClassNameMap.put("v1_19_R1", "net.minecraft.nbt.NBTTagString");
         nmsStringNbtClassNameMap.put("v1_18_R2", "net.minecraft.nbt.NBTTagString");
-        nmsStringNbtClassNameMap.put("v1_18_R1", "net.minecraft.nbt.NBTTagString");
+        nmsStringNbtClassNameMap.put("v1_17_R1", "net.minecraft.nbt.NBTTagString");
+        nmsStringNbtClassNameMap.put("v1_16_R3", "net.minecraft.server.v1_16_R3.NBTTagString");
+        nmsStringNbtClassNameMap.put("v1_16_R2", "net.minecraft.server.v1_16_R2.NBTTagString");
+        nmsStringNbtClassNameMap.put("v1_16_R1", "net.minecraft.server.v1_16_R1.NBTTagString");
+        nmsStringNbtClassNameMap.put("v1_15_R1", "net.minecraft.server.v1_15_R1.NBTTagString");
+        nmsStringNbtClassNameMap.put("v1_14_R1", "net.minecraft.server.v1_14_R1.NBTTagString");
+        nmsStringNbtClassNameMap.put("v1_13_R2", "net.minecraft.server.v1_13_R2.NBTTagString");
+        nmsStringNbtClassNameMap.put("v1_13_R1", "net.minecraft.server.v1_13_R1.NBTTagString");
     }
 
 }

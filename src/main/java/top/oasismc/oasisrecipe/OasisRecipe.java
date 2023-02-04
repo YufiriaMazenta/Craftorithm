@@ -32,9 +32,9 @@ public final class OasisRecipe extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+        loadVanillaVersion();
         ItemManager.loadItems();
         RecipeManager.loadRecipes();
-        loadVanillaVersion();
         saveDefaultConfig();
         loadConfigs();
         loadCommands();
