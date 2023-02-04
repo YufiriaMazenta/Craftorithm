@@ -19,8 +19,7 @@ public class NumberNbtTag implements IPluginNbtTag<Number> {
 
     static {
         getValueMethodNameMap = new HashMap<>();
-        getValueMethodNameMap.put("v1_19_R2", "l");
-        getValueMethodNameMap.put("v1_19_R1", "k");
+        loadGetValueMethodNameMap();
 
         nmsNumberNbtClassNameMap = new HashMap<>();
         loadNmsNumberNbtClassNameMap();
@@ -164,15 +163,25 @@ public class NumberNbtTag implements IPluginNbtTag<Number> {
     }
 
     private static void loadNmsNumberNbtClassNameMap() {
-        Map<NumberType, String> v1_19_R2nmsClassNameMap = new HashMap<>();
-        v1_19_R2nmsClassNameMap.put(NumberType.BYTE, "net.minecraft.nbt.NBTTagByte");
-        v1_19_R2nmsClassNameMap.put(NumberType.SHORT, "net.minecraft.nbt.NBTTagShort");
-        v1_19_R2nmsClassNameMap.put(NumberType.INT, "net.minecraft.nbt.NBTTagInt");
-        v1_19_R2nmsClassNameMap.put(NumberType.LONG, "net.minecraft.nbt.NBTTagLong");
-        v1_19_R2nmsClassNameMap.put(NumberType.FLOAT, "net.minecraft.nbt.NBTTagFloat");
-        v1_19_R2nmsClassNameMap.put(NumberType.DOUBLE, "net.minecraft.nbt.NBTTagDouble");
-        nmsNumberNbtClassNameMap.put("v1_19_R2", v1_19_R2nmsClassNameMap);
-        nmsNumberNbtClassNameMap.put("v1_19_R1", v1_19_R2nmsClassNameMap);
+        Map<NumberType, String> highVersionNmsNumberNbtClassNameMap = new HashMap<>();
+        highVersionNmsNumberNbtClassNameMap.put(NumberType.BYTE, "net.minecraft.nbt.NBTTagByte");
+        highVersionNmsNumberNbtClassNameMap.put(NumberType.SHORT, "net.minecraft.nbt.NBTTagShort");
+        highVersionNmsNumberNbtClassNameMap.put(NumberType.INT, "net.minecraft.nbt.NBTTagInt");
+        highVersionNmsNumberNbtClassNameMap.put(NumberType.LONG, "net.minecraft.nbt.NBTTagLong");
+        highVersionNmsNumberNbtClassNameMap.put(NumberType.FLOAT, "net.minecraft.nbt.NBTTagFloat");
+        highVersionNmsNumberNbtClassNameMap.put(NumberType.DOUBLE, "net.minecraft.nbt.NBTTagDouble");
+        nmsNumberNbtClassNameMap.put("v1_19_R2", highVersionNmsNumberNbtClassNameMap);
+        nmsNumberNbtClassNameMap.put("v1_19_R1", highVersionNmsNumberNbtClassNameMap);
+        nmsNumberNbtClassNameMap.put("v1_18_R2", highVersionNmsNumberNbtClassNameMap);
+        nmsNumberNbtClassNameMap.put("v1_17_R1", highVersionNmsNumberNbtClassNameMap);
+    }
+
+    private static void loadGetValueMethodNameMap() {
+        getValueMethodNameMap.put("v1_19_R2", "l");
+        getValueMethodNameMap.put("v1_19_R1", "k");
+        getValueMethodNameMap.put("v1_18_R2", "k");
+        getValueMethodNameMap.put("v1_18_R1", "k");
+        getValueMethodNameMap.put("v1_17_R1", "k");
     }
 
     enum NumberType {

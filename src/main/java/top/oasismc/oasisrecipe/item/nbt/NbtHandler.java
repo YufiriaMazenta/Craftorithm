@@ -28,30 +28,16 @@ public class NbtHandler {
     static {
         nmsVersion = Bukkit.getServer().getClass().getPackage().getName().substring(Bukkit.getServer().getClass().getPackage().getName().lastIndexOf('.') + 1);
         getNbtTagTypeMethodNameMap = new HashMap<>();
-        getNbtTagTypeMethodNameMap.put("v1_19_R2", "c");
-        getNbtTagTypeMethodNameMap.put("v1_19_R1", "b");
+        loadGetNbtTagTypeMethodNameMap();
 
         nbtObjTypeMap = new HashMap<>();
-        nbtObjTypeMap.put("Byte", NumberNbtTag::new);
-        nbtObjTypeMap.put("Short", NumberNbtTag::new);
-        nbtObjTypeMap.put("Int", NumberNbtTag::new);
-        nbtObjTypeMap.put("Long", NumberNbtTag::new);
-        nbtObjTypeMap.put("Float", NumberNbtTag::new);
-        nbtObjTypeMap.put("Double", NumberNbtTag::new);
-        nbtObjTypeMap.put("Compound", CompoundNbtTag::new);
-        nbtObjTypeMap.put("String", StringNbtTag::new);
-        nbtObjTypeMap.put("List", ListNbtTag::new);
-        nbtObjTypeMap.put("ByteArray", ByteArrayNbtTag::new);
-        nbtObjTypeMap.put("IntArray", IntArrayNbtTag::new);
-        nbtObjTypeMap.put("LongArray", LongArrayNbtTag::new);
+        loadNbtObjTypeMap();
 
         setNbt2CompoundMethodNameMap = new HashMap<>();
-        setNbt2CompoundMethodNameMap.put("v1_19_R2", "a");
-        setNbt2CompoundMethodNameMap.put("v1_19_R1", "a");
+        loadSetNbt2CompoundMethodNameMap();
 
         nbtBaseClassNameMap = new HashMap<>();
-        nbtBaseClassNameMap.put("v1_19_R2", "net.minecraft.nbt.NBTBase");
-        nbtBaseClassNameMap.put("v1_19_R1", "net.minecraft.nbt.NBTBase");
+        loadNbtBaseClassNameMap();
 
         try {
             String nbtBaseClassName = nbtBaseClassNameMap.getOrDefault(nmsVersion, "net.minecraft.nbt.NBTBase");
@@ -202,6 +188,45 @@ public class NbtHandler {
 
     public static Class<?> getNmsNbtBaseClass() {
         return nmsNbtBaseClass;
+    }
+
+    private static void loadGetNbtTagTypeMethodNameMap() {
+        getNbtTagTypeMethodNameMap.put("v1_19_R2", "c");
+        getNbtTagTypeMethodNameMap.put("v1_19_R1", "b");
+        getNbtTagTypeMethodNameMap.put("v1_18_R2", "b");
+        getNbtTagTypeMethodNameMap.put("v1_18_R1", "b");
+        getNbtTagTypeMethodNameMap.put("v1_17_R1", "b");
+    }
+
+    private static void loadNbtObjTypeMap() {
+        nbtObjTypeMap.put("Byte", NumberNbtTag::new);
+        nbtObjTypeMap.put("Short", NumberNbtTag::new);
+        nbtObjTypeMap.put("Int", NumberNbtTag::new);
+        nbtObjTypeMap.put("Long", NumberNbtTag::new);
+        nbtObjTypeMap.put("Float", NumberNbtTag::new);
+        nbtObjTypeMap.put("Double", NumberNbtTag::new);
+        nbtObjTypeMap.put("Compound", CompoundNbtTag::new);
+        nbtObjTypeMap.put("String", StringNbtTag::new);
+        nbtObjTypeMap.put("List", ListNbtTag::new);
+        nbtObjTypeMap.put("ByteArray", ByteArrayNbtTag::new);
+        nbtObjTypeMap.put("IntArray", IntArrayNbtTag::new);
+        nbtObjTypeMap.put("LongArray", LongArrayNbtTag::new);
+    }
+
+    private static void loadSetNbt2CompoundMethodNameMap() {
+        setNbt2CompoundMethodNameMap.put("v1_19_R2", "a");
+        setNbt2CompoundMethodNameMap.put("v1_19_R1", "a");
+        setNbt2CompoundMethodNameMap.put("v1_18_R2", "a");
+        setNbt2CompoundMethodNameMap.put("v1_18_R1", "a");
+        setNbt2CompoundMethodNameMap.put("v1_17_R1", "set");
+    }
+
+    private static void loadNbtBaseClassNameMap() {
+        nbtBaseClassNameMap.put("v1_19_R2", "net.minecraft.nbt.NBTBase");
+        nbtBaseClassNameMap.put("v1_19_R1", "net.minecraft.nbt.NBTBase");
+        nbtBaseClassNameMap.put("v1_18_R2", "net.minecraft.nbt.NBTBase");
+        nbtBaseClassNameMap.put("v1_18_R1", "net.minecraft.nbt.NBTBase");
+        nbtBaseClassNameMap.put("v1_17_R1", "net.minecraft.nbt.NBTBase");
     }
 
 }

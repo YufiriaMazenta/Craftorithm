@@ -19,12 +19,10 @@ public class LongArrayNbtTag implements IPluginNbtTag<long[]> {
 
     static {
         getValueMethodNameMap = new HashMap<>();
-        getValueMethodNameMap.put("v1_19_R2", "g");
-        getValueMethodNameMap.put("v1_19_R1", "f");
+        loadGetValueMethodNameMap();
 
         nmsLongArrayNbtClassNameMap = new HashMap<>();
-        nmsLongArrayNbtClassNameMap.put("v1_19_R2", "net.minecraft.nbt.NBTTagLongArray");
-        nmsLongArrayNbtClassNameMap.put("v1_19_R1", "net.minecraft.nbt.NBTTagLongArray");
+        loadNmsLongArrayNbtClassNameMap();
     }
 
     public LongArrayNbtTag(Object nmsNbtObj) {
@@ -78,6 +76,22 @@ public class LongArrayNbtTag implements IPluginNbtTag<long[]> {
             str.add(b + "");
         }
         return str.toString();
+    }
+
+    private static void loadGetValueMethodNameMap() {
+        getValueMethodNameMap.put("v1_19_R2", "g");
+        getValueMethodNameMap.put("v1_19_R1", "f");
+        getValueMethodNameMap.put("v1_18_R2", "f");
+        getValueMethodNameMap.put("v1_18_R1", "f");
+        getValueMethodNameMap.put("v1_17_R1", "getLongs");
+    }
+
+    private static void loadNmsLongArrayNbtClassNameMap() {
+        nmsLongArrayNbtClassNameMap.put("v1_19_R2", "net.minecraft.nbt.NBTTagLongArray");
+        nmsLongArrayNbtClassNameMap.put("v1_19_R1", "net.minecraft.nbt.NBTTagLongArray");
+        nmsLongArrayNbtClassNameMap.put("v1_18_R2", "net.minecraft.nbt.NBTTagLongArray");
+        nmsLongArrayNbtClassNameMap.put("v1_18_R1", "net.minecraft.nbt.NBTTagLongArray");
+        nmsLongArrayNbtClassNameMap.put("v1_17_R1", "net.minecraft.nbt.NBTTagLongArray");
     }
 
 }

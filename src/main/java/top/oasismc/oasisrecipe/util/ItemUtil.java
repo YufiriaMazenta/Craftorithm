@@ -16,25 +16,22 @@ import java.util.Map;
 
 public class ItemUtil {
 
-    private static final Map<String, String> getTagsMethodNameMap;
+    private static final Map<String, String> getNbtCompoundFromItemMethodNameMap;
     private static final Map<String, String> setNbtCompound2ItemMethodNameMap;
     private static final Map<String, String> nmsItemClassNameMap;
     private static final Class<?> nmsItemClass;
-    private static Method getTagsMethod = null;
+    private static Method getNbtCompoundFromItemMethod = null;
     private static Method setNbtCompound2ItemMethod = null;
 
     static {
-        getTagsMethodNameMap = new HashMap<>();
-        getTagsMethodNameMap.put("v1_19_R2", "u");
-        getTagsMethodNameMap.put("v1_19_R1", "u");
+        getNbtCompoundFromItemMethodNameMap = new HashMap<>();
+        loadGetNbtCompoundFromItemMethodNameMap();
 
         setNbtCompound2ItemMethodNameMap = new HashMap<>();
-        setNbtCompound2ItemMethodNameMap.put("v1_19_R2", "c");
-        setNbtCompound2ItemMethodNameMap.put("v1_19_R1", "c");
+        loadSetNbtCompound2ItemMethodNameMap();
 
         nmsItemClassNameMap = new HashMap<>();
-        nmsItemClassNameMap.put("v1_19_R2", "net.minecraft.world.item.ItemStack");
-        nmsItemClassNameMap.put("v1_19_R1", "net.minecraft.world.item.ItemStack");
+        loadNmsItemClassNameMap();
 
         Class<?> tmpClass = null;
         try {
@@ -90,11 +87,11 @@ public class ItemUtil {
         Object nmsItem = bukkit2NmsItem(item);
         Class<?> nmsItemClass = nmsItem.getClass();
         try {
-            if (getTagsMethod == null) {
-                String getTagsMethodName = getTagsMethodNameMap.getOrDefault(NbtHandler.getNmsVersion(), "u");
-                getTagsMethod = nmsItemClass.getMethod(getTagsMethodName);
+            if (getNbtCompoundFromItemMethod == null) {
+                String getTagsMethodName = getNbtCompoundFromItemMethodNameMap.getOrDefault(NbtHandler.getNmsVersion(), "u");
+                getNbtCompoundFromItemMethod = nmsItemClass.getMethod(getTagsMethodName);
             }
-            return getTagsMethod.invoke(nmsItem);
+            return getNbtCompoundFromItemMethod.invoke(nmsItem);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             //提示版本不兼容
             e.printStackTrace();
@@ -158,6 +155,30 @@ public class ItemUtil {
             e.printStackTrace();
         }
         return nms2BukkitItem(nmsItem);
+    }
+
+    private static void loadGetNbtCompoundFromItemMethodNameMap() {
+        getNbtCompoundFromItemMethodNameMap.put("v1_19_R2", "u");
+        getNbtCompoundFromItemMethodNameMap.put("v1_19_R1", "u");
+        getNbtCompoundFromItemMethodNameMap.put("v1_18_R2", "t");
+        getNbtCompoundFromItemMethodNameMap.put("v1_18_R1", "s");
+        getNbtCompoundFromItemMethodNameMap.put("v1_17_R1", "getTag");
+    }
+
+    private static void loadSetNbtCompound2ItemMethodNameMap() {
+        setNbtCompound2ItemMethodNameMap.put("v1_19_R2", "c");
+        setNbtCompound2ItemMethodNameMap.put("v1_19_R1", "c");
+        setNbtCompound2ItemMethodNameMap.put("v1_18_R2", "c");
+        setNbtCompound2ItemMethodNameMap.put("v1_18_R1", "c");
+        setNbtCompound2ItemMethodNameMap.put("v1_17_R1", "setTag");
+    }
+
+    private static void loadNmsItemClassNameMap() {
+        nmsItemClassNameMap.put("v1_19_R2", "net.minecraft.world.item.ItemStack");
+        nmsItemClassNameMap.put("v1_19_R1", "net.minecraft.world.item.ItemStack");
+        nmsItemClassNameMap.put("v1_18_R2", "net.minecraft.world.item.ItemStack");
+        nmsItemClassNameMap.put("v1_18_R1", "net.minecraft.world.item.ItemStack");
+        nmsItemClassNameMap.put("v1_17_R1", "net.minecraft.world.item.ItemStack");
     }
 
 }
