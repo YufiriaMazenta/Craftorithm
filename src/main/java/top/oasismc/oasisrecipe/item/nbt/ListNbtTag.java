@@ -12,27 +12,24 @@ public class ListNbtTag implements IPluginNbtTag<List<IPluginNbtTag<?>>> {
     private final List<IPluginNbtTag<?>> value;
     private final static Map<String, String> getListItemMethodNameMap;
     private final static Map<String, String> nmsNbtListClassNameMap;
-    private final static Map<String, String> getNmsNbtTypeByteMethodNameMap;
+    private final static Map<String, String> getNmsNbtTypeIdMethodNameMap;
     private static Method getListItemMethod = null;
-    private static Method getNmsNbtTypeMethod = null;
+    private static Method getNmsNbtTypeIdMethod = null;
     private static Constructor<?> nmsNbtListConstructor = null;
 
     static {
         getListItemMethodNameMap = new HashMap<>();
-        getListItemMethodNameMap.put("v1_19_R2", "k");
-        getListItemMethodNameMap.put("v1_19_R1", "k");
+        loadGetListItemMethodNameMap();
 
         nmsNbtListClassNameMap = new HashMap<>();
-        nmsNbtListClassNameMap.put("v1_19_R2", "net.minecraft.nbt.NBTTagList");
-        nmsNbtListClassNameMap.put("v1_19_R1", "net.minecraft.nbt.NBTTagList");
+        loadNmsNbtListClassNameMap();
 
-        getNmsNbtTypeByteMethodNameMap = new HashMap<>();
-        getNmsNbtTypeByteMethodNameMap.put("v1_19_R2", "b");
-        getNmsNbtTypeByteMethodNameMap.put("v1_19_R1", "a");
+        getNmsNbtTypeIdMethodNameMap = new HashMap<>();
+        loadGetNmsNbtTypeIdMethodNameMap();
 
         try {
-            String getNmsNbtTypeMethodName = getNmsNbtTypeByteMethodNameMap.getOrDefault(NbtHandler.getNmsVersion(), "b");
-            getNmsNbtTypeMethod = NbtHandler.getNmsNbtBaseClass().getMethod(getNmsNbtTypeMethodName);
+            String getNmsNbtTypeMethodName = getNmsNbtTypeIdMethodNameMap.getOrDefault(NbtHandler.getNmsVersion(), "b");
+            getNmsNbtTypeIdMethod = NbtHandler.getNmsNbtBaseClass().getMethod(getNmsNbtTypeMethodName);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
@@ -109,7 +106,7 @@ public class ListNbtTag implements IPluginNbtTag<List<IPluginNbtTag<?>>> {
                 Object nmsNbtTag = pluginNbtTag.toNmsNbt();
                 nmsNbtList.add(pluginNbtTag.toNmsNbt());
                 if (nmsNbtType == 0) {
-                    nmsNbtType = (byte) getNmsNbtTypeMethod.invoke(nmsNbtTag);
+                    nmsNbtType = (byte) getNmsNbtTypeIdMethod.invoke(nmsNbtTag);
                 }
             }
             if (nmsNbtListConstructor == null) {
@@ -123,6 +120,30 @@ public class ListNbtTag implements IPluginNbtTag<List<IPluginNbtTag<?>>> {
             e.printStackTrace();
         }
         return nmsNbtObj;
+    }
+
+    private static void loadGetListItemMethodNameMap() {
+        getListItemMethodNameMap.put("v1_19_R2", "k");
+        getListItemMethodNameMap.put("v1_19_R1", "k");
+        getListItemMethodNameMap.put("v1_18_R2", "k");
+        getListItemMethodNameMap.put("v1_18_R1", "k");
+        getListItemMethodNameMap.put("v1_17_R1", "get");
+    }
+
+    private static void loadNmsNbtListClassNameMap() {
+        nmsNbtListClassNameMap.put("v1_19_R2", "net.minecraft.nbt.NBTTagList");
+        nmsNbtListClassNameMap.put("v1_19_R1", "net.minecraft.nbt.NBTTagList");
+        nmsNbtListClassNameMap.put("v1_18_R2", "net.minecraft.nbt.NBTTagList");
+        nmsNbtListClassNameMap.put("v1_18_R1", "net.minecraft.nbt.NBTTagList");
+        nmsNbtListClassNameMap.put("v1_17_R1", "net.minecraft.nbt.NBTTagList");
+    }
+
+    private static void loadGetNmsNbtTypeIdMethodNameMap() {
+        getNmsNbtTypeIdMethodNameMap.put("v1_19_R2", "b");
+        getNmsNbtTypeIdMethodNameMap.put("v1_19_R1", "a");
+        getNmsNbtTypeIdMethodNameMap.put("v1_18_R2", "a");
+        getNmsNbtTypeIdMethodNameMap.put("v1_18_R1", "a");
+        getNmsNbtTypeIdMethodNameMap.put("v1_17_R1", "getTypeId");
     }
 
 }

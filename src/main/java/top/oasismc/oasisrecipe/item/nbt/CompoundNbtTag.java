@@ -19,16 +19,13 @@ public class CompoundNbtTag implements IPluginNbtTag<Map<String, IPluginNbtTag<?
 
     static {
         getKeySetMethodNameMap = new HashMap<>();
-        getKeySetMethodNameMap.put("v1_19_R2", "e");
-        getKeySetMethodNameMap.put("v1_19_R1", "d");
+        loadGetKeySetMethodNameMap();
 
         getNbtBaseMethodNameMap = new HashMap<>();
-        getNbtBaseMethodNameMap.put("v1_19_R2", "c");
-        getNbtBaseMethodNameMap.put("v1_19_R1", "c");
+        loadGetNbtBaseMethodNameMap();
 
         nmsNbtCompoundClassNameMap = new HashMap<>();
-        nmsNbtCompoundClassNameMap.put("v1_19_R2", "net.minecraft.nbt.NBTTagCompound");
-        nmsNbtCompoundClassNameMap.put("v1_19_R1", "net.minecraft.nbt.NBTTagCompound");
+        loadNmsNbtCompoundClassNameMap();
     }
 
     public CompoundNbtTag(Object nmsNbtObj) {
@@ -165,6 +162,30 @@ public class CompoundNbtTag implements IPluginNbtTag<Map<String, IPluginNbtTag<?
             e.printStackTrace();
         }
         return new HashMap<>();
+    }
+
+    private static void loadGetKeySetMethodNameMap() {
+        getKeySetMethodNameMap.put("v1_19_R2", "e");
+        getKeySetMethodNameMap.put("v1_19_R1", "d");
+        getKeySetMethodNameMap.put("v1_18_R2", "d");
+        getKeySetMethodNameMap.put("v1_18_R1", "d");
+        getKeySetMethodNameMap.put("v1_17_R1", "getKeys");
+    }
+
+    private static void loadGetNbtBaseMethodNameMap() {
+        getNbtBaseMethodNameMap.put("v1_19_R2", "c");
+        getNbtBaseMethodNameMap.put("v1_19_R1", "c");
+        getNbtBaseMethodNameMap.put("v1_18_R2", "c");
+        getNbtBaseMethodNameMap.put("v1_18_R1", "c");
+        getNbtBaseMethodNameMap.put("v1_17_R1", "get");
+    }
+
+    private static void loadNmsNbtCompoundClassNameMap() {
+        nmsNbtCompoundClassNameMap.put("v1_19_R2", "net.minecraft.nbt.NBTTagCompound");
+        nmsNbtCompoundClassNameMap.put("v1_19_R1", "net.minecraft.nbt.NBTTagCompound");
+        nmsNbtCompoundClassNameMap.put("v1_18_R2", "net.minecraft.nbt.NBTTagCompound");
+        nmsNbtCompoundClassNameMap.put("v1_18_R1", "net.minecraft.nbt.NBTTagCompound");
+        nmsNbtCompoundClassNameMap.put("v1_17_R1", "net.minecraft.nbt.NBTTagCompound");
     }
 
 }

@@ -22,12 +22,10 @@ public class StringNbtTag implements IPluginNbtTag<String> {
 
     static {
         getValueMethodNameMap = new HashMap<>();
-        getValueMethodNameMap.put("v1_19_R2", "f_");
-        getValueMethodNameMap.put("v1_19_R1", "e_");
+        loadGetValueMethodNameMap();
 
         nmsStringNbtClassNameMap = new HashMap<>();
-        nmsStringNbtClassNameMap.put("v1_19_R2", "net.minecraft.nbt.NBTTagString");
-        nmsStringNbtClassNameMap.put("v1_19_R1", "net.minecraft.nbt.NBTTagString");
+        loadNmsStringNbtClassNameMap();
 
         numberNbtPrefixList = Arrays.asList("BYTE", "SHORT", "LONG", "FLOAT");
         numberArrayNbtPrefixList = Arrays.asList("BYTE", "LONG", "INT");
@@ -146,6 +144,21 @@ public class StringNbtTag implements IPluginNbtTag<String> {
             e.printStackTrace();
         }
         return nmsNbtObj;
+    }
+
+    private static void loadGetValueMethodNameMap() {
+        getValueMethodNameMap.put("v1_19_R2", "f_");
+        getValueMethodNameMap.put("v1_19_R1", "e_");
+        getValueMethodNameMap.put("v1_18_R2", "e_");
+        getValueMethodNameMap.put("v1_18_R1", "e_");
+        getValueMethodNameMap.put("v1_17_R1", "asString");
+    }
+
+    private static void loadNmsStringNbtClassNameMap() {
+        nmsStringNbtClassNameMap.put("v1_19_R2", "net.minecraft.nbt.NBTTagString");
+        nmsStringNbtClassNameMap.put("v1_19_R1", "net.minecraft.nbt.NBTTagString");
+        nmsStringNbtClassNameMap.put("v1_18_R2", "net.minecraft.nbt.NBTTagString");
+        nmsStringNbtClassNameMap.put("v1_18_R1", "net.minecraft.nbt.NBTTagString");
     }
 
 }
