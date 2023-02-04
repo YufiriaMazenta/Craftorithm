@@ -1,6 +1,5 @@
 package top.oasismc.oasisrecipe.item.nbt;
 
-import org.bukkit.configuration.MemorySection;
 import top.oasismc.oasisrecipe.api.nbt.IPluginNbtTag;
 
 import java.lang.reflect.Constructor;
@@ -13,21 +12,27 @@ public class ListNbtTag implements IPluginNbtTag<List<IPluginNbtTag<?>>> {
     private final List<IPluginNbtTag<?>> value;
     private final static Map<String, String> getListItemMethodNameMap;
     private final static Map<String, String> nmsNbtListClassNameMap;
-    private final static Map<String, String> getNmsNbtTypeMethodNameMap;
-    private static Method getNmsNbtTypeMethod;
+    private final static Map<String, String> getNmsNbtTypeByteMethodNameMap;
+    private static Method getListItemMethod = null;
+    private static Method getNmsNbtTypeMethod = null;
+    private static Constructor<?> nmsNbtListConstructor = null;
 
     static {
         getListItemMethodNameMap = new HashMap<>();
         getListItemMethodNameMap.put("v1_19_R2", "k");
+        getListItemMethodNameMap.put("v1_19_R1", "k");
 
         nmsNbtListClassNameMap = new HashMap<>();
         nmsNbtListClassNameMap.put("v1_19_R2", "net.minecraft.nbt.NBTTagList");
+        nmsNbtListClassNameMap.put("v1_19_R1", "net.minecraft.nbt.NBTTagList");
 
-        getNmsNbtTypeMethodNameMap = new HashMap<>();
-        getNmsNbtTypeMethodNameMap.put("v1_19_R2", "b");
+        getNmsNbtTypeByteMethodNameMap = new HashMap<>();
+        getNmsNbtTypeByteMethodNameMap.put("v1_19_R2", "b");
+        getNmsNbtTypeByteMethodNameMap.put("v1_19_R1", "a");
 
         try {
-            getNmsNbtTypeMethod = NbtHandler.getNmsNbtBaseClass().getMethod(getNmsNbtTypeMethodNameMap.get(NbtHandler.getNmsVersion()));
+            String getNmsNbtTypeMethodName = getNmsNbtTypeByteMethodNameMap.getOrDefault(NbtHandler.getNmsVersion(), "b");
+            getNmsNbtTypeMethod = NbtHandler.getNmsNbtBaseClass().getMethod(getNmsNbtTypeMethodName);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
@@ -37,9 +42,11 @@ public class ListNbtTag implements IPluginNbtTag<List<IPluginNbtTag<?>>> {
         List<IPluginNbtTag<?>> value = new ArrayList<>();
         int size = ((AbstractList<?>) nmsNbtObj).size();
         try {
-            Class<?> nbtObjectClass = nmsNbtObj.getClass();
-            String getListItemMethodName = getListItemMethodNameMap.get(NbtHandler.getNmsVersion());
-            Method getListItemMethod = nbtObjectClass.getMethod(getListItemMethodName, int.class);
+            if (getListItemMethod == null) {
+                Class<?> nbtObjectClass = nmsNbtObj.getClass();
+                String getListItemMethodName = getListItemMethodNameMap.getOrDefault(NbtHandler.getNmsVersion(), "k");
+                getListItemMethod = nbtObjectClass.getMethod(getListItemMethodName, int.class);
+            }
             for (int i = 0; i < size; i++) {
                 Object listValue = getListItemMethod.invoke(nmsNbtObj, i);
                 IPluginNbtTag<?> pluginNbtTag = NbtHandler.nmsNbt2PluginNbtObj(listValue);
@@ -93,10 +100,8 @@ public class ListNbtTag implements IPluginNbtTag<List<IPluginNbtTag<?>>> {
 
     @Override
     public Object toNmsNbt() {
-        Class<?> nmsNbtListClass;
         Object nmsNbtObj = null;
         try {
-            nmsNbtListClass = Class.forName(nmsNbtListClassNameMap.get(NbtHandler.getNmsVersion()));
 
             List<Object> nmsNbtList = new ArrayList<>();
             byte nmsNbtType = 0;
@@ -107,9 +112,13 @@ public class ListNbtTag implements IPluginNbtTag<List<IPluginNbtTag<?>>> {
                     nmsNbtType = (byte) getNmsNbtTypeMethod.invoke(nmsNbtTag);
                 }
             }
-            Constructor<?> constructor = nmsNbtListClass.getDeclaredConstructor(List.class, byte.class);
-            constructor.setAccessible(true);
-            nmsNbtObj = constructor.newInstance(nmsNbtList, nmsNbtType);
+            if (nmsNbtListConstructor == null) {
+                String nmsNbtListClassName = nmsNbtListClassNameMap.getOrDefault(NbtHandler.getNmsVersion(), "net.minecraft.nbt.NBTTagList");
+                Class<?> nmsNbtListClass = Class.forName(nmsNbtListClassName);
+                nmsNbtListConstructor = nmsNbtListClass.getDeclaredConstructor(List.class, byte.class);
+                nmsNbtListConstructor.setAccessible(true);
+            }
+            nmsNbtObj = nmsNbtListConstructor.newInstance(nmsNbtList, nmsNbtType);
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
         }

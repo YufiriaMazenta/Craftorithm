@@ -8,14 +8,12 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import top.oasismc.oasisrecipe.OasisRecipe;
 import top.oasismc.oasisrecipe.api.script.IRecipeStatement;
 import top.oasismc.oasisrecipe.script.action.impl.*;
+import top.oasismc.oasisrecipe.util.MsgUtil;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import static top.oasismc.oasisrecipe.OasisRecipe.color;
-import static top.oasismc.oasisrecipe.OasisRecipe.info;
 
 public enum ActionDispatcher {
 
@@ -108,12 +106,12 @@ public enum ActionDispatcher {
         String messageKey = "messages.load.vaultSuccess";
         if (!economyLoaded)
             messageKey = "messages.load.vaultFailed";
-        info(color(OasisRecipe.getInstance().getConfig().getString(messageKey, messageKey)));
+        MsgUtil.info(OasisRecipe.getInstance().getConfig().getString(messageKey, messageKey));
         pointsLoaded = loadPlayerPoints();
         messageKey = "messages.load.pointsSuccess";
         if (!pointsLoaded)
             messageKey = "messages.load.pointsFailed";
-        info(color(OasisRecipe.getInstance().getConfig().getString(messageKey, messageKey)));
+        MsgUtil.info(OasisRecipe.getInstance().getConfig().getString(messageKey, messageKey));
     }
 
 }

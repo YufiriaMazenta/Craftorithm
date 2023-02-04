@@ -1,8 +1,6 @@
 package top.oasismc.oasisrecipe;
 
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -18,12 +16,8 @@ import top.oasismc.oasisrecipe.listener.SmithingListener;
 import top.oasismc.oasisrecipe.recipe.RecipeManager;
 import top.oasismc.oasisrecipe.script.action.ActionDispatcher;
 import top.oasismc.oasisrecipe.script.condition.ConditionDispatcher;
+import top.oasismc.oasisrecipe.util.MsgUtil;
 import top.oasismc.oasisrecipe.util.UpdateUtil;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
 public final class OasisRecipe extends JavaPlugin implements Listener {
 
@@ -31,7 +25,6 @@ public final class OasisRecipe extends JavaPlugin implements Listener {
     private int vanillaVersion;
     private ActionDispatcher actionDispatcher;
     private ConditionDispatcher conditionDispatcher;
-    private Pattern colorPattern;
 
     public OasisRecipe() {
         INSTANCE = this;
@@ -39,7 +32,6 @@ public final class OasisRecipe extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        INSTANCE.colorPattern = Pattern.compile("&#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})");
         ItemManager.loadItems();
         RecipeManager.loadRecipes();
         loadVanillaVersion();
@@ -48,8 +40,8 @@ public final class OasisRecipe extends JavaPlugin implements Listener {
         loadCommands();
         loadScripts();
         loadListener();
-        info("&aLoad 1." + vanillaVersion + " Adapter");
-        info(getConfig().getString("messages.load.finish", "messages.load.finish"));
+        MsgUtil.info("&aLoad 1." + vanillaVersion + " Adapter");
+        MsgUtil.info(getConfig().getString("messages.load.finish", "messages.load.finish"));
         UpdateUtil.checkUpdate(Bukkit.getConsoleSender());
         loadBStat();
     }
@@ -99,38 +91,8 @@ public final class OasisRecipe extends JavaPlugin implements Listener {
         conditionDispatcher = ConditionDispatcher.INSTANCE;
     }
 
-    public void sendMsg(CommandSender sender, String key) {
-        if (sender == null) {
-            return;
-        }
-        key = "messages." + key;
-        String message = getConfig().getString(key, key);
-        message = message.replace("%player%", sender.getName());
-        message = message.replace("%version%", getDescription().getVersion());
-        sender.sendMessage(color(message));
-    }
-
     public static OasisRecipe getInstance() {
         return INSTANCE;
-    }
-
-    public static String color(String text) {
-        if (getInstance().vanillaVersion >= 16) {
-            StringBuilder strBuilder = new StringBuilder(text);
-            Matcher matcher = getInstance().colorPattern.matcher(strBuilder);
-            while (matcher.find()) {
-                String colorCode = matcher.group();
-                String colorStr = ChatColor.of(colorCode.substring(1)).toString();
-                strBuilder.replace(matcher.start(), matcher.start() + colorCode.length(), colorStr);
-                matcher = getInstance().colorPattern.matcher(strBuilder);
-            }
-            text = strBuilder.toString();
-        }
-        return translateAlternateColorCodes('&', text);
-    }
-
-    public static void info(String text) {
-        Bukkit.getConsoleSender().sendMessage(color("&8[&3Oasis&bRecipe&8] &bINFO &8| &r" + text));
     }
 
     public int getVanillaVersion() {

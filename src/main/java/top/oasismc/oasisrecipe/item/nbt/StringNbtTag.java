@@ -5,7 +5,10 @@ import top.oasismc.oasisrecipe.api.nbt.IPluginNbtTag;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class StringNbtTag implements IPluginNbtTag<String> {
 
@@ -14,13 +17,17 @@ public class StringNbtTag implements IPluginNbtTag<String> {
     private static final Map<String, String> nmsStringNbtClassNameMap;
     private static final List<String> numberNbtPrefixList;
     private static final List<String> numberArrayNbtPrefixList;
+    private static Constructor<?> nmsStringNbtConstructor = null;
+    private static Method getValueMethod = null;
 
     static {
         getValueMethodNameMap = new HashMap<>();
         getValueMethodNameMap.put("v1_19_R2", "f_");
+        getValueMethodNameMap.put("v1_19_R1", "e_");
 
         nmsStringNbtClassNameMap = new HashMap<>();
         nmsStringNbtClassNameMap.put("v1_19_R2", "net.minecraft.nbt.NBTTagString");
+        nmsStringNbtClassNameMap.put("v1_19_R1", "net.minecraft.nbt.NBTTagString");
 
         numberNbtPrefixList = Arrays.asList("BYTE", "SHORT", "LONG", "FLOAT");
         numberArrayNbtPrefixList = Arrays.asList("BYTE", "LONG", "INT");
@@ -29,9 +36,11 @@ public class StringNbtTag implements IPluginNbtTag<String> {
     public StringNbtTag(Object nmsNbtObj) {
         String value;
         try {
-            Class<?> nmsNbtObjectClass = nmsNbtObj.getClass();
-            String getValueMethodName = getValueMethodNameMap.get(NbtHandler.getNmsVersion());
-            Method getValueMethod = nmsNbtObjectClass.getMethod(getValueMethodName);
+            if (getValueMethod == null) {
+                Class<?> nmsNbtObjectClass = nmsNbtObj.getClass();
+                String getValueMethodName = getValueMethodNameMap.getOrDefault(NbtHandler.getNmsVersion(), "f_");
+                getValueMethod = nmsNbtObjectClass.getMethod(getValueMethodName);
+            }
             value = getValueMethod.invoke(nmsNbtObj).toString();
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             //提示版本不兼容
@@ -123,13 +132,16 @@ public class StringNbtTag implements IPluginNbtTag<String> {
     }
 
     private Object parseStringNbt() {
-        Class<?> nmsStringNbtClass;
         Object nmsNbtObj = null;
         try {
-            nmsStringNbtClass = Class.forName(nmsStringNbtClassNameMap.get(NbtHandler.getNmsVersion()));
-            Constructor<?> constructor = nmsStringNbtClass.getDeclaredConstructor(String.class);
-            constructor.setAccessible(true);
-            nmsNbtObj = constructor.newInstance(value);
+            if (nmsStringNbtConstructor == null) {
+                String nmsStringNbtClassName = nmsStringNbtClassNameMap.getOrDefault(NbtHandler.getNmsVersion(), "net.minecraft.nbt.NBTTagString");
+                Class<?> nmsStringNbtClass = Class.forName(nmsStringNbtClassName);
+                nmsStringNbtConstructor = nmsStringNbtClass.getDeclaredConstructor(String.class);
+                nmsStringNbtConstructor.setAccessible(true);
+            }
+
+            nmsNbtObj = nmsStringNbtConstructor.newInstance(value);
         } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }

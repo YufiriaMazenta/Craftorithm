@@ -14,20 +14,29 @@ public class NumberNbtTag implements IPluginNbtTag<Number> {
     private final NumberType numberType;
     private static final Map<String, String> getValueMethodNameMap;
     private static final Map<String, Map<NumberType, String>> nmsNumberNbtClassNameMap;
+    private static final Map<NumberType, Constructor<?>> nmsNumberNbtConstructorMap;
+    private static Method getValueMethod = null;
 
     static {
         getValueMethodNameMap = new HashMap<>();
         getValueMethodNameMap.put("v1_19_R2", "l");
+        getValueMethodNameMap.put("v1_19_R1", "k");
 
         nmsNumberNbtClassNameMap = new HashMap<>();
-        Map<NumberType, String> v1_19_R2nmsClassNameMap = new HashMap<>();
-        v1_19_R2nmsClassNameMap.put(NumberType.BYTE, "net.minecraft.nbt.NBTTagByte");
-        v1_19_R2nmsClassNameMap.put(NumberType.SHORT, "net.minecraft.nbt.NBTTagShort");
-        v1_19_R2nmsClassNameMap.put(NumberType.INT, "net.minecraft.nbt.NBTTagInt");
-        v1_19_R2nmsClassNameMap.put(NumberType.LONG, "net.minecraft.nbt.NBTTagLong");
-        v1_19_R2nmsClassNameMap.put(NumberType.FLOAT, "net.minecraft.nbt.NBTTagFloat");
-        v1_19_R2nmsClassNameMap.put(NumberType.DOUBLE, "net.minecraft.nbt.NBTTagDouble");
-        nmsNumberNbtClassNameMap.put("v1_19_R2", v1_19_R2nmsClassNameMap);
+        loadNmsNumberNbtClassNameMap();
+
+        nmsNumberNbtConstructorMap = new HashMap<>();
+        for (NumberType type : NumberType.values()) {
+            try {
+                String valueNmsClassName = nmsNumberNbtClassNameMap.get(NbtHandler.getNmsVersion()).get(type);
+                Class<?> valueNmsClass = Class.forName(valueNmsClassName);
+                Constructor<?> constructor = valueNmsClass.getDeclaredConstructor(type.typeClass);
+                constructor.setAccessible(true);
+                nmsNumberNbtConstructorMap.put(type, constructor);
+            } catch (ClassNotFoundException | NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public NumberNbtTag(Object nmsNbtObj) {
@@ -35,7 +44,7 @@ public class NumberNbtTag implements IPluginNbtTag<Number> {
         NumberType numberType;
         try {
             Class<?> nmsNbtObjectClass = nmsNbtObj.getClass();
-            String nbtObjClsName = nmsNbtObj.getClass().getSimpleName();
+            String nbtObjClsName = nmsNbtObjectClass.getSimpleName();
             int nbtTagStrIndex = nbtObjClsName.indexOf("NBTTag") + 6;
             switch (nbtObjClsName.substring(nbtTagStrIndex)) {
                 case "Byte":
@@ -58,8 +67,11 @@ public class NumberNbtTag implements IPluginNbtTag<Number> {
                     numberType = NumberType.DOUBLE;
                     break;
             }
-            String getValueMethodName = getValueMethodNameMap.get(NbtHandler.getNmsVersion());
-            Method getValueMethod = nmsNbtObjectClass.getMethod(getValueMethodName);
+            if (getValueMethod == null) {
+                String getValueMethodName = getValueMethodNameMap.getOrDefault(NbtHandler.getNmsVersion(), "l");
+                getValueMethod = nmsNbtObjectClass.getMethod(getValueMethodName);
+            }
+
             value = (Number) getValueMethod.invoke(nmsNbtObj);
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             //提示版本不兼容
@@ -101,6 +113,8 @@ public class NumberNbtTag implements IPluginNbtTag<Number> {
         this.numberType = NumberType.DOUBLE;
     }
 
+
+
     @Override
     public Number getValue() {
         return this.value;
@@ -113,15 +127,11 @@ public class NumberNbtTag implements IPluginNbtTag<Number> {
 
     @Override
     public Object toNmsNbt() {
-        String nmsNumberNbtClassName = nmsNumberNbtClassNameMap.get(NbtHandler.getNmsVersion()).get(numberType);
-        Class<?> nmsNumberNbtClass;
         Object nmsNbtObj = null;
         try {
-            nmsNumberNbtClass = Class.forName(nmsNumberNbtClassName);
-            Constructor<?> constructor = nmsNumberNbtClass.getDeclaredConstructor(numberType.typeClass);
-            constructor.setAccessible(true);
+            Constructor<?> constructor = nmsNumberNbtConstructorMap.get(numberType);
             nmsNbtObj = constructor.newInstance(value);
-        } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
         return nmsNbtObj;
@@ -151,6 +161,18 @@ public class NumberNbtTag implements IPluginNbtTag<Number> {
     @Override
     public String toString() {
         return this.numberType.name() + "@" + this.value;
+    }
+
+    private static void loadNmsNumberNbtClassNameMap() {
+        Map<NumberType, String> v1_19_R2nmsClassNameMap = new HashMap<>();
+        v1_19_R2nmsClassNameMap.put(NumberType.BYTE, "net.minecraft.nbt.NBTTagByte");
+        v1_19_R2nmsClassNameMap.put(NumberType.SHORT, "net.minecraft.nbt.NBTTagShort");
+        v1_19_R2nmsClassNameMap.put(NumberType.INT, "net.minecraft.nbt.NBTTagInt");
+        v1_19_R2nmsClassNameMap.put(NumberType.LONG, "net.minecraft.nbt.NBTTagLong");
+        v1_19_R2nmsClassNameMap.put(NumberType.FLOAT, "net.minecraft.nbt.NBTTagFloat");
+        v1_19_R2nmsClassNameMap.put(NumberType.DOUBLE, "net.minecraft.nbt.NBTTagDouble");
+        nmsNumberNbtClassNameMap.put("v1_19_R2", v1_19_R2nmsClassNameMap);
+        nmsNumberNbtClassNameMap.put("v1_19_R1", v1_19_R2nmsClassNameMap);
     }
 
     enum NumberType {

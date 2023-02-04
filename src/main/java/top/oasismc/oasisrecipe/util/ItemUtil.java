@@ -20,20 +20,26 @@ public class ItemUtil {
     private static final Map<String, String> setNbtCompound2ItemMethodNameMap;
     private static final Map<String, String> nmsItemClassNameMap;
     private static final Class<?> nmsItemClass;
+    private static Method getTagsMethod = null;
+    private static Method setNbtCompound2ItemMethod = null;
 
     static {
         getTagsMethodNameMap = new HashMap<>();
         getTagsMethodNameMap.put("v1_19_R2", "u");
+        getTagsMethodNameMap.put("v1_19_R1", "u");
 
         setNbtCompound2ItemMethodNameMap = new HashMap<>();
         setNbtCompound2ItemMethodNameMap.put("v1_19_R2", "c");
+        setNbtCompound2ItemMethodNameMap.put("v1_19_R1", "c");
 
         nmsItemClassNameMap = new HashMap<>();
         nmsItemClassNameMap.put("v1_19_R2", "net.minecraft.world.item.ItemStack");
+        nmsItemClassNameMap.put("v1_19_R1", "net.minecraft.world.item.ItemStack");
 
         Class<?> tmpClass = null;
         try {
-            tmpClass = Class.forName(nmsItemClassNameMap.get(NbtHandler.getNmsVersion()));
+            String nmsItemClassName = nmsItemClassNameMap.getOrDefault(NbtHandler.getNmsVersion(), "net.minecraft.world.item.ItemStack");
+            tmpClass = Class.forName(nmsItemClassName);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -83,10 +89,11 @@ public class ItemUtil {
             return null;
         Object nmsItem = bukkit2NmsItem(item);
         Class<?> nmsItemClass = nmsItem.getClass();
-        Method getTagsMethod;
         try {
-            String getTagsMethodName = getTagsMethodNameMap.get(NbtHandler.getNmsVersion());
-            getTagsMethod = nmsItemClass.getMethod(getTagsMethodName);
+            if (getTagsMethod == null) {
+                String getTagsMethodName = getTagsMethodNameMap.getOrDefault(NbtHandler.getNmsVersion(), "u");
+                getTagsMethod = nmsItemClass.getMethod(getTagsMethodName);
+            }
             return getTagsMethod.invoke(nmsItem);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             //提示版本不兼容
@@ -136,14 +143,15 @@ public class ItemUtil {
         if (configSection == null || configSection.getKeys(false).size() < 1)
             return item;
         Object nmsItem = bukkit2NmsItem(item);
-        Class<?> nmsItemClass = nmsItem.getClass();
         Object nmsNbtCompoundObj = getNmsItemNbtTags(item);
         NbtHandler.setNbt2NmsCompound(configSection, nmsNbtCompoundObj);
 
         //将NBTCompound设置回物品
         try {
-            String setNbtCompound2ItemMethodName = setNbtCompound2ItemMethodNameMap.get(NbtHandler.getNmsVersion());
-            Method setNbtCompound2ItemMethod = nmsItemClass.getMethod(setNbtCompound2ItemMethodName, nmsNbtCompoundObj.getClass());
+            if (setNbtCompound2ItemMethod == null) {
+                String setNbtCompound2ItemMethodName = setNbtCompound2ItemMethodNameMap.getOrDefault(NbtHandler.getNmsVersion(), "c");
+                setNbtCompound2ItemMethod = nmsItemClass.getMethod(setNbtCompound2ItemMethodName, nmsNbtCompoundObj.getClass());
+            }
             setNbtCompound2ItemMethod.invoke(nmsItem, nmsNbtCompoundObj);
             return nms2BukkitItem(nmsItem);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
