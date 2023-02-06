@@ -38,7 +38,7 @@ public class MsgUtil {
         formatMap.putAll(defaultFormatMap);
         String message = msgConfigFile.getConfig().getString(msgKey, msgKey);
         for (String formatStr : formatMap.keySet()) {
-            message = String.format(formatStr, formatMap.get(formatStr));
+            message = message.replace(formatStr, formatMap.get(formatStr));
         }
         if (sender instanceof Player)
             if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)
@@ -61,10 +61,12 @@ public class MsgUtil {
         return translateAlternateColorCodes('&', text);
     }
 
-    public static void info(String text) {
-        Bukkit.getConsoleSender().sendMessage(color("&8[&3Oasis&bRecipe&8] &bINFO &8| &r" + text));
+    public static void info(String msgKey) {
+        sendMsg(Bukkit.getConsoleSender(), msgKey);
     }
 
-    public static Pattern getColorPattern() { return colorPattern; }
+    public static void reloadMsgConfig() {
+        msgConfigFile.reloadConfig();
+    }
 
 }

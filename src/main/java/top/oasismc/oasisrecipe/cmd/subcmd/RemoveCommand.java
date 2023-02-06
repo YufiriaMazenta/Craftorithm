@@ -23,6 +23,7 @@ public class RemoveCommand extends AbstractSubCommand {
     private RemoveCommand() {
         super("remove", null);
         recipeMap = new ConcurrentHashMap<>();
+        reloadRecipeMap();
     }
 
     @Override

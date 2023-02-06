@@ -1,13 +1,11 @@
 package top.oasismc.oasisrecipe.cmd;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import top.oasismc.oasisrecipe.api.ISubCommand;
 import top.oasismc.oasisrecipe.util.MsgUtil;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class AbstractSubCommand implements ISubCommand {
@@ -69,6 +67,21 @@ public class AbstractSubCommand implements ISubCommand {
 
     public void setSubCommandMap(Map<String, ISubCommand> subCommandMap) {
         this.subCommandMap = subCommandMap;
+    }
+
+    public void sendNotEnoughCmdParamMsg(CommandSender sender, int paramNum) {
+        Map<String, String> msgReplaceMap = new HashMap<>();
+        msgReplaceMap.put("<number>", String.valueOf(paramNum));
+        MsgUtil.sendMsg(sender, "command.not_enough_param", msgReplaceMap);
+    }
+
+    public boolean checkSenderIsPlayer(CommandSender sender) {
+        if (sender instanceof Player) {
+            return true;
+        } else {
+            MsgUtil.sendMsg(sender, "command.player_only");
+            return false;
+        }
     }
 
 }
