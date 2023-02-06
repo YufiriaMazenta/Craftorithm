@@ -1,6 +1,6 @@
 package top.oasismc.oasisrecipe.cmd.subcmd;
 
-import top.oasismc.oasisrecipe.api.ISubCommand;
+import top.oasismc.oasisrecipe.api.cmd.ISubCommand;
 import top.oasismc.oasisrecipe.cmd.AbstractSubCommand;
 
 import java.util.HashMap;

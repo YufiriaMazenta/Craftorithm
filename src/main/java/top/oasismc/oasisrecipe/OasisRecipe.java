@@ -36,7 +36,7 @@ public final class OasisRecipe extends JavaPlugin implements Listener {
         ConfigUpdater.INSTANCE.updateConfig();
 
         ItemManager.loadItemManager();
-        RecipeManager.loadRecipes();
+        RecipeManager.loadRecipeManager();
         regCommands();
         regListeners();
         initScripts();

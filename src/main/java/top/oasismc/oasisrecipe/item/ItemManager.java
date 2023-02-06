@@ -49,6 +49,7 @@ public class ItemManager {
         List<File> allFiles = getAllFiles(itemFileFolder);
         if (allFiles.size() < 1) {
             OasisRecipe.getInstance().saveResource("items/example_item.yml", false);
+            allFiles.add(new File(itemFileFolder, "example_item.yml"));
         }
         for (File file : allFiles) {
             String key = file.getName();
