@@ -1,9 +1,9 @@
 #必须的配置项：
 
-#合成表的合成物品，使用results:开头可以调用results.yml文件定义的物品, 使用ItemsAdder:开头可以调用ItemsAdder物品
-result: 'items:example_item.diamond_sword'
 #合成表的类型
 type: 'shaped'
+#合成表的合成物品，使用results:开头可以调用results.yml文件定义的物品, 使用ItemsAdder:开头可以调用ItemsAdder物品
+result: 'items:example_item:test2'
 #合成表的合成物品，使用items:开头可以调用item.yml文件定义的物品, 使用ItemsAdder:开头可以调用ItemsAdder物品
 shape:
   - 'aaa'
@@ -11,8 +11,8 @@ shape:
   - 'ccc'
 items:
   a: 'bedrock'
-  b: 'command_block'
-  c: 'items:example_item.iron_sword'
+  b: 'minecraft:command_block'
+  c: 'items:example_item:test2'
 
 
 #可选的配置项：

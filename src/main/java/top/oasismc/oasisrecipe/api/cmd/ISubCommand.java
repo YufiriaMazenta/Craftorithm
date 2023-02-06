@@ -1,4 +1,4 @@
-package top.oasismc.oasisrecipe.api;
+package top.oasismc.oasisrecipe.api.cmd;
 
 import org.bukkit.command.CommandSender;
 

@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class MapUtil {
 
-    public static Map<String, String> getHashMap(String... str) {
+    public static Map<String, String> newHashMap(String... str) {
         Map<String, String> hashMap = new HashMap<>();
         if (str.length % 2 != 0) {
             throw new IllegalArgumentException("Must be an even number of arguments");

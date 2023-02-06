@@ -13,7 +13,10 @@ command:
     get:
       success: '<prefix> &a物品获取成功'
       not_exist_item: '<prefix> &c不存在物品 <item_name>'
-  reload: '<prefix> &a插件重载成功'
+  reload:
+    success: '<prefix> &a插件重载成功'
+    exception: '<prefix> &c插件重载过程中发生错误，请查看控制台'
+
 #以下为旧格式
 commands:
   noPerm: '<prefix> &c你没有使用该命令的权限'
