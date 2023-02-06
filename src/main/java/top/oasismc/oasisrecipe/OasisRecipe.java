@@ -7,7 +7,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import top.oasismc.oasisrecipe.bstat.Metrics;
 import top.oasismc.oasisrecipe.cmd.PluginCommand;
-import top.oasismc.oasisrecipe.cmd.subcmd.ReloadCommand;
 import top.oasismc.oasisrecipe.config.ConfigUpdater;
 import top.oasismc.oasisrecipe.item.ItemManager;
 import top.oasismc.oasisrecipe.listener.CraftRecipeListener;
@@ -33,13 +32,15 @@ public final class OasisRecipe extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         loadVanillaVersion();
-        ItemManager.loadItems();
-        RecipeManager.loadRecipes();
         saveDefaultConfig();
-        loadConfigs();
-        loadCommands();
-        loadScripts();
-        loadListener();
+        ConfigUpdater.INSTANCE.updateConfig();
+
+        ItemManager.loadItemManager();
+        RecipeManager.loadRecipes();
+        regCommands();
+        regListeners();
+        initScripts();
+
         MsgUtil.info("&aLoad 1." + vanillaVersion + " Adapter");
         MsgUtil.info(getConfig().getString("messages.load.finish", "messages.load.finish"));
         UpdateUtil.checkUpdate(Bukkit.getConsoleSender());
@@ -48,6 +49,7 @@ public final class OasisRecipe extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
+        Bukkit.getScheduler().cancelTasks(this);
         Bukkit.resetRecipes();
     }
 
@@ -67,12 +69,12 @@ public final class OasisRecipe extends JavaPlugin implements Listener {
         new Metrics(this, 15016);
     }
 
-    private void loadCommands() {
+    private void regCommands() {
         Bukkit.getPluginCommand("oasisrecipe").setExecutor(PluginCommand.INSTANCE);
         Bukkit.getPluginCommand("oasisrecipe").setTabCompleter(PluginCommand.INSTANCE);
     }
 
-    private void loadListener() {
+    private void regListeners() {
         Bukkit.getPluginManager().registerEvents(CraftRecipeListener.INSTANCE, this);
         Bukkit.getPluginManager().registerEvents(this, this);
         if (getVanillaVersion() >= 14)
@@ -81,12 +83,7 @@ public final class OasisRecipe extends JavaPlugin implements Listener {
             Bukkit.getPluginManager().registerEvents(FurnaceSmeltListener.INSTANCE, this);
     }
 
-    private void loadConfigs() {
-        ConfigUpdater.INSTANCE.updateConfig();
-        ReloadCommand.reloadPlugin();
-    }
-
-    private void loadScripts() {
+    private void initScripts() {
         actionDispatcher = ActionDispatcher.INSTANCE;
         conditionDispatcher = ConditionDispatcher.INSTANCE;
     }

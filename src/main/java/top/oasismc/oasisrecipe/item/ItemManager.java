@@ -1,5 +1,6 @@
 package top.oasismc.oasisrecipe.item;
 
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import top.oasismc.oasisrecipe.OasisRecipe;
 import top.oasismc.oasisrecipe.config.YamlFileWrapper;
@@ -16,23 +17,32 @@ public class ItemManager {
     private static final Map<String, ItemStack> itemMap = new HashMap<>();
     private static final File itemFileFolder = new File(OasisRecipe.getInstance().getDataFolder().getPath(), "items");
 
-    public static void loadItems() {
+    public static void loadItemManager() {
         loadItemFiles();
+        loadItems();
+    }
+
+    public static void loadItems() {
+        itemMap.clear();
         for (String fileKey : itemFileMap.keySet()) {
             YamlFileWrapper itemFile = itemFileMap.get(fileKey);
             Set<String> itemKeySet = itemFile.getConfig().getKeys(false);
             for (String itemKey : itemKeySet) {
-                itemMap.put(itemKey, ItemUtil.getItemFromConfig(itemFile.getConfig(), itemKey));
+                itemMap.put(fileKey + ":" + itemKey, ItemUtil.getItemFromConfig(itemFile.getConfig(), itemKey));
             }
         }
     }
 
-    public static ItemStack getPluginItemStack(String itemName) {
-        //
-        return null;
+    public static boolean isOasisRecipeItem(String itemName) {
+        return itemMap.containsKey(itemName);
     }
 
-    private static void loadItemFiles() {
+    public static ItemStack getOasisRecipeItem(String itemName) {
+        return itemMap.getOrDefault(itemName, new ItemStack(Material.AIR)).clone();
+    }
+
+    public static void loadItemFiles() {
+        itemFileMap.clear();
         if (!itemFileFolder.exists()) {
             itemFileFolder.mkdir();
         }
@@ -41,16 +51,23 @@ public class ItemManager {
             OasisRecipe.getInstance().saveResource("items/example_item.yml", false);
         }
         for (File file : allFiles) {
-            String key = file.getPath();
-            key = key.substring(28).toLowerCase(Locale.ROOT);
-            key = key.substring(0, key.indexOf("."));
-            key = key.replace('\\', '/');
+            String key = file.getName();
+            int lastDotIndex = key.lastIndexOf(".");
+            key = key.substring(0, lastDotIndex);
             itemFileMap.put(key, new YamlFileWrapper(file));
         }
     }
 
     public static Map<String, ItemStack> getItemMap() {
         return itemMap;
+    }
+
+    public static Map<String, YamlFileWrapper> getItemFileMap() {
+        return itemFileMap;
+    }
+
+    public static File getItemFileFolder() {
+        return itemFileFolder;
     }
 
 }

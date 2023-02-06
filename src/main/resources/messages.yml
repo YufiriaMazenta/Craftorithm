@@ -1,6 +1,20 @@
 prefix: '&8[&3Oasis&bRecipe&8]'
 unsupported_version: '<prefix> 不支持的版本'
 #使用命令的一些消息
+command:
+  no_perm: '<prefix> &c你没有使用此命令的权限'
+  player_only: '<prefix> &c只有玩家才能执行此命令'
+  not_enough_param: '<prefix> &c命令缺少参数，缺少<number>个参数'
+  undefined_subcmd: '<prefix> &c未定义的子命令'
+  item:
+    save:
+      success: '<prefix> &a物品保存成功'
+      failed_save_air: '<prefix> &c物品保存失败，原因：不能保存不存在的物品'
+    get:
+      success: '<prefix> &a物品获取成功'
+      not_exist_item: '<prefix> &c不存在物品 <item_name>'
+  reload: '<prefix> &a插件重载成功'
+#以下为旧格式
 commands:
   noPerm: '<prefix> &c你没有使用该命令的权限'
   noArgs: '<prefix> &c请输入子命令以执行'

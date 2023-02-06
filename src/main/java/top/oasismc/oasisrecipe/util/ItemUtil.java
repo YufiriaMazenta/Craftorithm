@@ -1,10 +1,8 @@
 package top.oasismc.oasisrecipe.util;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemStack;
 import top.oasismc.oasisrecipe.api.nbt.IPluginNbtTag;
 import top.oasismc.oasisrecipe.config.YamlFileWrapper;
@@ -81,7 +79,7 @@ public class ItemUtil {
     }
 
     /*
-    获取物品的全部NMS版NBT标签，类型应为NBTCompound
+    获取物品的全部NMS NBT标签，类型应为NBTCompound
      */
     public static Object getNmsItemNbtTags(ItemStack item) {
         if (item == null)
@@ -93,7 +91,8 @@ public class ItemUtil {
                 String getTagsMethodName = getNbtCompoundFromItemMethodNameMap.getOrDefault(NbtHandler.getNmsVersion(), "u");
                 getNbtCompoundFromItemMethod = nmsItemClass.getMethod(getTagsMethodName);
             }
-            return getNbtCompoundFromItemMethod.invoke(nmsItem);
+            Object nmsNbtCompound = getNbtCompoundFromItemMethod.invoke(nmsItem);
+            return nmsNbtCompound == null? new CompoundNbtTag().toNmsNbt(): nmsNbtCompound;
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             //提示版本不兼容
             e.printStackTrace();
@@ -106,7 +105,7 @@ public class ItemUtil {
      */
     public static void saveItem2Config(ItemStack item, YamlFileWrapper configFile, String path) {
         if (item == null)
-            return;
+            throw new IllegalArgumentException("Item can not be null");
         String material = item.getType().getKey().toString();
         configFile.getConfig().set(path + ".material", material);
         int amount = item.getAmount();
