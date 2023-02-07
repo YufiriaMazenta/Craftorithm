@@ -1,0 +1,10 @@
+type: 'shapeless'
+result: 'bedrock'
+multiple: true
+source:
+  - - 'bedrock'
+    - 'bedrock'
+    - 'bedrock'
+  - - 'command_block'
+    - 'command_block'
+    - 'command_block'

@@ -7,9 +7,9 @@ import org.bukkit.inventory.Recipe;
 import top.oasismc.oasisrecipe.api.cmd.ISubCommand;
 import top.oasismc.oasisrecipe.cmd.AbstractSubCommand;
 import top.oasismc.oasisrecipe.config.YamlFileWrapper;
+import top.oasismc.oasisrecipe.recipe.RecipeManager;
 import top.oasismc.oasisrecipe.util.MsgUtil;
 
-import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -29,14 +29,14 @@ public class RemoveCommand extends AbstractSubCommand {
     @Override
     public boolean onCommand(CommandSender sender, List<String> args) {
         if (args.size() < 1) {
-            MsgUtil.sendMsg(sender, "commands.missingParam");
+            sendNotEnoughCmdParamMsg(sender, 1);
             return true;
         }
         if (removeRecipe(args.get(0))) {
-            MsgUtil.sendMsg(sender, "commands.removed");
+            MsgUtil.sendMsg(sender, "command.remove.success");
         }
         else
-            MsgUtil.sendMsg(sender, "commands.notExist");
+            MsgUtil.sendMsg(sender, "command.remove.not_exist");
         return true;
     }
 
@@ -59,7 +59,7 @@ public class RemoveCommand extends AbstractSubCommand {
         recipeMap.clear();
         while (recipeIterator.hasNext()) {
             Recipe recipe = recipeIterator.next();
-            NamespacedKey key = getRecipeKey(recipe);
+            NamespacedKey key = RecipeManager.getRecipeKey(recipe);
             recipeMap.put(key, recipe);
         }
     }
@@ -84,20 +84,22 @@ public class RemoveCommand extends AbstractSubCommand {
         Iterator<Recipe> recipeIterator = Bukkit.recipeIterator();
         while (recipeIterator.hasNext()) {
             Recipe recipe1 = recipeIterator.next();
-            NamespacedKey key1 = getRecipeKey(recipe1);
+            NamespacedKey key1 = RecipeManager.getRecipeKey(recipe1);
             if (key1 == null)
                 continue;
             if (keyList.contains(key1)) {
                 recipeIterator.remove();
                 List<String> removedList = removedRecipeConfig.getConfig().getStringList("recipes");
-                if (!removedList.contains(key1.toString()))
+                if (!removedList.contains(key1.toString())) {
                     removedList.add(key1.toString());
-                removedRecipeConfig.getConfig().set("recipes", removedList);
+                    removedRecipeConfig.getConfig().set("recipes", removedList);
+                }
                 keyList.remove(key1);
                 if (keyList.size() <= 0)
                     break;
             }
         }
+        reloadRecipeMap();
         removedRecipeConfig.saveConfig();
     }
 
@@ -108,7 +110,7 @@ public class RemoveCommand extends AbstractSubCommand {
             return false;
         while (recipeIterator.hasNext()) {
             Recipe recipe1 = recipeIterator.next();
-            NamespacedKey key1 = getRecipeKey(recipe1);
+            NamespacedKey key1 = RecipeManager.getRecipeKey(recipe1);
             if (key.equals(key1)) {
                 recipeIterator.remove();
                 List<String> removedList = removedRecipeConfig.getConfig().getStringList("recipes");
@@ -121,17 +123,6 @@ public class RemoveCommand extends AbstractSubCommand {
             }
         }
         return false;
-    }
-
-    private NamespacedKey getRecipeKey(Recipe recipe) {
-        try {
-            Class<?> recipeClass = Class.forName(recipe.getClass().getName());
-            Method getKeyMethod = recipeClass.getMethod("getKey");
-            return (NamespacedKey) getKeyMethod.invoke(recipe);
-        } catch (Exception e) {
-            return null;
-        }
-
     }
 
 }

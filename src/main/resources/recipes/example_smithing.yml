@@ -1,0 +1,8 @@
+type: smithing
+result: bedrock
+multiple: true
+source:
+  - base: 'command_block'
+    addition: 'command_block'
+  - base: 'bedrock'
+    addition: 'bedrock'

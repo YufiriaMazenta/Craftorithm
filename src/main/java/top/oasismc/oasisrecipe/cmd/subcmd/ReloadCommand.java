@@ -6,7 +6,6 @@ import top.oasismc.oasisrecipe.api.cmd.ISubCommand;
 import top.oasismc.oasisrecipe.cmd.AbstractSubCommand;
 import top.oasismc.oasisrecipe.item.ItemManager;
 import top.oasismc.oasisrecipe.recipe.RecipeManager;
-import top.oasismc.oasisrecipe.recipe.handler.OldRecipeManager;
 import top.oasismc.oasisrecipe.util.MsgUtil;
 
 import java.util.List;
@@ -46,7 +45,7 @@ public final class ReloadCommand extends AbstractSubCommand {
     }
 
     public static void reloadRecipes() {
-        RecipeManager.loadRecipes();
+        RecipeManager.reloadRecipes();
     }
 
 }

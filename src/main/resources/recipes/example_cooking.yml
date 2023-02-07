@@ -1,0 +1,16 @@
+type: cooking
+result: bedrock
+multiple: true
+source:
+  - block: furnace
+    item: command_block
+    exp: 20
+    time: 100
+  - block: smoking
+    item: command_block
+  - block: campfire
+    item: command_block
+  - block: blasting
+    item: command_block
+exp: 10
+time: 200

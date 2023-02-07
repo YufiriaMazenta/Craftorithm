@@ -23,13 +23,7 @@ public enum ConfigUpdater {
     }
 
     private void loadDefConfigs() {
-        addConfig("messages.load.itemsAdderSuccess", "&a发现ItemsAdder,已挂钩");
-        addConfig("messages.load.itemsAdderFailed", "&c未发现ItemsAdder");
-        addConfig("messages.commands.notExist", "&c配方不存在");
-        addConfig("messages.commands.removed", "&a配方已移除");
-        addConfig("messages.commands.reloadConfig", "&a配置文件重载成功");
-        addConfig("checkUpdate", true);
-        addConfig("messages.update.newVersion", "&8[&3Oasis&bRecipe&8] &a检测到有新版本发布, 请及时更新到新版本");
+        addConfig("check_update", true);
         addConfig("remove_all_vanilla_recipe", false);
     }
 

@@ -1,6 +1,8 @@
 prefix: '&8[&3Oasis&bRecipe&8]'
 unsupported_version: '<prefix> 不支持的版本'
-#使用命令的一些消息
+new_version: '<prefix> &a检测到有新版本发布, 请及时更新到新版本'
+
+#使用命令的一些反馈消息
 command:
   no_perm: '<prefix> &c你没有使用此命令的权限'
   player_only: '<prefix> &c只有玩家才能执行此命令'
@@ -16,26 +18,15 @@ command:
   reload:
     success: '<prefix> &a插件重载成功'
     exception: '<prefix> &c插件重载过程中发生错误，请查看控制台'
+  remove:
+    success: '<prefix> &a配方删除成功'
+    not_exist: '<prefix> &c配方不存在'
+  version: '<prefix> 插件版本：<version>'
 
-#以下为旧格式
-commands:
-  noPerm: '<prefix> &c你没有使用该命令的权限'
-  noArgs: '<prefix> &c请输入子命令以执行'
-  nullArg: '<prefix> &c不存在的子命令'
-  reload: '<prefix> &a插件重载成功'
-  reloadConfig: '<prefix> &a配置文件重载成功'
-  version: '<prefix> &a插件版本: <version>'
-  missingParam: '<prefix> &c缺少参数，请检查输入是否正确'
-  playerOnly: '<prefix> &c此命令只能玩家使用!'
-  import: '<prefix> &a导入成功'
-  notExist: '<prefix> &c配方不存在'
-  removed: '<prefix> &a配方已移除'
-#插件加载过程中的一些消息
+#插件加载的反馈信息
 load:
   finish: '<prefix> &a插件加载完毕'
-  vaultSuccess: '<prefix> &a发现经济插件,已挂钩'
-  vaultFailed: '<prefix> &c未发现经济插件,金钱检查将不会生效'
-  pointsSuccess: '<prefix> &a发现点券插件,已挂钩'
-  pointsFailed: '<prefix> &c未发现点券插件,点券检查将不会生效'
-update:
-  newVersion: '&8[&3Oasis&bRecipe&8] &a检测到有新版本发布, 请及时更新到新版本'
+  vault_success: '<prefix> &a发现经济插件,已挂钩'
+  vault_failed: '<prefix> &c未发现经济插件,金钱检查将不会生效'
+  points_success: '<prefix> &a发现点券插件,已挂钩'
+  points_failed: '<prefix> &c未发现点券插件,点券检查将不会生效'
