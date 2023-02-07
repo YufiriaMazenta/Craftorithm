@@ -40,9 +40,8 @@ public final class OasisRecipe extends JavaPlugin implements Listener {
         regCommands();
         regListeners();
         initScripts();
-
-        MsgUtil.info("&aLoad 1." + vanillaVersion + " Adapter");
-        MsgUtil.info(getConfig().getString("messages.load.finish", "messages.load.finish"));
+        
+        MsgUtil.info("load.finish");
         UpdateUtil.checkUpdate(Bukkit.getConsoleSender());
         loadBStat();
     }

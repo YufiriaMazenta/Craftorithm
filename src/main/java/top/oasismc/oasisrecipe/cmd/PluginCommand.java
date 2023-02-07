@@ -4,7 +4,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import top.oasismc.oasisrecipe.api.cmd.ISubCommand;
-import top.oasismc.oasisrecipe.cmd.subcmd.*;
+import top.oasismc.oasisrecipe.cmd.subcmd.ItemCommand;
+import top.oasismc.oasisrecipe.cmd.subcmd.ReloadCommand;
+import top.oasismc.oasisrecipe.cmd.subcmd.RemoveCommand;
+import top.oasismc.oasisrecipe.cmd.subcmd.VersionCommand;
 import top.oasismc.oasisrecipe.util.MsgUtil;
 
 import java.util.*;

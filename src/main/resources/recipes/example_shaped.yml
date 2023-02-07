@@ -1,0 +1,30 @@
+type: 'shaped'
+result: 'items:example_item:test2'
+multiple: true
+shape:
+  - - 'aaa'
+    - 'bbb'
+    - 'ccc'
+  - - 'dd'
+    - 'ee'
+source:
+  a: 'bedrock'
+  b: 'command_block'
+  c: 'items:example_item:test2'
+  d: 'diamond'
+  e: 'iron_ingot'
+
+#可选的配置项：
+conditions:
+  - 'perm oasis.recipe.test'
+  #- '&money >= *100'
+  #- '&points >= *10'
+  - '&!level >= *10'
+  - '&chunk slime'
+  - '&effect BAD_OMEN >= *1'
+#配方合成之后执行的动作
+actions:
+  - 'take-level 10'
+  #- 'take-money 10.0'
+  #- 'take-points 10'
+  - 'command me hello'

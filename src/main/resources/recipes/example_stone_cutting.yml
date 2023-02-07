@@ -1,0 +1,6 @@
+type: stone_cutting
+result: bedrock
+multiple: true
+source:
+  - command_block
+  - bedrock

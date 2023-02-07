@@ -5,7 +5,6 @@ import org.black_ixx.playerpoints.PlayerPoints;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import top.oasismc.oasisrecipe.OasisRecipe;
 import top.oasismc.oasisrecipe.api.script.IRecipeStatement;
 import top.oasismc.oasisrecipe.script.action.impl.*;
 import top.oasismc.oasisrecipe.util.MsgUtil;
@@ -25,7 +24,7 @@ public enum ActionDispatcher {
 
     ActionDispatcher() {
         actionMap = new ConcurrentHashMap<>();
-        loadHookPlugins();
+        hookPlugins();
         regDefActions();
     }
 
@@ -101,17 +100,17 @@ public enum ActionDispatcher {
         return playerPoints;
     }
 
-    private void loadHookPlugins() {
+    private void hookPlugins() {
         economyLoaded = loadVault();
-        String messageKey = "messages.load.vaultSuccess";
+        String messageKey = "load.vault_success";
         if (!economyLoaded)
-            messageKey = "messages.load.vaultFailed";
-        MsgUtil.info(OasisRecipe.getInstance().getConfig().getString(messageKey, messageKey));
+            messageKey = "load.vault_failed";
+        MsgUtil.info(messageKey);
         pointsLoaded = loadPlayerPoints();
-        messageKey = "messages.load.pointsSuccess";
+        messageKey = "load.points_success";
         if (!pointsLoaded)
-            messageKey = "messages.load.pointsFailed";
-        MsgUtil.info(OasisRecipe.getInstance().getConfig().getString(messageKey, messageKey));
+            messageKey = "load.points_failed";
+        MsgUtil.info(messageKey);
     }
 
 }

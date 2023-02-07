@@ -17,7 +17,7 @@ public class VersionCommand extends AbstractSubCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, List<String> args) {
-        MsgUtil.sendMsg(sender, "commands.version");
+        MsgUtil.sendMsg(sender, "command.version");
         return true;
     }
 }
