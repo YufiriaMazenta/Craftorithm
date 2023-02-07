@@ -12,7 +12,7 @@ public final class ItemCommand extends AbstractSubCommand {
     private ItemCommand() {
         super("item", new HashMap<>());
         regSubCommand(ItemSaveCommand.INSTANCE);
-        regSubCommand(ItemGetCommand.INSTANCE);
+        regSubCommand(ItemGiveCommand.INSTANCE);
     }
 
 }

@@ -45,7 +45,7 @@ dependencies {
 }
 
 group = 'top.oasismc'
-version = '1.0.0'
+version = '1.0.0-beta'
 def pluginVersion = version + "-" + new SimpleDateFormat("yyyyMMdd").format(System.currentTimeMillis())
 archivesBaseName = 'OasisRecipe'
 java.sourceCompatibility = JavaVersion.VERSION_1_8

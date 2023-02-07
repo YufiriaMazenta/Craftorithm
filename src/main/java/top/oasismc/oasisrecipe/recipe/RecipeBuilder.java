@@ -221,7 +221,16 @@ public class RecipeBuilder {
     }
 
     private static ItemStack getResultItem(YamlConfiguration config) {
-        String resultStr = config.getString("result", "");
+        String resultStr;
+        if (config.getString("type", "shaped").equals("random_cooking")) {
+            String tmpStr = config.getStringList("result").get(0);
+            tmpStr = tmpStr.substring(0, tmpStr.lastIndexOf(" "));
+            resultStr = tmpStr;
+        }
+        else {
+            resultStr = config.getString("result", "");
+        }
+
         if (resultStr.length() < 1) {
             throw new IllegalArgumentException("Empty recipe result");
         }

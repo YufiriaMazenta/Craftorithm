@@ -36,6 +36,7 @@ public class RecipeManager {
         recipeBuilderMap.put("cooking", RecipeBuilder::buildCookingRecipe);
         recipeBuilderMap.put("smithing", RecipeBuilder::buildSmithingRecipe);
         recipeBuilderMap.put("stone_cutting", RecipeBuilder::buildStoneCuttingRecipe);
+        recipeBuilderMap.put("random_cooking", RecipeBuilder::buildCookingRecipe);
 
         multipleRecipeBuilderMap = new HashMap<>();
         multipleRecipeBuilderMap.put("shaped", RecipeBuilder::buildMultipleShapedRecipe);
@@ -43,6 +44,7 @@ public class RecipeManager {
         multipleRecipeBuilderMap.put("cooking", RecipeBuilder::buildMultipleCookingRecipe);
         multipleRecipeBuilderMap.put("smithing", RecipeBuilder::buildMultipleSmithingRecipe);
         multipleRecipeBuilderMap.put("stone_cutting", RecipeBuilder::buildMultipleStoneCuttingRecipe);
+        multipleRecipeBuilderMap.put("random_cooking", RecipeBuilder::buildMultipleCookingRecipe);
     }
 
     public static void loadRecipeManager() {
@@ -110,7 +112,7 @@ public class RecipeManager {
     }
 
     private static void loadRecipeFromOtherPlugins() {
-        Map<Plugin, List<Recipe>> pluginRecipeMap = OasisRecipeAPI.INSTANCE.getPluginRecipeMap();
+        Map<Plugin, List<Recipe>> pluginRecipeMap = OasisRecipeAPI.INSTANCE.getPluginRegRecipeMap();
         for (Plugin plugin : pluginRecipeMap.keySet()) {
             for (Recipe recipe : pluginRecipeMap.get(plugin)) {
                 OasisRecipe.getInstance().getServer().addRecipe(recipe);

@@ -1,0 +1,15 @@
+type: random_cooking
+result:
+  - 'iron_ingot 0.8'
+  - 'diamond 0.05'
+  - 'copper_ingot 0.15'
+multiple: true
+source:
+  - block: furnace
+    item: bedrock
+  - block: smoking
+    item: bedrock
+  - block: blasting
+    item: bedrock
+exp: 10
+time: 100

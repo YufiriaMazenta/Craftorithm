@@ -12,9 +12,10 @@ command:
     save:
       success: '<prefix> &a物品保存成功'
       failed_save_air: '<prefix> &c物品保存失败，原因：不能保存不存在的物品'
-    get:
+    give:
       success: '<prefix> &a物品获取成功'
       not_exist_item: '<prefix> &c不存在物品 <item_name>'
+      player_offline: '<prefix> &c该玩家不在线或不存在'
   reload:
     success: '<prefix> &a插件重载成功'
     exception: '<prefix> &c插件重载过程中发生错误，请查看控制台'
