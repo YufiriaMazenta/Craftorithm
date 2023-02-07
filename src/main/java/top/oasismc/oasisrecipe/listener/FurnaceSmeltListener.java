@@ -2,12 +2,16 @@ package top.oasismc.oasisrecipe.listener;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.FurnaceStartSmeltEvent;
 import org.bukkit.inventory.ItemStack;
+import top.oasismc.oasisrecipe.item.ItemManager;
+import top.oasismc.oasisrecipe.recipe.RecipeBuilder;
+import top.oasismc.oasisrecipe.recipe.RecipeManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,43 +22,45 @@ public enum FurnaceSmeltListener implements Listener {
 
     INSTANCE;
 
-    private final Map<Block, String> furnaceMap;
+    private final Map<Block, YamlConfiguration> furnaceMap;
 
     FurnaceSmeltListener() {
         furnaceMap = new HashMap<>();
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onFurnaceStartSmelt(FurnaceStartSmeltEvent event) {
-//        String recipeName = OldRecipeManager.INSTANCE.getRecipeName(event.getRecipe());
-//        if (OldRecipeManager.INSTANCE.getRecipeFile().getConfig().getString(recipeName + ".type", "shaped").startsWith("random_")) {
-//            furnaceMap.put(event.getBlock(), recipeName);
-//        }
+        YamlConfiguration config = RecipeManager.getRecipeConfig(event.getRecipe());
+        if (config == null)
+            return;
+        if (config.getString("type", "shaped").equals("random_cooking")) {
+            furnaceMap.put(event.getBlock(), config);
+        }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onFurnaceSmelt(FurnaceSmeltEvent event) {
-//        if (furnaceMap.containsKey(event.getBlock())) {
-//            List<String> resultList = OldRecipeManager.INSTANCE.getRecipeFile().getConfig().getStringList(furnaceMap.get(event.getBlock()) + ".result");
-//            List<Map.Entry<ItemStack, Double>> probabilityList = getProbability(resultList);
-//            double random = Math.random();
-//            for (Map.Entry<ItemStack, Double> entry : probabilityList) {
-//                if (random < entry.getValue()) {
-//                    event.setResult(entry.getKey());
-//                    break;
-//                }
-//            }
-//            furnaceMap.remove(event.getBlock());
-//        }
+        if (furnaceMap.containsKey(event.getBlock())) {
+            List<String> resultList = furnaceMap.get(event.getBlock()).getStringList("result");
+            List<Map.Entry<ItemStack, Double>> probabilityList = getProbability(resultList);
+            double random = Math.random();
+            for (Map.Entry<ItemStack, Double> entry : probabilityList) {
+                if (random < entry.getValue()) {
+                    event.setResult(entry.getKey());
+                    break;
+                }
+            }
+            furnaceMap.remove(event.getBlock());
+        }
     }
 
-    private List<Map.Entry<ItemStack, Double>> getProbability(List<String> results) {
+    private List<Map.Entry<ItemStack, Double>> getProbability(List<String> resultStr) {
         Map<ItemStack, Double> probabilityMap = new HashMap<>();
         double sum = 0;
-        for (String result : results) {
-            String item = result.substring(0, result.indexOf(" "));
-            double probability = Double.parseDouble(result.substring(result.indexOf(" ") + 1));
-            ItemStack itemStack = null;//getItemFromConfig(item);
+        for (String result : resultStr) {
+            String item = result.substring(0, result.lastIndexOf(" "));
+            double probability = Double.parseDouble(result.substring(result.lastIndexOf(" ") + 1));
+            ItemStack itemStack = RecipeBuilder.parseRecipeItemStr(item);
             sum += probability;
             probabilityMap.put(itemStack, sum);
         }
