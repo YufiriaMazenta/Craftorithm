@@ -78,19 +78,20 @@ public class RecipeManager {
             boolean multiple = config.getBoolean("multiple", false);
             if (multiple) {
                 Recipe[] multipleRecipes = newMultipleRecipe(config, fileName);
-                for (int i = 0; i < multipleRecipes.length; i++) {
-                    regRecipe(fileName + "." + i, multipleRecipes[i], config);
+                for (Recipe recipe : multipleRecipes) {
+                    NamespacedKey key = getRecipeKey(recipe);
+                    regRecipe(key, recipe, config);
                 }
             } else {
-                regRecipe(fileName, newRecipe(config, fileName), config);
+                Recipe recipe = newRecipe(config, fileName);
+                regRecipe(getRecipeKey(recipe), recipe, config);
             }
         }
     }
 
-    public static void regRecipe(String key, Recipe recipe, YamlConfiguration config) {
+    public static void regRecipe(NamespacedKey key, Recipe recipe, YamlConfiguration config) {
         Bukkit.addRecipe(recipe);
-        NamespacedKey namespacedKey = new NamespacedKey(OasisRecipe.getInstance(), key);
-        recipeKeyConfigMap.put(namespacedKey, config);
+        recipeKeyConfigMap.put(key, config);
     }
 
     public static Recipe newRecipe(YamlConfiguration config, String key) {

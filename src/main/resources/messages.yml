@@ -1,6 +1,6 @@
 prefix: '&8[&3Oasis&bRecipe&8]'
 unsupported_version: '<prefix> 不支持的版本'
-new_version: '<prefix> &a检测到有新版本发布, 请及时更新到新版本'
+new_version: '<prefix> &a检测到有新版本<new_version>, 请及时更新到新版本'
 
 #使用命令的一些反馈消息
 command:
@@ -22,7 +22,7 @@ command:
   remove:
     success: '<prefix> &a配方删除成功'
     not_exist: '<prefix> &c配方不存在'
-  version: '<prefix> 插件版本：<version>'
+  version: '<prefix> &a插件版本：<version>'
 
 #插件加载的反馈信息
 load:

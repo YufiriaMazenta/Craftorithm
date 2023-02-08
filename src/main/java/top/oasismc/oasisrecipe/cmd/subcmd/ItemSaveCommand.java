@@ -52,13 +52,14 @@ public final class ItemSaveCommand extends AbstractSubCommand {
                 }
             }
             yamlFileWrapper = new YamlFileWrapper(itemFile);
-            ItemManager.getItemFileMap().put(itemFileName, yamlFileWrapper);
+            ItemManager.addRecipeFile(itemFileName, yamlFileWrapper);
         } else {
             yamlFileWrapper = ItemManager.getItemFileMap().get(itemFileName);
         }
 
         ItemUtil.saveItem2Config(item, yamlFileWrapper, args.get(1));
-        MsgUtil.sendMsg(sender, "commands.save.success");
+        ItemManager.addOasisRecipeItem(itemFileName + ":" + args.get(1), item.clone());
+        MsgUtil.sendMsg(sender, "command.item.save.success");
         return true;
     }
 
