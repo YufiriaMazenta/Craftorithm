@@ -25,6 +25,7 @@ public enum ConfigUpdater {
     private void loadDefConfigs() {
         addConfig("check_update", true);
         addConfig("remove_all_vanilla_recipe", false);
+        addConfig("lore_cannot_craft", "&c不能参与合成");
     }
 
     public void updateConfig() {

@@ -1,3 +1,4 @@
 version: ${version}
 check_update: true
 remove_all_vanilla_recipe: false
+lore_cannot_craft: '&c不能参与合成'
