@@ -31,9 +31,17 @@ public class ItemManager {
             YamlFileWrapper itemFile = itemFileMap.get(fileKey);
             Set<String> itemKeySet = itemFile.getConfig().getKeys(false);
             for (String itemKey : itemKeySet) {
-                itemMap.put(fileKey + ":" + itemKey, ItemUtil.getItemFromConfig(itemFile.getConfig(), itemKey));
+                addOasisRecipeItem(fileKey + ":" + itemKey, ItemUtil.getItemFromConfig(itemFile.getConfig(), itemKey));
             }
         }
+    }
+
+    public static void addOasisRecipeItem(String itemName, ItemStack item) {
+        itemMap.put(itemName, item);
+    }
+
+    public static void addRecipeFile(String name, YamlFileWrapper file) {
+        itemFileMap.put(name, file);
     }
 
     public static boolean isOasisRecipeItem(String itemName) {
@@ -58,7 +66,7 @@ public class ItemManager {
             String key = file.getName();
             int lastDotIndex = key.lastIndexOf(".");
             key = key.substring(0, lastDotIndex);
-            itemFileMap.put(key, new YamlFileWrapper(file));
+            addRecipeFile(key, new YamlFileWrapper(file));
         }
     }
 

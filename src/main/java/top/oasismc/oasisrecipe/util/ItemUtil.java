@@ -6,6 +6,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import top.oasismc.oasisrecipe.api.nbt.IPluginNbtTag;
 import top.oasismc.oasisrecipe.config.YamlFileWrapper;
+import top.oasismc.oasisrecipe.item.ItemManager;
 import top.oasismc.oasisrecipe.item.nbt.CompoundNbtTag;
 import top.oasismc.oasisrecipe.item.nbt.NbtHandler;
 
