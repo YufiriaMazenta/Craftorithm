@@ -40,25 +40,7 @@ public final class ItemSaveCommand extends AbstractSubCommand {
             return true;
         }
 
-        String itemFileName = args.get(0);
-        YamlFileWrapper yamlFileWrapper;
-        if (!ItemManager.getItemFileMap().containsKey(itemFileName)) {
-            File itemFile = new File(ItemManager.getItemFileFolder(), itemFileName + ".yml");
-            if (!itemFile.exists()) {
-                try {
-                    itemFile.createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            yamlFileWrapper = new YamlFileWrapper(itemFile);
-            ItemManager.addRecipeFile(itemFileName, yamlFileWrapper);
-        } else {
-            yamlFileWrapper = ItemManager.getItemFileMap().get(itemFileName);
-        }
-
-        ItemUtil.saveItem2Config(item, yamlFileWrapper, args.get(1));
-        ItemManager.addOasisRecipeItem(itemFileName + ":" + args.get(1), item.clone());
+        ItemManager.addOasisRecipeItem(args.get(0), args.get(1), item.clone());
         MsgUtil.sendMsg(sender, "command.item.save.success");
         return true;
     }
