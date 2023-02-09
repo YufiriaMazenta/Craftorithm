@@ -7,6 +7,7 @@ import top.oasismc.oasisrecipe.config.YamlFileWrapper;
 import top.oasismc.oasisrecipe.util.ItemUtil;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,17 +32,29 @@ public class ItemManager {
             YamlFileWrapper itemFile = itemFileMap.get(fileKey);
             Set<String> itemKeySet = itemFile.getConfig().getKeys(false);
             for (String itemKey : itemKeySet) {
-                addOasisRecipeItem(fileKey + ":" + itemKey, ItemUtil.getItemFromConfig(itemFile.getConfig(), itemKey));
+                addOasisRecipeItem(fileKey, itemKey, ItemUtil.getItemFromConfig(itemFile.getConfig(), itemKey));
             }
         }
     }
 
-    public static void addOasisRecipeItem(String itemName, ItemStack item) {
-        itemMap.put(itemName, item);
-    }
-
-    public static void addRecipeFile(String name, YamlFileWrapper file) {
-        itemFileMap.put(name, file);
+    public static void addOasisRecipeItem(String itemFileName, String itemName, ItemStack item) {
+        YamlFileWrapper yamlFileWrapper;
+        if (!ItemManager.getItemFileMap().containsKey(itemFileName)) {
+            File itemFile = new File(ItemManager.getItemFileFolder(), itemFileName + ".yml");
+            if (!itemFile.exists()) {
+                try {
+                    itemFile.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            yamlFileWrapper = new YamlFileWrapper(itemFile);
+            itemFileMap.put(itemName, yamlFileWrapper);
+        } else {
+            yamlFileWrapper = itemFileMap.get(itemFileName);
+        }
+        ItemUtil.saveItem2Config(item, yamlFileWrapper, itemName);
+        itemMap.put(itemFileName + ":" + itemName, item);
     }
 
     public static boolean isOasisRecipeItem(String itemName) {
@@ -66,7 +79,7 @@ public class ItemManager {
             String key = file.getName();
             int lastDotIndex = key.lastIndexOf(".");
             key = key.substring(0, lastDotIndex);
-            addRecipeFile(key, new YamlFileWrapper(file));
+            itemFileMap.put(key, new YamlFileWrapper(file));
         }
     }
 
