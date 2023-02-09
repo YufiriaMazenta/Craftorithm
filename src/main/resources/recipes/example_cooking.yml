@@ -6,11 +6,11 @@ source:
     item: command_block
     exp: 20
     time: 100
-  - block: smoking
+  - block: smoker
     item: command_block
   - block: campfire
     item: command_block
-  - block: blasting
+  - block: blast
     item: command_block
 exp: 10
 time: 200

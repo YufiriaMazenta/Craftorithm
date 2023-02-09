@@ -63,7 +63,8 @@ public class RecipeManager {
             allFiles.add(new File(recipeFileFolder, "example_shaped.yml"));
         }
         for (File file : allFiles) {
-            String key = file.getName();
+            String key = file.getPath().substring(recipeFileFolder.getPath().length() + 1);
+            key = key.replace("\\", "/");
             int lastDotIndex = key.lastIndexOf(".");
             key = key.substring(0, lastDotIndex);
             recipeFileNameMap.put(key, new YamlFileWrapper(file));
