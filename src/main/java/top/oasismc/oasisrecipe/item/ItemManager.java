@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import top.oasismc.oasisrecipe.OasisRecipe;
 import top.oasismc.oasisrecipe.config.YamlFileWrapper;
+import top.oasismc.oasisrecipe.util.FileUtil;
 import top.oasismc.oasisrecipe.util.ItemUtil;
 
 import java.io.File;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static top.oasismc.oasisrecipe.util.FileUtil.createNewFile;
 import static top.oasismc.oasisrecipe.util.FileUtil.getAllFiles;
 
 public class ItemManager {
@@ -42,11 +44,7 @@ public class ItemManager {
         if (!ItemManager.getItemFileMap().containsKey(itemFileName)) {
             File itemFile = new File(ItemManager.getItemFileFolder(), itemFileName + ".yml");
             if (!itemFile.exists()) {
-                try {
-                    itemFile.createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                FileUtil.createNewFile(itemFile);
             }
             yamlFileWrapper = new YamlFileWrapper(itemFile);
             itemFileMap.put(itemName, yamlFileWrapper);
@@ -76,7 +74,8 @@ public class ItemManager {
             allFiles.add(new File(itemFileFolder, "example_item.yml"));
         }
         for (File file : allFiles) {
-            String key = file.getName();
+            String key = file.getPath().substring(itemFileFolder.getPath().length() + 1);
+            key = key.replace("\\", "/");
             int lastDotIndex = key.lastIndexOf(".");
             key = key.substring(0, lastDotIndex);
             itemFileMap.put(key, new YamlFileWrapper(file));

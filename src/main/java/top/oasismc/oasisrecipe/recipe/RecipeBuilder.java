@@ -215,10 +215,10 @@ public class RecipeBuilder {
             default:
                 cookingRecipe = new FurnaceRecipe(key, result, choice, exp, time);
                 break;
-            case "smoking":
+            case "smoker":
                 cookingRecipe = new SmokingRecipe(key, result, choice, exp, time);
                 break;
-            case "blasting":
+            case "blast":
                 cookingRecipe = new BlastingRecipe(key, result, choice, exp, time);
                 break;
             case "campfire":

@@ -1,6 +1,7 @@
 package top.oasismc.oasisrecipe.util;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,10 +19,24 @@ public class FileUtil {
             if (file.isDirectory()) {
                 fileList.addAll(getAllFiles(file));
             } else {
-                fileList.add(file);
+                if (file.getName().endsWith(".yml"))
+                    fileList.add(file);
             }
         }
         return fileList;
+    }
+
+    public static boolean createNewFile(File file) {
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
+        }
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
 }
