@@ -6,6 +6,8 @@ import top.oasismc.oasisrecipe.OasisRecipe;
 import top.oasismc.oasisrecipe.config.YamlFileWrapper;
 import top.oasismc.oasisrecipe.util.FileUtil;
 import top.oasismc.oasisrecipe.util.ItemUtil;
+import top.oasismc.oasisrecipe.util.MapUtil;
+import top.oasismc.oasisrecipe.util.MsgUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +36,12 @@ public class ItemManager {
             YamlFileWrapper itemFile = itemFileMap.get(fileKey);
             Set<String> itemKeySet = itemFile.getConfig().getKeys(false);
             for (String itemKey : itemKeySet) {
-                addOasisRecipeItem(fileKey, itemKey, ItemUtil.getItemFromConfig(itemFile.getConfig(), itemKey));
+                try {
+                    addOasisRecipeItem(fileKey, itemKey, ItemUtil.getItemFromConfig(itemFile.getConfig(), itemKey));
+                } catch (Exception e) {
+                    MsgUtil.info("load.item_load_exception", MapUtil.newHashMap("<item_name>", fileKey + ":" + itemKey));
+                    e.printStackTrace();
+                }
             }
         }
     }

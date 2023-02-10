@@ -69,4 +69,7 @@ public class MsgUtil {
         msgConfigFile.reloadConfig();
     }
 
+    public static void info(String msgKey, Map<String, String> map) {
+        sendMsg(Bukkit.getConsoleSender(), msgKey, map);
+    }
 }
