@@ -27,6 +27,8 @@ command:
 #插件加载的反馈信息
 load:
   finish: '<prefix> &a插件加载完毕'
+  recipe_load_exception: '<prefix> &c加载配方<recipe_name>时出现错误'
+  item_load_exception: '<prefix> &c加载物品<item_name>时出现错误'
   vault_success: '<prefix> &a发现经济插件,已挂钩'
   vault_failed: '<prefix> &c未发现经济插件,金钱检查将不会生效'
   points_success: '<prefix> &a发现点券插件,已挂钩'

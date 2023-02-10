@@ -9,6 +9,8 @@ import top.oasismc.oasisrecipe.OasisRecipe;
 import top.oasismc.oasisrecipe.api.OasisRecipeAPI;
 import top.oasismc.oasisrecipe.cmd.subcmd.RemoveCommand;
 import top.oasismc.oasisrecipe.config.YamlFileWrapper;
+import top.oasismc.oasisrecipe.util.MapUtil;
+import top.oasismc.oasisrecipe.util.MsgUtil;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -75,17 +77,22 @@ public class RecipeManager {
         Bukkit.resetRecipes();
         recipeKeyConfigMap.clear();
         for (String fileName : recipeFileNameMap.keySet()) {
-            YamlConfiguration config = recipeFileNameMap.get(fileName).getConfig();
-            boolean multiple = config.getBoolean("multiple", false);
-            if (multiple) {
-                Recipe[] multipleRecipes = newMultipleRecipe(config, fileName);
-                for (Recipe recipe : multipleRecipes) {
-                    NamespacedKey key = getRecipeKey(recipe);
-                    regRecipe(key, recipe, config);
+            try {
+                YamlConfiguration config = recipeFileNameMap.get(fileName).getConfig();
+                boolean multiple = config.getBoolean("multiple", false);
+                if (multiple) {
+                    Recipe[] multipleRecipes = newMultipleRecipe(config, fileName);
+                    for (Recipe recipe : multipleRecipes) {
+                        NamespacedKey key = getRecipeKey(recipe);
+                        regRecipe(key, recipe, config);
+                    }
+                } else {
+                    Recipe recipe = newRecipe(config, fileName);
+                    regRecipe(getRecipeKey(recipe), recipe, config);
                 }
-            } else {
-                Recipe recipe = newRecipe(config, fileName);
-                regRecipe(getRecipeKey(recipe), recipe, config);
+            } catch (Exception e) {
+                MsgUtil.info("load.recipe_load_exception", MapUtil.newHashMap("<recipe_name>", fileName));
+                e.printStackTrace();
             }
         }
     }
