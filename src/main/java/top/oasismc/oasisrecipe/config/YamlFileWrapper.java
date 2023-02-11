@@ -40,7 +40,7 @@ public class YamlFileWrapper {
 
     //获取配置文件实例
     public YamlConfiguration getConfig() {
-        if (configFile == null) {
+        if (config == null) {
             reloadConfig();
         }
         return config;

@@ -8,6 +8,7 @@ import top.oasismc.oasisrecipe.cmd.subcmd.ItemCommand;
 import top.oasismc.oasisrecipe.cmd.subcmd.ReloadCommand;
 import top.oasismc.oasisrecipe.cmd.subcmd.RemoveCommand;
 import top.oasismc.oasisrecipe.cmd.subcmd.VersionCommand;
+import top.oasismc.oasisrecipe.util.MapUtil;
 import top.oasismc.oasisrecipe.util.MsgUtil;
 
 import java.util.*;
@@ -28,14 +29,14 @@ public enum PluginCommand implements TabExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         List<String> argList = Arrays.asList(args);
         if (argList.size() < 1) {
-            MsgUtil.sendMsg(sender, "commands.noArgs");
+            MsgUtil.sendMsg(sender, "command.not_enough_param", MapUtil.newHashMap("<number>", String.valueOf(1)));
             return true;
         }
         ISubCommand subCommand = subCommandMap.get(argList.get(0));
         if (subCommand != null)
             return subCommand.onCommand(sender, argList.subList(1, argList.size()));
         else {
-            MsgUtil.sendMsg(sender, "commands.nullArg");
+            MsgUtil.sendMsg(sender, "command.undefined_subcmd");
             return true;
         }
     }

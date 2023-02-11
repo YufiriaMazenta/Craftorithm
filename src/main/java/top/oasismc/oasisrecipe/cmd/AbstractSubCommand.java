@@ -29,7 +29,7 @@ public class AbstractSubCommand implements ISubCommand {
         }
         ISubCommand subCommand = subCommandMap.get(args.get(0));
         if (subCommand == null) {
-            MsgUtil.sendMsg(sender, "commands.nullArg");
+            MsgUtil.sendMsg(sender, "command.undefined_subcmd");
         } else {
             subCommand.onCommand(sender, args.subList(1, args.size()));
         }
