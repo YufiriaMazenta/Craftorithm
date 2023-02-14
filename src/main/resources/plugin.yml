@@ -4,7 +4,7 @@ main: top.oasismc.oasisrecipe.OasisRecipe
 api-version: 1.13
 load: POSTWORLD
 softdepend: [ Vault, LuckPerms, PlayerPoints, PlaceholderAPI ]
-authors: [ ChiyodaXiaoYi ]
+authors: [ YufiriaMazenta ]
 commands:
   oasisrecipe:
     aliases:
