@@ -145,15 +145,18 @@ public class RecipeManager {
 
     public static YamlConfiguration getRecipeConfig(Recipe recipe) {
         NamespacedKey key = getRecipeKey(recipe);
-        return recipeKeyConfigMap.get(key);
+        return key != null ? recipeKeyConfigMap.get(key) : null;
     }
 
     public static NamespacedKey getRecipeKey(Recipe recipe) {
+        if (recipe == null)
+            return null;
         try {
             Class<?> recipeClass = Class.forName(recipe.getClass().getName());
             Method getKeyMethod = recipeClass.getMethod("getKey");
             return (NamespacedKey) getKeyMethod.invoke(recipe);
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
 
