@@ -59,14 +59,17 @@ public enum MenuHandler implements Listener {
             return;
         if (event.getClickedInventory() == null)
             return;
-        if (!(event.getInventory().getHolder() instanceof MenuHolder))
+        if (!(event.getView().getTopInventory().getHolder() instanceof MenuHolder))
+            return;
+        else
+            event.setCancelled(true);
+        if (!(event.getClickedInventory().getHolder() instanceof MenuHolder))
             return;
         Player player = (Player) event.getWhoClicked();
-        if (event.getView().getTopInventory().getHolder() instanceof MenuHolder)
-            event.setCancelled(true);
         if (!playerInvConversationMap.containsKey(player.getUniqueId()))
             return;
         MenuHolder holder = (MenuHolder) event.getClickedInventory().getHolder();
+        //TODO 事件处理
     }
 
 }
