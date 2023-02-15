@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import top.oasismc.oasisrecipe.api.script.IRecipeStatement;
 import top.oasismc.oasisrecipe.script.action.impl.*;
-import top.oasismc.oasisrecipe.util.MsgUtil;
+import top.oasismc.oasisrecipe.util.LangUtil;
 
 import java.util.Collections;
 import java.util.List;
@@ -105,12 +105,12 @@ public enum ActionDispatcher {
         String messageKey = "load.vault_success";
         if (!economyLoaded)
             messageKey = "load.vault_failed";
-        MsgUtil.info(messageKey);
+        LangUtil.info(messageKey);
         pointsLoaded = loadPlayerPoints();
         messageKey = "load.points_success";
         if (!pointsLoaded)
             messageKey = "load.points_failed";
-        MsgUtil.info(messageKey);
+        LangUtil.info(messageKey);
     }
 
 }

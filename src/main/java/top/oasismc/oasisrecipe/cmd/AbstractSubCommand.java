@@ -4,7 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import top.oasismc.oasisrecipe.api.cmd.ISubCommand;
 import top.oasismc.oasisrecipe.util.MapUtil;
-import top.oasismc.oasisrecipe.util.MsgUtil;
+import top.oasismc.oasisrecipe.util.LangUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,14 +22,19 @@ public class AbstractSubCommand implements ISubCommand {
         this.subCommandMap = subCommandMap;
     }
 
+    public AbstractSubCommand(String command) {
+        this(command, new ConcurrentHashMap<>());
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, List<String> args) {
         if (subCommandMap == null || args.size() < 1) {
+            sendNotEnoughCmdParamMsg(sender, "unknown");
             return true;
         }
         ISubCommand subCommand = subCommandMap.get(args.get(0));
         if (subCommand == null) {
-            MsgUtil.sendMsg(sender, "command.undefined_subcmd");
+            LangUtil.sendMsg(sender, "command.undefined_subcmd");
         } else {
             subCommand.onCommand(sender, args.subList(1, args.size()));
         }
@@ -74,14 +79,18 @@ public class AbstractSubCommand implements ISubCommand {
     }
 
     public void sendNotEnoughCmdParamMsg(CommandSender sender, int paramNum) {
-        MsgUtil.sendMsg(sender, "command.not_enough_param", MapUtil.newHashMap("<number>", String.valueOf(paramNum)));
+        sendNotEnoughCmdParamMsg(sender, String.valueOf(paramNum));
+    }
+
+    public void sendNotEnoughCmdParamMsg(CommandSender sender, String paramStr) {
+        LangUtil.sendMsg(sender, "command.not_enough_param", MapUtil.newHashMap("<number>", paramStr));
     }
 
     public boolean checkSenderIsPlayer(CommandSender sender) {
         if (sender instanceof Player) {
             return true;
         } else {
-            MsgUtil.sendMsg(sender, "command.player_only");
+            LangUtil.sendMsg(sender, "command.player_only");
             return false;
         }
     }

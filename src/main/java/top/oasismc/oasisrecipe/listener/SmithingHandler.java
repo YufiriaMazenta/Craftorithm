@@ -12,7 +12,7 @@ import top.oasismc.oasisrecipe.recipe.RecipeManager;
 
 import java.util.List;
 
-public enum SmithingListener implements Listener {
+public enum SmithingHandler implements Listener {
 
     INSTANCE;
 

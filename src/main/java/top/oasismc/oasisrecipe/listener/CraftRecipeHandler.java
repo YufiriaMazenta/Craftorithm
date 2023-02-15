@@ -1,6 +1,5 @@
 package top.oasismc.oasisrecipe.listener;
 
-import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -8,19 +7,16 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
-import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import top.oasismc.oasisrecipe.OasisRecipe;
 import top.oasismc.oasisrecipe.recipe.RecipeManager;
-import top.oasismc.oasisrecipe.util.MsgUtil;
+import top.oasismc.oasisrecipe.util.LangUtil;
 
-import java.util.Arrays;
 import java.util.List;
 
-public enum CraftRecipeListener implements Listener {
+public enum CraftRecipeHandler implements Listener {
 
     INSTANCE;
 
@@ -85,7 +81,7 @@ public enum CraftRecipeListener implements Listener {
             List<String> lore = item.getItemMeta().getLore();
             if (lore == null)
                 return;
-            String cannotCraftLoreStr = MsgUtil.color(OasisRecipe.getInstance().getConfig().getString("lore_cannot_craft", "lore_cannot_craft"));
+            String cannotCraftLoreStr = LangUtil.color(OasisRecipe.getInstance().getConfig().getString("lore_cannot_craft", "lore_cannot_craft"));
             for (String loreStr : lore) {
                 if (loreStr.equals(cannotCraftLoreStr)) {
                     containsLore = true;

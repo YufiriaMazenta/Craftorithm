@@ -8,7 +8,7 @@ import top.oasismc.oasisrecipe.api.cmd.ISubCommand;
 import top.oasismc.oasisrecipe.cmd.AbstractSubCommand;
 import top.oasismc.oasisrecipe.config.YamlFileWrapper;
 import top.oasismc.oasisrecipe.recipe.RecipeManager;
-import top.oasismc.oasisrecipe.util.MsgUtil;
+import top.oasismc.oasisrecipe.util.LangUtil;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,7 +21,7 @@ public class RemoveCommand extends AbstractSubCommand {
     public static final ISubCommand INSTANCE = new RemoveCommand();
 
     private RemoveCommand() {
-        super("remove", null);
+        super("remove");
         recipeMap = new ConcurrentHashMap<>();
         reloadRecipeMap();
     }
@@ -33,10 +33,10 @@ public class RemoveCommand extends AbstractSubCommand {
             return true;
         }
         if (removeRecipe(args.get(0))) {
-            MsgUtil.sendMsg(sender, "command.remove.success");
+            LangUtil.sendMsg(sender, "command.remove.success");
         }
         else
-            MsgUtil.sendMsg(sender, "command.remove.not_exist");
+            LangUtil.sendMsg(sender, "command.remove.not_exist");
         return true;
     }
 

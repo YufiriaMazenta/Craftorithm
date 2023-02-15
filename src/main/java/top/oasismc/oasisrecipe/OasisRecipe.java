@@ -9,13 +9,14 @@ import top.oasismc.oasisrecipe.bstat.Metrics;
 import top.oasismc.oasisrecipe.cmd.PluginCommand;
 import top.oasismc.oasisrecipe.config.ConfigUpdater;
 import top.oasismc.oasisrecipe.item.ItemManager;
-import top.oasismc.oasisrecipe.listener.CraftRecipeListener;
-import top.oasismc.oasisrecipe.listener.FurnaceSmeltListener;
-import top.oasismc.oasisrecipe.listener.SmithingListener;
+import top.oasismc.oasisrecipe.listener.CraftRecipeHandler;
+import top.oasismc.oasisrecipe.listener.FurnaceSmeltHandler;
+import top.oasismc.oasisrecipe.listener.MenuHandler;
+import top.oasismc.oasisrecipe.listener.SmithingHandler;
 import top.oasismc.oasisrecipe.recipe.RecipeManager;
 import top.oasismc.oasisrecipe.script.action.ActionDispatcher;
 import top.oasismc.oasisrecipe.script.condition.ConditionDispatcher;
-import top.oasismc.oasisrecipe.util.MsgUtil;
+import top.oasismc.oasisrecipe.util.LangUtil;
 import top.oasismc.oasisrecipe.util.UpdateUtil;
 
 public final class OasisRecipe extends JavaPlugin implements Listener {
@@ -41,7 +42,7 @@ public final class OasisRecipe extends JavaPlugin implements Listener {
         regListeners();
         initScripts();
         
-        MsgUtil.info("load.finish");
+        LangUtil.info("load.finish");
         UpdateUtil.checkUpdate(Bukkit.getConsoleSender());
         loadBStat();
     }
@@ -74,12 +75,13 @@ public final class OasisRecipe extends JavaPlugin implements Listener {
     }
 
     private void regListeners() {
-        Bukkit.getPluginManager().registerEvents(CraftRecipeListener.INSTANCE, this);
+        Bukkit.getPluginManager().registerEvents(CraftRecipeHandler.INSTANCE, this);
         Bukkit.getPluginManager().registerEvents(this, this);
+        Bukkit.getPluginManager().registerEvents(MenuHandler.INSTANCE, this);
         if (getVanillaVersion() >= 14)
-            Bukkit.getPluginManager().registerEvents(SmithingListener.INSTANCE, this);
+            Bukkit.getPluginManager().registerEvents(SmithingHandler.INSTANCE, this);
         if (getVanillaVersion() >= 18)
-            Bukkit.getPluginManager().registerEvents(FurnaceSmeltListener.INSTANCE, this);
+            Bukkit.getPluginManager().registerEvents(FurnaceSmeltHandler.INSTANCE, this);
     }
 
     private void initScripts() {

@@ -1,4 +1,4 @@
-package top.oasismc.oasisrecipe.cmd.subcmd;
+package top.oasismc.oasisrecipe.cmd.subcmd.item;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -7,7 +7,7 @@ import top.oasismc.oasisrecipe.api.cmd.ISubCommand;
 import top.oasismc.oasisrecipe.cmd.AbstractSubCommand;
 import top.oasismc.oasisrecipe.item.ItemManager;
 import top.oasismc.oasisrecipe.util.MapUtil;
-import top.oasismc.oasisrecipe.util.MsgUtil;
+import top.oasismc.oasisrecipe.util.LangUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ public class ItemGiveCommand extends AbstractSubCommand {
     public static final ISubCommand INSTANCE = new ItemGiveCommand();
 
     private ItemGiveCommand() {
-        super("give", null);
+        super("give");
     }
 
     @Override
@@ -31,20 +31,20 @@ public class ItemGiveCommand extends AbstractSubCommand {
         if (args.size() >= 2) {
             player = Bukkit.getPlayer(args.get(1));
             if (player == null) {
-                MsgUtil.sendMsg(sender, "command.item.give.player_offline");
+                LangUtil.sendMsg(sender, "command.item.give.player_offline");
                 return true;
             }
         } else {
             if (checkSenderIsPlayer(sender)) {
                 player = (Player) sender;
             } else {
-                MsgUtil.sendMsg(sender, "command.player_only");
+                LangUtil.sendMsg(sender, "command.player_only");
                 return true;
             }
         }
 
         if (!ItemManager.isOasisRecipeItem(args.get(0))) {
-            MsgUtil.sendMsg(sender, "command.item.give.not_exist_item", MapUtil.newHashMap("<item_name>", args.get(0)));
+            LangUtil.sendMsg(sender, "command.item.give.not_exist_item", MapUtil.newHashMap("<item_name>", args.get(0)));
             return true;
         }
 

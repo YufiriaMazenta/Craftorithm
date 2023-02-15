@@ -34,7 +34,7 @@ public class UpdateUtil {
                 if (!ver.equals(newVersion)) {
                     String finalNewVersion = newVersion;
                     Bukkit.getScheduler().callSyncMethod(OasisRecipe.getInstance(), () -> {
-                        MsgUtil.sendMsg(sender, "new_version", MapUtil.newHashMap("<new_version>", finalNewVersion));
+                        LangUtil.sendMsg(sender, "new_version", MapUtil.newHashMap("<new_version>", finalNewVersion));
                         return null;
                     });
                 }

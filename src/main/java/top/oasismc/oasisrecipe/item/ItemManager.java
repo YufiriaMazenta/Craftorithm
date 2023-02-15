@@ -7,16 +7,14 @@ import top.oasismc.oasisrecipe.config.YamlFileWrapper;
 import top.oasismc.oasisrecipe.util.FileUtil;
 import top.oasismc.oasisrecipe.util.ItemUtil;
 import top.oasismc.oasisrecipe.util.MapUtil;
-import top.oasismc.oasisrecipe.util.MsgUtil;
+import top.oasismc.oasisrecipe.util.LangUtil;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static top.oasismc.oasisrecipe.util.FileUtil.createNewFile;
 import static top.oasismc.oasisrecipe.util.FileUtil.getAllFiles;
 
 public class ItemManager {
@@ -39,7 +37,7 @@ public class ItemManager {
                 try {
                     addOasisRecipeItem(fileKey, itemKey, ItemUtil.getItemFromConfig(itemFile.getConfig(), itemKey));
                 } catch (Exception e) {
-                    MsgUtil.info("load.item_load_exception", MapUtil.newHashMap("<item_name>", fileKey + ":" + itemKey));
+                    LangUtil.info("load.item_load_exception", MapUtil.newHashMap("<item_name>", fileKey + ":" + itemKey));
                     e.printStackTrace();
                 }
             }

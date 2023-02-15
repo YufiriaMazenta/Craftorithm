@@ -4,12 +4,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import top.oasismc.oasisrecipe.api.cmd.ISubCommand;
-import top.oasismc.oasisrecipe.cmd.subcmd.ItemCommand;
-import top.oasismc.oasisrecipe.cmd.subcmd.ReloadCommand;
-import top.oasismc.oasisrecipe.cmd.subcmd.RemoveCommand;
-import top.oasismc.oasisrecipe.cmd.subcmd.VersionCommand;
+import top.oasismc.oasisrecipe.cmd.subcmd.*;
 import top.oasismc.oasisrecipe.util.MapUtil;
-import top.oasismc.oasisrecipe.util.MsgUtil;
+import top.oasismc.oasisrecipe.util.LangUtil;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,14 +26,14 @@ public enum PluginCommand implements TabExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         List<String> argList = Arrays.asList(args);
         if (argList.size() < 1) {
-            MsgUtil.sendMsg(sender, "command.not_enough_param", MapUtil.newHashMap("<number>", String.valueOf(1)));
+            LangUtil.sendMsg(sender, "command.not_enough_param", MapUtil.newHashMap("<number>", String.valueOf(1)));
             return true;
         }
         ISubCommand subCommand = subCommandMap.get(argList.get(0));
         if (subCommand != null)
             return subCommand.onCommand(sender, argList.subList(1, argList.size()));
         else {
-            MsgUtil.sendMsg(sender, "command.undefined_subcmd");
+            LangUtil.sendMsg(sender, "command.undefined_subcmd");
             return true;
         }
     }
@@ -46,6 +43,7 @@ public enum PluginCommand implements TabExecutor {
         regSubCommand(VersionCommand.INSTANCE);
         regSubCommand(RemoveCommand.INSTANCE);
         regSubCommand(ItemCommand.INSTANCE);
+        regSubCommand(CreateRecipeCmd.INSTANCE);
     }
 
     public void regSubCommand(ISubCommand executor) {
