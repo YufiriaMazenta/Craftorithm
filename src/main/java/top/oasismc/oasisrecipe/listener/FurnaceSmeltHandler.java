@@ -9,7 +9,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.FurnaceStartSmeltEvent;
 import org.bukkit.inventory.ItemStack;
-import top.oasismc.oasisrecipe.item.ItemManager;
 import top.oasismc.oasisrecipe.recipe.RecipeBuilder;
 import top.oasismc.oasisrecipe.recipe.RecipeManager;
 
@@ -18,13 +17,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public enum FurnaceSmeltListener implements Listener {
+public enum FurnaceSmeltHandler implements Listener {
 
     INSTANCE;
 
     private final Map<Block, YamlConfiguration> furnaceMap;
 
-    FurnaceSmeltListener() {
+    FurnaceSmeltHandler() {
         furnaceMap = new HashMap<>();
     }
 

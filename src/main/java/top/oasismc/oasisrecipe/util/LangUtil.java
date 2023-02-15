@@ -15,15 +15,15 @@ import java.util.regex.Pattern;
 
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
-public class MsgUtil {
+public class LangUtil {
 
     private static final Pattern colorPattern = Pattern.compile("&#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})");
-    private static final YamlFileWrapper msgConfigFile = new YamlFileWrapper("messages.yml");
+    private static final YamlFileWrapper langConfigFile = new YamlFileWrapper("lang.yml");
     private static final Map<String, String> defaultFormatMap;
 
     static {
         defaultFormatMap = new HashMap<>();
-        defaultFormatMap.put("<prefix>", msgConfigFile.getConfig().getString("prefix", "&8[&3Oasis&bRecipe&8]"));
+        defaultFormatMap.put("<prefix>", langConfigFile.getConfig().getString("prefix", "&8[&3Oasis&bRecipe&8]"));
         defaultFormatMap.put("<version>", OasisRecipe.getInstance().getDescription().getVersion());
     }
 
@@ -36,7 +36,7 @@ public class MsgUtil {
             return;
         }
         formatMap.putAll(defaultFormatMap);
-        String message = msgConfigFile.getConfig().getString(msgKey, msgKey);
+        String message = langConfigFile.getConfig().getString(msgKey, msgKey);
         for (String formatStr : formatMap.keySet()) {
             message = message.replace(formatStr, formatMap.get(formatStr));
         }
@@ -66,10 +66,14 @@ public class MsgUtil {
     }
 
     public static void reloadMsgConfig() {
-        msgConfigFile.reloadConfig();
+        langConfigFile.reloadConfig();
     }
 
     public static void info(String msgKey, Map<String, String> map) {
         sendMsg(Bukkit.getConsoleSender(), msgKey, map);
+    }
+
+    public static String lang(String key) {
+        return langConfigFile.getConfig().getString(key, key);
     }
 }

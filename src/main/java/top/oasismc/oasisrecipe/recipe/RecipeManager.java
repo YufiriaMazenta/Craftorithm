@@ -10,7 +10,7 @@ import top.oasismc.oasisrecipe.api.OasisRecipeAPI;
 import top.oasismc.oasisrecipe.cmd.subcmd.RemoveCommand;
 import top.oasismc.oasisrecipe.config.YamlFileWrapper;
 import top.oasismc.oasisrecipe.util.MapUtil;
-import top.oasismc.oasisrecipe.util.MsgUtil;
+import top.oasismc.oasisrecipe.util.LangUtil;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -91,7 +91,7 @@ public class RecipeManager {
                     regRecipe(getRecipeKey(recipe), recipe, config);
                 }
             } catch (Exception e) {
-                MsgUtil.info("load.recipe_load_exception", MapUtil.newHashMap("<recipe_name>", fileName));
+                LangUtil.info("load.recipe_load_exception", MapUtil.newHashMap("<recipe_name>", fileName));
                 e.printStackTrace();
             }
         }

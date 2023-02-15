@@ -1,4 +1,4 @@
-package top.oasismc.oasisrecipe.cmd.subcmd;
+package top.oasismc.oasisrecipe.cmd.subcmd.item;
 
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -6,13 +6,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import top.oasismc.oasisrecipe.api.cmd.ISubCommand;
 import top.oasismc.oasisrecipe.cmd.AbstractSubCommand;
-import top.oasismc.oasisrecipe.config.YamlFileWrapper;
 import top.oasismc.oasisrecipe.item.ItemManager;
-import top.oasismc.oasisrecipe.util.ItemUtil;
-import top.oasismc.oasisrecipe.util.MsgUtil;
+import top.oasismc.oasisrecipe.util.LangUtil;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,7 +18,7 @@ public final class ItemSaveCommand extends AbstractSubCommand {
     public static final ISubCommand INSTANCE = new ItemSaveCommand();
 
     private ItemSaveCommand() {
-        super("save", null);
+        super("save");
     }
 
     @Override
@@ -36,12 +32,12 @@ public final class ItemSaveCommand extends AbstractSubCommand {
 
         ItemStack item = ((Player) sender).getInventory().getItemInMainHand();
         if (item.getType().equals(Material.AIR)) {
-            MsgUtil.sendMsg(sender, "command.item.save.failed_save_air");
+            LangUtil.sendMsg(sender, "command.item.save.failed_save_air");
             return true;
         }
 
         ItemManager.addOasisRecipeItem(args.get(0), args.get(1), item.clone());
-        MsgUtil.sendMsg(sender, "command.item.save.success");
+        LangUtil.sendMsg(sender, "command.item.save.success");
         return true;
     }
 
