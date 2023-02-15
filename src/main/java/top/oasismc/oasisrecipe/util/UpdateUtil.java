@@ -17,7 +17,7 @@ public class UpdateUtil {
             return;
         Bukkit.getScheduler().runTaskAsynchronously(OasisRecipe.getInstance(), () -> {
             try {
-                URL url = new URL("https://api.github.com/repos/ChiyodaXiaoYi/OasisRecipe/releases/latest");
+                URL url = new URL("https://api.github.com/repos/YufiriaMazenta/OasisRecipe/releases/latest");
                 URLConnection conn = url.openConnection();
                 String newVersion;
                 conn.setConnectTimeout(15000);
