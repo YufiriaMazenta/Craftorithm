@@ -30,6 +30,7 @@ public class RecipeManager {
     public static final Map<String, BiFunction<YamlConfiguration, String, Recipe[]>> multipleRecipeBuilderMap;
     public static final Map<NamespacedKey, YamlConfiguration> recipeKeyConfigMap = new ConcurrentHashMap<>();
     public static final File recipeFileFolder = new File(OasisRecipe.getInstance().getDataFolder().getPath(), "recipes");
+    public static final Map<NamespacedKey, Boolean> recipeUnlockMap;
 
     static {
         recipeBuilderMap = new HashMap<>();
@@ -47,6 +48,8 @@ public class RecipeManager {
         multipleRecipeBuilderMap.put("smithing", RecipeBuilder::buildMultipleSmithingRecipe);
         multipleRecipeBuilderMap.put("stone_cutting", RecipeBuilder::buildMultipleStoneCuttingRecipe);
         multipleRecipeBuilderMap.put("random_cooking", RecipeBuilder::buildMultipleCookingRecipe);
+
+        recipeUnlockMap = new ConcurrentHashMap<>();
     }
 
     public static void loadRecipeManager() {
@@ -100,6 +103,12 @@ public class RecipeManager {
     public static void regRecipe(NamespacedKey key, Recipe recipe, YamlConfiguration config) {
         Bukkit.addRecipe(recipe);
         recipeKeyConfigMap.put(key, config);
+        boolean defUnlockCondition = OasisRecipe.getInstance().getConfig().getBoolean("all_recipe_unlocked", false);
+        if (config.contains("unlock")) {
+            recipeUnlockMap.put(key, config.getBoolean("unlock", defUnlockCondition));
+        } else {
+            recipeUnlockMap.put(key, defUnlockCondition);
+        }
     }
 
     public static Recipe newRecipe(YamlConfiguration config, String key) {
@@ -159,7 +168,10 @@ public class RecipeManager {
             e.printStackTrace();
             return null;
         }
+    }
 
+    public static Map<NamespacedKey, Boolean> getRecipeUnlockMap() {
+        return recipeUnlockMap;
     }
 
 }
