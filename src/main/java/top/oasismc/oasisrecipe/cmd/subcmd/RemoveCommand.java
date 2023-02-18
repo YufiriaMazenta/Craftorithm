@@ -49,6 +49,7 @@ public class RemoveCommand extends AbstractSubCommand {
                 if (str.startsWith(args.get(0)))
                     arrayList.add(key.toString());
             }
+            arrayList.removeIf(str -> str.startsWith(args.get(0)));
             return arrayList;
         }
         return super.onTabComplete(sender, args);

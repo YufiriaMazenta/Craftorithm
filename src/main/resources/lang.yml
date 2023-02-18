@@ -23,7 +23,8 @@ command:
     success: '<prefix> &a配方删除成功'
     not_exist: '<prefix> &c配方不存在'
   version: '<prefix> &a插件版本：<version>'
-
+  create:
+    not_exist_type: '<prefix> &c不存在的配方类型'
 #插件加载的反馈信息
 load:
   finish: '<prefix> &a插件加载完毕'

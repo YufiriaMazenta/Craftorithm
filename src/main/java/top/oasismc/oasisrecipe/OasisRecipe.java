@@ -9,10 +9,7 @@ import top.oasismc.oasisrecipe.bstat.Metrics;
 import top.oasismc.oasisrecipe.cmd.PluginCommand;
 import top.oasismc.oasisrecipe.config.ConfigUpdater;
 import top.oasismc.oasisrecipe.item.ItemManager;
-import top.oasismc.oasisrecipe.listener.CraftRecipeHandler;
-import top.oasismc.oasisrecipe.listener.FurnaceSmeltHandler;
-import top.oasismc.oasisrecipe.listener.MenuHandler;
-import top.oasismc.oasisrecipe.listener.SmithingHandler;
+import top.oasismc.oasisrecipe.listener.*;
 import top.oasismc.oasisrecipe.recipe.RecipeManager;
 import top.oasismc.oasisrecipe.script.action.ActionDispatcher;
 import top.oasismc.oasisrecipe.script.condition.ConditionDispatcher;
@@ -78,6 +75,7 @@ public final class OasisRecipe extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(CraftRecipeHandler.INSTANCE, this);
         Bukkit.getPluginManager().registerEvents(this, this);
         Bukkit.getPluginManager().registerEvents(MenuHandler.INSTANCE, this);
+        Bukkit.getPluginManager().registerEvents(RecipeUnlockHandler.INSTANCE, this);
         if (getVanillaVersion() >= 14)
             Bukkit.getPluginManager().registerEvents(SmithingHandler.INSTANCE, this);
         if (getVanillaVersion() >= 18)
