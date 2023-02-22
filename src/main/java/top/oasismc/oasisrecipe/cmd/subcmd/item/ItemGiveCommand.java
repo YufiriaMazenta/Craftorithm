@@ -56,7 +56,7 @@ public class ItemGiveCommand extends AbstractSubCommand {
     public List<String> onTabComplete(CommandSender sender, List<String> args) {
         if (args.size() < 2) {
             List<String> tabList = new ArrayList<>(ItemManager.getItemMap().keySet());
-            tabList.removeIf(str -> !str.startsWith(args.get(0)));
+            filterTabList(tabList, args.get(0));
             return tabList;
         }
         else

@@ -28,10 +28,6 @@ public class AbstractSubCommand implements ISubCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, List<String> args) {
-        if (subCommandMap == null || args.size() < 1) {
-            sendNotEnoughCmdParamMsg(sender, "unknown");
-            return true;
-        }
         ISubCommand subCommand = subCommandMap.get(args.get(0));
         if (subCommand == null) {
             LangUtil.sendMsg(sender, "command.undefined_subcmd");
@@ -46,9 +42,9 @@ public class AbstractSubCommand implements ISubCommand {
         if (subCommandMap == null)
             return Collections.singletonList("");
         if (args.size() <= 1) {
-            List<String> returnList = new ArrayList<>(subCommandMap.keySet());
-            returnList.removeIf(str -> !str.startsWith(args.get(0)));
-            return returnList;
+            List<String> tabList = new ArrayList<>(subCommandMap.keySet());
+            filterTabList(tabList, args.get(0));
+            return tabList;
         }
         ISubCommand subCmd = subCommandMap.get(args.get(0));
         if (subCmd != null)
@@ -93,6 +89,10 @@ public class AbstractSubCommand implements ISubCommand {
             LangUtil.sendMsg(sender, "command.player_only");
             return false;
         }
+    }
+
+    public void filterTabList(List<String> tabList, String input) {
+        tabList.removeIf(str -> !str.startsWith(input));
     }
 
 }
