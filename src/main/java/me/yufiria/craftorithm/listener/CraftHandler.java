@@ -16,7 +16,7 @@ import me.yufiria.craftorithm.util.LangUtil;
 
 import java.util.List;
 
-public enum CraftRecipeHandler implements Listener {
+public enum CraftHandler implements Listener {
 
     INSTANCE;
 
