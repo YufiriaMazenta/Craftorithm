@@ -44,10 +44,10 @@ dependencies {
     compileOnly 'me.clip:placeholderapi:2.11.1'
 }
 
-group = 'top.oasismc'
+group = 'me.yufiria'
 version = '1.0.0-beta'
 def pluginVersion = version + "-" + new SimpleDateFormat("yyyyMMdd").format(System.currentTimeMillis())
-archivesBaseName = 'OasisRecipe'
+archivesBaseName = 'Craftorithm'
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 publishing {
