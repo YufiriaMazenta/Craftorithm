@@ -25,7 +25,7 @@ import static me.yufiria.craftorithm.util.FileUtil.getAllFiles;
 
 public class RecipeManager {
 
-    public static final Map<String, YamlFileWrapper> recipeFileNameMap = new HashMap<>();
+    public static final Map<String, YamlFileWrapper> recipeFileMap = new HashMap<>();
     public static final Map<RecipeType, BiFunction<YamlConfiguration, String, Recipe>> recipeBuilderMap;
     public static final Map<RecipeType, BiFunction<YamlConfiguration, String, Recipe[]>> multipleRecipeBuilderMap;
     public static final Map<NamespacedKey, YamlConfiguration> recipeKeyConfigMap = new ConcurrentHashMap<>();
@@ -58,30 +58,29 @@ public class RecipeManager {
     }
 
     public static void loadRecipeFiles() {
-        recipeFileNameMap.clear();
+        recipeFileMap.clear();
         if (!recipeFileFolder.exists()) {
             recipeFileFolder.mkdir();
         }
         List<File> allFiles = getAllFiles(recipeFileFolder);
         if (allFiles.size() < 1) {
-            Craftorithm.getInstance().saveResource("recipes/example_shaped.yml", false);
-            allFiles.add(new File(recipeFileFolder, "example_shaped.yml"));
+            saveDefConfigFile(allFiles);
         }
         for (File file : allFiles) {
             String key = file.getPath().substring(recipeFileFolder.getPath().length() + 1);
             key = key.replace("\\", "/");
             int lastDotIndex = key.lastIndexOf(".");
             key = key.substring(0, lastDotIndex);
-            recipeFileNameMap.put(key, new YamlFileWrapper(file));
+            recipeFileMap.put(key, new YamlFileWrapper(file));
         }
     }
 
     public static void loadPluginRecipes() {
         Bukkit.resetRecipes();
         recipeKeyConfigMap.clear();
-        for (String fileName : recipeFileNameMap.keySet()) {
+        for (String fileName : recipeFileMap.keySet()) {
             try {
-                YamlConfiguration config = recipeFileNameMap.get(fileName).getConfig();
+                YamlConfiguration config = recipeFileMap.get(fileName).getConfig();
                 boolean multiple = config.getBoolean("multiple", false);
                 if (multiple) {
                     Recipe[] multipleRecipes = newMultipleRecipe(config, fileName);
@@ -174,6 +173,21 @@ public class RecipeManager {
 
     public static Map<NamespacedKey, Boolean> getRecipeUnlockMap() {
         return recipeUnlockMap;
+    }
+
+    private static void saveDefConfigFile(List<File> allFiles) {
+        Craftorithm.getInstance().saveResource("recipes/example_shaped.yml", false);
+        Craftorithm.getInstance().saveResource("recipes/example_shapeless.yml", false);
+        Craftorithm.getInstance().saveResource("recipes/example_cooking.yml", false);
+        Craftorithm.getInstance().saveResource("recipes/example_smithing.yml", false);
+        Craftorithm.getInstance().saveResource("recipes/example_stone_cutting.yml", false);
+        Craftorithm.getInstance().saveResource("recipes/example_random_cooking.yml", false);
+        allFiles.add(new File(recipeFileFolder, "example_shaped.yml"));
+        allFiles.add(new File(recipeFileFolder, "example_shapeless.yml"));
+        allFiles.add(new File(recipeFileFolder, "example_cooking.yml"));
+        allFiles.add(new File(recipeFileFolder, "example_smithing.yml"));
+        allFiles.add(new File(recipeFileFolder, "example_stone_cutting.yml"));
+        allFiles.add(new File(recipeFileFolder, "example_random_cooking.yml"));
     }
 
 }

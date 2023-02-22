@@ -1,6 +1,6 @@
 package me.yufiria.craftorithm;
 
-import me.yufiria.craftorithm.listener.CraftRecipeHandler;
+import me.yufiria.craftorithm.listener.CraftHandler;
 import me.yufiria.craftorithm.listener.RecipeUnlockHandler;
 import me.yufiria.craftorithm.recipe.RecipeManager;
 import me.yufiria.craftorithm.util.LangUtil;
@@ -73,7 +73,7 @@ public final class Craftorithm extends JavaPlugin implements Listener {
     }
 
     private void regListeners() {
-        Bukkit.getPluginManager().registerEvents(CraftRecipeHandler.INSTANCE, this);
+        Bukkit.getPluginManager().registerEvents(CraftHandler.INSTANCE, this);
         Bukkit.getPluginManager().registerEvents(this, this);
         Bukkit.getPluginManager().registerEvents(RecipeUnlockHandler.INSTANCE, this);
         if (getVanillaVersion() >= 14)
