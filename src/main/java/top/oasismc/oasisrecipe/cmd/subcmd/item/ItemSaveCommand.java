@@ -47,7 +47,7 @@ public final class ItemSaveCommand extends AbstractSubCommand {
             case 0:
             case 1:
                 List<String> tabList = new ArrayList<>(ItemManager.getItemFileMap().keySet());
-                tabList.removeIf(str -> !str.startsWith(args.get(0)));
+                filterTabList(tabList, args.get(0));
                 return tabList;
             case 2:
             default:

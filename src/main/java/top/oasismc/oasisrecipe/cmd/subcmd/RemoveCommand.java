@@ -43,14 +43,14 @@ public class RemoveCommand extends AbstractSubCommand {
     @Override
     public List<String> onTabComplete(CommandSender sender, List<String> args) {
         if (args.size() <= 1) {
-            List<String> arrayList = new ArrayList<>();
+            List<String> tabList = new ArrayList<>();
             for (NamespacedKey key : recipeMap.keySet()) {
                 String str = key.toString();
                 if (str.startsWith(args.get(0)))
-                    arrayList.add(key.toString());
+                    tabList.add(key.toString());
             }
-            arrayList.removeIf(str -> str.startsWith(args.get(0)));
-            return arrayList;
+            filterTabList(tabList, args.get(0));
+            return tabList;
         }
         return super.onTabComplete(sender, args);
     }
