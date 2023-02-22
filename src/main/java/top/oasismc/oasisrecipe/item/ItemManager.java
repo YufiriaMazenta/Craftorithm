@@ -6,8 +6,8 @@ import top.oasismc.oasisrecipe.OasisRecipe;
 import top.oasismc.oasisrecipe.config.YamlFileWrapper;
 import top.oasismc.oasisrecipe.util.FileUtil;
 import top.oasismc.oasisrecipe.util.ItemUtil;
-import top.oasismc.oasisrecipe.util.MapUtil;
 import top.oasismc.oasisrecipe.util.LangUtil;
+import top.oasismc.oasisrecipe.util.MapUtil;
 
 import java.io.File;
 import java.util.HashMap;
@@ -99,4 +99,26 @@ public class ItemManager {
         return itemFileFolder;
     }
 
+    public static ItemStack matchOasisRecipeItem(String itemStr) {
+        ItemStack item;
+        int lastSpaceIndex = itemStr.lastIndexOf(" ");
+        int amountScale = 1;
+        if (lastSpaceIndex > 0) {
+            amountScale = Integer.parseInt(itemStr.substring(lastSpaceIndex + 1));
+            itemStr = itemStr.substring(0, lastSpaceIndex);
+        }
+        itemStr = itemStr.replace(" ", "");
+        if (itemStr.startsWith("items:")) {
+            itemStr = itemStr.substring("items:".length());
+            item = getOasisRecipeItem(itemStr);
+        } else {
+            Material material = Material.matchMaterial(itemStr);
+            if (material == null) {
+                throw new IllegalArgumentException(itemStr + " is a not exist item type");
+            }
+            item = new ItemStack(material);
+        }
+        item.setAmount(item.getAmount() * amountScale);
+        return item;
+    }
 }

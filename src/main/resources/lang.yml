@@ -34,6 +34,3 @@ load:
   vault_failed: '<prefix> &c未发现经济插件,金钱检查将不会生效'
   points_success: '<prefix> &a发现点券插件,已挂钩'
   points_failed: '<prefix> &c未发现点券插件,点券检查将不会生效'
-
-menu:
-  title: '&3&l创建配方'
