@@ -1,16 +1,16 @@
-name: OasisRecipe
+name: Craftorithm
 version: ${version}
-main: top.oasismc.oasisrecipe.OasisRecipe
+main: me.yufiria.craftorithm.Craftorithm
 api-version: 1.13
 load: POSTWORLD
 softdepend: [ Vault, LuckPerms, PlayerPoints, PlaceholderAPI ]
 authors: [ YufiriaMazenta ]
-website: https://github.com/YufiriaMazenta/OasisRecipe
+website: https://github.com/YufiriaMazenta/Craftorithm
 commands:
-  oasisrecipe:
+  craftorithm:
     aliases:
-      - or
-    permission: oasis.command.oasisrecipe
+      - craft
+    permission: craftorithm.command.main
 permissions:
-  oasis.command.oasisrecipe:
+  craftorithm.command.main:
     default: op
