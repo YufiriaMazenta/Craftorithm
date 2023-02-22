@@ -9,8 +9,8 @@ import top.oasismc.oasisrecipe.OasisRecipe;
 import top.oasismc.oasisrecipe.api.OasisRecipeAPI;
 import top.oasismc.oasisrecipe.cmd.subcmd.RemoveCommand;
 import top.oasismc.oasisrecipe.config.YamlFileWrapper;
-import top.oasismc.oasisrecipe.util.MapUtil;
 import top.oasismc.oasisrecipe.util.LangUtil;
+import top.oasismc.oasisrecipe.util.MapUtil;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -26,28 +26,28 @@ import static top.oasismc.oasisrecipe.util.FileUtil.getAllFiles;
 public class RecipeManager {
 
     public static final Map<String, YamlFileWrapper> recipeFileNameMap = new HashMap<>();
-    public static final Map<String, BiFunction<YamlConfiguration, String, Recipe>> recipeBuilderMap;
-    public static final Map<String, BiFunction<YamlConfiguration, String, Recipe[]>> multipleRecipeBuilderMap;
+    public static final Map<RecipeType, BiFunction<YamlConfiguration, String, Recipe>> recipeBuilderMap;
+    public static final Map<RecipeType, BiFunction<YamlConfiguration, String, Recipe[]>> multipleRecipeBuilderMap;
     public static final Map<NamespacedKey, YamlConfiguration> recipeKeyConfigMap = new ConcurrentHashMap<>();
     public static final File recipeFileFolder = new File(OasisRecipe.getInstance().getDataFolder().getPath(), "recipes");
     public static final Map<NamespacedKey, Boolean> recipeUnlockMap;
 
     static {
         recipeBuilderMap = new HashMap<>();
-        recipeBuilderMap.put("shaped", RecipeBuilder::buildShapedRecipe);
-        recipeBuilderMap.put("shapeless", RecipeBuilder::buildShapelessRecipe);
-        recipeBuilderMap.put("cooking", RecipeBuilder::buildCookingRecipe);
-        recipeBuilderMap.put("smithing", RecipeBuilder::buildSmithingRecipe);
-        recipeBuilderMap.put("stone_cutting", RecipeBuilder::buildStoneCuttingRecipe);
-        recipeBuilderMap.put("random_cooking", RecipeBuilder::buildCookingRecipe);
+        recipeBuilderMap.put(RecipeType.SHAPED, RecipeBuilder::buildShapedRecipe);
+        recipeBuilderMap.put(RecipeType.SHAPELESS, RecipeBuilder::buildShapelessRecipe);
+        recipeBuilderMap.put(RecipeType.COOKING, RecipeBuilder::buildCookingRecipe);
+        recipeBuilderMap.put(RecipeType.SMITHING, RecipeBuilder::buildSmithingRecipe);
+        recipeBuilderMap.put(RecipeType.STONE_CUTTING, RecipeBuilder::buildStoneCuttingRecipe);
+        recipeBuilderMap.put(RecipeType.RANDOM_COOKING, RecipeBuilder::buildCookingRecipe);
 
         multipleRecipeBuilderMap = new HashMap<>();
-        multipleRecipeBuilderMap.put("shaped", RecipeBuilder::buildMultipleShapedRecipe);
-        multipleRecipeBuilderMap.put("shapeless", RecipeBuilder::buildMultipleShapelessRecipe);
-        multipleRecipeBuilderMap.put("cooking", RecipeBuilder::buildMultipleCookingRecipe);
-        multipleRecipeBuilderMap.put("smithing", RecipeBuilder::buildMultipleSmithingRecipe);
-        multipleRecipeBuilderMap.put("stone_cutting", RecipeBuilder::buildMultipleStoneCuttingRecipe);
-        multipleRecipeBuilderMap.put("random_cooking", RecipeBuilder::buildMultipleCookingRecipe);
+        multipleRecipeBuilderMap.put(RecipeType.SHAPED, RecipeBuilder::buildMultipleShapedRecipe);
+        multipleRecipeBuilderMap.put(RecipeType.SHAPELESS, RecipeBuilder::buildMultipleShapelessRecipe);
+        multipleRecipeBuilderMap.put(RecipeType.COOKING, RecipeBuilder::buildMultipleCookingRecipe);
+        multipleRecipeBuilderMap.put(RecipeType.SMITHING, RecipeBuilder::buildMultipleSmithingRecipe);
+        multipleRecipeBuilderMap.put(RecipeType.STONE_CUTTING, RecipeBuilder::buildMultipleStoneCuttingRecipe);
+        multipleRecipeBuilderMap.put(RecipeType.RANDOM_COOKING, RecipeBuilder::buildMultipleCookingRecipe);
 
         recipeUnlockMap = new ConcurrentHashMap<>();
     }
@@ -113,13 +113,15 @@ public class RecipeManager {
 
     public static Recipe newRecipe(YamlConfiguration config, String key) {
         key = key.toLowerCase(Locale.ROOT);
-        String recipeType = config.getString("type", "shaped");
+        String recipeTypeStr = config.getString("type", "shaped");
+        RecipeType recipeType = RecipeType.valueOf(recipeTypeStr.toUpperCase(Locale.ROOT));
         return recipeBuilderMap.get(recipeType).apply(config, key);
     }
 
     public static Recipe[] newMultipleRecipe(YamlConfiguration config, String key) {
         key = key.toLowerCase(Locale.ROOT);
-        String recipeType = config.getString("type", "shaped");
+        String recipeTypeStr = config.getString("type", "shaped");
+        RecipeType recipeType = RecipeType.valueOf(recipeTypeStr.toUpperCase(Locale.ROOT));
         return multipleRecipeBuilderMap.get(recipeType).apply(config, key);
     }
 

@@ -46,7 +46,9 @@ public final class ItemSaveCommand extends AbstractSubCommand {
         switch (args.size()) {
             case 0:
             case 1:
-                return new ArrayList<>(ItemManager.getItemFileMap().keySet());
+                List<String> tabList = new ArrayList<>(ItemManager.getItemFileMap().keySet());
+                tabList.removeIf(str -> !str.startsWith(args.get(0)));
+                return tabList;
             case 2:
             default:
                 return Collections.singletonList("");

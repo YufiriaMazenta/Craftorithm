@@ -9,7 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.FurnaceStartSmeltEvent;
 import org.bukkit.inventory.ItemStack;
-import top.oasismc.oasisrecipe.recipe.RecipeBuilder;
+import top.oasismc.oasisrecipe.item.ItemManager;
 import top.oasismc.oasisrecipe.recipe.RecipeManager;
 
 import java.util.ArrayList;
@@ -59,7 +59,7 @@ public enum FurnaceSmeltHandler implements Listener {
         for (String result : resultStr) {
             String item = result.substring(0, result.lastIndexOf(" "));
             double probability = Double.parseDouble(result.substring(result.lastIndexOf(" ") + 1));
-            ItemStack itemStack = RecipeBuilder.parseRecipeItemStr(item);
+            ItemStack itemStack = ItemManager.matchOasisRecipeItem(item);
             sum += probability;
             probabilityMap.put(itemStack, sum);
         }

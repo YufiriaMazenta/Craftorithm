@@ -136,9 +136,9 @@ public class RecipeBuilder {
         ItemStack result;
         if (config.isList("result")) {
             List<String> resultList = config.getStringList("result");
-            result = parseRecipeItemStr(resultList.get(0));
+            result = ItemManager.matchOasisRecipeItem(resultList.get(0));
             for (int i = 1; i < resultList.size(); i++) {
-                ItemStack result1 = parseRecipeItemStr(resultList.get(i));
+                ItemStack result1 = ItemManager.matchOasisRecipeItem(resultList.get(i));
                 String fullKey = key + "." + i;
                 NamespacedKey namespacedKey = new NamespacedKey(OasisRecipe.getInstance(), fullKey);
                 RecipeManager.regRecipe(namespacedKey, buildStoneCuttingRecipe(namespacedKey, result1, choice), config);
@@ -157,7 +157,7 @@ public class RecipeBuilder {
             List<String> sourceList = config.getStringList("source");
             StonecuttingRecipe[] stonecuttingRecipes = new StonecuttingRecipe[resultList.size() * sourceList.size()];
             for (int i = 0; i < resultList.size(); i++) {
-                ItemStack result = parseRecipeItemStr(resultList.get(i));
+                ItemStack result = ItemManager.matchOasisRecipeItem(resultList.get(i));
                 for (int j = 0; j < sourceList.size(); j++) {
                     String fullKey = String.format(key + ".%d.%d", i, j);
                     NamespacedKey namespacedKey = new NamespacedKey(OasisRecipe.getInstance(), fullKey);
@@ -265,12 +265,12 @@ public class RecipeBuilder {
         if (resultStr.length() < 1) {
             throw new IllegalArgumentException("Empty recipe result");
         }
-        return parseRecipeItemStr(resultStr);
+        return ItemManager.matchOasisRecipeItem(resultStr);
     }
 
     public static RecipeChoice getRecipeChoice(String itemStr) {
         if (itemStr.startsWith("items:")) {
-            ItemStack item = parseRecipeItemStr(itemStr);
+            ItemStack item = ItemManager.matchOasisRecipeItem(itemStr);
             return new RecipeChoice.ExactChoice(item);
         } else {
             Material material = Material.matchMaterial(itemStr);
@@ -279,29 +279,6 @@ public class RecipeBuilder {
             }
             return new RecipeChoice.MaterialChoice(material);
         }
-    }
-
-    public static ItemStack parseRecipeItemStr(String itemStr) {
-        ItemStack item;
-        int lastSpaceIndex = itemStr.lastIndexOf(" ");
-        int amountScale = 1;
-        if (lastSpaceIndex > 0) {
-            amountScale = Integer.parseInt(itemStr.substring(lastSpaceIndex + 1));
-            itemStr = itemStr.substring(0, lastSpaceIndex);
-        }
-        itemStr = itemStr.replace(" ", "");
-        if (itemStr.startsWith("items:")) {
-            itemStr = itemStr.substring("items:".length());
-            item = ItemManager.getOasisRecipeItem(itemStr);
-        } else {
-            Material material = Material.matchMaterial(itemStr);
-            if (material == null) {
-                throw new IllegalArgumentException(itemStr + " is a not exist item type");
-            }
-            item = new ItemStack(material);
-        }
-        item.setAmount(item.getAmount() * amountScale);
-        return item;
     }
 
 }

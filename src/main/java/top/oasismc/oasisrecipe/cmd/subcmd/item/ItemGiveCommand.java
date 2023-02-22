@@ -6,8 +6,8 @@ import org.bukkit.entity.Player;
 import top.oasismc.oasisrecipe.api.cmd.ISubCommand;
 import top.oasismc.oasisrecipe.cmd.AbstractSubCommand;
 import top.oasismc.oasisrecipe.item.ItemManager;
-import top.oasismc.oasisrecipe.util.MapUtil;
 import top.oasismc.oasisrecipe.util.LangUtil;
+import top.oasismc.oasisrecipe.util.MapUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,8 +54,11 @@ public class ItemGiveCommand extends AbstractSubCommand {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, List<String> args) {
-        if (args.size() < 2)
-            return new ArrayList<>(ItemManager.getItemMap().keySet());
+        if (args.size() < 2) {
+            List<String> tabList = new ArrayList<>(ItemManager.getItemMap().keySet());
+            tabList.removeIf(str -> !str.startsWith(args.get(0)));
+            return tabList;
+        }
         else
             return getOnlinePlayerNameList();
     }
