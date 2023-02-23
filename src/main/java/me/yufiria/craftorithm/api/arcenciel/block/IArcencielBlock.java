@@ -1,5 +1,6 @@
 package me.yufiria.craftorithm.api.arcenciel.block;
 
+import me.yufiria.craftorithm.api.arcenciel.obj.ReturnObj;
 import org.bukkit.entity.Player;
 
 /**
@@ -8,7 +9,7 @@ import org.bukkit.entity.Player;
  */
 public interface IArcencielBlock<T> {
 
-    Object exec(Player player);
+    ReturnObj<Object> exec(Player player);
 
     T getArcencielBlockBody();
 

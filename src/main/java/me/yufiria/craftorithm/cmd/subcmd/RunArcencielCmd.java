@@ -1,5 +1,6 @@
 package me.yufiria.craftorithm.cmd.subcmd;
 
+import me.yufiria.craftorithm.api.arcenciel.obj.ReturnObj;
 import me.yufiria.craftorithm.api.cmd.AbstractSubCommand;
 import me.yufiria.craftorithm.arcenciel.ArcencielDispatcher;
 import me.yufiria.craftorithm.util.LangUtil;
@@ -32,8 +33,8 @@ public class RunArcencielCmd extends AbstractSubCommand {
         for (String arg : args) {
             arcencielBlock.add(arg);
         }
-        Object obj = ArcencielDispatcher.INSTANCE.dispatchArcencielBlock((Player) sender, arcencielBlock.toString());
-        LangUtil.sendMsg(sender, "command.run_arcenciel.success", MapUtil.newHashMap("<object>", String.valueOf(obj)));
+        ReturnObj<Object> returnObj = ArcencielDispatcher.INSTANCE.dispatchArcencielBlock((Player) sender, arcencielBlock.toString());
+        LangUtil.sendMsg(sender, "command.run_arcenciel.success", MapUtil.newHashMap("<object>", String.valueOf(returnObj.getObj())));
         return true;
     }
 }
