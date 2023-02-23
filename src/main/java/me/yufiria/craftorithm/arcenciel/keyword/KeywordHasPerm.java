@@ -1,6 +1,7 @@
-package me.yufiria.craftorithm.arcenciel.node;
+package me.yufiria.craftorithm.arcenciel.keyword;
 
 import me.yufiria.craftorithm.api.arcenciel.keyword.AbstractArcencielKeyword;
+import me.yufiria.craftorithm.api.arcenciel.obj.ReturnObj;
 import me.yufiria.craftorithm.util.LangUtil;
 import me.yufiria.craftorithm.util.MapUtil;
 import org.bukkit.entity.Player;
@@ -16,11 +17,11 @@ public class KeywordHasPerm extends AbstractArcencielKeyword<Boolean> {
     }
 
     @Override
-    public Boolean exec(Player player, List<String> args) {
+    public ReturnObj<Boolean> exec(Player player, List<String> args) {
         if (args.size() < 1) {
             LangUtil.sendMsg(player, "arcenciel.not_enough_param", MapUtil.newHashMap("<statement>", "if"));
-            return false;
+            return new ReturnObj<>(false);
         }
-        return player.hasPermission(args.get(0));
+        return new ReturnObj<>(player.hasPermission(args.get(0)));
     }
 }

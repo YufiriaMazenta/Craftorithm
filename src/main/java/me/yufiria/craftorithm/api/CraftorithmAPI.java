@@ -1,5 +1,6 @@
 package me.yufiria.craftorithm.api;
 
+import me.yufiria.craftorithm.arcenciel.ArcencielDispatcher;
 import me.yufiria.craftorithm.item.ItemManager;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
@@ -26,6 +27,10 @@ public enum CraftorithmAPI {
 
     public void regRecipes(Plugin plugin, List<Recipe> recipes) {
         pluginRecipeMap.put(plugin, recipes);
+    }
+
+    public ArcencielDispatcher getArcencielDispatcher() {
+        return ArcencielDispatcher.INSTANCE;
     }
 
 }

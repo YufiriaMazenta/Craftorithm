@@ -41,8 +41,7 @@ public class LangUtil {
             message = message.replace(formatStr, formatMap.get(formatStr));
         }
         if (sender instanceof Player)
-            if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)
-                message = PlaceholderAPI.setPlaceholders((Player) sender, message);
+            message = placeholder((Player) sender, message);
         sender.sendMessage(color(message));
     }
 
@@ -76,4 +75,11 @@ public class LangUtil {
     public static String lang(String key) {
         return langConfigFile.getConfig().getString(key, key);
     }
+
+    public static String placeholder(Player player, String source) {
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)
+            source = PlaceholderAPI.setPlaceholders(player, source);
+        return source;
+    }
+
 }

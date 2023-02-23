@@ -1,6 +1,8 @@
 package me.yufiria.craftorithm.api.arcenciel.block;
 
 import me.yufiria.craftorithm.api.arcenciel.keyword.IArcencielKeyword;
+import me.yufiria.craftorithm.api.arcenciel.obj.ArcencielSignal;
+import me.yufiria.craftorithm.api.arcenciel.obj.ReturnObj;
 import me.yufiria.craftorithm.arcenciel.ArcencielDispatcher;
 import me.yufiria.craftorithm.util.LangUtil;
 import me.yufiria.craftorithm.util.MapUtil;
@@ -26,23 +28,25 @@ public class StringArcencielBlock implements IArcencielBlock<String> {
     }
 
     @Override
-    public Object exec(Player player) {
+    public ReturnObj<Object> exec(Player player) {
         List<String> scriptChain = new ArrayList<>(Arrays.asList(arcencielBlockBody.split(" ")));
         scriptChain.removeIf(String::isEmpty);
         if (scriptChain.size() < 1)
-            return null;
-        String keyword = scriptChain.get(0);
-        IArcencielKeyword<?> node = arcencielKeywordMap.get(keyword);
-        if (node == null) {
-            List<String> func = ArcencielDispatcher.INSTANCE.getFunc(keyword);
+            return new ReturnObj<>(null);
+        String keywordStr = scriptChain.get(0);
+        IArcencielKeyword<?> keyword = arcencielKeywordMap.get(keywordStr);
+        if (keyword == null) {
+            List<String> func = ArcencielDispatcher.INSTANCE.getFunc(keywordStr);
             if (func.size() < 1) {
-                LangUtil.sendMsg(player, "arcenciel.unknown_keyword", MapUtil.newHashMap("<keyword>", keyword));
-                return null;
+                LangUtil.sendMsg(player, "arcenciel.unknown_keyword", MapUtil.newHashMap("<keyword>", keywordStr));
+                return new ReturnObj<>(ArcencielSignal.CONTINUE);
             } else {
                 return ArcencielDispatcher.INSTANCE.dispatchArcencielFunc(player, func);
             }
         }
-        return node.exec(player, scriptChain.subList(1, scriptChain.size()));
+        ReturnObj<?> returnObj = keyword.exec(player, scriptChain.subList(1, scriptChain.size()));
+        Object obj = returnObj.getObj();
+        return new ReturnObj<>(returnObj.getSignal(), obj);
     }
 
     @Override

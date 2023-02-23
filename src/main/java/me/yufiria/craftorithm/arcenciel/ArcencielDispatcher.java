@@ -3,9 +3,12 @@ package me.yufiria.craftorithm.arcenciel;
 import me.yufiria.craftorithm.api.arcenciel.IArcencielDispatcher;
 import me.yufiria.craftorithm.api.arcenciel.block.ListArcencielBlock;
 import me.yufiria.craftorithm.api.arcenciel.block.StringArcencielBlock;
-import me.yufiria.craftorithm.arcenciel.node.KeywordHasPerm;
-import me.yufiria.craftorithm.arcenciel.node.KeywordIf;
-import me.yufiria.craftorithm.arcenciel.node.KeywordRunCmd;
+import me.yufiria.craftorithm.api.arcenciel.obj.ArcencielSignal;
+import me.yufiria.craftorithm.api.arcenciel.obj.ReturnObj;
+import me.yufiria.craftorithm.arcenciel.keyword.KeywordHasPerm;
+import me.yufiria.craftorithm.arcenciel.keyword.KeywordIf;
+import me.yufiria.craftorithm.arcenciel.keyword.KeywordReturn;
+import me.yufiria.craftorithm.arcenciel.keyword.KeywordRunCmd;
 import me.yufiria.craftorithm.config.YamlFileWrapper;
 import org.bukkit.entity.Player;
 
@@ -21,7 +24,7 @@ public enum ArcencielDispatcher implements IArcencielDispatcher {
     }
 
     @Override
-    public Object dispatchArcencielBlock(Player player, String arcencielBlockBody) {
+    public ReturnObj<Object> dispatchArcencielBlock(Player player, String arcencielBlockBody) {
         if (arcencielBlockBody.contains("\n"))
             return new ListArcencielBlock(arcencielBlockBody).exec(player);
         else
@@ -29,14 +32,16 @@ public enum ArcencielDispatcher implements IArcencielDispatcher {
     }
 
     @Override
-    public Object dispatchArcencielFunc(Player player, List<String> arcencielFuncBody) {
-        Object returnObj = null;
+    public ReturnObj<Object> dispatchArcencielFunc(Player player, List<String> arcencielFuncBody) {
+        ReturnObj<Object> returnObj = new ReturnObj<>();
         for (int i = 0; i < arcencielFuncBody.size(); i++) {
             returnObj = dispatchArcencielBlock(player, arcencielFuncBody.get(i));
-            if (returnObj instanceof Boolean) {
-                if (returnObj.equals(false) && i + 1 < arcencielFuncBody.size())
+            if (returnObj.getObj() instanceof Boolean) {
+                if (returnObj.getObj().equals(false) && i + 1 < arcencielFuncBody.size())
                     i ++;
             }
+            if (returnObj.getSignal().equals(ArcencielSignal.END))
+                break;
         }
         return returnObj;
     }
@@ -45,6 +50,7 @@ public enum ArcencielDispatcher implements IArcencielDispatcher {
         StringArcencielBlock.regRootScriptNode(KeywordIf.INSTANCE);
         StringArcencielBlock.regRootScriptNode(KeywordHasPerm.INSTANCE);
         StringArcencielBlock.regRootScriptNode(KeywordRunCmd.INSTANCE);
+        StringArcencielBlock.regRootScriptNode(KeywordReturn.INSTANCE);
     }
 
     public YamlFileWrapper getFunctionFile() {

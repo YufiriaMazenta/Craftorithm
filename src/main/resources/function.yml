@@ -1,5 +1,13 @@
 example:
-  - if perm test
+  - if test
   - |-
     command me hello
     command me nice to meet you
+    return true
+  - command me hello2
+  - return run test2
+  - command me hello3
+test:
+  - return string false
+test2:
+  - return string hello4

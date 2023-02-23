@@ -1,5 +1,6 @@
 package me.yufiria.craftorithm.api.arcenciel.block;
 
+import me.yufiria.craftorithm.api.arcenciel.obj.ReturnObj;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -16,12 +17,12 @@ public class ListArcencielBlock implements IArcencielBlock<List<String>> {
     }
 
     @Override
-    public Object exec(Player player) {
-        Object returnObj = null;
+    public ReturnObj<Object> exec(Player player) {
+        ReturnObj<Object> returnObj = new ReturnObj<>(null);
         for (int i = 0; i < arcencielStatementList.size(); i++) {
             returnObj = new StringArcencielBlock(arcencielStatementList.get(i)).exec(player);
-            if (returnObj instanceof Boolean) {
-                if (returnObj.equals(false) && i + 1 < arcencielStatementList.size())
+            if (returnObj.getObj() instanceof Boolean) {
+                if (returnObj.getObj().equals(false) && i + 1 < arcencielStatementList.size())
                     i ++;
             }
         }
