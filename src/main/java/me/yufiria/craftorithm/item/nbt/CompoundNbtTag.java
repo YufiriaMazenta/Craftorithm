@@ -1,7 +1,7 @@
 package me.yufiria.craftorithm.item.nbt;
 
-import org.bukkit.configuration.MemorySection;
 import me.yufiria.craftorithm.api.nbt.IPluginNbtTag;
+import org.bukkit.configuration.MemorySection;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

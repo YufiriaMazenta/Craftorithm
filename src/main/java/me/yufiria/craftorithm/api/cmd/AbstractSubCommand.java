@@ -1,9 +1,9 @@
 package me.yufiria.craftorithm.api.cmd;
 
 import me.yufiria.craftorithm.util.LangUtil;
+import me.yufiria.craftorithm.util.MapUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import me.yufiria.craftorithm.util.MapUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;

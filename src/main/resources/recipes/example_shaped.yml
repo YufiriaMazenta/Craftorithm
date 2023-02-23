@@ -23,11 +23,7 @@ unlock: true
 
 #可选的配置项：
 conditions:
-  - 'perm oasis.recipe.test'
-  - '&!level >= *10'
-  - '&chunk slime'
-  - '&effect BAD_OMEN >= *1'
+  - 'if perm craftorithm.perm.example'
 #配方合成之后执行的动作
 actions:
-  - 'take-level 10'
-  - 'command me hello'
+  - 'example'

@@ -1,0 +1,5 @@
+example:
+  - if perm test
+  - |-
+    command me hello
+    command me nice to meet you

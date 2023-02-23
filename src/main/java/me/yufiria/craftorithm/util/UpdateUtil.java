@@ -1,8 +1,8 @@
 package me.yufiria.craftorithm.util;
 
+import me.yufiria.craftorithm.Craftorithm;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import me.yufiria.craftorithm.Craftorithm;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

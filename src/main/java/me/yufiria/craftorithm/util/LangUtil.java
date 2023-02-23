@@ -1,12 +1,12 @@
 package me.yufiria.craftorithm.util;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+import me.yufiria.craftorithm.Craftorithm;
+import me.yufiria.craftorithm.config.YamlFileWrapper;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import me.yufiria.craftorithm.Craftorithm;
-import me.yufiria.craftorithm.config.YamlFileWrapper;
 
 import java.util.HashMap;
 import java.util.Map;

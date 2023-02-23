@@ -1,16 +1,21 @@
-package me.yufiria.craftorithm.api.script;
+package me.yufiria.craftorithm.api.arcenciel.keyword;
 
 import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class AbstractScriptNode<T> implements IScriptNode<T> {
+public abstract class AbstractArcencielKeyword<T> implements IArcencielKeyword<T> {
 
     private String nodeName;
-    private Map<String, IScriptNode<T>> childNodeMap;
+    private Map<String, IArcencielKeyword<T>> childNodeMap;
 
-    protected AbstractScriptNode(String nodeName, Map<String, IScriptNode<T>> childNodeMap) {
+    protected AbstractArcencielKeyword(String nodeName) {
+        this(nodeName, new ConcurrentHashMap<>());
+    }
+
+    protected AbstractArcencielKeyword(String nodeName, Map<String, IArcencielKeyword<T>> childNodeMap) {
         this.nodeName = nodeName;
         this.childNodeMap = childNodeMap;
     }
@@ -31,12 +36,12 @@ public abstract class AbstractScriptNode<T> implements IScriptNode<T> {
         return nodeName;
     }
 
-    public void setChildNodeMap(Map<String, IScriptNode<T>> childNodeMap) {
+    public void setChildNodeMap(Map<String, IArcencielKeyword<T>> childNodeMap) {
         this.childNodeMap = childNodeMap;
     }
 
     @Override
-    public Map<String, IScriptNode<T>> getChildNodeMap() {
+    public Map<String, IArcencielKeyword<T>> getChildNodeMap() {
         return childNodeMap;
     }
 

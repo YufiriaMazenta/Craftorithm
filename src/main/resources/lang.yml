@@ -25,7 +25,13 @@ command:
   version: '<prefix> &a插件版本：<version>'
   create:
     not_exist_type: '<prefix> &c不存在的配方类型'
-script:
+  run_arcenciel:
+    success: '<prefix> &a运行成功，返回结果为<object>'
+
+#Arcenciel脚本的提示消息
+arcenciel:
+  not_enough_param: '<prefix> &c语句"<statement>"不完整'
+  unknown_keyword: '<prefix> &c未定义的关键词或函数<keyword>'
 
 #插件加载的反馈信息
 load:
