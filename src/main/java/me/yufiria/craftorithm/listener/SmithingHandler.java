@@ -1,6 +1,5 @@
 package me.yufiria.craftorithm.listener;
 
-import me.yufiria.craftorithm.Craftorithm;
 import me.yufiria.craftorithm.recipe.RecipeManager;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.HumanEntity;

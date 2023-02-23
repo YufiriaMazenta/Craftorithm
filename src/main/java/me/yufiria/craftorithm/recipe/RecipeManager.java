@@ -1,16 +1,16 @@
 package me.yufiria.craftorithm.recipe;
 
-import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.inventory.Recipe;
-import org.bukkit.plugin.Plugin;
 import me.yufiria.craftorithm.Craftorithm;
 import me.yufiria.craftorithm.api.CraftorithmAPI;
 import me.yufiria.craftorithm.cmd.subcmd.RemoveCommand;
 import me.yufiria.craftorithm.config.YamlFileWrapper;
 import me.yufiria.craftorithm.util.LangUtil;
 import me.yufiria.craftorithm.util.MapUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.Recipe;
+import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.lang.reflect.Method;

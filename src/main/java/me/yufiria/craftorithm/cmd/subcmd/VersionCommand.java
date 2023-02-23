@@ -1,9 +1,9 @@
 package me.yufiria.craftorithm.cmd.subcmd;
 
-import me.yufiria.craftorithm.util.LangUtil;
-import org.bukkit.command.CommandSender;
 import me.yufiria.craftorithm.api.cmd.AbstractSubCommand;
 import me.yufiria.craftorithm.api.cmd.ISubCommand;
+import me.yufiria.craftorithm.util.LangUtil;
+import org.bukkit.command.CommandSender;
 
 import java.util.List;
 

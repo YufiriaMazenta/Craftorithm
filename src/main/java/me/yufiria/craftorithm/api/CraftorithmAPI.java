@@ -1,9 +1,9 @@
 package me.yufiria.craftorithm.api;
 
+import me.yufiria.craftorithm.item.ItemManager;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.plugin.Plugin;
-import me.yufiria.craftorithm.item.ItemManager;
 
 import java.util.Collections;
 import java.util.HashMap;

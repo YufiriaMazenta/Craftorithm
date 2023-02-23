@@ -1,22 +1,23 @@
 package me.yufiria.craftorithm;
 
+import me.yufiria.craftorithm.arcenciel.ArcencielDispatcher;
+import me.yufiria.craftorithm.bstat.Metrics;
+import me.yufiria.craftorithm.cmd.PluginCommand;
+import me.yufiria.craftorithm.config.ConfigUpdater;
+import me.yufiria.craftorithm.item.ItemManager;
 import me.yufiria.craftorithm.listener.CraftHandler;
+import me.yufiria.craftorithm.listener.FurnaceSmeltHandler;
 import me.yufiria.craftorithm.listener.RecipeUnlockHandler;
+import me.yufiria.craftorithm.listener.SmithingHandler;
 import me.yufiria.craftorithm.recipe.RecipeManager;
 import me.yufiria.craftorithm.util.LangUtil;
+import me.yufiria.craftorithm.util.PluginHookUtil;
 import me.yufiria.craftorithm.util.UpdateUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import me.yufiria.craftorithm.bstat.Metrics;
-import me.yufiria.craftorithm.cmd.PluginCommand;
-import me.yufiria.craftorithm.config.ConfigUpdater;
-import me.yufiria.craftorithm.item.ItemManager;
-import me.yufiria.craftorithm.listener.FurnaceSmeltHandler;
-import me.yufiria.craftorithm.listener.SmithingHandler;
-import me.yufiria.craftorithm.util.PluginHookUtil;
 
 public final class Craftorithm extends JavaPlugin implements Listener {
 
@@ -38,7 +39,7 @@ public final class Craftorithm extends JavaPlugin implements Listener {
         regCommands();
         regListeners();
         PluginHookUtil.hookPlugins();
-        initScripts();
+        initArcenciel();
         
         LangUtil.info("load.finish");
         UpdateUtil.checkUpdate(Bukkit.getConsoleSender());
@@ -82,8 +83,8 @@ public final class Craftorithm extends JavaPlugin implements Listener {
             Bukkit.getPluginManager().registerEvents(FurnaceSmeltHandler.INSTANCE, this);
     }
 
-    private void initScripts() {
-        //TODO
+    private void initArcenciel() {
+        ArcencielDispatcher.INSTANCE.loadFuncFile();
     }
 
     public static Craftorithm getInstance() {

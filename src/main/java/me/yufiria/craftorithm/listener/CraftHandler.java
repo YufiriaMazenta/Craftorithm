@@ -1,6 +1,8 @@
 package me.yufiria.craftorithm.listener;
 
+import me.yufiria.craftorithm.Craftorithm;
 import me.yufiria.craftorithm.recipe.RecipeManager;
+import me.yufiria.craftorithm.util.LangUtil;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -11,8 +13,6 @@ import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import me.yufiria.craftorithm.Craftorithm;
-import me.yufiria.craftorithm.util.LangUtil;
 
 import java.util.List;
 

@@ -1,15 +1,12 @@
 package me.yufiria.craftorithm.cmd;
 
 import me.yufiria.craftorithm.api.cmd.ISubCommand;
-import me.yufiria.craftorithm.cmd.subcmd.ItemCommand;
-import me.yufiria.craftorithm.cmd.subcmd.ReloadCommand;
-import me.yufiria.craftorithm.cmd.subcmd.RemoveCommand;
-import me.yufiria.craftorithm.cmd.subcmd.VersionCommand;
+import me.yufiria.craftorithm.cmd.subcmd.*;
 import me.yufiria.craftorithm.util.LangUtil;
+import me.yufiria.craftorithm.util.MapUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
-import me.yufiria.craftorithm.util.MapUtil;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -46,6 +43,7 @@ public enum PluginCommand implements TabExecutor {
         regSubCommand(VersionCommand.INSTANCE);
         regSubCommand(RemoveCommand.INSTANCE);
         regSubCommand(ItemCommand.INSTANCE);
+        regSubCommand(RunArcencielCmd.INSTANCE);
     }
 
     public void regSubCommand(ISubCommand executor) {
