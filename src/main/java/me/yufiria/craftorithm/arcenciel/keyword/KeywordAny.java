@@ -9,12 +9,12 @@ import java.util.List;
 
 import static me.yufiria.craftorithm.arcenciel.obj.ArcencielSignal.IF;
 
-public class KeywordOr extends AbstractArcencielKeyword<Boolean> {
+public class KeywordAny extends AbstractArcencielKeyword<Boolean> {
 
-    public static final KeywordOr INSTANCE = new KeywordOr();
+    public static final KeywordAny INSTANCE = new KeywordAny();
 
-    protected KeywordOr() {
-        super("or");
+    protected KeywordAny() {
+        super("any");
     }
 
     @Override
@@ -25,7 +25,12 @@ public class KeywordOr extends AbstractArcencielKeyword<Boolean> {
         }
         boolean base = false;
         List<String> block = new ArrayList<>();
-        for (String arg : args) {
+        for (int i = 0; i < args.size() + 1; i++) {
+            if (i == args.size()) {
+                base = (base || (Boolean) StringArcencielBlock.getArcencielKeywordMap().get("if").exec(player, block).getObj());
+                break;
+            }
+            String arg = args.get(i);
             if (arg.equals("||")) {
                 base = (base || (Boolean) StringArcencielBlock.getArcencielKeywordMap().get("if").exec(player, block).getObj());
                 block = new ArrayList<>();

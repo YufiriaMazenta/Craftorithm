@@ -26,7 +26,7 @@ command:
   create:
     not_exist_type: '<prefix> &c不存在的配方类型'
   run_arcenciel:
-    success: '<prefix> &a运行成功，返回结果为<object>'
+    success: '<prefix> &a运行成功，耗时<time>ms'
 
 #Arcenciel脚本的提示消息
 arcenciel:

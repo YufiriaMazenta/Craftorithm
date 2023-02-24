@@ -25,7 +25,12 @@ public class KeywordAll extends AbstractArcencielKeyword<Boolean> {
         }
         boolean base = true;
         List<String> block = new ArrayList<>();
-        for (String arg : args) {
+        for (int i = 0; i < args.size() + 1; i++) {
+            if (i == args.size()) {
+                base = (base || (Boolean) StringArcencielBlock.getArcencielKeywordMap().get("if").exec(player, block).getObj());
+                break;
+            }
+            String arg = args.get(i);
             if (arg.equals("&&")) {
                 base = (base && (Boolean) StringArcencielBlock.getArcencielKeywordMap().get("if").exec(player, block).getObj());
                 block = new ArrayList<>();
