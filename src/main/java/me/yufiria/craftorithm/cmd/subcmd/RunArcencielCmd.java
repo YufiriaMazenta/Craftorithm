@@ -28,12 +28,14 @@ public class RunArcencielCmd extends AbstractSubCommand {
             sendNotEnoughCmdParamMsg(sender, 1);
             return true;
         }
+        long startTime = System.currentTimeMillis();
         StringJoiner arcencielBlock = new StringJoiner(" ");
         for (String arg : args) {
             arcencielBlock.add(arg);
         }
-        ReturnObj<Object> returnObj = ArcencielDispatcher.INSTANCE.dispatchArcencielBlock((Player) sender, arcencielBlock.toString());
-        LangUtil.sendMsg(sender, "command.run_arcenciel.success", MapUtil.newHashMap("<object>", String.valueOf(returnObj.getObj())));
+        ArcencielDispatcher.INSTANCE.dispatchArcencielBlock((Player) sender, arcencielBlock.toString());
+        long execTime = System.currentTimeMillis() - startTime;
+        LangUtil.sendMsg(sender, "command.run_arcenciel.success", MapUtil.newHashMap("<time>", String.valueOf(execTime)));
         return true;
     }
 }

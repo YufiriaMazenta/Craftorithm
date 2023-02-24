@@ -48,7 +48,7 @@ public enum ArcencielDispatcher implements IArcencielDispatcher {
         StringArcencielBlock.regScriptKeyword(KeywordRunCmd.INSTANCE);
         StringArcencielBlock.regScriptKeyword(KeywordReturn.INSTANCE);
         StringArcencielBlock.regScriptKeyword(KeywordAll.INSTANCE);
-        StringArcencielBlock.regScriptKeyword(KeywordOr.INSTANCE);
+        StringArcencielBlock.regScriptKeyword(KeywordAny.INSTANCE);
     }
 
     public YamlFileWrapper getFunctionFile() {

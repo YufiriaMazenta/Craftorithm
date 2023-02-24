@@ -1,5 +1,5 @@
 example:
-  - if or test2 || all test && test2
+  - if any test2 || all test && test2
   - |-
     command me hello
     command me nice to meet you
