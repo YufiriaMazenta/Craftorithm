@@ -1,5 +1,5 @@
 example:
-  - if any test2 || all test && test2
+  - if any test2 || all test && test2 || true
   - |-
     command me hello
     command me nice to meet you
@@ -8,6 +8,6 @@ example:
   - return run test2
   - command me hello3
 test:
-  - return string false
+  - return false
 test2:
-  - return string true
+  - return true

@@ -1,7 +1,7 @@
 package me.yufiria.craftorithm.cmd.subcmd;
 
 import me.yufiria.craftorithm.util.LangUtil;
-import me.yufiria.craftorithm.util.MapUtil;
+import me.yufiria.craftorithm.util.ContainerUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -78,7 +78,7 @@ public abstract class AbstractSubCommand implements ISubCommand {
     }
 
     public void sendNotEnoughCmdParamMsg(CommandSender sender, String paramStr) {
-        LangUtil.sendMsg(sender, "command.not_enough_param", MapUtil.newHashMap("<number>", paramStr));
+        LangUtil.sendMsg(sender, "command.not_enough_param", ContainerUtil.newHashMap("<number>", paramStr));
     }
 
     public boolean checkSenderIsPlayer(CommandSender sender) {

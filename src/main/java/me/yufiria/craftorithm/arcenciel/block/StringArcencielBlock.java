@@ -5,7 +5,7 @@ import me.yufiria.craftorithm.arcenciel.obj.ArcencielSignal;
 import me.yufiria.craftorithm.arcenciel.obj.ReturnObj;
 import me.yufiria.craftorithm.arcenciel.ArcencielDispatcher;
 import me.yufiria.craftorithm.util.LangUtil;
-import me.yufiria.craftorithm.util.MapUtil;
+import me.yufiria.craftorithm.util.ContainerUtil;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class StringArcencielBlock implements IArcencielBlock<String> {
         if (keyword == null) {
             List<String> func = ArcencielDispatcher.INSTANCE.getFunc(keywordStr);
             if (func.size() < 1) {
-                LangUtil.sendMsg(player, "arcenciel.unknown_keyword", MapUtil.newHashMap("<keyword>", keywordStr));
+                LangUtil.sendMsg(player, "arcenciel.unknown_keyword", ContainerUtil.newHashMap("<keyword>", keywordStr));
                 return new ReturnObj<>(ArcencielSignal.CONTINUE);
             } else {
                 return ArcencielDispatcher.INSTANCE.dispatchArcencielFunc(player, func);

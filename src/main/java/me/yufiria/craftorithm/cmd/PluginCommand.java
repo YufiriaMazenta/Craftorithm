@@ -3,7 +3,7 @@ package me.yufiria.craftorithm.cmd;
 import me.yufiria.craftorithm.cmd.subcmd.ISubCommand;
 import me.yufiria.craftorithm.cmd.subcmd.*;
 import me.yufiria.craftorithm.util.LangUtil;
-import me.yufiria.craftorithm.util.MapUtil;
+import me.yufiria.craftorithm.util.ContainerUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -26,7 +26,7 @@ public enum PluginCommand implements TabExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         List<String> argList = Arrays.asList(args);
         if (argList.size() < 1) {
-            LangUtil.sendMsg(sender, "command.not_enough_param", MapUtil.newHashMap("<number>", String.valueOf(1)));
+            LangUtil.sendMsg(sender, "command.not_enough_param", ContainerUtil.newHashMap("<number>", String.valueOf(1)));
             return true;
         }
         ISubCommand subCommand = subCommandMap.get(argList.get(0));

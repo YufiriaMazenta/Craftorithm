@@ -5,7 +5,7 @@ import me.yufiria.craftorithm.CraftorithmAPI;
 import me.yufiria.craftorithm.cmd.subcmd.RemoveCommand;
 import me.yufiria.craftorithm.config.YamlFileWrapper;
 import me.yufiria.craftorithm.util.LangUtil;
-import me.yufiria.craftorithm.util.MapUtil;
+import me.yufiria.craftorithm.util.ContainerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -25,12 +25,12 @@ import static me.yufiria.craftorithm.util.FileUtil.getAllFiles;
 
 public class RecipeManager {
 
-    public static final Map<String, YamlFileWrapper> recipeFileMap = new HashMap<>();
-    public static final Map<RecipeType, BiFunction<YamlConfiguration, String, Recipe>> recipeBuilderMap;
-    public static final Map<RecipeType, BiFunction<YamlConfiguration, String, Recipe[]>> multipleRecipeBuilderMap;
-    public static final Map<NamespacedKey, YamlConfiguration> recipeKeyConfigMap = new ConcurrentHashMap<>();
-    public static final File recipeFileFolder = new File(Craftorithm.getInstance().getDataFolder().getPath(), "recipes");
-    public static final Map<NamespacedKey, Boolean> recipeUnlockMap;
+    private static final Map<String, YamlFileWrapper> recipeFileMap = new HashMap<>();
+    private static final Map<RecipeType, BiFunction<YamlConfiguration, String, Recipe>> recipeBuilderMap;
+    private static final Map<RecipeType, BiFunction<YamlConfiguration, String, Recipe[]>> multipleRecipeBuilderMap;
+    private static final Map<NamespacedKey, YamlConfiguration> recipeKeyConfigMap = new ConcurrentHashMap<>();
+    private static final File recipeFileFolder = new File(Craftorithm.getInstance().getDataFolder().getPath(), "recipes");
+    private static final Map<NamespacedKey, Boolean> recipeUnlockMap;
 
     static {
         recipeBuilderMap = new HashMap<>();
@@ -60,7 +60,9 @@ public class RecipeManager {
     public static void loadRecipeFiles() {
         recipeFileMap.clear();
         if (!recipeFileFolder.exists()) {
-            recipeFileFolder.mkdir();
+            boolean mkdirResult = recipeFileFolder.mkdir();
+            if (!mkdirResult)
+                return;
         }
         List<File> allFiles = getAllFiles(recipeFileFolder);
         if (allFiles.size() < 1) {
@@ -93,7 +95,7 @@ public class RecipeManager {
                     regRecipe(getRecipeKey(recipe), recipe, config);
                 }
             } catch (Exception e) {
-                LangUtil.info("load.recipe_load_exception", MapUtil.newHashMap("<recipe_name>", fileName));
+                LangUtil.info("load.recipe_load_exception", ContainerUtil.newHashMap("<recipe_name>", fileName));
                 e.printStackTrace();
             }
         }

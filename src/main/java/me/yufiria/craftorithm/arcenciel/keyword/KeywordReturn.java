@@ -2,10 +2,15 @@ package me.yufiria.craftorithm.arcenciel.keyword;
 
 import me.yufiria.craftorithm.arcenciel.obj.ReturnObj;
 import me.yufiria.craftorithm.arcenciel.ArcencielDispatcher;
+import me.yufiria.craftorithm.util.ContainerUtil;
 import org.bukkit.entity.Player;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.StringJoiner;
+
+import static me.yufiria.craftorithm.arcenciel.obj.ArcencielSignal.END;
 
 public class KeywordReturn extends AbstractArcencielKeyword<Object> {
 
@@ -21,16 +26,14 @@ public class KeywordReturn extends AbstractArcencielKeyword<Object> {
             return new ReturnObj<>();
         StringJoiner returnStr = new StringJoiner(" ");
         String param = args.get(0);
-        args = args.subList(1, args.size());
-        for (String arg : args) {
-            returnStr.add(arg);
-        }
         switch (param) {
             case "string":
+                return new ReturnObj<>(END, ContainerUtil.list2ArcencielBlock(args.subList(1, args.size())));
             default:
-                return new ReturnObj<>(returnStr.toString());
+                return new ReturnObj<>(END, ContainerUtil.list2ArcencielBlock(args));
             case "run":
-                return ArcencielDispatcher.INSTANCE.dispatchArcencielBlock(player, returnStr.toString());
+                Object obj = ArcencielDispatcher.INSTANCE.dispatchArcencielBlock(player, ContainerUtil.list2ArcencielBlock(args.subList(1, args.size()))).getObj();
+                return new ReturnObj<>(END, obj);
         }
     }
 }

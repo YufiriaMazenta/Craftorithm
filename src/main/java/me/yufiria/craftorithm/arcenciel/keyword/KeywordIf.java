@@ -2,6 +2,7 @@ package me.yufiria.craftorithm.arcenciel.keyword;
 
 import me.yufiria.craftorithm.arcenciel.obj.ReturnObj;
 import me.yufiria.craftorithm.arcenciel.ArcencielDispatcher;
+import me.yufiria.craftorithm.util.ContainerUtil;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -25,11 +26,7 @@ public class KeywordIf extends AbstractArcencielKeyword<Boolean> {
             return new ReturnObj<>(IF, true);
         else if ("false".equalsIgnoreCase(args.get(0)))
             return new ReturnObj<>(IF, false);
-        StringJoiner arcencielBlock = new StringJoiner(" ");
-        for (String arg : args) {
-            arcencielBlock.add(arg);
-        }
-        ReturnObj<Object> returnObj = ArcencielDispatcher.INSTANCE.dispatchArcencielBlock(player, arcencielBlock.toString());
+        ReturnObj<Object> returnObj = ArcencielDispatcher.INSTANCE.dispatchArcencielBlock(player, ContainerUtil.list2ArcencielBlock(args));
         Object obj = returnObj.getObj();
         if (obj instanceof Boolean)
             return new ReturnObj<>(IF, ((Boolean) obj));
