@@ -1,4 +1,4 @@
-package me.yufiria.craftorithm.api;
+package me.yufiria.craftorithm;
 
 import me.yufiria.craftorithm.arcenciel.ArcencielDispatcher;
 import me.yufiria.craftorithm.item.ItemManager;

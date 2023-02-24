@@ -1,8 +1,6 @@
 package me.yufiria.craftorithm.cmd.subcmd;
 
 import me.yufiria.craftorithm.Craftorithm;
-import me.yufiria.craftorithm.api.cmd.AbstractSubCommand;
-import me.yufiria.craftorithm.api.cmd.ISubCommand;
 import me.yufiria.craftorithm.arcenciel.ArcencielDispatcher;
 import me.yufiria.craftorithm.item.ItemManager;
 import me.yufiria.craftorithm.recipe.RecipeManager;

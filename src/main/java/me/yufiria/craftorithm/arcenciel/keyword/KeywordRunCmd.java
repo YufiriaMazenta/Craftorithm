@@ -1,7 +1,7 @@
 package me.yufiria.craftorithm.arcenciel.keyword;
 
-import me.yufiria.craftorithm.api.arcenciel.keyword.AbstractArcencielKeyword;
-import me.yufiria.craftorithm.api.arcenciel.obj.ReturnObj;
+import me.yufiria.craftorithm.arcenciel.obj.ReturnObj;
+import me.yufiria.craftorithm.util.LangUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -18,10 +18,11 @@ public class KeywordRunCmd extends AbstractArcencielKeyword<Boolean> {
 
     @Override
     public ReturnObj<Boolean> exec(Player player, List<String> args) {
-        StringJoiner command = new StringJoiner(" ");
+        StringJoiner commandJoiner = new StringJoiner(" ");
         for (String arg : args) {
-            command.add(arg);
+            commandJoiner.add(arg);
         }
-        return new ReturnObj<>(Bukkit.dispatchCommand(player, command.toString()));
+        String command = LangUtil.placeholder(player, commandJoiner.toString());
+        return new ReturnObj<>(Bukkit.dispatchCommand(player, command));
     }
 }

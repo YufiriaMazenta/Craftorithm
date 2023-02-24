@@ -1,6 +1,6 @@
 package me.yufiria.craftorithm.util;
 
-import me.yufiria.craftorithm.api.nbt.IPluginNbtTag;
+import me.yufiria.craftorithm.item.nbt.IPluginNbtTag;
 import me.yufiria.craftorithm.config.YamlFileWrapper;
 import me.yufiria.craftorithm.item.nbt.CompoundNbtTag;
 import me.yufiria.craftorithm.item.nbt.NbtHandler;

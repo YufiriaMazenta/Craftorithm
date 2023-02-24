@@ -1,6 +1,6 @@
-package me.yufiria.craftorithm.api.arcenciel.block;
+package me.yufiria.craftorithm.arcenciel.block;
 
-import me.yufiria.craftorithm.api.arcenciel.obj.ReturnObj;
+import me.yufiria.craftorithm.arcenciel.obj.ReturnObj;
 import org.bukkit.entity.Player;
 
 /**

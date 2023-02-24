@@ -1,8 +1,8 @@
-package me.yufiria.craftorithm.api.arcenciel.block;
+package me.yufiria.craftorithm.arcenciel.block;
 
-import me.yufiria.craftorithm.api.arcenciel.keyword.IArcencielKeyword;
-import me.yufiria.craftorithm.api.arcenciel.obj.ArcencielSignal;
-import me.yufiria.craftorithm.api.arcenciel.obj.ReturnObj;
+import me.yufiria.craftorithm.arcenciel.keyword.IArcencielKeyword;
+import me.yufiria.craftorithm.arcenciel.obj.ArcencielSignal;
+import me.yufiria.craftorithm.arcenciel.obj.ReturnObj;
 import me.yufiria.craftorithm.arcenciel.ArcencielDispatcher;
 import me.yufiria.craftorithm.util.LangUtil;
 import me.yufiria.craftorithm.util.MapUtil;
@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class StringArcencielBlock implements IArcencielBlock<String> {
 
     private final String arcencielBlockBody;
-    public static final Map<String, IArcencielKeyword<?>> arcencielKeywordMap;
+    private static final Map<String, IArcencielKeyword<?>> arcencielKeywordMap;
 
     static {
         arcencielKeywordMap = new ConcurrentHashMap<>();
@@ -32,7 +32,7 @@ public class StringArcencielBlock implements IArcencielBlock<String> {
         List<String> scriptChain = new ArrayList<>(Arrays.asList(arcencielBlockBody.split(" ")));
         scriptChain.removeIf(String::isEmpty);
         if (scriptChain.size() < 1)
-            return new ReturnObj<>(null);
+            return new ReturnObj<>(ArcencielSignal.CONTINUE, null);
         String keywordStr = scriptChain.get(0);
         IArcencielKeyword<?> keyword = arcencielKeywordMap.get(keywordStr);
         if (keyword == null) {
@@ -54,8 +54,12 @@ public class StringArcencielBlock implements IArcencielBlock<String> {
         return arcencielBlockBody;
     }
 
-    public static void regRootScriptNode(IArcencielKeyword<?> node) {
-        arcencielKeywordMap.put(node.getNodeName(), node);
+    public static void regScriptKeyword(IArcencielKeyword<?> node) {
+        arcencielKeywordMap.put(node.getKeyword(), node);
+    }
+
+    public static Map<String, IArcencielKeyword<?>> getArcencielKeywordMap() {
+        return arcencielKeywordMap;
     }
 
 }
