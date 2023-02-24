@@ -1,4 +1,4 @@
-package me.yufiria.craftorithm.api.nbt;
+package me.yufiria.craftorithm.item.nbt;
 
 import me.yufiria.craftorithm.item.nbt.NbtType;
 

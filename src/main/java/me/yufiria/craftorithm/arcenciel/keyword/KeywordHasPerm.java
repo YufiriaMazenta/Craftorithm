@@ -1,7 +1,6 @@
 package me.yufiria.craftorithm.arcenciel.keyword;
 
-import me.yufiria.craftorithm.api.arcenciel.keyword.AbstractArcencielKeyword;
-import me.yufiria.craftorithm.api.arcenciel.obj.ReturnObj;
+import me.yufiria.craftorithm.arcenciel.obj.ReturnObj;
 import me.yufiria.craftorithm.util.LangUtil;
 import me.yufiria.craftorithm.util.MapUtil;
 import org.bukkit.entity.Player;

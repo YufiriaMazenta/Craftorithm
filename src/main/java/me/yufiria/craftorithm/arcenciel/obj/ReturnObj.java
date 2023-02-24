@@ -1,4 +1,4 @@
-package me.yufiria.craftorithm.api.arcenciel.obj;
+package me.yufiria.craftorithm.arcenciel.obj;
 
 public class ReturnObj<T> {
 

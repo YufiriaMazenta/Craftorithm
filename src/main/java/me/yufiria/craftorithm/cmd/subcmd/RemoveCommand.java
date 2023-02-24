@@ -1,7 +1,5 @@
 package me.yufiria.craftorithm.cmd.subcmd;
 
-import me.yufiria.craftorithm.api.cmd.AbstractSubCommand;
-import me.yufiria.craftorithm.api.cmd.ISubCommand;
 import me.yufiria.craftorithm.config.YamlFileWrapper;
 import me.yufiria.craftorithm.recipe.RecipeManager;
 import me.yufiria.craftorithm.util.LangUtil;

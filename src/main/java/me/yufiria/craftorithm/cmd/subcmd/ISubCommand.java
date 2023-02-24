@@ -1,4 +1,4 @@
-package me.yufiria.craftorithm.api.cmd;
+package me.yufiria.craftorithm.cmd.subcmd;
 
 import org.bukkit.command.CommandSender;
 

@@ -1,14 +1,10 @@
 package me.yufiria.craftorithm.arcenciel;
 
-import me.yufiria.craftorithm.api.arcenciel.IArcencielDispatcher;
-import me.yufiria.craftorithm.api.arcenciel.block.ListArcencielBlock;
-import me.yufiria.craftorithm.api.arcenciel.block.StringArcencielBlock;
-import me.yufiria.craftorithm.api.arcenciel.obj.ArcencielSignal;
-import me.yufiria.craftorithm.api.arcenciel.obj.ReturnObj;
-import me.yufiria.craftorithm.arcenciel.keyword.KeywordHasPerm;
-import me.yufiria.craftorithm.arcenciel.keyword.KeywordIf;
-import me.yufiria.craftorithm.arcenciel.keyword.KeywordReturn;
-import me.yufiria.craftorithm.arcenciel.keyword.KeywordRunCmd;
+import me.yufiria.craftorithm.arcenciel.block.ListArcencielBlock;
+import me.yufiria.craftorithm.arcenciel.block.StringArcencielBlock;
+import me.yufiria.craftorithm.arcenciel.keyword.*;
+import me.yufiria.craftorithm.arcenciel.obj.ArcencielSignal;
+import me.yufiria.craftorithm.arcenciel.obj.ReturnObj;
 import me.yufiria.craftorithm.config.YamlFileWrapper;
 import org.bukkit.entity.Player;
 
@@ -20,7 +16,7 @@ public enum ArcencielDispatcher implements IArcencielDispatcher {
     private YamlFileWrapper functionFile;
 
     ArcencielDispatcher() {
-        regDefRootScriptKeyword();
+        regDefScriptKeyword();
     }
 
     @Override
@@ -36,7 +32,7 @@ public enum ArcencielDispatcher implements IArcencielDispatcher {
         ReturnObj<Object> returnObj = new ReturnObj<>();
         for (int i = 0; i < arcencielFuncBody.size(); i++) {
             returnObj = dispatchArcencielBlock(player, arcencielFuncBody.get(i));
-            if (returnObj.getObj() instanceof Boolean) {
+            if (returnObj.getObj() instanceof Boolean && returnObj.getSignal().equals(ArcencielSignal.IF)) {
                 if (returnObj.getObj().equals(false) && i + 1 < arcencielFuncBody.size())
                     i ++;
             }
@@ -46,11 +42,13 @@ public enum ArcencielDispatcher implements IArcencielDispatcher {
         return returnObj;
     }
 
-    private void regDefRootScriptKeyword() {
-        StringArcencielBlock.regRootScriptNode(KeywordIf.INSTANCE);
-        StringArcencielBlock.regRootScriptNode(KeywordHasPerm.INSTANCE);
-        StringArcencielBlock.regRootScriptNode(KeywordRunCmd.INSTANCE);
-        StringArcencielBlock.regRootScriptNode(KeywordReturn.INSTANCE);
+    private void regDefScriptKeyword() {
+        StringArcencielBlock.regScriptKeyword(KeywordIf.INSTANCE);
+        StringArcencielBlock.regScriptKeyword(KeywordHasPerm.INSTANCE);
+        StringArcencielBlock.regScriptKeyword(KeywordRunCmd.INSTANCE);
+        StringArcencielBlock.regScriptKeyword(KeywordReturn.INSTANCE);
+        StringArcencielBlock.regScriptKeyword(KeywordAll.INSTANCE);
+        StringArcencielBlock.regScriptKeyword(KeywordOr.INSTANCE);
     }
 
     public YamlFileWrapper getFunctionFile() {

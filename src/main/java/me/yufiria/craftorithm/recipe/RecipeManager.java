@@ -1,7 +1,7 @@
 package me.yufiria.craftorithm.recipe;
 
 import me.yufiria.craftorithm.Craftorithm;
-import me.yufiria.craftorithm.api.CraftorithmAPI;
+import me.yufiria.craftorithm.CraftorithmAPI;
 import me.yufiria.craftorithm.cmd.subcmd.RemoveCommand;
 import me.yufiria.craftorithm.config.YamlFileWrapper;
 import me.yufiria.craftorithm.util.LangUtil;

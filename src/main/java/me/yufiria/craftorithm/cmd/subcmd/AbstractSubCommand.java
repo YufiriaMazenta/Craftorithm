@@ -1,4 +1,4 @@
-package me.yufiria.craftorithm.api.cmd;
+package me.yufiria.craftorithm.cmd.subcmd;
 
 import me.yufiria.craftorithm.util.LangUtil;
 import me.yufiria.craftorithm.util.MapUtil;

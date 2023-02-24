@@ -1,7 +1,6 @@
-package me.yufiria.craftorithm.api.arcenciel.keyword;
+package me.yufiria.craftorithm.arcenciel.keyword;
 
-import me.yufiria.craftorithm.api.arcenciel.obj.ArcencielSignal;
-import me.yufiria.craftorithm.api.arcenciel.obj.ReturnObj;
+import me.yufiria.craftorithm.arcenciel.obj.ReturnObj;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -34,7 +33,7 @@ public abstract class AbstractArcencielKeyword<T> implements IArcencielKeyword<T
     }
 
     @Override
-    public String getNodeName() {
+    public String getKeyword() {
         return nodeName;
     }
 
@@ -43,7 +42,7 @@ public abstract class AbstractArcencielKeyword<T> implements IArcencielKeyword<T
     }
 
     @Override
-    public Map<String, IArcencielKeyword<T>> getChildNodeMap() {
+    public Map<String, IArcencielKeyword<T>> getChildKeywordMap() {
         return childNodeMap;
     }
 

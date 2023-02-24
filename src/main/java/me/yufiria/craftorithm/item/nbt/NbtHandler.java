@@ -1,6 +1,5 @@
 package me.yufiria.craftorithm.item.nbt;
 
-import me.yufiria.craftorithm.api.nbt.IPluginNbtTag;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemorySection;

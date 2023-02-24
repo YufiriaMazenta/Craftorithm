@@ -1,7 +1,7 @@
 package me.yufiria.craftorithm.cmd.subcmd.item;
 
-import me.yufiria.craftorithm.api.cmd.AbstractSubCommand;
-import me.yufiria.craftorithm.api.cmd.ISubCommand;
+import me.yufiria.craftorithm.cmd.subcmd.AbstractSubCommand;
+import me.yufiria.craftorithm.cmd.subcmd.ISubCommand;
 import me.yufiria.craftorithm.item.ItemManager;
 import me.yufiria.craftorithm.util.LangUtil;
 import me.yufiria.craftorithm.util.MapUtil;
