@@ -5,7 +5,7 @@ import me.yufiria.craftorithm.config.YamlFileWrapper;
 import me.yufiria.craftorithm.util.FileUtil;
 import me.yufiria.craftorithm.util.ItemUtil;
 import me.yufiria.craftorithm.util.LangUtil;
-import me.yufiria.craftorithm.util.MapUtil;
+import me.yufiria.craftorithm.util.ContainerUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -37,7 +37,7 @@ public class ItemManager {
                 try {
                     addCraftorithmItem(fileKey, itemKey, ItemUtil.getItemFromConfig(itemFile.getConfig(), itemKey));
                 } catch (Exception e) {
-                    LangUtil.info("load.item_load_exception", MapUtil.newHashMap("<item_name>", fileKey + ":" + itemKey));
+                    LangUtil.info("load.item_load_exception", ContainerUtil.newHashMap("<item_name>", fileKey + ":" + itemKey));
                     e.printStackTrace();
                 }
             }
@@ -71,7 +71,9 @@ public class ItemManager {
     public static void loadItemFiles() {
         itemFileMap.clear();
         if (!itemFileFolder.exists()) {
-            itemFileFolder.mkdir();
+            boolean mkdirResult = itemFileFolder.mkdir();
+            if (!mkdirResult)
+                return;
         }
         List<File> allFiles = getAllFiles(itemFileFolder);
         if (allFiles.size() < 1) {

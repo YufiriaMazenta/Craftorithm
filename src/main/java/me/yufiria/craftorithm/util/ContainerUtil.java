@@ -1,9 +1,11 @@
 package me.yufiria.craftorithm.util;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
 
-public class MapUtil {
+public class ContainerUtil {
 
     public static Map<String, String> newHashMap(String... str) {
         Map<String, String> hashMap = new HashMap<>();
@@ -14,6 +16,14 @@ public class MapUtil {
             hashMap.put(str[i], str[i + 1]);
         }
         return hashMap;
+    }
+
+    public static String list2ArcencielBlock(List<String> list) {
+        StringJoiner blockJoiner = new StringJoiner(" ");
+        for (String s : list) {
+            blockJoiner.add(s);
+        }
+        return blockJoiner.toString();
     }
 
 }

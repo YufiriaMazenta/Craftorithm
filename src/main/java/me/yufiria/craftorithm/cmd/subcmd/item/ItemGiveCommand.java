@@ -4,7 +4,7 @@ import me.yufiria.craftorithm.cmd.subcmd.AbstractSubCommand;
 import me.yufiria.craftorithm.cmd.subcmd.ISubCommand;
 import me.yufiria.craftorithm.item.ItemManager;
 import me.yufiria.craftorithm.util.LangUtil;
-import me.yufiria.craftorithm.util.MapUtil;
+import me.yufiria.craftorithm.util.ContainerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -44,7 +44,7 @@ public class ItemGiveCommand extends AbstractSubCommand {
         }
 
         if (!ItemManager.isCraftorithmItem(args.get(0))) {
-            LangUtil.sendMsg(sender, "command.item.give.not_exist_item", MapUtil.newHashMap("<item_name>", args.get(0)));
+            LangUtil.sendMsg(sender, "command.item.give.not_exist_item", ContainerUtil.newHashMap("<item_name>", args.get(0)));
             return true;
         }
 
