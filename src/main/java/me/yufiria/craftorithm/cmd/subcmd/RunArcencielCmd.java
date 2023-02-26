@@ -14,7 +14,7 @@ public class RunArcencielCmd extends AbstractSubCommand {
     public static final RunArcencielCmd INSTANCE = new RunArcencielCmd();
 
     protected RunArcencielCmd() {
-        super("run-arcenciel");
+        super("run");
     }
 
     @Override

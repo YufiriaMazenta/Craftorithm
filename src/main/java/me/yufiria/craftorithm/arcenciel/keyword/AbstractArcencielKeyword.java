@@ -5,45 +5,26 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class AbstractArcencielKeyword<T> implements IArcencielKeyword<T> {
 
-    private String nodeName;
-    private Map<String, IArcencielKeyword<T>> childNodeMap;
+    private String keyword;
 
-    protected AbstractArcencielKeyword(String nodeName) {
-        this(nodeName, new ConcurrentHashMap<>());
+    protected AbstractArcencielKeyword(String keyword) {
+        this.keyword = keyword;
     }
 
-    protected AbstractArcencielKeyword(String nodeName, Map<String, IArcencielKeyword<T>> childNodeMap) {
-        this.nodeName = nodeName;
-        this.childNodeMap = childNodeMap;
-    }
 
     @Override
-    public ReturnObj<T> exec(Player player, List<String> args) {
-        if (args == null || args.size() < 1)
-            return new ReturnObj<>(null);
-        return childNodeMap.get(args.get(0)).exec(player, args.subList(1, args.size()));
-    }
+    public abstract ReturnObj<T> exec(Player player, List<String> args);
 
-    public void setNodeName(String nodeName) {
-        this.nodeName = nodeName;
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
     }
 
     @Override
     public String getKeyword() {
-        return nodeName;
-    }
-
-    public void setChildNodeMap(Map<String, IArcencielKeyword<T>> childNodeMap) {
-        this.childNodeMap = childNodeMap;
-    }
-
-    @Override
-    public Map<String, IArcencielKeyword<T>> getChildKeywordMap() {
-        return childNodeMap;
+        return keyword;
     }
 
 }

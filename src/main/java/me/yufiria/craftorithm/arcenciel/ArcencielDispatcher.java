@@ -6,6 +6,7 @@ import me.yufiria.craftorithm.arcenciel.keyword.*;
 import me.yufiria.craftorithm.arcenciel.obj.ArcencielSignal;
 import me.yufiria.craftorithm.arcenciel.obj.ReturnObj;
 import me.yufiria.craftorithm.config.YamlFileWrapper;
+import me.yufiria.craftorithm.util.PluginHookUtil;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -46,9 +47,21 @@ public enum ArcencielDispatcher implements IArcencielDispatcher {
         StringArcencielBlock.regScriptKeyword(KeywordIf.INSTANCE);
         StringArcencielBlock.regScriptKeyword(KeywordHasPerm.INSTANCE);
         StringArcencielBlock.regScriptKeyword(KeywordRunCmd.INSTANCE);
+        StringArcencielBlock.regScriptKeyword(KeywordConsole.INSTANCE);
         StringArcencielBlock.regScriptKeyword(KeywordReturn.INSTANCE);
         StringArcencielBlock.regScriptKeyword(KeywordAll.INSTANCE);
         StringArcencielBlock.regScriptKeyword(KeywordAny.INSTANCE);
+        StringArcencielBlock.regScriptKeyword(KeywordLevel.INSTANCE);
+        StringArcencielBlock.regScriptKeyword(KeywordTakeLevel.INSTANCE);
+        StringArcencielBlock.regScriptKeyword(KeywordPapi.INSTANCE);
+        if (PluginHookUtil.isEconomyLoaded()) {
+            StringArcencielBlock.regScriptKeyword(KeywordMoney.INSTANCE);
+            StringArcencielBlock.regScriptKeyword(KeywordTakeMoney.INSTANCE);
+        }
+        if (PluginHookUtil.isPlayerPointsLoaded()) {
+            StringArcencielBlock.regScriptKeyword(KeywordPoints.INSTANCE);
+            StringArcencielBlock.regScriptKeyword(KeywordTakePoints.INSTANCE);
+        }
     }
 
     public YamlFileWrapper getFunctionFile() {
