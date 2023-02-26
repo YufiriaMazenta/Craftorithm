@@ -8,17 +8,18 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class KeywordRunCmd extends AbstractArcencielKeyword<Boolean> {
+public class KeywordConsole extends AbstractArcencielKeyword<Boolean> {
 
-    public static final KeywordRunCmd INSTANCE = new KeywordRunCmd();
+    public static final KeywordConsole INSTANCE = new KeywordConsole();
 
-    protected KeywordRunCmd() {
-        super("command");
+    protected KeywordConsole() {
+        super("console");
     }
 
     @Override
     public ReturnObj<Boolean> exec(Player player, List<String> args) {
         String command = LangUtil.placeholder(player, ContainerUtil.list2ArcencielBlock(args));
-        return new ReturnObj<>(Bukkit.dispatchCommand(player, command));
+        return new ReturnObj<>(Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command));
     }
+
 }

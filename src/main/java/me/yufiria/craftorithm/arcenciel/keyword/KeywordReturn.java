@@ -24,7 +24,6 @@ public class KeywordReturn extends AbstractArcencielKeyword<Object> {
     public ReturnObj<Object> exec(Player player, List<String> args) {
         if (args.size() < 1)
             return new ReturnObj<>();
-        StringJoiner returnStr = new StringJoiner(" ");
         String param = args.get(0);
         switch (param) {
             case "string":

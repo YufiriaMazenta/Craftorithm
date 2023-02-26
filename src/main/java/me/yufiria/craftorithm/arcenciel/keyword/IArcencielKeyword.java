@@ -8,8 +8,6 @@ import java.util.Map;
 
 public interface IArcencielKeyword<T> {
 
-    Map<String, IArcencielKeyword<T>> getChildKeywordMap();
-
     ReturnObj<T> exec(Player player, List<String> args);
 
     String getKeyword();
