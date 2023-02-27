@@ -5,11 +5,11 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class KeywordTakeLevel extends AbstractArcencielKeyword<Integer> {
+public class TokenTakeLevel extends AbstractArcencielToken<Integer> {
 
-    public static final KeywordTakeLevel INSTANCE = new KeywordTakeLevel();
+    public static final TokenTakeLevel INSTANCE = new TokenTakeLevel();
 
-    protected KeywordTakeLevel() {
+    protected TokenTakeLevel() {
         super("take-level");
     }
 

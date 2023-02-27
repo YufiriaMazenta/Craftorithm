@@ -7,11 +7,11 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class KeywordHasPerm extends AbstractArcencielKeyword<Boolean> {
+public class TokenHasPerm extends AbstractArcencielToken<Boolean> {
 
-    public static final KeywordHasPerm INSTANCE = new KeywordHasPerm();
+    public static final TokenHasPerm INSTANCE = new TokenHasPerm();
 
-    protected KeywordHasPerm() {
+    protected TokenHasPerm() {
         super("perm");
     }
 

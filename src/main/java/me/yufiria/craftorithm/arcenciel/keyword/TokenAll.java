@@ -9,11 +9,11 @@ import java.util.List;
 
 import static me.yufiria.craftorithm.arcenciel.obj.ArcencielSignal.IF;
 
-public class KeywordAll extends AbstractArcencielKeyword<Boolean> {
+public class TokenAll extends AbstractArcencielToken<Boolean> {
 
-    public static final KeywordAll INSTANCE = new KeywordAll();
+    public static final TokenAll INSTANCE = new TokenAll();
 
-    protected KeywordAll() {
+    protected TokenAll() {
         super("all");
     }
 
@@ -27,7 +27,7 @@ public class KeywordAll extends AbstractArcencielKeyword<Boolean> {
         List<String> block = new ArrayList<>();
         for (int i = 0; i < args.size() + 1; i++) {
             if (i == args.size()) {
-                base = (base || (Boolean) StringArcencielBlock.getArcencielKeywordMap().get("if").exec(player, block).getObj());
+                base = (base && (Boolean) StringArcencielBlock.getArcencielKeywordMap().get("if").exec(player, block).getObj());
                 break;
             }
             String arg = args.get(i);

@@ -5,18 +5,15 @@ import me.yufiria.craftorithm.arcenciel.ArcencielDispatcher;
 import me.yufiria.craftorithm.util.ContainerUtil;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.StringJoiner;
 
 import static me.yufiria.craftorithm.arcenciel.obj.ArcencielSignal.END;
 
-public class KeywordReturn extends AbstractArcencielKeyword<Object> {
+public class TokenReturn extends AbstractArcencielToken<Object> {
 
-    public static final KeywordReturn INSTANCE = new KeywordReturn();
+    public static final TokenReturn INSTANCE = new TokenReturn();
 
-    protected KeywordReturn() {
+    protected TokenReturn() {
         super("return");
     }
 

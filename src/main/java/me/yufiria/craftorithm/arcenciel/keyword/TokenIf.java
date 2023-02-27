@@ -6,15 +6,14 @@ import me.yufiria.craftorithm.util.ContainerUtil;
 import org.bukkit.entity.Player;
 
 import java.util.List;
-import java.util.StringJoiner;
 
 import static me.yufiria.craftorithm.arcenciel.obj.ArcencielSignal.IF;
 
-public class KeywordIf extends AbstractArcencielKeyword<Boolean> {
+public class TokenIf extends AbstractArcencielToken<Boolean> {
 
-    public static final KeywordIf INSTANCE = new KeywordIf();
+    public static final TokenIf INSTANCE = new TokenIf();
 
-    protected KeywordIf() {
+    protected TokenIf() {
         super("if");
     }
 

@@ -6,11 +6,11 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class KeywordMoney extends AbstractArcencielKeyword<Boolean> {
+public class TokenMoney extends AbstractArcencielToken<Boolean> {
 
-    public static final KeywordMoney INSTANCE = new KeywordMoney();
+    public static final TokenMoney INSTANCE = new TokenMoney();
 
-    protected KeywordMoney() {
+    protected TokenMoney() {
         super("money");
     }
 

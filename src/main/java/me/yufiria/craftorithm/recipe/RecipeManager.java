@@ -177,6 +177,10 @@ public class RecipeManager {
         return recipeUnlockMap;
     }
 
+    public static Map<String, YamlFileWrapper> getRecipeFileMap() {
+        return recipeFileMap;
+    }
+
     private static void saveDefConfigFile(List<File> allFiles) {
         Craftorithm.getInstance().saveResource("recipes/example_shaped.yml", false);
         Craftorithm.getInstance().saveResource("recipes/example_shapeless.yml", false);

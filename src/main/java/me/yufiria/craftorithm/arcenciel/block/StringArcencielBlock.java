@@ -1,6 +1,6 @@
 package me.yufiria.craftorithm.arcenciel.block;
 
-import me.yufiria.craftorithm.arcenciel.keyword.IArcencielKeyword;
+import me.yufiria.craftorithm.arcenciel.keyword.IArcencielToken;
 import me.yufiria.craftorithm.arcenciel.obj.ArcencielSignal;
 import me.yufiria.craftorithm.arcenciel.obj.ReturnObj;
 import me.yufiria.craftorithm.arcenciel.ArcencielDispatcher;
@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class StringArcencielBlock implements IArcencielBlock<String> {
 
     private final String arcencielBlockBody;
-    private static final Map<String, IArcencielKeyword<?>> arcencielKeywordMap;
+    private static final Map<String, IArcencielToken<?>> arcencielKeywordMap;
 
     static {
         arcencielKeywordMap = new ConcurrentHashMap<>();
@@ -34,11 +34,11 @@ public class StringArcencielBlock implements IArcencielBlock<String> {
         if (scriptChain.size() < 1)
             return new ReturnObj<>(ArcencielSignal.CONTINUE, null);
         String keywordStr = scriptChain.get(0);
-        IArcencielKeyword<?> keyword = arcencielKeywordMap.get(keywordStr);
+        IArcencielToken<?> keyword = arcencielKeywordMap.get(keywordStr);
         if (keyword == null) {
             List<String> func = ArcencielDispatcher.INSTANCE.getFunc(keywordStr);
             if (func.size() < 1) {
-                LangUtil.sendMsg(player, "arcenciel.unknown_keyword", ContainerUtil.newHashMap("<keyword>", keywordStr));
+                LangUtil.sendMsg(player, "arcenciel.unknown_token", ContainerUtil.newHashMap("<token>", keywordStr));
                 return new ReturnObj<>(ArcencielSignal.CONTINUE);
             } else {
                 return ArcencielDispatcher.INSTANCE.dispatchArcencielFunc(player, func);
@@ -54,11 +54,11 @@ public class StringArcencielBlock implements IArcencielBlock<String> {
         return arcencielBlockBody;
     }
 
-    public static void regScriptKeyword(IArcencielKeyword<?> node) {
-        arcencielKeywordMap.put(node.getKeyword(), node);
+    public static void regScriptKeyword(IArcencielToken<?> node) {
+        arcencielKeywordMap.put(node.getTokenStr(), node);
     }
 
-    public static Map<String, IArcencielKeyword<?>> getArcencielKeywordMap() {
+    public static Map<String, IArcencielToken<?>> getArcencielKeywordMap() {
         return arcencielKeywordMap;
     }
 

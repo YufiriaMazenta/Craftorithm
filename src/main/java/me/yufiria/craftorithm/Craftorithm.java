@@ -19,6 +19,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.concurrent.Callable;
+
 public final class Craftorithm extends JavaPlugin implements Listener {
 
     private static Craftorithm INSTANCE;
@@ -65,7 +67,8 @@ public final class Craftorithm extends JavaPlugin implements Listener {
     }
 
     private void loadBStat() {
-        new Metrics(this, 15016);
+        Metrics metrics = new Metrics(this, 17821);
+        metrics.addCustomChart(new Metrics.SingleLineChart("recipes", () -> RecipeManager.getRecipeFileMap().keySet().size()));
     }
 
     private void regCommands() {

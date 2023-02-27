@@ -9,11 +9,11 @@ import java.util.List;
 
 import static me.yufiria.craftorithm.arcenciel.obj.ArcencielSignal.IF;
 
-public class KeywordAny extends AbstractArcencielKeyword<Boolean> {
+public class TokenAny extends AbstractArcencielToken<Boolean> {
 
-    public static final KeywordAny INSTANCE = new KeywordAny();
+    public static final TokenAny INSTANCE = new TokenAny();
 
-    protected KeywordAny() {
+    protected TokenAny() {
         super("any");
     }
 
