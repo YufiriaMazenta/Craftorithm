@@ -7,11 +7,11 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class KeywordTakePoints extends AbstractArcencielKeyword<Integer> {
+public class TokenTakePoints extends AbstractArcencielToken<Integer> {
 
-    public static final KeywordTakePoints INSTANCE = new KeywordTakePoints();
+    public static final TokenTakePoints INSTANCE = new TokenTakePoints();
 
-    protected KeywordTakePoints() {
+    protected TokenTakePoints() {
         super("take-points");
     }
 

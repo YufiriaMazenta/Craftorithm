@@ -44,23 +44,23 @@ public enum ArcencielDispatcher implements IArcencielDispatcher {
     }
 
     private void regDefScriptKeyword() {
-        StringArcencielBlock.regScriptKeyword(KeywordIf.INSTANCE);
-        StringArcencielBlock.regScriptKeyword(KeywordHasPerm.INSTANCE);
-        StringArcencielBlock.regScriptKeyword(KeywordRunCmd.INSTANCE);
-        StringArcencielBlock.regScriptKeyword(KeywordConsole.INSTANCE);
-        StringArcencielBlock.regScriptKeyword(KeywordReturn.INSTANCE);
-        StringArcencielBlock.regScriptKeyword(KeywordAll.INSTANCE);
-        StringArcencielBlock.regScriptKeyword(KeywordAny.INSTANCE);
-        StringArcencielBlock.regScriptKeyword(KeywordLevel.INSTANCE);
-        StringArcencielBlock.regScriptKeyword(KeywordTakeLevel.INSTANCE);
-        StringArcencielBlock.regScriptKeyword(KeywordPapi.INSTANCE);
+        StringArcencielBlock.regScriptKeyword(TokenIf.INSTANCE);
+        StringArcencielBlock.regScriptKeyword(TokenHasPerm.INSTANCE);
+        StringArcencielBlock.regScriptKeyword(TokenRunCmd.INSTANCE);
+        StringArcencielBlock.regScriptKeyword(TokenConsole.INSTANCE);
+        StringArcencielBlock.regScriptKeyword(TokenReturn.INSTANCE);
+        StringArcencielBlock.regScriptKeyword(TokenAll.INSTANCE);
+        StringArcencielBlock.regScriptKeyword(TokenAny.INSTANCE);
+        StringArcencielBlock.regScriptKeyword(TokenLevel.INSTANCE);
+        StringArcencielBlock.regScriptKeyword(TokenTakeLevel.INSTANCE);
+        StringArcencielBlock.regScriptKeyword(TokenPapi.INSTANCE);
         if (PluginHookUtil.isEconomyLoaded()) {
-            StringArcencielBlock.regScriptKeyword(KeywordMoney.INSTANCE);
-            StringArcencielBlock.regScriptKeyword(KeywordTakeMoney.INSTANCE);
+            StringArcencielBlock.regScriptKeyword(TokenMoney.INSTANCE);
+            StringArcencielBlock.regScriptKeyword(TokenTakeMoney.INSTANCE);
         }
         if (PluginHookUtil.isPlayerPointsLoaded()) {
-            StringArcencielBlock.regScriptKeyword(KeywordPoints.INSTANCE);
-            StringArcencielBlock.regScriptKeyword(KeywordTakePoints.INSTANCE);
+            StringArcencielBlock.regScriptKeyword(TokenPoints.INSTANCE);
+            StringArcencielBlock.regScriptKeyword(TokenTakePoints.INSTANCE);
         }
     }
 

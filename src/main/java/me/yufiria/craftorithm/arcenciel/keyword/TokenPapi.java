@@ -7,11 +7,11 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class KeywordPapi extends AbstractArcencielKeyword<Boolean> {
+public class TokenPapi extends AbstractArcencielToken<Boolean> {
 
-    public static final KeywordPapi INSTANCE = new KeywordPapi();
+    public static final TokenPapi INSTANCE = new TokenPapi();
 
-    protected KeywordPapi() {
+    protected TokenPapi() {
         super("papi");
     }
 

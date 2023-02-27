@@ -1,6 +1,9 @@
 package me.yufiria.craftorithm.listener;
 
 import me.yufiria.craftorithm.Craftorithm;
+import me.yufiria.craftorithm.CraftorithmAPI;
+import me.yufiria.craftorithm.arcenciel.ArcencielDispatcher;
+import me.yufiria.craftorithm.arcenciel.block.StringArcencielBlock;
 import me.yufiria.craftorithm.recipe.RecipeManager;
 import me.yufiria.craftorithm.util.LangUtil;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -34,17 +37,13 @@ public enum CraftHandler implements Listener {
             }
             Player player = ((Player) human);
 
-            List<String> conditions = config.getStringList("conditions");
-//            try {
-//                if (!Craftorithm.getInstance().getConditionDispatcher().dispatchConditions(conditions, player)) {
-//                    event.getInventory().setResult(null);
-//                    break;
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                event.getInventory().setResult(null);
-//                break;
-//            }
+            String condition = config.getString("condition", "true");
+            condition = "if " + condition;
+            boolean result = (boolean) ArcencielDispatcher.INSTANCE.dispatchArcencielBlock(player, condition).getObj();
+            if (!result) {
+                event.getInventory().setResult(null);
+                break;
+            }
         }
     }
 
@@ -64,7 +63,7 @@ public enum CraftHandler implements Listener {
             return;
         Player player = (Player) entity;
         List<String> actions = config.getStringList("actions");
-//        Craftorithm.getInstance().getActionDispatcher().dispatchActions(actions, player);
+        CraftorithmAPI.INSTANCE.getArcencielDispatcher().dispatchArcencielFunc(player, actions);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

@@ -8,11 +8,11 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class KeywordConsole extends AbstractArcencielKeyword<Boolean> {
+public class TokenConsole extends AbstractArcencielToken<Boolean> {
 
-    public static final KeywordConsole INSTANCE = new KeywordConsole();
+    public static final TokenConsole INSTANCE = new TokenConsole();
 
-    protected KeywordConsole() {
+    protected TokenConsole() {
         super("console");
     }
 

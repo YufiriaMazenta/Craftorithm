@@ -7,11 +7,11 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class KeywordTakeMoney extends AbstractArcencielKeyword<Double> {
+public class TokenTakeMoney extends AbstractArcencielToken<Double> {
 
-    public static final KeywordTakeMoney INSTANCE = new KeywordTakeMoney();
+    public static final TokenTakeMoney INSTANCE = new TokenTakeMoney();
 
-    protected KeywordTakeMoney() {
+    protected TokenTakeMoney() {
         super("take-money");
     }
 

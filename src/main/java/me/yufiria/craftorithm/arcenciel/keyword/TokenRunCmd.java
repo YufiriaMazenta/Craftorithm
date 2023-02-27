@@ -8,11 +8,11 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class KeywordRunCmd extends AbstractArcencielKeyword<Boolean> {
+public class TokenRunCmd extends AbstractArcencielToken<Boolean> {
 
-    public static final KeywordRunCmd INSTANCE = new KeywordRunCmd();
+    public static final TokenRunCmd INSTANCE = new TokenRunCmd();
 
-    protected KeywordRunCmd() {
+    protected TokenRunCmd() {
         super("command");
     }
 
