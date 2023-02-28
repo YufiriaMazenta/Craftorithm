@@ -2,6 +2,7 @@ package me.yufiria.craftorithm.recipe;
 
 import me.yufiria.craftorithm.Craftorithm;
 import me.yufiria.craftorithm.item.ItemManager;
+import me.yufiria.craftorithm.recipe.builder.*;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
@@ -10,9 +11,9 @@ import org.bukkit.inventory.*;
 
 import java.util.*;
 
-public class RecipeBuilder {
+public class RecipeFactory {
 
-    public static Recipe buildShapedRecipe(YamlConfiguration config, String key) {
+    public static Recipe shapedRecipe(YamlConfiguration config, String key) {
         Map<Character, RecipeChoice> recipeChoiceMap = getShapedRecipeChoiceMap(config.getConfigurationSection("source"));
         ItemStack result = getResultItem(config);
         NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.getInstance(), key);
@@ -23,10 +24,10 @@ public class RecipeBuilder {
         }
         String[] shape = new String[shapeStrList.size()];
         shape = shapeStrList.toArray(shape);
-        return buildShapedRecipe(namespacedKey, result, shape, recipeChoiceMap);
+        return ShapedRecipeBuilder.builder().key(namespacedKey).result(result).shape(shape).recipeChoiceMap(recipeChoiceMap).build();
     }
 
-    public static Recipe[] buildMultipleShapedRecipe(YamlConfiguration config, String key) {
+    public static Recipe[] multipleShapedRecipe(YamlConfiguration config, String key) {
         Map<Character, RecipeChoice> recipeChoiceMap = getShapedRecipeChoiceMap(config.getConfigurationSection("source"));
         ItemStack result = getResultItem(config);
         List<?> shapeList = config.getList("shape", new ArrayList<>());
@@ -40,13 +41,13 @@ public class RecipeBuilder {
             }
             String[] shape = new String[shapeStrList.size()];
             shape = shapeStrList.toArray(shape);
-            shapedRecipes[i] = buildShapedRecipe(namespacedKey, result, shape, recipeChoiceMap);
+            shapedRecipes[i] = ShapedRecipeBuilder.builder().key(namespacedKey).result(result).shape(shape).recipeChoiceMap(recipeChoiceMap).build();
             shapedRecipes[i].setGroup(key);
         }
         return shapedRecipes;
     }
 
-    public static Recipe buildShapelessRecipe(YamlConfiguration config, String key) {
+    public static Recipe shapelessRecipe(YamlConfiguration config, String key) {
         NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.getInstance(), key);
         ItemStack result = getResultItem(config);
         List<String> itemStrList = config.getStringList("source");
@@ -54,10 +55,10 @@ public class RecipeBuilder {
         for (String itemStr : itemStrList) {
             recipeChoiceList.add(getRecipeChoice(itemStr));
         }
-        return buildShapelessRecipe(namespacedKey, result, recipeChoiceList);
+        return ShapelessRecipeBuilder.builder().key(namespacedKey).result(result).choiceList(recipeChoiceList).build();
     }
 
-    public static Recipe[] buildMultipleShapelessRecipe(YamlConfiguration config, String key) {
+    public static Recipe[] multipleShapelessRecipe(YamlConfiguration config, String key) {
         ItemStack result = getResultItem(config);
         List<?> itemsList = config.getList("source", new ArrayList<>());
         ShapelessRecipe[] shapelessRecipes = new ShapelessRecipe[itemsList.size()];
@@ -70,13 +71,13 @@ public class RecipeBuilder {
             for (String itemStr : itemStrList) {
                 choiceList.add(getRecipeChoice(itemStr));
             }
-            shapelessRecipes[i] = buildShapelessRecipe(namespacedKey, result, choiceList);
+            shapelessRecipes[i] = ShapelessRecipeBuilder.builder().key(namespacedKey).result(result).choiceList(choiceList).build();
             shapelessRecipes[i].setGroup(key);
         }
         return shapelessRecipes;
     }
 
-    public static Recipe buildCookingRecipe(YamlConfiguration config, String key) {
+    public static Recipe cookingRecipe(YamlConfiguration config, String key) {
         NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.getInstance(), key);
         ItemStack result = getResultItem(config);
         String choiceStr = config.getString("source.item", "");
@@ -84,10 +85,10 @@ public class RecipeBuilder {
         RecipeChoice source = getRecipeChoice(choiceStr);
         int exp = config.getInt("exp", 0);
         int time = config.getInt("time", 200);
-        return buildCookingRecipe(namespacedKey, result, source, exp, time, cookingBlock);
+        return CookingRecipeBuilder.builder().key(namespacedKey).result(result).block(cookingBlock).source(source).exp(exp).time(time).build();
     }
 
-    public static Recipe[] buildMultipleCookingRecipe(YamlConfiguration config, String key) {
+    public static Recipe[] multipleCookingRecipe(YamlConfiguration config, String key) {
         ItemStack result = getResultItem(config);
         int globalExp = config.getInt("exp", 0);
         int globalTime = config.getInt("time", 0);
@@ -102,21 +103,21 @@ public class RecipeBuilder {
             String cookingBlock = (String) map.get("block");
             int exp = map.containsKey("exp") ? (Integer) map.get("exp") : globalExp;
             int time = map.containsKey("time") ? (Integer) map.get("time") : globalTime;
-            cookingRecipes[i] = buildCookingRecipe(namespacedKey, result, source, exp, time, cookingBlock);
+            cookingRecipes[i] = CookingRecipeBuilder.builder().key(namespacedKey).result(result).block(cookingBlock).source(source).exp(exp).time(time).build();
             cookingRecipes[i].setGroup(key);
         }
         return cookingRecipes;
     }
 
-    public static Recipe buildSmithingRecipe(YamlConfiguration config, String key) {
+    public static Recipe smithingRecipe(YamlConfiguration config, String key) {
         NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.getInstance(), key);
         ItemStack result = getResultItem(config);
         RecipeChoice base = getRecipeChoice(config.getString("source.base", ""));
         RecipeChoice addition = getRecipeChoice(config.getString("source.addition", ""));
-        return new SmithingRecipe(namespacedKey, result, base, addition);
+        return SmithingRecipeBuilder.builder().key(namespacedKey).result(result).base(base).addition(addition).build();
     }
 
-    public static Recipe[] buildMultipleSmithingRecipe(YamlConfiguration config, String key) {
+    public static Recipe[] multipleSmithingRecipe(YamlConfiguration config, String key) {
         ItemStack result = getResultItem(config);
         List<Map<?, ?>> sourceList = config.getMapList("source");
         SmithingRecipe[] smithingRecipes = new SmithingRecipe[sourceList.size()];
@@ -126,12 +127,12 @@ public class RecipeBuilder {
             NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.getInstance(), fullKey);
             RecipeChoice base = getRecipeChoice((String) map.get("base"));
             RecipeChoice addition = getRecipeChoice((String) map.get("addition"));
-            smithingRecipes[i] = buildSmithingRecipe(namespacedKey, result, base, addition);
+            smithingRecipes[i] = SmithingRecipeBuilder.builder().key(namespacedKey).result(result).base(base).addition(addition).build();
         }
         return smithingRecipes;
     }
 
-    public static Recipe buildStoneCuttingRecipe(YamlConfiguration config, String key) {
+    public static Recipe stoneCuttingRecipe(YamlConfiguration config, String key) {
         RecipeChoice choice = getRecipeChoice(config.getString("source", ""));
         ItemStack result;
         if (config.isList("result")) {
@@ -141,16 +142,16 @@ public class RecipeBuilder {
                 ItemStack result1 = ItemManager.matchCraftorithmItem(resultList.get(i));
                 String fullKey = key + "." + i;
                 NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.getInstance(), fullKey);
-                RecipeManager.regRecipe(namespacedKey, buildStoneCuttingRecipe(namespacedKey, result1, choice), config);
+                RecipeManager.regRecipe(namespacedKey, StoneCuttingRecipeBuilder.builder().key(namespacedKey).result(result1).source(choice).build(), config);
             }
         } else {
             result = getResultItem(config);
         }
         NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.getInstance(), key);
-        return buildStoneCuttingRecipe(namespacedKey, result, choice);
+        return StoneCuttingRecipeBuilder.builder().key(namespacedKey).result(result).source(choice).build();
     }
 
-    public static Recipe[] buildMultipleStoneCuttingRecipe(YamlConfiguration config, String key) {
+    public static Recipe[] multipleStoneCuttingRecipe(YamlConfiguration config, String key) {
         boolean resultIsList = config.isList("result");
         if (resultIsList) {
             List<String> resultList = config.getStringList("result");
@@ -163,7 +164,7 @@ public class RecipeBuilder {
                     NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.getInstance(), fullKey);
                     RecipeChoice source = getRecipeChoice(sourceList.get(j));
                     int index = i * sourceList.size() + j;
-                    stonecuttingRecipes[index] = buildStoneCuttingRecipe(namespacedKey, result, source);
+                    stonecuttingRecipes[index] = StoneCuttingRecipeBuilder.builder().key(namespacedKey).result(result).source(source).build();
                     stonecuttingRecipes[index].setGroup(key);
                 }
             }
@@ -176,64 +177,11 @@ public class RecipeBuilder {
                 String fullKey = key + "." + i;
                 NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.getInstance(), fullKey);
                 RecipeChoice source = getRecipeChoice(sourceList.get(i));
-                stonecuttingRecipes[i] = buildStoneCuttingRecipe(namespacedKey, result, source);
+                stonecuttingRecipes[i] = StoneCuttingRecipeBuilder.builder().key(namespacedKey).result(result).source(source).build();
                 stonecuttingRecipes[i].setGroup(key);
             }
             return stonecuttingRecipes;
         }
-    }
-
-    private static ShapedRecipe buildShapedRecipe(NamespacedKey key, ItemStack result, String[] shape, Map<Character, RecipeChoice> recipeChoiceMap) {
-        ShapedRecipe shapedRecipe = new ShapedRecipe(key, result);
-        shapedRecipe.shape(shape);
-        Set<Character> shapeStrChars = new HashSet<>();
-        for (String s : shape) {
-            for (char c : s.toCharArray()) {
-                shapeStrChars.add(c);
-            }
-        }
-        Set<Character> keySet = new HashSet<>(recipeChoiceMap.keySet());
-        keySet.removeIf((character -> !shapeStrChars.contains(character)));
-        for (Character ingredientKey : keySet) {
-            shapedRecipe.setIngredient(ingredientKey, recipeChoiceMap.get(ingredientKey));
-        }
-        return shapedRecipe;
-    }
-
-    private static ShapelessRecipe buildShapelessRecipe(NamespacedKey key, ItemStack result, List<RecipeChoice> choiceList) {
-        ShapelessRecipe shapelessRecipe = new ShapelessRecipe(key, result);
-        for (RecipeChoice choice : choiceList) {
-            shapelessRecipe.addIngredient(choice);
-        }
-        return shapelessRecipe;
-    }
-
-    private static CookingRecipe<?> buildCookingRecipe(NamespacedKey key, ItemStack result, RecipeChoice choice, int exp, int time, String block) {
-        CookingRecipe<?> cookingRecipe;
-        switch (block) {
-            case "furnace":
-            default:
-                cookingRecipe = new FurnaceRecipe(key, result, choice, exp, time);
-                break;
-            case "smoker":
-                cookingRecipe = new SmokingRecipe(key, result, choice, exp, time);
-                break;
-            case "blast":
-                cookingRecipe = new BlastingRecipe(key, result, choice, exp, time);
-                break;
-            case "campfire":
-                cookingRecipe = new CampfireRecipe(key, result, choice, exp, time);
-                break;
-        }
-        return cookingRecipe;
-    }
-
-    private static SmithingRecipe buildSmithingRecipe(NamespacedKey key, ItemStack result, RecipeChoice base, RecipeChoice addition) {
-        return new SmithingRecipe(key, result, base, addition);
-    }
-
-    private static StonecuttingRecipe buildStoneCuttingRecipe(NamespacedKey key, ItemStack result, RecipeChoice source) {
-        return new StonecuttingRecipe(key, result, source);
     }
 
     private static Map<Character, RecipeChoice> getShapedRecipeChoiceMap(ConfigurationSection section) {

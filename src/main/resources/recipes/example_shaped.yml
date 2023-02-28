@@ -22,7 +22,7 @@ source:
 unlock: true
 
 #可选的配置项：
-condition: 'if all perm craftorithm.perm.example && level 100'
+condition: 'if all perm craftorithm.perm.example && level >= 100'
 #配方合成之后执行的动作
 actions:
   - 'example'

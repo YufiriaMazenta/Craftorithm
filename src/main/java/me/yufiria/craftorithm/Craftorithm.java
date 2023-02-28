@@ -19,8 +19,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.concurrent.Callable;
-
 public final class Craftorithm extends JavaPlugin implements Listener {
 
     private static Craftorithm INSTANCE;

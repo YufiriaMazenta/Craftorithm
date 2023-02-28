@@ -1,6 +1,7 @@
-package me.yufiria.craftorithm.arcenciel.keyword;
+package me.yufiria.craftorithm.arcenciel.token;
 
 import me.yufiria.craftorithm.arcenciel.obj.ReturnObj;
+import me.yufiria.craftorithm.util.ScriptValueUtil;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -15,6 +16,11 @@ public class TokenLevel extends AbstractArcencielToken<Boolean> {
 
     @Override
     public ReturnObj<Boolean> exec(Player player, List<String> args) {
-        return new ReturnObj<>(player.getLevel() >= Integer.parseInt(args.get(0)));
+        boolean result;
+        if (args.size() < 2)
+            result = player.getLevel() >= Integer.parseInt(args.get(0));
+        else
+            result = ScriptValueUtil.compare(player.getLevel(), Integer.parseInt(args.get(1)), args.get(0));
+        return new ReturnObj<>(result);
     }
 }

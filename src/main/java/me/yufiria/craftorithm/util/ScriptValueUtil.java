@@ -14,6 +14,7 @@ public class ScriptValueUtil {
             case "<=":
                 return var1 <= var2;
             case "=":
+            case "==":
                 return var1 == var2;
             case "!=":
                 return var1 != var2;

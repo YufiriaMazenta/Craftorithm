@@ -2,6 +2,7 @@ package me.yufiria.craftorithm;
 
 import me.yufiria.craftorithm.arcenciel.ArcencielDispatcher;
 import me.yufiria.craftorithm.item.ItemManager;
+import me.yufiria.craftorithm.recipe.builder.AbstractRecipeBuilder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.plugin.Plugin;
