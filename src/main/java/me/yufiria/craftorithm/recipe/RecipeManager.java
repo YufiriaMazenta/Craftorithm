@@ -34,20 +34,20 @@ public class RecipeManager {
 
     static {
         recipeBuilderMap = new HashMap<>();
-        recipeBuilderMap.put(RecipeType.SHAPED, RecipeBuilder::buildShapedRecipe);
-        recipeBuilderMap.put(RecipeType.SHAPELESS, RecipeBuilder::buildShapelessRecipe);
-        recipeBuilderMap.put(RecipeType.COOKING, RecipeBuilder::buildCookingRecipe);
-        recipeBuilderMap.put(RecipeType.SMITHING, RecipeBuilder::buildSmithingRecipe);
-        recipeBuilderMap.put(RecipeType.STONE_CUTTING, RecipeBuilder::buildStoneCuttingRecipe);
-        recipeBuilderMap.put(RecipeType.RANDOM_COOKING, RecipeBuilder::buildCookingRecipe);
+        recipeBuilderMap.put(RecipeType.SHAPED, RecipeFactory::shapedRecipe);
+        recipeBuilderMap.put(RecipeType.SHAPELESS, RecipeFactory::shapelessRecipe);
+        recipeBuilderMap.put(RecipeType.COOKING, RecipeFactory::cookingRecipe);
+        recipeBuilderMap.put(RecipeType.SMITHING, RecipeFactory::smithingRecipe);
+        recipeBuilderMap.put(RecipeType.STONE_CUTTING, RecipeFactory::stoneCuttingRecipe);
+        recipeBuilderMap.put(RecipeType.RANDOM_COOKING, RecipeFactory::cookingRecipe);
 
         multipleRecipeBuilderMap = new HashMap<>();
-        multipleRecipeBuilderMap.put(RecipeType.SHAPED, RecipeBuilder::buildMultipleShapedRecipe);
-        multipleRecipeBuilderMap.put(RecipeType.SHAPELESS, RecipeBuilder::buildMultipleShapelessRecipe);
-        multipleRecipeBuilderMap.put(RecipeType.COOKING, RecipeBuilder::buildMultipleCookingRecipe);
-        multipleRecipeBuilderMap.put(RecipeType.SMITHING, RecipeBuilder::buildMultipleSmithingRecipe);
-        multipleRecipeBuilderMap.put(RecipeType.STONE_CUTTING, RecipeBuilder::buildMultipleStoneCuttingRecipe);
-        multipleRecipeBuilderMap.put(RecipeType.RANDOM_COOKING, RecipeBuilder::buildMultipleCookingRecipe);
+        multipleRecipeBuilderMap.put(RecipeType.SHAPED, RecipeFactory::multipleShapedRecipe);
+        multipleRecipeBuilderMap.put(RecipeType.SHAPELESS, RecipeFactory::multipleShapelessRecipe);
+        multipleRecipeBuilderMap.put(RecipeType.COOKING, RecipeFactory::multipleCookingRecipe);
+        multipleRecipeBuilderMap.put(RecipeType.SMITHING, RecipeFactory::multipleSmithingRecipe);
+        multipleRecipeBuilderMap.put(RecipeType.STONE_CUTTING, RecipeFactory::multipleStoneCuttingRecipe);
+        multipleRecipeBuilderMap.put(RecipeType.RANDOM_COOKING, RecipeFactory::multipleCookingRecipe);
 
         recipeUnlockMap = new ConcurrentHashMap<>();
     }

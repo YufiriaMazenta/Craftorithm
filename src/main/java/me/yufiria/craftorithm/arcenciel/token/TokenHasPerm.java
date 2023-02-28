@@ -1,4 +1,4 @@
-package me.yufiria.craftorithm.arcenciel.keyword;
+package me.yufiria.craftorithm.arcenciel.token;
 
 import me.yufiria.craftorithm.arcenciel.obj.ReturnObj;
 import me.yufiria.craftorithm.util.LangUtil;

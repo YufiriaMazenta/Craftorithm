@@ -2,7 +2,7 @@ package me.yufiria.craftorithm.arcenciel;
 
 import me.yufiria.craftorithm.arcenciel.block.ListArcencielBlock;
 import me.yufiria.craftorithm.arcenciel.block.StringArcencielBlock;
-import me.yufiria.craftorithm.arcenciel.keyword.*;
+import me.yufiria.craftorithm.arcenciel.token.*;
 import me.yufiria.craftorithm.arcenciel.obj.ArcencielSignal;
 import me.yufiria.craftorithm.arcenciel.obj.ReturnObj;
 import me.yufiria.craftorithm.config.YamlFileWrapper;

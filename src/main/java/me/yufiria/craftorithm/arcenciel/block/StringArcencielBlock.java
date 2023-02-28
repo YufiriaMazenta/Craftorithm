@@ -1,6 +1,6 @@
 package me.yufiria.craftorithm.arcenciel.block;
 
-import me.yufiria.craftorithm.arcenciel.keyword.IArcencielToken;
+import me.yufiria.craftorithm.arcenciel.token.IArcencielToken;
 import me.yufiria.craftorithm.arcenciel.obj.ArcencielSignal;
 import me.yufiria.craftorithm.arcenciel.obj.ReturnObj;
 import me.yufiria.craftorithm.arcenciel.ArcencielDispatcher;
