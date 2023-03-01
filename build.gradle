@@ -46,7 +46,7 @@ dependencies {
 }
 
 group = 'me.yufiria'
-version = '1.0.0-pre3'
+version = '1.0.0-pre4'
 def pluginVersion = version + "-" + new SimpleDateFormat("yyyyMMdd").format(System.currentTimeMillis())
 archivesBaseName = 'Craftorithm'
 java.sourceCompatibility = JavaVersion.VERSION_1_8
