@@ -4,21 +4,22 @@ import me.yufiria.craftorithm.Craftorithm;
 import me.yufiria.craftorithm.CraftorithmAPI;
 import me.yufiria.craftorithm.cmd.subcmd.RemoveCommand;
 import me.yufiria.craftorithm.config.YamlFileWrapper;
+import me.yufiria.craftorithm.recipe.custom.AnvilRecipe;
+import me.yufiria.craftorithm.recipe.custom.CustomRecipe;
 import me.yufiria.craftorithm.util.LangUtil;
 import me.yufiria.craftorithm.util.ContainerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiFunction;
 
 import static me.yufiria.craftorithm.util.FileUtil.getAllFiles;
@@ -31,6 +32,7 @@ public class RecipeManager {
     private static final Map<NamespacedKey, YamlConfiguration> recipeKeyConfigMap = new ConcurrentHashMap<>();
     private static final File recipeFileFolder = new File(Craftorithm.getInstance().getDataFolder().getPath(), "recipes");
     private static final Map<NamespacedKey, Boolean> recipeUnlockMap;
+    private static final Map<NamespacedKey, AnvilRecipe> anvilRecipeMap;
 
     static {
         recipeBuilderMap = new HashMap<>();
@@ -40,6 +42,7 @@ public class RecipeManager {
         recipeBuilderMap.put(RecipeType.SMITHING, RecipeFactory::smithingRecipe);
         recipeBuilderMap.put(RecipeType.STONE_CUTTING, RecipeFactory::stoneCuttingRecipe);
         recipeBuilderMap.put(RecipeType.RANDOM_COOKING, RecipeFactory::cookingRecipe);
+        recipeBuilderMap.put(RecipeType.ANVIL, RecipeFactory::anvilRecipe);
 
         multipleRecipeBuilderMap = new HashMap<>();
         multipleRecipeBuilderMap.put(RecipeType.SHAPED, RecipeFactory::multipleShapedRecipe);
@@ -50,6 +53,8 @@ public class RecipeManager {
         multipleRecipeBuilderMap.put(RecipeType.RANDOM_COOKING, RecipeFactory::multipleCookingRecipe);
 
         recipeUnlockMap = new ConcurrentHashMap<>();
+
+        anvilRecipeMap = new ConcurrentHashMap<>();
     }
 
     public static void loadRecipeManager() {
@@ -102,14 +107,22 @@ public class RecipeManager {
     }
 
     public static void regRecipe(NamespacedKey key, Recipe recipe, YamlConfiguration config) {
-        Bukkit.addRecipe(recipe);
-        recipeKeyConfigMap.put(key, config);
-        boolean defUnlockCondition = Craftorithm.getInstance().getConfig().getBoolean("all_recipe_unlocked", false);
-        if (config.contains("unlock")) {
-            recipeUnlockMap.put(key, config.getBoolean("unlock", defUnlockCondition));
+        if (recipe instanceof CustomRecipe) {
+            switch (((CustomRecipe) recipe).getRecipeType()) {
+                case ANVIL:
+                    anvilRecipeMap.put(key, (AnvilRecipe) recipe);
+                    break;
+            }
         } else {
-            recipeUnlockMap.put(key, defUnlockCondition);
+            Bukkit.addRecipe(recipe);
+            boolean defUnlockCondition = Craftorithm.getInstance().getConfig().getBoolean("all_recipe_unlocked", false);
+            if (config.contains("unlock")) {
+                recipeUnlockMap.put(key, config.getBoolean("unlock", defUnlockCondition));
+            } else {
+                recipeUnlockMap.put(key, defUnlockCondition);
+            }
         }
+        recipeKeyConfigMap.put(key, config);
     }
 
     public static Recipe newRecipe(YamlConfiguration config, String key) {
@@ -163,6 +176,9 @@ public class RecipeManager {
     public static NamespacedKey getRecipeKey(Recipe recipe) {
         if (recipe == null)
             return null;
+        if (recipe instanceof CustomRecipe) {
+            return ((CustomRecipe) recipe).getKey();
+        }
         try {
             Class<?> recipeClass = Class.forName(recipe.getClass().getName());
             Method getKeyMethod = recipeClass.getMethod("getKey");
@@ -179,6 +195,20 @@ public class RecipeManager {
 
     public static Map<String, YamlFileWrapper> getRecipeFileMap() {
         return recipeFileMap;
+    }
+
+    public static Map<NamespacedKey, AnvilRecipe> getAnvilRecipeMap() {return anvilRecipeMap;}
+
+    public static AnvilRecipe matchAnvilRecipe(ItemStack base, ItemStack addition) {
+        if (base == null || addition == null)
+            return null;
+        AtomicReference<AnvilRecipe> anvilRecipe = new AtomicReference<>();
+        anvilRecipeMap.forEach((key, recipe) -> {
+            if (recipe.checkSource(base, addition)) {
+                anvilRecipe.set(recipe);
+            }
+        });
+        return anvilRecipe.get();
     }
 
     private static void saveDefConfigFile(List<File> allFiles) {

@@ -1,5 +1,6 @@
-package me.yufiria.craftorithm.recipe.builder;
+package me.yufiria.craftorithm.recipe.builder.vanilla;
 
+import me.yufiria.craftorithm.recipe.builder.AbstractRecipeBuilder;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.*;
 

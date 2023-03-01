@@ -1,0 +1,6 @@
+type: anvil
+result: bedrock
+cost_level: 10
+source:
+  base: 'command_block'
+  addition: 'command_block'

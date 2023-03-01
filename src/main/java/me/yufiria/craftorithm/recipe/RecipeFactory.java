@@ -2,7 +2,9 @@ package me.yufiria.craftorithm.recipe;
 
 import me.yufiria.craftorithm.Craftorithm;
 import me.yufiria.craftorithm.item.ItemManager;
-import me.yufiria.craftorithm.recipe.builder.*;
+import me.yufiria.craftorithm.recipe.builder.custom.AnvilRecipeBuilder;
+import me.yufiria.craftorithm.recipe.builder.vanilla.*;
+import me.yufiria.craftorithm.recipe.custom.AnvilRecipeItem;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
@@ -182,6 +184,19 @@ public class RecipeFactory {
             }
             return stonecuttingRecipes;
         }
+    }
+
+    public static Recipe anvilRecipe(YamlConfiguration config, String key) {
+        ItemStack result = getResultItem(config);
+        String baseStr = config.getString("source.base", "");
+        ItemStack baseItem = ItemManager.matchCraftorithmItem(baseStr);
+        AnvilRecipeItem base = new AnvilRecipeItem(baseItem, baseStr.contains(":"));
+        String additionStr = config.getString("source.addition", "");
+        ItemStack additionItem = ItemManager.matchCraftorithmItem(additionStr);
+        AnvilRecipeItem addition = new AnvilRecipeItem(additionItem, additionStr.contains(":"));
+        NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.getInstance(), key);
+        int costLevel = config.getInt("cost_level", 0);
+        return AnvilRecipeBuilder.builder().key(namespacedKey).result(result).base(base).addition(addition).costLevel(costLevel).build();
     }
 
     private static Map<Character, RecipeChoice> getShapedRecipeChoiceMap(ConfigurationSection section) {
