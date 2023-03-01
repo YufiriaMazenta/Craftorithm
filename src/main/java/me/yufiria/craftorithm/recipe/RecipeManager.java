@@ -218,12 +218,14 @@ public class RecipeManager {
         Craftorithm.getInstance().saveResource("recipes/example_smithing.yml", false);
         Craftorithm.getInstance().saveResource("recipes/example_stone_cutting.yml", false);
         Craftorithm.getInstance().saveResource("recipes/example_random_cooking.yml", false);
+        Craftorithm.getInstance().saveResource("recipes/example_anvil.yml", false);
         allFiles.add(new File(recipeFileFolder, "example_shaped.yml"));
         allFiles.add(new File(recipeFileFolder, "example_shapeless.yml"));
         allFiles.add(new File(recipeFileFolder, "example_cooking.yml"));
         allFiles.add(new File(recipeFileFolder, "example_smithing.yml"));
         allFiles.add(new File(recipeFileFolder, "example_stone_cutting.yml"));
         allFiles.add(new File(recipeFileFolder, "example_random_cooking.yml"));
+        allFiles.add(new File(recipeFileFolder, "example_anvil.yml"));
     }
 
 }
