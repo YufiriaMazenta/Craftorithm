@@ -6,5 +6,6 @@ public enum RecipeType {
     COOKING,
     SMITHING,
     STONE_CUTTING,
-    RANDOM_COOKING
+    RANDOM_COOKING,
+    ANVIL
 }

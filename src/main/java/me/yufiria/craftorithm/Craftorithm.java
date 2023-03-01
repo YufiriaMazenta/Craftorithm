@@ -5,10 +5,7 @@ import me.yufiria.craftorithm.bstat.Metrics;
 import me.yufiria.craftorithm.cmd.PluginCommand;
 import me.yufiria.craftorithm.config.ConfigUpdater;
 import me.yufiria.craftorithm.item.ItemManager;
-import me.yufiria.craftorithm.listener.CraftHandler;
-import me.yufiria.craftorithm.listener.FurnaceSmeltHandler;
-import me.yufiria.craftorithm.listener.RecipeUnlockHandler;
-import me.yufiria.craftorithm.listener.SmithingHandler;
+import me.yufiria.craftorithm.listener.*;
 import me.yufiria.craftorithm.recipe.RecipeManager;
 import me.yufiria.craftorithm.util.LangUtil;
 import me.yufiria.craftorithm.util.PluginHookUtil;
@@ -78,6 +75,7 @@ public final class Craftorithm extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(CraftHandler.INSTANCE, this);
         Bukkit.getPluginManager().registerEvents(this, this);
         Bukkit.getPluginManager().registerEvents(RecipeUnlockHandler.INSTANCE, this);
+        Bukkit.getPluginManager().registerEvents(AnvilRecipeHandler.INSTANCE, this);
         if (getVanillaVersion() >= 14)
             Bukkit.getPluginManager().registerEvents(SmithingHandler.INSTANCE, this);
         if (getVanillaVersion() >= 18)
