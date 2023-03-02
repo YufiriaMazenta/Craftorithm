@@ -22,20 +22,13 @@ public enum SmithingHandler implements Listener {
         YamlConfiguration config = RecipeManager.getRecipeConfig(event.getInventory().getRecipe());
         if (config == null)
             return;
-        for (HumanEntity human : event.getViewers()) {
-            if (!(human instanceof Player)) {
-                event.setResult(null);
-                break;
-            }
 
-            Player player = ((Player) human);
-            String condition = config.getString("condition", "true");
-            condition = "if " + condition;
-            boolean result = (boolean) ArcencielDispatcher.INSTANCE.dispatchArcencielBlock(player, condition).getObj();
-            if (!result) {
-                event.getInventory().setResult(null);
-                break;
-            }
+        Player player = (Player) event.getView().getPlayer();
+        String condition = config.getString("condition", "true");
+        condition = "if " + condition;
+        boolean result = (boolean) ArcencielDispatcher.INSTANCE.dispatchArcencielBlock(player, condition).getObj();
+        if (!result) {
+            event.getInventory().setResult(null);
         }
     }
 

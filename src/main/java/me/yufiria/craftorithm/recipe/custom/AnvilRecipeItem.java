@@ -8,10 +8,12 @@ public class AnvilRecipeItem {
 
     private ItemStack item;
     private Boolean checkMeta;
+    private int cost;
 
     public AnvilRecipeItem(ItemStack item, Boolean checkMeta) {
         this.item = item;
         this.checkMeta = checkMeta;
+        this.cost = item.getAmount();
     }
 
     @Override
@@ -36,7 +38,7 @@ public class AnvilRecipeItem {
 
     public boolean check(ItemStack otherItem) {
         if (checkMeta) {
-            return this.item.isSimilar(otherItem);
+            return this.item.isSimilar(otherItem) && otherItem.getAmount() >= this.item.getAmount();
         }
         return this.item.getType().equals(otherItem.getType());
     }
@@ -61,4 +63,11 @@ public class AnvilRecipeItem {
         return item;
     }
 
+    public int getCost() {
+        return cost;
+    }
+
+    public void setCost(int cost) {
+        this.cost = cost;
+    }
 }

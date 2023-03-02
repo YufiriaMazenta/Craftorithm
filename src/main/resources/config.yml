@@ -9,5 +9,5 @@ lore_cannot_craft: '&c不能参与合成'
 #是否将全部由插件定义的原版配方都为玩家在配方书中解锁，默认为true
 #也可以在每个配方的配置文件里定义是否解锁，配方配置文件中的优先级高于此处的优先级
 all_recipe_unlocked: false
-#是否启用铁砧配方
+#是否启用插件铁砧配方
 enable_anvil_recipe: true
