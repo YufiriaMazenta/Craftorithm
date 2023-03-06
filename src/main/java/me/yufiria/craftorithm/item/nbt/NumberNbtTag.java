@@ -78,32 +78,32 @@ public class NumberNbtTag implements IPluginNbtTag<Number> {
         this.numberType = numberType;
     }
 
-    public NumberNbtTag(int value, int flag) {
+    public NumberNbtTag(int value) {
         this.value = value;
         this.numberType = NumberType.INT;
     }
 
-    public NumberNbtTag(byte value, int flag) {
+    public NumberNbtTag(byte value) {
         this.value = value;
         this.numberType = NumberType.BYTE;
     }
 
-    public NumberNbtTag(short value, int flag) {
+    public NumberNbtTag(short value) {
         this.value = value;
         this.numberType = NumberType.SHORT;
     }
 
-    public NumberNbtTag(long value, int flag) {
+    public NumberNbtTag(long value) {
         this.value = value;
         this.numberType = NumberType.LONG;
     }
 
-    public NumberNbtTag(float value, int flag) {
+    public NumberNbtTag(float value) {
         this.value = value;
         this.numberType = NumberType.FLOAT;
     }
 
-    public NumberNbtTag(double value, int flag) {
+    public NumberNbtTag(double value) {
         this.value = value;
         this.numberType = NumberType.DOUBLE;
     }

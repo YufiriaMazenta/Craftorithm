@@ -1,11 +1,9 @@
 package me.yufiria.craftorithm.listener;
 
-import me.yufiria.craftorithm.Craftorithm;
 import me.yufiria.craftorithm.CraftorithmAPI;
 import me.yufiria.craftorithm.arcenciel.ArcencielDispatcher;
-import me.yufiria.craftorithm.arcenciel.block.StringArcencielBlock;
 import me.yufiria.craftorithm.recipe.RecipeManager;
-import me.yufiria.craftorithm.util.LangUtil;
+import me.yufiria.craftorithm.util.ItemUtil;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -15,7 +13,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
@@ -62,29 +59,9 @@ public enum CraftHandler implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void checkCannotCraftLore(PrepareItemCraftEvent event) {
         ItemStack[] items = event.getInventory().getMatrix();
-        boolean containsLore = false;
-        for (ItemStack item : items) {
-            if (item == null)
-                continue;
-            ItemMeta meta = item.getItemMeta();
-            if (meta == null)
-                return;
-            List<String> lore = item.getItemMeta().getLore();
-            if (lore == null)
-                return;
-            String cannotCraftLoreStr = LangUtil.color(Craftorithm.getInstance().getConfig().getString("lore_cannot_craft", "lore_cannot_craft"));
-            for (String loreStr : lore) {
-                if (loreStr.equals(cannotCraftLoreStr)) {
-                    containsLore = true;
-                    break;
-                }
-            }
-            if (containsLore)
-                break;
-        }
-        if (!containsLore)
-            return;
-        event.getInventory().setResult(null);
+        boolean containsLore = ItemUtil.hasCannotCraftLore(items);
+        if (containsLore)
+            event.getInventory().setResult(null);
     }
 
 }

@@ -5,7 +5,6 @@ import me.yufiria.craftorithm.event.PrepareAnvilRecipeEvent;
 import me.yufiria.craftorithm.recipe.RecipeManager;
 import me.yufiria.craftorithm.recipe.custom.AnvilRecipe;
 import me.yufiria.craftorithm.util.LangUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -20,7 +19,6 @@ import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
