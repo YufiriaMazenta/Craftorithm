@@ -1,24 +1,23 @@
 package me.yufiria.craftorithm.item.nbt;
 
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 public class NbtHandler {
 
     private static final String nmsVersion;
     private static final Map<Byte, Function<Object, IPluginNbtTag<?>>> nbtObjTypeMap;
-    private static final Map<String, String> setNbt2CompoundMethodNameMap;
-    private final static Map<String, String> getNmsNbtTypeIdMethodNameMap;
+    private static final Map<String, String> getNmsNbtTypeIdMethodNameMap;
     private static final Map<String, String> nbtBaseClassNameMap;
     private static Class<?> nmsNbtBaseClass = null;
-    private static Method setNbt2CompoundMethod = null;
     private static Method getNmsNbtTypeIdMethod = null;
 
     static {
@@ -26,9 +25,6 @@ public class NbtHandler {
 
         nbtObjTypeMap = new HashMap<>();
         loadNbtObjTypeMap();
-
-        setNbt2CompoundMethodNameMap = new HashMap<>();
-        loadSetNbt2CompoundMethodNameMap();
 
         nbtBaseClassNameMap = new HashMap<>();
         loadNbtBaseClassNameMap();
@@ -113,69 +109,8 @@ public class NbtHandler {
         }
     }
 
-    /*
-    从配置文件读取并将NBT设置到NBTCompound对象
-     */
-    public static void setNbt2NmsCompound(ConfigurationSection configSection, Object nmsNbtCompoundObj) {
-        String setNbt2CompoundMethodName = setNbt2CompoundMethodNameMap.getOrDefault(nmsVersion, "a");
-        if (setNbt2CompoundMethod == null) {
-            try {
-                setNbt2CompoundMethod = nmsNbtCompoundObj.getClass().getMethod(setNbt2CompoundMethodName, String.class, nmsNbtBaseClass);
-            } catch (NoSuchMethodException e) {
-                //提示版本不兼容
-                e.printStackTrace();
-            }
-
-        }
-        for (String key : configSection.getKeys(false)) {
-            Object configObj = configSection.get(key);
-            Object nmsNbtObj = generateNmsNbtObj(configObj);
-            try {
-                setNbt2CompoundMethod.invoke(nmsNbtCompoundObj, key, nmsNbtObj);
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /*
-    传入获取的配置文件，返回生成的NMS NBT对象
-     */
-    public static Object generateNmsNbtObj(Object sourceObj) {
-        if (sourceObj == null)
-            return null;
-        String sourceObjClassName = sourceObj.getClass().getSimpleName();
-        switch (sourceObjClassName) {
-            case "Integer":
-                int intValue = (int) sourceObj;
-                return new NumberNbtTag(intValue, 0).toNmsNbt();
-            case "Double":
-                double doubleValue = (double) sourceObj;
-                return new NumberNbtTag(doubleValue, 0).toNmsNbt();
-            case "ArrayList":
-                List<?> listValue = (List<?>) sourceObj;
-                if (listValue.size() < 1)
-                    return null;
-                return new ListNbtTag(listValue, 0).toNmsNbt();
-            case "String":
-                return new StringNbtTag((String) sourceObj, 0).toNmsNbt();
-            case "MemorySection":
-                MemorySection sectionValue = (MemorySection) sourceObj;
-                return new CompoundNbtTag(sectionValue, 0).toNmsNbt();
-            case "LinkedHashMap":
-                LinkedHashMap<?, ?> map = (LinkedHashMap<?, ?>) sourceObj;
-                return new CompoundNbtTag(map, 0).toNmsNbt();
-            default:
-                throw new IllegalArgumentException("Unsupported object type: " + sourceObjClassName);
-        }
-    }
-
     public static Map<Byte, Function<Object, IPluginNbtTag<?>>> getNbtObjTypeMap() {
         return nbtObjTypeMap;
-    }
-
-    public static Method getSetNbt2CompoundMethod() {
-        return setNbt2CompoundMethod;
     }
 
     public static Class<?> getNmsNbtBaseClass() {
@@ -201,20 +136,6 @@ public class NbtHandler {
         nbtObjTypeMap.put((byte) 12, LongArrayNbtTag::new);
     }
 
-    private static void loadSetNbt2CompoundMethodNameMap() {
-        setNbt2CompoundMethodNameMap.put("v1_19_R2", "a");
-        setNbt2CompoundMethodNameMap.put("v1_19_R1", "a");
-        setNbt2CompoundMethodNameMap.put("v1_18_R2", "a");
-        setNbt2CompoundMethodNameMap.put("v1_18_R1", "a");
-        setNbt2CompoundMethodNameMap.put("v1_17_R1", "set");
-        setNbt2CompoundMethodNameMap.put("v1_16_R3", "set");
-        setNbt2CompoundMethodNameMap.put("v1_16_R2", "set");
-        setNbt2CompoundMethodNameMap.put("v1_16_R1", "set");
-        setNbt2CompoundMethodNameMap.put("v1_15_R1", "set");
-        setNbt2CompoundMethodNameMap.put("v1_14_R1", "set");
-        setNbt2CompoundMethodNameMap.put("v1_13_R2", "set");
-        setNbt2CompoundMethodNameMap.put("v1_13_R1", "set");
-    }
 
     private static void loadNbtBaseClassNameMap() {
         nbtBaseClassNameMap.put("v1_19_R2", "net.minecraft.nbt.NBTBase");

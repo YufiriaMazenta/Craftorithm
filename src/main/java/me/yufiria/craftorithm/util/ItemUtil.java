@@ -1,18 +1,25 @@
 package me.yufiria.craftorithm.util;
 
-import me.yufiria.craftorithm.item.nbt.IPluginNbtTag;
+import me.yufiria.craftorithm.Craftorithm;
 import me.yufiria.craftorithm.config.YamlFileWrapper;
 import me.yufiria.craftorithm.item.nbt.CompoundNbtTag;
+import me.yufiria.craftorithm.item.nbt.IPluginNbtTag;
 import me.yufiria.craftorithm.item.nbt.NbtHandler;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 public class ItemUtil {
 
@@ -20,6 +27,9 @@ public class ItemUtil {
     private static final Map<String, String> setNbtCompound2ItemMethodNameMap;
     private static final Map<String, String> nmsItemClassNameMap;
     private static final Class<?> nmsItemClass;
+    private static String cannotCraftLore;
+    private static Pattern cannotCraftLorePattern;
+    private static boolean cannotCraftLoreIsRegex;
     private static Method getNbtCompoundFromItemMethod = null;
     private static Method setNbtCompound2ItemMethod = null;
 
@@ -41,10 +51,24 @@ public class ItemUtil {
             e.printStackTrace();
         }
         nmsItemClass = tmpClass;
+
+        reloadCannotCraftLore();
     }
 
-    /*
-    获取一个NMS ItemStack对象
+    public static void reloadCannotCraftLore() {
+        cannotCraftLore = LangUtil.color(Craftorithm.getInstance().getConfig().getString("lore_cannot_craft", "lore_cannot_craft"));
+        try {
+            cannotCraftLorePattern = Pattern.compile(cannotCraftLore);
+            cannotCraftLoreIsRegex = true;
+        } catch (PatternSyntaxException e) {
+            cannotCraftLoreIsRegex = false;
+        }
+    }
+
+    /**
+     * 将Bukkit物品转化为NMS物品
+     * @param item 传入的物品
+     * @return 转化完成的物品
      */
     public static Object bukkit2NmsItem(ItemStack item) {
         if (item == null) {
@@ -61,16 +85,18 @@ public class ItemUtil {
         return null;
     }
 
-    /*
-    将NMS物品转化为Bukkit物品
+    /**
+     * 将NMS物品转化为Bukkit物品
+     * @param nmsItem 传入的NMS物品
+     * @return 转化完成的物品
      */
-    public static ItemStack nms2BukkitItem(Object nmsItemObj) {
-        if (!nmsItemObj.getClass().getName().contains("ItemStack"))
+    public static ItemStack nms2BukkitItem(Object nmsItem) {
+        if (!nmsItem.getClass().getName().contains("ItemStack"))
             return null;
         try {
             Class<?> craftItemClass = Class.forName("org.bukkit.craftbukkit." + NbtHandler.getNmsVersion() + ".inventory.CraftItemStack");
             Method asBukkitCopyMethod = craftItemClass.getMethod("asBukkitCopy", nmsItemClass);
-            return (ItemStack) asBukkitCopyMethod.invoke(null, nmsItemObj);
+            return (ItemStack) asBukkitCopyMethod.invoke(null, nmsItem);
         } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             //提示版本不兼容
             e.printStackTrace();
@@ -78,8 +104,10 @@ public class ItemUtil {
         return null;
     }
 
-    /*
-    获取物品的全部NMS NBT标签，类型应为NBTCompound
+    /**
+     * 获取物品的全部NMS NBT标签，类型应为NBTCompound
+     * @param item 传入的物品
+     * @return 返回的NMS NBT标签
      */
     public static Object getNmsItemNbtTags(ItemStack item) {
         if (item == null)
@@ -100,25 +128,31 @@ public class ItemUtil {
         return null;
     }
 
-    /*
-    将物品保存至配置文件
+    /**
+     * 将物品保存到配置文件
+     * @param item 保存的物品
+     * @param configFile 保存到的配置文件
+     * @param key 物品保存的Key
      */
-    public static void saveItem2Config(ItemStack item, YamlFileWrapper configFile, String path) {
+    public static void saveItem2Config(ItemStack item, YamlFileWrapper configFile, String key) {
         if (item == null)
             throw new IllegalArgumentException("Item can not be null");
         String material = item.getType().getKey().toString();
-        configFile.getConfig().set(path + ".material", material);
+        configFile.getConfig().set(key + ".material", material);
         int amount = item.getAmount();
-        configFile.getConfig().set(path + ".amount", amount);
+        configFile.getConfig().set(key + ".amount", amount);
         Object nmsNbt = ItemUtil.getNmsItemNbtTags(item);
         IPluginNbtTag<?> nbtTag = NbtHandler.nmsNbt2PluginNbtObj(nmsNbt);
         if (nbtTag != null)
-            NbtHandler.setPluginNbt2Config(configFile.getConfig(), path + ".nbt", (CompoundNbtTag) nbtTag);
+            NbtHandler.setPluginNbt2Config(configFile.getConfig(), key + ".nbt", (CompoundNbtTag) nbtTag);
         configFile.saveConfig();
     }
 
-    /*
-    从指定的配置文件里以名字读取物品
+    /**
+     * 从指定的配置文件中读取物品
+     * @param config 读取的配置文件
+     * @param key 物品的key
+     * @return 返回读取到的物品，可能会为null
      */
     public static ItemStack getItemFromConfig(YamlConfiguration config, String key) {
         String materialStr = config.getString(key + ".material", "AIR");
@@ -130,35 +164,74 @@ public class ItemUtil {
         int amount = config.getInt(key + ".amount", 1);
         ItemStack item = new ItemStack(material, amount);
         ConfigurationSection cfgSection = config.getConfigurationSection(key + ".nbt");
-        return loadNbt2Item(item, cfgSection);
+        return loadItemTagsFromConfig(item, cfgSection);
     }
 
     /*
     从配置文件中读取NBT，存储到物品中，然后返回物品
      */
-    public static ItemStack loadNbt2Item(ItemStack item, ConfigurationSection configSection) {
-        //获取NBTCompound对象并将NBT存入Compound
+    public static ItemStack loadItemTagsFromConfig(ItemStack item, ConfigurationSection configSection) {
         if (configSection == null || configSection.getKeys(false).size() < 1)
             return item;
-        Object nmsItem = bukkit2NmsItem(item);
-        Object nmsNbtCompoundObj = getNmsItemNbtTags(item);
-        if (nmsNbtCompoundObj == null) {
-            nmsNbtCompoundObj = new CompoundNbtTag().toNmsNbt();
-        }
-        NbtHandler.setNbt2NmsCompound(configSection, nmsNbtCompoundObj);
+        CompoundNbtTag nbtTagCompound = new CompoundNbtTag((MemorySection) configSection);
+        return setItemNmsTag(item, nbtTagCompound);
+    }
 
-        //将NBTCompound设置回物品
+    /*
+    将插件NBT转换为NMS NBT并存储到物品中
+     */
+    public static ItemStack setItemNmsTag(ItemStack item, CompoundNbtTag nbtCompound) {
+        Object nmsItem = bukkit2NmsItem(item);
+        Object nmsNbtCompound = nbtCompound.toNmsNbt();
+
         try {
             if (setNbtCompound2ItemMethod == null) {
                 String setNbtCompound2ItemMethodName = setNbtCompound2ItemMethodNameMap.getOrDefault(NbtHandler.getNmsVersion(), "c");
-                setNbtCompound2ItemMethod = nmsItemClass.getMethod(setNbtCompound2ItemMethodName, nmsNbtCompoundObj.getClass());
+                setNbtCompound2ItemMethod = nmsItemClass.getMethod(setNbtCompound2ItemMethodName, nmsNbtCompound.getClass());
             }
-            setNbtCompound2ItemMethod.invoke(nmsItem, nmsNbtCompoundObj);
+            setNbtCompound2ItemMethod.invoke(nmsItem, nmsNbtCompound);
             return nms2BukkitItem(nmsItem);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
         return nms2BukkitItem(nmsItem);
+    }
+
+    /**
+     * 检测物品是否含有不允许用于合成的lore
+     * @param items 传入的物品数组
+     * @return 是否包含所需字符串
+     */
+    public static boolean hasCannotCraftLore(ItemStack[] items) {
+        boolean containsLore = false;
+
+        for (ItemStack item : items) {
+            if (item == null)
+                continue;
+            ItemMeta meta = item.getItemMeta();
+            if (meta == null)
+                continue;
+            List<String> lore = item.getItemMeta().getLore();
+            if (lore == null)
+                continue;
+            for (String loreStr : lore) {
+                if (!cannotCraftLoreIsRegex) {
+                    if (loreStr.equals(cannotCraftLore)) {
+                        containsLore = true;
+                        break;
+                    }
+                } else {
+                    Matcher matcher = cannotCraftLorePattern.matcher(loreStr);
+                    if (matcher.find()) {
+                        containsLore = true;
+                        break;
+                    }
+                }
+            }
+            if (containsLore)
+                break;
+        }
+        return containsLore;
     }
 
     private static void loadGetNbtCompoundFromItemMethodNameMap() {

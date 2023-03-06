@@ -46,7 +46,7 @@ public class StringNbtTag implements IPluginNbtTag<String> {
         this.value = value;
     }
 
-    public StringNbtTag(String strObj, int flag) {
+    public StringNbtTag(String strObj) {
         this.value = strObj;
     }
 
@@ -112,16 +112,16 @@ public class StringNbtTag implements IPluginNbtTag<String> {
         switch (prefix) {
             case "BYTE":
                 byte byteVal = Byte.parseByte(numberStr);
-                return new NumberNbtTag(byteVal, 0).toNmsNbt();
+                return new NumberNbtTag(byteVal).toNmsNbt();
             case "SHORT":
                 short shortVal = Short.parseShort(numberStr);
-                return new NumberNbtTag(shortVal, 0).toNmsNbt();
+                return new NumberNbtTag(shortVal).toNmsNbt();
             case "LONG":
                 long longVal = Long.parseLong(numberStr);
-                return new NumberNbtTag(longVal, 0).toNmsNbt();
+                return new NumberNbtTag(longVal).toNmsNbt();
             case "FLOAT":
                 float floatVal = Float.parseFloat(numberStr);
-                return new NumberNbtTag(floatVal, 0).toNmsNbt();
+                return new NumberNbtTag(floatVal).toNmsNbt();
             default:
                 return parseStringNbt();
         }

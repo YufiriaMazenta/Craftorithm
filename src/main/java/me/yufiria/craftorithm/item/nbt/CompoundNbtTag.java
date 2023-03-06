@@ -12,6 +12,8 @@ public class CompoundNbtTag implements IPluginNbtTag<Map<String, IPluginNbtTag<?
     private static final Map<String, String> getKeySetMethodNameMap;
     private static final Map<String, String> getNbtBaseMethodNameMap;
     private static final Map<String, String> nmsNbtCompoundClassNameMap;
+    private static final Map<String, String> setNbt2CompoundMethodNameMap;
+    private static Method setNbt2CompoundMethod = null;
     private static Method getKeySetMethod = null;
     private static Method getNbtBaseMethod = null;
     private static Class<?> nmsNbtCompoundClass = null;
@@ -25,6 +27,9 @@ public class CompoundNbtTag implements IPluginNbtTag<Map<String, IPluginNbtTag<?
 
         nmsNbtCompoundClassNameMap = new HashMap<>();
         loadNmsNbtCompoundClassNameMap();
+
+        setNbt2CompoundMethodNameMap = new HashMap<>();
+        loadSetNbt2CompoundMethodNameMap();
     }
 
     public CompoundNbtTag() {
@@ -36,7 +41,7 @@ public class CompoundNbtTag implements IPluginNbtTag<Map<String, IPluginNbtTag<?
         this.value = getNbtValueMap(nmsNbtObj, tagKeySet);
     }
 
-    public CompoundNbtTag(MemorySection section, int flag) {
+    public CompoundNbtTag(MemorySection section) {
         Map<String, IPluginNbtTag<?>> value = new HashMap<>();
         for (String key : section.getKeys(false)) {
             Object sectionObj = section.get(key);
@@ -46,27 +51,27 @@ public class CompoundNbtTag implements IPluginNbtTag<Map<String, IPluginNbtTag<?
             switch (sectionObjClass) {
                 case "Integer":
                     int intValue = (int) sectionObj;
-                    value.put(key, new NumberNbtTag(intValue, 0));
+                    value.put(key, new NumberNbtTag(intValue));
                     break;
                 case "Double":
                     double doubleValue = (double) sectionObj;
-                    value.put(key, new NumberNbtTag(doubleValue, 0));
+                    value.put(key, new NumberNbtTag(doubleValue));
                     break;
                 case "ArrayList":
                     List<?> deepObjList = (List<?>) sectionObj;
                     if (deepObjList.size() >= 1)
-                        value.put(key, new ListNbtTag(deepObjList, 0));
+                        value.put(key, new ListNbtTag(deepObjList));
                     break;
                 case "String":
-                    value.put(key, new StringNbtTag((String) sectionObj, 0));
+                    value.put(key, new StringNbtTag((String) sectionObj));
                     break;
                 case "MemorySection":
                     MemorySection deepSection = (MemorySection) sectionObj;
-                    value.put(key, new CompoundNbtTag(deepSection, 0));
+                    value.put(key, new CompoundNbtTag(deepSection));
                     break;
                 case "LinkedHashMap":
                     LinkedHashMap<?, ?> map = (LinkedHashMap<?, ?>) sectionObj;
-                    value.put(key, new CompoundNbtTag(map, 0));
+                    value.put(key, new CompoundNbtTag(map));
                     break;
             }
         }
@@ -83,23 +88,23 @@ public class CompoundNbtTag implements IPluginNbtTag<Map<String, IPluginNbtTag<?
             switch (sectionObjClass) {
                 case "Integer":
                     int intValue = (int) sectionObj;
-                    value.put((String) key, new NumberNbtTag(intValue, 0));
+                    value.put((String) key, new NumberNbtTag(intValue));
                     break;
                 case "Double":
                     double doubleValue = (double) sectionObj;
-                    value.put((String) key, new NumberNbtTag(doubleValue, 0));
+                    value.put((String) key, new NumberNbtTag(doubleValue));
                     break;
                 case "ArrayList":
                     List<?> deepObjList = (List<?>) sectionObj;
                     if (deepObjList.size() >= 1)
-                        value.put((String) key, new ListNbtTag(deepObjList, 0));
+                        value.put((String) key, new ListNbtTag(deepObjList));
                     break;
                 case "String":
-                    value.put((String) key, new StringNbtTag((String) sectionObj, 0));
+                    value.put((String) key, new StringNbtTag((String) sectionObj));
                     break;
                 case "MemorySection":
                     MemorySection deepSection = (MemorySection) sectionObj;
-                    value.put((String) key, new CompoundNbtTag(deepSection, 0));
+                    value.put((String) key, new CompoundNbtTag(deepSection));
                     break;
                 case "LinkedHashMap":
                     LinkedHashMap<?, ?> deepMap = (LinkedHashMap<?, ?>) sectionObj;
@@ -129,11 +134,13 @@ public class CompoundNbtTag implements IPluginNbtTag<Map<String, IPluginNbtTag<?
                 nmsNbtCompoundClass = Class.forName(nmsNbtCompoundClassName);
             }
             nmsNbtObj = nmsNbtCompoundClass.newInstance();
-            Method method = NbtHandler.getSetNbt2CompoundMethod();
-            for (String key : value.keySet()) {
-                method.invoke(nmsNbtObj, key, value.get(key).toNmsNbt());
+            if (setNbt2CompoundMethod == null) {
+                setNbt2CompoundMethod = nmsNbtCompoundClass.getMethod(setNbt2CompoundMethodNameMap.get(NbtHandler.getNmsVersion()), String.class, NbtHandler.getNmsNbtBaseClass());
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            for (String key : value.keySet()) {
+                setNbt2CompoundMethod.invoke(nmsNbtObj, key, value.get(key).toNmsNbt());
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
         }
         return nmsNbtObj;
@@ -218,6 +225,21 @@ public class CompoundNbtTag implements IPluginNbtTag<Map<String, IPluginNbtTag<?
         nmsNbtCompoundClassNameMap.put("v1_14_R1", "net.minecraft.server.v1_14_R1.NBTTagCompound");
         nmsNbtCompoundClassNameMap.put("v1_13_R2", "net.minecraft.server.v1_13_R2.NBTTagCompound");
         nmsNbtCompoundClassNameMap.put("v1_13_R1", "net.minecraft.server.v1_13_R1.NBTTagCompound");
+    }
+
+    private static void loadSetNbt2CompoundMethodNameMap() {
+        setNbt2CompoundMethodNameMap.put("v1_19_R2", "a");
+        setNbt2CompoundMethodNameMap.put("v1_19_R1", "a");
+        setNbt2CompoundMethodNameMap.put("v1_18_R2", "a");
+        setNbt2CompoundMethodNameMap.put("v1_18_R1", "a");
+        setNbt2CompoundMethodNameMap.put("v1_17_R1", "set");
+        setNbt2CompoundMethodNameMap.put("v1_16_R3", "set");
+        setNbt2CompoundMethodNameMap.put("v1_16_R2", "set");
+        setNbt2CompoundMethodNameMap.put("v1_16_R1", "set");
+        setNbt2CompoundMethodNameMap.put("v1_15_R1", "set");
+        setNbt2CompoundMethodNameMap.put("v1_14_R1", "set");
+        setNbt2CompoundMethodNameMap.put("v1_13_R2", "set");
+        setNbt2CompoundMethodNameMap.put("v1_13_R1", "set");
     }
 
 }

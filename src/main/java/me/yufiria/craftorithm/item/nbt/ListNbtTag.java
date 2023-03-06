@@ -46,26 +46,26 @@ public class ListNbtTag implements IPluginNbtTag<List<IPluginNbtTag<?>>> {
         this.value = value;
     }
 
-    public ListNbtTag(List<?> objList, int flag) {
+    public ListNbtTag(List<?> objList) {
         List<IPluginNbtTag<?>> value = new ArrayList<>();
         for (Object listItem : objList) {
             String configObjClassName = listItem.getClass().getSimpleName();
             switch (configObjClassName) {
                 case "Integer":
                     int intValue = (int) listItem;
-                    value.add(new NumberNbtTag(intValue, 0));
+                    value.add(new NumberNbtTag(intValue));
                     break;
                 case "Double":
                     double doubleValue = (double) listItem;
-                    value.add(new NumberNbtTag(doubleValue, 0));
+                    value.add(new NumberNbtTag(doubleValue));
                     break;
                 case "ArrayList":
                     List<?> deepObjList = (List<?>) listItem;
                     if (deepObjList.size() >= 1)
-                        value.add(new ListNbtTag(deepObjList, 0));
+                        value.add(new ListNbtTag(deepObjList));
                     break;
                 case "String":
-                    value.add(new StringNbtTag((String) listItem, 0));
+                    value.add(new StringNbtTag((String) listItem));
                     break;
                 case "LinkedHashMap":
                     LinkedHashMap<?, ?> map = (LinkedHashMap<?, ?>) listItem;
@@ -73,7 +73,7 @@ public class ListNbtTag implements IPluginNbtTag<List<IPluginNbtTag<?>>> {
                     break;
                 case "MemorySection":
                     MemorySection deepSection = (MemorySection) listItem;
-                    value.add(new CompoundNbtTag(deepSection, 0));
+                    value.add(new CompoundNbtTag(deepSection));
                     break;
             }
         }

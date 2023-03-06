@@ -4,6 +4,7 @@ import me.yufiria.craftorithm.Craftorithm;
 import me.yufiria.craftorithm.arcenciel.ArcencielDispatcher;
 import me.yufiria.craftorithm.item.ItemManager;
 import me.yufiria.craftorithm.recipe.RecipeManager;
+import me.yufiria.craftorithm.util.ItemUtil;
 import me.yufiria.craftorithm.util.LangUtil;
 import org.bukkit.command.CommandSender;
 
@@ -42,6 +43,7 @@ public final class ReloadCommand extends AbstractSubCommand {
         ItemManager.loadItemFiles();
         RecipeManager.loadRecipeFiles();
         ArcencielDispatcher.INSTANCE.getFunctionFile().reloadConfig();
+        ItemUtil.reloadCannotCraftLore();
     }
 
     public static void reloadRecipes() {
