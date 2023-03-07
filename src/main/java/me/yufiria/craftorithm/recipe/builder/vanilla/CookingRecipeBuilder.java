@@ -9,7 +9,8 @@ import java.util.Locale;
 public class CookingRecipeBuilder extends AbstractRecipeBuilder {
 
     private RecipeChoice source;
-    private int exp, time;
+    private int time;
+    private float exp;
     private CookingBlock cookingBlock;
 
     private CookingRecipeBuilder() {
@@ -28,7 +29,7 @@ public class CookingRecipeBuilder extends AbstractRecipeBuilder {
         return (CookingRecipeBuilder) super.key(key);
     }
 
-    public CookingRecipeBuilder exp(int exp) {
+    public CookingRecipeBuilder exp(float exp) {
         this.exp = exp;
         return this;
     }
@@ -61,7 +62,7 @@ public class CookingRecipeBuilder extends AbstractRecipeBuilder {
         return source;
     }
 
-    public int getExp() {
+    public float getExp() {
         return exp;
     }
 
