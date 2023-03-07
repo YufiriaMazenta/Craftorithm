@@ -4,6 +4,7 @@ import me.yufiria.craftorithm.Craftorithm;
 import me.yufiria.craftorithm.item.ItemManager;
 import me.yufiria.craftorithm.recipe.builder.custom.AnvilRecipeBuilder;
 import me.yufiria.craftorithm.recipe.builder.vanilla.*;
+import me.yufiria.craftorithm.recipe.custom.AnvilRecipe;
 import me.yufiria.craftorithm.recipe.custom.AnvilRecipeItem;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -88,15 +89,15 @@ public class RecipeFactory {
         String choiceStr = config.getString("source.item", "");
         String cookingBlock = config.getString("source.block", "furnace");
         RecipeChoice source = getRecipeChoice(choiceStr);
-        int exp = config.getInt("exp", 0);
+        float exp = (float) config.getDouble("exp", 0);
         int time = config.getInt("time", 200);
         return CookingRecipeBuilder.builder().key(namespacedKey).result(result).block(cookingBlock).source(source).exp(exp).time(time).build();
     }
 
     public static Recipe[] multipleCookingRecipe(YamlConfiguration config, String key) {
         ItemStack result = getResultItem(config);
-        int globalExp = config.getInt("exp", 0);
-        int globalTime = config.getInt("time", 0);
+        float globalExp = (float) config.getDouble("exp", 0);
+        int globalTime = config.getInt("time", 200);
 
         List<Map<?, ?>> sourceList = config.getMapList("source");
         CookingRecipe<?>[] cookingRecipes = new CookingRecipe[sourceList.size()];
@@ -106,7 +107,7 @@ public class RecipeFactory {
             NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.getInstance(), fullKey);
             RecipeChoice source = getRecipeChoice((String) map.get("item"));
             String cookingBlock = (String) map.get("block");
-            int exp = map.containsKey("exp") ? (Integer) map.get("exp") : globalExp;
+            float exp = map.containsKey("exp") ? Float.parseFloat(String.valueOf(map.get("exp"))) : globalExp;
             int time = map.containsKey("time") ? (Integer) map.get("time") : globalTime;
             cookingRecipes[i] = CookingRecipeBuilder.builder().key(namespacedKey).result(result).block(cookingBlock).source(source).exp(exp).time(time).build();
             cookingRecipes[i].setGroup(key);
@@ -200,6 +201,25 @@ public class RecipeFactory {
         NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.getInstance(), key);
         int costLevel = config.getInt("cost_level", 0);
         return AnvilRecipeBuilder.builder().key(namespacedKey).result(result).base(base).addition(addition).costLevel(costLevel).build();
+    }
+
+    public static Recipe[] multipleAnvilRecipe(YamlConfiguration config, String key) {
+        ItemStack result = getResultItem(config);
+        List<Map<?, ?>> sourceList = config.getMapList("source");
+        AnvilRecipe[] anvilRecipes = new AnvilRecipe[sourceList.size()];
+        int globalCostLevel = config.getInt("cost_level", 0);
+        for (int i = 0; i < sourceList.size(); i++) {
+            Map<?, ?> map = sourceList.get(i);
+            String fullKey = key + "." + i;
+            NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.getInstance(), fullKey);
+            String baseStr = (String) map.get("base");
+            AnvilRecipeItem base = new AnvilRecipeItem(ItemManager.matchCraftorithmItem(baseStr), baseStr.contains(":"));
+            String additionStr = (String) map.get("addition");
+            AnvilRecipeItem addition = new AnvilRecipeItem(ItemManager.matchCraftorithmItem(additionStr), additionStr.contains(":"));
+            int costLevel = map.containsKey("cost_level") ? (int) map.get("cost_level") : globalCostLevel;
+            anvilRecipes[i] = AnvilRecipeBuilder.builder().key(namespacedKey).result(result).base(base).addition(addition).costLevel(costLevel).build();
+        }
+        return anvilRecipes;
     }
 
     private static Map<Character, RecipeChoice> getShapedRecipeChoiceMap(ConfigurationSection section) {

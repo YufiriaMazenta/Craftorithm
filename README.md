@@ -9,4 +9,4 @@
 Craftorithm是一个基于BukkitAPI编写的配方管理插件，可以添加原版的各类配方，并可以进行合成限制，删除配方等管理操作
 
 ## 使用方式
-文档正在编写中...
+#### [Craftorithm Wiki](https://yufiriamazenta.gitbook.io/craftorithm-wiki/)

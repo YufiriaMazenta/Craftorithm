@@ -29,7 +29,7 @@ public class ListArcencielBlock implements IArcencielBlock<List<String>> {
             if (returnObj.getSignal().equals(ArcencielSignal.END))
                 break;
         }
-        return new ReturnObj<>(ArcencielSignal.CONTINUE, returnObj.getObj());
+        return new ReturnObj<>(returnObj.getSignal(), returnObj.getObj());
     }
 
     @Override

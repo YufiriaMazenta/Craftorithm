@@ -54,6 +54,7 @@ public class RecipeManager {
         multipleRecipeBuilderMap.put(RecipeType.SMITHING, RecipeFactory::multipleSmithingRecipe);
         multipleRecipeBuilderMap.put(RecipeType.STONE_CUTTING, RecipeFactory::multipleStoneCuttingRecipe);
         multipleRecipeBuilderMap.put(RecipeType.RANDOM_COOKING, RecipeFactory::multipleCookingRecipe);
+        multipleRecipeBuilderMap.put(RecipeType.ANVIL, RecipeFactory::multipleAnvilRecipe);
 
         recipeUnlockMap = new ConcurrentHashMap<>();
 
@@ -87,6 +88,7 @@ public class RecipeManager {
 
     public static void loadPluginRecipes() {
         Bukkit.resetRecipes();
+        anvilRecipeMap.clear();
         recipeKeyConfigMap.clear();
         for (String fileName : recipeFileMap.keySet()) {
             try {
