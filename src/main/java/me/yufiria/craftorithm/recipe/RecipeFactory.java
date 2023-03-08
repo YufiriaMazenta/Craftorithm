@@ -216,7 +216,7 @@ public class RecipeFactory {
             AnvilRecipeItem base = new AnvilRecipeItem(ItemManager.matchCraftorithmItem(baseStr), baseStr.contains(":"));
             String additionStr = (String) map.get("addition");
             AnvilRecipeItem addition = new AnvilRecipeItem(ItemManager.matchCraftorithmItem(additionStr), additionStr.contains(":"));
-            int costLevel = map.containsKey("cost_level") ? (int) map.get("cost_level") : globalCostLevel;
+            int costLevel = map.containsKey("cost_level") ? (Integer) map.get("cost_level") : globalCostLevel;
             anvilRecipes[i] = AnvilRecipeBuilder.builder().key(namespacedKey).result(result).base(base).addition(addition).costLevel(costLevel).build();
         }
         return anvilRecipes;
