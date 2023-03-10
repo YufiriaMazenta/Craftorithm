@@ -29,8 +29,16 @@ public enum PluginCommand implements TabExecutor {
             return true;
         }
         ISubCommand subCommand = subCommandMap.get(argList.get(0));
-        if (subCommand != null)
+        if (subCommand != null) {
+            String perm = subCommand.getPerm();
+            if (perm != null) {
+                if (!sender.hasPermission(perm)) {
+                    LangUtil.sendMsg(sender, "command.no_perm");
+                    return true;
+                }
+            }
             return subCommand.onCommand(sender, argList.subList(1, argList.size()));
+        }
         else {
             LangUtil.sendMsg(sender, "command.undefined_subcmd");
             return true;
@@ -54,13 +62,21 @@ public enum PluginCommand implements TabExecutor {
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         List<String> argList = Arrays.asList(args);
         if (argList.size() <= 1) {
-            List<String> returnList = new ArrayList<>(subCommandMap.keySet());
-            returnList.removeIf(str -> !str.startsWith(args[0]));
-            return returnList;
+            List<String> tabList = new ArrayList<>();
+            for (String subCmd : subCommandMap.keySet()) {
+                ISubCommand subCommand = subCommandMap.get(subCmd);
+                if (sender.hasPermission(subCommand.getPerm()))
+                    tabList.add(subCmd);
+            }
+            tabList.removeIf(str -> !str.startsWith(args[0]));
+            return tabList;
         }
         ISubCommand subCommand = subCommandMap.get(argList.get(0));
-        if (subCommand != null)
+        if (subCommand != null) {
+            if (!sender.hasPermission(subCommand.getPerm()))
+                return Collections.singletonList("");
             return subCommand.onTabComplete(sender, argList.subList(1, argList.size()));
+        }
         else
             return Collections.singletonList("");
     }

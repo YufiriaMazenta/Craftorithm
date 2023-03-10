@@ -19,10 +19,16 @@ public class RecipeShowMenuHolder extends BukkitMenuHandler {
 
     private final Recipe recipe;
     private final InventoryType inventoryType;
-    private String invTitle;
+    private final String invTitle;
+    private RecipeListMenuHolder parentMenu;
 
     public RecipeShowMenuHolder(Recipe recipe) {
+        this(recipe, null);
+    }
+
+    public RecipeShowMenuHolder(Recipe recipe, RecipeListMenuHolder parentMenu) {
         super();
+        this.parentMenu = parentMenu;
         this.recipe = recipe;
         RecipeType recipeType = RecipeManager.getPluginRecipeType(recipe);
         switch (recipeType) {
@@ -152,6 +158,14 @@ public class RecipeShowMenuHolder extends BukkitMenuHandler {
         getMenuIconMap().put(0, ItemDisplayIcon.icon(anvilRecipe.getBase().getItem()));
         getMenuIconMap().put(1, ItemDisplayIcon.icon(anvilRecipe.getAddition().getItem()));
         getMenuIconMap().put(2, ItemDisplayIcon.icon(anvilRecipe.getResult()));
+    }
+
+    public RecipeListMenuHolder getParentMenu() {
+        return parentMenu;
+    }
+
+    public void setParentMenu(RecipeListMenuHolder parentMenu) {
+        this.parentMenu = parentMenu;
     }
 
 }

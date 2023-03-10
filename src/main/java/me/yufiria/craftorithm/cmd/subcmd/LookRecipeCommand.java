@@ -18,7 +18,7 @@ public class LookRecipeCommand extends AbstractSubCommand {
     public static final LookRecipeCommand INSTANCE = new LookRecipeCommand();
 
     protected LookRecipeCommand() {
-        super("look");
+        super("look", "craftorithm.command.look");
     }
 
     @Override

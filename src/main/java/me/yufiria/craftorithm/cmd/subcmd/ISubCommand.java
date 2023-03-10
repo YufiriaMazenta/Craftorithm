@@ -17,4 +17,8 @@ public interface ISubCommand {
 
     void regSubCommand(ISubCommand subCommand);
 
+    String getPerm();
+
+    void setPerm();
+
 }
