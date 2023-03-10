@@ -3,6 +3,7 @@ package me.yufiria.craftorithm.recipe.custom;
 import me.yufiria.craftorithm.recipe.RecipeType;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public class AnvilRecipe implements CustomRecipe {
 
@@ -40,8 +41,8 @@ public class AnvilRecipe implements CustomRecipe {
     }
 
     @Override
-    public ItemStack getResult() {
-        return result;
+    public @NotNull ItemStack getResult() {
+        return this.result;
     }
 
     public void setResult(ItemStack result) {

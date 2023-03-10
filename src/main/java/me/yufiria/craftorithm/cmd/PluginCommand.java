@@ -43,6 +43,7 @@ public enum PluginCommand implements TabExecutor {
         regSubCommand(RemoveCommand.INSTANCE);
         regSubCommand(ItemCommand.INSTANCE);
         regSubCommand(RunArcencielCmd.INSTANCE);
+        regSubCommand(LookRecipeCommand.INSTANCE);
     }
 
     public void regSubCommand(ISubCommand executor) {

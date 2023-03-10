@@ -6,21 +6,18 @@ import me.yufiria.craftorithm.cmd.subcmd.RemoveCommand;
 import me.yufiria.craftorithm.config.YamlFileWrapper;
 import me.yufiria.craftorithm.recipe.custom.AnvilRecipe;
 import me.yufiria.craftorithm.recipe.custom.CustomRecipe;
+import me.yufiria.craftorithm.recipe.custom.PotionMixRecipe;
 import me.yufiria.craftorithm.util.ContainerUtil;
 import me.yufiria.craftorithm.util.LangUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.*;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiFunction;
@@ -36,6 +33,8 @@ public class RecipeManager {
     private static final File recipeFileFolder = new File(Craftorithm.getInstance().getDataFolder().getPath(), "recipes");
     private static final Map<NamespacedKey, Boolean> recipeUnlockMap;
     private static final Map<NamespacedKey, AnvilRecipe> anvilRecipeMap;
+    private static final Map<Recipe, RecipeType> recipeTypeMap;
+    private static final Map<NamespacedKey, Recipe> recipeKeyMap;
 
     static {
         recipeBuilderMap = new HashMap<>();
@@ -59,6 +58,10 @@ public class RecipeManager {
         recipeUnlockMap = new ConcurrentHashMap<>();
 
         anvilRecipeMap = new ConcurrentHashMap<>();
+
+        recipeTypeMap = new ConcurrentHashMap<>();
+
+        recipeKeyMap = new ConcurrentHashMap<>();
     }
 
     public static void loadRecipeManager() {
@@ -88,6 +91,7 @@ public class RecipeManager {
 
     public static void loadPluginRecipes() {
         Bukkit.resetRecipes();
+        recipeTypeMap.clear();
         anvilRecipeMap.clear();
         recipeKeyConfigMap.clear();
         for (String fileName : recipeFileMap.keySet()) {
@@ -115,8 +119,10 @@ public class RecipeManager {
         if (recipe instanceof CustomRecipe) {
             switch (((CustomRecipe) recipe).getRecipeType()) {
                 case ANVIL:
-                    anvilRecipeMap.put(key, (AnvilRecipe) recipe);
+                    regAnvilRecipe((AnvilRecipe) recipe);
                     break;
+                case POTION:
+                    regPotionMixRecipe((PotionMixRecipe) recipe);
             }
         } else {
             Bukkit.addRecipe(recipe);
@@ -128,6 +134,25 @@ public class RecipeManager {
             }
         }
         recipeKeyConfigMap.put(key, config);
+        putRecipeTypeMap(recipe);
+        recipeKeyMap.put(key, recipe);
+    }
+
+    private static void putRecipeTypeMap(Recipe recipe) {
+        if (recipe instanceof ShapedRecipe)
+            recipeTypeMap.put(recipe, RecipeType.SHAPED);
+        else if (recipe instanceof ShapelessRecipe)
+            recipeTypeMap.put(recipe, RecipeType.SHAPELESS);
+        else if (recipe instanceof CookingRecipe)
+            recipeTypeMap.put(recipe, RecipeType.COOKING);
+        else if (recipe instanceof SmithingRecipe)
+            recipeTypeMap.put(recipe, RecipeType.SMITHING);
+        else if (recipe instanceof StonecuttingRecipe)
+            recipeTypeMap.put(recipe, RecipeType.STONE_CUTTING);
+        else if (recipe instanceof AnvilRecipe)
+            recipeTypeMap.put(recipe, RecipeType.ANVIL);
+        else
+            recipeTypeMap.put(recipe, RecipeType.UNKNOWN);
     }
 
     public static Recipe newRecipe(YamlConfiguration config, String key) {
@@ -178,6 +203,10 @@ public class RecipeManager {
         return key != null ? recipeKeyConfigMap.get(key) : null;
     }
 
+    public static Map<Recipe, RecipeType> getPluginRecipes() {
+        return new ConcurrentHashMap<>(recipeTypeMap);
+    }
+
     public static NamespacedKey getRecipeKey(Recipe recipe) {
         if (recipe == null)
             return null;
@@ -192,6 +221,26 @@ public class RecipeManager {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static Recipe getPluginRecipe(String key) {
+        if (key.contains(":")) {
+            return getPluginRecipe(NamespacedKey.fromString(key));
+        } else {
+            return getPluginRecipe(NamespacedKey.fromString(key, Craftorithm.getInstance()));
+        }
+    }
+
+    public static Recipe getPluginRecipe(NamespacedKey namespacedKey) {
+        return recipeKeyMap.get(namespacedKey);
+    }
+
+    public static List<NamespacedKey> getPluginRecipeKeys() {
+        return new ArrayList<>(recipeKeyMap.keySet());
+    }
+
+    public static RecipeType getPluginRecipeType(Recipe recipe) {
+        return recipeTypeMap.getOrDefault(recipe, RecipeType.UNKNOWN);
     }
 
     public static Map<NamespacedKey, Boolean> getRecipeUnlockMap() {
@@ -215,6 +264,15 @@ public class RecipeManager {
         });
         return anvilRecipe.get();
     }
+
+    public static void regAnvilRecipe(AnvilRecipe recipe) {
+        anvilRecipeMap.put(recipe.getKey(), recipe);
+    }
+
+    private static void regPotionMixRecipe(PotionMixRecipe recipe) {
+        //TODO
+    }
+
 
     private static void saveDefConfigFile(List<File> allFiles) {
         Craftorithm.getInstance().saveResource("recipes/example_shaped.yml", false);

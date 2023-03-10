@@ -60,7 +60,12 @@ public class AnvilRecipeItem {
     }
 
     public ItemStack getItem() {
-        return item;
+        if (checkMeta) {
+            ItemStack item = this.item;
+            item.setAmount(1);
+            return item;
+        }
+        return this.item;
     }
 
     public int getCost() {
