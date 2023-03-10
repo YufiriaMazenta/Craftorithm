@@ -27,6 +27,19 @@ command:
     not_exist_type: '<prefix> &c不存在的配方类型'
   run_arcenciel:
     success: '<prefix> &a运行成功，耗时<time>ms'
+  look:
+    not_exist_recipe: '<prefix> &c不存在的配方'
+    title:
+      list: 新增配方列表
+      shaped: 有序配方
+      shapeless: 无序配方
+      furnace: 熔炉配方
+      blasting: 高炉配方
+      smoking: 烟熏炉配方
+      campfire: 营火配方
+      smithing: 锻造配方
+      stone_cutting: 切石配方
+      anvil: 铁砧配方
 
 #Arcenciel脚本的提示消息
 arcenciel:
