@@ -10,7 +10,7 @@ public class VersionCommand extends AbstractSubCommand {
     public static final ISubCommand INSTANCE = new VersionCommand();
 
     private VersionCommand() {
-        super("version");
+        super("version", "craftorithm.command.version");
     }
 
     @Override

@@ -1,9 +1,14 @@
 package me.yufiria.craftorithm.menu.dispatcher;
 
+import me.yufiria.craftorithm.Craftorithm;
 import me.yufiria.craftorithm.menu.bukkit.BukkitMenuHandler;
+import me.yufiria.craftorithm.menu.recipeshow.RecipeListMenuHolder;
+import me.yufiria.craftorithm.menu.recipeshow.RecipeShowMenuHolder;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.InventoryView;
 
 public enum BukkitMenuDispatcher implements Listener {
@@ -23,6 +28,18 @@ public enum BukkitMenuDispatcher implements Listener {
         }
         BukkitMenuHandler handler = (BukkitMenuHandler) view.getTopInventory().getHolder();
         handler.click(event.getSlot(), event);
+    }
+
+    @EventHandler
+    public void onCloseRecipeShowMenu(InventoryCloseEvent event) {
+        if (event.getInventory().getHolder() instanceof RecipeShowMenuHolder) {
+            RecipeShowMenuHolder holder = (RecipeShowMenuHolder) event.getInventory().getHolder();
+            if (holder.getParentMenu() != null) {
+                Bukkit.getScheduler().runTask(Craftorithm.getInstance(), () -> {
+                    event.getPlayer().openInventory(holder.getParentMenu().getInventory());
+                });
+            }
+        }
     }
 
 }

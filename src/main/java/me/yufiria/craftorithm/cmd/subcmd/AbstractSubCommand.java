@@ -14,15 +14,21 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class AbstractSubCommand implements ISubCommand {
 
     private final String command;
+    private String perm;
     private Map<String, ISubCommand> subCommandMap;
 
-    protected AbstractSubCommand(String command, Map<String, ISubCommand> subCommandMap) {
+    protected AbstractSubCommand(String command, Map<String, ISubCommand> subCommandMap, String perm) {
         this.command = command;
         this.subCommandMap = subCommandMap;
+        this.perm = perm;
+    }
+
+    protected AbstractSubCommand(String command, String perm) {
+        this(command, new ConcurrentHashMap<>(), perm);
     }
 
     protected AbstractSubCommand(String command) {
-        this(command, new ConcurrentHashMap<>());
+        this(command, new ConcurrentHashMap<>(), null);
     }
 
     @Override
@@ -31,6 +37,13 @@ public abstract class AbstractSubCommand implements ISubCommand {
         if (subCommand == null) {
             LangUtil.sendMsg(sender, "command.undefined_subcmd");
         } else {
+            String perm = subCommand.getPerm();
+            if (perm != null) {
+                if (!sender.hasPermission(perm)) {
+                    LangUtil.sendMsg(sender, "command.no_perm");
+                    return true;
+                }
+            }
             subCommand.onCommand(sender, args.subList(1, args.size()));
         }
         return true;
@@ -41,14 +54,23 @@ public abstract class AbstractSubCommand implements ISubCommand {
         if (subCommandMap == null)
             return Collections.singletonList("");
         if (args.size() <= 1) {
-            List<String> tabList = new ArrayList<>(subCommandMap.keySet());
-            filterTabList(tabList, args.get(0));
+            List<String> tabList = new ArrayList<>();
+            for (String subCmd : subCommandMap.keySet()) {
+                ISubCommand subCommand = subCommandMap.get(subCmd);
+                if (sender.hasPermission(subCommand.getPerm()))
+                    tabList.add(subCmd);
+            }
+            tabList.removeIf(str -> !str.startsWith(args.get(0)));
             return tabList;
         }
-        ISubCommand subCmd = subCommandMap.get(args.get(0));
-        if (subCmd != null)
-            return subCommandMap.get(args.get(0)).onTabComplete(sender, args.subList(1, args.size()));
-        return Collections.singletonList("");
+        ISubCommand subCommand = subCommandMap.get(args.get(0));
+        if (subCommand != null) {
+            if (!sender.hasPermission(subCommand.getPerm()))
+                return Collections.singletonList("");
+            return subCommand.onTabComplete(sender, args.subList(1, args.size()));
+        }
+        else
+            return Collections.singletonList("");
     }
 
     @Override
@@ -94,4 +116,13 @@ public abstract class AbstractSubCommand implements ISubCommand {
         tabList.removeIf(str -> !str.startsWith(input));
     }
 
+    @Override
+    public String getPerm() {
+        return perm;
+    }
+
+    @Override
+    public void setPerm() {
+        this.perm = perm;
+    }
 }

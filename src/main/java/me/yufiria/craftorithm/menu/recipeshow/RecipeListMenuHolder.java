@@ -55,7 +55,7 @@ public class RecipeListMenuHolder extends BukkitMenuHandler {
         int []frame = {45, 47, 48, 49, 50, 51, 53};
         ItemStack frameDisplay = new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1);
         ItemMeta frameMeta = Bukkit.getItemFactory().getItemMeta(Material.BLACK_STAINED_GLASS_PANE);
-        frameMeta.setDisplayName("");
+        frameMeta.setDisplayName(LangUtil.color(LangUtil.lang("command.look.icon.list.frame")));
         frameDisplay.setItemMeta(frameMeta);
         for (int i : frame) {
             getMenuIconMap().put(i, ItemDisplayIcon.icon(frameDisplay.clone()));
@@ -63,6 +63,7 @@ public class RecipeListMenuHolder extends BukkitMenuHandler {
         ItemStack previousDisplay = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta previousMeta = (SkullMeta) previousDisplay.getItemMeta();
         previousMeta.setOwner("MHF_ArrowLeft");
+        previousMeta.setDisplayName(LangUtil.color(LangUtil.lang("command.look.icon.list.previous")));
         previousDisplay.setItemMeta(previousMeta);
         getMenuIconMap().put(46, ItemDisplayIcon.icon(previousDisplay, (event -> {
             getPreviousPage();
@@ -70,6 +71,7 @@ public class RecipeListMenuHolder extends BukkitMenuHandler {
         ItemStack nextDisplay = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta nextMeta = (SkullMeta) previousDisplay.getItemMeta();
         nextMeta.setOwner("MHF_ArrowRight");
+        nextMeta.setDisplayName(LangUtil.color(LangUtil.lang("command.look.icon.list.next")));
         nextDisplay.setItemMeta(nextMeta);
         getMenuIconMap().put(52, ItemDisplayIcon.icon(nextDisplay, (event -> {
             getPreviousPage();
@@ -79,7 +81,7 @@ public class RecipeListMenuHolder extends BukkitMenuHandler {
             ItemStack display = recipeList.get(slot).getResult();
             int finalSlot = slot;
             getMenuIconMap().put(i, ItemDisplayIcon.icon(display, (event -> {
-                event.getWhoClicked().openInventory(new RecipeShowMenuHolder(recipeList.get(finalSlot)).getInventory());
+                event.getWhoClicked().openInventory(new RecipeShowMenuHolder(recipeList.get(finalSlot), this).getInventory());
             })));
 
         }

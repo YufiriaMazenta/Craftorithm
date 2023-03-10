@@ -29,6 +29,11 @@ command:
     success: '<prefix> &a运行成功，耗时<time>ms'
   look:
     not_exist_recipe: '<prefix> &c不存在的配方'
+    icon:
+      list:
+        frame: ''
+        previous: '&a上一页'
+        next: '&a下一页'
     title:
       list: 新增配方列表
       shaped: 有序配方

@@ -19,7 +19,7 @@ public class RemoveCommand extends AbstractSubCommand {
     public static final ISubCommand INSTANCE = new RemoveCommand();
 
     private RemoveCommand() {
-        super("remove");
+        super("remove", "craftorithm.command.remove");
         recipeMap = new ConcurrentHashMap<>();
         reloadRecipeMap();
     }

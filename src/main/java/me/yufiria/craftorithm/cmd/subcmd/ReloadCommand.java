@@ -15,7 +15,7 @@ public final class ReloadCommand extends AbstractSubCommand {
     public static final ISubCommand INSTANCE = new ReloadCommand();
 
     private ReloadCommand() {
-        super("reload");
+        super("reload", "craftorithm.command.reload");
     }
 
     @Override
