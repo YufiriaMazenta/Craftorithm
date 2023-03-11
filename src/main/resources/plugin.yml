@@ -1,6 +1,6 @@
 name: Craftorithm
 version: ${version}
-main: me.yufiria.craftorithm.Craftorithm
+main: com.github.yufiriamazenta.craftorithm.Craftorithm
 api-version: 1.13
 load: POSTWORLD
 softdepend: [ Vault, LuckPerms, PlayerPoints, PlaceholderAPI ]
