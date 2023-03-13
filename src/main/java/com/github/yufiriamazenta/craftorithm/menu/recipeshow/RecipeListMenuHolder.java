@@ -69,7 +69,7 @@ public class RecipeListMenuHolder extends BukkitMenuHandler {
             getPreviousPage();
         })));
         ItemStack nextDisplay = new ItemStack(Material.PLAYER_HEAD);
-        SkullMeta nextMeta = (SkullMeta) previousDisplay.getItemMeta();
+        SkullMeta nextMeta = (SkullMeta) nextDisplay.getItemMeta();
         nextMeta.setOwner("MHF_ArrowRight");
         nextMeta.setDisplayName(LangUtil.color(LangUtil.lang("command.look.icon.list.next")));
         nextDisplay.setItemMeta(nextMeta);

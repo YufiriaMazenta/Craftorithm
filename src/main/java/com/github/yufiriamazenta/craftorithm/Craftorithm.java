@@ -38,10 +38,10 @@ public final class Craftorithm extends JavaPlugin implements Listener {
         regListeners();
         PluginHookUtil.hookPlugins();
         initArcenciel();
+        loadBStat();
         
         LangUtil.info("load.finish");
         UpdateUtil.checkUpdate(Bukkit.getConsoleSender());
-        loadBStat();
     }
 
     @Override
