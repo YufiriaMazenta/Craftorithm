@@ -147,10 +147,10 @@ public class RecipeShowMenuHolder extends BukkitMenuHandler {
 
     private void setStoneCuttingRecipeMenu() {
         StonecuttingRecipe stonecuttingRecipe = (StonecuttingRecipe) recipe;
-        getMenuIconMap().put(15, ItemDisplayIcon.icon(stonecuttingRecipe.getResult()));
         ItemStack input = stonecuttingRecipe.getInput();
         input.setAmount(1);
         getMenuIconMap().put(11, ItemDisplayIcon.icon(input));
+        getMenuIconMap().put(15, ItemDisplayIcon.icon(stonecuttingRecipe.getResult()));
     }
 
     private void setAnvilRecipeMenu() {

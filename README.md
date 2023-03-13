@@ -2,7 +2,7 @@
 <h1>Craftorithm</h1>
 <h6>基于BukkitAPI开发，轻量级的配方管理插件</h6>
 
-[//]: # (<img src="https://attachment.mcbbs.net/data/myattachment/forum/202204/03/023220kgqlc6gxq6g0qhxh.png" width=150 height=150>)
+<img src="./logo.png" width=150 height=150 alt="Craftorithm">
 </div>
 
 ----
