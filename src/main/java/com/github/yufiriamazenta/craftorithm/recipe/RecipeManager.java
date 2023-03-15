@@ -264,6 +264,10 @@ public class RecipeManager {
         return anvilRecipe.get();
     }
 
+    public static File getRecipeFileFolder() {
+        return recipeFileFolder;
+    }
+
     public static void regAnvilRecipe(AnvilRecipe recipe) {
         anvilRecipeMap.put(recipe.getKey(), recipe);
     }
@@ -271,7 +275,6 @@ public class RecipeManager {
     private static void regPotionMixRecipe(PotionMixRecipe recipe) {
         //TODO
     }
-
 
     private static void saveDefConfigFile(List<File> allFiles) {
         Craftorithm.getInstance().saveResource("recipes/example_shaped.yml", false);

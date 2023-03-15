@@ -25,17 +25,22 @@ command:
   version: '<prefix> &a插件版本：<version>'
   create:
     not_exist_type: '<prefix> &c不存在的配方类型'
+    null_result: '<prefix> &c配方结果不允许为空！'
+    success: '<prefix> &a配方<recipe_name>创建成功'
   run_arcenciel:
     success: '<prefix> &a运行成功，耗时<time>ms'
   look:
     not_exist_recipe: '<prefix> &c不存在的配方'
+
+menu:
+  recipe_list:
+    title: '&3&l新增配方列表'
     icon:
-      list:
-        frame: ''
-        previous: '&a上一页'
-        next: '&a下一页'
+      frame: '&3&l新增配方列表'
+      previous: '&a上一页'
+      next: '&a下一页'
+  recipe_display:
     title:
-      list: 新增配方列表
       shaped: 有序配方
       shapeless: 无序配方
       furnace: 熔炉配方
@@ -45,6 +50,14 @@ command:
       smithing: 锻造配方
       stone_cutting: 切石配方
       anvil: 铁砧配方
+  recipe_creator:
+    title: '&3创建<recipe_type>配方: <recipe_name>'
+    icon:
+      frame: ''
+      result_frame: '&a配方结果'
+      confirm: '&3&l确认创建'
+
+
 
 #Arcenciel脚本的提示消息
 arcenciel:

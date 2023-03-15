@@ -2,10 +2,7 @@ package com.github.yufiriamazenta.craftorithm.item;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.YamlFileWrapper;
-import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
-import com.github.yufiriamazenta.craftorithm.util.FileUtil;
-import com.github.yufiriamazenta.craftorithm.util.ItemUtil;
-import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import com.github.yufiriamazenta.craftorithm.util.*;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -14,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ItemManager {
 
@@ -121,4 +119,37 @@ public class ItemManager {
         item.setAmount(item.getAmount() * amountScale);
         return item;
     }
+
+    /**
+     * 获取一个物品的Craftorithm名字
+     * @param item 传入的物品
+     * @param ignoreAmount 是否忽略数量
+     * @param regNew 如果不存在，是否将此物品注册
+     * @param regName 注册的名字
+     * @return 传入的物品名字
+     */
+    public static String getItemName(ItemStack item, boolean ignoreAmount, boolean regNew, String namespace, String regName) {
+        if (BukkitUtil.checkItemIsAir(item))
+            return null;
+        AtomicReference<String> itemName = new AtomicReference<>("");
+        itemMap.forEach((key, savedItem) -> {
+            if (ignoreAmount) {
+                if (savedItem.isSimilar(item)) {
+                    itemName.set(key);
+                }
+            } else {
+                if (savedItem.equals(item)) {
+                    itemName.set(key);
+                }
+            }
+        });
+        if (!itemName.get().isEmpty())
+            return itemName.get();
+        if (regNew) {
+            addCraftorithmItem(namespace, regName, item);
+            return namespace + ":" + regName;
+        }
+        return null;
+    }
+
 }
