@@ -10,4 +10,5 @@ public enum RecipeType {
     ANVIL,
     UNKNOWN,
     POTION
+
 }

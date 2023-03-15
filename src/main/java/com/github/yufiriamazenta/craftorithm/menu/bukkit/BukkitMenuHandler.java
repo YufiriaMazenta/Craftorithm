@@ -4,8 +4,8 @@ import com.github.yufiriamazenta.craftorithm.menu.api.IMenuHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.InventoryHolder;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Bukkit的菜单处理器
@@ -19,7 +19,7 @@ public abstract class BukkitMenuHandler implements IMenuHandler<Integer, Invento
     }
 
     protected BukkitMenuHandler() {
-        this.menuIconMap = new HashMap<>();
+        this.menuIconMap = new ConcurrentHashMap<>();
     }
 
     @Override

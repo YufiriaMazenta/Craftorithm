@@ -1,7 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.cmd.subcmd;
 
-import com.github.yufiriamazenta.craftorithm.menu.recipeshow.RecipeListMenuHolder;
-import com.github.yufiriamazenta.craftorithm.menu.recipeshow.RecipeShowMenuHolder;
+import com.github.yufiriamazenta.craftorithm.menu.impl.recipe.RecipeDisplayMenuHolder;
+import com.github.yufiriamazenta.craftorithm.menu.impl.recipe.RecipeListMenuHolder;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import org.bukkit.NamespacedKey;
@@ -37,7 +37,7 @@ public class LookRecipeCommand extends AbstractSubCommand {
             return true;
         }
         Player player = (Player) sender;
-        player.openInventory(new RecipeShowMenuHolder(recipe).getInventory());
+        player.openInventory(new RecipeDisplayMenuHolder(recipe).getInventory());
         return true;
     }
 

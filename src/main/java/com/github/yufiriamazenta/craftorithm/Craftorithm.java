@@ -6,7 +6,7 @@ import com.github.yufiriamazenta.craftorithm.cmd.PluginCommand;
 import com.github.yufiriamazenta.craftorithm.config.ConfigUpdater;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.listener.*;
-import com.github.yufiriamazenta.craftorithm.menu.dispatcher.BukkitMenuDispatcher;
+import com.github.yufiriamazenta.craftorithm.menu.bukkit.BukkitMenuDispatcher;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import com.github.yufiriamazenta.craftorithm.util.PluginHookUtil;

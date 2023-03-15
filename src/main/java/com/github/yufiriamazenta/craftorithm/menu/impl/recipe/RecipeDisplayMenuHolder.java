@@ -1,4 +1,4 @@
-package com.github.yufiriamazenta.craftorithm.menu.recipeshow;
+package com.github.yufiriamazenta.craftorithm.menu.impl.recipe;
 
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.BukkitMenuHandler;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.ItemDisplayIcon;
@@ -15,18 +15,18 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Map;
 
-public class RecipeShowMenuHolder extends BukkitMenuHandler {
+public class RecipeDisplayMenuHolder extends BukkitMenuHandler {
 
     private final Recipe recipe;
     private final InventoryType inventoryType;
     private final String invTitle;
     private RecipeListMenuHolder parentMenu;
 
-    public RecipeShowMenuHolder(Recipe recipe) {
+    public RecipeDisplayMenuHolder(Recipe recipe) {
         this(recipe, null);
     }
 
-    public RecipeShowMenuHolder(Recipe recipe, RecipeListMenuHolder parentMenu) {
+    public RecipeDisplayMenuHolder(Recipe recipe, RecipeListMenuHolder parentMenu) {
         super();
         this.parentMenu = parentMenu;
         this.recipe = recipe;
@@ -35,47 +35,47 @@ public class RecipeShowMenuHolder extends BukkitMenuHandler {
             case SHAPED:
                 setShapedRecipeMenu();
                 inventoryType = InventoryType.WORKBENCH;
-                invTitle = LangUtil.lang("command.look.title.shaped");
+                invTitle = LangUtil.lang("menu.recipe_display.title.shaped");
                 break;
             case SHAPELESS:
                 setShapelessRecipeMenu();
                 inventoryType = InventoryType.WORKBENCH;
-                invTitle = LangUtil.lang("command.look.title.shapeless");
+                invTitle = LangUtil.lang("menu.recipe_display.title.shapeless");
                 break;
             case COOKING:
             case RANDOM_COOKING:
                 setCookingRecipeMenu();
                 if (recipe instanceof FurnaceRecipe) {
                     inventoryType = InventoryType.FURNACE;
-                    invTitle = LangUtil.lang("command.look.title.furnace");
+                    invTitle = LangUtil.lang("menu.recipe_display.title.furnace");
                 }
                 else if (recipe instanceof BlastingRecipe) {
                     inventoryType = InventoryType.BLAST_FURNACE;
-                    invTitle = LangUtil.lang("command.look.title.blasting");
+                    invTitle = LangUtil.lang("menu.recipe_display.title.blasting");
                 }
                 else if (recipe instanceof SmokingRecipe) {
                     inventoryType = InventoryType.SMOKER;
-                    invTitle = LangUtil.lang("command.look.title.smoking");
+                    invTitle = LangUtil.lang("menu.recipe_display.title.smoking");
                 }
                 else {
                     inventoryType = InventoryType.FURNACE;
-                    invTitle = LangUtil.lang("command.look.title.campfire");
+                    invTitle = LangUtil.lang("menu.recipe_display.title.campfire");
                 }
                 break;
             case SMITHING:
                 setSmithingRecipeMenu();
                 inventoryType = InventoryType.SMITHING;
-                invTitle = LangUtil.lang("command.look.title.smithing");
+                invTitle = LangUtil.lang("menu.recipe_display.title.smithing");
                 break;
             case STONE_CUTTING:
                 setStoneCuttingRecipeMenu();
                 inventoryType = InventoryType.CHEST;
-                invTitle = LangUtil.lang("command.look.title.stone_cutting");
+                invTitle = LangUtil.lang("menu.recipe_display.title.stone_cutting");
                 break;
             case ANVIL:
                 setAnvilRecipeMenu();
                 inventoryType = InventoryType.ANVIL;
-                invTitle = LangUtil.lang("command.look.title.anvil");
+                invTitle = LangUtil.lang("menu.recipe_display.title.anvil");
                 break;
             default:
                 invTitle = "Unknown Type";

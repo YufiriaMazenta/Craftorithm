@@ -57,16 +57,22 @@ public abstract class AbstractSubCommand implements ISubCommand {
             List<String> tabList = new ArrayList<>();
             for (String subCmd : subCommandMap.keySet()) {
                 ISubCommand subCommand = subCommandMap.get(subCmd);
-                if (sender.hasPermission(subCommand.getPerm()))
+                if (subCommand.getPerm() != null) {
+                    if (sender.hasPermission(subCommand.getPerm()))
+                        tabList.add(subCmd);
+                } else {
                     tabList.add(subCmd);
+                }
             }
             tabList.removeIf(str -> !str.startsWith(args.get(0)));
             return tabList;
         }
         ISubCommand subCommand = subCommandMap.get(args.get(0));
         if (subCommand != null) {
-            if (!sender.hasPermission(subCommand.getPerm()))
-                return Collections.singletonList("");
+            if (subCommand.getPerm() != null) {
+                if (!sender.hasPermission(subCommand.getPerm()))
+                    return Collections.singletonList("");
+            }
             return subCommand.onTabComplete(sender, args.subList(1, args.size()));
         }
         else
