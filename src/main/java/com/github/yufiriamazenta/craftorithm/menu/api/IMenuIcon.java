@@ -7,6 +7,10 @@ package com.github.yufiriamazenta.craftorithm.menu.api;
  */
 public interface IMenuIcon<T, C> {
 
+    Object getValue(String key);
+
+    void setValue(String name, Object value);
+
     void onClick(C clickEvent);
 
     T getDisplay();

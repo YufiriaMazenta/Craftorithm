@@ -7,14 +7,19 @@ import com.github.yufiriamazenta.craftorithm.menu.bukkit.BukkitMenuHandler;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.ItemDisplayIcon;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
+import com.github.yufiriamazenta.craftorithm.util.BukkitUtil;
 import com.github.yufiriamazenta.craftorithm.util.FileUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -65,6 +70,121 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
     }
 
     private void setCookingMenuIcons() {
+        int[] frameSlots = {
+                0, 1, 2, 3, 4, 5, 6, 7, 8,
+                9, 13, 17,
+                18, 26,
+                27, 31, 35,
+                36, 37, 40, 43, 44
+        };
+        ItemDisplayIcon frameIcon = ItemDisplayIcon.icon(Material.BLACK_STAINED_GLASS_PANE, LangUtil.lang("menu.recipe_creator.icon.frame"));
+        for (int slot : frameSlots) {
+            getMenuIconMap().put(slot, frameIcon);
+        }
+        int[] resultFrameSlots = {
+                14, 15, 16,
+                23, 25,
+                32, 33, 34
+        };
+        ItemDisplayIcon resultFrameIcon = ItemDisplayIcon.icon(Material.LIME_STAINED_GLASS_PANE, LangUtil.lang("menu.recipe_creator.icon.result_frame"));
+        for (int slot : resultFrameSlots) {
+            getMenuIconMap().put(slot, resultFrameIcon);
+        }
+        int[] cookingFrameSlots = {
+                10, 11, 12,
+                19, 21,
+                28, 29, 30
+        };
+        ItemDisplayIcon cookingFrameIcon = ItemDisplayIcon.icon(Material.CYAN_STAINED_GLASS_PANE, LangUtil.lang("menu.recipe_creator.icon.cooking_frame"));
+        for (int slot : cookingFrameSlots) {
+            getMenuIconMap().put(slot, cookingFrameIcon);
+        }
+        if (Craftorithm.getInstance().getVanillaVersion() >= 14) {
+            ItemDisplayIcon furnaceIcon = ItemDisplayIcon.icon(Material.FURNACE, LangUtil.lang("menu.recipe_creator.icon.furnace_toggle"), event -> {
+                setIconGlowing(38, event);
+            });
+            getMenuIconMap().put(38, furnaceIcon);
+            ItemDisplayIcon blastingIcon = ItemDisplayIcon.icon(Material.BLAST_FURNACE, LangUtil.lang("menu.recipe_creator.icon.blasting_toggle"), event -> {
+                setIconGlowing(39, event);
+            });
+            getMenuIconMap().put(39, blastingIcon);
+            ItemDisplayIcon smokingIcon = ItemDisplayIcon.icon(Material.SMOKER, LangUtil.lang("menu.recipe_creator.icon.smoking_toggle"), event -> {
+                setIconGlowing(41, event);
+            });
+            getMenuIconMap().put(41, smokingIcon);
+            ItemDisplayIcon campfireIcon = ItemDisplayIcon.icon(Material.CAMPFIRE, LangUtil.lang("menu.recipe_creator.icon.campfire_toggle"), event -> {
+                setIconGlowing(42, event);
+            });
+            getMenuIconMap().put(42, campfireIcon);
+        }
+        ItemDisplayIcon confirmIcon = ItemDisplayIcon.icon(Material.FURNACE, LangUtil.lang("menu.recipe_creator.icon.confirm"), event -> {
+            event.setCancelled(true);
+            ItemStack source = event.getClickedInventory().getItem(20);
+            String sourceName = getItemName(source, true);
+            ItemStack result = event.getClickedInventory().getItem(24);
+            if (result == null || result.getType().equals(Material.AIR)) {
+                LangUtil.sendMsg(event.getWhoClicked(), "command.create.null_result");
+                return;
+            }
+            String resultName = getItemName(result, false);
+            File recipeFile = new File(RecipeManager.getRecipeFileFolder(), recipeName + ".yml");
+            if (!recipeFile.exists()) {
+                FileUtil.createNewFile(recipeFile);
+            }
+            YamlFileWrapper recipeConfig = new YamlFileWrapper(recipeFile);
+            recipeConfig.getConfig().set("type", "cooking");
+            recipeConfig.getConfig().set("result", resultName);
+            if (Craftorithm.getInstance().getVanillaVersion() >= 14) {
+                recipeConfig.getConfig().set("multiple", true);
+                List<Map<String, String>> sourceList = new ArrayList<>();
+                int []toggleSlots = { 38, 39, 41, 42 };
+                for (int slot : toggleSlots) {
+                    ItemStack item = event.getClickedInventory().getItem(slot);
+                    Material material = item.getType();
+                    boolean toggle = item.containsEnchantment(Enchantment.MENDING);
+                    if (toggle) {
+                        Map<String, String> sourceMap = new HashMap<>();
+                        sourceMap.put("block", material.name().toLowerCase(Locale.ROOT));
+                        sourceMap.put("item", sourceName);
+                        sourceList.add(sourceMap);
+                    }
+                }
+                recipeConfig.getConfig().set("source", sourceList);
+                recipeConfig.saveConfig();
+                recipeConfig.reloadConfig();
+                Recipe[] multipleRecipes = RecipeManager.newMultipleRecipe(recipeConfig.getConfig(), recipeName);
+                for (Recipe recipe : multipleRecipes) {
+                    NamespacedKey key = RecipeManager.getRecipeKey(recipe);
+                    RecipeManager.regRecipe(key, recipe, recipeConfig.getConfig());
+                }
+            } else {
+                recipeConfig.getConfig().set("source.block", "furnace");
+                recipeConfig.getConfig().set("source.item", sourceName);
+                recipeConfig.saveConfig();
+                recipeConfig.reloadConfig();
+                Recipe recipe = RecipeManager.newRecipe(recipeConfig.getConfig(), recipeName);
+                RecipeManager.regRecipe(NamespacedKey.fromString(recipeName, Craftorithm.getInstance()), recipe, recipeConfig.getConfig());
+            }
+            event.getWhoClicked().closeInventory();
+        });
+        getMenuIconMap().put(22, confirmIcon);
+    }
+
+    private void setIconGlowing(int slot, InventoryClickEvent event) {
+        event.setCancelled(true);
+        RecipeCreatorMenuHolder holder = (RecipeCreatorMenuHolder) event.getClickedInventory().getHolder();
+        ItemDisplayIcon icon = holder.getMenuIconMap().get(slot);
+        ItemStack display = icon.getDisplay();
+        if (!display.containsEnchantment(Enchantment.MENDING)) {
+            display.addUnsafeEnchantment(Enchantment.MENDING, 1);
+            ItemMeta meta = display.getItemMeta();
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            display.setItemMeta(meta);
+            event.getClickedInventory().setItem(slot, display);
+        } else {
+            display.removeEnchantment(Enchantment.MENDING);
+            event.getClickedInventory().setItem(slot, display);
+        }
     }
 
     private void setCraftMenuIcons() {
@@ -98,13 +218,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
                         LangUtil.sendMsg(event.getWhoClicked(), "command.create.null_result");
                         return;
                     }
-                    String resultName;
-                    if (result.hasItemMeta()) {
-                        resultName = ItemManager.getItemName(result, false, true, "gui_result", UUID.randomUUID().toString());
-                        resultName = "items:" + resultName;
-                    } else {
-                        resultName = result.getType().name();
-                    }
+                    String resultName = getItemName(result, false);
                     int[] sourceSlots = {
                             10, 11, 12,
                             19, 20, 21,
@@ -117,13 +231,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
                             sourceList.add("");
                             continue;
                         }
-                        String itemName;
-                        if (item.hasItemMeta()) {
-                            itemName = ItemManager.getItemName(item, true, true, "gui", UUID.randomUUID().toString());
-                            itemName = "items:" + itemName;
-                        } else {
-                            itemName = item.getType().name();
-                        }
+                        String itemName = getItemName(item, true);
                         sourceList.add(itemName);
                     }
                     File recipeFile = new File(RecipeManager.getRecipeFileFolder(), recipeName + ".yml");
@@ -201,6 +309,20 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
 
     public void setRecipeName(String recipeName) {
         this.recipeName = recipeName;
+    }
+
+    private String getItemName(ItemStack item, boolean ignoreAmount) {
+        if (BukkitUtil.checkItemIsAir(item)) {
+            return null;
+        }
+        String itemName;
+        if (item.hasItemMeta()) {
+            itemName = ItemManager.getItemName(item, ignoreAmount, true, "gui_result", UUID.randomUUID().toString());
+            itemName = "items:" + itemName;
+        } else {
+            itemName = item.getType().name();
+        }
+        return itemName;
     }
 
 }

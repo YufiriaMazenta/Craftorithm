@@ -56,7 +56,11 @@ menu:
       frame: ''
       result_frame: '&a配方结果'
       confirm: '&3&l确认创建'
-
+      cooking_frame: '&a烧炼物品'
+      furnace_toggle: '&a熔炉配方'
+      blasting_toggle: '&a高炉配方'
+      smoking_toggle: '&a烟熏炉配方'
+      campfire_toggle: '&a营火配方'
 
 
 #Arcenciel脚本的提示消息

@@ -11,10 +11,14 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 
 public class ItemDisplayIcon implements IMenuIcon<ItemStack, InventoryClickEvent> {
+
+    private final Map<String, Object> valuesMap;
 
     private ItemStack display;
     private final Consumer<InventoryClickEvent> clickEventConsumer;
@@ -26,6 +30,17 @@ public class ItemDisplayIcon implements IMenuIcon<ItemStack, InventoryClickEvent
     protected ItemDisplayIcon(ItemStack display, Consumer<InventoryClickEvent> clickEventConsumer) {
         this.display = display;
         this.clickEventConsumer = clickEventConsumer;
+        valuesMap = new HashMap<>();
+    }
+
+    @Override
+    public Object getValue(String key) {
+        return valuesMap.get(key);
+    }
+
+    @Override
+    public void setValue(String name, Object value) {
+        valuesMap.put(name, value);
     }
 
     @Override
