@@ -258,7 +258,6 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
                                         s = s.replace(c, ' ');
                                     }
                                 }
-                                s = s.substring(0, s.lastIndexOf(' '));
                                 shape.set(i, s);
                             }
                             shape.removeIf(s -> s.trim().isEmpty());
@@ -286,7 +285,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
     @Override
     public Inventory getInventory() {
         String title = LangUtil.color(LangUtil.lang("menu.recipe_creator.title"));
-        title = title.replace("<recipe_type>", recipeType.name());
+        title = title.replace("<recipe_type>", recipeType.name().toLowerCase(Locale.ROOT));
         title = title.replace("<recipe_name>", recipeName);
         Inventory inventory = Bukkit.createInventory(this, 45, title);
         for (Integer slot : getMenuIconMap().keySet()) {
