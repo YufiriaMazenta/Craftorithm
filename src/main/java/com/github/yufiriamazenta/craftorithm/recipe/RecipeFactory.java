@@ -12,12 +12,48 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.BiFunction;
 
 public class RecipeFactory {
+
+    private static final Map<RecipeType, BiFunction<YamlConfiguration, String, Recipe>> recipeBuilderMap;
+    private static final Map<RecipeType, BiFunction<YamlConfiguration, String, Recipe[]>> multipleRecipeBuilderMap;
+
+    static {
+        recipeBuilderMap = new HashMap<>();
+        recipeBuilderMap.put(RecipeType.SHAPED, RecipeFactory::shapedRecipe);
+        recipeBuilderMap.put(RecipeType.SHAPELESS, RecipeFactory::shapelessRecipe);
+        recipeBuilderMap.put(RecipeType.COOKING, RecipeFactory::cookingRecipe);
+        recipeBuilderMap.put(RecipeType.SMITHING, RecipeFactory::smithingRecipe);
+        recipeBuilderMap.put(RecipeType.STONE_CUTTING, RecipeFactory::stoneCuttingRecipe);
+        recipeBuilderMap.put(RecipeType.RANDOM_COOKING, RecipeFactory::cookingRecipe);
+        recipeBuilderMap.put(RecipeType.ANVIL, RecipeFactory::anvilRecipe);
+
+        multipleRecipeBuilderMap = new HashMap<>();
+        multipleRecipeBuilderMap.put(RecipeType.SHAPED, RecipeFactory::multipleShapedRecipe);
+        multipleRecipeBuilderMap.put(RecipeType.SHAPELESS, RecipeFactory::multipleShapelessRecipe);
+        multipleRecipeBuilderMap.put(RecipeType.COOKING, RecipeFactory::multipleCookingRecipe);
+        multipleRecipeBuilderMap.put(RecipeType.SMITHING, RecipeFactory::multipleSmithingRecipe);
+        multipleRecipeBuilderMap.put(RecipeType.STONE_CUTTING, RecipeFactory::multipleStoneCuttingRecipe);
+        multipleRecipeBuilderMap.put(RecipeType.RANDOM_COOKING, RecipeFactory::multipleCookingRecipe);
+        multipleRecipeBuilderMap.put(RecipeType.ANVIL, RecipeFactory::multipleAnvilRecipe);
+
+    }
+
+    public static Recipe newRecipe(YamlConfiguration config, String key) {
+        key = key.toLowerCase(Locale.ROOT);
+        String recipeTypeStr = config.getString("type", "shaped");
+        RecipeType recipeType = RecipeType.valueOf(recipeTypeStr.toUpperCase(Locale.ROOT));
+        return recipeBuilderMap.get(recipeType).apply(config, key);
+    }
+
+    public static Recipe[] newMultipleRecipe(YamlConfiguration config, String key) {
+        key = key.toLowerCase(Locale.ROOT);
+        String recipeTypeStr = config.getString("type", "shaped");
+        RecipeType recipeType = RecipeType.valueOf(recipeTypeStr.toUpperCase(Locale.ROOT));
+        return multipleRecipeBuilderMap.get(recipeType).apply(config, key);
+    }
 
     public static Recipe shapedRecipe(YamlConfiguration config, String key) {
         Map<Character, RecipeChoice> recipeChoiceMap = getShapedRecipeChoiceMap(config.getConfigurationSection("source"));

@@ -5,6 +5,7 @@ import com.github.yufiriamazenta.craftorithm.config.YamlFileWrapper;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.BukkitMenuHandler;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.ItemDisplayIcon;
+import com.github.yufiriamazenta.craftorithm.recipe.RecipeFactory;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.util.BukkitUtil;
@@ -67,6 +68,63 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
     }
 
     private void setSmithingMenuIcons() {
+        int[] frameSlots = {
+                0, 1 ,2, 3, 4, 5, 6, 7, 8,
+                9, 13, 17,
+                18, 26,
+                27, 31, 35,
+                36, 37, 38, 39, 40, 41, 42, 43, 44
+        };
+        ItemDisplayIcon frameIcon = ItemDisplayIcon.icon(Material.BLACK_STAINED_GLASS_PANE, LangUtil.lang("menu.recipe_creator.icon.frame"));
+        for (int slot : frameSlots) {
+            getMenuIconMap().put(slot, frameIcon);
+        }
+        int[] resultFrameSlots = {
+                14, 15, 16,
+                23, 25,
+                32, 33, 34
+        };
+        ItemDisplayIcon resultFrameIcon = ItemDisplayIcon.icon(Material.LIME_STAINED_GLASS_PANE, LangUtil.lang("menu.recipe_creator.icon.result_frame"));
+        for (int slot : resultFrameSlots) {
+            getMenuIconMap().put(slot, resultFrameIcon);
+        }
+        int[] smithingFrameSlots = {
+                10, 12,
+                19, 20, 21,
+                28, 30
+        };
+        ItemDisplayIcon smithingFrameIcon = ItemDisplayIcon.icon(Material.CYAN_STAINED_GLASS_PANE, LangUtil.lang("menu.recipe_creator.icon.smithing_frame"));
+        for (int slot : smithingFrameSlots) {
+            getMenuIconMap().put(slot, smithingFrameIcon);
+        }
+        ItemDisplayIcon confirmFrameIcon = ItemDisplayIcon.icon(Material.SMITHING_TABLE, LangUtil.lang("menu.recipe_creator.icon.confirm"), event -> {
+            event.setCancelled(true);
+            ItemStack result = event.getClickedInventory().getItem(24);
+            if (result == null || result.getType().equals(Material.AIR)) {
+                LangUtil.sendMsg(event.getWhoClicked(), "command.create.null_result");
+                return;
+            }
+            String resultName = getItemName(result, false);
+            ItemStack base = event.getClickedInventory().getItem(11);
+            ItemStack addition = event.getClickedInventory().getItem(29);
+            String baseName = getItemName(base, true);
+            String additionName = getItemName(addition, true);
+            File recipeFile = new File(RecipeManager.getRecipeFileFolder(), recipeName + ".yml");
+            if (!recipeFile.exists()) {
+                FileUtil.createNewFile(recipeFile);
+            }
+            YamlFileWrapper recipeConfig = new YamlFileWrapper(recipeFile);
+            recipeConfig.getConfig().set("result", resultName);
+            recipeConfig.getConfig().set("source.base", baseName);
+            recipeConfig.getConfig().set("source.addition", additionName);
+            recipeConfig.getConfig().set("type", "smithing");
+            recipeConfig.saveConfig();
+            recipeConfig.reloadConfig();
+            Recipe recipe = RecipeFactory.newRecipe(recipeConfig.getConfig(), recipeName);
+            RecipeManager.regRecipe(NamespacedKey.fromString(recipeName, Craftorithm.getInstance()), recipe, recipeConfig.getConfig());
+            event.getWhoClicked().closeInventory();
+        });
+        getMenuIconMap().put(22, confirmFrameIcon);
     }
 
     private void setCookingMenuIcons() {
@@ -152,7 +210,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
                 recipeConfig.getConfig().set("source", sourceList);
                 recipeConfig.saveConfig();
                 recipeConfig.reloadConfig();
-                Recipe[] multipleRecipes = RecipeManager.newMultipleRecipe(recipeConfig.getConfig(), recipeName);
+                Recipe[] multipleRecipes = RecipeFactory.newMultipleRecipe(recipeConfig.getConfig(), recipeName);
                 for (Recipe recipe : multipleRecipes) {
                     NamespacedKey key = RecipeManager.getRecipeKey(recipe);
                     RecipeManager.regRecipe(key, recipe, recipeConfig.getConfig());
@@ -162,7 +220,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
                 recipeConfig.getConfig().set("source.item", sourceName);
                 recipeConfig.saveConfig();
                 recipeConfig.reloadConfig();
-                Recipe recipe = RecipeManager.newRecipe(recipeConfig.getConfig(), recipeName);
+                Recipe recipe = RecipeFactory.newRecipe(recipeConfig.getConfig(), recipeName);
                 RecipeManager.regRecipe(NamespacedKey.fromString(recipeName, Craftorithm.getInstance()), recipe, recipeConfig.getConfig());
             }
             event.getWhoClicked().closeInventory();
@@ -274,7 +332,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
                     }
                     recipeConfig.saveConfig();
                     recipeConfig.reloadConfig();
-                    Recipe recipe = RecipeManager.newRecipe(recipeConfig.getConfig(), recipeName);
+                    Recipe recipe = RecipeFactory.newRecipe(recipeConfig.getConfig(), recipeName);
                     RecipeManager.regRecipe(NamespacedKey.fromString(recipeName, Craftorithm.getInstance()), recipe, recipeConfig.getConfig());
                     event.getWhoClicked().closeInventory();
                 });
@@ -316,7 +374,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
         }
         String itemName;
         if (item.hasItemMeta()) {
-            itemName = ItemManager.getItemName(item, ignoreAmount, true, "gui_result", UUID.randomUUID().toString());
+            itemName = ItemManager.getItemName(item, ignoreAmount, true, "gui_items", UUID.randomUUID().toString());
             itemName = "items:" + itemName;
         } else {
             itemName = item.getType().name();

@@ -138,6 +138,7 @@ public class NbtHandler {
 
 
     private static void loadNbtBaseClassNameMap() {
+        nbtBaseClassNameMap.put("v1_19_R3", "net.minecraft.nbt.NBTBase");
         nbtBaseClassNameMap.put("v1_19_R2", "net.minecraft.nbt.NBTBase");
         nbtBaseClassNameMap.put("v1_19_R1", "net.minecraft.nbt.NBTBase");
         nbtBaseClassNameMap.put("v1_18_R2", "net.minecraft.nbt.NBTBase");
@@ -153,6 +154,7 @@ public class NbtHandler {
     }
 
     private static void loadGetNmsNbtTypeIdMethodNameMap() {
+        getNmsNbtTypeIdMethodNameMap.put("v1_19_R3", "b");
         getNmsNbtTypeIdMethodNameMap.put("v1_19_R2", "b");
         getNmsNbtTypeIdMethodNameMap.put("v1_19_R1", "a");
         getNmsNbtTypeIdMethodNameMap.put("v1_18_R2", "a");

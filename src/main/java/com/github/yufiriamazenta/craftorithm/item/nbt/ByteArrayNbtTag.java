@@ -78,6 +78,7 @@ public class ByteArrayNbtTag implements IPluginNbtTag<byte[]> {
     }
 
     private static void loadGetValueMethodNameMap() {
+        getValueMethodNameMap.put("v1_19_R3", "e");
         getValueMethodNameMap.put("v1_19_R2", "e");
         getValueMethodNameMap.put("v1_19_R1", "d");
         getValueMethodNameMap.put("v1_18_R2", "d");
@@ -93,6 +94,7 @@ public class ByteArrayNbtTag implements IPluginNbtTag<byte[]> {
     }
 
     private static void loadNmsByteArrayNbtClassNameMap() {
+        nmsByteArrayNbtClassNameMap.put("v1_19_R3", "net.minecraft.nbt.NBTTagByteArray");
         nmsByteArrayNbtClassNameMap.put("v1_19_R2", "net.minecraft.nbt.NBTTagByteArray");
         nmsByteArrayNbtClassNameMap.put("v1_19_R1", "net.minecraft.nbt.NBTTagByteArray");
         nmsByteArrayNbtClassNameMap.put("v1_18_R2", "net.minecraft.nbt.NBTTagByteArray");

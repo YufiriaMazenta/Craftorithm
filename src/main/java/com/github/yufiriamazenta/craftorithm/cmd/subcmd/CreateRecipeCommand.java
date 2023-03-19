@@ -8,12 +8,12 @@ import org.bukkit.entity.Player;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class CreateCommand extends AbstractSubCommand {
+public class CreateRecipeCommand extends AbstractSubCommand {
 
-    public static final CreateCommand INSTANCE = new CreateCommand();
+    public static final CreateRecipeCommand INSTANCE = new CreateRecipeCommand();
     private final List<String> recipeTypeList;
 
-    protected CreateCommand() {
+    protected CreateRecipeCommand() {
         super("create", "craftorithm.command.create");
         recipeTypeList = Arrays.stream(RecipeType.values()).map(RecipeType::name).map(s -> s.toLowerCase(Locale.ROOT)).collect(Collectors.toList());
     }
