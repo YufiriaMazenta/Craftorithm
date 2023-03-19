@@ -165,6 +165,7 @@ public class NumberNbtTag implements IPluginNbtTag<Number> {
         highVersionNmsNumberNbtClassNameMap.put(NumberType.FLOAT, "net.minecraft.nbt.NBTTagFloat");
         highVersionNmsNumberNbtClassNameMap.put(NumberType.DOUBLE, "net.minecraft.nbt.NBTTagDouble");
         nmsNumberNbtClassNameMap.put("default", highVersionNmsNumberNbtClassNameMap);
+        nmsNumberNbtClassNameMap.put("v1_19_R3", highVersionNmsNumberNbtClassNameMap);
         nmsNumberNbtClassNameMap.put("v1_19_R2", highVersionNmsNumberNbtClassNameMap);
         nmsNumberNbtClassNameMap.put("v1_19_R1", highVersionNmsNumberNbtClassNameMap);
         nmsNumberNbtClassNameMap.put("v1_18_R2", highVersionNmsNumberNbtClassNameMap);
@@ -182,6 +183,7 @@ public class NumberNbtTag implements IPluginNbtTag<Number> {
     }
 
     private static void loadGetValueMethodNameMap() {
+        getValueMethodNameMap.put("v1_19_R3", "l");
         getValueMethodNameMap.put("v1_19_R2", "l");
         getValueMethodNameMap.put("v1_19_R1", "k");
         getValueMethodNameMap.put("v1_18_R2", "k");

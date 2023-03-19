@@ -2,7 +2,7 @@ package com.github.yufiriamazenta.craftorithm.recipe;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.CraftorithmAPI;
-import com.github.yufiriamazenta.craftorithm.cmd.subcmd.RemoveCommand;
+import com.github.yufiriamazenta.craftorithm.cmd.subcmd.RemoveRecipeCommand;
 import com.github.yufiriamazenta.craftorithm.config.YamlFileWrapper;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.CustomRecipe;
@@ -26,8 +26,6 @@ import java.util.function.BiFunction;
 public class RecipeManager {
 
     private static final Map<String, YamlFileWrapper> recipeFileMap = new HashMap<>();
-    private static final Map<RecipeType, BiFunction<YamlConfiguration, String, Recipe>> recipeBuilderMap;
-    private static final Map<RecipeType, BiFunction<YamlConfiguration, String, Recipe[]>> multipleRecipeBuilderMap;
     private static final Map<NamespacedKey, YamlConfiguration> recipeKeyConfigMap = new ConcurrentHashMap<>();
     private static final File recipeFileFolder = new File(Craftorithm.getInstance().getDataFolder().getPath(), "recipes");
     private static final Map<NamespacedKey, Boolean> recipeUnlockMap;
@@ -36,24 +34,6 @@ public class RecipeManager {
     private static final Map<NamespacedKey, Recipe> recipeKeyMap;
 
     static {
-        recipeBuilderMap = new HashMap<>();
-        recipeBuilderMap.put(RecipeType.SHAPED, RecipeFactory::shapedRecipe);
-        recipeBuilderMap.put(RecipeType.SHAPELESS, RecipeFactory::shapelessRecipe);
-        recipeBuilderMap.put(RecipeType.COOKING, RecipeFactory::cookingRecipe);
-        recipeBuilderMap.put(RecipeType.SMITHING, RecipeFactory::smithingRecipe);
-        recipeBuilderMap.put(RecipeType.STONE_CUTTING, RecipeFactory::stoneCuttingRecipe);
-        recipeBuilderMap.put(RecipeType.RANDOM_COOKING, RecipeFactory::cookingRecipe);
-        recipeBuilderMap.put(RecipeType.ANVIL, RecipeFactory::anvilRecipe);
-
-        multipleRecipeBuilderMap = new HashMap<>();
-        multipleRecipeBuilderMap.put(RecipeType.SHAPED, RecipeFactory::multipleShapedRecipe);
-        multipleRecipeBuilderMap.put(RecipeType.SHAPELESS, RecipeFactory::multipleShapelessRecipe);
-        multipleRecipeBuilderMap.put(RecipeType.COOKING, RecipeFactory::multipleCookingRecipe);
-        multipleRecipeBuilderMap.put(RecipeType.SMITHING, RecipeFactory::multipleSmithingRecipe);
-        multipleRecipeBuilderMap.put(RecipeType.STONE_CUTTING, RecipeFactory::multipleStoneCuttingRecipe);
-        multipleRecipeBuilderMap.put(RecipeType.RANDOM_COOKING, RecipeFactory::multipleCookingRecipe);
-        multipleRecipeBuilderMap.put(RecipeType.ANVIL, RecipeFactory::multipleAnvilRecipe);
-
         recipeUnlockMap = new ConcurrentHashMap<>();
 
         anvilRecipeMap = new ConcurrentHashMap<>();
@@ -98,13 +78,13 @@ public class RecipeManager {
                 YamlConfiguration config = recipeFileMap.get(fileName).getConfig();
                 boolean multiple = config.getBoolean("multiple", false);
                 if (multiple) {
-                    Recipe[] multipleRecipes = newMultipleRecipe(config, fileName);
+                    Recipe[] multipleRecipes = RecipeFactory.newMultipleRecipe(config, fileName);
                     for (Recipe recipe : multipleRecipes) {
                         NamespacedKey key = getRecipeKey(recipe);
                         regRecipe(key, recipe, config);
                     }
                 } else {
-                    Recipe recipe = newRecipe(config, fileName);
+                    Recipe recipe = RecipeFactory.newRecipe(config, fileName);
                     regRecipe(getRecipeKey(recipe), recipe, config);
                 }
             } catch (Exception e) {
@@ -154,20 +134,6 @@ public class RecipeManager {
             recipeTypeMap.put(recipe, RecipeType.UNKNOWN);
     }
 
-    public static Recipe newRecipe(YamlConfiguration config, String key) {
-        key = key.toLowerCase(Locale.ROOT);
-        String recipeTypeStr = config.getString("type", "shaped");
-        RecipeType recipeType = RecipeType.valueOf(recipeTypeStr.toUpperCase(Locale.ROOT));
-        return recipeBuilderMap.get(recipeType).apply(config, key);
-    }
-
-    public static Recipe[] newMultipleRecipe(YamlConfiguration config, String key) {
-        key = key.toLowerCase(Locale.ROOT);
-        String recipeTypeStr = config.getString("type", "shaped");
-        RecipeType recipeType = RecipeType.valueOf(recipeTypeStr.toUpperCase(Locale.ROOT));
-        return multipleRecipeBuilderMap.get(recipeType).apply(config, key);
-    }
-
     public static void reloadRecipes() {
         loadPluginRecipes();
         loadRecipeFromOtherPlugins();
@@ -184,9 +150,9 @@ public class RecipeManager {
     }
 
     private static void removeRecipes() {
-        List<String> removedRecipes = RemoveCommand.getRemovedRecipeConfig().getConfig().getStringList("recipes");
+        List<String> removedRecipes = RemoveRecipeCommand.getRemovedRecipeConfig().getConfig().getStringList("recipes");
         if (Craftorithm.getInstance().getConfig().getBoolean("remove_all_vanilla_recipe", false)) {
-            for (NamespacedKey key : ((RemoveCommand) RemoveCommand.INSTANCE).getRecipeMap().keySet()) {
+            for (NamespacedKey key : ((RemoveRecipeCommand) RemoveRecipeCommand.INSTANCE).getRecipeMap().keySet()) {
                 if (key.getNamespace().equals("minecraft")) {
                     if (removedRecipes.contains(key.toString()))
                         continue;
@@ -194,7 +160,7 @@ public class RecipeManager {
                 }
             }
         }
-        ((RemoveCommand) RemoveCommand.INSTANCE).removeRecipes(removedRecipes);
+        ((RemoveRecipeCommand) RemoveRecipeCommand.INSTANCE).removeRecipes(removedRecipes);
     }
 
     public static YamlConfiguration getRecipeConfig(Recipe recipe) {

@@ -39,7 +39,7 @@ public final class ReloadCommand extends AbstractSubCommand {
     public static void reloadConfigs() {
         Craftorithm.getInstance().reloadConfig();
         LangUtil.reloadMsgConfig();
-        RemoveCommand.getRemovedRecipeConfig().reloadConfig();
+        RemoveRecipeCommand.getRemovedRecipeConfig().reloadConfig();
         ItemManager.loadItemFiles();
         RecipeManager.loadRecipeFiles();
         ArcencielDispatcher.INSTANCE.getFunctionFile().reloadConfig();

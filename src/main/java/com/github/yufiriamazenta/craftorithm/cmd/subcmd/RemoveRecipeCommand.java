@@ -11,14 +11,14 @@ import org.bukkit.inventory.Recipe;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class RemoveCommand extends AbstractSubCommand {
+public class RemoveRecipeCommand extends AbstractSubCommand {
 
     private static final YamlFileWrapper removedRecipeConfig = new YamlFileWrapper("removed_recipes.yml");
     private final Map<NamespacedKey, Recipe> recipeMap;
 
-    public static final ISubCommand INSTANCE = new RemoveCommand();
+    public static final ISubCommand INSTANCE = new RemoveRecipeCommand();
 
-    private RemoveCommand() {
+    private RemoveRecipeCommand() {
         super("remove", "craftorithm.command.remove");
         recipeMap = new ConcurrentHashMap<>();
         reloadRecipeMap();
