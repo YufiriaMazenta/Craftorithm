@@ -54,7 +54,7 @@ menu:
   recipe_creator:
     title: '&3创建<recipe_type>配方: <recipe_name>'
     icon:
-      frame: ''
+      frame: '&a创建配方'
       result_frame: '&a配方结果'
       confirm: '&3&l确认创建'
       cooking_frame: '&a烧炼物品'
