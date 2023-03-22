@@ -35,4 +35,8 @@ public class StoneCuttingRecipeBuilder extends AbstractRecipeBuilder {
         return new StoneCuttingRecipeBuilder();
     }
 
+    public RecipeChoice getSource() {
+        return source.clone();
+    }
+
 }

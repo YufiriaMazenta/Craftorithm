@@ -59,7 +59,7 @@ public class CookingRecipeBuilder extends AbstractRecipeBuilder {
     }
 
     public RecipeChoice getSource() {
-        return source;
+        return source.clone();
     }
 
     public float getExp() {
