@@ -11,7 +11,7 @@ public abstract class AbstractRecipeBuilder {
     protected AbstractRecipeBuilder() {}
 
     public ItemStack getResult() {
-        return result;
+        return result.clone();
     }
 
     public AbstractRecipeBuilder result(ItemStack result) {

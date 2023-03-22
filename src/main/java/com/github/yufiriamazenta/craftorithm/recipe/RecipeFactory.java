@@ -25,20 +25,19 @@ public class RecipeFactory {
         recipeBuilderMap.put(RecipeType.SHAPED, RecipeFactory::shapedRecipe);
         recipeBuilderMap.put(RecipeType.SHAPELESS, RecipeFactory::shapelessRecipe);
         recipeBuilderMap.put(RecipeType.COOKING, RecipeFactory::cookingRecipe);
-        recipeBuilderMap.put(RecipeType.SMITHING, RecipeFactory::smithingRecipe);
         recipeBuilderMap.put(RecipeType.STONE_CUTTING, RecipeFactory::stoneCuttingRecipe);
         recipeBuilderMap.put(RecipeType.RANDOM_COOKING, RecipeFactory::cookingRecipe);
         recipeBuilderMap.put(RecipeType.ANVIL, RecipeFactory::anvilRecipe);
+        recipeBuilderMap.put(RecipeType.SMITHING, RecipeFactory::smithingRecipe);
 
         multipleRecipeBuilderMap = new HashMap<>();
         multipleRecipeBuilderMap.put(RecipeType.SHAPED, RecipeFactory::multipleShapedRecipe);
         multipleRecipeBuilderMap.put(RecipeType.SHAPELESS, RecipeFactory::multipleShapelessRecipe);
         multipleRecipeBuilderMap.put(RecipeType.COOKING, RecipeFactory::multipleCookingRecipe);
-        multipleRecipeBuilderMap.put(RecipeType.SMITHING, RecipeFactory::multipleSmithingRecipe);
         multipleRecipeBuilderMap.put(RecipeType.STONE_CUTTING, RecipeFactory::multipleStoneCuttingRecipe);
         multipleRecipeBuilderMap.put(RecipeType.RANDOM_COOKING, RecipeFactory::multipleCookingRecipe);
         multipleRecipeBuilderMap.put(RecipeType.ANVIL, RecipeFactory::multipleAnvilRecipe);
-
+        multipleRecipeBuilderMap.put(RecipeType.SMITHING, RecipeFactory::multipleSmithingRecipe);
     }
 
     public static Recipe newRecipe(YamlConfiguration config, String key) {
@@ -158,7 +157,6 @@ public class RecipeFactory {
         RecipeChoice addition = getRecipeChoice(config.getString("source.addition", ""));
         return SmithingRecipeBuilder.builder().key(namespacedKey).result(result).base(base).addition(addition).build();
     }
-
     public static Recipe[] multipleSmithingRecipe(YamlConfiguration config, String key) {
         ItemStack result = getResultItem(config);
         List<Map<?, ?>> sourceList = config.getMapList("source");
