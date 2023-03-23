@@ -21,7 +21,6 @@ public class RemoveRecipeCommand extends AbstractSubCommand {
     private RemoveRecipeCommand() {
         super("remove", "craftorithm.command.remove");
         recipeMap = new ConcurrentHashMap<>();
-        reloadRecipeMap();
     }
 
     @Override

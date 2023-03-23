@@ -13,15 +13,13 @@ import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -47,7 +45,7 @@ public class RecipeManager {
 
     public static void loadRecipeManager() {
         loadRecipeFiles();
-        reloadRecipes();
+        initRecipes();
     }
 
     public static void loadRecipeFiles() {
@@ -70,7 +68,7 @@ public class RecipeManager {
         }
     }
 
-    public static void loadPluginRecipes() {
+    public static void loadCraftorithmRecipes() {
         Bukkit.resetRecipes();
         recipeTypeMap.clear();
         anvilRecipeMap.clear();
@@ -136,10 +134,40 @@ public class RecipeManager {
             recipeTypeMap.put(recipe, RecipeType.UNKNOWN);
     }
 
-    public static void reloadRecipes() {
-        loadPluginRecipes();
+    public static void initRecipes() {
+        Bukkit.getScheduler().runTaskLater(Craftorithm.getInstance(), () -> {
+            Map<Plugin, List<Recipe>> map = CraftorithmAPI.INSTANCE.getPluginRegRecipeMap();
+            Iterator<Recipe> iterator = Bukkit.getServer().recipeIterator();
+            Map<String, Plugin> pluginNameMap = new HashMap<>();
+            for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
+                pluginNameMap.put(plugin.getName().toLowerCase(Locale.ROOT), plugin);
+            }
+            while (iterator.hasNext()) {
+                Recipe recipe = iterator.next();
+                NamespacedKey key = RecipeManager.getRecipeKey(recipe);
+                String namespace = key.getNamespace();
+                if (namespace.equals(NamespacedKey.MINECRAFT) || namespace.equals("craftorithm"))
+                    continue;
+                Plugin plugin = pluginNameMap.get(namespace);
+                if (map.containsKey(plugin)) {
+                    map.get(plugin).add(recipe);
+                } else {
+                    List<Recipe> recipes = new ArrayList<>();
+                    recipes.add(recipe);
+                    map.put(plugin, recipes);
+                }
+            }
+            loadRecipes();
+        }, 200L);
+    }
+
+
+
+    public static void loadRecipes() {
+        loadCraftorithmRecipes();
         loadRecipeFromOtherPlugins();
         removeRecipes();
+        ((RemoveRecipeCommand) RemoveRecipeCommand.INSTANCE).reloadRecipeMap();
     }
 
     private static void loadRecipeFromOtherPlugins() {

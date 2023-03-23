@@ -12,19 +12,21 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public enum CraftorithmAPI {
 
     INSTANCE;
 
-    private final Map<Plugin, List<Recipe>> pluginRecipeMap = new HashMap<>();
+    private final Map<Plugin, List<Recipe>> pluginRecipeMap = new ConcurrentHashMap<>();
+    private boolean loadedOtherPluginRecipe = false;
 
     public ItemStack getOasisRecipeItem(String itemName) {
         return ItemManager.getCraftorithmItem(itemName);
     }
 
     public Map<Plugin, List<Recipe>> getPluginRegRecipeMap() {
-        return Collections.unmodifiableMap(pluginRecipeMap);
+        return pluginRecipeMap;
     }
 
     public void regRecipes(Plugin plugin, List<Recipe> recipes) {
@@ -37,6 +39,14 @@ public enum CraftorithmAPI {
 
     public Map<Recipe, RecipeType> getPluginRecipes() {
         return RecipeManager.getPluginRecipes();
+    }
+
+    public void setLoadedOtherPluginRecipe(boolean loadedOtherPluginRecipe) {
+        this.loadedOtherPluginRecipe = loadedOtherPluginRecipe;
+    }
+
+    public boolean isLoadedOtherPluginRecipe() {
+        return loadedOtherPluginRecipe;
     }
 
 }

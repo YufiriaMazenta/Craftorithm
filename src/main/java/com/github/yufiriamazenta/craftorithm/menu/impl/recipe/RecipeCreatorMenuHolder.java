@@ -8,10 +8,7 @@ import com.github.yufiriamazenta.craftorithm.menu.bukkit.ItemDisplayIcon;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeFactory;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
-import com.github.yufiriamazenta.craftorithm.util.BukkitUtil;
-import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
-import com.github.yufiriamazenta.craftorithm.util.FileUtil;
-import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import com.github.yufiriamazenta.craftorithm.util.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -425,7 +422,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
     }
 
     private String getItemName(ItemStack item, boolean ignoreAmount) {
-        if (BukkitUtil.checkItemIsAir(item)) {
+        if (ItemUtil.checkItemIsAir(item)) {
             return null;
         }
         String itemName;
