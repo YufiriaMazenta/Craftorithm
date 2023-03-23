@@ -157,6 +157,7 @@ public class RecipeFactory {
         RecipeChoice addition = getRecipeChoice(config.getString("source.addition", ""));
         return SmithingRecipeBuilder.builder().key(namespacedKey).result(result).base(base).addition(addition).build();
     }
+
     public static Recipe[] multipleSmithingRecipe(YamlConfiguration config, String key) {
         ItemStack result = getResultItem(config);
         List<Map<?, ?>> sourceList = config.getMapList("source");
