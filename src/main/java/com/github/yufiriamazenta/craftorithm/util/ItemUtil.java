@@ -279,4 +279,7 @@ public class ItemUtil {
         nmsItemClassNameMap.put("v1_13_R1", "net.minecraft.server.v1_13_R1.ItemStack");
     }
 
+    public static boolean checkItemIsAir(ItemStack item) {
+        return item == null || item.getType().equals(Material.AIR);
+    }
 }

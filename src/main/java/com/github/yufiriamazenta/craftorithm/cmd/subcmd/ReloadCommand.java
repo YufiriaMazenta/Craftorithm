@@ -47,7 +47,7 @@ public final class ReloadCommand extends AbstractSubCommand {
     }
 
     public static void reloadRecipes() {
-        RecipeManager.reloadRecipes();
+        RecipeManager.loadRecipes();
     }
 
 }
