@@ -1,0 +1,2 @@
+https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Tag.html
+https://bukkit.windit.net/javadoc/org/bukkit/Tag.html

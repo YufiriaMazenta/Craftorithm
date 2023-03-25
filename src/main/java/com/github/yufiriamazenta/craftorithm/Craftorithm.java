@@ -31,6 +31,7 @@ public final class Craftorithm extends JavaPlugin implements Listener {
         loadVanillaVersion();
         saveDefaultConfig();
         ConfigUpdater.INSTANCE.updateConfig();
+        saveResource("tags.txt", false);
 
         ItemManager.loadItemManager();
         RecipeManager.loadRecipeManager();

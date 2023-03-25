@@ -6,13 +6,17 @@ import com.github.yufiriamazenta.craftorithm.recipe.builder.custom.AnvilRecipeBu
 import com.github.yufiriamazenta.craftorithm.recipe.builder.vanilla.*;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipeItem;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Tag;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.*;
 
+import java.lang.reflect.Field;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 
 public class RecipeFactory {
@@ -293,7 +297,18 @@ public class RecipeFactory {
         if (itemStr.startsWith("items:")) {
             ItemStack item = ItemManager.matchCraftorithmItem(itemStr);
             return new RecipeChoice.ExactChoice(item);
-        } else {
+        } else if (itemStr.startsWith("tag:")) {
+            String tagStr = itemStr.substring(4).toUpperCase(Locale.ROOT);
+            Tag<Material> materialTag;
+            try {
+                Field field = Tag.class.getField(tagStr);
+                materialTag = (Tag<Material>) field.get(null);
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+            return new RecipeChoice.MaterialChoice(materialTag);
+        }
+        else {
             Material material = Material.matchMaterial(itemStr);
             if (material == null) {
                 throw new IllegalArgumentException(itemStr + " is a not exist item type");
