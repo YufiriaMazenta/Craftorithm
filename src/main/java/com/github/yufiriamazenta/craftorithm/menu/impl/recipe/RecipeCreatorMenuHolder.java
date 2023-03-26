@@ -356,7 +356,6 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
                             char[] tmp = "abcdefghi".toCharArray();
                             for (int i = 0; i < sourceList.size(); i++) {
                                 if (sourceList.get(i).isEmpty()) {
-                                    i++;
                                     continue;
                                 }
                                 itemMap.put(tmp[i], sourceList.get(i));

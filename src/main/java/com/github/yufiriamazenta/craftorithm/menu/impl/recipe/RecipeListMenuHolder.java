@@ -61,6 +61,7 @@ public class RecipeListMenuHolder extends BukkitMenuHandler {
         previousMeta.setDisplayName(LangUtil.color(LangUtil.lang("menu.recipe_list.icon.previous")));
         previousDisplay.setItemMeta(previousMeta);
         getMenuIconMap().put(46, ItemDisplayIcon.icon(previousDisplay, (event -> {
+            event.setCancelled(true);
             event.getWhoClicked().openInventory(getPreviousPage());
         })));
         ItemStack nextDisplay = new ItemStack(Material.PLAYER_HEAD);
@@ -69,6 +70,7 @@ public class RecipeListMenuHolder extends BukkitMenuHandler {
         nextMeta.setDisplayName(LangUtil.color(LangUtil.lang("menu.recipe_list.icon.next")));
         nextDisplay.setItemMeta(nextMeta);
         getMenuIconMap().put(52, ItemDisplayIcon.icon(nextDisplay, (event -> {
+            event.setCancelled(true);
             event.getWhoClicked().openInventory(getNextPage());
         })));
         int slot = page * 54;
@@ -76,6 +78,7 @@ public class RecipeListMenuHolder extends BukkitMenuHandler {
             ItemStack display = recipeList.get(slot).getResult();
             int finalSlot = slot;
             getMenuIconMap().put(i, ItemDisplayIcon.icon(display, (event -> {
+                event.setCancelled(true);
                 event.getWhoClicked().openInventory(new RecipeDisplayMenuHolder(recipeList.get(finalSlot), this).getInventory());
             })));
 
