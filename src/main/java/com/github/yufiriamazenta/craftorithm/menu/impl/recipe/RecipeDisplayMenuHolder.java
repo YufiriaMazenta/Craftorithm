@@ -104,6 +104,8 @@ public class RecipeDisplayMenuHolder extends BukkitMenuHandler {
             for (int i = 0; i < shapeStr.length(); i++) {
                 char c = shapeStr.charAt(i);
                 if (itemMap.containsKey(c)) {
+                    if (itemMap.get(c) == null)
+                        continue;
                     ItemStack item = itemMap.get(c).clone();
                     item.setAmount(1);
                     getMenuIconMap().put(columnStart, ItemDisplayIcon.icon(item));
