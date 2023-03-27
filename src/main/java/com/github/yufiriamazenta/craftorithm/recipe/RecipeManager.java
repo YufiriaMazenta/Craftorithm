@@ -13,7 +13,6 @@ import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
 import org.bukkit.plugin.Plugin;
 
