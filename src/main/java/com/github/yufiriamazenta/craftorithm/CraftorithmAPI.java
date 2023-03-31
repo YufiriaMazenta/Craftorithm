@@ -16,18 +16,18 @@ public enum CraftorithmAPI {
 
     INSTANCE;
 
-    private final Map<Plugin, List<Recipe>> pluginRecipeMap = new ConcurrentHashMap<>();
+    private final Map<String, List<Recipe>> pluginRecipeMap = new ConcurrentHashMap<>();
     private boolean loadedOtherPluginRecipe = false;
 
     public ItemStack getOasisRecipeItem(String itemName) {
         return ItemManager.getCraftorithmItem(itemName);
     }
 
-    public Map<Plugin, List<Recipe>> getPluginRegRecipeMap() {
+    public Map<String, List<Recipe>> getPluginRegRecipeMap() {
         return pluginRecipeMap;
     }
 
-    public void regRecipes(Plugin plugin, List<Recipe> recipes) {
+    public void regRecipes(String plugin, List<Recipe> recipes) {
         pluginRecipeMap.put(plugin, recipes);
     }
 

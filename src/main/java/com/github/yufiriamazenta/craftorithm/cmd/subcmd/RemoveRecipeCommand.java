@@ -29,7 +29,7 @@ public class RemoveRecipeCommand extends AbstractSubCommand {
             sendNotEnoughCmdParamMsg(sender, 1);
             return true;
         }
-        if (removeRecipe(args.get(0))) {
+        if (removeRecipe(args.get(0), true)) {
             LangUtil.sendMsg(sender, "command.remove.success");
         }
         else
@@ -70,7 +70,7 @@ public class RemoveRecipeCommand extends AbstractSubCommand {
         return removedRecipeConfig;
     }
 
-    public void removeRecipes(List<String> keyStrList) {
+    public void removeRecipes(List<String> keyStrList, boolean save2File) {
         List<NamespacedKey> keyList = new ArrayList<>();
         for (String str : keyStrList) {
             NamespacedKey key = NamespacedKey.fromString(str);
@@ -87,10 +87,13 @@ public class RemoveRecipeCommand extends AbstractSubCommand {
                 continue;
             if (keyList.contains(key1)) {
                 recipeIterator.remove();
-                List<String> removedList = removedRecipeConfig.getConfig().getStringList("recipes");
-                if (!removedList.contains(key1.toString())) {
-                    removedList.add(key1.toString());
-                    removedRecipeConfig.getConfig().set("recipes", removedList);
+                if (save2File) {
+                    List<String> removedList = removedRecipeConfig.getConfig().getStringList("recipes");
+                    if (!removedList.contains(key1.toString())) {
+                        removedList.add(key1.toString());
+                        removedRecipeConfig.getConfig().set("recipes", removedList);
+                    }
+                    removedRecipeConfig.saveConfig();
                 }
                 keyList.remove(key1);
                 if (keyList.size() <= 0)
@@ -98,10 +101,9 @@ public class RemoveRecipeCommand extends AbstractSubCommand {
             }
         }
         reloadRecipeMap();
-        removedRecipeConfig.saveConfig();
     }
 
-    public boolean removeRecipe(String keyStr) {
+    public boolean removeRecipe(String keyStr, boolean save2File) {
         NamespacedKey key = NamespacedKey.fromString(keyStr);
         Iterator<Recipe> recipeIterator = Bukkit.recipeIterator();
         if (key == null)
@@ -111,11 +113,13 @@ public class RemoveRecipeCommand extends AbstractSubCommand {
             NamespacedKey key1 = RecipeManager.getRecipeKey(recipe1);
             if (key.equals(key1)) {
                 recipeIterator.remove();
-                List<String> removedList = removedRecipeConfig.getConfig().getStringList("recipes");
-                if (!removedList.contains(keyStr))
-                    removedList.add(keyStr);
-                removedRecipeConfig.getConfig().set("recipes", removedList);
-                removedRecipeConfig.saveConfig();
+                if (save2File) {
+                    List<String> removedList = removedRecipeConfig.getConfig().getStringList("recipes");
+                    if (!removedList.contains(keyStr))
+                        removedList.add(keyStr);
+                    removedRecipeConfig.getConfig().set("recipes", removedList);
+                    removedRecipeConfig.saveConfig();
+                }
                 reloadRecipeMap();
                 return true;
             }

@@ -47,7 +47,7 @@ public final class Craftorithm extends JavaPlugin implements Listener {
     @Override
     public void onDisable() {
         Bukkit.getScheduler().cancelTasks(this);
-        Bukkit.resetRecipes();
+        RecipeManager.resetRecipes();
     }
 
     private void loadVanillaVersion() {
