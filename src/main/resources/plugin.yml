@@ -6,6 +6,7 @@ load: POSTWORLD
 softdepend: [ Vault, LuckPerms, PlayerPoints, PlaceholderAPI ]
 authors: [ YufiriaMazenta ]
 website: https://github.com/YufiriaMazenta/Craftorithm
+folia-supported: true
 commands:
   craftorithm:
     aliases:

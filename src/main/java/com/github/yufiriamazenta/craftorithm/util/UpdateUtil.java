@@ -31,7 +31,7 @@ public class UpdateUtil {
                 newVersion = newVersion.substring(index + 13, index2 - 2);
                 String ver = Craftorithm.getInstance().getDescription().getVersion();
                 ver = ver.substring(0, ver.indexOf("-"));
-                if (!ver.equals(newVersion)) {
+                if (checkVersion(newVersion, ver)) {
                     String finalNewVersion = newVersion;
                     Bukkit.getScheduler().callSyncMethod(Craftorithm.getInstance(), () -> {
                         LangUtil.sendMsg(sender, "new_version", ContainerUtil.newHashMap("<new_version>", finalNewVersion));
@@ -42,6 +42,28 @@ public class UpdateUtil {
                 e.printStackTrace();
             }
         });
+    }
+
+    public static boolean checkVersion(String newVersion, String version) {
+        if (newVersion.equals(version))
+            return false;
+        String[] newVersionNum = newVersion.split("\\.");
+        String[] versionNum = version.split("\\.");
+        int newRootVer = Integer.parseInt(newVersionNum[0]);
+        int rootVer = Integer.parseInt(versionNum[0]);
+        if (rootVer < newRootVer)
+            return true;
+        else if (rootVer > newRootVer)
+            return false;
+        int newSubVer = Integer.parseInt(newVersionNum[1]);
+        int subVer = Integer.parseInt(versionNum[1]);
+        if (newSubVer > subVer)
+            return true;
+        else if (subVer > newSubVer)
+            return false;
+        int newLatestVer = Integer.parseInt(newVersionNum[2]);
+        int latestVer = Integer.parseInt(versionNum[2]);
+        return newLatestVer > latestVer;
     }
 
 }

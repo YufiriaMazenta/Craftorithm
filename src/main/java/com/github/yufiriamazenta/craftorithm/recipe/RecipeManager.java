@@ -14,7 +14,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.*;
-import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -68,10 +67,7 @@ public class RecipeManager {
     }
 
     public static void loadCraftorithmRecipes() {
-        Bukkit.resetRecipes();
-        recipeTypeMap.clear();
-        anvilRecipeMap.clear();
-        recipeKeyConfigMap.clear();
+        resetRecipes();
         for (String fileName : recipeFileMap.keySet()) {
             try {
                 YamlConfiguration config = recipeFileMap.get(fileName).getConfig();
@@ -91,6 +87,28 @@ public class RecipeManager {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static void resetRecipes() {
+        CraftorithmAPI.INSTANCE.getPluginRegRecipeMap().forEach((plugin, recipes) -> {
+            if (plugin.equals(NamespacedKey.MINECRAFT))
+                return;
+            List<String> recipeKeyList = new ArrayList<>();
+            for (Recipe recipe : recipes) {
+                recipeKeyList.add(getRecipeKey(recipe).toString());
+            }
+            ((RemoveRecipeCommand) RemoveRecipeCommand.INSTANCE).removeRecipes(recipeKeyList, false);
+        });
+        List<String> recipeKeyList = new ArrayList<>();
+        for (NamespacedKey key : getPluginRecipeKeys()) {
+            recipeKeyList.add(key.toString());
+        }
+        ((RemoveRecipeCommand) RemoveRecipeCommand.INSTANCE).removeRecipes(recipeKeyList, false);
+        recipeTypeMap.clear();
+        recipeKeyMap.clear();
+        recipeUnlockMap.clear();
+        anvilRecipeMap.clear();
+        recipeKeyConfigMap.clear();
     }
 
     public static void regRecipe(NamespacedKey key, Recipe recipe, YamlConfiguration config) {
@@ -135,25 +153,18 @@ public class RecipeManager {
 
     public static void initRecipes() {
         Bukkit.getScheduler().runTaskLater(Craftorithm.getInstance(), () -> {
-            Map<Plugin, List<Recipe>> map = CraftorithmAPI.INSTANCE.getPluginRegRecipeMap();
+            Map<String, List<Recipe>> map = CraftorithmAPI.INSTANCE.getPluginRegRecipeMap();
             Iterator<Recipe> iterator = Bukkit.getServer().recipeIterator();
-            Map<String, Plugin> pluginNameMap = new HashMap<>();
-            for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
-                pluginNameMap.put(plugin.getName().toLowerCase(Locale.ROOT), plugin);
-            }
             while (iterator.hasNext()) {
                 Recipe recipe = iterator.next();
                 NamespacedKey key = RecipeManager.getRecipeKey(recipe);
                 String namespace = key.getNamespace();
-                if (namespace.equals(NamespacedKey.MINECRAFT) || namespace.equals("craftorithm"))
-                    continue;
-                Plugin plugin = pluginNameMap.get(namespace);
-                if (map.containsKey(plugin)) {
-                    map.get(plugin).add(recipe);
+                if (map.containsKey(namespace)) {
+                    map.get(namespace).add(recipe);
                 } else {
                     List<Recipe> recipes = new ArrayList<>();
                     recipes.add(recipe);
-                    map.put(plugin, recipes);
+                    map.put(namespace, recipes);
                 }
             }
             loadRecipes();
@@ -170,8 +181,10 @@ public class RecipeManager {
     }
 
     private static void loadRecipeFromOtherPlugins() {
-        Map<Plugin, List<Recipe>> pluginRecipeMap = CraftorithmAPI.INSTANCE.getPluginRegRecipeMap();
-        for (Plugin plugin : pluginRecipeMap.keySet()) {
+        Map<String, List<Recipe>> pluginRecipeMap = CraftorithmAPI.INSTANCE.getPluginRegRecipeMap();
+        for (String plugin : pluginRecipeMap.keySet()) {
+            if (plugin.equals(NamespacedKey.MINECRAFT) || plugin.equals(Craftorithm.getInstance().getName()))
+                continue;
             for (Recipe recipe : pluginRecipeMap.get(plugin)) {
                 Craftorithm.getInstance().getServer().addRecipe(recipe);
             }
@@ -189,7 +202,7 @@ public class RecipeManager {
                 }
             }
         }
-        ((RemoveRecipeCommand) RemoveRecipeCommand.INSTANCE).removeRecipes(removedRecipes);
+        ((RemoveRecipeCommand) RemoveRecipeCommand.INSTANCE).removeRecipes(removedRecipes, false);
     }
 
     public static YamlConfiguration getRecipeConfig(Recipe recipe) {
