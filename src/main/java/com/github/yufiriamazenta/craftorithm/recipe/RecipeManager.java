@@ -43,7 +43,6 @@ public class RecipeManager {
 
     public static void loadRecipeManager() {
         loadRecipeFiles();
-        initRecipes();
     }
 
     public static void loadRecipeFiles() {
@@ -150,28 +149,6 @@ public class RecipeManager {
         else
             recipeTypeMap.put(recipe, RecipeType.UNKNOWN);
     }
-
-    public static void initRecipes() {
-        Bukkit.getScheduler().runTaskLater(Craftorithm.getInstance(), () -> {
-            Map<String, List<Recipe>> map = CraftorithmAPI.INSTANCE.getPluginRegRecipeMap();
-            Iterator<Recipe> iterator = Bukkit.getServer().recipeIterator();
-            while (iterator.hasNext()) {
-                Recipe recipe = iterator.next();
-                NamespacedKey key = RecipeManager.getRecipeKey(recipe);
-                String namespace = key.getNamespace();
-                if (map.containsKey(namespace)) {
-                    map.get(namespace).add(recipe);
-                } else {
-                    List<Recipe> recipes = new ArrayList<>();
-                    recipes.add(recipe);
-                    map.put(namespace, recipes);
-                }
-            }
-            loadRecipes();
-        }, 200L);
-    }
-
-
 
     public static void loadRecipes() {
         loadCraftorithmRecipes();
