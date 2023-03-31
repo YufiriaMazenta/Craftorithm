@@ -152,7 +152,7 @@ public class RecipeManager {
     }
 
     public static void initRecipes() {
-        Bukkit.getScheduler().runTaskLater(Craftorithm.getInstance(), () -> {
+        Bukkit.getGlobalRegionScheduler().runDelayed(Craftorithm.getInstance(), (task -> {
             Map<String, List<Recipe>> map = CraftorithmAPI.INSTANCE.getPluginRegRecipeMap();
             Iterator<Recipe> iterator = Bukkit.getServer().recipeIterator();
             while (iterator.hasNext()) {
@@ -168,7 +168,7 @@ public class RecipeManager {
                 }
             }
             loadRecipes();
-        }, 200L);
+        }), 200L);
     }
 
 

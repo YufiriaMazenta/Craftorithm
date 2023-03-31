@@ -15,7 +15,7 @@ public class UpdateUtil {
     public static void checkUpdate(CommandSender sender) {
         if (!Craftorithm.getInstance().getConfig().getBoolean("check_update"))
             return;
-        Bukkit.getScheduler().runTaskAsynchronously(Craftorithm.getInstance(), () -> {
+        Bukkit.getGlobalRegionScheduler().run(Craftorithm.getInstance(), (task -> {
             try {
                 URL url = new URL("https://api.github.com/repos/YufiriaMazenta/Craftorithm/releases/latest");
                 URLConnection conn = url.openConnection();
@@ -41,7 +41,7 @@ public class UpdateUtil {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        });
+        }));
     }
 
     public static boolean checkVersion(String newVersion, String version) {
