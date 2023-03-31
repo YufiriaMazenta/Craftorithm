@@ -12,15 +12,23 @@ import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import com.github.yufiriamazenta.craftorithm.util.PluginHookUtil;
 import com.github.yufiriamazenta.craftorithm.util.UpdateUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.Recipe;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public final class Craftorithm extends JavaPlugin implements Listener {
 
     private static Craftorithm INSTANCE;
     private int vanillaVersion;
+    private boolean hasLoadPluginRecipeMap = false;
 
     public Craftorithm() {
         INSTANCE = this;
@@ -102,4 +110,25 @@ public final class Craftorithm extends JavaPlugin implements Listener {
         }
     }
 
+    @EventHandler
+    public void onPlayerJoinLoadRecipeMap(PlayerJoinEvent event) {
+        if (!hasLoadPluginRecipeMap) {
+            hasLoadPluginRecipeMap = true;
+            Map<String, List<Recipe>> map = CraftorithmAPI.INSTANCE.getPluginRegRecipeMap();
+            Iterator<Recipe> iterator = Bukkit.getServer().recipeIterator();
+            while (iterator.hasNext()) {
+                Recipe recipe = iterator.next();
+                NamespacedKey key = RecipeManager.getRecipeKey(recipe);
+                String namespace = key.getNamespace();
+                if (map.containsKey(namespace)) {
+                    map.get(namespace).add(recipe);
+                } else {
+                    List<Recipe> recipes = new ArrayList<>();
+                    recipes.add(recipe);
+                    map.put(namespace, recipes);
+                }
+            }
+            RecipeManager.loadRecipes();
+        }
+    }
 }
