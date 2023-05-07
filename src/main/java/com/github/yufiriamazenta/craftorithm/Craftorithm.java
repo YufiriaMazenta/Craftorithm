@@ -16,6 +16,8 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.server.ServerLoadEvent;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -111,7 +113,7 @@ public final class Craftorithm extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    public void onPlayerJoinLoadRecipeMap(PlayerJoinEvent event) {
+    public void onPlayerJoinLoadRecipeMap(ServerLoadEvent event) {
         if (!hasLoadPluginRecipeMap) {
             hasLoadPluginRecipeMap = true;
             Map<String, List<Recipe>> map = CraftorithmAPI.INSTANCE.getPluginRegRecipeMap();
