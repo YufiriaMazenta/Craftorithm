@@ -21,6 +21,7 @@ public enum BukkitMenuDispatcher implements Listener {
         if (!(view.getTopInventory().getHolder() instanceof BukkitMenuHandler))
             return;
         if (view.getBottomInventory().equals(event.getClickedInventory())) {
+            event.setCancelled(true);
             return;
         }
         BukkitMenuHandler handler = (BukkitMenuHandler) view.getTopInventory().getHolder();
