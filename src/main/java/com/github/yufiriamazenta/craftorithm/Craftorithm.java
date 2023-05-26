@@ -113,7 +113,7 @@ public final class Craftorithm extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    public void onPlayerJoinLoadRecipeMap(ServerLoadEvent event) {
+    public void onServerLoad(ServerLoadEvent event) {
         if (!hasLoadPluginRecipeMap) {
             hasLoadPluginRecipeMap = true;
             Map<String, List<Recipe>> map = CraftorithmAPI.INSTANCE.getPluginRegRecipeMap();

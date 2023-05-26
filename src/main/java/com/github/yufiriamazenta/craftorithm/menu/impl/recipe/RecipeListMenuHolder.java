@@ -1,5 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.menu.impl.recipe;
 
+import com.github.yufiriamazenta.craftorithm.cmd.subcmd.RemoveRecipeCommand;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.BukkitMenuHandler;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.ItemDisplayIcon;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
