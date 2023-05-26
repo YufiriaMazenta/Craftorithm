@@ -1,6 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.menu.impl.recipe;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
+import com.github.yufiriamazenta.craftorithm.cmd.subcmd.RemoveRecipeCommand;
 import com.github.yufiriamazenta.craftorithm.config.YamlFileWrapper;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.BukkitMenuHandler;
@@ -115,7 +116,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
                         RecipeManager.regRecipe(key, recipe, recipeConfig.getConfig());
                     }
                     event.getWhoClicked().closeInventory();
-                    sendSuccessMsg(event.getWhoClicked());
+                    sendSuccessMsgAndReloadMap(event.getWhoClicked());
                 });
         getMenuIconMap().put(22, confirmIcon);
     }
@@ -176,7 +177,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
             Recipe recipe = RecipeFactory.newRecipe(recipeConfig.getConfig(), recipeName);
             RecipeManager.regRecipe(NamespacedKey.fromString(recipeName, Craftorithm.getInstance()), recipe, recipeConfig.getConfig());
             event.getWhoClicked().closeInventory();
-            sendSuccessMsg(event.getWhoClicked());
+            sendSuccessMsgAndReloadMap(event.getWhoClicked());
         });
         getMenuIconMap().put(22, confirmFrameIcon);
     }
@@ -278,7 +279,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
                 RecipeManager.regRecipe(NamespacedKey.fromString(recipeName, Craftorithm.getInstance()), recipe, recipeConfig.getConfig());
             }
             event.getWhoClicked().closeInventory();
-            sendSuccessMsg(event.getWhoClicked());
+            sendSuccessMsgAndReloadMap(event.getWhoClicked());
         });
         getMenuIconMap().put(22, confirmIcon);
     }
@@ -389,7 +390,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
                     Recipe recipe = RecipeFactory.newRecipe(recipeConfig.getConfig(), recipeName);
                     RecipeManager.regRecipe(NamespacedKey.fromString(recipeName, Craftorithm.getInstance()), recipe, recipeConfig.getConfig());
                     event.getWhoClicked().closeInventory();
-                    sendSuccessMsg(event.getWhoClicked());
+                    sendSuccessMsgAndReloadMap(event.getWhoClicked());
                 });
         getMenuIconMap().put(22, confirmIcon);
     }
@@ -437,10 +438,11 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
         return itemName;
     }
 
-    private void sendSuccessMsg(HumanEntity entity) {
+    private void sendSuccessMsgAndReloadMap(HumanEntity entity) {
         Map<String, String> replaceMap = ContainerUtil.newHashMap("<recipe_type>", recipeType.name().toLowerCase(),
                 "<recipe_name>", recipeName);
         LangUtil.sendMsg(entity, "command.create.success", replaceMap);
+        ((RemoveRecipeCommand) RemoveRecipeCommand.INSTANCE).reloadRecipeMap();
     }
 
 }
