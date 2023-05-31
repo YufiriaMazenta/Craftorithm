@@ -380,6 +380,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
                             recipeConfig.getConfig().set("source", itemMap);
                             break;
                         case SHAPELESS:
+                            sourceList.removeIf(String::isEmpty);
                             recipeConfig.getConfig().set("type", "shapeless");
                             recipeConfig.getConfig().set("result", resultName);
                             recipeConfig.getConfig().set("source", sourceList);
