@@ -34,7 +34,7 @@ public class ItemManager {
             Set<String> itemKeySet = itemFile.getConfig().getKeys(false);
             for (String itemKey : itemKeySet) {
                 try {
-                    addCraftorithmItem(fileKey, itemKey, ItemUtil.getItemFromConfig(itemFile.getConfig(), itemKey));
+                    itemMap.put(fileKey + ":" + itemKey, ItemUtil.getItemFromConfig(itemFile.getConfig(), itemKey));
                 } catch (Exception e) {
                     LangUtil.info("load.item_load_exception", ContainerUtil.newHashMap("<item_name>", fileKey + ":" + itemKey));
                     e.printStackTrace();

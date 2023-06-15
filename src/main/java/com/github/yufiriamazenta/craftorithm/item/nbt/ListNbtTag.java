@@ -134,6 +134,7 @@ public class ListNbtTag implements IPluginNbtTag<List<IPluginNbtTag<?>>> {
     }
 
     private static void loadGetListItemMethodNameMap() {
+        getListItemMethodNameMap.put("v1_20_R1", "k");
         getListItemMethodNameMap.put("v1_19_R3", "k");
         getListItemMethodNameMap.put("v1_19_R2", "k");
         getListItemMethodNameMap.put("v1_19_R1", "k");
@@ -150,6 +151,7 @@ public class ListNbtTag implements IPluginNbtTag<List<IPluginNbtTag<?>>> {
     }
 
     private static void loadNmsNbtListClassNameMap() {
+        nmsNbtListClassNameMap.put("v1_20_R1", "net.minecraft.nbt.NBTTagList");
         nmsNbtListClassNameMap.put("v1_19_R3", "net.minecraft.nbt.NBTTagList");
         nmsNbtListClassNameMap.put("v1_19_R2", "net.minecraft.nbt.NBTTagList");
         nmsNbtListClassNameMap.put("v1_19_R1", "net.minecraft.nbt.NBTTagList");

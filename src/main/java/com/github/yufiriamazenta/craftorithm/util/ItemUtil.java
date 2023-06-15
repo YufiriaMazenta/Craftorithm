@@ -235,6 +235,8 @@ public class ItemUtil {
     }
 
     private static void loadGetNbtCompoundFromItemMethodNameMap() {
+        getNbtCompoundFromItemMethodNameMap.put("v1_20_R1", "u");
+        getNbtCompoundFromItemMethodNameMap.put("v1_19_R3", "u");
         getNbtCompoundFromItemMethodNameMap.put("v1_19_R2", "u");
         getNbtCompoundFromItemMethodNameMap.put("v1_19_R1", "u");
         getNbtCompoundFromItemMethodNameMap.put("v1_18_R2", "t");
@@ -250,6 +252,8 @@ public class ItemUtil {
     }
 
     private static void loadSetNbtCompound2ItemMethodNameMap() {
+        setNbtCompound2ItemMethodNameMap.put("v1_20_R1", "c");
+        setNbtCompound2ItemMethodNameMap.put("v1_19_R3", "c");
         setNbtCompound2ItemMethodNameMap.put("v1_19_R2", "c");
         setNbtCompound2ItemMethodNameMap.put("v1_19_R1", "c");
         setNbtCompound2ItemMethodNameMap.put("v1_18_R2", "c");
@@ -265,6 +269,8 @@ public class ItemUtil {
     }
 
     private static void loadNmsItemClassNameMap() {
+        nmsItemClassNameMap.put("v1_20_R1", "net.minecraft.world.item.ItemStack");
+        nmsItemClassNameMap.put("v1_19_R3", "net.minecraft.world.item.ItemStack");
         nmsItemClassNameMap.put("v1_19_R2", "net.minecraft.world.item.ItemStack");
         nmsItemClassNameMap.put("v1_19_R1", "net.minecraft.world.item.ItemStack");
         nmsItemClassNameMap.put("v1_18_R2", "net.minecraft.world.item.ItemStack");

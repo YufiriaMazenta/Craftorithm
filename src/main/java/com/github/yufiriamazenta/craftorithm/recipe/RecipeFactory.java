@@ -157,7 +157,13 @@ public class RecipeFactory {
         ItemStack result = getResultItem(config);
         RecipeChoice base = getRecipeChoice(config.getString("source.base", ""));
         RecipeChoice addition = getRecipeChoice(config.getString("source.addition", ""));
-        return SmithingRecipeBuilder.builder().key(namespacedKey).result(result).base(base).addition(addition).build();
+        SmithingRecipeBuilder.SmithingType type = SmithingRecipeBuilder.SmithingType.valueOf(config.getString("source.type", "default").toUpperCase());
+        if (Craftorithm.getInstance().getVanillaVersion() >= 20) {
+            RecipeChoice template = getRecipeChoice(config.getString("source.template", ""));
+            return SmithingRecipeBuilder.builder(type).key(namespacedKey).result(result).base(base).addition(addition).template(template).build();
+        } else {
+            return SmithingRecipeBuilder.builder(type).key(namespacedKey).result(result).base(base).addition(addition).build();
+        }
     }
 
     public static Recipe[] multipleSmithingRecipe(YamlConfiguration config, String key) {
@@ -170,7 +176,17 @@ public class RecipeFactory {
             NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.getInstance(), fullKey);
             RecipeChoice base = getRecipeChoice((String) map.get("base"));
             RecipeChoice addition = getRecipeChoice((String) map.get("addition"));
-            smithingRecipes[i] = SmithingRecipeBuilder.builder().key(namespacedKey).result(result).base(base).addition(addition).build();
+            String typeStr = (String) map.get("type");
+            if (typeStr == null) {
+                typeStr = "DEFAULT";
+            }
+            SmithingRecipeBuilder.SmithingType type = SmithingRecipeBuilder.SmithingType.valueOf(typeStr.toUpperCase());
+            if (Craftorithm.getInstance().getVanillaVersion() >= 20) {
+                RecipeChoice template = getRecipeChoice((String) map.get("template"));
+                smithingRecipes[i] = SmithingRecipeBuilder.builder(type).key(namespacedKey).result(result).base(base).addition(addition).template(template).build();
+            } else {
+                smithingRecipes[i] = SmithingRecipeBuilder.builder(type).key(namespacedKey).result(result).base(base).addition(addition).build();
+            }
         }
         return smithingRecipes;
     }

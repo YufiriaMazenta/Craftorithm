@@ -78,6 +78,7 @@ public class ByteArrayNbtTag implements IPluginNbtTag<byte[]> {
     }
 
     private static void loadGetValueMethodNameMap() {
+        getValueMethodNameMap.put("v1_20_R1", "e");
         getValueMethodNameMap.put("v1_19_R3", "e");
         getValueMethodNameMap.put("v1_19_R2", "e");
         getValueMethodNameMap.put("v1_19_R1", "d");

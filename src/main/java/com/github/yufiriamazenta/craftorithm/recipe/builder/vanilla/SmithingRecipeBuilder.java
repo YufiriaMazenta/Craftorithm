@@ -2,9 +2,7 @@ package com.github.yufiriamazenta.craftorithm.recipe.builder.vanilla;
 
 import com.github.yufiriamazenta.craftorithm.recipe.builder.AbstractRecipeBuilder;
 import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.RecipeChoice;
-import org.bukkit.inventory.SmithingRecipe;
+import org.bukkit.inventory.*;
 
 public class SmithingRecipeBuilder extends AbstractRecipeBuilder {
 
@@ -48,14 +46,21 @@ public class SmithingRecipeBuilder extends AbstractRecipeBuilder {
     }
 
     public SmithingRecipe build() {
-        return new SmithingRecipe(getKey(), getResult(), base, addition);
+        switch (type) {
+            case DEFAULT:
+            default:
+                return new SmithingRecipe(getKey(), getResult(), base, addition);
+            case TRIM:
+                return new SmithingTrimRecipe(getKey(),template, base, addition);
+            case TRANSFORM:
+                return new SmithingTransformRecipe(getKey(), getResult(), template, base, addition);
+        }
     }
 
     public static SmithingRecipeBuilder builder() {
         return new SmithingRecipeBuilder();
     }
 
-    @Deprecated
     public static SmithingRecipeBuilder builder(SmithingType type) {
         return new SmithingRecipeBuilder(type);
     }

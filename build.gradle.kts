@@ -20,7 +20,7 @@ repositories {
 dependencies {
     compileOnly("org.jetbrains:annotations:24.0.1")
     compileOnly("org.spigotmc:spigot:1.19.4-R0.1-SNAPSHOT")
-    compileOnly("org.spigotmc:spigot-api:1.19.4-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
     compileOnly("org.black_ixx:playerpoints:3.2.5")
     compileOnly("net.luckperms:api:5.4")
@@ -28,7 +28,7 @@ dependencies {
 }
 
 group = "com.github.yufiriamazenta"
-version = "1.3.5"
+version = "1.4.0-dev1"
 var pluginVersion: String = version.toString() + "-" + SimpleDateFormat("yyyyMMdd").format(System.currentTimeMillis())
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
