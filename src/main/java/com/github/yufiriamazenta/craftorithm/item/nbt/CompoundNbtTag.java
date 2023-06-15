@@ -135,7 +135,7 @@ public class CompoundNbtTag implements IPluginNbtTag<Map<String, IPluginNbtTag<?
             }
             nmsNbtObj = nmsNbtCompoundClass.newInstance();
             if (setNbt2CompoundMethod == null) {
-                setNbt2CompoundMethod = nmsNbtCompoundClass.getMethod(setNbt2CompoundMethodNameMap.get(NbtHandler.getNmsVersion()), String.class, NbtHandler.getNmsNbtBaseClass());
+                setNbt2CompoundMethod = nmsNbtCompoundClass.getMethod(setNbt2CompoundMethodNameMap.getOrDefault(NbtHandler.getNmsVersion(), "a"), String.class, NbtHandler.getNmsNbtBaseClass());
             }
             for (String key : value.keySet()) {
                 setNbt2CompoundMethod.invoke(nmsNbtObj, key, value.get(key).toNmsNbt());
@@ -183,6 +183,7 @@ public class CompoundNbtTag implements IPluginNbtTag<Map<String, IPluginNbtTag<?
     }
 
     private static void loadGetKeySetMethodNameMap() {
+        getKeySetMethodNameMap.put("v1_20_R1", "e");
         getKeySetMethodNameMap.put("v1_19_R3", "e");
         getKeySetMethodNameMap.put("v1_19_R2", "e");
         getKeySetMethodNameMap.put("v1_19_R1", "d");
@@ -199,6 +200,7 @@ public class CompoundNbtTag implements IPluginNbtTag<Map<String, IPluginNbtTag<?
     }
 
     private static void loadGetNbtBaseMethodNameMap() {
+        getNbtBaseMethodNameMap.put("v1_20_R1", "c");
         getNbtBaseMethodNameMap.put("v1_19_R3", "c");
         getNbtBaseMethodNameMap.put("v1_19_R2", "c");
         getNbtBaseMethodNameMap.put("v1_19_R1", "c");
@@ -215,6 +217,7 @@ public class CompoundNbtTag implements IPluginNbtTag<Map<String, IPluginNbtTag<?
     }
 
     private static void loadNmsNbtCompoundClassNameMap() {
+        nmsNbtCompoundClassNameMap.put("v1_20_R1", "net.minecraft.nbt.NBTTagCompound");
         nmsNbtCompoundClassNameMap.put("v1_19_R3", "net.minecraft.nbt.NBTTagCompound");
         nmsNbtCompoundClassNameMap.put("v1_19_R2", "net.minecraft.nbt.NBTTagCompound");
         nmsNbtCompoundClassNameMap.put("v1_19_R1", "net.minecraft.nbt.NBTTagCompound");
@@ -231,6 +234,7 @@ public class CompoundNbtTag implements IPluginNbtTag<Map<String, IPluginNbtTag<?
     }
 
     private static void loadSetNbt2CompoundMethodNameMap() {
+        setNbt2CompoundMethodNameMap.put("v1_20_R1", "a");
         setNbt2CompoundMethodNameMap.put("v1_19_R3", "a");
         setNbt2CompoundMethodNameMap.put("v1_19_R2", "a");
         setNbt2CompoundMethodNameMap.put("v1_19_R1", "a");

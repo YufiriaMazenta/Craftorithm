@@ -145,6 +145,7 @@ public class StringNbtTag implements IPluginNbtTag<String> {
     }
 
     private static void loadGetValueMethodNameMap() {
+        getValueMethodNameMap.put("v1_20_R1", "f_");
         getValueMethodNameMap.put("v1_19_R3", "f_");
         getValueMethodNameMap.put("v1_19_R2", "f_");
         getValueMethodNameMap.put("v1_19_R1", "e_");
@@ -161,6 +162,7 @@ public class StringNbtTag implements IPluginNbtTag<String> {
     }
 
     private static void loadNmsStringNbtClassNameMap() {
+        nmsStringNbtClassNameMap.put("v1_20_R1", "net.minecraft.nbt.NBTTagString");
         nmsStringNbtClassNameMap.put("v1_19_R3", "net.minecraft.nbt.NBTTagString");
         nmsStringNbtClassNameMap.put("v1_19_R2", "net.minecraft.nbt.NBTTagString");
         nmsStringNbtClassNameMap.put("v1_19_R1", "net.minecraft.nbt.NBTTagString");

@@ -4,5 +4,7 @@ multiple: true
 source:
   - base: 'command_block'
     addition: 'command_block'
+    type: transform
   - base: 'bedrock'
     addition: 'bedrock'
+    type: trim
