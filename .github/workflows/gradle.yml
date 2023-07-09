@@ -34,5 +34,5 @@ jobs:
         arguments: build
     - uses: actions/upload-artifact@v3
       with:
-        name: artifacts
-        path: build/libs
+        name: Craftorithm
+        path: build/libs/*.jar
