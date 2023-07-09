@@ -40,7 +40,7 @@ public enum BukkitMenuDispatcher implements Listener {
         if (event.getClickedInventory() == null)
             return;
         InventoryView view = event.getView();
-        if (!(view.getTopInventory().getHolder() instanceof BukkitMenuHandler))
+        if (!(view.getTopInventory().getHolder() instanceof BukkitMenuHandler handler))
             return;
         if (view.getBottomInventory().equals(event.getClickedInventory())) {
             InventoryAction action = event.getAction();
@@ -48,18 +48,14 @@ public enum BukkitMenuDispatcher implements Listener {
                 event.setCancelled(true);
             return;
         }
-        BukkitMenuHandler handler = (BukkitMenuHandler) view.getTopInventory().getHolder();
         handler.click(event.getSlot(), event);
     }
 
     @EventHandler
     public void onCloseRecipeShowMenu(InventoryCloseEvent event) {
-        if (event.getInventory().getHolder() instanceof RecipeDisplayMenuHolder) {
-            RecipeDisplayMenuHolder holder = (RecipeDisplayMenuHolder) event.getInventory().getHolder();
+        if (event.getInventory().getHolder() instanceof RecipeDisplayMenuHolder holder) {
             if (holder.getParentMenu() != null) {
-                Bukkit.getScheduler().runTask(Craftorithm.getInstance(), () -> {
-                    event.getPlayer().openInventory(holder.getParentMenu().getInventory());
-                });
+                Bukkit.getScheduler().runTask(Craftorithm.getInstance(), () -> event.getPlayer().openInventory(holder.getParentMenu().getInventory()));
             }
         }
     }

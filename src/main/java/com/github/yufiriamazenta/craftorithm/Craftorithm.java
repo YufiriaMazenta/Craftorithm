@@ -11,12 +11,12 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import com.github.yufiriamazenta.craftorithm.util.PluginHookUtil;
 import com.github.yufiriamazenta.craftorithm.util.UpdateUtil;
+import com.github.yufiriamazenta.lib.ParettiaLib;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.server.ServerLoadEvent;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -56,6 +56,7 @@ public final class Craftorithm extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
+        ParettiaLib.INSTANCE.getPlatform().cancelTasks(this);
         RecipeManager.resetRecipes();
     }
 
