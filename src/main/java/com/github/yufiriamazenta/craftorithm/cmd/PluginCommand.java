@@ -3,6 +3,7 @@ package com.github.yufiriamazenta.craftorithm.cmd;
 import com.github.yufiriamazenta.craftorithm.cmd.subcmd.*;
 import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import com.github.yufiriamazenta.lib.command.ISubCommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -56,7 +57,7 @@ public enum PluginCommand implements TabExecutor {
     }
 
     public void regSubCommand(ISubCommand executor) {
-        subCommandMap.put(executor.getSubCommand(), executor);
+        subCommandMap.put(executor.getSubCommandName(), executor);
     }
 
     @Override

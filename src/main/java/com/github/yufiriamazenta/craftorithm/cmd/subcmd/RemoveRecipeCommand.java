@@ -1,8 +1,10 @@
 package com.github.yufiriamazenta.craftorithm.cmd.subcmd;
 
-import com.github.yufiriamazenta.craftorithm.config.YamlFileWrapper;
+import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import com.github.yufiriamazenta.lib.command.ISubCommand;
+import com.github.yufiriamazenta.lib.config.impl.YamlConfigWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
@@ -13,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class RemoveRecipeCommand extends AbstractSubCommand {
 
-    private static final YamlFileWrapper removedRecipeConfig = new YamlFileWrapper("removed_recipes.yml");
+    private static final YamlConfigWrapper removedRecipeConfig = new YamlConfigWrapper(Craftorithm.getInstance(), "removed_recipes.yml");
     private final Map<NamespacedKey, Recipe> recipeMap;
 
     public static final ISubCommand INSTANCE = new RemoveRecipeCommand();
@@ -66,7 +68,7 @@ public class RemoveRecipeCommand extends AbstractSubCommand {
         return Collections.unmodifiableMap(recipeMap);
     }
 
-    public static YamlFileWrapper getRemovedRecipeConfig() {
+    public static YamlConfigWrapper getRemovedRecipeConfig() {
         return removedRecipeConfig;
     }
 

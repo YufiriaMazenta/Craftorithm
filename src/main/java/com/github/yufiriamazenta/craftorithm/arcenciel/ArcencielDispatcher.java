@@ -1,12 +1,13 @@
 package com.github.yufiriamazenta.craftorithm.arcenciel;
 
+import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.arcenciel.block.ListArcencielBlock;
 import com.github.yufiriamazenta.craftorithm.arcenciel.block.StringArcencielBlock;
 import com.github.yufiriamazenta.craftorithm.arcenciel.obj.ArcencielSignal;
 import com.github.yufiriamazenta.craftorithm.arcenciel.obj.ReturnObj;
 import com.github.yufiriamazenta.craftorithm.arcenciel.token.*;
-import com.github.yufiriamazenta.craftorithm.config.YamlFileWrapper;
 import com.github.yufiriamazenta.craftorithm.util.PluginHookUtil;
+import com.github.yufiriamazenta.lib.config.impl.YamlConfigWrapper;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
 public enum ArcencielDispatcher implements IArcencielDispatcher {
 
     INSTANCE;
-    private YamlFileWrapper functionFile;
+    private YamlConfigWrapper functionFile;
 
     ArcencielDispatcher() {
         regDefScriptKeyword();
@@ -64,7 +65,7 @@ public enum ArcencielDispatcher implements IArcencielDispatcher {
         }
     }
 
-    public YamlFileWrapper getFunctionFile() {
+    public YamlConfigWrapper getFunctionFile() {
         return functionFile;
     }
 
@@ -74,7 +75,7 @@ public enum ArcencielDispatcher implements IArcencielDispatcher {
 
     public void loadFuncFile() {
         if (functionFile == null)
-            functionFile = new YamlFileWrapper("function.yml");
+            functionFile = new YamlConfigWrapper(Craftorithm.getInstance(), "function.yml");
     }
 
 }

@@ -2,6 +2,7 @@ package com.github.yufiriamazenta.craftorithm.cmd.subcmd;
 
 import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import com.github.yufiriamazenta.lib.command.ISubCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -80,7 +81,12 @@ public abstract class AbstractSubCommand implements ISubCommand {
     }
 
     @Override
-    public String getSubCommand() {
+    public void setPerm(String perm) {
+        this.perm = perm;
+    }
+
+    @Override
+    public String getSubCommandName() {
         return command;
     }
 
@@ -94,7 +100,7 @@ public abstract class AbstractSubCommand implements ISubCommand {
         if (subCommandMap == null) {
             subCommandMap = new ConcurrentHashMap<>();
         }
-        subCommandMap.put(command.getSubCommand(), command);
+        subCommandMap.put(command.getSubCommandName(), command);
     }
 
     public void setSubCommandMap(Map<String, ISubCommand> subCommandMap) {
@@ -127,8 +133,8 @@ public abstract class AbstractSubCommand implements ISubCommand {
         return perm;
     }
 
-    @Override
     public void setPerm() {
         this.perm = perm;
     }
+
 }
