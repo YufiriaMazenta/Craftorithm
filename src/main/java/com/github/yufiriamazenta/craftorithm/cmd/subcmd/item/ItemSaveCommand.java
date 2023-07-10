@@ -1,9 +1,9 @@
 package com.github.yufiriamazenta.craftorithm.cmd.subcmd.item;
 
 import com.github.yufiriamazenta.craftorithm.cmd.subcmd.AbstractSubCommand;
-import com.github.yufiriamazenta.craftorithm.cmd.subcmd.ISubCommand;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import com.github.yufiriamazenta.lib.command.ISubCommand;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

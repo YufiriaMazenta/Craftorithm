@@ -1,7 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.util;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
-import com.github.yufiriamazenta.craftorithm.config.YamlFileWrapper;
+import com.github.yufiriamazenta.lib.config.impl.YamlConfigWrapper;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -18,7 +18,7 @@ import static org.bukkit.ChatColor.translateAlternateColorCodes;
 public class LangUtil {
 
     private static final Pattern colorPattern = Pattern.compile("&#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})");
-    private static final YamlFileWrapper langConfigFile = new YamlFileWrapper("lang.yml");
+    private static final YamlConfigWrapper langConfigFile = new YamlConfigWrapper(Craftorithm.getInstance(), "lang.yml");
     private static final Map<String, String> defaultFormatMap;
 
     static {

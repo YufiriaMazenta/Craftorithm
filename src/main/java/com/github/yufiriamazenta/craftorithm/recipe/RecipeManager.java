@@ -3,13 +3,13 @@ package com.github.yufiriamazenta.craftorithm.recipe;
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.CraftorithmAPI;
 import com.github.yufiriamazenta.craftorithm.cmd.subcmd.RemoveRecipeCommand;
-import com.github.yufiriamazenta.craftorithm.config.YamlFileWrapper;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.CustomRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.PotionMixRecipe;
 import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
 import com.github.yufiriamazenta.craftorithm.util.FileUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import com.github.yufiriamazenta.lib.config.impl.YamlConfigWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class RecipeManager {
 
-    private static final Map<String, YamlFileWrapper> recipeFileMap = new HashMap<>();
+    private static final Map<String, YamlConfigWrapper> recipeFileMap = new HashMap<>();
     private static final Map<NamespacedKey, YamlConfiguration> recipeKeyConfigMap = new ConcurrentHashMap<>();
     private static final File recipeFileFolder = new File(Craftorithm.getInstance().getDataFolder().getPath(), "recipes");
     private static final Map<NamespacedKey, Boolean> recipeUnlockMap;
@@ -64,7 +64,7 @@ public class RecipeManager {
             key = key.replace("\\", "/");
             int lastDotIndex = key.lastIndexOf(".");
             key = key.substring(0, lastDotIndex);
-            recipeFileMap.put(key, new YamlFileWrapper(file));
+            recipeFileMap.put(key, new YamlConfigWrapper(file));
         }
     }
 
@@ -234,7 +234,7 @@ public class RecipeManager {
         return recipeUnlockMap;
     }
 
-    public static Map<String, YamlFileWrapper> getRecipeFileMap() {
+    public static Map<String, YamlConfigWrapper> getRecipeFileMap() {
         return recipeFileMap;
     }
 

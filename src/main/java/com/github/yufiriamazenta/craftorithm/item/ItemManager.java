@@ -1,11 +1,12 @@
 package com.github.yufiriamazenta.craftorithm.item;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
-import com.github.yufiriamazenta.craftorithm.config.YamlFileWrapper;
 import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
 import com.github.yufiriamazenta.craftorithm.util.FileUtil;
-import com.github.yufiriamazenta.craftorithm.util.ItemUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import com.github.yufiriamazenta.lib.config.impl.YamlConfigWrapper;
+import com.github.yufiriamazenta.lib.nms.item.Item;
+import com.github.yufiriamazenta.lib.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -18,7 +19,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class ItemManager {
 
-    private static final Map<String, YamlFileWrapper> itemFileMap = new HashMap<>();
+    private static final Map<String, YamlConfigWrapper> itemFileMap = new HashMap<>();
     private static final Map<String, ItemStack> itemMap = new HashMap<>();
     private static final File itemFileFolder = new File(Craftorithm.getInstance().getDataFolder().getPath(), "items");
 
@@ -30,11 +31,11 @@ public class ItemManager {
     public static void loadItems() {
         itemMap.clear();
         for (String fileKey : itemFileMap.keySet()) {
-            YamlFileWrapper itemFile = itemFileMap.get(fileKey);
+            YamlConfigWrapper itemFile = itemFileMap.get(fileKey);
             Set<String> itemKeySet = itemFile.getConfig().getKeys(false);
             for (String itemKey : itemKeySet) {
                 try {
-                    itemMap.put(fileKey + ":" + itemKey, ItemUtil.getItemFromConfig(itemFile.getConfig(), itemKey));
+                    itemMap.put(fileKey + ":" + itemKey, Item.fromConfig(itemFile.getConfig(), itemKey).toBukkitItem());
                 } catch (Exception e) {
                     LangUtil.info("load.item_load_exception", ContainerUtil.newHashMap("<item_name>", fileKey + ":" + itemKey));
                     e.printStackTrace();
@@ -44,18 +45,18 @@ public class ItemManager {
     }
 
     public static void addCraftorithmItem(String itemFileName, String itemName, ItemStack item) {
-        YamlFileWrapper yamlFileWrapper;
+        YamlConfigWrapper YamlConfigWrapper;
         if (!ItemManager.getItemFileMap().containsKey(itemFileName)) {
             File itemFile = new File(ItemManager.getItemFileFolder(), itemFileName + ".yml");
             if (!itemFile.exists()) {
                 FileUtil.createNewFile(itemFile);
             }
-            yamlFileWrapper = new YamlFileWrapper(itemFile);
-            itemFileMap.put(itemName, yamlFileWrapper);
+            YamlConfigWrapper = new YamlConfigWrapper(itemFile);
+            itemFileMap.put(itemName, YamlConfigWrapper);
         } else {
-            yamlFileWrapper = itemFileMap.get(itemFileName);
+            YamlConfigWrapper = itemFileMap.get(itemFileName);
         }
-        ItemUtil.saveItem2Config(item, yamlFileWrapper, itemName);
+        Item.fromBukkitItem(item).save2Config(YamlConfigWrapper, itemName);
         itemMap.put(itemFileName + ":" + itemName, item);
     }
 
@@ -84,7 +85,7 @@ public class ItemManager {
             key = key.replace("\\", "/");
             int lastDotIndex = key.lastIndexOf(".");
             key = key.substring(0, lastDotIndex);
-            itemFileMap.put(key, new YamlFileWrapper(file));
+            itemFileMap.put(key, new YamlConfigWrapper(file));
         }
     }
 
@@ -92,7 +93,7 @@ public class ItemManager {
         return itemMap;
     }
 
-    public static Map<String, YamlFileWrapper> getItemFileMap() {
+    public static Map<String, YamlConfigWrapper> getItemFileMap() {
         return itemFileMap;
     }
 
@@ -132,7 +133,7 @@ public class ItemManager {
      * @return 传入的物品名字
      */
     public static String getItemName(ItemStack item, boolean ignoreAmount, boolean regNew, String namespace, String regName) {
-        if (ItemUtil.checkItemIsAir(item))
+        if (ItemUtil.isItemInvalidate(item))
             return null;
         AtomicReference<String> itemName = new AtomicReference<>("");
         itemMap.forEach((key, savedItem) -> {

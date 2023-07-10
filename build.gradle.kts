@@ -24,12 +24,12 @@ dependencies {
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
     compileOnly("org.black_ixx:playerpoints:3.2.5")
     compileOnly("net.luckperms:api:5.4")
-    compileOnly("com.github.YufiriaMazenta:ParettiaLib:abd3d222f3")
+    compileOnly("com.github.YufiriaMazenta:ParettiaLib:-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.11.1")
 }
 
 group = "com.github.yufiriamazenta"
-version = "1.4.0-dev2"
+version = "1.4.0-dev3"
 var pluginVersion: String = version.toString() + "-" + SimpleDateFormat("yyyyMMdd").format(System.currentTimeMillis())
 java.sourceCompatibility = JavaVersion.VERSION_17
 
