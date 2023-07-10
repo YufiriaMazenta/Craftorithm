@@ -67,7 +67,4 @@ public class ItemUtil {
         return containsLore;
     }
 
-    public static boolean checkItemIsAir(ItemStack item) {
-        return item == null || item.getType().equals(Material.AIR);
-    }
 }
