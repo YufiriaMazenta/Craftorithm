@@ -24,7 +24,7 @@ dependencies {
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
     compileOnly("org.black_ixx:playerpoints:3.2.5")
     compileOnly("net.luckperms:api:5.4")
-    compileOnly("com.github.YufiriaMazenta:ParettiaLib:-SNAPSHOT")
+    compileOnly("com.github.YufiriaMazenta:ParettiaLib:a19874c46a")
     compileOnly("me.clip:placeholderapi:2.11.1")
 }
 
