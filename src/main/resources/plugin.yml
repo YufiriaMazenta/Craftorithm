@@ -12,9 +12,10 @@ commands:
   craftorithm:
     aliases:
       - craft
-    permission: craftorithm.command.main
+    permission: craftorithm.command
 permissions:
-  craftorithm.command.main:
-    default: op
+  craftorithm.command:
+    description: Plugin command main permissions
   craftorithm.anvil.color:
+    description: Controls the color codes players use when crafting anvil recipes
     default: op
