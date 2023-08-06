@@ -11,6 +11,7 @@ import com.github.yufiriamazenta.craftorithm.util.FileUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import com.github.yufiriamazenta.lib.config.impl.YamlConfigWrapper;
 import org.bukkit.Bukkit;
+import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.*;
@@ -30,12 +31,15 @@ public class RecipeManager {
     private static final Map<NamespacedKey, YamlConfiguration> recipeKeyConfigMap = new ConcurrentHashMap<>();
     private static final File recipeFileFolder = new File(Craftorithm.getInstance().getDataFolder().getPath(), "recipes");
     private static final Map<NamespacedKey, Boolean> recipeUnlockMap;
+    private static final Map<NamespacedKey, Integer> recipeSortIdMap;
     private static final Map<NamespacedKey, AnvilRecipe> anvilRecipeMap;
     private static final Map<Recipe, RecipeType> recipeTypeMap;
     private static final Map<NamespacedKey, Recipe> recipeKeyMap;
 
     static {
         recipeUnlockMap = new ConcurrentHashMap<>();
+
+        recipeSortIdMap = new ConcurrentHashMap<>();
 
         anvilRecipeMap = new ConcurrentHashMap<>();
 
@@ -133,6 +137,7 @@ public class RecipeManager {
         }
         recipeKeyConfigMap.put(key, config);
         putRecipeTypeMap(recipe);
+        recipeSortIdMap.put(key, config.getInt("sort_id", 0));
         recipeKeyMap.put(key, recipe);
     }
 
@@ -190,8 +195,12 @@ public class RecipeManager {
         return key != null ? recipeKeyConfigMap.get(key) : null;
     }
 
-    public static Map<Recipe, RecipeType> getPluginRecipes() {
+    public static Map<Recipe, RecipeType> getPluginRecipeTypeMap() {
         return new ConcurrentHashMap<>(recipeTypeMap);
+    }
+
+    public static Map<NamespacedKey, Integer> getRecipeSortIdMap() {
+        return new ConcurrentHashMap<>(recipeSortIdMap);
     }
 
     public static NamespacedKey getRecipeKey(Recipe recipe) {
@@ -200,14 +209,7 @@ public class RecipeManager {
         if (recipe instanceof CustomRecipe) {
             return ((CustomRecipe) recipe).getKey();
         }
-        try {
-            Class<?> recipeClass = Class.forName(recipe.getClass().getName());
-            Method getKeyMethod = recipeClass.getMethod("getKey");
-            return (NamespacedKey) getKeyMethod.invoke(recipe);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        return ((Keyed) recipe).getKey();
     }
 
     public static Recipe getPluginRecipe(String key) {

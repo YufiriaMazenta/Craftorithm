@@ -2,6 +2,7 @@ package com.github.yufiriamazenta.craftorithm.menu.bukkit;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.menu.impl.recipe.RecipeDisplayMenuHolder;
+import com.github.yufiriamazenta.lib.ParettiaLib;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -55,7 +56,7 @@ public enum BukkitMenuDispatcher implements Listener {
     public void onCloseRecipeShowMenu(InventoryCloseEvent event) {
         if (event.getInventory().getHolder() instanceof RecipeDisplayMenuHolder holder) {
             if (holder.getParentMenu() != null) {
-                Bukkit.getScheduler().runTask(Craftorithm.getInstance(), () -> event.getPlayer().openInventory(holder.getParentMenu().getInventory()));
+                ParettiaLib.INSTANCE.getPlatform().runTask(Craftorithm.getInstance(), (t) -> event.getPlayer().openInventory(holder.getParentMenu().getInventory()));
             }
         }
     }

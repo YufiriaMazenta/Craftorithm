@@ -34,8 +34,8 @@ public enum CraftorithmAPI {
         return ArcencielDispatcher.INSTANCE;
     }
 
-    public Map<Recipe, RecipeType> getPluginRecipes() {
-        return RecipeManager.getPluginRecipes();
+    public Map<Recipe, RecipeType> getPluginRecipeTypeMap() {
+        return RecipeManager.getPluginRecipeTypeMap();
     }
 
     public void setLoadedOtherPluginRecipe(boolean loadedOtherPluginRecipe) {

@@ -3,13 +3,14 @@ package com.github.yufiriamazenta.craftorithm.menu.impl.recipe;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.BukkitMenuHandler;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.ItemDisplayIcon;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import com.github.yufiriamazenta.lib.ParettiaLib;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.SmithingTrimRecipe;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,17 +25,20 @@ public class RecipeListMenuHolder extends BukkitMenuHandler {
 
     public RecipeListMenuHolder() {
         super();
-        this.recipeList = new ArrayList<>(RecipeManager.getPluginRecipes().keySet());
+        this.recipeList = new ArrayList<>(RecipeManager.getPluginRecipeTypeMap().keySet());
         int recipeNum = recipeList.size();
         page = 0;
         if (recipeNum % 45 == 0)
             maxPage = recipeNum / 45;
         else
             maxPage = recipeNum / 45 + 1;
+        if (ParettiaLib.INSTANCE.getVanillaVersion() >= 20) {
+            recipeList.removeIf(recipe -> recipe instanceof SmithingTrimRecipe);
+        }
         recipeList.sort((o1, o2) -> {
-            RecipeType recipeType = RecipeManager.getPluginRecipeType(o1);
-            RecipeType recipeType2 = RecipeManager.getPluginRecipeType(o2);
-            return recipeType.compareTo(recipeType2);
+            int sortId = RecipeManager.getRecipeSortIdMap().get(RecipeManager.getRecipeKey(o1));
+            int sortId2 = RecipeManager.getRecipeSortIdMap().get(RecipeManager.getRecipeKey(o2));
+            return Integer.compare(sortId, sortId2);
         });
     }
 

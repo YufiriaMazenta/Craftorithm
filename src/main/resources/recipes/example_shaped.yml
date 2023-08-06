@@ -20,6 +20,8 @@ source:
   e: 'iron_ingot'
 #是否在配方书中为玩家解锁此配方，默认为config.yml中的all_recipe_unlocked配置项
 unlock: true
+#配方的排序ID，影响在配方展示页面的排序顺序，从小到大排序，默认为0
+sort_id: 1
 
 #可选的配置项：
 condition: 'if all perm craftorithm.perm.example && level >= 100 && papi %player_name% == Anisufia'
