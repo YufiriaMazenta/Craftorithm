@@ -11,6 +11,7 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
 import com.github.yufiriamazenta.craftorithm.util.FileUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import com.github.yufiriamazenta.lib.ParettiaLib;
 import com.github.yufiriamazenta.lib.config.impl.YamlConfigWrapper;
 import com.github.yufiriamazenta.lib.util.ItemUtil;
 import org.bukkit.Bukkit;
@@ -142,11 +143,19 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
         for (int slot : resultFrameSlots) {
             getMenuIconMap().put(slot, resultFrameIcon);
         }
-        int[] smithingFrameSlots = {
-                10, 12,
-                19, 20, 21,
-                28, 30
-        };
+        int[] smithingFrameSlots;
+        if (ParettiaLib.INSTANCE.getVanillaVersion() < 20) {
+            smithingFrameSlots = new int[]{
+                    10, 11, 12,
+                    20,
+                    28, 29, 30
+            };
+        } else {
+            smithingFrameSlots = new int[]{
+                    10, 11, 12,
+                    28, 29, 30
+            };
+        }
         ItemDisplayIcon smithingFrameIcon = ItemDisplayIcon.icon(Material.CYAN_STAINED_GLASS_PANE, LangUtil.lang("menu.recipe_creator.icon.smithing_frame"));
         for (int slot : smithingFrameSlots) {
             getMenuIconMap().put(slot, smithingFrameIcon);
@@ -159,10 +168,19 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
                 return;
             }
             String resultName = getItemName(result, false);
-            ItemStack base = event.getClickedInventory().getItem(11);
-            ItemStack addition = event.getClickedInventory().getItem(29);
-            String baseName = getItemName(base, true);
-            String additionName = getItemName(addition, true);
+            ItemStack base, addition, template;
+            String baseName, additionName, templateName = null;
+            if (ParettiaLib.INSTANCE.getVanillaVersion() < 20) {
+                base = event.getClickedInventory().getItem(19);
+                addition = event.getClickedInventory().getItem(21);
+            } else {
+                template = event.getClickedInventory().getItem(19);
+                base = event.getClickedInventory().getItem(20);
+                addition = event.getClickedInventory().getItem(21);
+                templateName = getItemName(template, true);
+            }
+            baseName = getItemName(base, true);
+            additionName = getItemName(addition, true);
             File recipeFile = new File(RecipeManager.getRecipeFileFolder(), recipeName + ".yml");
             if (!recipeFile.exists()) {
                 FileUtil.createNewFile(recipeFile);
@@ -172,6 +190,10 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
             recipeConfig.getConfig().set("source.base", baseName);
             recipeConfig.getConfig().set("source.addition", additionName);
             recipeConfig.getConfig().set("type", "smithing");
+            if (ParettiaLib.INSTANCE.getVanillaVersion() >= 20) {
+                recipeConfig.getConfig().set("source.type", "transform");
+                recipeConfig.getConfig().set("source.template", templateName);
+            }
             recipeConfig.saveConfig();
             recipeConfig.reloadConfig();
             Recipe recipe = RecipeFactory.newRecipe(recipeConfig.getConfig(), recipeName);
