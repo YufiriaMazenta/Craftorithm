@@ -4,7 +4,7 @@ import com.github.yufiriamazenta.craftorithm.cmd.subcmd.AbstractSubCommand;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import com.github.yufiriamazenta.lib.command.ISubCommand;
+import crypticlib.command.ISubCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

@@ -1,7 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.util;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
-import com.github.yufiriamazenta.lib.ParettiaLib;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
@@ -16,7 +15,7 @@ public class UpdateUtil {
     public static void checkUpdate(CommandSender sender) {
         if (!Craftorithm.getInstance().getConfig().getBoolean("check_update"))
             return;
-        ParettiaLib.INSTANCE.getPlatform().runTaskAsync(Craftorithm.getInstance(), task -> {
+        Craftorithm.getInstance().getPlatform().runTaskAsync(Craftorithm.getInstance(), task -> {
             try {
                 URL url = new URL("https://api.github.com/repos/YufiriaMazenta/Craftorithm/releases/latest");
                 URLConnection conn = url.openConnection();

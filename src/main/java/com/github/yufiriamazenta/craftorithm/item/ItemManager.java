@@ -4,9 +4,9 @@ import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
 import com.github.yufiriamazenta.craftorithm.util.FileUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import com.github.yufiriamazenta.lib.config.impl.YamlConfigWrapper;
-import com.github.yufiriamazenta.lib.nms.item.Item;
-import com.github.yufiriamazenta.lib.util.ItemUtil;
+import crypticlib.config.impl.YamlConfigWrapper;
+import crypticlib.item.Item;
+import crypticlib.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 

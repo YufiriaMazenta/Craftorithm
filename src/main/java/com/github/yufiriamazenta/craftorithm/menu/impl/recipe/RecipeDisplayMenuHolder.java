@@ -1,19 +1,18 @@
 package com.github.yufiriamazenta.craftorithm.menu.impl.recipe;
 
+import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.BukkitMenuHandler;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.ItemDisplayIcon;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import com.github.yufiriamazenta.lib.ParettiaLib;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.net.http.HttpClient;
 import java.util.List;
 import java.util.Map;
 
@@ -145,14 +144,14 @@ public class RecipeDisplayMenuHolder extends BukkitMenuHandler {
 
     private void setSmithingRecipeMenu() {
         SmithingRecipe smithingRecipe = (SmithingRecipe) recipe;
-        if (ParettiaLib.INSTANCE.getVanillaVersion() >= 20) {
+        if (Craftorithm.getInstance().getVanillaVersion() >= 20) {
             getMenuIconMap().put(1, ItemDisplayIcon.icon(smithingRecipe.getBase().getItemStack()));
             getMenuIconMap().put(2, ItemDisplayIcon.icon(smithingRecipe.getAddition().getItemStack()));
             getMenuIconMap().put(3, ItemDisplayIcon.icon(smithingRecipe.getResult()));
-            if (recipe instanceof SmithingTransformRecipe transformRecipe) {
-                getMenuIconMap().put(0, ItemDisplayIcon.icon(transformRecipe.getTemplate().getItemStack()));
-            } else if (recipe instanceof SmithingTrimRecipe trimRecipe){
-                getMenuIconMap().put(0, ItemDisplayIcon.icon(trimRecipe.getTemplate().getItemStack()));
+            if (recipe instanceof SmithingTransformRecipe) {
+                getMenuIconMap().put(0, ItemDisplayIcon.icon(((SmithingTransformRecipe) recipe).getTemplate().getItemStack()));
+            } else if (recipe instanceof SmithingTrimRecipe){
+                getMenuIconMap().put(0, ItemDisplayIcon.icon(((SmithingTrimRecipe) recipe).getTemplate().getItemStack()));
             }
         } else {
             getMenuIconMap().put(0, ItemDisplayIcon.icon(smithingRecipe.getBase().getItemStack()));

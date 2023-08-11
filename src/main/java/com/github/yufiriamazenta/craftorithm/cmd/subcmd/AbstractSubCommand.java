@@ -2,7 +2,7 @@ package com.github.yufiriamazenta.craftorithm.cmd.subcmd;
 
 import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import com.github.yufiriamazenta.lib.command.ISubCommand;
+import crypticlib.command.ISubCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -92,15 +92,7 @@ public abstract class AbstractSubCommand implements ISubCommand {
 
     @Override
     public Map<String, ISubCommand> getSubCommands() {
-        return Collections.unmodifiableMap(subCommandMap);
-    }
-
-    @Override
-    public void regSubCommand(ISubCommand command) {
-        if (subCommandMap == null) {
-            subCommandMap = new ConcurrentHashMap<>();
-        }
-        subCommandMap.put(command.getSubCommandName(), command);
+        return subCommandMap;
     }
 
     public void setSubCommandMap(Map<String, ISubCommand> subCommandMap) {

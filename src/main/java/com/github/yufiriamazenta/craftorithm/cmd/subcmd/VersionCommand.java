@@ -1,7 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.cmd.subcmd;
 
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import com.github.yufiriamazenta.lib.command.ISubCommand;
+import crypticlib.command.ISubCommand;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;

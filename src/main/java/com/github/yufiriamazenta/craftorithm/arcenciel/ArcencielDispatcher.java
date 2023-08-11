@@ -7,7 +7,7 @@ import com.github.yufiriamazenta.craftorithm.arcenciel.obj.ArcencielSignal;
 import com.github.yufiriamazenta.craftorithm.arcenciel.obj.ReturnObj;
 import com.github.yufiriamazenta.craftorithm.arcenciel.token.*;
 import com.github.yufiriamazenta.craftorithm.util.PluginHookUtil;
-import com.github.yufiriamazenta.lib.config.impl.YamlConfigWrapper;
+import crypticlib.config.impl.YamlConfigWrapper;
 import org.bukkit.entity.Player;
 
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.bstat;
 
-import com.github.yufiriamazenta.lib.ParettiaLib;
+import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -78,7 +78,7 @@ public class Metrics {
                         enabled,
                         this::appendPlatformData,
                         this::appendServiceData,
-                        submitDataTask -> ParettiaLib.INSTANCE.getPlatform().runTask(plugin, t -> submitDataTask.run()),
+                        submitDataTask -> Craftorithm.getInstance().getPlatform().runTask(plugin, t -> submitDataTask.run()),
                         plugin::isEnabled,
                         (message, error) -> this.plugin.getLogger().log(Level.WARNING, message, error),
                         (message) -> this.plugin.getLogger().log(Level.INFO, message),
