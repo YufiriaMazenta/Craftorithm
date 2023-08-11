@@ -1,10 +1,10 @@
 package com.github.yufiriamazenta.craftorithm.menu.impl.recipe;
 
+import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.BukkitMenuHandler;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.ItemDisplayIcon;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import com.github.yufiriamazenta.lib.ParettiaLib;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
@@ -32,7 +32,7 @@ public class RecipeListMenuHolder extends BukkitMenuHandler {
             maxPage = recipeNum / 45;
         else
             maxPage = recipeNum / 45 + 1;
-        if (ParettiaLib.INSTANCE.getVanillaVersion() >= 20) {
+        if (Craftorithm.getInstance().getVanillaVersion() >= 20) {
             recipeList.removeIf(recipe -> recipe instanceof SmithingTrimRecipe);
         }
         recipeList.sort((o1, o2) -> {

@@ -2,8 +2,6 @@ package com.github.yufiriamazenta.craftorithm.menu.bukkit;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.menu.impl.recipe.RecipeDisplayMenuHolder;
-import com.github.yufiriamazenta.lib.ParettiaLib;
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryAction;
@@ -41,8 +39,10 @@ public enum BukkitMenuDispatcher implements Listener {
         if (event.getClickedInventory() == null)
             return;
         InventoryView view = event.getView();
-        if (!(view.getTopInventory().getHolder() instanceof BukkitMenuHandler handler))
+        BukkitMenuHandler handler;
+        if (!(view.getTopInventory().getHolder() instanceof BukkitMenuHandler))
             return;
+        handler = (BukkitMenuHandler) view.getTopInventory().getHolder();
         if (view.getBottomInventory().equals(event.getClickedInventory())) {
             InventoryAction action = event.getAction();
             if (!allowedPlayerInvActions.contains(action))
@@ -54,9 +54,10 @@ public enum BukkitMenuDispatcher implements Listener {
 
     @EventHandler
     public void onCloseRecipeShowMenu(InventoryCloseEvent event) {
-        if (event.getInventory().getHolder() instanceof RecipeDisplayMenuHolder holder) {
+        if (event.getInventory().getHolder() instanceof RecipeDisplayMenuHolder) {
+            RecipeDisplayMenuHolder holder = (RecipeDisplayMenuHolder) event.getInventory().getHolder();
             if (holder.getParentMenu() != null) {
-                ParettiaLib.INSTANCE.getPlatform().runTask(Craftorithm.getInstance(), (t) -> event.getPlayer().openInventory(holder.getParentMenu().getInventory()));
+                Craftorithm.getInstance().getPlatform().runTask(Craftorithm.getInstance(), (t) -> event.getPlayer().openInventory(holder.getParentMenu().getInventory()));
             }
         }
     }

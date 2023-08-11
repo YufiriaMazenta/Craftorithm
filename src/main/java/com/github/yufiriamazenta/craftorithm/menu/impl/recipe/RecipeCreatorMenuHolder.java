@@ -11,9 +11,8 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
 import com.github.yufiriamazenta.craftorithm.util.FileUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import com.github.yufiriamazenta.lib.ParettiaLib;
-import com.github.yufiriamazenta.lib.config.impl.YamlConfigWrapper;
-import com.github.yufiriamazenta.lib.util.ItemUtil;
+import crypticlib.config.impl.YamlConfigWrapper;
+import crypticlib.util.ItemUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -144,7 +143,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
             getMenuIconMap().put(slot, resultFrameIcon);
         }
         int[] smithingFrameSlots;
-        if (ParettiaLib.INSTANCE.getVanillaVersion() < 20) {
+        if (Craftorithm.getInstance().getVanillaVersion() < 20) {
             smithingFrameSlots = new int[]{
                     10, 11, 12,
                     20,
@@ -170,7 +169,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
             String resultName = getItemName(result, false);
             ItemStack base, addition, template;
             String baseName, additionName, templateName = null;
-            if (ParettiaLib.INSTANCE.getVanillaVersion() < 20) {
+            if (Craftorithm.getInstance().getVanillaVersion() < 20) {
                 base = event.getClickedInventory().getItem(19);
                 addition = event.getClickedInventory().getItem(21);
             } else {
@@ -190,7 +189,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
             recipeConfig.getConfig().set("source.base", baseName);
             recipeConfig.getConfig().set("source.addition", additionName);
             recipeConfig.getConfig().set("type", "smithing");
-            if (ParettiaLib.INSTANCE.getVanillaVersion() >= 20) {
+            if (Craftorithm.getInstance().getVanillaVersion() >= 20) {
                 recipeConfig.getConfig().set("source.type", "transform");
                 recipeConfig.getConfig().set("source.template", templateName);
             }
@@ -376,7 +375,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
                     }
                     YamlConfigWrapper recipeConfig = new YamlConfigWrapper(recipeFile);
                     switch (recipeType) {
-                        case SHAPED -> {
+                        case SHAPED:
                             List<String> shape = new ArrayList<>(Arrays.asList("abc", "def", "ghi"));
                             Map<Character, String> itemMap = new HashMap<>();
                             char[] tmp = "abcdefghi".toCharArray();
@@ -400,13 +399,13 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
                             recipeConfig.getConfig().set("result", resultName);
                             recipeConfig.getConfig().set("shape", shape);
                             recipeConfig.getConfig().set("source", itemMap);
-                        }
-                        case SHAPELESS -> {
+                            break;
+                        case SHAPELESS:
                             sourceList.removeIf(String::isEmpty);
                             recipeConfig.getConfig().set("type", "shapeless");
                             recipeConfig.getConfig().set("result", resultName);
                             recipeConfig.getConfig().set("source", sourceList);
-                        }
+                            break;
                     }
                     recipeConfig.saveConfig();
                     recipeConfig.reloadConfig();
