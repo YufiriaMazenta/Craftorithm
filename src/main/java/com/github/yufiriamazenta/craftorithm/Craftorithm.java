@@ -36,7 +36,7 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
     }
 
     @Override
-    public void onEnable() {
+    public void enable() {
         loadVanillaVersion();
         saveDefaultConfig();
         ConfigUpdater.INSTANCE.updateConfig();
@@ -54,8 +54,7 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
     }
 
     @Override
-    public void onDisable() {
-        getPlatform().cancelTasks(this);
+    public void disable() {
         RecipeManager.resetRecipes();
     }
 
