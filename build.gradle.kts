@@ -27,11 +27,11 @@ dependencies {
     compileOnly("org.black_ixx:playerpoints:3.2.5")
     compileOnly("net.luckperms:api:5.4")
     compileOnly("me.clip:placeholderapi:2.11.1")
-    implementation("com.github.YufiriaMazenta:CrypticLib:1.0.0")
+    implementation("com.github.YufiriaMazenta:CrypticLib:1.0.1")
 }
 
 group = "com.github.yufiriamazenta"
-version = "1.4.1-dev2"
+version = "1.4.1-dev3"
 var pluginVersion: String = version.toString() + "-" + SimpleDateFormat("yyyyMMdd").format(System.currentTimeMillis())
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 java.targetCompatibility = JavaVersion.VERSION_1_8
@@ -42,6 +42,7 @@ publishing {
     }
 }
 tasks.withType<ShadowJar> {
+    archiveFileName.set("Craftorithm-$version.jar")
     relocate("crypticlib", "com.github.yufiriamazenta.crypticlib")
 }
 
