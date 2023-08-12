@@ -157,12 +157,12 @@ public class RecipeFactory {
         ItemStack result = getResultItem(config);
         RecipeChoice base = getRecipeChoice(config.getString("source.base", ""));
         RecipeChoice addition = getRecipeChoice(config.getString("source.addition", ""));
-        SmithingRecipeBuilder.SmithingType type = SmithingRecipeBuilder.SmithingType.valueOf(config.getString("source.type", "default").toUpperCase());
         if (Craftorithm.getInstance().getVanillaVersion() >= 20) {
             RecipeChoice template = getRecipeChoice(config.getString("source.template", ""));
-            return SmithingRecipeBuilder.builder(type).key(namespacedKey).result(result).base(base).addition(addition).template(template).build();
+            XSmithingRecipeBuilder.SmithingType type = XSmithingRecipeBuilder.SmithingType.valueOf(config.getString("source.type", "default").toUpperCase());
+            return XSmithingRecipeBuilder.builder(type).key(namespacedKey).result(result).base(base).addition(addition).template(template).build();
         } else {
-            return SmithingRecipeBuilder.builder(type).key(namespacedKey).result(result).base(base).addition(addition).build();
+            return SmithingRecipeBuilder.builder().key(namespacedKey).result(result).base(base).addition(addition).build();
         }
     }
 
@@ -180,12 +180,12 @@ public class RecipeFactory {
             if (typeStr == null) {
                 typeStr = "DEFAULT";
             }
-            SmithingRecipeBuilder.SmithingType type = SmithingRecipeBuilder.SmithingType.valueOf(typeStr.toUpperCase());
             if (Craftorithm.getInstance().getVanillaVersion() >= 20) {
                 RecipeChoice template = getRecipeChoice((String) map.get("template"));
-                smithingRecipes[i] = SmithingRecipeBuilder.builder(type).key(namespacedKey).result(result).base(base).addition(addition).template(template).build();
+                XSmithingRecipeBuilder.SmithingType type = XSmithingRecipeBuilder.SmithingType.valueOf(typeStr.toUpperCase());
+                smithingRecipes[i] = XSmithingRecipeBuilder.builder(type).key(namespacedKey).result(result).base(base).addition(addition).template(template).build();
             } else {
-                smithingRecipes[i] = SmithingRecipeBuilder.builder(type).key(namespacedKey).result(result).base(base).addition(addition).build();
+                smithingRecipes[i] = SmithingRecipeBuilder.builder().key(namespacedKey).result(result).base(base).addition(addition).build();
             }
         }
         return smithingRecipes;

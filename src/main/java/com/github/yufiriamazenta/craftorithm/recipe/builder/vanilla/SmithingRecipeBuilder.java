@@ -6,16 +6,7 @@ import org.bukkit.inventory.*;
 
 public class SmithingRecipeBuilder extends AbstractRecipeBuilder {
 
-    private RecipeChoice base, addition, template;
-    private final SmithingType type;
-
-    protected SmithingRecipeBuilder() {
-        type = SmithingType.DEFAULT;
-    }
-
-    protected SmithingRecipeBuilder(SmithingType type) {
-        this.type =  type;
-    }
+    protected RecipeChoice base, addition;
 
     @Override
     public SmithingRecipeBuilder key(NamespacedKey key) {
@@ -46,40 +37,11 @@ public class SmithingRecipeBuilder extends AbstractRecipeBuilder {
     }
 
     public SmithingRecipe build() {
-        switch (type) {
-            case DEFAULT:
-            default:
-                return new SmithingRecipe(getKey(), getResult(), base, addition);
-            case TRIM:
-                return new SmithingTrimRecipe(getKey(),template, base, addition);
-            case TRANSFORM:
-                return new SmithingTransformRecipe(getKey(), getResult(), template, base, addition);
-        }
+        return new SmithingRecipe(getKey(), getResult(), base, addition);
     }
 
     public static SmithingRecipeBuilder builder() {
         return new SmithingRecipeBuilder();
-    }
-
-    public static SmithingRecipeBuilder builder(SmithingType type) {
-        return new SmithingRecipeBuilder(type);
-    }
-
-    public SmithingRecipeBuilder template(RecipeChoice template) {
-        this.template = template;
-        return this;
-    }
-
-    public RecipeChoice getTemplate() {
-        return template.clone();
-    }
-
-    public SmithingType getType() {
-        return type;
-    }
-
-    public enum SmithingType {
-        TRIM, TRANSFORM, DEFAULT
     }
 
 }

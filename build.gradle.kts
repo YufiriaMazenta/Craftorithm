@@ -27,11 +27,11 @@ dependencies {
     compileOnly("org.black_ixx:playerpoints:3.2.5")
     compileOnly("net.luckperms:api:5.4")
     compileOnly("me.clip:placeholderapi:2.11.1")
-    implementation("com.github.YufiriaMazenta:CrypticLib:8701123118")
+    implementation("com.github.YufiriaMazenta:CrypticLib:1.0.0")
 }
 
 group = "com.github.yufiriamazenta"
-version = "1.4.1-dev1"
+version = "1.4.1-dev2"
 var pluginVersion: String = version.toString() + "-" + SimpleDateFormat("yyyyMMdd").format(System.currentTimeMillis())
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 java.targetCompatibility = JavaVersion.VERSION_1_8
@@ -43,9 +43,6 @@ publishing {
 }
 tasks.withType<ShadowJar> {
     relocate("crypticlib", "com.github.yufiriamazenta.crypticlib")
-    dependencies {
-        include(dependency("com.github.YufiriaMazenta:CrypticLib:8701123118"))
-    }
 }
 
 tasks.withType(JavaCompile::class.java) {
