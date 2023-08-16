@@ -3,7 +3,7 @@ version: ${version}
 main: com.github.yufiriamazenta.craftorithm.Craftorithm
 api-version: 1.13
 load: POSTWORLD
-softdepend: [ Vault, LuckPerms, PlayerPoints, PlaceholderAPI ]
+softdepend: [ Vault, LuckPerms, PlayerPoints, PlaceholderAPI, ItemsAdder, Oraxen, MythicMobs ]
 authors: [ YufiriaMazenta ]
 folia-supported: true
 website: https://github.com/YufiriaMazenta/Craftorithm

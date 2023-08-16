@@ -7,14 +7,17 @@ import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.config.impl.YamlConfigWrapper;
 import crypticlib.item.Item;
 import crypticlib.util.ItemUtil;
+import dev.lone.itemsadder.api.CustomStack;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.bukkit.MythicBukkit;
+import io.lumine.mythic.core.items.ItemExecutor;
+import io.lumine.mythic.core.items.MythicItem;
+import io.th0rgal.oraxen.api.OraxenItems;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class ItemManager {
@@ -110,9 +113,24 @@ public class ItemManager {
             itemStr = itemStr.substring(0, lastSpaceIndex);
         }
         itemStr = itemStr.replace(" ", "");
-        if (itemStr.startsWith("items:")) {
-            itemStr = itemStr.substring("items:".length());
-            item = getCraftorithmItem(itemStr);
+        if (itemStr.contains(":")) {
+            String namespace = itemStr.substring(0, itemStr.indexOf(":")), key = itemStr.substring(itemStr.indexOf(":") + 1);
+            switch (namespace) {
+                case "items":
+                    item = getCraftorithmItem(key);
+                    break;
+                case "items_adder":
+                    item = getItemsAdderItem(key);
+                    break;
+                case "oraxen":
+                    item = getOraxenItem(key);
+                    break;
+                case "mythic_mobs":
+                    item = getMythicMobsItem(key);
+                    break;
+                default:
+                    throw new IllegalArgumentException(namespace + " is not a valid item namespace");
+            }
         } else {
             Material material = Material.matchMaterial(itemStr);
             if (material == null) {
@@ -120,6 +138,7 @@ public class ItemManager {
             }
             item = new ItemStack(material);
         }
+
         item.setAmount(item.getAmount() * amountScale);
         return item;
     }
@@ -154,6 +173,35 @@ public class ItemManager {
             return namespace + ":" + regName;
         }
         return null;
+    }
+
+    public static ItemStack getItemsAdderItem(String itemStr) {
+        itemStr = itemStr.substring("items_adder:".length());
+        CustomStack customStack = CustomStack.getInstance(itemStr);
+        if (customStack == null) {
+            throw new IllegalArgumentException(itemStr + " is a not exist ItemsAdder item");
+        }
+        return customStack.getItemStack();
+    }
+
+    public static ItemStack getOraxenItem(String itemStr) {
+        itemStr = itemStr.substring("oraxen:".length());
+        if (!OraxenItems.exists(itemStr)) {
+            throw new IllegalArgumentException(itemStr + " is a not exist Oraxen item");
+        }
+        return OraxenItems.getItemById(itemStr).build();
+    }
+
+    public static ItemStack getMythicMobsItem(String itemStr) {
+        itemStr = itemStr.substring("mythicmobs:".length());
+        ItemExecutor executor = MythicBukkit.inst().getItemManager();
+        Optional<MythicItem> itemOptional = executor.getItem(itemStr);
+        if (!itemOptional.isPresent()) {
+            throw new IllegalArgumentException(itemStr + " is not a valid MythicMobs item");
+        }
+        MythicItem mythicItem = itemOptional.get();
+        int amount = mythicItem.getAmount();
+        return BukkitAdapter.adapt(itemOptional.get().generateItemStack(amount));
     }
 
 }
