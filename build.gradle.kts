@@ -45,14 +45,6 @@ publishing {
         from(components["java"])
     }
 }
-tasks.withType<ShadowJar> {
-    archiveFileName.set("Craftorithm-$version.jar")
-    relocate("crypticlib", "com.github.yufiriamazenta.crypticlib")
-}
-
-tasks.withType(JavaCompile::class.java) {
-    options.encoding = "UTF-8"
-}
 
 tasks {
     val props = HashMap<String, String>()
@@ -64,5 +56,12 @@ tasks {
         filesMatching("config.yml") {
             expand(props)
         }
+    }
+    compileJava {
+        options.encoding = "UTF-8"
+    }
+    shadowJar {
+        archiveFileName.set("Craftorithm-$version.jar")
+        relocate("crypticlib", "com.github.yufiriamazenta.crypticlib")
     }
 }
