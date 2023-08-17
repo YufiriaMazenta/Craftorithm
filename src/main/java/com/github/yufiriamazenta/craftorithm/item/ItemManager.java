@@ -176,7 +176,6 @@ public class ItemManager {
     }
 
     public static ItemStack getItemsAdderItem(String itemStr) {
-        itemStr = itemStr.substring("items_adder:".length());
         CustomStack customStack = CustomStack.getInstance(itemStr);
         if (customStack == null) {
             throw new IllegalArgumentException(itemStr + " is a not exist ItemsAdder item");
@@ -185,7 +184,6 @@ public class ItemManager {
     }
 
     public static ItemStack getOraxenItem(String itemStr) {
-        itemStr = itemStr.substring("oraxen:".length());
         if (!OraxenItems.exists(itemStr)) {
             throw new IllegalArgumentException(itemStr + " is a not exist Oraxen item");
         }
@@ -193,7 +191,6 @@ public class ItemManager {
     }
 
     public static ItemStack getMythicMobsItem(String itemStr) {
-        itemStr = itemStr.substring("mythicmobs:".length());
         ItemExecutor executor = MythicBukkit.inst().getItemManager();
         Optional<MythicItem> itemOptional = executor.getItem(itemStr);
         if (!itemOptional.isPresent()) {
