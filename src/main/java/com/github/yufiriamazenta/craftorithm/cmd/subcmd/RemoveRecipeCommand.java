@@ -81,29 +81,29 @@ public class RemoveRecipeCommand extends AbstractSubCommand {
         }
         if (keyList.size() < 1)
             return;
-        Iterator<Recipe> recipeIterator = Bukkit.recipeIterator();
-        while (recipeIterator.hasNext()) {
-            Recipe recipe1 = recipeIterator.next();
-            NamespacedKey key1 = RecipeManager.getRecipeKey(recipe1);
-            if (key1 == null)
-                continue;
-            if (keyList.contains(key1)) {
-                if (Craftorithm.getInstance().getVanillaVersion() >= 15) {
-                    Bukkit.removeRecipe(key1);
-                } else {
-                    recipeIterator.remove();
-                }
+        if (Craftorithm.getInstance().getVanillaVersion() >= 15) {
+            for (NamespacedKey key : keyList) {
+                Bukkit.removeRecipe(key);
                 if (save2File) {
-                    List<String> removedList = removedRecipeConfig.getConfig().getStringList("recipes");
-                    if (!removedList.contains(key1.toString())) {
-                        removedList.add(key1.toString());
-                        removedRecipeConfig.getConfig().set("recipes", removedList);
-                    }
-                    removedRecipeConfig.saveConfig();
+                    addKey2RemovedConfig(key.toString());
                 }
-                keyList.remove(key1);
-                if (keyList.size() <= 0)
-                    break;
+            }
+        } else {
+            Iterator<Recipe> recipeIterator = Bukkit.recipeIterator();
+            while (recipeIterator.hasNext()) {
+                Recipe recipe1 = recipeIterator.next();
+                NamespacedKey key1 = RecipeManager.getRecipeKey(recipe1);
+                if (key1 == null)
+                    continue;
+                if (keyList.contains(key1)) {
+                    recipeIterator.remove();
+                    if (save2File) {
+                        addKey2RemovedConfig(key1.toString());
+                    }
+                    keyList.remove(key1);
+                    if (keyList.size() <= 0)
+                        break;
+                }
             }
         }
         reloadRecipeMap();
@@ -114,26 +114,33 @@ public class RemoveRecipeCommand extends AbstractSubCommand {
         Iterator<Recipe> recipeIterator = Bukkit.recipeIterator();
         if (key == null)
             return false;
-        while (recipeIterator.hasNext()) {
-            Recipe recipe1 = recipeIterator.next();
-            NamespacedKey key1 = RecipeManager.getRecipeKey(recipe1);
-            if (key.equals(key1)) {
-                if (Craftorithm.getInstance().getVanillaVersion() >= 15) {
-                    Bukkit.removeRecipe(key);
-                } else {
+        if (Craftorithm.getInstance().getVanillaVersion() >= 15) {
+            if (Bukkit.removeRecipe(key) && save2File)
+                addKey2RemovedConfig(key.toString());
+            reloadRecipeMap();
+        } else {
+            while (recipeIterator.hasNext()) {
+                Recipe recipe1 = recipeIterator.next();
+                NamespacedKey key1 = RecipeManager.getRecipeKey(recipe1);
+                if (key.equals(key1)) {
                     recipeIterator.remove();
+                    if (save2File) {
+                        addKey2RemovedConfig(key.toString());
+                    }
+                    reloadRecipeMap();
+                    return true;
                 }
-                if (save2File) {
-                    List<String> removedList = removedRecipeConfig.getConfig().getStringList("recipes");
-                    if (!removedList.contains(keyStr))
-                        removedList.add(keyStr);
-                    removedRecipeConfig.getConfig().set("recipes", removedList);
-                    removedRecipeConfig.saveConfig();
-                }
-                return true;
             }
         }
         return false;
+    }
+
+    public void addKey2RemovedConfig(String key) {
+        List<String> removedList = removedRecipeConfig.getConfig().getStringList("recipes");
+        if (!removedList.contains(key))
+            removedList.add(key);
+        removedRecipeConfig.getConfig().set("recipes", removedList);
+        removedRecipeConfig.saveConfig();
     }
 
 }
