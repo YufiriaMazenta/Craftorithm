@@ -308,21 +308,21 @@ public class RecipeFactory {
     }
 
     public static RecipeChoice getRecipeChoice(String itemStr) {
-        if (itemStr.startsWith("items:")) {
+        if (itemStr.contains(":")) {
+            if (itemStr.startsWith("tag:")) {
+                String tagStr = itemStr.substring(4).toUpperCase(Locale.ROOT);
+                Tag<Material> materialTag;
+                try {
+                    Field field = Tag.class.getField(tagStr);
+                    materialTag = (Tag<Material>) field.get(null);
+                } catch (NoSuchFieldException | IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+                return new RecipeChoice.MaterialChoice(materialTag);
+            }
             ItemStack item = ItemManager.matchCraftorithmItem(itemStr);
             return new RecipeChoice.ExactChoice(item);
-        } else if (itemStr.startsWith("tag:")) {
-            String tagStr = itemStr.substring(4).toUpperCase(Locale.ROOT);
-            Tag<Material> materialTag;
-            try {
-                Field field = Tag.class.getField(tagStr);
-                materialTag = (Tag<Material>) field.get(null);
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-            return new RecipeChoice.MaterialChoice(materialTag);
-        }
-        else {
+        } else {
             Material material = Material.matchMaterial(itemStr);
             if (material == null) {
                 throw new IllegalArgumentException(itemStr + " is a not exist item type");
