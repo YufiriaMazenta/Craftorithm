@@ -88,7 +88,11 @@ public class RemoveRecipeCommand extends AbstractSubCommand {
             if (key1 == null)
                 continue;
             if (keyList.contains(key1)) {
-                recipeIterator.remove();
+                if (Craftorithm.getInstance().getVanillaVersion() >= 15) {
+                    Bukkit.removeRecipe(key1);
+                } else {
+                    recipeIterator.remove();
+                }
                 if (save2File) {
                     List<String> removedList = removedRecipeConfig.getConfig().getStringList("recipes");
                     if (!removedList.contains(key1.toString())) {
@@ -114,7 +118,11 @@ public class RemoveRecipeCommand extends AbstractSubCommand {
             Recipe recipe1 = recipeIterator.next();
             NamespacedKey key1 = RecipeManager.getRecipeKey(recipe1);
             if (key.equals(key1)) {
-                recipeIterator.remove();
+                if (Craftorithm.getInstance().getVanillaVersion() >= 15) {
+                    Bukkit.removeRecipe(key);
+                } else {
+                    recipeIterator.remove();
+                }
                 if (save2File) {
                     List<String> removedList = removedRecipeConfig.getConfig().getStringList("recipes");
                     if (!removedList.contains(keyStr))
@@ -122,7 +130,6 @@ public class RemoveRecipeCommand extends AbstractSubCommand {
                     removedRecipeConfig.getConfig().set("recipes", removedList);
                     removedRecipeConfig.saveConfig();
                 }
-                reloadRecipeMap();
                 return true;
             }
         }
