@@ -10,6 +10,7 @@ import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
 import com.github.yufiriamazenta.craftorithm.util.FileUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.config.impl.YamlConfigWrapper;
+import crypticlib.util.MsgUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
