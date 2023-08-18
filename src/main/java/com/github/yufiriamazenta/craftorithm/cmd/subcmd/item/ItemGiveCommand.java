@@ -1,7 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.cmd.subcmd.item;
 
 import com.github.yufiriamazenta.craftorithm.cmd.subcmd.AbstractSubCommand;
-import com.github.yufiriamazenta.craftorithm.item.ItemManager;
+import com.github.yufiriamazenta.craftorithm.item.manager.DefItemManager;
 import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.command.ISubCommand;
@@ -43,19 +43,19 @@ public class ItemGiveCommand extends AbstractSubCommand {
             }
         }
 
-        if (!ItemManager.isCraftorithmItem(args.get(0))) {
+        if (!DefItemManager.isCraftorithmItem(args.get(0))) {
             LangUtil.sendMsg(sender, "command.item.give.not_exist_item", ContainerUtil.newHashMap("<item_name>", args.get(0)));
             return true;
         }
 
-        player.getInventory().addItem(ItemManager.getCraftorithmItem(args.get(0)));
+        player.getInventory().addItem(DefItemManager.getCraftorithmItem(args.get(0)));
         return true;
     }
 
     @Override
     public List<String> onTabComplete(CommandSender sender, List<String> args) {
         if (args.size() < 2) {
-            List<String> tabList = new ArrayList<>(ItemManager.getItemMap().keySet());
+            List<String> tabList = new ArrayList<>(DefItemManager.getItemMap().keySet());
             filterTabList(tabList, args.get(0));
             return tabList;
         }

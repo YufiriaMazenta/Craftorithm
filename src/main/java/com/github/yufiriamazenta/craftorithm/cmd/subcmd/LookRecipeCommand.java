@@ -2,7 +2,7 @@ package com.github.yufiriamazenta.craftorithm.cmd.subcmd;
 
 import com.github.yufiriamazenta.craftorithm.menu.impl.recipe.RecipeDisplayMenuHolder;
 import com.github.yufiriamazenta.craftorithm.menu.impl.recipe.RecipeListMenuHolder;
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
+import com.github.yufiriamazenta.craftorithm.recipe.DefRecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
@@ -31,24 +31,25 @@ public class LookRecipeCommand extends AbstractSubCommand {
             player.openInventory(new RecipeListMenuHolder().getInventory());
             return true;
         }
-        Recipe recipe = RecipeManager.getPluginRecipe(args.get(0));
-        if (recipe == null) {
-            LangUtil.sendMsg(sender, "command.look.not_exist_recipe");
-            return true;
-        }
-        Player player = (Player) sender;
-        player.openInventory(new RecipeDisplayMenuHolder(recipe).getInventory());
+//        Recipe recipe = DefRecipeManager.getPluginRecipe(args.get(0));
+//        if (recipe == null) {
+//            LangUtil.sendMsg(sender, "command.look.not_exist_recipe");
+//            return true;
+//        }
+//        Player player = (Player) sender;
+//        player.openInventory(new RecipeDisplayMenuHolder(recipe).getInventory());
+        //TODO
         return true;
     }
 
     @Override
     public List<String> onTabComplete(CommandSender sender, List<String> args) {
         if (args.size() <= 1) {
-            List<NamespacedKey> recipeKeyList = RecipeManager.getPluginRecipeKeys();
+//            List<NamespacedKey> recipeKeyList = DefRecipeManager.getPluginRecipeKeys();
             List<String> tabList = new ArrayList<>();
-            for (NamespacedKey key : recipeKeyList) {
-                tabList.add(key.getKey());
-            }
+//            for (NamespacedKey key : recipeKeyList) {
+//                tabList.add(key.getKey());
+//            }
             filterTabList(tabList, args.get(0));
             return tabList;
         } else {

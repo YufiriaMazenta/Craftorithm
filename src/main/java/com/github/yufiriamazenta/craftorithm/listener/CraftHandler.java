@@ -2,7 +2,7 @@ package com.github.yufiriamazenta.craftorithm.listener;
 
 import com.github.yufiriamazenta.craftorithm.CraftorithmAPI;
 import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
+import com.github.yufiriamazenta.craftorithm.recipe.DefRecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtil;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.HumanEntity;
@@ -24,36 +24,38 @@ public enum CraftHandler implements Listener {
     public void dispatchConditions(PrepareItemCraftEvent event) {
         if (event.getRecipe() == null)
             return;
-        YamlConfiguration config = RecipeManager.getRecipeConfig(event.getRecipe());
-        if (config == null)
-            return;
-
-        Player player = (Player) event.getView().getPlayer();
-        String condition = config.getString("condition", "true");
-        condition = "if " + condition;
-        boolean result = (boolean) ArcencielDispatcher.INSTANCE.dispatchArcencielBlock(player, condition).getObj();
-        if (!result) {
-            event.getInventory().setResult(null);
-        }
+//        YamlConfiguration config = DefRecipeManager.getRecipeConfig(event.getRecipe());
+//        if (config == null)
+//            return;
+//
+//        Player player = (Player) event.getView().getPlayer();
+//        String condition = config.getString("condition", "true");
+//        condition = "if " + condition;
+//        boolean result = (boolean) ArcencielDispatcher.INSTANCE.dispatchArcencielBlock(player, condition).getObj();
+//        if (!result) {
+//            event.getInventory().setResult(null);
+//        }
+        //TODO
     }
 
     @EventHandler(priority = EventPriority.LOW)
     public void dispatchActions(CraftItemEvent event) {
-        if (event.getInventory().getResult() == null) {
-            event.getInventory().setResult(null);
-            event.setCancelled(true);
-            return;
-        }
-        HumanEntity entity = event.getWhoClicked();
-        if (!(entity instanceof Player)) {
-            return;
-        }
-        YamlConfiguration config = RecipeManager.getRecipeConfig(event.getRecipe());
-        if (config == null)
-            return;
-        Player player = (Player) entity;
-        List<String> actions = config.getStringList("actions");
-        CraftorithmAPI.INSTANCE.getArcencielDispatcher().dispatchArcencielFunc(player, actions);
+//        if (event.getInventory().getResult() == null) {
+//            event.getInventory().setResult(null);
+//            event.setCancelled(true);
+//            return;
+//        }
+//        HumanEntity entity = event.getWhoClicked();
+//        if (!(entity instanceof Player)) {
+//            return;
+//        }
+//        YamlConfiguration config = DefRecipeManager.getRecipeConfig(event.getRecipe());
+//        if (config == null)
+//            return;
+//        Player player = (Player) entity;
+//        List<String> actions = config.getStringList("actions");
+//        CraftorithmAPI.INSTANCE.getArcencielDispatcher().dispatchArcencielFunc(player, actions);
+        //TODO
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

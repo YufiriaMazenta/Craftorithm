@@ -1,23 +1,26 @@
 package com.github.yufiriamazenta.craftorithm.cmd;
 
+import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.cmd.subcmd.*;
 import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import crypticlib.annotations.BukkitCommand;
+import crypticlib.command.IPluginCommand;
 import crypticlib.command.ISubCommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabExecutor;
+import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public enum PluginCommand implements TabExecutor {
-
-    INSTANCE;
+@BukkitCommand(command = "craftorithm")
+public class PluginCommand implements IPluginCommand {
 
     private final Map<String, ISubCommand> subCommandMap;
 
-    PluginCommand() {
+    public PluginCommand() {
         subCommandMap = new ConcurrentHashMap<>();
         regDefaultSubCommands();
     }
@@ -56,8 +59,18 @@ public enum PluginCommand implements TabExecutor {
         regSubCommand(CreateRecipeCommand.INSTANCE);
     }
 
+    @Override
+    public @NotNull Map<String, ISubCommand> getSubCommands() {
+        return subCommandMap;
+    }
+
     public void regSubCommand(ISubCommand executor) {
         subCommandMap.put(executor.getSubCommandName(), executor);
+    }
+
+    @Override
+    public Plugin getPlugin() {
+        return Craftorithm.getInstance();
     }
 
     @Override

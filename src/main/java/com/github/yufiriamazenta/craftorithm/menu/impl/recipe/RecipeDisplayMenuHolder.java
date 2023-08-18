@@ -3,7 +3,7 @@ package com.github.yufiriamazenta.craftorithm.menu.impl.recipe;
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.BukkitMenuHandler;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.ItemDisplayIcon;
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
+import com.github.yufiriamazenta.craftorithm.recipe.DefRecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
@@ -19,8 +19,8 @@ import java.util.Map;
 public class RecipeDisplayMenuHolder extends BukkitMenuHandler {
 
     private final Recipe recipe;
-    private final InventoryType inventoryType;
-    private final String invTitle;
+//    private final InventoryType inventoryType;
+//    private final String invTitle;
     private RecipeListMenuHolder parentMenu;
 
     public RecipeDisplayMenuHolder(Recipe recipe) {
@@ -31,69 +31,72 @@ public class RecipeDisplayMenuHolder extends BukkitMenuHandler {
         super();
         this.parentMenu = parentMenu;
         this.recipe = recipe;
-        RecipeType recipeType = RecipeManager.getPluginRecipeType(recipe);
-        switch (recipeType) {
-            case SHAPED:
-                setShapedRecipeMenu();
-                inventoryType = InventoryType.WORKBENCH;
-                invTitle = LangUtil.lang("menu.recipe_display.title.shaped");
-                break;
-            case SHAPELESS:
-                setShapelessRecipeMenu();
-                inventoryType = InventoryType.WORKBENCH;
-                invTitle = LangUtil.lang("menu.recipe_display.title.shapeless");
-                break;
-            case COOKING:
-            case RANDOM_COOKING:
-                setCookingRecipeMenu();
-                if (recipe instanceof FurnaceRecipe) {
-                    inventoryType = InventoryType.FURNACE;
-                    invTitle = LangUtil.lang("menu.recipe_display.title.furnace");
-                }
-                else if (recipe instanceof BlastingRecipe) {
-                    inventoryType = InventoryType.BLAST_FURNACE;
-                    invTitle = LangUtil.lang("menu.recipe_display.title.blasting");
-                }
-                else if (recipe instanceof SmokingRecipe) {
-                    inventoryType = InventoryType.SMOKER;
-                    invTitle = LangUtil.lang("menu.recipe_display.title.smoking");
-                }
-                else {
-                    inventoryType = InventoryType.FURNACE;
-                    invTitle = LangUtil.lang("menu.recipe_display.title.campfire");
-                }
-                break;
-            case SMITHING:
-                setSmithingRecipeMenu();
-                inventoryType = InventoryType.SMITHING;
-                invTitle = LangUtil.lang("menu.recipe_display.title.smithing");
-                break;
-            case STONE_CUTTING:
-                setStoneCuttingRecipeMenu();
-                inventoryType = InventoryType.CHEST;
-                invTitle = LangUtil.lang("menu.recipe_display.title.stone_cutting");
-                break;
-            case ANVIL:
-                setAnvilRecipeMenu();
-                inventoryType = InventoryType.ANVIL;
-                invTitle = LangUtil.lang("menu.recipe_display.title.anvil");
-                break;
-            default:
-                invTitle = "Unknown Type";
-                inventoryType = InventoryType.CHEST;
-                getMenuIconMap().put(15, ItemDisplayIcon.icon(recipe.getResult()));
-                break;
-        }
+//        RecipeType recipeType = DefRecipeManager.getPluginRecipeType(recipe);
+//        switch (recipeType) {
+//            case SHAPED:
+//                setShapedRecipeMenu();
+//                inventoryType = InventoryType.WORKBENCH;
+//                invTitle = LangUtil.lang("menu.recipe_display.title.shaped");
+//                break;
+//            case SHAPELESS:
+//                setShapelessRecipeMenu();
+//                inventoryType = InventoryType.WORKBENCH;
+//                invTitle = LangUtil.lang("menu.recipe_display.title.shapeless");
+//                break;
+//            case COOKING:
+//            case RANDOM_COOKING:
+//                setCookingRecipeMenu();
+//                if (recipe instanceof FurnaceRecipe) {
+//                    inventoryType = InventoryType.FURNACE;
+//                    invTitle = LangUtil.lang("menu.recipe_display.title.furnace");
+//                }
+//                else if (recipe instanceof BlastingRecipe) {
+//                    inventoryType = InventoryType.BLAST_FURNACE;
+//                    invTitle = LangUtil.lang("menu.recipe_display.title.blasting");
+//                }
+//                else if (recipe instanceof SmokingRecipe) {
+//                    inventoryType = InventoryType.SMOKER;
+//                    invTitle = LangUtil.lang("menu.recipe_display.title.smoking");
+//                }
+//                else {
+//                    inventoryType = InventoryType.FURNACE;
+//                    invTitle = LangUtil.lang("menu.recipe_display.title.campfire");
+//                }
+//                break;
+//            case SMITHING:
+//                setSmithingRecipeMenu();
+//                inventoryType = InventoryType.SMITHING;
+//                invTitle = LangUtil.lang("menu.recipe_display.title.smithing");
+//                break;
+//            case STONE_CUTTING:
+//                setStoneCuttingRecipeMenu();
+//                inventoryType = InventoryType.CHEST;
+//                invTitle = LangUtil.lang("menu.recipe_display.title.stone_cutting");
+//                break;
+//            case ANVIL:
+//                setAnvilRecipeMenu();
+//                inventoryType = InventoryType.ANVIL;
+//                invTitle = LangUtil.lang("menu.recipe_display.title.anvil");
+//                break;
+//            default:
+//                invTitle = "Unknown Type";
+//                inventoryType = InventoryType.CHEST;
+//                getMenuIconMap().put(15, ItemDisplayIcon.icon(recipe.getResult()));
+//                break;
+//        }
+        //TODO
     }
 
     @NotNull
     @Override
     public Inventory getInventory() {
-        Inventory inventory = Bukkit.createInventory(this, inventoryType, LangUtil.color(invTitle));
-        for (Integer slot : getMenuIconMap().keySet()) {
-            inventory.setItem(slot, getMenuIconMap().get(slot).getDisplay());
-        }
-        return inventory;
+//        Inventory inventory = Bukkit.createInventory(this, inventoryType, LangUtil.color(invTitle));
+//        for (Integer slot : getMenuIconMap().keySet()) {
+//            inventory.setItem(slot, getMenuIconMap().get(slot).getDisplay());
+//        }
+//        return inventory;
+        //TODO
+        return null;
     }
 
     public void setShapedRecipeMenu() {

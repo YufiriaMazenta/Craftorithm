@@ -5,6 +5,7 @@ plugins {
     `java-library`
     `maven-publish`
     id("com.github.johnrengelman.shadow").version("7.1.2")
+    id("io.papermc.paperweight.userdev").version("1.5.5")
 }
 
 repositories {
@@ -22,7 +23,7 @@ repositories {
 
 dependencies {
     compileOnly("org.jetbrains:annotations:24.0.1")
-    compileOnly("org.spigotmc:spigot:1.19.4-R0.1-SNAPSHOT")
+//    compileOnly("org.spigotmc:spigot:1.19.4-R0.1-SNAPSHOT")
     compileOnly("org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
     compileOnly("org.black_ixx:playerpoints:3.2.5")
@@ -32,13 +33,14 @@ dependencies {
     compileOnly("com.github.oraxen:oraxen:1.160.0")
     compileOnly("io.lumine:Mythic-Dist:5.3.5")
     implementation("com.github.YufiriaMazenta:CrypticLib:1.0.1")
+    paperweight.paperDevBundle("1.20.1-R0.1-SNAPSHOT")
 }
 
 group = "com.github.yufiriamazenta"
-version = "1.4.1"
+version = "2.0.0-dev1"
 var pluginVersion: String = version.toString() + "-" + SimpleDateFormat("yyyyMMdd").format(System.currentTimeMillis())
-java.sourceCompatibility = JavaVersion.VERSION_1_8
-java.targetCompatibility = JavaVersion.VERSION_1_8
+java.sourceCompatibility = JavaVersion.VERSION_17
+java.targetCompatibility = JavaVersion.VERSION_17
 
 publishing {
     publications.create<MavenPublication>("maven") {
@@ -63,5 +65,12 @@ tasks {
     shadowJar {
         archiveFileName.set("Craftorithm-$version.jar")
         relocate("crypticlib", "com.github.yufiriamazenta.crypticlib")
+        destinationDirectory.set(layout.buildDirectory.dir("dev-libs"))
+    }
+    jar {
+        destinationDirectory.set(layout.buildDirectory.dir("dev-libs"))
+    }
+    assemble {
+        dependsOn(reobfJar)
     }
 }

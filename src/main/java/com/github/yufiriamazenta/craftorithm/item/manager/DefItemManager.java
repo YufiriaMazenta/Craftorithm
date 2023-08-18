@@ -1,4 +1,4 @@
-package com.github.yufiriamazenta.craftorithm.item;
+package com.github.yufiriamazenta.craftorithm.item.manager;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
@@ -20,7 +20,9 @@ import java.io.File;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class ItemManager {
+public enum DefItemManager implements IItemManager {
+
+    INSTANCE;
 
     private static final Map<String, YamlConfigWrapper> itemFileMap = new HashMap<>();
     private static final Map<String, ItemStack> itemMap = new HashMap<>();
@@ -49,8 +51,8 @@ public class ItemManager {
 
     public static void addCraftorithmItem(String itemFileName, String itemName, ItemStack item) {
         YamlConfigWrapper YamlConfigWrapper;
-        if (!ItemManager.getItemFileMap().containsKey(itemFileName)) {
-            File itemFile = new File(ItemManager.getItemFileFolder(), itemFileName + ".yml");
+        if (!DefItemManager.getItemFileMap().containsKey(itemFileName)) {
+            File itemFile = new File(DefItemManager.getItemFileFolder(), itemFileName + ".yml");
             if (!itemFile.exists()) {
                 FileUtil.createNewFile(itemFile);
             }

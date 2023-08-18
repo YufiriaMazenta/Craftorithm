@@ -1,6 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.listener;
 
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
+import com.github.yufiriamazenta.craftorithm.recipe.DefRecipeManager;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,11 +17,12 @@ public enum RecipeUnlockHandler implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        Map<NamespacedKey, Boolean> unlockMap = RecipeManager.getRecipeUnlockMap();
-        List<NamespacedKey> unlockKeyList = new ArrayList<>(unlockMap.keySet());
-        unlockKeyList.removeIf(key -> unlockMap.getOrDefault(key, false) && !player.hasDiscoveredRecipe(key));
-        player.discoverRecipes(unlockKeyList);
+//        Player player = event.getPlayer();
+//        Map<NamespacedKey, Boolean> unlockMap = DefRecipeManager.getRecipeUnlockMap();
+//        List<NamespacedKey> unlockKeyList = new ArrayList<>(unlockMap.keySet());
+//        unlockKeyList.removeIf(key -> unlockMap.getOrDefault(key, false) && !player.hasDiscoveredRecipe(key));
+//        player.discoverRecipes(unlockKeyList);
+        //TODO
     }
 
 }
