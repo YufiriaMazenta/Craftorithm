@@ -1,7 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.listener;
 
-import com.github.yufiriamazenta.craftorithm.item.ItemManager;
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
+import com.github.yufiriamazenta.craftorithm.item.manager.DefItemManager;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -29,12 +28,13 @@ public enum FurnaceSmeltHandler implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onFurnaceStartSmelt(FurnaceStartSmeltEvent event) {
-        YamlConfiguration config = RecipeManager.getRecipeConfig(event.getRecipe());
-        if (config == null)
-            return;
-        if (config.getString("type", "shaped").equals("random_cooking")) {
-            furnaceMap.put(event.getBlock(), config);
-        }
+//        YamlConfiguration config = DefRecipeManager.getRecipeConfig(event.getRecipe());
+//        if (config == null)
+//            return;
+//        if (config.getString("type", "shaped").equals("random_cooking")) {
+//            furnaceMap.put(event.getBlock(), config);
+//        }
+        //TODO
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -59,7 +59,7 @@ public enum FurnaceSmeltHandler implements Listener {
         for (String result : resultStr) {
             String item = result.substring(0, result.lastIndexOf(" "));
             double probability = Double.parseDouble(result.substring(result.lastIndexOf(" ") + 1));
-            ItemStack itemStack = ItemManager.matchCraftorithmItem(item);
+            ItemStack itemStack = DefItemManager.matchCraftorithmItem(item);
             sum += probability;
             probabilityMap.put(itemStack, sum);
         }

@@ -1,7 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.cmd.subcmd.item;
 
 import com.github.yufiriamazenta.craftorithm.cmd.subcmd.AbstractSubCommand;
-import com.github.yufiriamazenta.craftorithm.item.ItemManager;
+import com.github.yufiriamazenta.craftorithm.item.manager.DefItemManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.command.ISubCommand;
 import org.bukkit.Material;
@@ -36,7 +36,7 @@ public final class ItemSaveCommand extends AbstractSubCommand {
             return true;
         }
 
-        ItemManager.addCraftorithmItem(args.get(0), args.get(1), item.clone());
+        DefItemManager.addCraftorithmItem(args.get(0), args.get(1), item.clone());
         LangUtil.sendMsg(sender, "command.item.save.success");
         return true;
     }
@@ -46,7 +46,7 @@ public final class ItemSaveCommand extends AbstractSubCommand {
         switch (args.size()) {
             case 0:
             case 1:
-                List<String> tabList = new ArrayList<>(ItemManager.getItemFileMap().keySet());
+                List<String> tabList = new ArrayList<>(DefItemManager.getItemFileMap().keySet());
                 filterTabList(tabList, args.get(0));
                 return tabList;
             case 2:

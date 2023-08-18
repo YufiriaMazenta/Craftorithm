@@ -1,7 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.cmd.subcmd;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
+import com.github.yufiriamazenta.craftorithm.recipe.DefRecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.command.ISubCommand;
 import crypticlib.config.impl.YamlConfigWrapper;
@@ -59,8 +59,9 @@ public class RemoveRecipeCommand extends AbstractSubCommand {
         recipeMap.clear();
         while (recipeIterator.hasNext()) {
             Recipe recipe = recipeIterator.next();
-            NamespacedKey key = RecipeManager.getRecipeKey(recipe);
-            recipeMap.put(key, recipe);
+//            NamespacedKey key = DefRecipeManager.getRecipeKey(recipe);
+//            recipeMap.put(key, recipe);
+            //TODO
         }
     }
 
@@ -89,22 +90,23 @@ public class RemoveRecipeCommand extends AbstractSubCommand {
                 }
             }
         } else {
-            Iterator<Recipe> recipeIterator = Bukkit.recipeIterator();
-            while (recipeIterator.hasNext()) {
-                Recipe recipe1 = recipeIterator.next();
-                NamespacedKey key1 = RecipeManager.getRecipeKey(recipe1);
-                if (key1 == null)
-                    continue;
-                if (keyList.contains(key1)) {
-                    recipeIterator.remove();
-                    if (save2File) {
-                        addKey2RemovedConfig(key1.toString());
-                    }
-                    keyList.remove(key1);
-                    if (keyList.size() <= 0)
-                        break;
-                }
-            }
+//            Iterator<Recipe> recipeIterator = Bukkit.recipeIterator();
+//            while (recipeIterator.hasNext()) {
+//                Recipe recipe1 = recipeIterator.next();
+//                NamespacedKey key1 = DefRecipeManager.getRecipeKey(recipe1);
+//                if (key1 == null)
+//                    continue;
+//                if (keyList.contains(key1)) {
+//                    recipeIterator.remove();
+//                    if (save2File) {
+//                        addKey2RemovedConfig(key1.toString());
+//                    }
+//                    keyList.remove(key1);
+//                    if (keyList.size() <= 0)
+//                        break;
+//                }
+//            }
+            //TODO
         }
         reloadRecipeMap();
     }
@@ -119,18 +121,19 @@ public class RemoveRecipeCommand extends AbstractSubCommand {
                 addKey2RemovedConfig(key.toString());
             reloadRecipeMap();
         } else {
-            while (recipeIterator.hasNext()) {
-                Recipe recipe1 = recipeIterator.next();
-                NamespacedKey key1 = RecipeManager.getRecipeKey(recipe1);
-                if (key.equals(key1)) {
-                    recipeIterator.remove();
-                    if (save2File) {
-                        addKey2RemovedConfig(key.toString());
-                    }
-                    reloadRecipeMap();
-                    return true;
-                }
-            }
+//            while (recipeIterator.hasNext()) {
+//                Recipe recipe1 = recipeIterator.next();
+//                NamespacedKey key1 = DefRecipeManager.getRecipeKey(recipe1);
+//                if (key.equals(key1)) {
+//                    recipeIterator.remove();
+//                    if (save2File) {
+//                        addKey2RemovedConfig(key.toString());
+//                    }
+//                    reloadRecipeMap();
+//                    return true;
+//                }
+//            }
+            //TODO
         }
         return false;
     }

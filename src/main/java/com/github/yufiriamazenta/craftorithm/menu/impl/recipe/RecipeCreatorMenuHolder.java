@@ -2,31 +2,24 @@ package com.github.yufiriamazenta.craftorithm.menu.impl.recipe;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.cmd.subcmd.RemoveRecipeCommand;
-import com.github.yufiriamazenta.craftorithm.item.ItemManager;
+import com.github.yufiriamazenta.craftorithm.item.manager.DefItemManager;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.BukkitMenuHandler;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.ItemDisplayIcon;
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeFactory;
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
-import com.github.yufiriamazenta.craftorithm.util.FileUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import crypticlib.config.impl.YamlConfigWrapper;
 import crypticlib.util.ItemUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
 import java.util.*;
 
 public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
@@ -99,24 +92,25 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
                         String itemName = getItemName(item, false);
                         results.add(itemName);
                     }
-                    File recipeFile = new File(RecipeManager.getRecipeFileFolder(), recipeName + ".yml");
-                    if (!recipeFile.exists()) {
-                        FileUtil.createNewFile(recipeFile);
-                    }
-                    YamlConfigWrapper recipeConfig = new YamlConfigWrapper(recipeFile);
-                    recipeConfig.getConfig().set("multiple", true);
-                    recipeConfig.getConfig().set("result", results);
-                    recipeConfig.getConfig().set("source", sources);
-                    recipeConfig.getConfig().set("type", "stone_cutting");
-                    recipeConfig.saveConfig();
-                    recipeConfig.reloadConfig();
-                    Recipe[] recipes = RecipeFactory.newMultipleRecipe(recipeConfig.getConfig(), recipeName);
-                    for (Recipe recipe : recipes) {
-                        NamespacedKey key = RecipeManager.getRecipeKey(recipe);
-                        RecipeManager.regRecipe(key, recipe, recipeConfig.getConfig());
-                    }
-                    event.getWhoClicked().closeInventory();
-                    sendSuccessMsgAndReloadMap(event.getWhoClicked());
+//                    File recipeFile = new File(DefRecipeManager.getRecipeFileFolder(), recipeName + ".yml");
+//                    if (!recipeFile.exists()) {
+//                        FileUtil.createNewFile(recipeFile);
+//                    }
+//                    YamlConfigWrapper recipeConfig = new YamlConfigWrapper(recipeFile);
+//                    recipeConfig.getConfig().set("multiple", true);
+//                    recipeConfig.getConfig().set("result", results);
+//                    recipeConfig.getConfig().set("source", sources);
+//                    recipeConfig.getConfig().set("type", "stone_cutting");
+//                    recipeConfig.saveConfig();
+//                    recipeConfig.reloadConfig();
+//                    Recipe[] recipes = RecipeFactory.newMultipleRecipe(recipeConfig.getConfig(), recipeName);
+//                    for (Recipe recipe : recipes) {
+//                        NamespacedKey key = DefRecipeManager.getRecipeKey(recipe);
+//                        DefRecipeManager.regRecipe(key, recipe, recipeConfig.getConfig());
+//                    }
+//                    event.getWhoClicked().closeInventory();
+//                    sendSuccessMsgAndReloadMap(event.getWhoClicked());
+                    //TODO
                 });
         getMenuIconMap().put(22, confirmIcon);
     }
@@ -180,25 +174,26 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
             }
             baseName = getItemName(base, true);
             additionName = getItemName(addition, true);
-            File recipeFile = new File(RecipeManager.getRecipeFileFolder(), recipeName + ".yml");
-            if (!recipeFile.exists()) {
-                FileUtil.createNewFile(recipeFile);
-            }
-            YamlConfigWrapper recipeConfig = new YamlConfigWrapper(recipeFile);
-            recipeConfig.getConfig().set("result", resultName);
-            recipeConfig.getConfig().set("source.base", baseName);
-            recipeConfig.getConfig().set("source.addition", additionName);
-            recipeConfig.getConfig().set("type", "smithing");
-            if (Craftorithm.getInstance().getVanillaVersion() >= 20) {
-                recipeConfig.getConfig().set("source.type", "transform");
-                recipeConfig.getConfig().set("source.template", templateName);
-            }
-            recipeConfig.saveConfig();
-            recipeConfig.reloadConfig();
-            Recipe recipe = RecipeFactory.newRecipe(recipeConfig.getConfig(), recipeName);
-            RecipeManager.regRecipe(NamespacedKey.fromString(recipeName, Craftorithm.getInstance()), recipe, recipeConfig.getConfig());
-            event.getWhoClicked().closeInventory();
-            sendSuccessMsgAndReloadMap(event.getWhoClicked());
+//            File recipeFile = new File(DefRecipeManager.getRecipeFileFolder(), recipeName + ".yml");
+//            if (!recipeFile.exists()) {
+//                FileUtil.createNewFile(recipeFile);
+//            }
+//            YamlConfigWrapper recipeConfig = new YamlConfigWrapper(recipeFile);
+//            recipeConfig.getConfig().set("result", resultName);
+//            recipeConfig.getConfig().set("source.base", baseName);
+//            recipeConfig.getConfig().set("source.addition", additionName);
+//            recipeConfig.getConfig().set("type", "smithing");
+//            if (Craftorithm.getInstance().getVanillaVersion() >= 20) {
+//                recipeConfig.getConfig().set("source.type", "transform");
+//                recipeConfig.getConfig().set("source.template", templateName);
+//            }
+//            recipeConfig.saveConfig();
+//            recipeConfig.reloadConfig();
+//            Recipe recipe = RecipeFactory.newRecipe(recipeConfig.getConfig(), recipeName);
+//            DefRecipeManager.regRecipe(NamespacedKey.fromString(recipeName, Craftorithm.getInstance()), recipe, recipeConfig.getConfig());
+//            event.getWhoClicked().closeInventory();
+//            sendSuccessMsgAndReloadMap(event.getWhoClicked());
+            //TODO
         });
         getMenuIconMap().put(22, confirmFrameIcon);
     }
@@ -261,46 +256,47 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
                 return;
             }
             String resultName = getItemName(result, false);
-            File recipeFile = new File(RecipeManager.getRecipeFileFolder(), recipeName + ".yml");
-            if (!recipeFile.exists()) {
-                FileUtil.createNewFile(recipeFile);
-            }
-            YamlConfigWrapper recipeConfig = new YamlConfigWrapper(recipeFile);
-            recipeConfig.getConfig().set("type", "cooking");
-            recipeConfig.getConfig().set("result", resultName);
-            if (Craftorithm.getInstance().getVanillaVersion() >= 14) {
-                recipeConfig.getConfig().set("multiple", true);
-                List<Map<String, String>> sourceList = new ArrayList<>();
-                int []toggleSlots = { 38, 39, 41, 42 };
-                for (int slot : toggleSlots) {
-                    ItemStack item = event.getClickedInventory().getItem(slot);
-                    Material material = item.getType();
-                    boolean toggle = item.containsEnchantment(Enchantment.MENDING);
-                    if (toggle) {
-                        Map<String, String> sourceMap = new HashMap<>();
-                        sourceMap.put("block", material.name().toLowerCase(Locale.ROOT));
-                        sourceMap.put("item", sourceName);
-                        sourceList.add(sourceMap);
-                    }
-                }
-                recipeConfig.getConfig().set("source", sourceList);
-                recipeConfig.saveConfig();
-                recipeConfig.reloadConfig();
-                Recipe[] multipleRecipes = RecipeFactory.newMultipleRecipe(recipeConfig.getConfig(), recipeName);
-                for (Recipe recipe : multipleRecipes) {
-                    NamespacedKey key = RecipeManager.getRecipeKey(recipe);
-                    RecipeManager.regRecipe(key, recipe, recipeConfig.getConfig());
-                }
-            } else {
-                recipeConfig.getConfig().set("source.block", "furnace");
-                recipeConfig.getConfig().set("source.item", sourceName);
-                recipeConfig.saveConfig();
-                recipeConfig.reloadConfig();
-                Recipe recipe = RecipeFactory.newRecipe(recipeConfig.getConfig(), recipeName);
-                RecipeManager.regRecipe(NamespacedKey.fromString(recipeName, Craftorithm.getInstance()), recipe, recipeConfig.getConfig());
-            }
-            event.getWhoClicked().closeInventory();
-            sendSuccessMsgAndReloadMap(event.getWhoClicked());
+//            File recipeFile = new File(DefRecipeManager.getRecipeFileFolder(), recipeName + ".yml");
+//            if (!recipeFile.exists()) {
+//                FileUtil.createNewFile(recipeFile);
+//            }
+//            YamlConfigWrapper recipeConfig = new YamlConfigWrapper(recipeFile);
+//            recipeConfig.getConfig().set("type", "cooking");
+//            recipeConfig.getConfig().set("result", resultName);
+//            if (Craftorithm.getInstance().getVanillaVersion() >= 14) {
+//                recipeConfig.getConfig().set("multiple", true);
+//                List<Map<String, String>> sourceList = new ArrayList<>();
+//                int []toggleSlots = { 38, 39, 41, 42 };
+//                for (int slot : toggleSlots) {
+//                    ItemStack item = event.getClickedInventory().getItem(slot);
+//                    Material material = item.getType();
+//                    boolean toggle = item.containsEnchantment(Enchantment.MENDING);
+//                    if (toggle) {
+//                        Map<String, String> sourceMap = new HashMap<>();
+//                        sourceMap.put("block", material.name().toLowerCase(Locale.ROOT));
+//                        sourceMap.put("item", sourceName);
+//                        sourceList.add(sourceMap);
+//                    }
+//                }
+//                recipeConfig.getConfig().set("source", sourceList);
+//                recipeConfig.saveConfig();
+//                recipeConfig.reloadConfig();
+//                Recipe[] multipleRecipes = RecipeFactory.newMultipleRecipe(recipeConfig.getConfig(), recipeName);
+//                for (Recipe recipe : multipleRecipes) {
+//                    NamespacedKey key = DefRecipeManager.getRecipeKey(recipe);
+//                    DefRecipeManager.regRecipe(key, recipe, recipeConfig.getConfig());
+//                }
+//            } else {
+//                recipeConfig.getConfig().set("source.block", "furnace");
+//                recipeConfig.getConfig().set("source.item", sourceName);
+//                recipeConfig.saveConfig();
+//                recipeConfig.reloadConfig();
+//                Recipe recipe = RecipeFactory.newRecipe(recipeConfig.getConfig(), recipeName);
+//                DefRecipeManager.regRecipe(NamespacedKey.fromString(recipeName, Craftorithm.getInstance()), recipe, recipeConfig.getConfig());
+//            }
+//            event.getWhoClicked().closeInventory();
+//            sendSuccessMsgAndReloadMap(event.getWhoClicked());
+            //TODO
         });
         getMenuIconMap().put(22, confirmIcon);
     }
@@ -369,50 +365,51 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
                         String itemName = getItemName(item, true);
                         sourceList.add(itemName);
                     }
-                    File recipeFile = new File(RecipeManager.getRecipeFileFolder(), recipeName + ".yml");
-                    if (!recipeFile.exists()) {
-                        FileUtil.createNewFile(recipeFile);
-                    }
-                    YamlConfigWrapper recipeConfig = new YamlConfigWrapper(recipeFile);
-                    switch (recipeType) {
-                        case SHAPED:
-                            List<String> shape = new ArrayList<>(Arrays.asList("abc", "def", "ghi"));
-                            Map<Character, String> itemMap = new HashMap<>();
-                            char[] tmp = "abcdefghi".toCharArray();
-                            for (int i = 0; i < sourceList.size(); i++) {
-                                if (sourceList.get(i).isEmpty()) {
-                                    continue;
-                                }
-                                itemMap.put(tmp[i], sourceList.get(i));
-                            }
-                            for (int i = 0; i < shape.size(); i++) {
-                                String s = shape.get(i);
-                                for (char c : s.toCharArray()) {
-                                    if (!itemMap.containsKey(c)) {
-                                        s = s.replace(c, ' ');
-                                    }
-                                }
-                                shape.set(i, s);
-                            }
-                            shape.removeIf(s -> s.trim().isEmpty());
-                            recipeConfig.getConfig().set("type", "shaped");
-                            recipeConfig.getConfig().set("result", resultName);
-                            recipeConfig.getConfig().set("shape", shape);
-                            recipeConfig.getConfig().set("source", itemMap);
-                            break;
-                        case SHAPELESS:
-                            sourceList.removeIf(String::isEmpty);
-                            recipeConfig.getConfig().set("type", "shapeless");
-                            recipeConfig.getConfig().set("result", resultName);
-                            recipeConfig.getConfig().set("source", sourceList);
-                            break;
-                    }
-                    recipeConfig.saveConfig();
-                    recipeConfig.reloadConfig();
-                    Recipe recipe = RecipeFactory.newRecipe(recipeConfig.getConfig(), recipeName);
-                    RecipeManager.regRecipe(NamespacedKey.fromString(recipeName, Craftorithm.getInstance()), recipe, recipeConfig.getConfig());
-                    event.getWhoClicked().closeInventory();
-                    sendSuccessMsgAndReloadMap(event.getWhoClicked());
+//                    File recipeFile = new File(DefRecipeManager.getRecipeFileFolder(), recipeName + ".yml");
+//                    if (!recipeFile.exists()) {
+//                        FileUtil.createNewFile(recipeFile);
+//                    }
+//                    YamlConfigWrapper recipeConfig = new YamlConfigWrapper(recipeFile);
+//                    switch (recipeType) {
+//                        case SHAPED:
+//                            List<String> shape = new ArrayList<>(Arrays.asList("abc", "def", "ghi"));
+//                            Map<Character, String> itemMap = new HashMap<>();
+//                            char[] tmp = "abcdefghi".toCharArray();
+//                            for (int i = 0; i < sourceList.size(); i++) {
+//                                if (sourceList.get(i).isEmpty()) {
+//                                    continue;
+//                                }
+//                                itemMap.put(tmp[i], sourceList.get(i));
+//                            }
+//                            for (int i = 0; i < shape.size(); i++) {
+//                                String s = shape.get(i);
+//                                for (char c : s.toCharArray()) {
+//                                    if (!itemMap.containsKey(c)) {
+//                                        s = s.replace(c, ' ');
+//                                    }
+//                                }
+//                                shape.set(i, s);
+//                            }
+//                            shape.removeIf(s -> s.trim().isEmpty());
+//                            recipeConfig.getConfig().set("type", "shaped");
+//                            recipeConfig.getConfig().set("result", resultName);
+//                            recipeConfig.getConfig().set("shape", shape);
+//                            recipeConfig.getConfig().set("source", itemMap);
+//                            break;
+//                        case SHAPELESS:
+//                            sourceList.removeIf(String::isEmpty);
+//                            recipeConfig.getConfig().set("type", "shapeless");
+//                            recipeConfig.getConfig().set("result", resultName);
+//                            recipeConfig.getConfig().set("source", sourceList);
+//                            break;
+//                    }
+//                    recipeConfig.saveConfig();
+//                    recipeConfig.reloadConfig();
+//                    Recipe recipe = RecipeFactory.newRecipe(recipeConfig.getConfig(), recipeName);
+//                    DefRecipeManager.regRecipe(NamespacedKey.fromString(recipeName, Craftorithm.getInstance()), recipe, recipeConfig.getConfig());
+//                    event.getWhoClicked().closeInventory();
+//                    sendSuccessMsgAndReloadMap(event.getWhoClicked());
+                    //TODO
                 });
         getMenuIconMap().put(22, confirmIcon);
     }
@@ -452,7 +449,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
         }
         String itemName;
         if (item.hasItemMeta()) {
-            itemName = ItemManager.getItemName(item, ignoreAmount, true, "gui_items", UUID.randomUUID().toString());
+            itemName = DefItemManager.getItemName(item, ignoreAmount, true, "gui_items", UUID.randomUUID().toString());
             itemName = "items:" + itemName;
         } else {
             itemName = item.getType().name();

@@ -3,7 +3,7 @@ package com.github.yufiriamazenta.craftorithm.menu.impl.recipe;
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.BukkitMenuHandler;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.ItemDisplayIcon;
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
+import com.github.yufiriamazenta.craftorithm.recipe.DefRecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -20,30 +20,32 @@ import java.util.List;
 public class RecipeListMenuHolder extends BukkitMenuHandler {
 
     private int page;
-    private final int maxPage;
-    private final List<Recipe> recipeList;
+//    private final int maxPage;
+//    private final List<Recipe> recipeList;
 
     public RecipeListMenuHolder() {
         super();
-        this.recipeList = new ArrayList<>(RecipeManager.getPluginRecipeTypeMap().keySet());
-        int recipeNum = recipeList.size();
-        page = 0;
-        if (recipeNum % 45 == 0)
-            maxPage = recipeNum / 45;
-        else
-            maxPage = recipeNum / 45 + 1;
-        if (Craftorithm.getInstance().getVanillaVersion() >= 20) {
-            recipeList.removeIf(recipe -> recipe instanceof SmithingTrimRecipe);
-        }
-        recipeList.sort((o1, o2) -> {
-            int sortId = RecipeManager.getRecipeSortIdMap().get(RecipeManager.getRecipeKey(o1));
-            int sortId2 = RecipeManager.getRecipeSortIdMap().get(RecipeManager.getRecipeKey(o2));
-            return Integer.compare(sortId, sortId2);
-        });
+//        this.recipeList = new ArrayList<>(DefRecipeManager.getPluginRecipeTypeMap().keySet());
+//        int recipeNum = recipeList.size();
+//        page = 0;
+//        if (recipeNum % 45 == 0)
+//            maxPage = recipeNum / 45;
+//        else
+//            maxPage = recipeNum / 45 + 1;
+//        if (Craftorithm.getInstance().getVanillaVersion() >= 20) {
+//            recipeList.removeIf(recipe -> recipe instanceof SmithingTrimRecipe);
+//        }
+//        recipeList.sort((o1, o2) -> {
+//            int sortId = DefRecipeManager.getRecipeSortIdMap().get(DefRecipeManager.getRecipeKey(o1));
+//            int sortId2 = DefRecipeManager.getRecipeSortIdMap().get(DefRecipeManager.getRecipeKey(o2));
+//            return Integer.compare(sortId, sortId2);
+//        });
+        //TODO
     }
 
     public Inventory getNextPage() {
-        setPage(Math.min(getPage() + 1, maxPage - 1));
+//        setPage(Math.min(getPage() + 1, maxPage - 1));
+        //TODO
         return getInventory();
     }
 
@@ -78,15 +80,16 @@ public class RecipeListMenuHolder extends BukkitMenuHandler {
             event.getWhoClicked().openInventory(getNextPage());
         })));
         int slot = page * 54;
-        for (int i = 0; i < 45 && slot < recipeList.size(); i++, slot ++) {
-            ItemStack display = recipeList.get(slot).getResult();
-            int finalSlot = slot;
-            getMenuIconMap().put(i, ItemDisplayIcon.icon(display, (event -> {
-                event.setCancelled(true);
-                event.getWhoClicked().openInventory(new RecipeDisplayMenuHolder(recipeList.get(finalSlot), this).getInventory());
-            })));
-
-        }
+//        for (int i = 0; i < 45 && slot < recipeList.size(); i++, slot ++) {
+//            ItemStack display = recipeList.get(slot).getResult();
+//            int finalSlot = slot;
+//            getMenuIconMap().put(i, ItemDisplayIcon.icon(display, (event -> {
+//                event.setCancelled(true);
+//                event.getWhoClicked().openInventory(new RecipeDisplayMenuHolder(recipeList.get(finalSlot), this).getInventory());
+//            })));
+//
+//        }
+        //TODO
     }
 
     @NotNull
