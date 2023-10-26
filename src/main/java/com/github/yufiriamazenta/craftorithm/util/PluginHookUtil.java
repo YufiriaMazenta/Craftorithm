@@ -1,5 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.util;
 
+import crypticlib.util.MsgUtil;
 import net.milkbowl.vault.economy.Economy;
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.bukkit.Bukkit;
@@ -46,12 +47,12 @@ public class PluginHookUtil {
         String messageKey = "load.vault_success";
         if (!economyLoaded)
             messageKey = "load.vault_failed";
-        LangUtil.info(messageKey);
+        MsgUtil.info(messageKey);
         pointsLoaded = hookPlayerPoints();
         messageKey = "load.points_success";
         if (!pointsLoaded)
             messageKey = "load.points_failed";
-        LangUtil.info(messageKey);
+        MsgUtil.info(messageKey);
     }
 
 }
