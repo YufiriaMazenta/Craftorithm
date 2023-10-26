@@ -1,6 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.bstat;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
+import crypticlib.CrypticLib;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -78,7 +79,7 @@ public class Metrics {
                         enabled,
                         this::appendPlatformData,
                         this::appendServiceData,
-                        submitDataTask -> Craftorithm.getInstance().getPlatform().runTask(plugin, t -> submitDataTask.run()),
+                        submitDataTask -> CrypticLib.platform().scheduler().runTask(plugin, t -> submitDataTask.run()),
                         plugin::isEnabled,
                         (message, error) -> this.plugin.getLogger().log(Level.WARNING, message, error),
                         (message) -> this.plugin.getLogger().log(Level.INFO, message),

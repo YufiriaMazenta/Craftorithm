@@ -1,6 +1,8 @@
 package com.github.yufiriamazenta.craftorithm.util;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
+import crypticlib.CrypticLib;
+import crypticlib.util.MsgUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
@@ -15,7 +17,7 @@ public class UpdateUtil {
     public static void checkUpdate(CommandSender sender) {
         if (!Craftorithm.getInstance().getConfig().getBoolean("check_update"))
             return;
-        Craftorithm.getInstance().getPlatform().runTaskAsync(Craftorithm.getInstance(), task -> {
+        CrypticLib.platform().scheduler().runTaskAsync(Craftorithm.getInstance(), task -> {
             try {
                 URL url = new URL("https://api.github.com/repos/YufiriaMazenta/Craftorithm/releases/latest");
                 URLConnection conn = url.openConnection();
@@ -34,7 +36,7 @@ public class UpdateUtil {
                 if (checkVersion(newVersion, ver)) {
                     String finalNewVersion = newVersion;
                     Bukkit.getScheduler().callSyncMethod(Craftorithm.getInstance(), () -> {
-                        LangUtil.sendMsg(sender, "new_version", ContainerUtil.newHashMap("<new_version>", finalNewVersion));
+                        MsgUtil.sendMsg(sender, "new_version", ContainerUtil.newHashMap("<new_version>", finalNewVersion));
                         return null;
                     });
                 }
