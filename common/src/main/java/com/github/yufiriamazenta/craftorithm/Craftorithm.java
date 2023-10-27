@@ -1,7 +1,7 @@
 package com.github.yufiriamazenta.craftorithm;
 
 import com.github.yufiriamazenta.craftorithm.bstat.Metrics;
-import com.github.yufiriamazenta.craftorithm.config.ConfigUpdater;
+import com.github.yufiriamazenta.craftorithm.config.Config;
 import com.github.yufiriamazenta.craftorithm.util.PluginHookUtil;
 import com.github.yufiriamazenta.craftorithm.util.UpdateUtil;
 import crypticlib.BukkitPlugin;
@@ -15,6 +15,7 @@ import org.bukkit.event.server.ServerLoadEvent;
 public final class Craftorithm extends BukkitPlugin implements Listener {
 
     private static Craftorithm INSTANCE;
+    private Metrics metrics;
 
     public Craftorithm() {
         INSTANCE = this;
@@ -23,13 +24,21 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
     @Override
     public void enable() {
         saveDefaultConfig();
-        ConfigUpdater.INSTANCE.updateConfig();
+        reloadConfig();
+        loadBStat();
 
         PluginHookUtil.hookPlugins();
-        loadBStat();
-        
+
         MsgUtil.info("load.finish");
         UpdateUtil.checkUpdate(Bukkit.getConsoleSender());
+    }
+
+    @Override
+    public void reloadConfig() {
+        super.reloadConfig();
+        for (Config.BooleanConfig booleanConfigValue : Config.BooleanConfig.values()) {
+            booleanConfigValue.reload();
+        }
     }
 
     @Override
@@ -38,7 +47,9 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
     }
 
     private void loadBStat() {
-        Metrics metrics = new Metrics(this, 17821);
+        if (!Config.BooleanConfig.B_STATS.value())
+            return;
+        metrics = new Metrics(this, 17821);
     }
 
     public static Craftorithm getInstance() {
@@ -55,6 +66,10 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
     @EventHandler
     public void onServerLoad(ServerLoadEvent event) {
         //todo
+    }
+
+    public Metrics getMetrics() {
+        return metrics;
     }
 
 }
