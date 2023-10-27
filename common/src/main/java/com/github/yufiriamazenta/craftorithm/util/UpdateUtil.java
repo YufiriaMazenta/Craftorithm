@@ -1,6 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.util;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
+import com.github.yufiriamazenta.craftorithm.config.Config;
 import crypticlib.CrypticLib;
 import crypticlib.util.MsgUtil;
 import org.bukkit.Bukkit;
@@ -15,7 +16,7 @@ import java.net.URLConnection;
 public class UpdateUtil {
 
     public static void checkUpdate(CommandSender sender) {
-        if (!Craftorithm.getInstance().getConfig().getBoolean("check_update"))
+        if (!Config.BooleanConfig.CHECK_UPDATE.value())
             return;
         CrypticLib.platform().scheduler().runTaskAsync(Craftorithm.getInstance(), task -> {
             try {
