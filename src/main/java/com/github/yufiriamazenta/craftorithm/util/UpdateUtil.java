@@ -1,7 +1,10 @@
 package com.github.yufiriamazenta.craftorithm.util;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import crypticlib.CrypticLib;
+import crypticlib.util.JsonUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
@@ -20,22 +23,25 @@ public class UpdateUtil {
             try {
                 URL url = new URL("https://api.github.com/repos/YufiriaMazenta/Craftorithm/releases/latest");
                 URLConnection conn = url.openConnection();
-                String newVersion;
+                String releaseInfo;
                 conn.setConnectTimeout(15000);
                 conn.setReadTimeout(60000);
                 InputStream is = conn.getInputStream();
-                newVersion = new BufferedReader(new InputStreamReader(is)).readLine();
+                releaseInfo = new BufferedReader(new InputStreamReader(is)).readLine();
                 is.close();
 
-                int index = newVersion.indexOf("\"tag_name\"");
-                int index2 = newVersion.indexOf("\"target_commitish\"");
-                newVersion = newVersion.substring(index + 13, index2 - 2);
-                String ver = Craftorithm.getInstance().getDescription().getVersion();
-                ver = ver.substring(0, ver.indexOf("-"));
-                if (checkVersion(newVersion, ver)) {
-                    String finalNewVersion = newVersion;
+                JsonObject jsonObject = JsonUtil.str2JsonObject(releaseInfo);
+                String latestVersion = jsonObject.get("tag_name").getAsString();
+                if (latestVersion.startsWith("v"))
+                    latestVersion = latestVersion.substring(1);
+                if (latestVersion.contains("-"))
+                    latestVersion = latestVersion.substring(0, latestVersion.indexOf("-"));
+                String pluginVersion = Craftorithm.getInstance().getDescription().getVersion();
+                pluginVersion = pluginVersion.substring(0, pluginVersion.indexOf("-"));
+                if (checkVersion(latestVersion, pluginVersion)) {
+                    String finalLatestVersion = latestVersion;
                     Bukkit.getScheduler().callSyncMethod(Craftorithm.getInstance(), () -> {
-                        LangUtil.sendMsg(sender, "new_version", ContainerUtil.newHashMap("<new_version>", finalNewVersion));
+                        LangUtil.sendMsg(sender, "new_version", ContainerUtil.newHashMap("<new_version>", finalLatestVersion));
                         return null;
                     });
                 }

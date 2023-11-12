@@ -38,7 +38,7 @@ dependencies {
 }
 
 group = "com.github.yufiriamazenta"
-version = "1.4.2-dev2"
+version = "1.4.2"
 var pluginVersion: String = version.toString() + "-" + SimpleDateFormat("yyyyMMdd").format(System.currentTimeMillis())
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 java.targetCompatibility = JavaVersion.VERSION_1_8

@@ -10,6 +10,3 @@ Craftorithm是一个基于BukkitAPI编写的配方管理插件，可以添加原
 
 ## 使用方式
 #### [Craftorithm Wiki](https://yufiriamazenta.gitbook.io/craftorithm-wiki/)
-
-## ParettiaLib
-#### [下载链接](https://github.com/YufiriaMazenta/ParettiaLib/actions)
