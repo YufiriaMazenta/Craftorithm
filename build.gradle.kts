@@ -60,6 +60,9 @@ tasks {
             expand(props)
         }
     }
+    build {
+        dependsOn(shadowJar)
+    }
     compileJava {
         options.encoding = "UTF-8"
     }
