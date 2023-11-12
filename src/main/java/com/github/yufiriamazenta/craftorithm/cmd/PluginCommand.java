@@ -1,6 +1,5 @@
 package com.github.yufiriamazenta.craftorithm.cmd;
 
-import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.cmd.subcmd.*;
 import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
@@ -10,6 +9,7 @@ import crypticlib.command.ISubCmdExecutor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -65,8 +65,13 @@ public enum PluginCommand implements IPluginCmdExecutor {
     }
 
     @Override
+    public @NotNull Map<String, ISubCmdExecutor> subCommands() {
+        return subCommandMap;
+    }
+
+    @Override
     public Plugin getPlugin() {
-        return Craftorithm.getInstance();
+        return null;
     }
 
     @Override
@@ -92,9 +97,7 @@ public enum PluginCommand implements IPluginCmdExecutor {
             return Collections.singletonList("");
     }
 
-    public Map<String, ISubCmdExecutor> getSubCommandMap() {
-        return subCommandMap;
-    }
+
 
 
 }

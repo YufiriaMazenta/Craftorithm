@@ -38,10 +38,8 @@ public class ItemManager {
             Set<String> itemKeySet = itemFile.config().getKeys(false);
             for (String itemKey : itemKeySet) {
                 try {
-                    itemMap.put(
-                            fileKey + ":" + itemKey,
-                            crypticlib.nms.item.ItemManager.item(itemFile.config().getConfigurationSection(itemKey)).buildBukkit()
-                    );
+                    Item item = crypticlib.nms.item.ItemManager.item(itemFile.config().getConfigurationSection(itemKey));
+                    itemMap.put(fileKey + ":" + itemKey, item.buildBukkit());
                 } catch (Exception e) {
                     LangUtil.info("load.item_load_exception", ContainerUtil.newHashMap("<item_name>", fileKey + ":" + itemKey));
                     e.printStackTrace();
@@ -63,7 +61,7 @@ public class ItemManager {
             yamlConfig = itemFileMap.get(itemFileName);
         }
         Item libItem = crypticlib.nms.item.ItemManager.item(item);
-        yamlConfig.config().set(itemName, libItem.toMap());
+        yamlConfig.set(itemName, libItem.toMap());
         itemMap.put(itemFileName + ":" + itemName, item);
     }
 

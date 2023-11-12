@@ -1,0 +1,20 @@
+name: Craftorithm
+version: ${version}
+main: com.github.yufiriamazenta.craftorithm.Craftorithm
+api-version: 1.13
+load: POSTWORLD
+softdepend: [ Vault, LuckPerms, PlayerPoints, PlaceholderAPI, ItemsAdder, Oraxen, MythicMobs ]
+authors: [ YufiriaMazenta ]
+folia-supported: true
+website: https://github.com/YufiriaMazenta/Craftorithm
+commands:
+  craftorithm:
+    aliases:
+      - craft
+    permission: craftorithm.command
+permissions:
+  craftorithm.command:
+    description: Plugin command main permissions
+  craftorithm.anvil.color:
+    description: Controls the color codes players use when crafting anvil recipes
+    default: op

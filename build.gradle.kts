@@ -1,3 +1,4 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import java.text.SimpleDateFormat
 
 plugins {
@@ -37,7 +38,7 @@ dependencies {
 }
 
 group = "com.github.yufiriamazenta"
-version = "1.4.2-dev1"
+version = "1.4.2-dev2"
 var pluginVersion: String = version.toString() + "-" + SimpleDateFormat("yyyyMMdd").format(System.currentTimeMillis())
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 java.targetCompatibility = JavaVersion.VERSION_1_8
@@ -59,14 +60,11 @@ tasks {
             expand(props)
         }
     }
-    build {
-        dependsOn(shadowJar)
-    }
     compileJava {
         options.encoding = "UTF-8"
     }
     shadowJar {
         archiveFileName.set("Craftorithm-$version.jar")
-        relocate("crypticlib", "com.github.yufiriamazenta.craftorithm.crypticlib")
+        relocate("crypticlib", "com.github.yufiriamazenta.crypticlib")
     }
 }
