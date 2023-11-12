@@ -33,7 +33,7 @@ public enum PluginCommand implements IPluginCmdExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         List<String> argList = Arrays.asList(args);
-        if (argList.size() < 1) {
+        if (argList.isEmpty()) {
             LangUtil.sendMsg(sender, "command.not_enough_param", ContainerUtil.newHashMap("<number>", String.valueOf(1)));
             return true;
         }
@@ -73,31 +73,5 @@ public enum PluginCommand implements IPluginCmdExecutor {
     public Plugin getPlugin() {
         return null;
     }
-
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        List<String> argList = Arrays.asList(args);
-        if (argList.size() <= 1) {
-            List<String> tabList = new ArrayList<>();
-            for (String subCmd : subCommandMap.keySet()) {
-                ISubCmdExecutor subCommand = subCommandMap.get(subCmd);
-                if (sender.hasPermission(subCommand.permission()))
-                    tabList.add(subCmd);
-            }
-            tabList.removeIf(str -> !str.startsWith(args[0]));
-            return tabList;
-        }
-        ISubCmdExecutor subCommand = subCommandMap.get(argList.get(0));
-        if (subCommand != null) {
-            if (!sender.hasPermission(subCommand.permission()))
-                return Collections.singletonList("");
-            return subCommand.onTabComplete(sender, argList.subList(1, argList.size()));
-        }
-        else
-            return Collections.singletonList("");
-    }
-
-
-
 
 }
