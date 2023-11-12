@@ -2,6 +2,7 @@ package com.github.yufiriamazenta.craftorithm;
 
 import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import com.github.yufiriamazenta.craftorithm.bstat.Metrics;
+import com.github.yufiriamazenta.craftorithm.cmd.PluginCommand;
 import com.github.yufiriamazenta.craftorithm.config.ConfigUpdater;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.listener.*;
@@ -42,6 +43,7 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
 
         ItemManager.loadItemManager();
         RecipeManager.loadRecipeManager();
+        regCommands();
         regListeners();
         PluginHookUtil.hookPlugins();
         initArcenciel();
@@ -71,6 +73,11 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
     private void loadBStat() {
         Metrics metrics = new Metrics(this, 17821);
         metrics.addCustomChart(new Metrics.SingleLineChart("recipes", () -> RecipeManager.getRecipeFileMap().keySet().size()));
+    }
+
+    private void regCommands() {
+        Bukkit.getPluginCommand("craftorithm").setExecutor(PluginCommand.INSTANCE);
+        Bukkit.getPluginCommand("craftorithm").setTabCompleter(PluginCommand.INSTANCE);
     }
 
     private void regListeners() {

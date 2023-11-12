@@ -115,6 +115,11 @@ public abstract class AbstractSubCommand implements ISubCmdExecutor {
         tabList.removeIf(str -> !str.startsWith(input));
     }
 
+    @Override
+    public String permission() {
+        return perm;
+    }
+
     public void setPerm() {
         this.perm = perm;
     }
