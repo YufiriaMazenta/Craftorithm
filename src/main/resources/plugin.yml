@@ -7,11 +7,6 @@ softdepend: [ Vault, LuckPerms, PlayerPoints, PlaceholderAPI, ItemsAdder, Oraxen
 authors: [ YufiriaMazenta ]
 folia-supported: true
 website: https://github.com/YufiriaMazenta/Craftorithm
-commands:
-  craftorithm:
-    aliases:
-      - craft
-    permission: craftorithm.command
 permissions:
   craftorithm.command:
     description: Plugin command main permissions
