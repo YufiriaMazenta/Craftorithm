@@ -282,7 +282,7 @@ public class RecipeFactory {
         for (String key : section.getKeys(false)) {
             char keyWord = key.toCharArray()[0];
             String itemStr = section.getString(key, "");
-            if (itemStr.length() < 1) {
+            if (itemStr.isEmpty()) {
                 throw new IllegalArgumentException("Empty recipe ingredient: " + key);
             }
             recipeChoiceMap.put(keyWord, getRecipeChoice(itemStr));
@@ -301,7 +301,7 @@ public class RecipeFactory {
             resultStr = config.getString("result", "");
         }
 
-        if (resultStr.length() < 1) {
+        if (resultStr.isEmpty()) {
             throw new IllegalArgumentException("Empty recipe result");
         }
         return ItemManager.matchCraftorithmItem(resultStr);
