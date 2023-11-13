@@ -7,6 +7,7 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import crypticlib.CrypticLib;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryType;
@@ -144,7 +145,7 @@ public class RecipeDisplayMenuHolder extends BukkitMenuHandler {
 
     private void setSmithingRecipeMenu() {
         SmithingRecipe smithingRecipe = (SmithingRecipe) recipe;
-        if (Craftorithm.getInstance().getVanillaVersion() >= 20) {
+        if (CrypticLib.minecraftVersion() >= 12000) {
             getMenuIconMap().put(1, ItemDisplayIcon.icon(smithingRecipe.getBase().getItemStack()));
             getMenuIconMap().put(2, ItemDisplayIcon.icon(smithingRecipe.getAddition().getItemStack()));
             getMenuIconMap().put(3, ItemDisplayIcon.icon(smithingRecipe.getResult()));

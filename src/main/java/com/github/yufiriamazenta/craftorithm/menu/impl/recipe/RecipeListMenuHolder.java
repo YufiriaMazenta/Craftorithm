@@ -5,6 +5,7 @@ import com.github.yufiriamazenta.craftorithm.menu.bukkit.BukkitMenuHandler;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.ItemDisplayIcon;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import crypticlib.CrypticLib;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
@@ -32,7 +33,7 @@ public class RecipeListMenuHolder extends BukkitMenuHandler {
             maxPage = recipeNum / 45;
         else
             maxPage = recipeNum / 45 + 1;
-        if (Craftorithm.getInstance().getVanillaVersion() >= 20) {
+        if (CrypticLib.minecraftVersion() >= 12000) {
             recipeList.removeIf(recipe -> recipe instanceof SmithingTrimRecipe);
         }
         recipeList.sort((o1, o2) -> {

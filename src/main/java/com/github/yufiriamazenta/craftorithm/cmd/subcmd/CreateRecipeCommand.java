@@ -4,6 +4,7 @@ import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.menu.impl.recipe.RecipeCreatorMenuHolder;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import crypticlib.CrypticLib;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -26,7 +27,7 @@ public class CreateRecipeCommand extends AbstractSubCommand {
         unsupportedRecipeTypeList.add("random_cooking");
         unsupportedRecipeTypeList.add("anvil");
         unsupportedRecipeTypeList.add("unknown");
-        if (Craftorithm.getInstance().getVanillaVersion() < 14) {
+        if (CrypticLib.minecraftVersion() < 11400) {
             unsupportedRecipeTypeList.add("stone_cutting");
             unsupportedRecipeTypeList.add("smithing");
         }
