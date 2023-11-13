@@ -196,9 +196,9 @@ public class RecipeFactory {
         ItemStack result;
         if (config.isList("result")) {
             List<String> resultList = config.getStringList("result");
-            result = ItemManager.matchCraftorithmItem(resultList.get(0));
+            result = ItemManager.matchItem(resultList.get(0));
             for (int i = 1; i < resultList.size(); i++) {
-                ItemStack result1 = ItemManager.matchCraftorithmItem(resultList.get(i));
+                ItemStack result1 = ItemManager.matchItem(resultList.get(i));
                 String fullKey = key + "." + i;
                 NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.getInstance(), fullKey);
                 RecipeManager.regRecipe(namespacedKey, StoneCuttingRecipeBuilder.builder().key(namespacedKey).result(result1).source(choice).build(), config);
@@ -217,7 +217,7 @@ public class RecipeFactory {
             List<String> sourceList = config.getStringList("source");
             StonecuttingRecipe[] stonecuttingRecipes = new StonecuttingRecipe[resultList.size() * sourceList.size()];
             for (int i = 0; i < resultList.size(); i++) {
-                ItemStack result = ItemManager.matchCraftorithmItem(resultList.get(i));
+                ItemStack result = ItemManager.matchItem(resultList.get(i));
                 for (int j = 0; j < sourceList.size(); j++) {
                     String fullKey = String.format(key + ".%d.%d", i, j);
                     NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.getInstance(), fullKey);
@@ -246,10 +246,10 @@ public class RecipeFactory {
     public static Recipe anvilRecipe(YamlConfiguration config, String key) {
         ItemStack result = getResultItem(config);
         String baseStr = config.getString("source.base", "");
-        ItemStack baseItem = ItemManager.matchCraftorithmItem(baseStr);
+        ItemStack baseItem = ItemManager.matchItem(baseStr);
         AnvilRecipeItem base = new AnvilRecipeItem(baseItem, baseStr.contains(":"));
         String additionStr = config.getString("source.addition", "");
-        ItemStack additionItem = ItemManager.matchCraftorithmItem(additionStr);
+        ItemStack additionItem = ItemManager.matchItem(additionStr);
         AnvilRecipeItem addition = new AnvilRecipeItem(additionItem, additionStr.contains(":"));
         NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.getInstance(), key);
         int costLevel = config.getInt("cost_level", 0);
@@ -266,9 +266,9 @@ public class RecipeFactory {
             String fullKey = key + "." + i;
             NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.getInstance(), fullKey);
             String baseStr = (String) map.get("base");
-            AnvilRecipeItem base = new AnvilRecipeItem(ItemManager.matchCraftorithmItem(baseStr), baseStr.contains(":"));
+            AnvilRecipeItem base = new AnvilRecipeItem(ItemManager.matchItem(baseStr), baseStr.contains(":"));
             String additionStr = (String) map.get("addition");
-            AnvilRecipeItem addition = new AnvilRecipeItem(ItemManager.matchCraftorithmItem(additionStr), additionStr.contains(":"));
+            AnvilRecipeItem addition = new AnvilRecipeItem(ItemManager.matchItem(additionStr), additionStr.contains(":"));
             int costLevel = map.containsKey("cost_level") ? (Integer) map.get("cost_level") : globalCostLevel;
             anvilRecipes[i] = AnvilRecipeBuilder.builder().key(namespacedKey).result(result).base(base).addition(addition).costLevel(costLevel).build();
         }
@@ -304,7 +304,7 @@ public class RecipeFactory {
         if (resultStr.isEmpty()) {
             throw new IllegalArgumentException("Empty recipe result");
         }
-        return ItemManager.matchCraftorithmItem(resultStr);
+        return ItemManager.matchItem(resultStr);
     }
 
     public static RecipeChoice getRecipeChoice(String itemStr) {
@@ -320,7 +320,7 @@ public class RecipeFactory {
                 }
                 return new RecipeChoice.MaterialChoice(materialTag);
             }
-            ItemStack item = ItemManager.matchCraftorithmItem(itemStr);
+            ItemStack item = ItemManager.matchItem(itemStr);
             return new RecipeChoice.ExactChoice(item);
         } else {
             Material material = Material.matchMaterial(itemStr);

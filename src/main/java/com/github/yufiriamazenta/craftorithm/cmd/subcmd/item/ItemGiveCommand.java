@@ -22,7 +22,7 @@ public class ItemGiveCommand extends AbstractSubCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, List<String> args) {
-        if (args.size() < 1) {
+        if (args.isEmpty()) {
             sendNotEnoughCmdParamMsg(sender, 1);
             return true;
         }

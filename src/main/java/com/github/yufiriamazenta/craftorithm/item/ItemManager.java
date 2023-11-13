@@ -6,6 +6,7 @@ import com.github.yufiriamazenta.craftorithm.util.FileUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.config.impl.YamlConfigWrapper;
 import crypticlib.nms.item.Item;
+import crypticlib.nms.item.ItemFactory;
 import crypticlib.util.ItemUtil;
 import dev.lone.itemsadder.api.CustomStack;
 import io.lumine.mythic.bukkit.BukkitAdapter;
@@ -14,6 +15,7 @@ import io.lumine.mythic.core.items.ItemExecutor;
 import io.lumine.mythic.core.items.MythicItem;
 import io.th0rgal.oraxen.api.OraxenItems;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
@@ -38,8 +40,11 @@ public class ItemManager {
             Set<String> itemKeySet = itemFile.config().getKeys(false);
             for (String itemKey : itemKeySet) {
                 try {
-                    Item item = crypticlib.nms.item.ItemManager.item(itemFile.config().getConfigurationSection(itemKey));
-                    itemMap.put(fileKey + ":" + itemKey, item.buildBukkit());
+                    ConfigurationSection config = itemFile.config().getConfigurationSection(itemKey);
+                    Item item = ItemFactory.item(config);
+                    ItemStack bukkitItem = item.buildBukkit();
+                    bukkitItem.setAmount(config.getInt("amount", 1));
+                    itemMap.put(fileKey + ":" + itemKey, bukkitItem);
                 } catch (Exception e) {
                     LangUtil.info("load.item_load_exception", ContainerUtil.newHashMap("<item_name>", fileKey + ":" + itemKey));
                     e.printStackTrace();
@@ -60,8 +65,9 @@ public class ItemManager {
         } else {
             yamlConfig = itemFileMap.get(itemFileName);
         }
-        Item libItem = crypticlib.nms.item.ItemManager.item(item);
+        Item libItem = ItemFactory.item(item);
         yamlConfig.set(itemName, libItem.toMap());
+        yamlConfig.set(itemName + ".amount", item.getAmount());
         itemMap.put(itemFileName + ":" + itemName, item);
     }
 
@@ -81,7 +87,7 @@ public class ItemManager {
                 return;
         }
         List<File> allFiles = FileUtil.getAllFiles(itemFileFolder);
-        if (allFiles.size() < 1) {
+        if (allFiles.isEmpty()) {
             Craftorithm.getInstance().saveResource("items/example_item.yml", false);
             allFiles.add(new File(itemFileFolder, "example_item.yml"));
         }
@@ -106,7 +112,7 @@ public class ItemManager {
         return itemFileFolder;
     }
 
-    public static ItemStack matchCraftorithmItem(String itemStr) {
+    public static ItemStack matchItem(String itemStr) {
         ItemStack item;
         int lastSpaceIndex = itemStr.lastIndexOf(" ");
         int amountScale = 1;

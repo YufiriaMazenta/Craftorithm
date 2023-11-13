@@ -59,7 +59,7 @@ public enum FurnaceSmeltHandler implements Listener {
         for (String result : resultStr) {
             String item = result.substring(0, result.lastIndexOf(" "));
             double probability = Double.parseDouble(result.substring(result.lastIndexOf(" ") + 1));
-            ItemStack itemStack = ItemManager.matchCraftorithmItem(item);
+            ItemStack itemStack = ItemManager.matchItem(item);
             sum += probability;
             probabilityMap.put(itemStack, sum);
         }
