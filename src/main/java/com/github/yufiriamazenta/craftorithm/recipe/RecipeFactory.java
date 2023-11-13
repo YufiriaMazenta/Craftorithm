@@ -6,6 +6,7 @@ import com.github.yufiriamazenta.craftorithm.recipe.builder.custom.AnvilRecipeBu
 import com.github.yufiriamazenta.craftorithm.recipe.builder.vanilla.*;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipeItem;
+import crypticlib.CrypticLib;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
@@ -157,7 +158,7 @@ public class RecipeFactory {
         ItemStack result = getResultItem(config);
         RecipeChoice base = getRecipeChoice(config.getString("source.base", ""));
         RecipeChoice addition = getRecipeChoice(config.getString("source.addition", ""));
-        if (Craftorithm.getInstance().getVanillaVersion() >= 20) {
+        if (CrypticLib.minecraftVersion() >= 12000) {
             RecipeChoice template = getRecipeChoice(config.getString("source.template", ""));
             XSmithingRecipeBuilder.SmithingType type = XSmithingRecipeBuilder.SmithingType.valueOf(config.getString("source.type", "default").toUpperCase());
             return XSmithingRecipeBuilder.builder(type).key(namespacedKey).result(result).base(base).addition(addition).template(template).build();
@@ -180,7 +181,7 @@ public class RecipeFactory {
             if (typeStr == null) {
                 typeStr = "DEFAULT";
             }
-            if (Craftorithm.getInstance().getVanillaVersion() >= 20) {
+            if (CrypticLib.minecraftVersion() >= 12000) {
                 RecipeChoice template = getRecipeChoice((String) map.get("template"));
                 XSmithingRecipeBuilder.SmithingType type = XSmithingRecipeBuilder.SmithingType.valueOf(typeStr.toUpperCase());
                 smithingRecipes[i] = XSmithingRecipeBuilder.builder(type).key(namespacedKey).result(result).base(base).addition(addition).template(template).build();

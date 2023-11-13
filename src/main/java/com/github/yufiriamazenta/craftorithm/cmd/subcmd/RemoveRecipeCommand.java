@@ -3,6 +3,7 @@ package com.github.yufiriamazenta.craftorithm.cmd.subcmd;
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import crypticlib.CrypticLib;
 import crypticlib.command.ISubCmdExecutor;
 import crypticlib.config.impl.YamlConfigWrapper;
 import org.bukkit.Bukkit;
@@ -79,9 +80,9 @@ public class RemoveRecipeCommand extends AbstractSubCommand {
             if (key != null)
                 keyList.add(key);
         }
-        if (keyList.size() < 1)
+        if (keyList.isEmpty())
             return;
-        if (Craftorithm.getInstance().getVanillaVersion() >= 15) {
+        if (CrypticLib.minecraftVersion() >= 11500) {
             for (NamespacedKey key : keyList) {
                 Bukkit.removeRecipe(key);
                 if (save2File) {
@@ -101,7 +102,7 @@ public class RemoveRecipeCommand extends AbstractSubCommand {
                         addKey2RemovedConfig(key1.toString());
                     }
                     keyList.remove(key1);
-                    if (keyList.size() <= 0)
+                    if (keyList.isEmpty())
                         break;
                 }
             }
@@ -114,7 +115,7 @@ public class RemoveRecipeCommand extends AbstractSubCommand {
         Iterator<Recipe> recipeIterator = Bukkit.recipeIterator();
         if (key == null)
             return false;
-        if (Craftorithm.getInstance().getVanillaVersion() >= 15) {
+        if (CrypticLib.minecraftVersion() >= 11500) {
             if (Bukkit.removeRecipe(key) && save2File)
                 addKey2RemovedConfig(key.toString());
             reloadRecipeMap();

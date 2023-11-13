@@ -11,6 +11,7 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
 import com.github.yufiriamazenta.craftorithm.util.FileUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import crypticlib.CrypticLib;
 import crypticlib.config.impl.YamlConfigWrapper;
 import crypticlib.util.ItemUtil;
 import org.bukkit.Bukkit;
@@ -143,7 +144,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
             getMenuIconMap().put(slot, resultFrameIcon);
         }
         int[] smithingFrameSlots;
-        if (Craftorithm.getInstance().getVanillaVersion() < 20) {
+        if (CrypticLib.minecraftVersion() < 12000) {
             smithingFrameSlots = new int[]{
                     10, 11, 12,
                     20,
@@ -169,7 +170,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
             String resultName = getItemName(result, false);
             ItemStack base, addition, template;
             String baseName, additionName, templateName = null;
-            if (Craftorithm.getInstance().getVanillaVersion() < 20) {
+            if (CrypticLib.minecraftVersion() < 12000) {
                 base = event.getClickedInventory().getItem(19);
                 addition = event.getClickedInventory().getItem(21);
             } else {
@@ -189,7 +190,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
             recipeConfig.config().set("source.base", baseName);
             recipeConfig.config().set("source.addition", additionName);
             recipeConfig.config().set("type", "smithing");
-            if (Craftorithm.getInstance().getVanillaVersion() >= 20) {
+            if (CrypticLib.minecraftVersion() >= 12000) {
                 recipeConfig.config().set("source.type", "transform");
                 recipeConfig.config().set("source.template", templateName);
             }
@@ -233,7 +234,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
         for (int slot : cookingFrameSlots) {
             getMenuIconMap().put(slot, cookingFrameIcon);
         }
-        if (Craftorithm.getInstance().getVanillaVersion() >= 14) {
+        if (CrypticLib.minecraftVersion() >= 11400) {
             ItemDisplayIcon furnaceIcon = ItemDisplayIcon.icon(Material.FURNACE, LangUtil.lang("menu.recipe_creator.icon.furnace_toggle"), event -> {
                 setIconGlowing(38, event);
             });
@@ -268,7 +269,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
             YamlConfigWrapper recipeConfig = new YamlConfigWrapper(recipeFile);
             recipeConfig.config().set("type", "cooking");
             recipeConfig.config().set("result", resultName);
-            if (Craftorithm.getInstance().getVanillaVersion() >= 14) {
+            if (CrypticLib.minecraftVersion() >= 11400) {
                 recipeConfig.config().set("multiple", true);
                 List<Map<String, String>> sourceList = new ArrayList<>();
                 int []toggleSlots = { 38, 39, 41, 42 };

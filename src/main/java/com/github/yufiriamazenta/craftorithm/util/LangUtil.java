@@ -1,6 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.util;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
+import crypticlib.CrypticLib;
 import crypticlib.config.impl.YamlConfigWrapper;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.ChatColor;
@@ -46,7 +47,7 @@ public class LangUtil {
     }
 
     public static String color(String text) {
-        if (Craftorithm.getInstance().getVanillaVersion() >= 16) {
+        if (CrypticLib.minecraftVersion() >= 11600) {
             StringBuilder strBuilder = new StringBuilder(text);
             Matcher matcher = colorPattern.matcher(strBuilder);
             while (matcher.find()) {

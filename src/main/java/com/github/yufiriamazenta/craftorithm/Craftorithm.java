@@ -2,7 +2,6 @@ package com.github.yufiriamazenta.craftorithm;
 
 import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import com.github.yufiriamazenta.craftorithm.bstat.Metrics;
-import com.github.yufiriamazenta.craftorithm.cmd.PluginCommand;
 import com.github.yufiriamazenta.craftorithm.config.ConfigUpdater;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.listener.*;
@@ -12,6 +11,7 @@ import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import com.github.yufiriamazenta.craftorithm.util.PluginHookUtil;
 import com.github.yufiriamazenta.craftorithm.util.UpdateUtil;
 import crypticlib.BukkitPlugin;
+import crypticlib.CrypticLib;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.EventHandler;
@@ -28,7 +28,6 @@ import java.util.Map;
 public final class Craftorithm extends BukkitPlugin implements Listener {
 
     private static Craftorithm INSTANCE;
-    private int vanillaVersion;
     private boolean hasLoadPluginRecipeMap = false;
 
     public Craftorithm() {
@@ -37,7 +36,6 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
 
     @Override
     public void enable() {
-        loadVanillaVersion();
         saveDefaultConfig();
         ConfigUpdater.INSTANCE.updateConfig();
 
@@ -57,18 +55,6 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
         RecipeManager.resetRecipes();
     }
 
-    private void loadVanillaVersion() {
-        String versionStr = Bukkit.getBukkitVersion();
-        int index1 = versionStr.indexOf(".");
-        int index2 = versionStr.indexOf(".", index1 + 1);
-        versionStr = versionStr.substring(index1 + 1, index2);
-        try {
-            vanillaVersion = Integer.parseInt(versionStr);
-        } catch (NumberFormatException e) {
-            vanillaVersion = Integer.parseInt(versionStr.substring(0, versionStr.indexOf("-")));
-        }
-    }
-
     private void loadBStat() {
         Metrics metrics = new Metrics(this, 17821);
         metrics.addCustomChart(new Metrics.SingleLineChart("recipes", () -> RecipeManager.getRecipeFileMap().keySet().size()));
@@ -80,9 +66,9 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(RecipeUnlockHandler.INSTANCE, this);
         Bukkit.getPluginManager().registerEvents(AnvilRecipeHandler.INSTANCE, this);
         Bukkit.getPluginManager().registerEvents(BukkitMenuDispatcher.INSTANCE, this);
-        if (getVanillaVersion() >= 14)
+        if (CrypticLib.minecraftVersion() >= 11400)
             Bukkit.getPluginManager().registerEvents(SmithingHandler.INSTANCE, this);
-        if (getVanillaVersion() >= 17)
+        if (CrypticLib.minecraftVersion() >= 11700)
             Bukkit.getPluginManager().registerEvents(FurnaceSmeltHandler.INSTANCE, this);
     }
 
@@ -92,10 +78,6 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
 
     public static Craftorithm getInstance() {
         return INSTANCE;
-    }
-
-    public int getVanillaVersion() {
-        return vanillaVersion;
     }
 
     @EventHandler
