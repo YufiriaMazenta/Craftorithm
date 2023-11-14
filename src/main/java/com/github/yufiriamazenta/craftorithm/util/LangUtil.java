@@ -38,6 +38,13 @@ public class LangUtil {
         }
         formatMap.putAll(defaultFormatMap);
         String message = langConfigFile.config().getString(msgKey, msgKey);
+
+        if (!langConfigFile.config().contains(msgKey)) {
+            langConfigFile.config().set(msgKey, msgKey);
+            langConfigFile.saveConfig();
+            langConfigFile.reloadConfig();
+        }
+
         for (String formatStr : formatMap.keySet()) {
             message = message.replace(formatStr, formatMap.get(formatStr));
         }
@@ -81,6 +88,10 @@ public class LangUtil {
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)
             source = PlaceholderAPI.setPlaceholders(player, source);
         return source;
+    }
+
+    public static YamlConfigWrapper getLangConfigFile() {
+        return langConfigFile;
     }
 
 }

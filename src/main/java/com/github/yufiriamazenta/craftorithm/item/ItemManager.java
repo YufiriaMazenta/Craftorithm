@@ -4,6 +4,7 @@ import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
 import com.github.yufiriamazenta.craftorithm.util.FileUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import com.github.yufiriamazenta.craftorithm.util.PluginHookUtil;
 import crypticlib.config.impl.YamlConfigWrapper;
 import crypticlib.nms.item.Item;
 import crypticlib.nms.item.ItemFactory;
@@ -128,13 +129,13 @@ public class ItemManager {
                     item = getCraftorithmItem(key);
                     break;
                 case "items_adder":
-                    item = getItemsAdderItem(key);
+                    item = PluginHookUtil.getItemsAdderItem(key);
                     break;
                 case "oraxen":
-                    item = getOraxenItem(key);
+                    item = PluginHookUtil.getOraxenItem(key);
                     break;
                 case "mythic_mobs":
-                    item = getMythicMobsItem(key);
+                    item = PluginHookUtil.getMythicMobsItem(key);
                     break;
                 default:
                     throw new IllegalArgumentException(namespace + " is not a valid item namespace");
@@ -181,32 +182,6 @@ public class ItemManager {
             return namespace + ":" + regName;
         }
         return null;
-    }
-
-    public static ItemStack getItemsAdderItem(String itemStr) {
-        CustomStack customStack = CustomStack.getInstance(itemStr);
-        if (customStack == null) {
-            throw new IllegalArgumentException(itemStr + " is a not exist ItemsAdder item");
-        }
-        return customStack.getItemStack();
-    }
-
-    public static ItemStack getOraxenItem(String itemStr) {
-        if (!OraxenItems.exists(itemStr)) {
-            throw new IllegalArgumentException(itemStr + " is a not exist Oraxen item");
-        }
-        return OraxenItems.getItemById(itemStr).build();
-    }
-
-    public static ItemStack getMythicMobsItem(String itemStr) {
-        ItemExecutor executor = MythicBukkit.inst().getItemManager();
-        Optional<MythicItem> itemOptional = executor.getItem(itemStr);
-        if (!itemOptional.isPresent()) {
-            throw new IllegalArgumentException(itemStr + " is not a valid MythicMobs item");
-        }
-        MythicItem mythicItem = itemOptional.get();
-        int amount = mythicItem.getAmount();
-        return BukkitAdapter.adapt(itemOptional.get().generateItemStack(amount));
     }
 
 }

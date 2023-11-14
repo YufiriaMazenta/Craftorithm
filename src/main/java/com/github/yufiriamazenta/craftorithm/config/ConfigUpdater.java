@@ -40,6 +40,7 @@ public enum ConfigUpdater {
         }
         config.set("version", Craftorithm.getInstance().getDescription().getVersion());
         Craftorithm.getInstance().saveConfig();
+        Craftorithm.getInstance().reloadConfig();
     }
 
 }

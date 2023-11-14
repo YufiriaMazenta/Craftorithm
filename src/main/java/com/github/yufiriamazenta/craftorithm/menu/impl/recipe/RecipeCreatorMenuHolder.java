@@ -11,6 +11,7 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
 import com.github.yufiriamazenta.craftorithm.util.FileUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import com.github.yufiriamazenta.craftorithm.util.PluginHookUtil;
 import crypticlib.CrypticLib;
 import crypticlib.config.impl.YamlConfigWrapper;
 import crypticlib.util.ItemUtil;
@@ -451,7 +452,9 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
         if (ItemUtil.isItemInvalidate(item)) {
             return null;
         }
-        String itemName;
+        String itemName = checkIsOtherPluginName(item);
+        if (itemName != null)
+            return itemName;
         if (item.hasItemMeta()) {
             itemName = ItemManager.getItemName(item, ignoreAmount, true, "gui_items", UUID.randomUUID().toString());
             itemName = "items:" + itemName;
@@ -459,6 +462,25 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
             itemName = item.getType().name();
         }
         return itemName;
+    }
+
+    private String checkIsOtherPluginName(ItemStack item) {
+        //识别是否是ItemsAdder的物品
+        String itemsAdderName = PluginHookUtil.getItemsAdderName(item);
+        if (itemsAdderName != null)
+            return "items_adder:" + itemsAdderName;
+
+        //识别是否是Oraxen的物品
+        String oraxenName = PluginHookUtil.getOraxenName(item);
+        if (oraxenName != null) {
+            return "oraxen:" + oraxenName;
+        }
+
+        //识别是否是MythicMobs的物品
+        String mythicName = PluginHookUtil.getMythicMobsName(item);
+        if (mythicName != null)
+            return "mythic_mobs:" + mythicName;
+        return null;
     }
 
     private void sendSuccessMsgAndReloadMap(HumanEntity entity) {
