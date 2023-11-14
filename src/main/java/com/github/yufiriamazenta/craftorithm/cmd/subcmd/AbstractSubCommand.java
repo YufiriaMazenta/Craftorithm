@@ -5,6 +5,7 @@ import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.command.ISubCmdExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,42 +52,12 @@ public abstract class AbstractSubCommand implements ISubCmdExecutor {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, List<String> args) {
-        if (subCommandMap == null)
-            return Collections.singletonList("");
-        if (args.size() <= 1) {
-            List<String> tabList = new ArrayList<>();
-            for (String subCmd : subCommandMap.keySet()) {
-                ISubCmdExecutor subCommand = subCommandMap.get(subCmd);
-                if (subCommand.permission() != null) {
-                    if (sender.hasPermission(subCommand.permission()))
-                        tabList.add(subCmd);
-                } else {
-                    tabList.add(subCmd);
-                }
-            }
-            tabList.removeIf(str -> !str.startsWith(args.get(0)));
-            return tabList;
-        }
-        ISubCmdExecutor subCommand = subCommandMap.get(args.get(0));
-        if (subCommand != null) {
-            if (subCommand.permission() != null) {
-                if (!sender.hasPermission(subCommand.permission()))
-                    return Collections.singletonList("");
-            }
-            return subCommand.onTabComplete(sender, args.subList(1, args.size()));
-        }
-        else
-            return Collections.singletonList("");
-    }
-
-    @Override
     public String subCommandName() {
         return command;
     }
 
     @Override
-    public Map<String, ISubCmdExecutor> subCommands() {
+    public @NotNull Map<String, ISubCmdExecutor> subCommands() {
         return subCommandMap;
     }
 
