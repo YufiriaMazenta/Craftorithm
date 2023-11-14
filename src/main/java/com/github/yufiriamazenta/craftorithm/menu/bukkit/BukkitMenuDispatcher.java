@@ -3,6 +3,7 @@ package com.github.yufiriamazenta.craftorithm.menu.bukkit;
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.menu.impl.recipe.RecipeDisplayMenuHolder;
 import crypticlib.CrypticLib;
+import crypticlib.annotations.BukkitListener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryAction;
@@ -13,6 +14,7 @@ import org.bukkit.inventory.InventoryView;
 import java.util.ArrayList;
 import java.util.List;
 
+@BukkitListener
 public enum BukkitMenuDispatcher implements Listener {
 
     INSTANCE;

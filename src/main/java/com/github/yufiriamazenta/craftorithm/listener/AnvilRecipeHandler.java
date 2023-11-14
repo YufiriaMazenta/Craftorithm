@@ -5,6 +5,7 @@ import com.github.yufiriamazenta.craftorithm.event.PrepareAnvilRecipeEvent;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import crypticlib.annotations.BukkitListener;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -23,6 +24,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+@BukkitListener
 public enum AnvilRecipeHandler implements Listener {
 
     INSTANCE;

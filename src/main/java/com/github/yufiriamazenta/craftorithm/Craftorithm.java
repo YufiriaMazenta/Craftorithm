@@ -61,11 +61,7 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
     }
 
     private void regListeners() {
-        Bukkit.getPluginManager().registerEvents(CraftHandler.INSTANCE, this);
         Bukkit.getPluginManager().registerEvents(this, this);
-        Bukkit.getPluginManager().registerEvents(RecipeUnlockHandler.INSTANCE, this);
-        Bukkit.getPluginManager().registerEvents(AnvilRecipeHandler.INSTANCE, this);
-        Bukkit.getPluginManager().registerEvents(BukkitMenuDispatcher.INSTANCE, this);
         if (CrypticLib.minecraftVersion() >= 11400)
             Bukkit.getPluginManager().registerEvents(SmithingHandler.INSTANCE, this);
         if (CrypticLib.minecraftVersion() >= 11700)
