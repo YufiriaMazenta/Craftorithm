@@ -34,11 +34,11 @@ dependencies {
     compileOnly("com.github.LoneDev6:API-ItemsAdder:3.5.0b")
     compileOnly("com.github.oraxen:oraxen:1.160.0")
     compileOnly("io.lumine:Mythic-Dist:5.3.5")
-    implementation("com.crypticlib:CrypticLib:0.1.3")
+    implementation("com.crypticlib:CrypticLib:0.1.4")
 }
 
 group = "com.github.yufiriamazenta"
-version = "1.4.6"
+version = "1.4.7-dev1"
 var pluginVersion: String = version.toString() + "-" + SimpleDateFormat("yyyyMMdd").format(System.currentTimeMillis())
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 java.targetCompatibility = JavaVersion.VERSION_1_8
