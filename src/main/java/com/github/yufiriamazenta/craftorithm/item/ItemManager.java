@@ -9,18 +9,15 @@ import crypticlib.config.impl.YamlConfigWrapper;
 import crypticlib.nms.item.Item;
 import crypticlib.nms.item.ItemFactory;
 import crypticlib.util.ItemUtil;
-import dev.lone.itemsadder.api.CustomStack;
-import io.lumine.mythic.bukkit.BukkitAdapter;
-import io.lumine.mythic.bukkit.MythicBukkit;
-import io.lumine.mythic.core.items.ItemExecutor;
-import io.lumine.mythic.core.items.MythicItem;
-import io.th0rgal.oraxen.api.OraxenItems;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class ItemManager {
@@ -44,7 +41,6 @@ public class ItemManager {
                     ConfigurationSection config = itemFile.config().getConfigurationSection(itemKey);
                     Item item = ItemFactory.item(config);
                     ItemStack bukkitItem = item.buildBukkit();
-                    bukkitItem.setAmount(config.getInt("amount", 1));
                     itemMap.put(fileKey + ":" + itemKey, bukkitItem);
                 } catch (Exception e) {
                     LangUtil.info("load.item_load_exception", ContainerUtil.newHashMap("<item_name>", fileKey + ":" + itemKey));
@@ -68,7 +64,6 @@ public class ItemManager {
         }
         Item libItem = ItemFactory.item(item);
         yamlConfig.set(itemName, libItem.toMap());
-        yamlConfig.set(itemName + ".amount", item.getAmount());
         itemMap.put(itemFileName + ":" + itemName, item);
     }
 
