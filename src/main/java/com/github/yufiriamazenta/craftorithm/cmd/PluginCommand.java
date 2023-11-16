@@ -60,6 +60,7 @@ public enum PluginCommand implements IPluginCmdExecutor {
         regSubCommand(ReloadCommand.INSTANCE);
         regSubCommand(VersionCommand.INSTANCE);
         regSubCommand(RemoveRecipeCommand.INSTANCE);
+        regSubCommand(DisableRecipeCommand.INSTANCE);
         regSubCommand(ItemCommand.INSTANCE);
         regSubCommand(RunArcencielCmd.INSTANCE);
         regSubCommand(ShowRecipeCommand.INSTANCE);

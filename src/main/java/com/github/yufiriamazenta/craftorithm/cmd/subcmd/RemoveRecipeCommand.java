@@ -9,6 +9,9 @@ import org.bukkit.command.CommandSender;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 重构为只能删除本身插件的配方，取消其他插件配方移动到disable命令
+ */
 public final class RemoveRecipeCommand extends AbstractSubCommand {
 
     public static final ISubCmdExecutor INSTANCE = new RemoveRecipeCommand();
@@ -35,7 +38,7 @@ public final class RemoveRecipeCommand extends AbstractSubCommand {
     public List<String> onTabComplete(CommandSender sender, List<String> args) {
         if (args.size() <= 1) {
             List<String> tabList = new ArrayList<>();
-            for (NamespacedKey key : RecipeManager.getServerRecipeMap().keySet()) {
+            for (NamespacedKey key : RecipeManager.getServerRecipeList().keySet()) {
                 String str = key.toString();
                 if (str.startsWith(args.get(0)))
                     tabList.add(key.toString());

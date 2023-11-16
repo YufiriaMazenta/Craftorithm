@@ -202,7 +202,7 @@ public class RecipeFactory {
                 ItemStack result1 = ItemManager.matchItem(resultList.get(i));
                 String fullKey = key + "." + i;
                 NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.getInstance(), fullKey);
-                RecipeManager.regRecipe(namespacedKey, StoneCuttingRecipeBuilder.builder().key(namespacedKey).result(result1).source(choice).build(), config);
+                RecipeManager.regRecipes(namespacedKey, StoneCuttingRecipeBuilder.builder().key(namespacedKey).result(result1).source(choice).build(), config);
             }
         } else {
             result = getResultItem(config);

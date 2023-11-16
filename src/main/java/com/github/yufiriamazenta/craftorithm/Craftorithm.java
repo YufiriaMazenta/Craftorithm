@@ -57,7 +57,7 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
 
     private void loadBStat() {
         Metrics metrics = new Metrics(this, 17821);
-        metrics.addCustomChart(new Metrics.SingleLineChart("recipes", () -> RecipeManager.getRecipeFileMap().keySet().size()));
+        metrics.addCustomChart(new Metrics.SingleLineChart("recipes", () -> RecipeManager.getRecipeConfigWrapperMap().keySet().size()));
     }
 
     private void regListeners() {
@@ -74,6 +74,10 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
 
     public static Craftorithm getInstance() {
         return INSTANCE;
+    }
+
+    public static CraftorithmAPI getAPI() {
+        return CraftorithmAPI.INSTANCE;
     }
 
     @EventHandler
