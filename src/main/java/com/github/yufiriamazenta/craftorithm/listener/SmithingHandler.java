@@ -4,6 +4,7 @@ import com.github.yufiriamazenta.craftorithm.CraftorithmAPI;
 import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtil;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -22,7 +23,8 @@ public enum SmithingHandler implements Listener {
 
     @EventHandler
     public void onPrepareSmith(PrepareSmithingEvent event) {
-        YamlConfiguration config = RecipeManager.getRecipeConfig(event.getInventory().getRecipe());
+        NamespacedKey recipeKey = RecipeManager.getRecipeKey(event.getInventory().getRecipe());
+        YamlConfiguration config = RecipeManager.getRecipeConfig(recipeKey);
         if (config == null)
             return;
 
@@ -41,7 +43,8 @@ public enum SmithingHandler implements Listener {
         if (!(entity instanceof Player)) {
             return;
         }
-        YamlConfiguration config = RecipeManager.getRecipeConfig(event.getInventory().getRecipe());
+        NamespacedKey recipeKey = RecipeManager.getRecipeKey(event.getInventory().getRecipe());
+        YamlConfiguration config = RecipeManager.getRecipeConfig(recipeKey);
         if (config == null)
             return;
         Player player = (Player) entity;

@@ -30,7 +30,7 @@ public final class ShowRecipeCommand extends AbstractSubCommand {
             sendNotEnoughCmdParamMsg(sender, 1);
             return true;
         }
-        Recipe recipe = RecipeManager.getPluginRecipe(args.get(0));
+        Recipe recipe = RecipeManager.getCraftorithmRecipe(args.get(0));
         if (recipe == null) {
             LangUtil.sendLang(sender, "command.show.not_exist_recipe");
             return true;

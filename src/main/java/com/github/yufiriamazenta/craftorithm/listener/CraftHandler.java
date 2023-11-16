@@ -5,6 +5,7 @@ import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtil;
 import crypticlib.annotations.BukkitListener;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -14,6 +15,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
 
 import java.util.List;
 
@@ -26,7 +28,7 @@ public enum CraftHandler implements Listener {
     public void dispatchConditions(PrepareItemCraftEvent event) {
         if (event.getRecipe() == null)
             return;
-        YamlConfiguration config = RecipeManager.getRecipeConfig(event.getRecipe());
+        YamlConfiguration config = RecipeManager.getRecipeConfig(RecipeManager.getRecipeKey(event.getRecipe()));
         if (config == null)
             return;
 
@@ -50,7 +52,8 @@ public enum CraftHandler implements Listener {
         if (!(entity instanceof Player)) {
             return;
         }
-        YamlConfiguration config = RecipeManager.getRecipeConfig(event.getRecipe());
+        NamespacedKey recipeKey = RecipeManager.getRecipeKey(event.getRecipe());
+        YamlConfiguration config = RecipeManager.getRecipeConfig(recipeKey);
         if (config == null)
             return;
         Player player = (Player) entity;
