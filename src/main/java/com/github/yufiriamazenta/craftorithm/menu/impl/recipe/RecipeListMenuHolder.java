@@ -26,7 +26,8 @@ public class RecipeListMenuHolder extends BukkitMenuHandler {
 
     public RecipeListMenuHolder() {
         super();
-        this.recipeList = new ArrayList<>(RecipeManager.getPluginRecipeTypeMap().keySet());
+        //TODO 重写配方展示页面
+        this.recipeList = new ArrayList<>();
         int recipeNum = recipeList.size();
         page = 0;
         if (recipeNum % 45 == 0)

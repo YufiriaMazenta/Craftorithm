@@ -1,9 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.cmd.subcmd;
 
-import com.github.yufiriamazenta.craftorithm.menu.impl.recipe.RecipeDisplayMenuHolder;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Recipe;
@@ -30,25 +28,27 @@ public final class ShowRecipeCommand extends AbstractSubCommand {
             sendNotEnoughCmdParamMsg(sender, 1);
             return true;
         }
-        Recipe recipe = RecipeManager.getCraftorithmRecipe(args.get(0));
-        if (recipe == null) {
+        List<Recipe> recipes = RecipeManager.getCraftorithmRecipe(args.get(0));
+        if (recipes.isEmpty()) {
             LangUtil.sendLang(sender, "command.show.not_exist_recipe");
             return true;
         }
         Player player = (Player) sender;
-        player.openInventory(new RecipeDisplayMenuHolder(recipe).getInventory());
+        //TODO 完成新版配方展示
+//        player.openInventory(new RecipeDisplayMenuHolder(recipe).getInventory());
         return true;
     }
 
     @Override
     public List<String> onTabComplete(CommandSender sender, List<String> args) {
+        //TODO 修改返回列表
         if (args.size() <= 1) {
-            List<NamespacedKey> recipeKeyList = RecipeManager.getPluginRecipeKeys();
+//            List<NamespacedKey> recipeKeyList = RecipeManager.getPluginRecipeKeys();
             List<String> tabList = new ArrayList<>();
-            for (NamespacedKey key : recipeKeyList) {
-                tabList.add(key.getKey());
-            }
-            filterTabList(tabList, args.get(0));
+//            for (NamespacedKey key : recipeKeyList) {
+//                tabList.add(key.getKey());
+//            }
+//            filterTabList(tabList, args.get(0));
             return tabList;
         } else {
             return Collections.singletonList("");

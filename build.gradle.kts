@@ -15,6 +15,7 @@ repositories {
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     maven("https://repo.maven.apache.org/maven2/")
     maven("https://mvn.lumine.io/repository/maven-public/")
+    maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://nexus.phoenixdevt.fr/repository/maven-public/")
     maven("http://repo.crypticlib.com:8081/repository/maven-public/") {
         isAllowInsecureProtocol = true
@@ -37,7 +38,7 @@ dependencies {
 }
 
 group = "com.github.yufiriamazenta"
-version = "1.4.7-dev2"
+version = "1.4.7-dev3"
 var pluginVersion: String = version.toString() + "-" + SimpleDateFormat("yyyyMMdd").format(System.currentTimeMillis())
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 java.targetCompatibility = JavaVersion.VERSION_1_8

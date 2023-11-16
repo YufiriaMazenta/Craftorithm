@@ -113,10 +113,8 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
                     recipeConfig.saveConfig();
                     recipeConfig.reloadConfig();
                     Recipe[] recipes = RecipeFactory.newMultipleRecipe(recipeConfig.config(), recipeName);
-                    for (Recipe recipe : recipes) {
-                        NamespacedKey key = RecipeManager.getRecipeKey(recipe);
-                        RecipeManager.regRecipes(key, recipe, recipeConfig.config());
-                    }
+                    RecipeManager.regRecipes(recipeName, Arrays.asList(recipes), recipeConfig);
+                    RecipeManager.getRecipeConfigWrapperMap().put(recipeName, recipeConfig);
                     event.getWhoClicked().closeInventory();
                     sendSuccessMsgAndReloadMap(event.getWhoClicked());
                 });
@@ -197,8 +195,9 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
             }
             recipeConfig.saveConfig();
             recipeConfig.reloadConfig();
-            Recipe recipe = RecipeFactory.newRecipe(recipeConfig.config(), recipeName);
-            RecipeManager.regRecipes(NamespacedKey.fromString(recipeName, Craftorithm.getInstance()), recipe, recipeConfig.config());
+            Recipe[] recipes = RecipeFactory.newRecipe(recipeConfig.config(), recipeName);
+            RecipeManager.regRecipes(recipeName, Arrays.asList(recipes), recipeConfig);
+            RecipeManager.getRecipeConfigWrapperMap().put(recipeName, recipeConfig);
             event.getWhoClicked().closeInventory();
             sendSuccessMsgAndReloadMap(event.getWhoClicked());
         });
@@ -281,17 +280,16 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
                 recipeConfig.saveConfig();
                 recipeConfig.reloadConfig();
                 Recipe[] multipleRecipes = RecipeFactory.newMultipleRecipe(recipeConfig.config(), recipeName);
-                for (Recipe recipe : multipleRecipes) {
-                    NamespacedKey key = RecipeManager.getRecipeKey(recipe);
-                    RecipeManager.regRecipes(key, recipe, recipeConfig.config());
-                }
+                RecipeManager.regRecipes(recipeName, Arrays.asList(multipleRecipes), recipeConfig);
+                RecipeManager.getRecipeConfigWrapperMap().put(recipeName, recipeConfig);
             } else {
                 recipeConfig.config().set("source.block", "furnace");
                 recipeConfig.config().set("source.item", sourceName);
                 recipeConfig.saveConfig();
                 recipeConfig.reloadConfig();
-                Recipe recipe = RecipeFactory.newRecipe(recipeConfig.config(), recipeName);
-                RecipeManager.regRecipes(NamespacedKey.fromString(recipeName, Craftorithm.getInstance()), recipe, recipeConfig.config());
+                Recipe[] recipes = RecipeFactory.newRecipe(recipeConfig.config(), recipeName);
+                RecipeManager.regRecipes(recipeName, Arrays.asList(recipes), recipeConfig);
+                RecipeManager.getRecipeConfigWrapperMap().put(recipeName, recipeConfig);
             }
             event.getWhoClicked().closeInventory();
             sendSuccessMsgAndReloadMap(event.getWhoClicked());
@@ -403,8 +401,9 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
                     }
                     recipeConfig.saveConfig();
                     recipeConfig.reloadConfig();
-                    Recipe recipe = RecipeFactory.newRecipe(recipeConfig.config(), recipeName);
-                    RecipeManager.regRecipes(NamespacedKey.fromString(recipeName, Craftorithm.getInstance()), recipe, recipeConfig.config());
+                    Recipe[] recipes = RecipeFactory.newRecipe(recipeConfig.config(), recipeName);
+                    RecipeManager.regRecipes(recipeName, Arrays.asList(recipes), recipeConfig);
+                    RecipeManager.getRecipeConfigWrapperMap().put(recipeName, recipeConfig);
                     event.getWhoClicked().closeInventory();
                     sendSuccessMsgAndReloadMap(event.getWhoClicked());
                 });
