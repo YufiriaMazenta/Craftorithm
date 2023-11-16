@@ -1,7 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.menu.impl.recipe;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
-import com.github.yufiriamazenta.craftorithm.cmd.subcmd.RemoveRecipeCommand;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.BukkitMenuHandler;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.ItemDisplayIcon;
@@ -116,7 +115,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
                     Recipe[] recipes = RecipeFactory.newMultipleRecipe(recipeConfig.config(), recipeName);
                     for (Recipe recipe : recipes) {
                         NamespacedKey key = RecipeManager.getRecipeKey(recipe);
-                        RecipeManager.regRecipe(key, recipe, recipeConfig.config());
+                        RecipeManager.regRecipes(key, recipe, recipeConfig.config());
                     }
                     event.getWhoClicked().closeInventory();
                     sendSuccessMsgAndReloadMap(event.getWhoClicked());
@@ -199,7 +198,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
             recipeConfig.saveConfig();
             recipeConfig.reloadConfig();
             Recipe recipe = RecipeFactory.newRecipe(recipeConfig.config(), recipeName);
-            RecipeManager.regRecipe(NamespacedKey.fromString(recipeName, Craftorithm.getInstance()), recipe, recipeConfig.config());
+            RecipeManager.regRecipes(NamespacedKey.fromString(recipeName, Craftorithm.getInstance()), recipe, recipeConfig.config());
             event.getWhoClicked().closeInventory();
             sendSuccessMsgAndReloadMap(event.getWhoClicked());
         });
@@ -284,7 +283,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
                 Recipe[] multipleRecipes = RecipeFactory.newMultipleRecipe(recipeConfig.config(), recipeName);
                 for (Recipe recipe : multipleRecipes) {
                     NamespacedKey key = RecipeManager.getRecipeKey(recipe);
-                    RecipeManager.regRecipe(key, recipe, recipeConfig.config());
+                    RecipeManager.regRecipes(key, recipe, recipeConfig.config());
                 }
             } else {
                 recipeConfig.config().set("source.block", "furnace");
@@ -292,7 +291,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
                 recipeConfig.saveConfig();
                 recipeConfig.reloadConfig();
                 Recipe recipe = RecipeFactory.newRecipe(recipeConfig.config(), recipeName);
-                RecipeManager.regRecipe(NamespacedKey.fromString(recipeName, Craftorithm.getInstance()), recipe, recipeConfig.config());
+                RecipeManager.regRecipes(NamespacedKey.fromString(recipeName, Craftorithm.getInstance()), recipe, recipeConfig.config());
             }
             event.getWhoClicked().closeInventory();
             sendSuccessMsgAndReloadMap(event.getWhoClicked());
@@ -405,7 +404,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
                     recipeConfig.saveConfig();
                     recipeConfig.reloadConfig();
                     Recipe recipe = RecipeFactory.newRecipe(recipeConfig.config(), recipeName);
-                    RecipeManager.regRecipe(NamespacedKey.fromString(recipeName, Craftorithm.getInstance()), recipe, recipeConfig.config());
+                    RecipeManager.regRecipes(NamespacedKey.fromString(recipeName, Craftorithm.getInstance()), recipe, recipeConfig.config());
                     event.getWhoClicked().closeInventory();
                     sendSuccessMsgAndReloadMap(event.getWhoClicked());
                 });
