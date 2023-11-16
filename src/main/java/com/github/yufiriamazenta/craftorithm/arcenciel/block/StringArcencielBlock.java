@@ -31,14 +31,14 @@ public class StringArcencielBlock implements IArcencielBlock<String> {
     public ReturnObj<Object> exec(Player player) {
         List<String> scriptChain = new ArrayList<>(Arrays.asList(arcencielBlockBody.split(" ")));
         scriptChain.removeIf(String::isEmpty);
-        if (scriptChain.size() < 1)
+        if (scriptChain.isEmpty())
             return new ReturnObj<>(ArcencielSignal.CONTINUE, null);
         String keywordStr = scriptChain.get(0);
         IArcencielToken<?> keyword = arcencielKeywordMap.get(keywordStr);
         if (keyword == null) {
             List<String> func = ArcencielDispatcher.INSTANCE.getFunc(keywordStr);
-            if (func.size() < 1) {
-                LangUtil.sendMsg(player, "arcenciel.unknown_token", ContainerUtil.newHashMap("<token>", keywordStr));
+            if (func.isEmpty()) {
+                LangUtil.sendLang(player, "arcenciel.unknown_token", ContainerUtil.newHashMap("<token>", keywordStr));
                 return new ReturnObj<>(ArcencielSignal.CONTINUE);
             } else {
                 return ArcencielDispatcher.INSTANCE.dispatchArcencielFunc(player, func);

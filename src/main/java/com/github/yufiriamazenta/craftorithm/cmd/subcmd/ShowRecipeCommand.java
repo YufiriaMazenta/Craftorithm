@@ -1,7 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.cmd.subcmd;
 
 import com.github.yufiriamazenta.craftorithm.menu.impl.recipe.RecipeDisplayMenuHolder;
-import com.github.yufiriamazenta.craftorithm.menu.impl.recipe.RecipeListMenuHolder;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import org.bukkit.NamespacedKey;
@@ -13,12 +12,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class LookRecipeCommand extends AbstractSubCommand {
+//TODO 迁移命令到list
+public final class ShowRecipeCommand extends AbstractSubCommand {
 
-    public static final LookRecipeCommand INSTANCE = new LookRecipeCommand();
+    public static final ShowRecipeCommand INSTANCE = new ShowRecipeCommand();
 
-    protected LookRecipeCommand() {
-        super("look", "craftorithm.command.look");
+    private ShowRecipeCommand() {
+        super("show", "craftorithm.command.show");
     }
 
     @Override
@@ -26,14 +26,13 @@ public class LookRecipeCommand extends AbstractSubCommand {
         if (!checkSenderIsPlayer(sender)) {
             return true;
         }
-        if (args.size() < 1) {
-            Player player = (Player) sender;
-            player.openInventory(new RecipeListMenuHolder().getInventory());
+        if (args.isEmpty()) {
+            sendNotEnoughCmdParamMsg(sender, 1);
             return true;
         }
         Recipe recipe = RecipeManager.getPluginRecipe(args.get(0));
         if (recipe == null) {
-            LangUtil.sendMsg(sender, "command.look.not_exist_recipe");
+            LangUtil.sendLang(sender, "command.show.not_exist_recipe");
             return true;
         }
         Player player = (Player) sender;

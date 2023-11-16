@@ -1,7 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.util;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import crypticlib.CrypticLib;
 import crypticlib.util.JsonUtil;
@@ -41,7 +40,7 @@ public class UpdateUtil {
                 if (checkVersion(latestVersion, pluginVersion)) {
                     String finalLatestVersion = latestVersion;
                     Bukkit.getScheduler().callSyncMethod(Craftorithm.getInstance(), () -> {
-                        LangUtil.sendMsg(sender, "new_version", ContainerUtil.newHashMap("<new_version>", finalLatestVersion));
+                        LangUtil.sendLang(sender, "new_version", ContainerUtil.newHashMap("<new_version>", finalLatestVersion));
                         return null;
                     });
                 }

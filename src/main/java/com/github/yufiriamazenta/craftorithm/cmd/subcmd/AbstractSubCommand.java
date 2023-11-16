@@ -7,8 +7,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class AbstractSubCommand implements ISubCmdExecutor {
 
     private final String command;
-    private String perm;
+    private final String perm;
     private Map<String, ISubCmdExecutor> subCommandMap;
 
     protected AbstractSubCommand(String command, Map<String, ISubCmdExecutor> subCommandMap, String perm) {
@@ -37,12 +35,12 @@ public abstract class AbstractSubCommand implements ISubCmdExecutor {
     public boolean onCommand(CommandSender sender, List<String> args) {
         ISubCmdExecutor subCommand = subCommandMap.get(args.get(0));
         if (subCommand == null) {
-            LangUtil.sendMsg(sender, "command.undefined_subcmd");
+            LangUtil.sendLang(sender, "command.undefined_subcmd");
         } else {
             String perm = subCommand.permission();
             if (perm != null) {
                 if (!sender.hasPermission(perm)) {
-                    LangUtil.sendMsg(sender, "command.no_perm");
+                    LangUtil.sendLang(sender, "command.no_perm");
                     return true;
                 }
             }
@@ -70,14 +68,14 @@ public abstract class AbstractSubCommand implements ISubCmdExecutor {
     }
 
     public void sendNotEnoughCmdParamMsg(CommandSender sender, String paramStr) {
-        LangUtil.sendMsg(sender, "command.not_enough_param", ContainerUtil.newHashMap("<number>", paramStr));
+        LangUtil.sendLang(sender, "command.not_enough_param", ContainerUtil.newHashMap("<number>", paramStr));
     }
 
     public boolean checkSenderIsPlayer(CommandSender sender) {
         if (sender instanceof Player) {
             return true;
         } else {
-            LangUtil.sendMsg(sender, "command.player_only");
+            LangUtil.sendLang(sender, "command.player_only");
             return false;
         }
     }
@@ -91,8 +89,6 @@ public abstract class AbstractSubCommand implements ISubCmdExecutor {
         return perm;
     }
 
-    public void setPerm() {
-        this.perm = perm;
-    }
+
 
 }

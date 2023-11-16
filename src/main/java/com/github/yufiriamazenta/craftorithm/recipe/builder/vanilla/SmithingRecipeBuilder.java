@@ -2,7 +2,9 @@ package com.github.yufiriamazenta.craftorithm.recipe.builder.vanilla;
 
 import com.github.yufiriamazenta.craftorithm.recipe.builder.AbstractRecipeBuilder;
 import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.*;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.RecipeChoice;
+import org.bukkit.inventory.SmithingRecipe;
 
 public class SmithingRecipeBuilder extends AbstractRecipeBuilder {
 

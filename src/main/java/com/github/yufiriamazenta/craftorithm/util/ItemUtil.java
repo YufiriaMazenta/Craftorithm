@@ -1,6 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.util;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
+import crypticlib.util.TextUtil;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -20,7 +21,7 @@ public class ItemUtil {
     }
 
     public static void reloadCannotCraftLore() {
-        cannotCraftLore = LangUtil.color(Craftorithm.getInstance().getConfig().getString("lore_cannot_craft", "lore_cannot_craft"));
+        cannotCraftLore = TextUtil.color(Craftorithm.getInstance().getConfig().getString("lore_cannot_craft", "lore_cannot_craft"));
         try {
             cannotCraftLorePattern = Pattern.compile(cannotCraftLore);
             cannotCraftLoreIsRegex = true;

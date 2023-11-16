@@ -1,6 +1,5 @@
 package com.github.yufiriamazenta.craftorithm.bstat;
 
-import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import crypticlib.CrypticLib;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
