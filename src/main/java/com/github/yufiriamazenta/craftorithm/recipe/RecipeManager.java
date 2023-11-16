@@ -67,7 +67,9 @@ public class RecipeManager {
         }
     }
 
-    public static void reloadRecipes() {
+    public static void reloadRecipesManager() {
+        resetRecipes();
+        reloadRecipeFiles();
         reloadCraftorithmRecipes();
         reloadOtherPluginsRecipes();
         reloadRemovedRecipes();
@@ -75,7 +77,6 @@ public class RecipeManager {
     }
 
     public static void reloadCraftorithmRecipes() {
-        resetRecipes();
         for (String fileName : recipeConfigWrapperMap.keySet()) {
             try {
                 YamlConfigWrapper configWrapper = recipeConfigWrapperMap.get(fileName);
@@ -132,6 +133,7 @@ public class RecipeManager {
     }
 
     private static void reloadRemovedRecipes() {
+        removedRecipeConfig.reloadConfig();
         List<String> removedRecipes = removedRecipeConfig.config().getStringList("recipes");
         if (Craftorithm.getInstance().getConfig().getBoolean("remove_all_vanilla_recipe", false)) {
             for (NamespacedKey key : serverRecipeList) {

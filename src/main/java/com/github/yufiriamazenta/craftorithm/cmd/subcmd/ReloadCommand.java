@@ -33,22 +33,15 @@ public final class ReloadCommand extends AbstractSubCommand {
 
     public static void reloadPlugin() {
         reloadConfigs();
-        ItemManager.loadItems();
-        reloadRecipes();
+        ItemManager.reloadItemManager();
+        RecipeManager.reloadRecipesManager();
     }
 
     public static void reloadConfigs() {
         Craftorithm.getInstance().reloadConfig();
-        LangUtil.reloadMsgConfig();
-        RecipeManager.getRemovedRecipeConfig().reloadConfig();
-        ItemManager.loadItemFiles();
-        RecipeManager.reloadRecipeFiles();
-        ArcencielDispatcher.INSTANCE.getFunctionFile().reloadConfig();
         ItemUtil.reloadCannotCraftLore();
-    }
-
-    public static void reloadRecipes() {
-        RecipeManager.reloadRecipes();
+        LangUtil.reloadLangConfig();
+        ArcencielDispatcher.INSTANCE.getFunctionFile().reloadConfig();
     }
 
 }
