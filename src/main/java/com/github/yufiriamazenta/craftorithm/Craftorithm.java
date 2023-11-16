@@ -105,7 +105,7 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
                     map.put(namespace, recipes);
                 }
             }
-            RecipeManager.loadRecipes();
+            RecipeManager.reloadRecipes();
         }
     }
 }

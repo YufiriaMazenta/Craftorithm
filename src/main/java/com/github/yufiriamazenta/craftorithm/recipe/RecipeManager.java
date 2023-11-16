@@ -4,7 +4,6 @@ import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.CraftorithmAPI;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.CustomRecipe;
-import com.github.yufiriamazenta.craftorithm.recipe.custom.PotionMixRecipe;
 import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
 import com.github.yufiriamazenta.craftorithm.util.FileUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
@@ -27,16 +26,16 @@ public class RecipeManager {
     private static final YamlConfigWrapper removedRecipeConfig;
     private static final File recipeFileFolder;
     private static final Map<String, YamlConfigWrapper> recipeConfigWrapperMap;
-    private static final Map<String, List<NamespacedKey>> craftorithmRecipeGroupMap;
+    private static final Map<String, List<NamespacedKey>> recipeGroupMap;
+    private static final Map<String, Integer> recipeSortIdMap;
     private static final Map<NamespacedKey, Boolean> recipeUnlockMap;
-    private static final Map<NamespacedKey, Integer> recipeSortIdMap;
     private static final Map<NamespacedKey, AnvilRecipe> anvilRecipeMap;
     private static final List<NamespacedKey> serverRecipeList;
 
     static {
         removedRecipeConfig = new YamlConfigWrapper(Craftorithm.getInstance(), "removed_recipes.yml");
         recipeFileFolder = new File(Craftorithm.getInstance().getDataFolder().getPath(), "recipes");
-        craftorithmRecipeGroupMap = new ConcurrentHashMap<>();
+        recipeGroupMap = new ConcurrentHashMap<>();
         recipeConfigWrapperMap = new ConcurrentHashMap<>();
         serverRecipeList = new CopyOnWriteArrayList<>();
         recipeUnlockMap = new ConcurrentHashMap<>();
@@ -45,10 +44,10 @@ public class RecipeManager {
     }
 
     public static void loadRecipeManager() {
-        loadRecipeFiles();
+        reloadRecipeFiles();
     }
 
-    public static void loadRecipeFiles() {
+    public static void reloadRecipeFiles() {
         recipeConfigWrapperMap.clear();
         if (!recipeFileFolder.exists()) {
             boolean mkdirResult = recipeFileFolder.mkdir();
@@ -68,14 +67,14 @@ public class RecipeManager {
         }
     }
 
-    public static void loadRecipes() {
-        loadCraftorithmRecipes();
-        loadOtherPluginsRecipes();
-        loadRemovedRecipes();
+    public static void reloadRecipes() {
+        reloadCraftorithmRecipes();
+        reloadOtherPluginsRecipes();
+        reloadRemovedRecipes();
         reloadServerRecipeMap();
     }
 
-    public static void loadCraftorithmRecipes() {
+    public static void reloadCraftorithmRecipes() {
         resetRecipes();
         for (String fileName : recipeConfigWrapperMap.keySet()) {
             try {
@@ -84,12 +83,11 @@ public class RecipeManager {
                 boolean multiple = config.getBoolean("multiple", false);
                 if (multiple) {
                     Recipe[] multipleRecipes = RecipeFactory.newMultipleRecipe(config, fileName);
-                    regRecipes(fileName, Arrays.asList(multipleRecipes), config);
+                    regRecipes(fileName, Arrays.asList(multipleRecipes), configWrapper);
                 } else {
-                    Recipe recipe = RecipeFactory.newRecipe(config, fileName);
-                    regRecipes(fileName, Collections.singletonList(recipe), config);
+                    Recipe[] recipes = RecipeFactory.newRecipe(config, fileName);
+                    regRecipes(fileName, Arrays.asList(recipes), configWrapper);
                 }
-                recipeConfigWrapperMap.put(fileName, configWrapper);
             } catch (Exception e) {
                 LangUtil.info("load.recipe_load_exception", ContainerUtil.newHashMap("<recipe_name>", fileName));
                 e.printStackTrace();
@@ -97,18 +95,16 @@ public class RecipeManager {
         }
     }
 
-    public static void regRecipes(String recipeName, List<Recipe> recipes, YamlConfiguration config) {
+    public static void regRecipes(String recipeName, List<Recipe> recipes, YamlConfigWrapper configWrapper) {
+        YamlConfiguration config = configWrapper.config();
         List<NamespacedKey> recipeKeyList = new ArrayList<>();
         for (Recipe recipe : recipes) {
             NamespacedKey recipeKey = getRecipeKey(recipe);
             recipeKeyList.add(getRecipeKey(recipe));
             if (recipe instanceof CustomRecipe) {
-                switch (((CustomRecipe) recipe).getRecipeType()) {
-                    case ANVIL:
-                        regAnvilRecipe((AnvilRecipe) recipe);
-                        break;
-                    case POTION:
-                        regPotionMixRecipe((PotionMixRecipe) recipe);
+                //TODO
+                if (Objects.requireNonNull(((CustomRecipe) recipe).getRecipeType()) == RecipeType.ANVIL) {
+                    regAnvilRecipe((AnvilRecipe) recipe);
                 }
             } else {
                 Bukkit.addRecipe(recipe);
@@ -120,13 +116,11 @@ public class RecipeManager {
                 }
             }
         }
-        craftorithmRecipeGroupMap.put(recipeName, recipeKeyList);
-
-        //TODO 是否要进行排序暂定
-//        recipeSortIdMap.put(key, config.getInt("sort_id", 0));
+        recipeGroupMap.put(recipeName, recipeKeyList);
+        recipeSortIdMap.put(recipeName, config.getInt("sort_id", 0));
     }
 
-    private static void loadOtherPluginsRecipes() {
+    private static void reloadOtherPluginsRecipes() {
         Map<String, List<Recipe>> pluginRecipeMap = CraftorithmAPI.INSTANCE.getPluginRegRecipeMap();
         for (String plugin : pluginRecipeMap.keySet()) {
             if (plugin.equals(NamespacedKey.MINECRAFT) || plugin.equals(Craftorithm.getInstance().getName()))
@@ -137,7 +131,7 @@ public class RecipeManager {
         }
     }
 
-    private static void loadRemovedRecipes() {
+    private static void reloadRemovedRecipes() {
         List<String> removedRecipes = removedRecipeConfig.config().getStringList("recipes");
         if (Craftorithm.getInstance().getConfig().getBoolean("remove_all_vanilla_recipe", false)) {
             for (NamespacedKey key : serverRecipeList) {
@@ -168,12 +162,11 @@ public class RecipeManager {
         });
 
         //删除Craftorithm的配方
-        craftorithmRecipeGroupMap.forEach((key, recipes) -> {
-            removeCraftorithmRecipe(key);
+        recipeGroupMap.forEach((key, recipes) -> {
+            removeCraftorithmRecipe(key, false);
         });
         anvilRecipeMap.clear();
-        craftorithmRecipeGroupMap.clear();
-        recipeConfigWrapperMap.clear();
+        recipeGroupMap.clear();
         recipeUnlockMap.clear();
         recipeSortIdMap.clear();
         reloadServerRecipeMap();
@@ -206,6 +199,12 @@ public class RecipeManager {
     private static int removeRecipes(List<NamespacedKey> recipeKeys) {
         if (recipeKeys == null || recipeKeys.isEmpty())
             return 0;
+        //删除表里缓存的一些数据
+        for (NamespacedKey recipeKey : recipeKeys) {
+            recipeUnlockMap.remove(recipeKey);
+        }
+
+        //在服务器中缓存的数据
         int removedRecipeNum = 0;
         if (CrypticLib.minecraftVersion() >= 11500) {
             for (NamespacedKey recipeKey : recipeKeys) {
@@ -222,20 +221,21 @@ public class RecipeManager {
                     removedRecipeNum ++;
                     //TODO 维护表
                 }
-                reloadServerRecipeMap();
             }
+            reloadServerRecipeMap();
         }
         return removedRecipeNum;
     }
 
-    public static boolean removeCraftorithmRecipe(String recipeName) {
-        int i = removeRecipes(craftorithmRecipeGroupMap.getOrDefault(recipeName, new ArrayList<>()));
+    public static boolean removeCraftorithmRecipe(String recipeName, boolean deleteFile) {
+        int i = removeRecipes(recipeGroupMap.getOrDefault(recipeName, new ArrayList<>()));
         YamlConfigWrapper recipeConfig = recipeConfigWrapperMap.get(recipeName);
-        if (recipeConfig != null) {
+        if (recipeConfig != null && deleteFile) {
             recipeConfig.configFile().delete();
         }
         recipeConfigWrapperMap.remove(recipeName);
-        craftorithmRecipeGroupMap.remove(recipeName);
+        recipeGroupMap.remove(recipeName);
+        recipeSortIdMap.remove(recipeName);
 
         return i > 0;
     }
@@ -245,9 +245,12 @@ public class RecipeManager {
         return removeRecipes(recipeKeys) > 0;
     }
 
-    public static void addKeyToRemovedConfig(List<NamespacedKey> keys) {
+    private static void addKeyToRemovedConfig(List<NamespacedKey> keys) {
         List<String> removedList = removedRecipeConfig.config().getStringList("recipes");
+        boolean removeAllVanillaRecipe = Craftorithm.getInstance().getConfig().getBoolean("remove_all_vanilla_recipe");
         for (NamespacedKey key : keys) {
+            if (key.getNamespace().equals(NamespacedKey.MINECRAFT) && removeAllVanillaRecipe)
+                continue;
             String keyStr = key.toString();
             if (!removedList.contains(keyStr))
                 removedList.add(keyStr);
@@ -262,14 +265,18 @@ public class RecipeManager {
         while (recipeIterator.hasNext()) {
             Recipe recipe = recipeIterator.next();
             NamespacedKey key = RecipeManager.getRecipeKey(recipe);
-            serverRecipeList.put(key, recipe);
+            serverRecipeList.add(key);
         }
     }
 
-
-
     public static YamlConfiguration getRecipeConfig(NamespacedKey recipeKey) {
-        return recipeKey != null ? recipeKeyConfigMap.get(recipeKey) : null;
+        for (String recipeName : recipeGroupMap.keySet()) {
+            List<NamespacedKey> recipeKeys = recipeGroupMap.getOrDefault(recipeName, new ArrayList<>());
+            if (recipeKeys.contains(recipeKey)) {
+                return recipeConfigWrapperMap.get(recipeName).config();
+            }
+        }
+        return null;
     }
 
     public static NamespacedKey getRecipeKey(Recipe recipe) {
@@ -281,17 +288,14 @@ public class RecipeManager {
         return ((Keyed) recipe).getKey();
     }
 
-    public static List<Recipe> getCraftorithmRecipe(String key) {
+    public static List<Recipe> getCraftorithmRecipe(String recipeName) {
         List<Recipe> recipes = new ArrayList<>();
-        if (key.contains(":")) {
-            return getCraftorithmRecipe(NamespacedKey.fromString(key));
-        } else {
-            return getCraftorithmRecipe(NamespacedKey.fromString(key, Craftorithm.getInstance()));
+        for (NamespacedKey key : recipeGroupMap.getOrDefault(recipeName, new ArrayList<>())) {
+            Recipe recipe = Bukkit.getRecipe(key);
+            if (recipe != null)
+                recipes.add(recipe);
         }
-    }
-
-    public static RecipeType getCraftorithmRecipeType(Recipe recipe) {
-        return recipeTypeMap.getOrDefault(recipe, RecipeType.UNKNOWN);
+        return recipes;
     }
 
     public static AnvilRecipe matchAnvilRecipe(ItemStack base, ItemStack addition) {
@@ -314,17 +318,21 @@ public class RecipeManager {
         anvilRecipeMap.put(recipe.getKey(), recipe);
     }
 
-    private static void regPotionMixRecipe(PotionMixRecipe recipe) {
-        //TODO
-    }
+//    private static void regPotionMixRecipe(PotionMix recipe) {
+//        //TODO
+//    }
 
+
+    public static Map<String, List<NamespacedKey>> getRecipeGroupMap() {
+        return recipeGroupMap;
+    }
 
     public static YamlConfigWrapper getRemovedRecipeConfig() {
         return removedRecipeConfig;
     }
 
-    public static Map<NamespacedKey, Recipe> getServerRecipeList() {
-        return Collections.unmodifiableMap(serverRecipeList);
+    public static List<NamespacedKey> getServerRecipeList() {
+        return serverRecipeList;
     }
 
     public static Map<NamespacedKey, Boolean> getRecipeUnlockMap() {
@@ -336,19 +344,9 @@ public class RecipeManager {
     }
 
     public static Map<NamespacedKey, AnvilRecipe> getAnvilRecipeMap() {return anvilRecipeMap;}
-
-    public static List<NamespacedKey> getPluginRecipeKeys() {
-        return new ArrayList<>(recipeKeyMap.keySet());
+    public static Map<String, Integer> getRecipeSortIdMap() {
+        return recipeSortIdMap;
     }
-
-    public static Map<Recipe, RecipeType> getPluginRecipeTypeMap() {
-        return new ConcurrentHashMap<>(recipeTypeMap);
-    }
-
-    public static Map<NamespacedKey, Integer> getRecipeSortIdMap() {
-        return new ConcurrentHashMap<>(recipeSortIdMap);
-    }
-
 
     private static void saveDefConfigFile(List<File> allFiles) {
         Craftorithm.getInstance().saveResource("recipes/example_shaped.yml", false);

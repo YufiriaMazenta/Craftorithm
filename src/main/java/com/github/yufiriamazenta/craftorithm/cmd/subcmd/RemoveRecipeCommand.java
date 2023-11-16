@@ -3,7 +3,6 @@ package com.github.yufiriamazenta.craftorithm.cmd.subcmd;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.command.ISubCmdExecutor;
-import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
@@ -26,7 +25,8 @@ public final class RemoveRecipeCommand extends AbstractSubCommand {
             sendNotEnoughCmdParamMsg(sender, 1);
             return true;
         }
-        if (RecipeManager.removeRecipe(args.get(0), true)) {
+
+        if (RecipeManager.removeCraftorithmRecipe(args.get(0), true)) {
             LangUtil.sendLang(sender, "command.remove.success");
         }
         else
@@ -38,10 +38,9 @@ public final class RemoveRecipeCommand extends AbstractSubCommand {
     public List<String> onTabComplete(CommandSender sender, List<String> args) {
         if (args.size() <= 1) {
             List<String> tabList = new ArrayList<>();
-            for (NamespacedKey key : RecipeManager.getServerRecipeList().keySet()) {
-                String str = key.toString();
-                if (str.startsWith(args.get(0)))
-                    tabList.add(key.toString());
+            for (String key : RecipeManager.getRecipeGroupMap().keySet()) {
+                if (key.startsWith(args.get(0)))
+                    tabList.add(key);
             }
             filterTabList(tabList, args.get(0));
             return tabList;

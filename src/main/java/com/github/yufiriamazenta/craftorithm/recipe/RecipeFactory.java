@@ -20,7 +20,7 @@ import java.util.function.BiFunction;
 
 public class RecipeFactory {
 
-    private static final Map<RecipeType, BiFunction<YamlConfiguration, String, Recipe>> recipeBuilderMap;
+    private static final Map<RecipeType, BiFunction<YamlConfiguration, String, Recipe[]>> recipeBuilderMap;
     private static final Map<RecipeType, BiFunction<YamlConfiguration, String, Recipe[]>> multipleRecipeBuilderMap;
 
     static {
@@ -43,7 +43,7 @@ public class RecipeFactory {
         multipleRecipeBuilderMap.put(RecipeType.SMITHING, RecipeFactory::multipleSmithingRecipe);
     }
 
-    public static Recipe newRecipe(YamlConfiguration config, String key) {
+    public static Recipe[] newRecipe(YamlConfiguration config, String key) {
         key = key.toLowerCase(Locale.ROOT);
         String recipeTypeStr = config.getString("type", "shaped");
         RecipeType recipeType = RecipeType.valueOf(recipeTypeStr.toUpperCase(Locale.ROOT));
@@ -57,7 +57,7 @@ public class RecipeFactory {
         return multipleRecipeBuilderMap.get(recipeType).apply(config, key);
     }
 
-    public static Recipe shapedRecipe(YamlConfiguration config, String key) {
+    public static Recipe[] shapedRecipe(YamlConfiguration config, String key) {
         Map<Character, RecipeChoice> recipeChoiceMap = getShapedRecipeChoiceMap(config.getConfigurationSection("source"));
         ItemStack result = getResultItem(config);
         NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.getInstance(), key);
@@ -68,7 +68,8 @@ public class RecipeFactory {
         }
         String[] shape = new String[shapeStrList.size()];
         shape = shapeStrList.toArray(shape);
-        return ShapedRecipeBuilder.builder().key(namespacedKey).result(result).shape(shape).recipeChoiceMap(recipeChoiceMap).build();
+        Recipe recipe = ShapedRecipeBuilder.builder().key(namespacedKey).result(result).shape(shape).recipeChoiceMap(recipeChoiceMap).build();
+        return new Recipe[]{recipe};
     }
 
     public static Recipe[] multipleShapedRecipe(YamlConfiguration config, String key) {
@@ -91,7 +92,7 @@ public class RecipeFactory {
         return shapedRecipes;
     }
 
-    public static Recipe shapelessRecipe(YamlConfiguration config, String key) {
+    public static Recipe[] shapelessRecipe(YamlConfiguration config, String key) {
         NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.getInstance(), key);
         ItemStack result = getResultItem(config);
         List<String> itemStrList = config.getStringList("source");
@@ -99,7 +100,8 @@ public class RecipeFactory {
         for (String itemStr : itemStrList) {
             recipeChoiceList.add(getRecipeChoice(itemStr));
         }
-        return ShapelessRecipeBuilder.builder().key(namespacedKey).result(result).choiceList(recipeChoiceList).build();
+        Recipe recipe = ShapelessRecipeBuilder.builder().key(namespacedKey).result(result).choiceList(recipeChoiceList).build();
+        return new Recipe[]{recipe};
     }
 
     public static Recipe[] multipleShapelessRecipe(YamlConfiguration config, String key) {
@@ -121,7 +123,7 @@ public class RecipeFactory {
         return shapelessRecipes;
     }
 
-    public static Recipe cookingRecipe(YamlConfiguration config, String key) {
+    public static Recipe[] cookingRecipe(YamlConfiguration config, String key) {
         NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.getInstance(), key);
         ItemStack result = getResultItem(config);
         String choiceStr = config.getString("source.item", "");
@@ -129,7 +131,8 @@ public class RecipeFactory {
         RecipeChoice source = getRecipeChoice(choiceStr);
         float exp = (float) config.getDouble("exp", 0);
         int time = config.getInt("time", 200);
-        return CookingRecipeBuilder.builder().key(namespacedKey).result(result).block(cookingBlock).source(source).exp(exp).time(time).build();
+        Recipe recipe = CookingRecipeBuilder.builder().key(namespacedKey).result(result).block(cookingBlock).source(source).exp(exp).time(time).build();
+        return new Recipe[]{recipe};
     }
 
     public static Recipe[] multipleCookingRecipe(YamlConfiguration config, String key) {
@@ -153,18 +156,20 @@ public class RecipeFactory {
         return cookingRecipes;
     }
 
-    public static Recipe smithingRecipe(YamlConfiguration config, String key) {
+    public static Recipe[] smithingRecipe(YamlConfiguration config, String key) {
         NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.getInstance(), key);
         ItemStack result = getResultItem(config);
         RecipeChoice base = getRecipeChoice(config.getString("source.base", ""));
         RecipeChoice addition = getRecipeChoice(config.getString("source.addition", ""));
+        Recipe recipe;
         if (CrypticLib.minecraftVersion() >= 12000) {
             RecipeChoice template = getRecipeChoice(config.getString("source.template", ""));
             XSmithingRecipeBuilder.SmithingType type = XSmithingRecipeBuilder.SmithingType.valueOf(config.getString("source.type", "default").toUpperCase());
-            return XSmithingRecipeBuilder.builder(type).key(namespacedKey).result(result).base(base).addition(addition).template(template).build();
+            recipe = XSmithingRecipeBuilder.builder(type).key(namespacedKey).result(result).base(base).addition(addition).template(template).build();
         } else {
-            return SmithingRecipeBuilder.builder().key(namespacedKey).result(result).base(base).addition(addition).build();
+            recipe = SmithingRecipeBuilder.builder().key(namespacedKey).result(result).base(base).addition(addition).build();
         }
+        return new Recipe[]{recipe};
     }
 
     public static Recipe[] multipleSmithingRecipe(YamlConfiguration config, String key) {
@@ -192,23 +197,25 @@ public class RecipeFactory {
         return smithingRecipes;
     }
 
-    public static Recipe stoneCuttingRecipe(YamlConfiguration config, String key) {
+    public static Recipe[] stoneCuttingRecipe(YamlConfiguration config, String key) {
         RecipeChoice choice = getRecipeChoice(config.getString("source", ""));
         ItemStack result;
         if (config.isList("result")) {
+            List<Recipe> recipes = new ArrayList<>();
             List<String> resultList = config.getStringList("result");
-            result = ItemManager.matchItem(resultList.get(0));
-            for (int i = 1; i < resultList.size(); i++) {
+            for (int i = 0; i < resultList.size(); i++) {
                 ItemStack result1 = ItemManager.matchItem(resultList.get(i));
                 String fullKey = key + "." + i;
                 NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.getInstance(), fullKey);
-                RecipeManager.regRecipes(namespacedKey, StoneCuttingRecipeBuilder.builder().key(namespacedKey).result(result1).source(choice).build(), config);
+                recipes.add(StoneCuttingRecipeBuilder.builder().key(namespacedKey).result(result1).source(choice).build());
             }
+            return recipes.toArray(new Recipe[0]);
         } else {
             result = getResultItem(config);
+            NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.getInstance(), key);
+            Recipe recipe = StoneCuttingRecipeBuilder.builder().key(namespacedKey).result(result).source(choice).build();
+            return new Recipe[]{recipe};
         }
-        NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.getInstance(), key);
-        return StoneCuttingRecipeBuilder.builder().key(namespacedKey).result(result).source(choice).build();
     }
 
     public static Recipe[] multipleStoneCuttingRecipe(YamlConfiguration config, String key) {
@@ -244,7 +251,7 @@ public class RecipeFactory {
         }
     }
 
-    public static Recipe anvilRecipe(YamlConfiguration config, String key) {
+    public static Recipe[] anvilRecipe(YamlConfiguration config, String key) {
         ItemStack result = getResultItem(config);
         String baseStr = config.getString("source.base", "");
         ItemStack baseItem = ItemManager.matchItem(baseStr);
@@ -254,7 +261,8 @@ public class RecipeFactory {
         AnvilRecipeItem addition = new AnvilRecipeItem(additionItem, additionStr.contains(":"));
         NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.getInstance(), key);
         int costLevel = config.getInt("cost_level", 0);
-        return AnvilRecipeBuilder.builder().key(namespacedKey).result(result).base(base).addition(addition).costLevel(costLevel).build();
+        Recipe recipe = AnvilRecipeBuilder.builder().key(namespacedKey).result(result).base(base).addition(addition).costLevel(costLevel).build();
+        return new Recipe[]{recipe};
     }
 
     public static Recipe[] multipleAnvilRecipe(YamlConfiguration config, String key) {

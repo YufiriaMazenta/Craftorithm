@@ -42,13 +42,13 @@ public final class ReloadCommand extends AbstractSubCommand {
         LangUtil.reloadMsgConfig();
         RecipeManager.getRemovedRecipeConfig().reloadConfig();
         ItemManager.loadItemFiles();
-        RecipeManager.loadRecipeFiles();
+        RecipeManager.reloadRecipeFiles();
         ArcencielDispatcher.INSTANCE.getFunctionFile().reloadConfig();
         ItemUtil.reloadCannotCraftLore();
     }
 
     public static void reloadRecipes() {
-        RecipeManager.loadRecipes();
+        RecipeManager.reloadRecipes();
     }
 
 }
