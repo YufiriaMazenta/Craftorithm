@@ -6,6 +6,7 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.annotations.BukkitListener;
+import crypticlib.util.TextUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -57,7 +58,7 @@ public enum AnvilRecipeHandler implements Listener {
             if (meta != null) {
                 renameStr = LangUtil.placeholder(player, renameStr);
                 if (player.hasPermission("craftorithm.anvil.color"))
-                    renameStr = LangUtil.color(renameStr);
+                    renameStr = TextUtil.color(renameStr);
                 meta.setDisplayName(renameStr);
                 result.setItemMeta(meta);
             }

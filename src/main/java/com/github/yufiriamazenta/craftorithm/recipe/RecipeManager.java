@@ -2,15 +2,14 @@ package com.github.yufiriamazenta.craftorithm.recipe;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.CraftorithmAPI;
-import com.github.yufiriamazenta.craftorithm.cmd.subcmd.RemoveRecipeCommand;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.CustomRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.PotionMixRecipe;
 import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
 import com.github.yufiriamazenta.craftorithm.util.FileUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import crypticlib.CrypticLib;
 import crypticlib.config.impl.YamlConfigWrapper;
-import crypticlib.util.MsgUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
@@ -18,13 +17,11 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.*;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
+//TODO 优化代码结构
 public class RecipeManager {
 
     private static final Map<String, YamlConfigWrapper> recipeFileMap = new HashMap<>();
@@ -35,8 +32,12 @@ public class RecipeManager {
     private static final Map<NamespacedKey, AnvilRecipe> anvilRecipeMap;
     private static final Map<Recipe, RecipeType> recipeTypeMap;
     private static final Map<NamespacedKey, Recipe> recipeKeyMap;
+    private static final YamlConfigWrapper removedRecipeConfig = new YamlConfigWrapper(Craftorithm.getInstance(), "removed_recipes.yml");
+    private static final Map<NamespacedKey, Recipe> serverRecipeMap;
 
     static {
+        serverRecipeMap = new ConcurrentHashMap<>();
+
         recipeUnlockMap = new ConcurrentHashMap<>();
 
         recipeSortIdMap = new ConcurrentHashMap<>();
@@ -60,7 +61,7 @@ public class RecipeManager {
                 return;
         }
         List<File> allFiles = FileUtil.getAllFiles(recipeFileFolder);
-        if (allFiles.size() < 1) {
+        if (allFiles.isEmpty()) {
             saveDefConfigFile(allFiles);
         }
         for (File file : allFiles) {
@@ -103,13 +104,13 @@ public class RecipeManager {
             for (Recipe recipe : recipes) {
                 recipeKeyList.add(getRecipeKey(recipe).toString());
             }
-            ((RemoveRecipeCommand) RemoveRecipeCommand.INSTANCE).removeRecipes(recipeKeyList, false);
+            removeRecipes(recipeKeyList, false);
         });
         List<String> recipeKeyList = new ArrayList<>();
         for (NamespacedKey key : getPluginRecipeKeys()) {
             recipeKeyList.add(key.toString());
         }
-        ((RemoveRecipeCommand) RemoveRecipeCommand.INSTANCE).removeRecipes(recipeKeyList, false);
+        removeRecipes(recipeKeyList, false);
         recipeTypeMap.clear();
         recipeKeyMap.clear();
         recipeUnlockMap.clear();
@@ -141,6 +142,70 @@ public class RecipeManager {
         recipeKeyMap.put(key, recipe);
     }
 
+    public static boolean removeRecipe(String keyStr, boolean save2File) {
+        NamespacedKey key = NamespacedKey.fromString(keyStr);
+        Iterator<Recipe> recipeIterator = Bukkit.recipeIterator();
+        if (key == null)
+            return false;
+        if (CrypticLib.minecraftVersion() >= 11500) {
+            if (Bukkit.removeRecipe(key) && save2File)
+                addKey2RemovedConfig(key.toString());
+            reloadServerRecipeMap();
+        } else {
+            while (recipeIterator.hasNext()) {
+                Recipe recipe1 = recipeIterator.next();
+                NamespacedKey key1 = RecipeManager.getRecipeKey(recipe1);
+                if (key.equals(key1)) {
+                    recipeIterator.remove();
+                    if (save2File) {
+                        addKey2RemovedConfig(key.toString());
+                    }
+                    reloadServerRecipeMap();
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    public static void removeRecipes(List<String> keyStrList, boolean save2File) {
+        List<NamespacedKey> keyList = new ArrayList<>();
+        for (String str : keyStrList) {
+            NamespacedKey key = NamespacedKey.fromString(str);
+            if (key != null)
+                keyList.add(key);
+        }
+        if (keyList.isEmpty())
+            return;
+        if (CrypticLib.minecraftVersion() >= 11500) {
+            for (NamespacedKey key : keyList) {
+                Bukkit.removeRecipe(key);
+                if (save2File) {
+                    addKey2RemovedConfig(key.toString());
+                }
+            }
+        } else {
+            Iterator<Recipe> recipeIterator = Bukkit.recipeIterator();
+            while (recipeIterator.hasNext()) {
+                Recipe recipe1 = recipeIterator.next();
+                NamespacedKey key1 = RecipeManager.getRecipeKey(recipe1);
+                if (key1 == null)
+                    continue;
+                if (keyList.contains(key1)) {
+                    recipeIterator.remove();
+                    if (save2File) {
+                        addKey2RemovedConfig(key1.toString());
+                    }
+                    keyList.remove(key1);
+                    if (keyList.isEmpty())
+                        break;
+                }
+            }
+        }
+        reloadServerRecipeMap();
+    }
+
     private static void putRecipeTypeMap(Recipe recipe) {
         if (recipe instanceof ShapedRecipe)
             recipeTypeMap.put(recipe, RecipeType.SHAPED);
@@ -158,11 +223,37 @@ public class RecipeManager {
             recipeTypeMap.put(recipe, RecipeType.UNKNOWN);
     }
 
+    public static void reloadServerRecipeMap() {
+        Iterator<Recipe> recipeIterator = Bukkit.recipeIterator();
+        serverRecipeMap.clear();
+        while (recipeIterator.hasNext()) {
+            Recipe recipe = recipeIterator.next();
+            NamespacedKey key = RecipeManager.getRecipeKey(recipe);
+            serverRecipeMap.put(key, recipe);
+        }
+    }
+
+    public static Map<NamespacedKey, Recipe> getServerRecipeMap() {
+        return Collections.unmodifiableMap(serverRecipeMap);
+    }
+
+    public static YamlConfigWrapper getRemovedRecipeConfig() {
+        return removedRecipeConfig;
+    }
+
+    public static void addKey2RemovedConfig(String key) {
+        List<String> removedList = removedRecipeConfig.config().getStringList("recipes");
+        if (!removedList.contains(key))
+            removedList.add(key);
+        removedRecipeConfig.config().set("recipes", removedList);
+        removedRecipeConfig.saveConfig();
+    }
+
     public static void loadRecipes() {
         loadCraftorithmRecipes();
         loadRecipeFromOtherPlugins();
-        removeRecipes();
-        ((RemoveRecipeCommand) RemoveRecipeCommand.INSTANCE).reloadRecipeMap();
+        loadRemovedRecipes();
+        reloadServerRecipeMap();
     }
 
     private static void loadRecipeFromOtherPlugins() {
@@ -176,10 +267,10 @@ public class RecipeManager {
         }
     }
 
-    private static void removeRecipes() {
-        List<String> removedRecipes = RemoveRecipeCommand.getRemovedRecipeConfig().config().getStringList("recipes");
+    private static void loadRemovedRecipes() {
+        List<String> removedRecipes = removedRecipeConfig.config().getStringList("recipes");
         if (Craftorithm.getInstance().getConfig().getBoolean("remove_all_vanilla_recipe", false)) {
-            for (NamespacedKey key : ((RemoveRecipeCommand) RemoveRecipeCommand.INSTANCE).getRecipeMap().keySet()) {
+            for (NamespacedKey key : serverRecipeMap.keySet()) {
                 if (key.getNamespace().equals("minecraft")) {
                     if (removedRecipes.contains(key.toString()))
                         continue;
@@ -187,7 +278,7 @@ public class RecipeManager {
                 }
             }
         }
-        ((RemoveRecipeCommand) RemoveRecipeCommand.INSTANCE).removeRecipes(removedRecipes, false);
+        removeRecipes(removedRecipes, false);
     }
 
     public static YamlConfiguration getRecipeConfig(Recipe recipe) {

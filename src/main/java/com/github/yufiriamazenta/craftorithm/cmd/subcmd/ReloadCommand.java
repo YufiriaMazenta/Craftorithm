@@ -23,10 +23,10 @@ public final class ReloadCommand extends AbstractSubCommand {
     public boolean onCommand(CommandSender sender, List<String> args) {
         try {
             reloadPlugin();
-            LangUtil.sendMsg(sender, "command.reload.success");
+            LangUtil.sendLang(sender, "command.reload.success");
         } catch (Exception e) {
             e.printStackTrace();
-            LangUtil.sendMsg(sender, "command.reload.exception");
+            LangUtil.sendLang(sender, "command.reload.exception");
         }
         return true;
     }
@@ -40,7 +40,7 @@ public final class ReloadCommand extends AbstractSubCommand {
     public static void reloadConfigs() {
         Craftorithm.getInstance().reloadConfig();
         LangUtil.reloadMsgConfig();
-        RemoveRecipeCommand.getRemovedRecipeConfig().reloadConfig();
+        RecipeManager.getRemovedRecipeConfig().reloadConfig();
         ItemManager.loadItemFiles();
         RecipeManager.loadRecipeFiles();
         ArcencielDispatcher.INSTANCE.getFunctionFile().reloadConfig();

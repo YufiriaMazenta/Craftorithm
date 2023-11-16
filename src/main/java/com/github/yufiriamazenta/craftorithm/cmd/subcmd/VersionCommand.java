@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 
 import java.util.List;
 
-public class VersionCommand extends AbstractSubCommand {
+public final class VersionCommand extends AbstractSubCommand {
 
     public static final ISubCmdExecutor INSTANCE = new VersionCommand();
 
@@ -16,7 +16,7 @@ public class VersionCommand extends AbstractSubCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, List<String> args) {
-        LangUtil.sendMsg(sender, "command.version");
+        LangUtil.sendLang(sender, "command.version");
         return true;
     }
 }

@@ -1,7 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.menu.bukkit;
 
 import com.github.yufiriamazenta.craftorithm.menu.api.IMenuIcon;
-import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import crypticlib.util.TextUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -24,7 +24,7 @@ public class ItemDisplayIcon implements IMenuIcon<ItemStack, InventoryClickEvent
     private final Consumer<InventoryClickEvent> clickEventConsumer;
 
     protected ItemDisplayIcon(ItemStack display, boolean cancel) {
-        this(display, event -> { event.setCancelled(cancel); });
+        this(display, event -> event.setCancelled(cancel));
     }
 
     protected ItemDisplayIcon(ItemStack display, Consumer<InventoryClickEvent> clickEventConsumer) {
@@ -73,7 +73,7 @@ public class ItemDisplayIcon implements IMenuIcon<ItemStack, InventoryClickEvent
     public static ItemDisplayIcon icon(Material display, String name, Consumer<InventoryClickEvent> clickEventConsumer) {
         ItemStack item = new ItemStack(display);
         ItemMeta meta = Bukkit.getItemFactory().getItemMeta(display);
-        meta.setDisplayName(LangUtil.color(name));
+        meta.setDisplayName(TextUtil.color(name));
         meta.addAttributeModifier(Attribute.GENERIC_ARMOR, new AttributeModifier(UUID.randomUUID(), UUID.randomUUID().toString(), 1000, AttributeModifier.Operation.ADD_NUMBER));
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         item.setItemMeta(meta);
@@ -83,7 +83,7 @@ public class ItemDisplayIcon implements IMenuIcon<ItemStack, InventoryClickEvent
     public static ItemDisplayIcon icon(Material display, String name) {
         ItemStack item = new ItemStack(display);
         ItemMeta meta = Bukkit.getItemFactory().getItemMeta(display);
-        meta.setDisplayName(LangUtil.color(name));
+        meta.setDisplayName(TextUtil.color(name));
         meta.addAttributeModifier(Attribute.GENERIC_ARMOR, new AttributeModifier(UUID.randomUUID(), UUID.randomUUID().toString(), 1000, AttributeModifier.Operation.ADD_NUMBER));
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         item.setItemMeta(meta);
@@ -93,7 +93,7 @@ public class ItemDisplayIcon implements IMenuIcon<ItemStack, InventoryClickEvent
     public static ItemDisplayIcon icon(Material display, String name, boolean cancel) {
         ItemStack item = new ItemStack(display);
         ItemMeta meta = Bukkit.getItemFactory().getItemMeta(display);
-        meta.setDisplayName(LangUtil.color(name));
+        meta.setDisplayName(TextUtil.color(name));
         meta.addAttributeModifier(Attribute.GENERIC_ARMOR, new AttributeModifier(UUID.randomUUID(), UUID.randomUUID().toString(), 1000, AttributeModifier.Operation.ADD_NUMBER));
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         item.setItemMeta(meta);

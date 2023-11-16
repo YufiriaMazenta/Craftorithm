@@ -11,7 +11,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @BukkitCommand(
@@ -31,10 +33,10 @@ public enum PluginCommand implements IPluginCmdExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         List<String> argList = Arrays.asList(args);
         if (argList.isEmpty()) {
-            LangUtil.sendMsg(sender, "command.not_enough_param", ContainerUtil.newHashMap("<number>", String.valueOf(1)));
+            LangUtil.sendLang(sender, "command.not_enough_param", ContainerUtil.newHashMap("<number>", String.valueOf(1)));
             return true;
         }
         ISubCmdExecutor subCommand = subCommandMap.get(argList.get(0));
@@ -42,14 +44,14 @@ public enum PluginCommand implements IPluginCmdExecutor {
             String perm = subCommand.permission();
             if (perm != null) {
                 if (!sender.hasPermission(perm)) {
-                    LangUtil.sendMsg(sender, "command.no_perm");
+                    LangUtil.sendLang(sender, "command.no_perm");
                     return true;
                 }
             }
             return subCommand.onCommand(sender, argList.subList(1, argList.size()));
         }
         else {
-            LangUtil.sendMsg(sender, "command.undefined_subcmd");
+            LangUtil.sendLang(sender, "command.undefined_subcmd");
             return true;
         }
     }
@@ -60,8 +62,9 @@ public enum PluginCommand implements IPluginCmdExecutor {
         regSubCommand(RemoveRecipeCommand.INSTANCE);
         regSubCommand(ItemCommand.INSTANCE);
         regSubCommand(RunArcencielCmd.INSTANCE);
-        regSubCommand(LookRecipeCommand.INSTANCE);
+        regSubCommand(ShowRecipeCommand.INSTANCE);
         regSubCommand(CreateRecipeCommand.INSTANCE);
+        regSubCommand(RecipeListCommand.INSTANCE);
     }
 
     @Override

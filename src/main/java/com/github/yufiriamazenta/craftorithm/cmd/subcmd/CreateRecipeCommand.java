@@ -1,6 +1,5 @@
 package com.github.yufiriamazenta.craftorithm.cmd.subcmd;
 
-import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.menu.impl.recipe.RecipeCreatorMenuHolder;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
@@ -13,13 +12,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class CreateRecipeCommand extends AbstractSubCommand {
+public final class CreateRecipeCommand extends AbstractSubCommand {
 
     public static final CreateRecipeCommand INSTANCE = new CreateRecipeCommand();
     private final List<String> recipeTypeList;
     private final Pattern recipeNamePattern = Pattern.compile("[a-z0-9/._-]+");
 
-    protected CreateRecipeCommand() {
+    private CreateRecipeCommand() {
         super("create", "craftorithm.command.create");
         recipeTypeList = Arrays.stream(RecipeType.values()).map(RecipeType::name).map(s -> s.toLowerCase(Locale.ROOT)).collect(Collectors.toList());
         List<String> unsupportedRecipeTypeList = new ArrayList<>();
@@ -44,13 +43,13 @@ public class CreateRecipeCommand extends AbstractSubCommand {
         }
         String recipeTypeStr = args.get(0).toLowerCase(Locale.ROOT);
         if (!recipeTypeList.contains(recipeTypeStr)) {
-            LangUtil.sendMsg(sender, "command.create.unsupported_recipe_type");
+            LangUtil.sendLang(sender, "command.create.unsupported_recipe_type");
             return true;
         }
         String recipeName = args.get(1);
         Matcher matcher = recipeNamePattern.matcher(recipeName);
         if (!matcher.matches()) {
-            LangUtil.sendMsg(sender, "command.create.unsupported_recipe_name");
+            LangUtil.sendLang(sender, "command.create.unsupported_recipe_name");
             return true;
         }
         RecipeType recipeType = RecipeType.valueOf(recipeTypeStr.toUpperCase(Locale.ROOT));

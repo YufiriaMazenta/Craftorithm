@@ -1,6 +1,5 @@
 package com.github.yufiriamazenta.craftorithm.menu.impl.recipe;
 
-import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.BukkitMenuHandler;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.ItemDisplayIcon;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
@@ -8,6 +7,7 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.CrypticLib;
+import crypticlib.util.TextUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryType;
@@ -37,47 +37,47 @@ public class RecipeDisplayMenuHolder extends BukkitMenuHandler {
             case SHAPED:
                 setShapedRecipeMenu();
                 inventoryType = InventoryType.WORKBENCH;
-                invTitle = LangUtil.lang("menu.recipe_display.title.shaped");
+                invTitle = LangUtil.langMsg("menu.recipe_display.title.shaped");
                 break;
             case SHAPELESS:
                 setShapelessRecipeMenu();
                 inventoryType = InventoryType.WORKBENCH;
-                invTitle = LangUtil.lang("menu.recipe_display.title.shapeless");
+                invTitle = LangUtil.langMsg("menu.recipe_display.title.shapeless");
                 break;
             case COOKING:
             case RANDOM_COOKING:
                 setCookingRecipeMenu();
                 if (recipe instanceof FurnaceRecipe) {
                     inventoryType = InventoryType.FURNACE;
-                    invTitle = LangUtil.lang("menu.recipe_display.title.furnace");
+                    invTitle = LangUtil.langMsg("menu.recipe_display.title.furnace");
                 }
                 else if (recipe instanceof BlastingRecipe) {
                     inventoryType = InventoryType.BLAST_FURNACE;
-                    invTitle = LangUtil.lang("menu.recipe_display.title.blasting");
+                    invTitle = LangUtil.langMsg("menu.recipe_display.title.blasting");
                 }
                 else if (recipe instanceof SmokingRecipe) {
                     inventoryType = InventoryType.SMOKER;
-                    invTitle = LangUtil.lang("menu.recipe_display.title.smoking");
+                    invTitle = LangUtil.langMsg("menu.recipe_display.title.smoking");
                 }
                 else {
                     inventoryType = InventoryType.FURNACE;
-                    invTitle = LangUtil.lang("menu.recipe_display.title.campfire");
+                    invTitle = LangUtil.langMsg("menu.recipe_display.title.campfire");
                 }
                 break;
             case SMITHING:
                 setSmithingRecipeMenu();
                 inventoryType = InventoryType.SMITHING;
-                invTitle = LangUtil.lang("menu.recipe_display.title.smithing");
+                invTitle = LangUtil.langMsg("menu.recipe_display.title.smithing");
                 break;
             case STONE_CUTTING:
                 setStoneCuttingRecipeMenu();
                 inventoryType = InventoryType.CHEST;
-                invTitle = LangUtil.lang("menu.recipe_display.title.stone_cutting");
+                invTitle = LangUtil.langMsg("menu.recipe_display.title.stone_cutting");
                 break;
             case ANVIL:
                 setAnvilRecipeMenu();
                 inventoryType = InventoryType.ANVIL;
-                invTitle = LangUtil.lang("menu.recipe_display.title.anvil");
+                invTitle = LangUtil.langMsg("menu.recipe_display.title.anvil");
                 break;
             default:
                 invTitle = "Unknown Type";
@@ -90,7 +90,7 @@ public class RecipeDisplayMenuHolder extends BukkitMenuHandler {
     @NotNull
     @Override
     public Inventory getInventory() {
-        Inventory inventory = Bukkit.createInventory(this, inventoryType, LangUtil.color(invTitle));
+        Inventory inventory = Bukkit.createInventory(this, inventoryType, TextUtil.color(invTitle));
         for (Integer slot : getMenuIconMap().keySet()) {
             inventory.setItem(slot, getMenuIconMap().get(slot).getDisplay());
         }

@@ -15,6 +15,7 @@ import com.github.yufiriamazenta.craftorithm.util.PluginHookUtil;
 import crypticlib.CrypticLib;
 import crypticlib.config.impl.YamlConfigWrapper;
 import crypticlib.util.ItemUtil;
+import crypticlib.util.TextUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -78,11 +79,11 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
                 27, 35,
                 36, 37, 38, 39, 40, 41, 42, 43, 44
         };
-        ItemDisplayIcon frameIcon = ItemDisplayIcon.icon(Material.BLACK_STAINED_GLASS_PANE, LangUtil.lang("menu.recipe_creator.icon.frame"));
+        ItemDisplayIcon frameIcon = ItemDisplayIcon.icon(Material.BLACK_STAINED_GLASS_PANE, LangUtil.langMsg("menu.recipe_creator.icon.frame"));
         for (int frameSlot : frameSlots) {
             getMenuIconMap().put(frameSlot, frameIcon);
         }
-        ItemDisplayIcon confirmIcon = ItemDisplayIcon.icon(Material.STONECUTTER, LangUtil.lang("menu.recipe_creator.icon.frame"),
+        ItemDisplayIcon confirmIcon = ItemDisplayIcon.icon(Material.STONECUTTER, LangUtil.langMsg("menu.recipe_creator.icon.frame"),
                 event -> {
                     event.setCancelled(true);
                     List<String> sources = new ArrayList<>();
@@ -131,7 +132,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
                 27, 31, 35,
                 36, 37, 38, 39, 40, 41, 42, 43, 44
         };
-        ItemDisplayIcon frameIcon = ItemDisplayIcon.icon(Material.BLACK_STAINED_GLASS_PANE, LangUtil.lang("menu.recipe_creator.icon.frame"));
+        ItemDisplayIcon frameIcon = ItemDisplayIcon.icon(Material.BLACK_STAINED_GLASS_PANE, LangUtil.langMsg("menu.recipe_creator.icon.frame"));
         for (int slot : frameSlots) {
             getMenuIconMap().put(slot, frameIcon);
         }
@@ -140,7 +141,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
                 23, 25,
                 32, 33, 34
         };
-        ItemDisplayIcon resultFrameIcon = ItemDisplayIcon.icon(Material.LIME_STAINED_GLASS_PANE, LangUtil.lang("menu.recipe_creator.icon.result_frame"));
+        ItemDisplayIcon resultFrameIcon = ItemDisplayIcon.icon(Material.LIME_STAINED_GLASS_PANE, LangUtil.langMsg("menu.recipe_creator.icon.result_frame"));
         for (int slot : resultFrameSlots) {
             getMenuIconMap().put(slot, resultFrameIcon);
         }
@@ -157,15 +158,15 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
                     28, 29, 30
             };
         }
-        ItemDisplayIcon smithingFrameIcon = ItemDisplayIcon.icon(Material.CYAN_STAINED_GLASS_PANE, LangUtil.lang("menu.recipe_creator.icon.smithing_frame"));
+        ItemDisplayIcon smithingFrameIcon = ItemDisplayIcon.icon(Material.CYAN_STAINED_GLASS_PANE, LangUtil.langMsg("menu.recipe_creator.icon.smithing_frame"));
         for (int slot : smithingFrameSlots) {
             getMenuIconMap().put(slot, smithingFrameIcon);
         }
-        ItemDisplayIcon confirmFrameIcon = ItemDisplayIcon.icon(Material.SMITHING_TABLE, LangUtil.lang("menu.recipe_creator.icon.confirm"), event -> {
+        ItemDisplayIcon confirmFrameIcon = ItemDisplayIcon.icon(Material.SMITHING_TABLE, LangUtil.langMsg("menu.recipe_creator.icon.confirm"), event -> {
             event.setCancelled(true);
             ItemStack result = event.getClickedInventory().getItem(24);
             if (result == null || result.getType().equals(Material.AIR)) {
-                LangUtil.sendMsg(event.getWhoClicked(), "command.create.null_result");
+                LangUtil.sendLang(event.getWhoClicked(), "command.create.null_result");
                 return;
             }
             String resultName = getItemName(result, false);
@@ -213,7 +214,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
                 27, 31, 35,
                 36, 37, 40, 43, 44
         };
-        ItemDisplayIcon frameIcon = ItemDisplayIcon.icon(Material.BLACK_STAINED_GLASS_PANE, LangUtil.lang("menu.recipe_creator.icon.frame"));
+        ItemDisplayIcon frameIcon = ItemDisplayIcon.icon(Material.BLACK_STAINED_GLASS_PANE, LangUtil.langMsg("menu.recipe_creator.icon.frame"));
         for (int slot : frameSlots) {
             getMenuIconMap().put(slot, frameIcon);
         }
@@ -222,7 +223,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
                 23, 25,
                 32, 33, 34
         };
-        ItemDisplayIcon resultFrameIcon = ItemDisplayIcon.icon(Material.LIME_STAINED_GLASS_PANE, LangUtil.lang("menu.recipe_creator.icon.result_frame"));
+        ItemDisplayIcon resultFrameIcon = ItemDisplayIcon.icon(Material.LIME_STAINED_GLASS_PANE, LangUtil.langMsg("menu.recipe_creator.icon.result_frame"));
         for (int slot : resultFrameSlots) {
             getMenuIconMap().put(slot, resultFrameIcon);
         }
@@ -231,35 +232,27 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
                 19, 21,
                 28, 29, 30
         };
-        ItemDisplayIcon cookingFrameIcon = ItemDisplayIcon.icon(Material.CYAN_STAINED_GLASS_PANE, LangUtil.lang("menu.recipe_creator.icon.cooking_frame"));
+        ItemDisplayIcon cookingFrameIcon = ItemDisplayIcon.icon(Material.CYAN_STAINED_GLASS_PANE, LangUtil.langMsg("menu.recipe_creator.icon.cooking_frame"));
         for (int slot : cookingFrameSlots) {
             getMenuIconMap().put(slot, cookingFrameIcon);
         }
         if (CrypticLib.minecraftVersion() >= 11400) {
-            ItemDisplayIcon furnaceIcon = ItemDisplayIcon.icon(Material.FURNACE, LangUtil.lang("menu.recipe_creator.icon.furnace_toggle"), event -> {
-                setIconGlowing(38, event);
-            });
+            ItemDisplayIcon furnaceIcon = ItemDisplayIcon.icon(Material.FURNACE, LangUtil.langMsg("menu.recipe_creator.icon.furnace_toggle"), event -> setIconGlowing(38, event));
             getMenuIconMap().put(38, furnaceIcon);
-            ItemDisplayIcon blastingIcon = ItemDisplayIcon.icon(Material.BLAST_FURNACE, LangUtil.lang("menu.recipe_creator.icon.blasting_toggle"), event -> {
-                setIconGlowing(39, event);
-            });
+            ItemDisplayIcon blastingIcon = ItemDisplayIcon.icon(Material.BLAST_FURNACE, LangUtil.langMsg("menu.recipe_creator.icon.blasting_toggle"), event -> setIconGlowing(39, event));
             getMenuIconMap().put(39, blastingIcon);
-            ItemDisplayIcon smokingIcon = ItemDisplayIcon.icon(Material.SMOKER, LangUtil.lang("menu.recipe_creator.icon.smoking_toggle"), event -> {
-                setIconGlowing(41, event);
-            });
+            ItemDisplayIcon smokingIcon = ItemDisplayIcon.icon(Material.SMOKER, LangUtil.langMsg("menu.recipe_creator.icon.smoking_toggle"), event -> setIconGlowing(41, event));
             getMenuIconMap().put(41, smokingIcon);
-            ItemDisplayIcon campfireIcon = ItemDisplayIcon.icon(Material.CAMPFIRE, LangUtil.lang("menu.recipe_creator.icon.campfire_toggle"), event -> {
-                setIconGlowing(42, event);
-            });
+            ItemDisplayIcon campfireIcon = ItemDisplayIcon.icon(Material.CAMPFIRE, LangUtil.langMsg("menu.recipe_creator.icon.campfire_toggle"), event -> setIconGlowing(42, event));
             getMenuIconMap().put(42, campfireIcon);
         }
-        ItemDisplayIcon confirmIcon = ItemDisplayIcon.icon(Material.FURNACE, LangUtil.lang("menu.recipe_creator.icon.confirm"), event -> {
+        ItemDisplayIcon confirmIcon = ItemDisplayIcon.icon(Material.FURNACE, LangUtil.langMsg("menu.recipe_creator.icon.confirm"), event -> {
             event.setCancelled(true);
             ItemStack source = event.getClickedInventory().getItem(20);
             String sourceName = getItemName(source, true);
             ItemStack result = event.getClickedInventory().getItem(24);
             if (result == null || result.getType().equals(Material.AIR)) {
-                LangUtil.sendMsg(event.getWhoClicked(), "command.create.null_result");
+                LangUtil.sendLang(event.getWhoClicked(), "command.create.null_result");
                 return;
             }
             String resultName = getItemName(result, false);
@@ -332,7 +325,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
                 27, 31, 35,
                 36, 37, 38, 39, 40, 41, 42, 43, 44
         };
-        ItemDisplayIcon frameIcon = ItemDisplayIcon.icon(Material.BLACK_STAINED_GLASS_PANE, LangUtil.lang("menu.recipe_creator.icon.frame"));
+        ItemDisplayIcon frameIcon = ItemDisplayIcon.icon(Material.BLACK_STAINED_GLASS_PANE, LangUtil.langMsg("menu.recipe_creator.icon.frame"));
         for (int slot : frameSlots) {
             getMenuIconMap().put(slot, frameIcon);
         }
@@ -341,18 +334,18 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
                 23, 25,
                 32, 33, 34
         };
-        ItemDisplayIcon resultFrameIcon = ItemDisplayIcon.icon(Material.LIME_STAINED_GLASS_PANE, LangUtil.lang("menu.recipe_creator.icon.result_frame"));
+        ItemDisplayIcon resultFrameIcon = ItemDisplayIcon.icon(Material.LIME_STAINED_GLASS_PANE, LangUtil.langMsg("menu.recipe_creator.icon.result_frame"));
         for (int slot : resultFrameSlots) {
             getMenuIconMap().put(slot, resultFrameIcon);
         }
         ItemDisplayIcon confirmIcon = ItemDisplayIcon.icon(Material.CRAFTING_TABLE,
-                LangUtil.lang("menu.recipe_creator.icon.confirm"),
+                LangUtil.langMsg("menu.recipe_creator.icon.confirm"),
                 event -> {
                     event.setCancelled(true);
                     Inventory inventory = event.getView().getTopInventory();
                     ItemStack result = inventory.getItem(24);
                     if (result == null || result.getType().equals(Material.AIR)) {
-                        LangUtil.sendMsg(event.getWhoClicked(), "command.create.null_result");
+                        LangUtil.sendLang(event.getWhoClicked(), "command.create.null_result");
                         return;
                     }
                     String resultName = getItemName(result, false);
@@ -422,7 +415,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
     @NotNull
     @Override
     public Inventory getInventory() {
-        String title = LangUtil.color(LangUtil.lang("menu.recipe_creator.title"));
+        String title = TextUtil.color(LangUtil.langMsg("menu.recipe_creator.title"));
         title = title.replace("<recipe_type>", recipeType.name().toLowerCase(Locale.ROOT));
         title = title.replace("<recipe_name>", recipeName);
         Inventory inventory = Bukkit.createInventory(this, 45, title);
@@ -486,8 +479,8 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
     private void sendSuccessMsgAndReloadMap(HumanEntity entity) {
         Map<String, String> replaceMap = ContainerUtil.newHashMap("<recipe_type>", recipeType.name().toLowerCase(),
                 "<recipe_name>", recipeName);
-        LangUtil.sendMsg(entity, "command.create.success", replaceMap);
-        ((RemoveRecipeCommand) RemoveRecipeCommand.INSTANCE).reloadRecipeMap();
+        LangUtil.sendLang(entity, "command.create.success", replaceMap);
+        RecipeManager.reloadServerRecipeMap();
     }
 
 }
