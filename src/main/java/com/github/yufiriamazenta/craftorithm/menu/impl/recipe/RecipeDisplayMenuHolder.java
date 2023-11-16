@@ -32,7 +32,7 @@ public class RecipeDisplayMenuHolder extends BukkitMenuHandler {
         super();
         this.parentMenu = parentMenu;
         this.recipe = recipe;
-        RecipeType recipeType = RecipeManager.getPluginRecipeType(recipe);
+        RecipeType recipeType = RecipeManager.getCraftorithmRecipeType(recipe);
         switch (recipeType) {
             case SHAPED:
                 setShapedRecipeMenu();

@@ -29,7 +29,7 @@ public enum FurnaceSmeltHandler implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onFurnaceStartSmelt(FurnaceStartSmeltEvent event) {
-        YamlConfiguration config = RecipeManager.getRecipeConfig(event.getRecipe());
+        YamlConfiguration config = RecipeManager.getRecipeConfig(event.getRecipe().getKey());
         if (config == null)
             return;
         if (config.getString("type", "shaped").equals("random_cooking")) {
