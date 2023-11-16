@@ -39,7 +39,7 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
         saveDefaultConfig();
         ConfigUpdater.INSTANCE.updateConfig();
 
-        ItemManager.loadItemManager();
+        ItemManager.reloadItemManager();
         RecipeManager.loadRecipeManager();
         regListeners();
         PluginHookUtil.hookPlugins();
@@ -105,7 +105,7 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
                     map.put(namespace, recipes);
                 }
             }
-            RecipeManager.reloadRecipes();
+            RecipeManager.reloadRecipesManager();
         }
     }
 }

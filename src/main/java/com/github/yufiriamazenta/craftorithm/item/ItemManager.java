@@ -26,12 +26,12 @@ public class ItemManager {
     private static final Map<String, ItemStack> itemMap = new HashMap<>();
     private static final File itemFileFolder = new File(Craftorithm.getInstance().getDataFolder().getPath(), "items");
 
-    public static void loadItemManager() {
-        loadItemFiles();
-        loadItems();
+    public static void reloadItemManager() {
+        reloadItemFiles();
+        reloadItems();
     }
 
-    public static void loadItems() {
+    public static void reloadItems() {
         itemMap.clear();
         for (String fileKey : itemFileMap.keySet()) {
             YamlConfigWrapper itemFile = itemFileMap.get(fileKey);
@@ -75,7 +75,7 @@ public class ItemManager {
         return itemMap.getOrDefault(itemName, new ItemStack(Material.AIR)).clone();
     }
 
-    public static void loadItemFiles() {
+    public static void reloadItemFiles() {
         itemFileMap.clear();
         if (!itemFileFolder.exists()) {
             boolean mkdirResult = itemFileFolder.mkdir();

@@ -51,7 +51,7 @@ public class LangUtil {
         sendLang(Bukkit.getConsoleSender(), msgKey);
     }
 
-    public static void reloadMsgConfig() {
+    public static void reloadLangConfig() {
         langConfigFile.reloadConfig();
     }
 
