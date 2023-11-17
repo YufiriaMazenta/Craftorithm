@@ -1,7 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.menu.impl.recipe;
 
-import com.github.yufiriamazenta.craftorithm.menu.bukkit.IChildBukkitMenu;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.BukkitMenuHandler;
+import com.github.yufiriamazenta.craftorithm.menu.bukkit.IChildBukkitMenu;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.ItemDisplayIcon;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;

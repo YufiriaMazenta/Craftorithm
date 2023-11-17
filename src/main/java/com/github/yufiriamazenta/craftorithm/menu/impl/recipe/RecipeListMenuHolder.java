@@ -3,7 +3,6 @@ package com.github.yufiriamazenta.craftorithm.menu.impl.recipe;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.BukkitMenuHandler;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.IChildBukkitMenu;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.ItemDisplayIcon;
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.CrypticLib;
 import crypticlib.util.TextUtil;
@@ -18,7 +17,6 @@ import org.bukkit.inventory.SmithingTrimRecipe;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RecipeListMenuHolder extends BukkitMenuHandler implements IChildBukkitMenu {

@@ -5,10 +5,10 @@ import com.github.yufiriamazenta.craftorithm.CraftorithmAPI;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.CustomRecipe;
 import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
-import com.github.yufiriamazenta.craftorithm.util.FileUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.CrypticLib;
 import crypticlib.config.impl.YamlConfigWrapper;
+import crypticlib.util.FileUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
@@ -57,7 +57,7 @@ public class RecipeManager {
             if (!mkdirResult)
                 return;
         }
-        List<File> allFiles = FileUtil.getAllFiles(recipeFileFolder);
+        List<File> allFiles = FileUtil.allFiles(recipeFileFolder, FileUtil.YAML_FILE_PATTERN);
         if (allFiles.isEmpty()) {
             saveDefConfigFile(allFiles);
         }

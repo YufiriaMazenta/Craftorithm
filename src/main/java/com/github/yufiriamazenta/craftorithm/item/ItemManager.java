@@ -2,12 +2,12 @@ package com.github.yufiriamazenta.craftorithm.item;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
-import com.github.yufiriamazenta.craftorithm.util.FileUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import com.github.yufiriamazenta.craftorithm.util.PluginHookUtil;
 import crypticlib.config.impl.YamlConfigWrapper;
 import crypticlib.nms.item.Item;
 import crypticlib.nms.item.ItemFactory;
+import crypticlib.util.FileUtil;
 import crypticlib.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -82,7 +82,7 @@ public class ItemManager {
             if (!mkdirResult)
                 return;
         }
-        List<File> allFiles = FileUtil.getAllFiles(itemFileFolder);
+        List<File> allFiles = FileUtil.allFiles(itemFileFolder, FileUtil.YAML_FILE_PATTERN);
         if (allFiles.isEmpty()) {
             Craftorithm.getInstance().saveResource("items/example_item.yml", false);
             allFiles.add(new File(itemFileFolder, "example_item.yml"));
