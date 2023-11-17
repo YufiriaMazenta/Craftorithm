@@ -1,6 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.cmd.sub;
 
 import com.github.yufiriamazenta.craftorithm.menu.impl.recipe.RecipeCreatorMenuHolder;
+import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.CrypticLib;
@@ -50,6 +51,10 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
         Matcher matcher = recipeNamePattern.matcher(recipeName);
         if (!matcher.matches()) {
             LangUtil.sendLang(sender, "command.create.unsupported_recipe_name");
+            return true;
+        }
+        if (RecipeManager.getRecipeGroupMap().containsKey(recipeName)) {
+            LangUtil.sendLang(sender, "command.create.name_used");
             return true;
         }
         RecipeType recipeType = RecipeType.valueOf(recipeTypeStr.toUpperCase(Locale.ROOT));

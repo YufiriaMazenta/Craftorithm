@@ -55,7 +55,7 @@ public class RecipeGroupListMenuHolder extends BukkitMenuHandler {
     @Override
     public Inventory getInventory() {
         resetIcons();
-        Inventory inventory = Bukkit.createInventory(this, 54, LangUtil.langMsg("menu.new_recipe_list.title"));
+        Inventory inventory = Bukkit.createInventory(this, 54, TextUtil.color(LangUtil.langMsg("menu.new_recipe_list.title")));
         for (Integer slot : getMenuIconMap().keySet()) {
             inventory.setItem(slot, getMenuIconMap().get(slot).getDisplay());
         }
