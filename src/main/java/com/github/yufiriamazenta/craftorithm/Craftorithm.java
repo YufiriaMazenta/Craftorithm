@@ -42,7 +42,6 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
         ItemManager.reloadItemManager();
         RecipeManager.loadRecipeManager();
         regListeners();
-        PluginHookUtil.hookPlugins();
         initArcenciel();
         loadBStat();
         
@@ -89,6 +88,7 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
 
     @EventHandler
     public void onServerLoad(ServerLoadEvent event) {
+        PluginHookUtil.hookPlugins();
         if (!hasLoadPluginRecipeMap) {
             hasLoadPluginRecipeMap = true;
             Map<String, List<Recipe>> map = CraftorithmAPI.INSTANCE.getPluginRegRecipeMap();

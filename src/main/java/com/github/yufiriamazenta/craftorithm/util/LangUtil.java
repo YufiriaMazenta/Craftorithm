@@ -31,13 +31,7 @@ public class LangUtil {
             return;
         }
         formatMap.putAll(defaultFormatMap);
-        String message = langConfigFile.config().getString(msgKey, msgKey);
-
-        if (!langConfigFile.config().contains(msgKey)) {
-            langConfigFile.config().set(msgKey, msgKey);
-            langConfigFile.saveConfig();
-            langConfigFile.reloadConfig();
-        }
+        String message = langMsg(msgKey);
 
         for (String formatStr : formatMap.keySet()) {
             message = message.replace(formatStr, formatMap.get(formatStr));
@@ -60,7 +54,13 @@ public class LangUtil {
     }
 
     public static String langMsg(String key) {
-        return langConfigFile.config().getString(key, key);
+        if (!langConfigFile.config().contains(key)) {
+            langConfigFile.config().set(key, "<prefix> Translated text that is not set");
+            langConfigFile.saveConfig();
+            langConfigFile.reloadConfig();
+            return key;
+        }
+        return langConfigFile.config().getString(key);
     }
 
     public static String placeholder(Player player, String source) {

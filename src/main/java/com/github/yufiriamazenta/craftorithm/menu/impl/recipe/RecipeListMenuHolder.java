@@ -38,7 +38,6 @@ public class RecipeListMenuHolder extends BukkitMenuHandler implements IChildBuk
         this.parentMenu = parentMenu;
         this.hasEditPermission = player.hasPermission("craftorithm.recipe_list.manager");
         this.recipeKeyList = recipeKeys;
-        System.out.println(recipeKeyList.size());
         page = 0;
         recipeKeyList.removeIf(recipeKey -> {
             Recipe recipe = Bukkit.getRecipe(recipeKey);

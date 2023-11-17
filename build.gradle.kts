@@ -1,6 +1,6 @@
 import java.text.SimpleDateFormat
 
-plugins {
+    plugins {
     `java-library`
     `maven-publish`
     id("com.github.johnrengelman.shadow").version("7.1.2")
@@ -38,7 +38,7 @@ dependencies {
 }
 
 group = "com.github.yufiriamazenta"
-version = "1.5.0-beta1"
+version = "1.5.0-beta2"
 var pluginVersion: String = version.toString() + "-" + SimpleDateFormat("yyyyMMdd").format(System.currentTimeMillis())
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 java.targetCompatibility = JavaVersion.VERSION_1_8
