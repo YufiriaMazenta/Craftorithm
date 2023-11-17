@@ -13,3 +13,5 @@ permissions:
   craftorithm.anvil.color:
     description: Controls the color codes players use when crafting anvil recipes
     default: op
+  craftorithm.recipe_list.manager:
+    default: op

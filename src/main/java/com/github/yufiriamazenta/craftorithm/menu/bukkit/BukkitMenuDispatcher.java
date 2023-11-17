@@ -1,7 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.menu.bukkit;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
-import com.github.yufiriamazenta.craftorithm.menu.impl.recipe.RecipeDisplayMenuHolder;
 import crypticlib.CrypticLib;
 import crypticlib.annotations.BukkitListener;
 import org.bukkit.event.EventHandler;
@@ -9,9 +8,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.InventoryView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @BukkitListener
@@ -57,10 +58,16 @@ public enum BukkitMenuDispatcher implements Listener {
 
     @EventHandler
     public void onCloseRecipeShowMenu(InventoryCloseEvent event) {
-        if (event.getInventory().getHolder() instanceof RecipeDisplayMenuHolder) {
-            RecipeDisplayMenuHolder holder = (RecipeDisplayMenuHolder) event.getInventory().getHolder();
-            if (holder.getParentMenu() != null) {
-                CrypticLib.platform().scheduler().runTask(Craftorithm.getInstance(), () -> event.getPlayer().openInventory(holder.getParentMenu().getInventory()));
+        if (event.getInventory().getHolder() instanceof IChildBukkitMenu) {
+            IChildBukkitMenu holder = (IChildBukkitMenu) event.getInventory().getHolder();
+            if (holder.parentMenu() != null) {
+                CrypticLib.platform().scheduler().runTask(Craftorithm.getInstance(), () -> {
+                    InventoryType type = event.getPlayer().getOpenInventory().getType();
+                    List<InventoryType> typeWhenNotOpenInv = Arrays.asList(InventoryType.CRAFTING, InventoryType.CREATIVE);
+                    if (!typeWhenNotOpenInv.contains(type))
+                        return;
+                    event.getPlayer().openInventory(holder.parentMenu().getInventory());
+                });
             }
         }
     }

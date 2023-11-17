@@ -1,6 +1,5 @@
 package com.github.yufiriamazenta.craftorithm.menu.impl.recipe;
 
-import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.BukkitMenuHandler;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.ItemDisplayIcon;
@@ -17,7 +16,6 @@ import crypticlib.util.ItemUtil;
 import crypticlib.util.TextUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -478,7 +476,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
         Map<String, String> replaceMap = ContainerUtil.newHashMap("<recipe_type>", recipeType.name().toLowerCase(),
                 "<recipe_name>", recipeName);
         LangUtil.sendLang(entity, "command.create.success", replaceMap);
-        RecipeManager.reloadServerRecipeMap();
+        RecipeManager.reloadServerRecipeCache();
     }
 
 }

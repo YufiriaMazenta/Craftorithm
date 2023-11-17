@@ -20,30 +20,21 @@ public class UpdateUtil {
             return;
         CrypticLib.platform().scheduler().runTaskAsync(Craftorithm.getInstance(), () -> {
             try {
-                URL url = new URL("https://api.github.com/repos/YufiriaMazenta/Craftorithm/releases/latest");
+                URL url = new URL("https://api.spigotmc.org/legacy/update.php?resource=108429/~");
                 URLConnection conn = url.openConnection();
-                String releaseInfo;
                 conn.setConnectTimeout(15000);
                 conn.setReadTimeout(60000);
                 InputStream is = conn.getInputStream();
-                releaseInfo = new BufferedReader(new InputStreamReader(is)).readLine();
-                is.close();
-
-                JsonObject jsonObject = JsonUtil.str2JsonObject(releaseInfo);
-                String latestVersion = jsonObject.get("tag_name").getAsString();
-                if (latestVersion.startsWith("v"))
-                    latestVersion = latestVersion.substring(1);
-                if (latestVersion.contains("-"))
-                    latestVersion = latestVersion.substring(0, latestVersion.indexOf("-"));
+                String latestVersion = new BufferedReader(new InputStreamReader(is)).readLine();
                 String pluginVersion = Craftorithm.getInstance().getDescription().getVersion();
                 pluginVersion = pluginVersion.substring(0, pluginVersion.indexOf("-"));
                 if (checkVersion(latestVersion, pluginVersion)) {
-                    String finalLatestVersion = latestVersion;
                     Bukkit.getScheduler().callSyncMethod(Craftorithm.getInstance(), () -> {
-                        LangUtil.sendLang(sender, "new_version", ContainerUtil.newHashMap("<new_version>", finalLatestVersion));
+                        LangUtil.sendLang(sender, "new_version", ContainerUtil.newHashMap("<new_version>", latestVersion));
                         return null;
                     });
                 }
+                is.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }

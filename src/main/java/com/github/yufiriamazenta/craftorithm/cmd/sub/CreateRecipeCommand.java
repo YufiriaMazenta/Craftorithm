@@ -1,4 +1,4 @@
-package com.github.yufiriamazenta.craftorithm.cmd.subcmd;
+package com.github.yufiriamazenta.craftorithm.cmd.sub;
 
 import com.github.yufiriamazenta.craftorithm.menu.impl.recipe.RecipeCreatorMenuHolder;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;

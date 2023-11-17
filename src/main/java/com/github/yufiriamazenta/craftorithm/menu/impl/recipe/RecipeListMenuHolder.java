@@ -1,6 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.menu.impl.recipe;
 
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.BukkitMenuHandler;
+import com.github.yufiriamazenta.craftorithm.menu.bukkit.IChildBukkitMenu;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.ItemDisplayIcon;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
@@ -8,6 +9,8 @@ import crypticlib.CrypticLib;
 import crypticlib.util.TextUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
@@ -18,39 +21,56 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecipeListMenuHolder extends BukkitMenuHandler {
+public class RecipeListMenuHolder extends BukkitMenuHandler implements IChildBukkitMenu {
 
     private int page;
     private final int maxPage;
-    private final List<Recipe> recipeList;
+    private final List<NamespacedKey> recipeKeyList;
+    private final boolean hasEditPermission;
+    private BukkitMenuHandler parentMenu;
 
-    public RecipeListMenuHolder() {
+    public RecipeListMenuHolder(Player player, List<NamespacedKey> recipeKeys) {
+        this(player, recipeKeys, null);
+    }
+
+    public RecipeListMenuHolder(Player player, List<NamespacedKey> recipeKeys, BukkitMenuHandler parentMenu) {
         super();
-        //TODO 重写配方展示页面
-        this.recipeList = new ArrayList<>();
-        int recipeNum = recipeList.size();
+        this.parentMenu = parentMenu;
+        this.hasEditPermission = player.hasPermission("craftorithm.recipe_list.manager");
+        this.recipeKeyList = recipeKeys;
+        System.out.println(recipeKeyList.size());
         page = 0;
+        recipeKeyList.removeIf(recipeKey -> {
+            Recipe recipe = Bukkit.getRecipe(recipeKey);
+            if (recipe == null)
+                return true;
+            if (CrypticLib.minecraftVersion() >= 12000) {
+                if (recipe instanceof SmithingTrimRecipe)
+                    return true;
+            }
+            return recipe.getResult().getType().equals(Material.AIR);
+        });
+        int recipeNum = recipeKeyList.size();
         if (recipeNum % 45 == 0)
             maxPage = recipeNum / 45;
         else
             maxPage = recipeNum / 45 + 1;
-        if (CrypticLib.minecraftVersion() >= 12000) {
-            recipeList.removeIf(recipe -> recipe instanceof SmithingTrimRecipe);
-        }
-        recipeList.sort((o1, o2) -> {
-            int sortId = RecipeManager.getRecipeSortIdMap().get(RecipeManager.getRecipeKey(o1));
-            int sortId2 = RecipeManager.getRecipeSortIdMap().get(RecipeManager.getRecipeKey(o2));
-            return Integer.compare(sortId, sortId2);
+        recipeKeyList.sort((key1, key2) -> {
+            Recipe recipe = Bukkit.getRecipe(key1);
+            Recipe recipe1 = Bukkit.getRecipe(key2);
+            ItemStack result = recipe.getResult();
+            ItemStack result1 = recipe1.getResult();
+            return Integer.compare(result.getType().ordinal(), result1.getType().ordinal());
         });
     }
 
     public Inventory getNextPage() {
-        setPage(Math.min(getPage() + 1, maxPage - 1));
+        setPage(Math.min(page + 1, maxPage - 1));
         return getInventory();
     }
 
     public Inventory getPreviousPage() {
-        setPage(Math.max(getPage() - 1, 0));
+        setPage(Math.max(page - 1, 0));
         return getInventory();
     }
 
@@ -79,13 +99,16 @@ public class RecipeListMenuHolder extends BukkitMenuHandler {
             event.setCancelled(true);
             event.getWhoClicked().openInventory(getNextPage());
         })));
-        int slot = page * 54;
-        for (int i = 0; i < 45 && slot < recipeList.size(); i++, slot ++) {
-            ItemStack display = recipeList.get(slot).getResult();
-            int finalSlot = slot;
+        int recipeSlot = page * 45;
+        for (int i = 0; i < 45 && recipeSlot < recipeKeyList.size(); i++, recipeSlot ++) {
+            Recipe recipe = Bukkit.getRecipe(recipeKeyList.get(recipeSlot));
+            if (recipe == null)
+                continue;
+            ItemStack display = recipe.getResult();
+            int finalSlot = recipeSlot;
             getMenuIconMap().put(i, ItemDisplayIcon.icon(display, (event -> {
                 event.setCancelled(true);
-                event.getWhoClicked().openInventory(new RecipeDisplayMenuHolder(recipeList.get(finalSlot), this).getInventory());
+                event.getWhoClicked().openInventory(new RecipeDisplayMenuHolder(recipeKeyList.get(finalSlot), this).getInventory());
             })));
 
         }
@@ -110,4 +133,13 @@ public class RecipeListMenuHolder extends BukkitMenuHandler {
         this.page = page;
     }
 
+    @Override
+    public BukkitMenuHandler parentMenu() {
+        return parentMenu;
+    }
+
+    @Override
+    public void setParentMenu(BukkitMenuHandler parentMenu) {
+        this.parentMenu = parentMenu;
+    }
 }
