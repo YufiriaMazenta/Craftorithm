@@ -1,5 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.menu.impl.recipe;
 
+import com.github.yufiriamazenta.craftorithm.menu.bukkit.IChildBukkitMenu;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.BukkitMenuHandler;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.ItemDisplayIcon;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
@@ -10,6 +11,7 @@ import crypticlib.CrypticLib;
 import crypticlib.util.TextUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.*;
 import org.jetbrains.annotations.NotNull;
@@ -17,22 +19,22 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Map;
 
-public class RecipeDisplayMenuHolder extends BukkitMenuHandler {
+public class RecipeDisplayMenuHolder extends BukkitMenuHandler implements IChildBukkitMenu {
 
     private final Recipe recipe;
     private final InventoryType inventoryType;
     private final String invTitle;
-    private RecipeListMenuHolder parentMenu;
+    private BukkitMenuHandler parentMenu;
 
-    public RecipeDisplayMenuHolder(Recipe recipe) {
-        this(recipe, null);
+    public RecipeDisplayMenuHolder(NamespacedKey recipeKey) {
+        this(recipeKey, null);
     }
 
-    public RecipeDisplayMenuHolder(Recipe recipe, RecipeListMenuHolder parentMenu) {
+    public RecipeDisplayMenuHolder(NamespacedKey recipeKey, RecipeListMenuHolder parentMenu) {
         super();
         this.parentMenu = parentMenu;
-        this.recipe = recipe;
-        RecipeType recipeType = RecipeManager.getRecipeType(recipe);
+        this.recipe = Bukkit.getRecipe(recipeKey);
+        RecipeType recipeType = RecipeManager.getRecipeType(this.recipe);
         switch (recipeType) {
             case SHAPED:
                 setShapedRecipeMenu();
@@ -176,11 +178,13 @@ public class RecipeDisplayMenuHolder extends BukkitMenuHandler {
         getMenuIconMap().put(2, ItemDisplayIcon.icon(anvilRecipe.getResult()));
     }
 
-    public RecipeListMenuHolder getParentMenu() {
+    @Override
+    public BukkitMenuHandler parentMenu() {
         return parentMenu;
     }
 
-    public void setParentMenu(RecipeListMenuHolder parentMenu) {
+    @Override
+    public void setParentMenu(BukkitMenuHandler parentMenu) {
         this.parentMenu = parentMenu;
     }
 

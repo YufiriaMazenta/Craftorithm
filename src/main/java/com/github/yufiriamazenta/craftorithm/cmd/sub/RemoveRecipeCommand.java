@@ -1,4 +1,4 @@
-package com.github.yufiriamazenta.craftorithm.cmd.subcmd;
+package com.github.yufiriamazenta.craftorithm.cmd.sub;
 
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;

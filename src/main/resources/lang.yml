@@ -22,6 +22,10 @@ command:
   remove:
     success: '<prefix> &a配方删除成功'
     not_exist: '<prefix> &c配方不存在'
+  disable:
+    success: '<prefix> &c禁用配方成功'
+    not_exist: '<prefix> &c配方不存在'
+    failed: '<prefix> &c配方禁用失败，可能已被禁用或不存在'
   version: '<prefix> &a插件版本：<version>'
   create:
     unsupported_recipe_type: '<prefix> &c不支持的配方类型'
@@ -35,7 +39,13 @@ command:
 
 menu:
   recipe_list:
-    title: '&3&l新增配方列表'
+    title: '&3&l配方列表'
+    icon:
+      frame: '&3&l配方列表'
+      previous: '&a上一页'
+      next: '&a下一页'
+  new_recipe_list:
+    title: '&3&lCraftorithm新增配方列表'
     icon:
       frame: '&3&l新增配方列表'
       previous: '&a上一页'

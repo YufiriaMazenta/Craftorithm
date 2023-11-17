@@ -1,7 +1,7 @@
-package com.github.yufiriamazenta.craftorithm.cmd.subcmd;
+package com.github.yufiriamazenta.craftorithm.cmd.sub;
 
-import com.github.yufiriamazenta.craftorithm.cmd.subcmd.item.ItemGiveCommand;
-import com.github.yufiriamazenta.craftorithm.cmd.subcmd.item.ItemSaveCommand;
+import com.github.yufiriamazenta.craftorithm.cmd.sub.item.ItemGiveCommand;
+import com.github.yufiriamazenta.craftorithm.cmd.sub.item.ItemSaveCommand;
 import crypticlib.command.ISubCmdExecutor;
 import org.bukkit.command.CommandSender;
 

@@ -1,4 +1,4 @@
-package com.github.yufiriamazenta.craftorithm.cmd.subcmd;
+package com.github.yufiriamazenta.craftorithm.cmd.sub;
 
 import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;

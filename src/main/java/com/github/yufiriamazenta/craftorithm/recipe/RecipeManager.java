@@ -30,17 +30,20 @@ public class RecipeManager {
     private static final Map<String, Integer> recipeSortIdMap;
     private static final Map<NamespacedKey, Boolean> recipeUnlockMap;
     private static final Map<NamespacedKey, AnvilRecipe> anvilRecipeMap;
-    private static final List<NamespacedKey> serverRecipeList;
+    private static final List<NamespacedKey> serverRecipeCache;
+    private static final List<Recipe> removedRecipeRecycleBin;
+    private static final String PLUGIN_RECIPE_NAMESPACE = "craftorithm";
 
     static {
         removedRecipeConfig = new YamlConfigWrapper(Craftorithm.getInstance(), "removed_recipes.yml");
         recipeFileFolder = new File(Craftorithm.getInstance().getDataFolder().getPath(), "recipes");
         recipeGroupMap = new ConcurrentHashMap<>();
         recipeConfigWrapperMap = new ConcurrentHashMap<>();
-        serverRecipeList = new CopyOnWriteArrayList<>();
+        serverRecipeCache = new CopyOnWriteArrayList<>();
         recipeUnlockMap = new ConcurrentHashMap<>();
         recipeSortIdMap = new ConcurrentHashMap<>();
         anvilRecipeMap = new ConcurrentHashMap<>();
+        removedRecipeRecycleBin = new CopyOnWriteArrayList<>();
     }
 
     public static void loadRecipeManager() {
@@ -73,7 +76,7 @@ public class RecipeManager {
         reloadCraftorithmRecipes();
         reloadOtherPluginsRecipes();
         reloadRemovedRecipes();
-        reloadServerRecipeMap();
+        reloadServerRecipeCache();
     }
 
     public static void reloadCraftorithmRecipes() {
@@ -136,7 +139,7 @@ public class RecipeManager {
         removedRecipeConfig.reloadConfig();
         List<String> removedRecipes = removedRecipeConfig.config().getStringList("recipes");
         if (Craftorithm.getInstance().getConfig().getBoolean("remove_all_vanilla_recipe", false)) {
-            for (NamespacedKey key : serverRecipeList) {
+            for (NamespacedKey key : serverRecipeCache) {
                 if (key.getNamespace().equals("minecraft")) {
                     if (removedRecipes.contains(key.toString()))
                         continue;
@@ -167,11 +170,17 @@ public class RecipeManager {
         recipeGroupMap.forEach((key, recipes) -> {
             removeCraftorithmRecipe(key, false);
         });
+
+        //先将已经删除的配方还原
+        for (Recipe recipe : removedRecipeRecycleBin) {
+            Bukkit.addRecipe(recipe);
+        }
+        removedRecipeRecycleBin.clear();
         anvilRecipeMap.clear();
         recipeGroupMap.clear();
         recipeUnlockMap.clear();
         recipeSortIdMap.clear();
-        reloadServerRecipeMap();
+        reloadServerRecipeCache();
     }
 
     public static RecipeType getRecipeType(Recipe recipe) {
@@ -221,11 +230,10 @@ public class RecipeManager {
                 if (recipeKeys.contains(iteratorRecipeKey)) {
                     recipeIterator.remove();
                     removedRecipeNum ++;
-                    //TODO 维护表
                 }
             }
-            reloadServerRecipeMap();
         }
+        serverRecipeCache.removeAll(recipeKeys);
         return removedRecipeNum;
     }
 
@@ -243,8 +251,18 @@ public class RecipeManager {
     }
 
     public static boolean disableOtherPluginsRecipe(List<NamespacedKey> recipeKeys) {
+        addRecipeToRemovedRecipeRecycleMap(recipeKeys);
         addKeyToRemovedConfig(recipeKeys);
         return removeRecipes(recipeKeys) > 0;
+    }
+
+    private static void addRecipeToRemovedRecipeRecycleMap(List<NamespacedKey> recipeKeys) {
+        for (NamespacedKey recipeKey : recipeKeys) {
+            Recipe recipe = Bukkit.getRecipe(recipeKey);
+            if (recipe == null)
+                continue;
+            removedRecipeRecycleBin.add(recipe);
+        }
     }
 
     private static void addKeyToRemovedConfig(List<NamespacedKey> keys) {
@@ -261,13 +279,15 @@ public class RecipeManager {
         removedRecipeConfig.saveConfig();
     }
 
-    public static void reloadServerRecipeMap() {
+    public static void reloadServerRecipeCache() {
         Iterator<Recipe> recipeIterator = Bukkit.recipeIterator();
-        serverRecipeList.clear();
+        serverRecipeCache.clear();
         while (recipeIterator.hasNext()) {
             Recipe recipe = recipeIterator.next();
             NamespacedKey key = RecipeManager.getRecipeKey(recipe);
-            serverRecipeList.add(key);
+            if (key.getNamespace().equals(PLUGIN_RECIPE_NAMESPACE))
+                continue;
+            serverRecipeCache.add(key);
         }
     }
 
@@ -300,6 +320,10 @@ public class RecipeManager {
         return recipes;
     }
 
+    public static int getCraftorithmRecipeSortId(String recipeName) {
+        return recipeSortIdMap.getOrDefault(recipeName, 0);
+    }
+
     public static AnvilRecipe matchAnvilRecipe(ItemStack base, ItemStack addition) {
         if (base == null || addition == null)
             return null;
@@ -312,10 +336,6 @@ public class RecipeManager {
         return anvilRecipe.get();
     }
 
-    public static File getRecipeFileFolder() {
-        return recipeFileFolder;
-    }
-
     public static void regAnvilRecipe(AnvilRecipe recipe) {
         anvilRecipeMap.put(recipe.getKey(), recipe);
     }
@@ -325,6 +345,11 @@ public class RecipeManager {
 //    }
 
 
+
+    public static File getRecipeFileFolder() {
+        return recipeFileFolder;
+    }
+
     public static Map<String, List<NamespacedKey>> getRecipeGroupMap() {
         return recipeGroupMap;
     }
@@ -333,8 +358,8 @@ public class RecipeManager {
         return removedRecipeConfig;
     }
 
-    public static List<NamespacedKey> getServerRecipeList() {
-        return serverRecipeList;
+    public static List<NamespacedKey> getServerRecipeCache() {
+        return serverRecipeCache;
     }
 
     public static Map<NamespacedKey, Boolean> getRecipeUnlockMap() {

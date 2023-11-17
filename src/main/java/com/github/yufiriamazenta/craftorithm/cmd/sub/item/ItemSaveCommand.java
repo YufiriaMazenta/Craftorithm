@@ -1,6 +1,6 @@
-package com.github.yufiriamazenta.craftorithm.cmd.subcmd.item;
+package com.github.yufiriamazenta.craftorithm.cmd.sub.item;
 
-import com.github.yufiriamazenta.craftorithm.cmd.subcmd.AbstractSubCommand;
+import com.github.yufiriamazenta.craftorithm.cmd.sub.AbstractSubCommand;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.command.ISubCmdExecutor;

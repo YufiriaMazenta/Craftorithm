@@ -1,6 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.cmd;
 
-import com.github.yufiriamazenta.craftorithm.cmd.subcmd.*;
+import com.github.yufiriamazenta.craftorithm.cmd.sub.*;
 import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.annotations.BukkitCommand;
@@ -63,7 +63,6 @@ public enum PluginCommand implements IPluginCmdExecutor {
         regSubCommand(DisableRecipeCommand.INSTANCE);
         regSubCommand(ItemCommand.INSTANCE);
         regSubCommand(RunArcencielCmd.INSTANCE);
-        regSubCommand(ShowRecipeCommand.INSTANCE);
         regSubCommand(CreateRecipeCommand.INSTANCE);
         regSubCommand(RecipeListCommand.INSTANCE);
     }
