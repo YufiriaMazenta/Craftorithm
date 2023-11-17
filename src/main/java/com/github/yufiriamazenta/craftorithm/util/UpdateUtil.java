@@ -1,9 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.util;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
-import com.google.gson.JsonObject;
 import crypticlib.CrypticLib;
-import crypticlib.util.JsonUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
