@@ -5,6 +5,7 @@ import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.command.BukkitCommand;
 import crypticlib.command.RootCmdExecutor;
+import crypticlib.command.SubcmdExecutor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +31,7 @@ public class PluginCommand extends RootCmdExecutor {
             LangUtil.sendLang(sender, "command.not_enough_param", ContainerUtil.newHashMap("<number>", String.valueOf(1)));
             return true;
         }
-        ISubCmdExecutor subCommand = subCommandMap.get(argList.get(0));
+        SubcmdExecutor subCommand = subcommands().get(argList.get(0));
         if (subCommand != null) {
             String perm = subCommand.permission();
             if (perm != null) {

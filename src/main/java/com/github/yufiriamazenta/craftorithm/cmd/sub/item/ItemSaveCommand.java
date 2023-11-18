@@ -3,7 +3,7 @@ package com.github.yufiriamazenta.craftorithm.cmd.sub.item;
 import com.github.yufiriamazenta.craftorithm.cmd.sub.AbstractSubCommand;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import crypticlib.command.ISubCmdExecutor;
+import crypticlib.command.SubcmdExecutor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -15,7 +15,7 @@ import java.util.List;
 
 public final class ItemSaveCommand extends AbstractSubCommand {
 
-    public static final ISubCmdExecutor INSTANCE = new ItemSaveCommand();
+    public static final SubcmdExecutor INSTANCE = new ItemSaveCommand();
 
     private ItemSaveCommand() {
         super("save");

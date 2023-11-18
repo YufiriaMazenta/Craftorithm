@@ -4,7 +4,7 @@ import com.github.yufiriamazenta.craftorithm.CraftorithmAPI;
 import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtil;
-import crypticlib.annotations.BukkitListener;
+import crypticlib.listener.BukkitListener;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.HumanEntity;
