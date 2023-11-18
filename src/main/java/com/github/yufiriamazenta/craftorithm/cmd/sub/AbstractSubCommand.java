@@ -2,38 +2,25 @@ package com.github.yufiriamazenta.craftorithm.cmd.sub;
 
 import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import crypticlib.command.ISubCmdExecutor;
+import crypticlib.command.SubcmdExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class AbstractSubCommand implements ISubCmdExecutor {
-
-    private final String command;
-    private final String perm;
-    private Map<String, ISubCmdExecutor> subCommandMap;
-
-    protected AbstractSubCommand(String command, Map<String, ISubCmdExecutor> subCommandMap, String perm) {
-        this.command = command;
-        this.subCommandMap = subCommandMap;
-        this.perm = perm;
-    }
+public abstract class AbstractSubCommand extends SubcmdExecutor {
 
     protected AbstractSubCommand(String command, String perm) {
-        this(command, new ConcurrentHashMap<>(), perm);
+        super(command, perm);
     }
 
     protected AbstractSubCommand(String command) {
-        this(command, new ConcurrentHashMap<>(), null);
+        super(command);
     }
 
     @Override
     public boolean onCommand(CommandSender sender, List<String> args) {
-        ISubCmdExecutor subCommand = subCommandMap.get(args.get(0));
+        SubcmdExecutor subCommand = subcommands().get(args.get(0));
         if (subCommand == null) {
             LangUtil.sendLang(sender, "command.undefined_subcmd");
         } else {
@@ -47,20 +34,6 @@ public abstract class AbstractSubCommand implements ISubCmdExecutor {
             subCommand.onCommand(sender, args.subList(1, args.size()));
         }
         return true;
-    }
-
-    @Override
-    public String name() {
-        return command;
-    }
-
-    @Override
-    public @NotNull Map<String, ISubCmdExecutor> subCommands() {
-        return subCommandMap;
-    }
-
-    public void setSubCommandMap(Map<String, ISubCmdExecutor> subCommandMap) {
-        this.subCommandMap = subCommandMap;
     }
 
     public void sendNotEnoughCmdParamMsg(CommandSender sender, int paramNum) {
@@ -83,12 +56,5 @@ public abstract class AbstractSubCommand implements ISubCmdExecutor {
     public void filterTabList(List<String> tabList, String input) {
         tabList.removeIf(str -> !str.startsWith(input));
     }
-
-    @Override
-    public String permission() {
-        return perm;
-    }
-
-
 
 }

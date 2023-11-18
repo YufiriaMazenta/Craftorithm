@@ -34,7 +34,7 @@ dependencies {
     compileOnly("com.github.LoneDev6:API-ItemsAdder:3.5.0b")
     compileOnly("com.github.oraxen:oraxen:1.160.0")
     compileOnly("io.lumine:Mythic-Dist:5.3.5")
-    implementation("com.crypticlib:CrypticLib:0.1.10")
+    implementation("com.crypticlib:CrypticLib:0.1.11")
 }
 
 group = "com.github.yufiriamazenta"
