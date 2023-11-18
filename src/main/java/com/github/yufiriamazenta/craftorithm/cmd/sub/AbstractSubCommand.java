@@ -50,7 +50,7 @@ public abstract class AbstractSubCommand implements ISubCmdExecutor {
     }
 
     @Override
-    public String subCommandName() {
+    public String name() {
         return command;
     }
 

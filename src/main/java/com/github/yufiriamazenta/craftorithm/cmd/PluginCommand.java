@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @BukkitCommand(
         name = "craftorithm",
-        alias = {"craft"},
+        aliases = {"craft"},
         permission = "craftorithm.command"
 )
 public enum PluginCommand implements IPluginCmdExecutor {
@@ -57,24 +57,19 @@ public enum PluginCommand implements IPluginCmdExecutor {
     }
 
     private void regDefaultSubCommands() {
-        regSubCommand(ReloadCommand.INSTANCE);
-        regSubCommand(VersionCommand.INSTANCE);
-        regSubCommand(RemoveRecipeCommand.INSTANCE);
-        regSubCommand(DisableRecipeCommand.INSTANCE);
-        regSubCommand(ItemCommand.INSTANCE);
-        regSubCommand(RunArcencielCmd.INSTANCE);
-        regSubCommand(CreateRecipeCommand.INSTANCE);
-        regSubCommand(RecipeListCommand.INSTANCE);
+        regSub(ReloadCommand.INSTANCE)
+                .regSub(VersionCommand.INSTANCE)
+                .regSub(RemoveRecipeCommand.INSTANCE)
+                .regSub(DisableRecipeCommand.INSTANCE)
+                .regSub(ItemCommand.INSTANCE)
+                .regSub(RunArcencielCmd.INSTANCE)
+                .regSub(CreateRecipeCommand.INSTANCE)
+                .regSub(RecipeListCommand.INSTANCE);
     }
 
     @Override
     public @NotNull Map<String, ISubCmdExecutor> subCommands() {
         return subCommandMap;
-    }
-
-    @Override
-    public Plugin getPlugin() {
-        return null;
     }
 
 }
