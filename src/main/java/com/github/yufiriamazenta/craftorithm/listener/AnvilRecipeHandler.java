@@ -5,7 +5,7 @@ import com.github.yufiriamazenta.craftorithm.event.PrepareAnvilRecipeEvent;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import crypticlib.annotations.BukkitListener;
+import crypticlib.listener.BukkitListener;
 import crypticlib.util.TextUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;

@@ -2,7 +2,7 @@ package com.github.yufiriamazenta.craftorithm.menu.bukkit;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import crypticlib.CrypticLib;
-import crypticlib.annotations.BukkitListener;
+import crypticlib.listener.BukkitListener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryAction;

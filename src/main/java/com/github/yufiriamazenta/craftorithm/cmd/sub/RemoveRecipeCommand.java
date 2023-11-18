@@ -2,7 +2,7 @@ package com.github.yufiriamazenta.craftorithm.cmd.sub;
 
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import crypticlib.command.ISubCmdExecutor;
+import crypticlib.command.SubcmdExecutor;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import java.util.List;
  */
 public final class RemoveRecipeCommand extends AbstractSubCommand {
 
-    public static final ISubCmdExecutor INSTANCE = new RemoveRecipeCommand();
+    public static final SubcmdExecutor INSTANCE = new RemoveRecipeCommand();
 
     private RemoveRecipeCommand() {
         super("remove", "craftorithm.command.remove");
