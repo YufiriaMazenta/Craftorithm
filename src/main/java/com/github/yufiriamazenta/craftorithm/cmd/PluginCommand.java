@@ -3,32 +3,23 @@ package com.github.yufiriamazenta.craftorithm.cmd;
 import com.github.yufiriamazenta.craftorithm.cmd.sub.*;
 import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import crypticlib.annotations.BukkitCommand;
-import crypticlib.command.IPluginCmdExecutor;
-import crypticlib.command.ISubCmdExecutor;
+import crypticlib.command.BukkitCommand;
+import crypticlib.command.RootCmdExecutor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @BukkitCommand(
         name = "craftorithm",
         aliases = {"craft"},
         permission = "craftorithm.command"
 )
-public enum PluginCommand implements IPluginCmdExecutor {
-
-    INSTANCE;
-
-    private final Map<String, ISubCmdExecutor> subCommandMap;
+public class PluginCommand extends RootCmdExecutor {
 
     PluginCommand() {
-        subCommandMap = new ConcurrentHashMap<>();
         regDefaultSubCommands();
     }
 
@@ -65,11 +56,6 @@ public enum PluginCommand implements IPluginCmdExecutor {
                 .regSub(RunArcencielCmd.INSTANCE)
                 .regSub(CreateRecipeCommand.INSTANCE)
                 .regSub(RecipeListCommand.INSTANCE);
-    }
-
-    @Override
-    public @NotNull Map<String, ISubCmdExecutor> subCommands() {
-        return subCommandMap;
     }
 
 }
