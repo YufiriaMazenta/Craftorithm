@@ -16,6 +16,7 @@ import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.*;
+import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionBrewer;
 
 import java.io.File;
@@ -31,7 +32,7 @@ public class RecipeManager {
     private static final Map<String, List<NamespacedKey>> recipeGroupMap;
     private static final Map<String, Integer> recipeSortIdMap;
     private static final Map<NamespacedKey, Boolean> recipeUnlockMap;
-    private static final Map<String, List<NamespacedKey>> potionMixGroupMap;
+    private static final Map<String, List<PotionMixRecipe>> potionMixGroupMap;
     private static final List<NamespacedKey> serverRecipeCache;
     private static final List<Recipe> removedRecipeRecycleBin;
     private static final String PLUGIN_RECIPE_NAMESPACE = "craftorithm";
@@ -109,7 +110,7 @@ public class RecipeManager {
                 } else {
                     regRecipes(fileName, Arrays.asList(recipes), configWrapper);
                 }
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 LangUtil.info("load.recipe_load_exception", ContainerUtil.newHashMap("<recipe_name>", fileName));
                 e.printStackTrace();
             }
@@ -136,13 +137,13 @@ public class RecipeManager {
 
     public static void regPotionMix(String potionMixName, List<Recipe> recipes, YamlConfigWrapper configWrapper) {
         PotionBrewer potionBrewer = Bukkit.getPotionBrewer();
-        List<NamespacedKey> potionMixes = new ArrayList<>();
+        List<PotionMixRecipe> potionMixes = new ArrayList<>();
         for (Recipe recipe : recipes) {
             if (!(recipe instanceof PotionMixRecipe)) {
                 continue;
             }
             potionBrewer.addPotionMix(((PotionMixRecipe) recipe).potionMix());
-            potionMixes.add(((PotionMixRecipe) recipe).getKey());
+            potionMixes.add(((PotionMixRecipe) recipe));
         }
         potionMixGroupMap.put(potionMixName, potionMixes);
         recipeSortIdMap.put(potionMixName, configWrapper.config().getInt("sort_id", 0));
@@ -231,17 +232,17 @@ public class RecipeManager {
 
     /**
      * 删除酿造台配方
-     * @param potionMixKeys 酿造台配方的key
+     * @param potionMixRecipes 酿造台配方的key
      */
-    public static void removePotionMix(List<NamespacedKey> potionMixKeys) {
-        for (NamespacedKey potionMixKey : potionMixKeys) {
-            Bukkit.getPotionBrewer().removePotionMix(potionMixKey);
+    public static void removePotionMix(List<PotionMixRecipe> potionMixRecipes) {
+        for (PotionMixRecipe recipe : potionMixRecipes) {
+            Bukkit.getPotionBrewer().removePotionMix(recipe.getKey());
         }
     }
 
     /**
      * 删除配方的基础方法
-     * @param recipeKeys 要删除配方的key
+     * @param recipeKeys 要删除的配方
      * @return 删除的配方数量
      */
     private static int removeRecipes(List<NamespacedKey> recipeKeys) {
@@ -384,7 +385,7 @@ public class RecipeManager {
         return recipeGroupMap;
     }
 
-    public static Map<String, List<NamespacedKey>> getPotionMixGroupMap() {
+    public static Map<String, List<PotionMixRecipe>> getPotionMixGroupMap() {
         return potionMixGroupMap;
     }
 
@@ -416,18 +417,24 @@ public class RecipeManager {
     private static void saveDefConfigFile(List<File> allFiles) {
         Craftorithm.getInstance().saveResource("recipes/example_shaped.yml", false);
         Craftorithm.getInstance().saveResource("recipes/example_shapeless.yml", false);
-        Craftorithm.getInstance().saveResource("recipes/example_cooking.yml", false);
-        Craftorithm.getInstance().saveResource("recipes/example_smithing.yml", false);
-        Craftorithm.getInstance().saveResource("recipes/example_stone_cutting.yml", false);
-        Craftorithm.getInstance().saveResource("recipes/example_random_cooking.yml", false);
-        Craftorithm.getInstance().saveResource("recipes/example_potion.yml", false);
         allFiles.add(new File(recipeFileFolder, "example_shaped.yml"));
         allFiles.add(new File(recipeFileFolder, "example_shapeless.yml"));
-        allFiles.add(new File(recipeFileFolder, "example_cooking.yml"));
-        allFiles.add(new File(recipeFileFolder, "example_smithing.yml"));
-        allFiles.add(new File(recipeFileFolder, "example_stone_cutting.yml"));
-        allFiles.add(new File(recipeFileFolder, "example_random_cooking.yml"));
-        allFiles.add(new File(recipeFileFolder, "example_potion.yml"));
+        if (CrypticLib.minecraftVersion() >= 11300) {
+            Craftorithm.getInstance().saveResource("recipes/example_cooking.yml", false);
+            allFiles.add(new File(recipeFileFolder, "example_cooking.yml"));
+        }
+        if (CrypticLib.minecraftVersion() >= 11400) {
+            Craftorithm.getInstance().saveResource("recipes/example_smithing.yml", false);
+            Craftorithm.getInstance().saveResource("recipes/example_stone_cutting.yml", false);
+            Craftorithm.getInstance().saveResource("recipes/example_random_cooking.yml", false);
+            allFiles.add(new File(recipeFileFolder, "example_smithing.yml"));
+            allFiles.add(new File(recipeFileFolder, "example_stone_cutting.yml"));
+            allFiles.add(new File(recipeFileFolder, "example_random_cooking.yml"));
+        }
+        if (supportPotionMix()) {
+            Craftorithm.getInstance().saveResource("recipes/example_potion.yml", false);
+            allFiles.add(new File(recipeFileFolder, "example_potion.yml"));
+        }
     }
 
 }
