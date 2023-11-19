@@ -28,10 +28,9 @@ public class PluginHookUtil {
         hookMythicMobs();
     }
 
-
     private static void hookVault() {
-        if (Bukkit.getPluginManager().isPluginEnabled("Vault")) {
-            economyLoaded = false;
+        economyLoaded = Bukkit.getPluginManager().isPluginEnabled("Vault");
+        if (!economyLoaded) {
             LangUtil.info("load.vault_not_exist");
             return;
         }

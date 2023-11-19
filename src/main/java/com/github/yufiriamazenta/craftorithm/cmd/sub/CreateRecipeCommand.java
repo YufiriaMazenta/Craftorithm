@@ -23,13 +23,14 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
         super("create", "craftorithm.command.create");
         recipeTypeList = Arrays.stream(RecipeType.values()).map(RecipeType::name).map(s -> s.toLowerCase(Locale.ROOT)).collect(Collectors.toList());
         List<String> unsupportedRecipeTypeList = new ArrayList<>();
-        unsupportedRecipeTypeList.add("potion");
         unsupportedRecipeTypeList.add("random_cooking");
-        unsupportedRecipeTypeList.add("anvil");
         unsupportedRecipeTypeList.add("unknown");
         if (CrypticLib.minecraftVersion() < 11400) {
             unsupportedRecipeTypeList.add("stone_cutting");
             unsupportedRecipeTypeList.add("smithing");
+        }
+        if (!RecipeManager.supportPotionMix()) {
+            unsupportedRecipeTypeList.add("potion");
         }
         recipeTypeList.removeAll(unsupportedRecipeTypeList);
     }
@@ -53,7 +54,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
             LangUtil.sendLang(sender, "command.create.unsupported_recipe_name");
             return true;
         }
-        if (RecipeManager.getRecipeGroupMap().containsKey(recipeName)) {
+        if (RecipeManager.getRecipeGroupMap().containsKey(recipeName) || RecipeManager.getPotionMixGroupMap().containsKey(recipeName)) {
             LangUtil.sendLang(sender, "command.create.name_used");
             return true;
         }

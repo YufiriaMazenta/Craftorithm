@@ -5,6 +5,7 @@ import com.github.yufiriamazenta.craftorithm.menu.bukkit.IChildBukkitMenu;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.ItemDisplayIcon;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
+import com.github.yufiriamazenta.craftorithm.recipe.custom.PotionMixRecipe;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.CrypticLib;
 import crypticlib.util.TextUtil;
@@ -26,13 +27,13 @@ public class RecipeDisplayMenuHolder extends BukkitMenuHandler implements IChild
     private BukkitMenuHandler parentMenu;
 
     public RecipeDisplayMenuHolder(NamespacedKey recipeKey) {
-        this(recipeKey, null);
+        this(Bukkit.getRecipe(recipeKey), null);
     }
 
-    public RecipeDisplayMenuHolder(NamespacedKey recipeKey, RecipeListMenuHolder parentMenu) {
+    public RecipeDisplayMenuHolder(Recipe recipe, RecipeListMenuHolder parentMenu) {
         super();
         this.parentMenu = parentMenu;
-        this.recipe = Bukkit.getRecipe(recipeKey);
+        this.recipe = recipe;
         RecipeType recipeType = RecipeManager.getRecipeType(this.recipe);
         switch (recipeType) {
             case SHAPED:
@@ -74,6 +75,11 @@ public class RecipeDisplayMenuHolder extends BukkitMenuHandler implements IChild
                 setStoneCuttingRecipeMenu();
                 inventoryType = InventoryType.CHEST;
                 invTitle = LangUtil.langMsg("menu.recipe_display.title.stone_cutting");
+                break;
+            case POTION:
+                setPotionMixRecipeMenu();
+                inventoryType = InventoryType.BREWING;
+                invTitle = LangUtil.langMsg("menu.recipe_display.title.potion");
                 break;
             default:
                 invTitle = "Unknown Type";
@@ -164,6 +170,17 @@ public class RecipeDisplayMenuHolder extends BukkitMenuHandler implements IChild
         getMenuIconMap().put(11, ItemDisplayIcon.icon(input));
         getMenuIconMap().put(15, ItemDisplayIcon.icon(stonecuttingRecipe.getResult()));
     }
+
+    private void setPotionMixRecipeMenu() {
+        PotionMixRecipe potionMixRecipe = (PotionMixRecipe) recipe;
+        ItemStack input = potionMixRecipe.input().getItemStack();
+        ItemStack ingredient = potionMixRecipe.ingredient().getItemStack();
+        ItemStack result = potionMixRecipe.getResult();
+        getMenuIconMap().put(0, ItemDisplayIcon.icon(input));
+        getMenuIconMap().put(3, ItemDisplayIcon.icon(ingredient));
+        getMenuIconMap().put(2, ItemDisplayIcon.icon(result));
+    }
+
 
     @Override
     public BukkitMenuHandler parentMenu() {

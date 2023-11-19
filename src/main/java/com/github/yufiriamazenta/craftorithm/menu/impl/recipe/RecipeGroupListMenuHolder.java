@@ -36,6 +36,11 @@ public class RecipeGroupListMenuHolder extends BukkitMenuHandler {
                 return;
             recipeResultMap.put(recipeName, firstRecipe.getResult());
         });
+        RecipeManager.getPotionMixGroupMap().forEach((recipeName, recipes) -> {
+            if (recipes == null || recipes.isEmpty())
+                return;
+            recipeResultMap.put(recipeName, recipes.get(0).getResult());
+        });
         recipeGroupResultList = new ArrayList<>(recipeResultMap.entrySet());
         page = 0;
         int recipeGroupNum = recipeResultMap.size();
@@ -105,16 +110,30 @@ public class RecipeGroupListMenuHolder extends BukkitMenuHandler {
     private ItemDisplayIcon wrapIcon(int recipeSlot) {
         ItemStack display = recipeGroupResultList.get(recipeSlot).getValue();
         String recipeGroupName = recipeGroupResultList.get(recipeSlot).getKey();
-        return ItemDisplayIcon.icon(display, event -> {
-            event.setCancelled(true);
-            event.getWhoClicked().openInventory(
+        if (RecipeManager.getRecipeGroupMap().containsKey(recipeGroupName)) {
+            return ItemDisplayIcon.icon(display, event -> {
+                event.setCancelled(true);
+                event.getWhoClicked().openInventory(
                     new RecipeListMenuHolder(
-                            (Player) event.getWhoClicked(),
-                            RecipeManager.getRecipeGroupMap().get(recipeGroupName),
-                            this
+                        (Player) event.getWhoClicked(),
+                        RecipeManager.getRecipeGroupMap().get(recipeGroupName),
+                        this
                     ).getInventory()
-            );
-        });
+                );
+            });
+        } else {
+            return ItemDisplayIcon.icon(display, event -> {
+                event.setCancelled(true);
+                event.getWhoClicked().openInventory(
+                    new RecipeListMenuHolder(
+                        (Player) event.getWhoClicked(),
+                        RecipeManager.getPotionMixGroupMap(),
+                        recipeGroupName,
+                        this
+                    ).getInventory()
+                );
+            });
+        }
     }
 
     public int page() {

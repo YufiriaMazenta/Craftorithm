@@ -56,9 +56,56 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
             case STONE_CUTTING:
                 setStoneCuttingMenuIcons();
                 break;
+            case POTION:
+                setPotionMixMenuIcons();
             default:
                 break;
         }
+    }
+
+    private void setPotionMixMenuIcons() {
+        int[] frameSlots = {
+            0, 1, 2, 3, 4, 5, 6, 7, 8,
+            9, 10, 11, 12, 13, 14, 15, 16, 17,
+            18, 20, 21, 23, 24, 26,
+            27, 28, 29, 30, 31, 32, 33, 34, 35,
+            36, 37, 38, 39, 41, 42, 43, 44
+        };
+        ItemDisplayIcon frameIcon = ItemDisplayIcon.icon(Material.BLACK_STAINED_GLASS_PANE, LangUtil.langMsg("menu.recipe_creator.icon.frame"));
+        for (int frameSlot : frameSlots) {
+            getMenuIconMap().put(frameSlot, frameIcon);
+        }
+        ItemDisplayIcon confirmIcon = ItemDisplayIcon.icon(Material.BREWING_STAND, LangUtil.langMsg("menu.recipe_creator.icon.confirm"),
+            event -> {
+                event.setCancelled(true);
+                ItemStack result = event.getClickedInventory().getItem(25);
+                ItemStack input = event.getClickedInventory().getItem(19);
+                ItemStack ingredient = event.getClickedInventory().getItem(22);
+                if (result == null || result.getType().equals(Material.AIR)) {
+                    LangUtil.sendLang(event.getWhoClicked(), "command.create.null_result");
+                    return;
+                }
+                String resultName = getItemName(result, false);
+                String inputName = getItemName(input, true);
+                String ingredientName = getItemName(ingredient, true);
+                File recipeFile = new File(RecipeManager.getRecipeFileFolder(), recipeName + ".yml");
+                if (!recipeFile.exists()) {
+                    FileUtil.createNewFile(recipeFile);
+                }
+                YamlConfigWrapper recipeConfig = new YamlConfigWrapper(recipeFile);
+                recipeConfig.config().set("type", "potion");
+                recipeConfig.config().set("source.input", inputName);
+                recipeConfig.config().set("source.ingredient", ingredientName);
+                recipeConfig.config().set("result", resultName);
+                recipeConfig.saveConfig();
+                recipeConfig.reloadConfig();
+                Recipe[] recipes = RecipeFactory.newRecipe(recipeConfig.config(), recipeName);
+                RecipeManager.regPotionMix(recipeName, Arrays.asList(recipes), recipeConfig);
+                RecipeManager.getRecipeConfigWrapperMap().put(recipeName, recipeConfig);
+                event.getWhoClicked().closeInventory();
+                sendSuccessMsgAndReloadMap(event.getWhoClicked());
+            });
+        getMenuIconMap().put(40, confirmIcon);
     }
 
     private void setStoneCuttingMenuIcons() {
@@ -73,7 +120,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
         for (int frameSlot : frameSlots) {
             getMenuIconMap().put(frameSlot, frameIcon);
         }
-        ItemDisplayIcon confirmIcon = ItemDisplayIcon.icon(Material.STONECUTTER, LangUtil.langMsg("menu.recipe_creator.icon.frame"),
+        ItemDisplayIcon confirmIcon = ItemDisplayIcon.icon(Material.STONECUTTER, LangUtil.langMsg("menu.recipe_creator.icon.confirm"),
                 event -> {
                     event.setCancelled(true);
                     List<String> sources = new ArrayList<>();
