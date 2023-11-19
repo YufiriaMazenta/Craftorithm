@@ -80,7 +80,6 @@ public class RecipeManager {
         resetRecipes();
         loadRecipeFiles();
         reloadCraftorithmRecipes();
-        reloadOtherPluginsRecipes();
         reloadRemovedRecipes();
         reloadServerRecipeCache();
     }
@@ -147,17 +146,6 @@ public class RecipeManager {
         recipeSortIdMap.put(potionMixName, configWrapper.config().getInt("sort_id", 0));
     }
 
-    private static void reloadOtherPluginsRecipes() {
-        Map<String, List<Recipe>> pluginRecipeMap = CraftorithmAPI.INSTANCE.getPluginRegRecipeMap();
-        for (String plugin : pluginRecipeMap.keySet()) {
-            if (plugin.equals(NamespacedKey.MINECRAFT) || plugin.equals(Craftorithm.getInstance().getName()))
-                continue;
-            for (Recipe recipe : pluginRecipeMap.get(plugin)) {
-                Bukkit.addRecipe(recipe);
-            }
-        }
-    }
-
     private static void reloadRemovedRecipes() {
         removedRecipeConfig.reloadConfig();
         List<String> removedRecipes = removedRecipeConfig.config().getStringList("recipes");
@@ -174,19 +162,19 @@ public class RecipeManager {
         for (String recipeKey : removedRecipes) {
             removedRecipeKeys.add(NamespacedKey.fromString(recipeKey));
         }
-        disableOtherPluginsRecipe(removedRecipeKeys);
+        disableOtherPluginsRecipe(removedRecipeKeys, false);
     }
 
     public static void resetRecipes() {
         //删除其他插件的配方
         CraftorithmAPI.INSTANCE.getPluginRegRecipeMap().forEach((plugin, recipes) -> {
-            if (plugin.equals(NamespacedKey.MINECRAFT))
+            if (plugin.equals(NamespacedKey.MINECRAFT) || plugin.equals("craftorithm"))
                 return;
             List<NamespacedKey> recipeKeyList = new ArrayList<>();
             for (Recipe recipe : recipes) {
                 recipeKeyList.add(getRecipeKey(recipe));
             }
-            disableOtherPluginsRecipe(recipeKeyList);
+            disableOtherPluginsRecipe(recipeKeyList, false);
         });
 
         //删除Craftorithm的配方
@@ -300,13 +288,14 @@ public class RecipeManager {
         }
     }
 
-    public static boolean disableOtherPluginsRecipe(List<NamespacedKey> recipeKeys) {
-        addRecipeToRemovedRecipeRecycleMap(recipeKeys);
-        addKeyToRemovedConfig(recipeKeys);
+    public static boolean disableOtherPluginsRecipe(List<NamespacedKey> recipeKeys, boolean save) {
+        if (save)
+            addKeyToRemovedConfig(recipeKeys);
+        addRecipeToRemovedRecipeRecycleBin(recipeKeys);
         return removeRecipes(recipeKeys) > 0;
     }
 
-    private static void addRecipeToRemovedRecipeRecycleMap(List<NamespacedKey> recipeKeys) {
+    private static void addRecipeToRemovedRecipeRecycleBin(List<NamespacedKey> recipeKeys) {
         for (NamespacedKey recipeKey : recipeKeys) {
             Recipe recipe = Bukkit.getRecipe(recipeKey);
             if (recipe == null)

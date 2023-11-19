@@ -40,7 +40,6 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
         ConfigUpdater.INSTANCE.updateConfig();
 
         ItemManager.reloadItemManager();
-        RecipeManager.initRecipeManager();
         regListeners();
         initArcenciel();
         loadBStat();
