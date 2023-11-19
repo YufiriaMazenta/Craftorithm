@@ -426,9 +426,11 @@ public class RecipeManager {
         if (CrypticLib.minecraftVersion() >= 11400) {
             Craftorithm.getInstance().saveResource("recipes/example_smithing.yml", false);
             Craftorithm.getInstance().saveResource("recipes/example_stone_cutting.yml", false);
-            Craftorithm.getInstance().saveResource("recipes/example_random_cooking.yml", false);
             allFiles.add(new File(recipeFileFolder, "example_smithing.yml"));
             allFiles.add(new File(recipeFileFolder, "example_stone_cutting.yml"));
+        }
+        if (CrypticLib.minecraftVersion() >= 11700) {
+            Craftorithm.getInstance().saveResource("recipes/example_random_cooking.yml", false);
             allFiles.add(new File(recipeFileFolder, "example_random_cooking.yml"));
         }
         if (supportPotionMix()) {
