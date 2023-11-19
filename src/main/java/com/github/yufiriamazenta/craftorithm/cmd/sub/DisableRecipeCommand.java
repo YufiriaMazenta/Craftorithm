@@ -29,7 +29,7 @@ public final class DisableRecipeCommand extends AbstractSubCommand {
             return true;
         }
         List<NamespacedKey> removeRecipeKeys = Collections.singletonList(removeRecipeKey);
-        if (RecipeManager.disableOtherPluginsRecipe(removeRecipeKeys)) {
+        if (RecipeManager.disableOtherPluginsRecipe(removeRecipeKeys, true)) {
             LangUtil.sendLang(sender, "command.disable.success");
         }
         else
