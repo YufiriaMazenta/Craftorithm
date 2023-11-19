@@ -10,13 +10,11 @@ import crypticlib.CrypticLib;
 import crypticlib.config.impl.YamlConfigWrapper;
 import crypticlib.platform.IPlatform;
 import crypticlib.util.FileUtil;
-import io.papermc.paper.potion.PotionMix;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.*;
-import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionBrewer;
 
 import java.io.File;
@@ -54,11 +52,11 @@ public class RecipeManager {
         }
     }
 
-    public static void loadRecipeManager() {
-        reloadRecipeFiles();
+    public static void initRecipeManager() {
+        loadRecipeFiles();
     }
 
-    public static void reloadRecipeFiles() {
+    public static void loadRecipeFiles() {
         recipeConfigWrapperMap.clear();
         if (!recipeFileFolder.exists()) {
             boolean mkdirResult = recipeFileFolder.mkdir();
@@ -78,9 +76,9 @@ public class RecipeManager {
         }
     }
 
-    public static void reloadRecipesManager() {
+    public static void reloadRecipeManager() {
         resetRecipes();
-        reloadRecipeFiles();
+        loadRecipeFiles();
         reloadCraftorithmRecipes();
         reloadOtherPluginsRecipes();
         reloadRemovedRecipes();

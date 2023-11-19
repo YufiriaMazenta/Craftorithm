@@ -3,7 +3,6 @@ package com.github.yufiriamazenta.craftorithm.recipe.builder.vanilla;
 import com.github.yufiriamazenta.craftorithm.recipe.builder.AbstractRecipeBuilder;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.SmithingRecipe;
 
@@ -41,6 +40,18 @@ public class SmithingRecipeBuilder extends AbstractRecipeBuilder {
 
     @Override
     public SmithingRecipe build() {
+        if (key() == null) {
+            throw new IllegalArgumentException("Recipe key cannot be null");
+        }
+        if (result() == null) {
+            throw new IllegalArgumentException("Recipe result cannot be null");
+        }
+        if (base == null) {
+            throw new IllegalArgumentException("Recipe base cannot be null");
+        }
+        if (addition == null) {
+            throw new IllegalArgumentException("Recipe addition cannot be null");
+        }
         return new SmithingRecipe(key(), result(), base, addition);
     }
 

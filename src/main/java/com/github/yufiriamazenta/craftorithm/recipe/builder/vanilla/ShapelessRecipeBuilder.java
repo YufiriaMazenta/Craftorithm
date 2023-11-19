@@ -3,7 +3,6 @@ package com.github.yufiriamazenta.craftorithm.recipe.builder.vanilla;
 import com.github.yufiriamazenta.craftorithm.recipe.builder.AbstractRecipeBuilder;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapelessRecipe;
 
@@ -35,6 +34,12 @@ public class ShapelessRecipeBuilder extends AbstractRecipeBuilder {
     }
 
     public ShapelessRecipe build() {
+        if (key() == null) {
+            throw new IllegalArgumentException("Recipe key cannot be null");
+        }
+        if (result() == null) {
+            throw new IllegalArgumentException("Recipe result cannot be null");
+        }
         ShapelessRecipe shapelessRecipe = new ShapelessRecipe(key(), result());
         for (RecipeChoice choice : choiceList) {
             shapelessRecipe.addIngredient(choice);

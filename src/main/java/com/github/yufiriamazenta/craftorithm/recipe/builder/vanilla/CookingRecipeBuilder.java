@@ -75,6 +75,15 @@ public class CookingRecipeBuilder extends AbstractRecipeBuilder {
     }
 
     public CookingRecipe<?> build() {
+        if (key() == null) {
+            throw new IllegalArgumentException("Recipe key cannot be null");
+        }
+        if (result() == null) {
+            throw new IllegalArgumentException("Recipe result cannot be null");
+        }
+        if (source == null) {
+            throw new IllegalArgumentException("Recipe source cannot be null");
+        }
         CookingRecipe<?> cookingRecipe;
         switch (cookingBlock) {
             case FURNACE:
