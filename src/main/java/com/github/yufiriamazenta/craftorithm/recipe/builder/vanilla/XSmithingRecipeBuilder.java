@@ -52,12 +52,24 @@ public class XSmithingRecipeBuilder extends SmithingRecipeBuilder {
 
     @Override
     public SmithingRecipe build() {
+        if (key() == null) {
+            throw new IllegalArgumentException("Recipe key cannot be null");
+        }
+        if (result() == null) {
+            throw new IllegalArgumentException("Recipe result cannot be null");
+        }
+        if (base == null) {
+            throw new IllegalArgumentException("Recipe base cannot be null");
+        }
+        if (addition == null) {
+            throw new IllegalArgumentException("Recipe addition cannot be null");
+        }
         switch (type) {
             case DEFAULT:
             default:
                 return new SmithingRecipe(key(), result(), base, addition);
             case TRIM:
-                return new SmithingTrimRecipe(key(),template, base, addition);
+                return new SmithingTrimRecipe(key(), template, base, addition);
             case TRANSFORM:
                 return new SmithingTransformRecipe(key(), result(), template, base, addition);
         }

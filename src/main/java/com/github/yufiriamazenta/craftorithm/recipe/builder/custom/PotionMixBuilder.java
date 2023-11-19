@@ -1,4 +1,4 @@
-package com.github.yufiriamazenta.craftorithm.recipe.builder.vanilla;
+package com.github.yufiriamazenta.craftorithm.recipe.builder.custom;
 
 import com.github.yufiriamazenta.craftorithm.recipe.builder.AbstractRecipeBuilder;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.PotionMixRecipe;

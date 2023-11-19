@@ -34,7 +34,7 @@ public final class ReloadCommand extends AbstractSubCommand {
     public static void reloadPlugin() {
         reloadConfigs();
         ItemManager.reloadItemManager();
-        RecipeManager.reloadRecipesManager();
+        RecipeManager.reloadRecipeManager();
     }
 
     public static void reloadConfigs() {

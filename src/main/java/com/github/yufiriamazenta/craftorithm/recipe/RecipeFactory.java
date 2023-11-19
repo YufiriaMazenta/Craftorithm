@@ -2,6 +2,7 @@ package com.github.yufiriamazenta.craftorithm.recipe;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
+import com.github.yufiriamazenta.craftorithm.recipe.builder.custom.PotionMixBuilder;
 import com.github.yufiriamazenta.craftorithm.recipe.builder.vanilla.*;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.PotionMixRecipe;
 import crypticlib.CrypticLib;
