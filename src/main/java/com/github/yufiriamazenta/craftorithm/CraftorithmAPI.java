@@ -15,35 +15,12 @@ public enum CraftorithmAPI {
 
     INSTANCE;
 
-    private final Map<String, List<Recipe>> pluginRecipeMap = new ConcurrentHashMap<>();
-    private boolean loadedOtherPluginRecipe = false;
-
     public ItemStack getCraftorithmItem(String itemName) {
         return ItemManager.getCraftorithmItem(itemName);
     }
 
-    public Map<String, List<Recipe>> getPluginRegRecipeMap() {
-        return pluginRecipeMap;
-    }
-
-    public void regRecipes(String plugin, List<Recipe> recipes) {
-        pluginRecipeMap.put(plugin, recipes);
-    }
-
     public ArcencielDispatcher getArcencielDispatcher() {
         return ArcencielDispatcher.INSTANCE;
-    }
-
-    public RecipeType getRecipeType(Recipe recipe) {
-        return RecipeManager.getRecipeType(recipe);
-    }
-
-    public void setLoadedOtherPluginRecipe(boolean loadedOtherPluginRecipe) {
-        this.loadedOtherPluginRecipe = loadedOtherPluginRecipe;
-    }
-
-    public boolean isLoadedOtherPluginRecipe() {
-        return loadedOtherPluginRecipe;
     }
 
 }

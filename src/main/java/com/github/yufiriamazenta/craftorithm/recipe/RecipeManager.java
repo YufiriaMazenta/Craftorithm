@@ -166,17 +166,6 @@ public class RecipeManager {
     }
 
     public static void resetRecipes() {
-        //删除其他插件的配方
-        CraftorithmAPI.INSTANCE.getPluginRegRecipeMap().forEach((plugin, recipes) -> {
-            if (plugin.equals(NamespacedKey.MINECRAFT) || plugin.equals("craftorithm"))
-                return;
-            List<NamespacedKey> recipeKeyList = new ArrayList<>();
-            for (Recipe recipe : recipes) {
-                recipeKeyList.add(getRecipeKey(recipe));
-            }
-            disableOtherPluginsRecipe(recipeKeyList, false);
-        });
-
         //删除Craftorithm的配方
         recipeGroupMap.forEach((key, recipes) -> {
             removeCraftorithmRecipe(key, false);
