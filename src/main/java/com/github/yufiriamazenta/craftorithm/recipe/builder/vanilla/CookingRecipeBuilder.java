@@ -15,18 +15,18 @@ public class CookingRecipeBuilder extends AbstractRecipeBuilder {
 
     private CookingRecipeBuilder() {
         this.exp = 0;
-        this.time = 0;
+        this.time = 200;
         this.cookingBlock = CookingBlock.FURNACE;
     }
 
     @Override
-    public CookingRecipeBuilder result(ItemStack result) {
-        return (CookingRecipeBuilder) super.result(result);
+    public CookingRecipeBuilder setResult(ItemStack result) {
+        return (CookingRecipeBuilder) super.setResult(result);
     }
 
     @Override
-    public CookingRecipeBuilder key(NamespacedKey key) {
-        return (CookingRecipeBuilder) super.key(key);
+    public CookingRecipeBuilder setKey(NamespacedKey key) {
+        return (CookingRecipeBuilder) super.setKey(key);
     }
 
     public CookingRecipeBuilder exp(float exp) {
@@ -79,16 +79,16 @@ public class CookingRecipeBuilder extends AbstractRecipeBuilder {
         switch (cookingBlock) {
             case FURNACE:
             default:
-                cookingRecipe = new FurnaceRecipe(getKey(), getResult(), source, exp, time);
+                cookingRecipe = new FurnaceRecipe(key(), result(), source, exp, time);
                 break;
             case SMOKER:
-                cookingRecipe = new SmokingRecipe(getKey(), getResult(), source, exp, time);
+                cookingRecipe = new SmokingRecipe(key(), result(), source, exp, time);
                 break;
             case BLAST:
-                cookingRecipe = new BlastingRecipe(getKey(), getResult(), source, exp, time);
+                cookingRecipe = new BlastingRecipe(key(), result(), source, exp, time);
                 break;
             case CAMPFIRE:
-                cookingRecipe = new CampfireRecipe(getKey(), getResult(), source, exp, time);
+                cookingRecipe = new CampfireRecipe(key(), result(), source, exp, time);
                 break;
         }
         return cookingRecipe;
@@ -98,7 +98,7 @@ public class CookingRecipeBuilder extends AbstractRecipeBuilder {
         return new CookingRecipeBuilder();
     }
 
-    enum CookingBlock {
+    public enum CookingBlock {
         FURNACE,
         BLAST,
         SMOKER,

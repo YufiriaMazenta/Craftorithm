@@ -3,6 +3,7 @@ package com.github.yufiriamazenta.craftorithm.recipe.builder.vanilla;
 import com.github.yufiriamazenta.craftorithm.recipe.builder.AbstractRecipeBuilder;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 
@@ -18,13 +19,13 @@ public class ShapedRecipeBuilder extends AbstractRecipeBuilder {
     private ShapedRecipeBuilder() {}
 
     @Override
-    public ShapedRecipeBuilder key(NamespacedKey key) {
-        return (ShapedRecipeBuilder) super.key(key);
+    public ShapedRecipeBuilder setKey(NamespacedKey key) {
+        return (ShapedRecipeBuilder) super.setKey(key);
     }
 
     @Override
-    public ShapedRecipeBuilder result(ItemStack result) {
-        return (ShapedRecipeBuilder) super.result(result);
+    public ShapedRecipeBuilder setResult(ItemStack result) {
+        return (ShapedRecipeBuilder) super.setResult(result);
     }
 
     public String[] getShape() {
@@ -46,7 +47,7 @@ public class ShapedRecipeBuilder extends AbstractRecipeBuilder {
     }
 
     public ShapedRecipe build() {
-        ShapedRecipe shapedRecipe = new ShapedRecipe(getKey(), getResult());
+        ShapedRecipe shapedRecipe = new ShapedRecipe(key(), result());
         shapedRecipe.shape(shape);
         Set<Character> shapeStrChars = new HashSet<>();
         for (String s : shape) {

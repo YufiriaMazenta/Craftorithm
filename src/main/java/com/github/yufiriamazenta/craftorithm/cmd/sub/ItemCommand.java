@@ -2,14 +2,14 @@ package com.github.yufiriamazenta.craftorithm.cmd.sub;
 
 import com.github.yufiriamazenta.craftorithm.cmd.sub.item.ItemGiveCommand;
 import com.github.yufiriamazenta.craftorithm.cmd.sub.item.ItemSaveCommand;
-import crypticlib.command.SubcmdExecutor;
+import crypticlib.command.api.ISubcmdExecutor;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
 
 public final class ItemCommand extends AbstractSubCommand {
 
-    public static final SubcmdExecutor INSTANCE = new ItemCommand();
+    public static final ISubcmdExecutor INSTANCE = new ItemCommand();
 
     private ItemCommand() {
         super("item", "craftorithm.command.item");

@@ -3,6 +3,7 @@ package com.github.yufiriamazenta.craftorithm.recipe.builder.vanilla;
 import com.github.yufiriamazenta.craftorithm.recipe.builder.AbstractRecipeBuilder;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.StonecuttingRecipe;
 
@@ -18,17 +19,17 @@ public class StoneCuttingRecipeBuilder extends AbstractRecipeBuilder {
     }
 
     @Override
-    public StoneCuttingRecipeBuilder result(ItemStack result) {
-        return (StoneCuttingRecipeBuilder) super.result(result);
+    public StoneCuttingRecipeBuilder setResult(ItemStack result) {
+        return (StoneCuttingRecipeBuilder) super.setResult(result);
     }
 
     @Override
-    public StoneCuttingRecipeBuilder key(NamespacedKey key) {
-        return (StoneCuttingRecipeBuilder) super.key(key);
+    public StoneCuttingRecipeBuilder setKey(NamespacedKey key) {
+        return (StoneCuttingRecipeBuilder) super.setKey(key);
     }
 
     public StonecuttingRecipe build() {
-        return new StonecuttingRecipe(getKey(), getResult(), source);
+        return new StonecuttingRecipe(key(), result(), source);
     }
 
     public static StoneCuttingRecipeBuilder builder() {

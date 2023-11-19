@@ -20,13 +20,13 @@ public class XSmithingRecipeBuilder extends SmithingRecipeBuilder {
     }
 
     @Override
-    public XSmithingRecipeBuilder key(NamespacedKey key) {
-        return (XSmithingRecipeBuilder) super.key(key);
+    public XSmithingRecipeBuilder setKey(NamespacedKey key) {
+        return (XSmithingRecipeBuilder) super.setKey(key);
     }
 
     @Override
-    public XSmithingRecipeBuilder result(ItemStack result) {
-        return (XSmithingRecipeBuilder) super.result(result);
+    public XSmithingRecipeBuilder setResult(ItemStack result) {
+        return (XSmithingRecipeBuilder) super.setResult(result);
     }
 
     public RecipeChoice getBase() {
@@ -55,11 +55,11 @@ public class XSmithingRecipeBuilder extends SmithingRecipeBuilder {
         switch (type) {
             case DEFAULT:
             default:
-                return new SmithingRecipe(getKey(), getResult(), base, addition);
+                return new SmithingRecipe(key(), result(), base, addition);
             case TRIM:
-                return new SmithingTrimRecipe(getKey(),template, base, addition);
+                return new SmithingTrimRecipe(key(),template, base, addition);
             case TRANSFORM:
-                return new SmithingTransformRecipe(getKey(), getResult(), template, base, addition);
+                return new SmithingTransformRecipe(key(), result(), template, base, addition);
         }
     }
 

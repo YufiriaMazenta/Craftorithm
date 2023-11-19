@@ -10,6 +10,4 @@ public interface CustomRecipe extends Recipe {
 
     NamespacedKey getKey();
 
-    void setKey(NamespacedKey key);
-
 }
