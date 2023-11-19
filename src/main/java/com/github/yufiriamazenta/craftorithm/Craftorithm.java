@@ -28,7 +28,6 @@ import java.util.Map;
 public final class Craftorithm extends BukkitPlugin implements Listener {
 
     private static Craftorithm INSTANCE;
-    private boolean hasLoadPluginRecipeMap = false;
 
     public Craftorithm() {
         INSTANCE = this;
@@ -88,23 +87,6 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
     @EventHandler
     public void onServerLoad(ServerLoadEvent event) {
         PluginHookUtil.hookPlugins();
-        if (!hasLoadPluginRecipeMap) {
-            hasLoadPluginRecipeMap = true;
-            Map<String, List<Recipe>> map = CraftorithmAPI.INSTANCE.getPluginRegRecipeMap();
-            Iterator<Recipe> iterator = Bukkit.getServer().recipeIterator();
-            while (iterator.hasNext()) {
-                Recipe recipe = iterator.next();
-                NamespacedKey key = RecipeManager.getRecipeKey(recipe);
-                String namespace = key.getNamespace();
-                if (map.containsKey(namespace)) {
-                    map.get(namespace).add(recipe);
-                } else {
-                    List<Recipe> recipes = new ArrayList<>();
-                    recipes.add(recipe);
-                    map.put(namespace, recipes);
-                }
-            }
-            RecipeManager.reloadRecipeManager();
-        }
+        RecipeManager.reloadRecipeManager();
     }
 }
