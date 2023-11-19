@@ -5,7 +5,6 @@ import com.github.yufiriamazenta.craftorithm.menu.bukkit.IChildBukkitMenu;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.ItemDisplayIcon;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
-import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.CrypticLib;
 import crypticlib.util.TextUtil;
@@ -75,11 +74,6 @@ public class RecipeDisplayMenuHolder extends BukkitMenuHandler implements IChild
                 setStoneCuttingRecipeMenu();
                 inventoryType = InventoryType.CHEST;
                 invTitle = LangUtil.langMsg("menu.recipe_display.title.stone_cutting");
-                break;
-            case ANVIL:
-                setAnvilRecipeMenu();
-                inventoryType = InventoryType.ANVIL;
-                invTitle = LangUtil.langMsg("menu.recipe_display.title.anvil");
                 break;
             default:
                 invTitle = "Unknown Type";
@@ -169,13 +163,6 @@ public class RecipeDisplayMenuHolder extends BukkitMenuHandler implements IChild
         input.setAmount(1);
         getMenuIconMap().put(11, ItemDisplayIcon.icon(input));
         getMenuIconMap().put(15, ItemDisplayIcon.icon(stonecuttingRecipe.getResult()));
-    }
-
-    private void setAnvilRecipeMenu() {
-        AnvilRecipe anvilRecipe = (AnvilRecipe) recipe;
-        getMenuIconMap().put(0, ItemDisplayIcon.icon(anvilRecipe.getBase().getItem()));
-        getMenuIconMap().put(1, ItemDisplayIcon.icon(anvilRecipe.getAddition().getItem()));
-        getMenuIconMap().put(2, ItemDisplayIcon.icon(anvilRecipe.getResult()));
     }
 
     @Override

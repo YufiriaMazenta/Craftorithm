@@ -2,7 +2,8 @@ package com.github.yufiriamazenta.craftorithm.cmd.sub;
 
 import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import crypticlib.command.SubcmdExecutor;
+import crypticlib.command.api.ISubcmdExecutor;
+import crypticlib.command.impl.SubcmdExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -20,7 +21,7 @@ public abstract class AbstractSubCommand extends SubcmdExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, List<String> args) {
-        SubcmdExecutor subCommand = subcommands().get(args.get(0));
+        ISubcmdExecutor subCommand = subcommands().get(args.get(0));
         if (subCommand == null) {
             LangUtil.sendLang(sender, "command.undefined_subcmd");
         } else {

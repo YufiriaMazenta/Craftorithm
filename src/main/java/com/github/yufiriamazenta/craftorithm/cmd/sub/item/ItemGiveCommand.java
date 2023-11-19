@@ -4,7 +4,7 @@ import com.github.yufiriamazenta.craftorithm.cmd.sub.AbstractSubCommand;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import crypticlib.command.SubcmdExecutor;
+import crypticlib.command.api.ISubcmdExecutor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -14,7 +14,7 @@ import java.util.List;
 
 public class ItemGiveCommand extends AbstractSubCommand {
 
-    public static final SubcmdExecutor INSTANCE = new ItemGiveCommand();
+    public static final ISubcmdExecutor INSTANCE = new ItemGiveCommand();
 
     private ItemGiveCommand() {
         super("give");

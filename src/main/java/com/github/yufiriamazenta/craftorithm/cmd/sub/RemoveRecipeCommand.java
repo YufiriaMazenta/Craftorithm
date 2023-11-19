@@ -2,7 +2,7 @@ package com.github.yufiriamazenta.craftorithm.cmd.sub;
 
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import crypticlib.command.SubcmdExecutor;
+import crypticlib.command.api.ISubcmdExecutor;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import java.util.List;
  */
 public final class RemoveRecipeCommand extends AbstractSubCommand {
 
-    public static final SubcmdExecutor INSTANCE = new RemoveRecipeCommand();
+    public static final ISubcmdExecutor INSTANCE = new RemoveRecipeCommand();
 
     private RemoveRecipeCommand() {
         super("remove", "craftorithm.command.remove");
@@ -39,6 +39,10 @@ public final class RemoveRecipeCommand extends AbstractSubCommand {
         if (args.size() <= 1) {
             List<String> tabList = new ArrayList<>();
             for (String key : RecipeManager.getRecipeGroupMap().keySet()) {
+                if (key.startsWith(args.get(0)))
+                    tabList.add(key);
+            }
+            for (String key : RecipeManager.getPotionMixGroupMap().keySet()) {
                 if (key.startsWith(args.get(0)))
                     tabList.add(key);
             }

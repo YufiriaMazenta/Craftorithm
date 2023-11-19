@@ -56,16 +56,9 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
             case STONE_CUTTING:
                 setStoneCuttingMenuIcons();
                 break;
-            case ANVIL:
-                setAnvilMenuIcons();
-                break;
             default:
                 break;
         }
-    }
-
-    private void setAnvilMenuIcons() {
-        //TODO
     }
 
     private void setStoneCuttingMenuIcons() {

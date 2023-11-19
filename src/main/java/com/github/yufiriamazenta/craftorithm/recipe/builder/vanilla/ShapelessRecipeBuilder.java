@@ -3,6 +3,7 @@ package com.github.yufiriamazenta.craftorithm.recipe.builder.vanilla;
 import com.github.yufiriamazenta.craftorithm.recipe.builder.AbstractRecipeBuilder;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapelessRecipe;
 
@@ -15,13 +16,13 @@ public class ShapelessRecipeBuilder extends AbstractRecipeBuilder {
     private ShapelessRecipeBuilder() {}
 
     @Override
-    public ShapelessRecipeBuilder key(NamespacedKey key) {
-        return (ShapelessRecipeBuilder) super.key(key);
+    public ShapelessRecipeBuilder setKey(NamespacedKey key) {
+        return (ShapelessRecipeBuilder) super.setKey(key);
     }
 
     @Override
-    public ShapelessRecipeBuilder result(ItemStack result) {
-        return (ShapelessRecipeBuilder) super.result(result);
+    public ShapelessRecipeBuilder setResult(ItemStack result) {
+        return (ShapelessRecipeBuilder) super.setResult(result);
     }
 
     public ShapelessRecipeBuilder choiceList(List<RecipeChoice> choiceList) {
@@ -34,7 +35,7 @@ public class ShapelessRecipeBuilder extends AbstractRecipeBuilder {
     }
 
     public ShapelessRecipe build() {
-        ShapelessRecipe shapelessRecipe = new ShapelessRecipe(getKey(), getResult());
+        ShapelessRecipe shapelessRecipe = new ShapelessRecipe(key(), result());
         for (RecipeChoice choice : choiceList) {
             shapelessRecipe.addIngredient(choice);
         }

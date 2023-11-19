@@ -2,6 +2,7 @@ package com.github.yufiriamazenta.craftorithm.recipe.builder;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
 
 public abstract class AbstractRecipeBuilder {
 
@@ -10,22 +11,24 @@ public abstract class AbstractRecipeBuilder {
 
     protected AbstractRecipeBuilder() {}
 
-    public ItemStack getResult() {
+    public ItemStack result() {
         return result.clone();
     }
 
-    public AbstractRecipeBuilder result(ItemStack result) {
+    public AbstractRecipeBuilder setResult(ItemStack result) {
         this.result = result;
         return this;
     }
 
-    public NamespacedKey getKey() {
+    public NamespacedKey key() {
         return key;
     }
 
-    public AbstractRecipeBuilder key(NamespacedKey key) {
+    public AbstractRecipeBuilder setKey(NamespacedKey key) {
         this.key = key;
         return this;
     }
+
+    public abstract Recipe build();
 
 }

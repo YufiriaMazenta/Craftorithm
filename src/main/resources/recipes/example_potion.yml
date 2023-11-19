@@ -1,0 +1,8 @@
+type: potion
+result: bedrock
+multiple: true
+source:
+  - input: 'command_block'
+    ingredient: 'command_block'
+  - input: 'bedrock'
+    ingredient: 'bedrock'
