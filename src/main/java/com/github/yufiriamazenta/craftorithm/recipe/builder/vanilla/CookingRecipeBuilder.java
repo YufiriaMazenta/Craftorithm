@@ -29,17 +29,17 @@ public class CookingRecipeBuilder extends AbstractRecipeBuilder {
         return (CookingRecipeBuilder) super.setKey(key);
     }
 
-    public CookingRecipeBuilder exp(float exp) {
+    public CookingRecipeBuilder setExp(float exp) {
         this.exp = exp;
         return this;
     }
 
-    public CookingRecipeBuilder time(int time) {
+    public CookingRecipeBuilder setTime(int time) {
         this.time = time;
         return this;
     }
 
-    public CookingRecipeBuilder block(String block) {
+    public CookingRecipeBuilder setBlock(String block) {
         try {
             this.cookingBlock = CookingBlock.valueOf(block.toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException e) {
@@ -48,21 +48,21 @@ public class CookingRecipeBuilder extends AbstractRecipeBuilder {
         return this;
     }
 
-    public CookingRecipeBuilder block(CookingBlock block) {
+    public CookingRecipeBuilder setBlock(CookingBlock block) {
         this.cookingBlock = block;
         return this;
     }
 
-    public CookingRecipeBuilder source(RecipeChoice source) {
+    public CookingRecipeBuilder setSource(RecipeChoice source) {
         this.source = source;
         return this;
     }
 
-    public RecipeChoice getSource() {
+    public RecipeChoice source() {
         return source.clone();
     }
 
-    public float getExp() {
+    public float exp() {
         return exp;
     }
 
@@ -70,7 +70,7 @@ public class CookingRecipeBuilder extends AbstractRecipeBuilder {
         return time;
     }
 
-    public CookingBlock getCookingBlock() {
+    public CookingBlock cookingBlock() {
         return cookingBlock;
     }
 

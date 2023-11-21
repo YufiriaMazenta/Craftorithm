@@ -29,23 +29,14 @@ public class XSmithingRecipeBuilder extends SmithingRecipeBuilder {
         return (XSmithingRecipeBuilder) super.setResult(result);
     }
 
-    public RecipeChoice getBase() {
-        return base.clone();
-    }
-
     @Override
-    public XSmithingRecipeBuilder base(RecipeChoice base) {
+    public XSmithingRecipeBuilder setBase(RecipeChoice base) {
         this.base = base;
         return this;
     }
 
     @Override
-    public RecipeChoice getAddition() {
-        return addition.clone();
-    }
-
-    @Override
-    public XSmithingRecipeBuilder addition(RecipeChoice addition) {
+    public XSmithingRecipeBuilder setAddition(RecipeChoice addition) {
         this.addition = addition;
         return this;
     }
@@ -83,16 +74,16 @@ public class XSmithingRecipeBuilder extends SmithingRecipeBuilder {
         return new XSmithingRecipeBuilder(type);
     }
 
-    public XSmithingRecipeBuilder template(RecipeChoice template) {
+    public XSmithingRecipeBuilder setTemplate(RecipeChoice template) {
         this.template = template;
         return this;
     }
 
-    public RecipeChoice getTemplate() {
+    public RecipeChoice template() {
         return template.clone();
     }
 
-    public SmithingType getType() {
+    public SmithingType type() {
         return type;
     }
 

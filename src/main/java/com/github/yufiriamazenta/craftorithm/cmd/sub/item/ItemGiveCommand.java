@@ -2,7 +2,7 @@ package com.github.yufiriamazenta.craftorithm.cmd.sub.item;
 
 import com.github.yufiriamazenta.craftorithm.cmd.sub.AbstractSubCommand;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
-import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
+import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.command.api.ISubcmdExecutor;
 import org.bukkit.Bukkit;
@@ -44,7 +44,7 @@ public class ItemGiveCommand extends AbstractSubCommand {
         }
 
         if (!ItemManager.isCraftorithmItem(args.get(0))) {
-            LangUtil.sendLang(sender, "command.item.give.not_exist_item", ContainerUtil.newHashMap("<item_name>", args.get(0)));
+            LangUtil.sendLang(sender, "command.item.give.not_exist_item", CollectionsUtil.newHashMap("<item_name>", args.get(0)));
             return true;
         }
 
@@ -55,7 +55,7 @@ public class ItemGiveCommand extends AbstractSubCommand {
     @Override
     public List<String> onTabComplete(CommandSender sender, List<String> args) {
         if (args.size() < 2) {
-            List<String> tabList = new ArrayList<>(ItemManager.getItemMap().keySet());
+            List<String> tabList = new ArrayList<>(ItemManager.itemMap().keySet());
             filterTabList(tabList, args.get(0));
             return tabList;
         }

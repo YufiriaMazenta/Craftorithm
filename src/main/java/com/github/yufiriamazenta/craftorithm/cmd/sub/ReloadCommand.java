@@ -38,10 +38,10 @@ public final class ReloadCommand extends AbstractSubCommand {
     }
 
     public static void reloadConfigs() {
-        Craftorithm.getInstance().reloadConfig();
+        Craftorithm.instance().reloadConfig();
         ItemUtil.reloadCannotCraftLore();
         LangUtil.reloadLangConfig();
-        ArcencielDispatcher.INSTANCE.getFunctionFile().reloadConfig();
+        ArcencielDispatcher.INSTANCE.functionFile().reloadConfig();
     }
 
 }

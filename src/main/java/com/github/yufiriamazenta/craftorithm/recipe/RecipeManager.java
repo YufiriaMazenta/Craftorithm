@@ -3,7 +3,7 @@ package com.github.yufiriamazenta.craftorithm.recipe;
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.CustomRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.PotionMixRecipe;
-import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
+import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.CrypticLib;
 import crypticlib.config.impl.YamlConfigWrapper;
@@ -35,8 +35,8 @@ public class RecipeManager {
     private static final String PLUGIN_RECIPE_NAMESPACE = "craftorithm";
 
     static {
-        removedRecipeConfig = new YamlConfigWrapper(Craftorithm.getInstance(), "removed_recipes.yml");
-        recipeFileFolder = new File(Craftorithm.getInstance().getDataFolder().getPath(), "recipes");
+        removedRecipeConfig = new YamlConfigWrapper(Craftorithm.instance(), "removed_recipes.yml");
+        recipeFileFolder = new File(Craftorithm.instance().getDataFolder().getPath(), "recipes");
         recipeGroupMap = new ConcurrentHashMap<>();
         recipeConfigWrapperMap = new ConcurrentHashMap<>();
         serverRecipeCache = new CopyOnWriteArrayList<>();
@@ -103,7 +103,7 @@ public class RecipeManager {
                     regRecipes(fileName, Arrays.asList(recipes), configWrapper);
                 }
             } catch (Throwable e) {
-                LangUtil.info("load.recipe_load_exception", ContainerUtil.newHashMap("<recipe_name>", fileName));
+                LangUtil.info("load.recipe_load_exception", CollectionsUtil.newHashMap("<recipe_name>", fileName));
                 e.printStackTrace();
             }
         }
@@ -116,7 +116,7 @@ public class RecipeManager {
             NamespacedKey recipeKey = getRecipeKey(recipe);
             recipeKeyList.add(getRecipeKey(recipe));
             Bukkit.addRecipe(recipe);
-            boolean defUnlockCondition = Craftorithm.getInstance().getConfig().getBoolean("all_recipe_unlocked", false);
+            boolean defUnlockCondition = Craftorithm.instance().getConfig().getBoolean("all_recipe_unlocked", false);
             if (config.contains("unlock")) {
                 recipeUnlockMap.put(recipeKey, config.getBoolean("unlock", defUnlockCondition));
             } else {
@@ -144,7 +144,7 @@ public class RecipeManager {
     private static void reloadRemovedRecipes() {
         removedRecipeConfig.reloadConfig();
         List<String> removedRecipes = removedRecipeConfig.config().getStringList("recipes");
-        if (Craftorithm.getInstance().getConfig().getBoolean("remove_all_vanilla_recipe", false)) {
+        if (Craftorithm.instance().getConfig().getBoolean("remove_all_vanilla_recipe", false)) {
             for (NamespacedKey key : serverRecipeCache) {
                 if (key.getNamespace().equals("minecraft")) {
                     if (removedRecipes.contains(key.toString()))
@@ -206,7 +206,7 @@ public class RecipeManager {
      */
     public static void removePotionMix(List<PotionMixRecipe> potionMixRecipes) {
         for (PotionMixRecipe recipe : potionMixRecipes) {
-            Bukkit.getPotionBrewer().removePotionMix(recipe.getKey());
+            Bukkit.getPotionBrewer().removePotionMix(recipe.key());
         }
     }
 
@@ -290,7 +290,7 @@ public class RecipeManager {
 
     private static void addKeyToRemovedConfig(List<NamespacedKey> keys) {
         List<String> removedList = removedRecipeConfig.config().getStringList("recipes");
-        boolean removeAllVanillaRecipe = Craftorithm.getInstance().getConfig().getBoolean("remove_all_vanilla_recipe");
+        boolean removeAllVanillaRecipe = Craftorithm.instance().getConfig().getBoolean("remove_all_vanilla_recipe");
         for (NamespacedKey key : keys) {
             if (key.getNamespace().equals(NamespacedKey.MINECRAFT) && removeAllVanillaRecipe)
                 continue;
@@ -328,7 +328,7 @@ public class RecipeManager {
         if (recipe == null)
             return null;
         if (recipe instanceof CustomRecipe) {
-            return ((CustomRecipe) recipe).getKey();
+            return ((CustomRecipe) recipe).key();
         }
         return ((Keyed) recipe).getKey();
     }
@@ -348,35 +348,35 @@ public class RecipeManager {
     }
 
 
-    public static File getRecipeFileFolder() {
+    public static File recipeFileFolder() {
         return recipeFileFolder;
     }
 
-    public static Map<String, List<NamespacedKey>> getRecipeGroupMap() {
+    public static Map<String, List<NamespacedKey>> recipeGroupMap() {
         return recipeGroupMap;
     }
 
-    public static Map<String, List<PotionMixRecipe>> getPotionMixGroupMap() {
+    public static Map<String, List<PotionMixRecipe>> potionMixGroupMap() {
         return potionMixGroupMap;
     }
 
-    public static YamlConfigWrapper getRemovedRecipeConfig() {
+    public static YamlConfigWrapper removedRecipeConfig() {
         return removedRecipeConfig;
     }
 
-    public static List<NamespacedKey> getServerRecipeCache() {
+    public static List<NamespacedKey> serverRecipeCache() {
         return serverRecipeCache;
     }
 
-    public static Map<NamespacedKey, Boolean> getRecipeUnlockMap() {
+    public static Map<NamespacedKey, Boolean> recipeUnlockMap() {
         return recipeUnlockMap;
     }
 
-    public static Map<String, YamlConfigWrapper> getRecipeConfigWrapperMap() {
+    public static Map<String, YamlConfigWrapper> recipeConfigWrapperMap() {
         return recipeConfigWrapperMap;
     }
 
-    public static Map<String, Integer> getRecipeSortIdMap() {
+    public static Map<String, Integer> recipeSortIdMap() {
         return recipeSortIdMap;
     }
 
@@ -386,26 +386,26 @@ public class RecipeManager {
     }
 
     private static void saveDefConfigFile(List<File> allFiles) {
-        Craftorithm.getInstance().saveResource("recipes/example_shaped.yml", false);
-        Craftorithm.getInstance().saveResource("recipes/example_shapeless.yml", false);
+        Craftorithm.instance().saveResource("recipes/example_shaped.yml", false);
+        Craftorithm.instance().saveResource("recipes/example_shapeless.yml", false);
         allFiles.add(new File(recipeFileFolder, "example_shaped.yml"));
         allFiles.add(new File(recipeFileFolder, "example_shapeless.yml"));
         if (CrypticLib.minecraftVersion() >= 11300) {
-            Craftorithm.getInstance().saveResource("recipes/example_cooking.yml", false);
+            Craftorithm.instance().saveResource("recipes/example_cooking.yml", false);
             allFiles.add(new File(recipeFileFolder, "example_cooking.yml"));
         }
         if (CrypticLib.minecraftVersion() >= 11400) {
-            Craftorithm.getInstance().saveResource("recipes/example_smithing.yml", false);
-            Craftorithm.getInstance().saveResource("recipes/example_stone_cutting.yml", false);
+            Craftorithm.instance().saveResource("recipes/example_smithing.yml", false);
+            Craftorithm.instance().saveResource("recipes/example_stone_cutting.yml", false);
             allFiles.add(new File(recipeFileFolder, "example_smithing.yml"));
             allFiles.add(new File(recipeFileFolder, "example_stone_cutting.yml"));
         }
         if (CrypticLib.minecraftVersion() >= 11700) {
-            Craftorithm.getInstance().saveResource("recipes/example_random_cooking.yml", false);
+            Craftorithm.instance().saveResource("recipes/example_random_cooking.yml", false);
             allFiles.add(new File(recipeFileFolder, "example_random_cooking.yml"));
         }
         if (supportPotionMix()) {
-            Craftorithm.getInstance().saveResource("recipes/example_potion.yml", false);
+            Craftorithm.instance().saveResource("recipes/example_potion.yml", false);
             allFiles.add(new File(recipeFileFolder, "example_potion.yml"));
         }
     }

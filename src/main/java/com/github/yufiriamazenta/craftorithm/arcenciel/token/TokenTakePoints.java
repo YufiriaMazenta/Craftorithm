@@ -18,7 +18,7 @@ public class TokenTakePoints extends AbstractArcencielToken<Integer> {
     @Override
     public ReturnObj<Integer> exec(Player player, List<String> args) {
         PlayerPointsAPI api = PluginHookUtil.getPlayerPoints().getAPI();
-        if (args.size() < 1)
+        if (args.isEmpty())
             return new ReturnObj<>(api.look(player.getUniqueId()));
         int value = Integer.parseInt(args.get(0));
         if (value >= 0)

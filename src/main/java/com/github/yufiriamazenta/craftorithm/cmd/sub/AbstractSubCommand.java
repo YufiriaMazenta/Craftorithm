@@ -1,6 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.cmd.sub;
 
-import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
+import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.command.api.ISubcmdExecutor;
 import crypticlib.command.impl.SubcmdExecutor;
@@ -42,7 +42,7 @@ public abstract class AbstractSubCommand extends SubcmdExecutor {
     }
 
     public void sendNotEnoughCmdParamMsg(CommandSender sender, String paramStr) {
-        LangUtil.sendLang(sender, "command.not_enough_param", ContainerUtil.newHashMap("<number>", paramStr));
+        LangUtil.sendLang(sender, "command.not_enough_param", CollectionsUtil.newHashMap("<number>", paramStr));
     }
 
     public boolean checkSenderIsPlayer(CommandSender sender) {

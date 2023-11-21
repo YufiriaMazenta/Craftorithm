@@ -11,6 +11,6 @@ public interface IArcencielBlock<T> {
 
     ReturnObj<Object> exec(Player player);
 
-    T getArcencielBlockBody();
+    T arcencielBlockBody();
 
 }

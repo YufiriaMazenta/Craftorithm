@@ -38,11 +38,11 @@ public final class RemoveRecipeCommand extends AbstractSubCommand {
     public List<String> onTabComplete(CommandSender sender, List<String> args) {
         if (args.size() <= 1) {
             List<String> tabList = new ArrayList<>();
-            for (String key : RecipeManager.getRecipeGroupMap().keySet()) {
+            for (String key : RecipeManager.recipeGroupMap().keySet()) {
                 if (key.startsWith(args.get(0)))
                     tabList.add(key);
             }
-            for (String key : RecipeManager.getPotionMixGroupMap().keySet()) {
+            for (String key : RecipeManager.potionMixGroupMap().keySet()) {
                 if (key.startsWith(args.get(0)))
                     tabList.add(key);
             }

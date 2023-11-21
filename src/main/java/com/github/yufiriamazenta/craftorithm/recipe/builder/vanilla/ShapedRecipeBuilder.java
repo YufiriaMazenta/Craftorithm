@@ -27,20 +27,20 @@ public class ShapedRecipeBuilder extends AbstractRecipeBuilder {
         return (ShapedRecipeBuilder) super.setResult(result);
     }
 
-    public String[] getShape() {
+    public String[] shape() {
         return shape;
     }
 
-    public ShapedRecipeBuilder shape(String[] shape) {
+    public ShapedRecipeBuilder setShape(String[] shape) {
         this.shape = shape;
         return this;
     }
 
-    public Map<Character, RecipeChoice> getRecipeChoiceMap() {
+    public Map<Character, RecipeChoice> recipeChoiceMap() {
         return recipeChoiceMap;
     }
 
-    public ShapedRecipeBuilder recipeChoiceMap(Map<Character, RecipeChoice> recipeChoiceMap) {
+    public ShapedRecipeBuilder setRecipeChoiceMap(Map<Character, RecipeChoice> recipeChoiceMap) {
         this.recipeChoiceMap = recipeChoiceMap;
         return this;
     }

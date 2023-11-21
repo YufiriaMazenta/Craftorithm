@@ -21,7 +21,7 @@ public class ItemUtil {
     }
 
     public static void reloadCannotCraftLore() {
-        cannotCraftLore = TextUtil.color(Craftorithm.getInstance().getConfig().getString("lore_cannot_craft", "lore_cannot_craft"));
+        cannotCraftLore = TextUtil.color(Craftorithm.instance().getConfig().getString("lore_cannot_craft", "lore_cannot_craft"));
         try {
             cannotCraftLorePattern = Pattern.compile(cannotCraftLore);
             cannotCraftLoreIsRegex = true;

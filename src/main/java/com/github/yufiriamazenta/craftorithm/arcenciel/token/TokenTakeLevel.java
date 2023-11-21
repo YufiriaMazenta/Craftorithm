@@ -15,7 +15,7 @@ public class TokenTakeLevel extends AbstractArcencielToken<Integer> {
 
     @Override
     public ReturnObj<Integer> exec(Player player, List<String> args) {
-        if (args.size() < 1)
+        if (args.isEmpty())
             return new ReturnObj<>(player.getLevel());
         int value = Integer.parseInt(args.get(0));
         player.setLevel(Math.max(0, player.getLevel() - value));

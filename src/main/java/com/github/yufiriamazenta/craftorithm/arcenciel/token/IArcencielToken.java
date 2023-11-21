@@ -9,6 +9,6 @@ public interface IArcencielToken<T> {
 
     ReturnObj<T> exec(Player player, List<String> args);
 
-    String getTokenStr();
+    String tokenStr();
 
 }

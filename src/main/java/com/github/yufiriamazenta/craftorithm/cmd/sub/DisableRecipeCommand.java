@@ -24,7 +24,7 @@ public final class DisableRecipeCommand extends AbstractSubCommand {
             return true;
         }
         NamespacedKey removeRecipeKey = NamespacedKey.fromString(args.get(0));
-        if (!RecipeManager.getServerRecipeCache().contains(removeRecipeKey)) {
+        if (!RecipeManager.serverRecipeCache().contains(removeRecipeKey)) {
             LangUtil.sendLang(sender, "command.disable.not_exist");
             return true;
         }
@@ -41,7 +41,7 @@ public final class DisableRecipeCommand extends AbstractSubCommand {
     public List<String> onTabComplete(CommandSender sender, List<String> args) {
         if (args.size() <= 1) {
             List<String> tabList = new ArrayList<>();
-            for (NamespacedKey key : RecipeManager.getServerRecipeCache()) {
+            for (NamespacedKey key : RecipeManager.serverRecipeCache()) {
                 String str = key.toString();
                 if (str.startsWith(args.get(0)))
                     tabList.add(key.toString());

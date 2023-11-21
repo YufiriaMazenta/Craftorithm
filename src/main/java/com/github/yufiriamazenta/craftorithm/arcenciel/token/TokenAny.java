@@ -20,19 +20,19 @@ public class TokenAny extends AbstractArcencielToken<Boolean> {
     @Override
     public ReturnObj<Boolean> exec(Player player, List<String> args) {
         if (!args.contains("||")) {
-            Boolean bool = (Boolean) StringArcencielBlock.getArcencielKeywordMap().get("if").exec(player, args).getObj();
+            Boolean bool = (Boolean) StringArcencielBlock.getArcencielKeywordMap().get("if").exec(player, args).obj();
             return new ReturnObj<>(IF, bool);
         }
         boolean base = false;
         List<String> block = new ArrayList<>();
         for (int i = 0; i < args.size() + 1; i++) {
             if (i == args.size()) {
-                base = (base || (Boolean) StringArcencielBlock.getArcencielKeywordMap().get("if").exec(player, block).getObj());
+                base = (base || (Boolean) StringArcencielBlock.getArcencielKeywordMap().get("if").exec(player, block).obj());
                 break;
             }
             String arg = args.get(i);
             if (arg.equals("||")) {
-                base = (base || (Boolean) StringArcencielBlock.getArcencielKeywordMap().get("if").exec(player, block).getObj());
+                base = (base || (Boolean) StringArcencielBlock.getArcencielKeywordMap().get("if").exec(player, block).obj());
                 block = new ArrayList<>();
                 continue;
             }

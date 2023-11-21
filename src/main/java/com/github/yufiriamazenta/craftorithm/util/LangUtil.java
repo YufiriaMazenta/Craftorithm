@@ -13,13 +13,13 @@ import java.util.Map;
 
 public class LangUtil {
 
-    private static final YamlConfigWrapper langConfigFile = new YamlConfigWrapper(Craftorithm.getInstance(), "lang.yml");
+    private static final YamlConfigWrapper langConfigFile = new YamlConfigWrapper(Craftorithm.instance(), "lang.yml");
     private static final Map<String, String> defaultFormatMap;
 
     static {
         defaultFormatMap = new HashMap<>();
         defaultFormatMap.put("<prefix>", langConfigFile.config().getString("prefix", "&8[&3Oasis&bRecipe&8]"));
-        defaultFormatMap.put("<version>", Craftorithm.getInstance().getDescription().getVersion());
+        defaultFormatMap.put("<version>", Craftorithm.instance().getDescription().getVersion());
     }
 
     public static void sendLang(CommandSender sender, String msgKey) {

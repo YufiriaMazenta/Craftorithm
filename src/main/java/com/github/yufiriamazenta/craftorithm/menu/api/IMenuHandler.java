@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public interface IMenuHandler<T, C, I extends IMenuIcon<?, ?>> {
 
-    Map<T, I> getMenuIconMap();
+    Map<T, I> menuIconMap();
 
     void click(T slot, C clickEvent);
 

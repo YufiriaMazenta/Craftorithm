@@ -23,7 +23,7 @@ public abstract class BukkitMenuHandler implements IMenuHandler<Integer, Invento
     }
 
     @Override
-    public Map<Integer, ItemDisplayIcon> getMenuIconMap() {
+    public Map<Integer, ItemDisplayIcon> menuIconMap() {
         return menuIconMap;
     }
 

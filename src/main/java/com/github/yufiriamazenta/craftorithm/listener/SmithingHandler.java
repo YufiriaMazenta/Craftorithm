@@ -31,7 +31,7 @@ public enum SmithingHandler implements Listener {
         Player player = (Player) event.getView().getPlayer();
         String condition = config.getString("condition", "true");
         condition = "if " + condition;
-        boolean result = (boolean) ArcencielDispatcher.INSTANCE.dispatchArcencielBlock(player, condition).getObj();
+        boolean result = (boolean) ArcencielDispatcher.INSTANCE.dispatchArcencielBlock(player, condition).obj();
         if (!result) {
             event.getInventory().setResult(null);
         }
@@ -49,7 +49,7 @@ public enum SmithingHandler implements Listener {
             return;
         Player player = (Player) entity;
         List<String> actions = config.getStringList("actions");
-        CraftorithmAPI.INSTANCE.getArcencielDispatcher().dispatchArcencielFunc(player, actions);
+        CraftorithmAPI.INSTANCE.arcencielDispatcher().dispatchArcencielFunc(player, actions);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

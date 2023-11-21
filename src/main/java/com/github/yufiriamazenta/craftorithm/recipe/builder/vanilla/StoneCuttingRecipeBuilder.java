@@ -12,7 +12,7 @@ public class StoneCuttingRecipeBuilder extends AbstractRecipeBuilder {
 
     private StoneCuttingRecipeBuilder() {}
 
-    public StoneCuttingRecipeBuilder source(RecipeChoice source) {
+    public StoneCuttingRecipeBuilder setSource(RecipeChoice source) {
         this.source = source;
         return this;
     }
@@ -44,7 +44,7 @@ public class StoneCuttingRecipeBuilder extends AbstractRecipeBuilder {
         return new StoneCuttingRecipeBuilder();
     }
 
-    public RecipeChoice getSource() {
+    public RecipeChoice source() {
         return source.clone();
     }
 

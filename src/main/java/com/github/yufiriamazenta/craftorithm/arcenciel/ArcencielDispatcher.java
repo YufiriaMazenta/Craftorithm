@@ -34,11 +34,11 @@ public enum ArcencielDispatcher implements IArcencielDispatcher {
         ReturnObj<Object> returnObj = new ReturnObj<>();
         for (int i = 0; i < arcencielFuncBody.size(); i++) {
             returnObj = dispatchArcencielBlock(player, arcencielFuncBody.get(i));
-            if (returnObj.getObj() instanceof Boolean && returnObj.getSignal().equals(ArcencielSignal.IF)) {
-                if (returnObj.getObj().equals(false) && i + 1 < arcencielFuncBody.size())
+            if (returnObj.obj() instanceof Boolean && returnObj.signal().equals(ArcencielSignal.IF)) {
+                if (returnObj.obj().equals(false) && i + 1 < arcencielFuncBody.size())
                     i ++;
             }
-            if (returnObj.getSignal().equals(ArcencielSignal.END))
+            if (returnObj.signal().equals(ArcencielSignal.END))
                 break;
         }
         return returnObj;
@@ -65,7 +65,7 @@ public enum ArcencielDispatcher implements IArcencielDispatcher {
         }
     }
 
-    public YamlConfigWrapper getFunctionFile() {
+    public YamlConfigWrapper functionFile() {
         return functionFile;
     }
 
@@ -75,7 +75,7 @@ public enum ArcencielDispatcher implements IArcencielDispatcher {
 
     public void loadFuncFile() {
         if (functionFile == null)
-            functionFile = new YamlConfigWrapper(Craftorithm.getInstance(), "function.yml");
+            functionFile = new YamlConfigWrapper(Craftorithm.instance(), "function.yml");
     }
 
 }

@@ -54,7 +54,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
             LangUtil.sendLang(sender, "command.create.unsupported_recipe_name");
             return true;
         }
-        if (RecipeManager.getRecipeGroupMap().containsKey(recipeName) || RecipeManager.getPotionMixGroupMap().containsKey(recipeName)) {
+        if (RecipeManager.recipeGroupMap().containsKey(recipeName) || RecipeManager.potionMixGroupMap().containsKey(recipeName)) {
             LangUtil.sendLang(sender, "command.create.name_used");
             return true;
         }
