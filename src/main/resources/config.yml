@@ -11,3 +11,5 @@ lore_cannot_craft: '.*不可用于合成.*'
 all_recipe_unlocked: false
 #是否启用插件铁砧配方
 enable_anvil_recipe: true
+#是否启用bstats插件使用数据统计
+bstats: true

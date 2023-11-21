@@ -13,17 +13,10 @@ import com.github.yufiriamazenta.craftorithm.util.UpdateUtil;
 import crypticlib.BukkitPlugin;
 import crypticlib.CrypticLib;
 import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.server.ServerLoadEvent;
-import org.bukkit.inventory.Recipe;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 public final class Craftorithm extends BukkitPlugin implements Listener {
 
@@ -53,6 +46,8 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
     }
 
     private void loadBStat() {
+        if (!getConfig().getBoolean("bstats", true))
+            return;
         Metrics metrics = new Metrics(this, 17821);
         metrics.addCustomChart(new Metrics.SingleLineChart("recipes", () -> RecipeManager.getRecipeConfigWrapperMap().keySet().size()));
     }

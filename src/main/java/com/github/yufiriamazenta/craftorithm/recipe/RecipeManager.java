@@ -1,7 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.recipe;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
-import com.github.yufiriamazenta.craftorithm.CraftorithmAPI;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.CustomRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.PotionMixRecipe;
 import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
@@ -50,10 +49,6 @@ public class RecipeManager {
         } else {
             potionMixGroupMap = null;
         }
-    }
-
-    public static void initRecipeManager() {
-        loadRecipeFiles();
     }
 
     public static void loadRecipeFiles() {
