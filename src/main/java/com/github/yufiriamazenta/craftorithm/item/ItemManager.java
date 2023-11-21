@@ -1,7 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.item;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
-import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
+import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import com.github.yufiriamazenta.craftorithm.util.PluginHookUtil;
 import crypticlib.config.impl.YamlConfigWrapper;
@@ -24,55 +24,11 @@ public class ItemManager {
 
     private static final Map<String, YamlConfigWrapper> itemFileMap = new HashMap<>();
     private static final Map<String, ItemStack> itemMap = new HashMap<>();
-    private static final File itemFileFolder = new File(Craftorithm.getInstance().getDataFolder().getPath(), "items");
+    private static final File itemFileFolder = new File(Craftorithm.instance().getDataFolder(), "items");
 
     public static void reloadItemManager() {
         reloadItemFiles();
         reloadItems();
-    }
-
-    public static void reloadItems() {
-        itemMap.clear();
-        for (String fileKey : itemFileMap.keySet()) {
-            YamlConfigWrapper itemFile = itemFileMap.get(fileKey);
-            Set<String> itemKeySet = itemFile.config().getKeys(false);
-            for (String itemKey : itemKeySet) {
-                try {
-                    ConfigurationSection config = itemFile.config().getConfigurationSection(itemKey);
-                    Item item = ItemFactory.item(config);
-                    ItemStack bukkitItem = item.buildBukkit();
-                    itemMap.put(fileKey + ":" + itemKey, bukkitItem);
-                } catch (Exception e) {
-                    LangUtil.info("load.item_load_exception", ContainerUtil.newHashMap("<item_name>", fileKey + ":" + itemKey));
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    public static void addCraftorithmItem(String itemFileName, String itemName, ItemStack item) {
-        YamlConfigWrapper yamlConfig;
-        if (!ItemManager.getItemFileMap().containsKey(itemFileName)) {
-            File itemFile = new File(ItemManager.getItemFileFolder(), itemFileName + ".yml");
-            if (!itemFile.exists()) {
-                FileUtil.createNewFile(itemFile);
-            }
-            yamlConfig = new YamlConfigWrapper(itemFile);
-            itemFileMap.put(itemName, yamlConfig);
-        } else {
-            yamlConfig = itemFileMap.get(itemFileName);
-        }
-        Item libItem = ItemFactory.item(item);
-        yamlConfig.set(itemName, libItem.toMap());
-        itemMap.put(itemFileName + ":" + itemName, item);
-    }
-
-    public static boolean isCraftorithmItem(String itemName) {
-        return itemMap.containsKey(itemName);
-    }
-
-    public static ItemStack getCraftorithmItem(String itemName) {
-        return itemMap.getOrDefault(itemName, new ItemStack(Material.AIR)).clone();
     }
 
     public static void reloadItemFiles() {
@@ -80,11 +36,11 @@ public class ItemManager {
         if (!itemFileFolder.exists()) {
             boolean mkdirResult = itemFileFolder.mkdir();
             if (!mkdirResult)
-                return;
+                throw new RuntimeException("Create item folder failed");
         }
         List<File> allFiles = FileUtil.allFiles(itemFileFolder, FileUtil.YAML_FILE_PATTERN);
         if (allFiles.isEmpty()) {
-            Craftorithm.getInstance().saveResource("items/example_item.yml", false);
+            Craftorithm.instance().saveResource("items/example_item.yml", false);
             allFiles.add(new File(itemFileFolder, "example_item.yml"));
         }
         for (File file : allFiles) {
@@ -96,29 +52,80 @@ public class ItemManager {
         }
     }
 
-    public static Map<String, ItemStack> getItemMap() {
+    public static void reloadItems() {
+        itemMap.clear();
+        for (String namespace : itemFileMap.keySet()) {
+            YamlConfigWrapper itemFile = itemFileMap.get(namespace);
+            Set<String> itemKeySet = itemFile.config().getKeys(false);
+            for (String itemKey : itemKeySet) {
+                ConfigurationSection config = itemFile.config().getConfigurationSection(itemKey);
+                loadItem(namespace + ":" + itemKey, config);
+            }
+        }
+    }
+
+    private static void loadItem(String itemKey, ConfigurationSection config) {
+        try {
+            Item item = ItemFactory.item(config);
+            ItemStack bukkitItem = item.buildBukkit();
+            itemMap.put(itemKey, bukkitItem);
+        } catch (Exception e) {
+            LangUtil.info("load.item_load_exception", CollectionsUtil.newHashMap("<item_name>", itemKey));
+            e.printStackTrace();
+        }
+    }
+
+
+    public static void addCraftorithmItem(String namespace, String itemName, ItemStack bukkit) {
+        YamlConfigWrapper itemConfigFile;
+        if (!itemFileMap.containsKey(namespace)) {
+            File itemFile = new File(itemFileFolder, namespace + ".yml");
+            if (!itemFile.exists()) {
+                FileUtil.createNewFile(itemFile);
+            }
+            itemConfigFile = new YamlConfigWrapper(itemFile);
+            itemFileMap.put(namespace, itemConfigFile);
+        } else {
+            itemConfigFile = itemFileMap.get(namespace);
+        }
+        Item item = ItemFactory.item(bukkit);
+        itemConfigFile.set(itemName, item.toMap());
+        itemConfigFile.saveConfig();
+        itemMap.put(namespace + ":" + itemName, bukkit);
+    }
+
+    public static boolean isCraftorithmItem(String itemName) {
+        return itemMap.containsKey(itemName);
+    }
+
+    public static ItemStack getCraftorithmItem(String itemName) {
+        return itemMap.getOrDefault(itemName, new ItemStack(Material.AIR)).clone();
+    }
+
+    public static Map<String, ItemStack> itemMap() {
         return itemMap;
     }
 
-    public static Map<String, YamlConfigWrapper> getItemFileMap() {
+    public static Map<String, YamlConfigWrapper> itemFileMap() {
         return itemFileMap;
     }
 
-    public static File getItemFileFolder() {
+    public static File itemFileFolder() {
         return itemFileFolder;
     }
 
-    public static ItemStack matchItem(String itemStr) {
+    public static ItemStack matchItem(String itemName) {
         ItemStack item;
-        int lastSpaceIndex = itemStr.lastIndexOf(" ");
+        int lastSpaceIndex = itemName.lastIndexOf(" ");
         int amountScale = 1;
         if (lastSpaceIndex > 0) {
-            amountScale = Integer.parseInt(itemStr.substring(lastSpaceIndex + 1));
-            itemStr = itemStr.substring(0, lastSpaceIndex);
+            amountScale = Integer.parseInt(itemName.substring(lastSpaceIndex + 1));
+            itemName = itemName.substring(0, lastSpaceIndex);
         }
-        itemStr = itemStr.replace(" ", "");
-        if (itemStr.contains(":")) {
-            String namespace = itemStr.substring(0, itemStr.indexOf(":")), key = itemStr.substring(itemStr.indexOf(":") + 1);
+        itemName = itemName.replace(" ", "");
+        if (itemName.contains(":")) {
+            int index = itemName.indexOf(":");
+            String namespace = itemName.substring(0, index), key = itemName.substring(index + 1);
             switch (namespace) {
                 case "items":
                     item = getCraftorithmItem(key);
@@ -136,9 +143,9 @@ public class ItemManager {
                     throw new IllegalArgumentException(namespace + " is not a valid item namespace");
             }
         } else {
-            Material material = Material.matchMaterial(itemStr);
+            Material material = Material.matchMaterial(itemName);
             if (material == null) {
-                throw new IllegalArgumentException(itemStr + " is a not exist item type");
+                throw new IllegalArgumentException(itemName + " is a not exist item type");
             }
             item = new ItemStack(material);
         }

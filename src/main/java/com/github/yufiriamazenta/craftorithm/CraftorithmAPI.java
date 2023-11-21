@@ -12,7 +12,7 @@ public enum CraftorithmAPI {
         return ItemManager.getCraftorithmItem(itemName);
     }
 
-    public ArcencielDispatcher getArcencielDispatcher() {
+    public ArcencielDispatcher arcencielDispatcher() {
         return ArcencielDispatcher.INSTANCE;
     }
 

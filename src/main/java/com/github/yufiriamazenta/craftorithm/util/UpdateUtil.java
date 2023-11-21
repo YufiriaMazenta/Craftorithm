@@ -2,7 +2,6 @@ package com.github.yufiriamazenta.craftorithm.util;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import crypticlib.CrypticLib;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import java.io.BufferedReader;
@@ -13,10 +12,10 @@ import java.net.URLConnection;
 
 public class UpdateUtil {
 
-    public static void checkUpdate(CommandSender sender) {
-        if (!Craftorithm.getInstance().getConfig().getBoolean("check_update"))
+    public static void pullUpdateCheckRequest(CommandSender sender) {
+        if (!Craftorithm.instance().getConfig().getBoolean("check_update"))
             return;
-        CrypticLib.platform().scheduler().runTaskAsync(Craftorithm.getInstance(), () -> {
+        CrypticLib.platform().scheduler().runTaskAsync(Craftorithm.instance(), () -> {
             try {
                 URL url = new URL("https://api.spigotmc.org/legacy/update.php?resource=108429/~");
                 URLConnection conn = url.openConnection();
@@ -24,12 +23,11 @@ public class UpdateUtil {
                 conn.setReadTimeout(60000);
                 InputStream is = conn.getInputStream();
                 String latestVersion = new BufferedReader(new InputStreamReader(is)).readLine();
-                String pluginVersion = Craftorithm.getInstance().getDescription().getVersion();
+                String pluginVersion = Craftorithm.instance().getDescription().getVersion();
                 pluginVersion = pluginVersion.substring(0, pluginVersion.indexOf("-"));
                 if (checkVersion(latestVersion, pluginVersion)) {
-                    Bukkit.getScheduler().callSyncMethod(Craftorithm.getInstance(), () -> {
-                        LangUtil.sendLang(sender, "new_version", ContainerUtil.newHashMap("<new_version>", latestVersion));
-                        return null;
+                    CrypticLib.platform().scheduler().runTask(Craftorithm.instance(), () -> {
+                        LangUtil.sendLang(sender, "new_version", CollectionsUtil.newHashMap("<new_version>", latestVersion));
                     });
                 }
                 is.close();

@@ -61,7 +61,7 @@ public enum BukkitMenuDispatcher implements Listener {
         if (event.getInventory().getHolder() instanceof IChildBukkitMenu) {
             IChildBukkitMenu holder = (IChildBukkitMenu) event.getInventory().getHolder();
             if (holder.parentMenu() != null) {
-                CrypticLib.platform().scheduler().runTask(Craftorithm.getInstance(), () -> {
+                CrypticLib.platform().scheduler().runTask(Craftorithm.instance(), () -> {
                     InventoryType type = event.getPlayer().getOpenInventory().getType();
                     List<InventoryType> typeWhenNotOpenInv = Arrays.asList(InventoryType.CRAFTING, InventoryType.CREATIVE);
                     if (!typeWhenNotOpenInv.contains(type))

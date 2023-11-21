@@ -22,7 +22,7 @@ public class ReturnObj<T> {
         this.obj = obj;
     }
 
-    public ArcencielSignal getSignal() {
+    public ArcencielSignal signal() {
         return signal;
     }
 
@@ -30,7 +30,7 @@ public class ReturnObj<T> {
         this.signal = signal;
     }
 
-    public T getObj() {
+    public T obj() {
         return obj;
     }
 

@@ -13,7 +13,7 @@ public interface IMenuIcon<T, C> {
 
     void onClick(C clickEvent);
 
-    T getDisplay();
+    T display();
 
     void setDisplay(T display);
 

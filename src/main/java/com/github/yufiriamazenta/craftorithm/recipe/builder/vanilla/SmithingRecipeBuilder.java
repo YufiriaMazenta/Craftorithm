@@ -20,20 +20,20 @@ public class SmithingRecipeBuilder extends AbstractRecipeBuilder {
         return (SmithingRecipeBuilder) super.setResult(result);
     }
 
-    public RecipeChoice getBase() {
+    public RecipeChoice base() {
         return base.clone();
     }
 
-    public SmithingRecipeBuilder base(RecipeChoice base) {
+    public SmithingRecipeBuilder setBase(RecipeChoice base) {
         this.base = base;
         return this;
     }
 
-    public RecipeChoice getAddition() {
+    public RecipeChoice addition() {
         return addition.clone();
     }
 
-    public SmithingRecipeBuilder addition(RecipeChoice addition) {
+    public SmithingRecipeBuilder setAddition(RecipeChoice addition) {
         this.addition = addition;
         return this;
     }

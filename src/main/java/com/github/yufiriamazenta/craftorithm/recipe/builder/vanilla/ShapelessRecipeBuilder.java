@@ -24,12 +24,12 @@ public class ShapelessRecipeBuilder extends AbstractRecipeBuilder {
         return (ShapelessRecipeBuilder) super.setResult(result);
     }
 
-    public ShapelessRecipeBuilder choiceList(List<RecipeChoice> choiceList) {
+    public ShapelessRecipeBuilder setChoiceList(List<RecipeChoice> choiceList) {
         this.choiceList = choiceList;
         return this;
     }
 
-    public List<RecipeChoice> getChoiceList() {
+    public List<RecipeChoice> choiceList() {
         return choiceList;
     }
 

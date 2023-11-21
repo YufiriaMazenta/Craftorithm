@@ -22,18 +22,18 @@ public class ListArcencielBlock implements IArcencielBlock<List<String>> {
         ReturnObj<Object> returnObj = new ReturnObj<>(ArcencielSignal.CONTINUE, null);
         for (int i = 0; i < arcencielStatementList.size(); i++) {
             returnObj = new StringArcencielBlock(arcencielStatementList.get(i)).exec(player);
-            if (returnObj.getObj() instanceof Boolean && returnObj.getSignal().equals(ArcencielSignal.IF)) {
-                if (returnObj.getObj().equals(false) && i + 1 < arcencielStatementList.size())
+            if (returnObj.obj() instanceof Boolean && returnObj.signal().equals(ArcencielSignal.IF)) {
+                if (returnObj.obj().equals(false) && i + 1 < arcencielStatementList.size())
                     i ++;
             }
-            if (returnObj.getSignal().equals(ArcencielSignal.END))
+            if (returnObj.signal().equals(ArcencielSignal.END))
                 break;
         }
-        return new ReturnObj<>(returnObj.getSignal(), returnObj.getObj());
+        return new ReturnObj<>(returnObj.signal(), returnObj.obj());
     }
 
     @Override
-    public List<String> getArcencielBlockBody() {
+    public List<String> arcencielBlockBody() {
         return arcencielStatementList;
     }
 

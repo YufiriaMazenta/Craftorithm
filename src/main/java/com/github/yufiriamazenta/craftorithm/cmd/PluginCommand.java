@@ -1,7 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.cmd;
 
 import com.github.yufiriamazenta.craftorithm.cmd.sub.*;
-import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
+import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.command.api.BukkitCommand;
 import crypticlib.command.api.ISubcmdExecutor;
@@ -28,7 +28,7 @@ public class PluginCommand extends RootCmdExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         List<String> argList = Arrays.asList(args);
         if (argList.isEmpty()) {
-            LangUtil.sendLang(sender, "command.not_enough_param", ContainerUtil.newHashMap("<number>", String.valueOf(1)));
+            LangUtil.sendLang(sender, "command.not_enough_param", CollectionsUtil.newHashMap("<number>", String.valueOf(1)));
             return true;
         }
         ISubcmdExecutor subCommand = subcommands().get(argList.get(0));

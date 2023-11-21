@@ -31,16 +31,16 @@ public enum ConfigUpdater {
     }
 
     public void updateConfig() {
-        YamlConfiguration config = (YamlConfiguration) Craftorithm.getInstance().getConfig();
+        YamlConfiguration config = (YamlConfiguration) Craftorithm.instance().getConfig();
         Set<String> configKeySet = config.getKeys(true);
         Set<String> updateKeys = defConfigMap.keySet();
         updateKeys.removeAll(configKeySet);
         for (String key : updateKeys) {
             config.set(key, defConfigMap.get(key));
         }
-        config.set("version", Craftorithm.getInstance().getDescription().getVersion());
-        Craftorithm.getInstance().saveConfig();
-        Craftorithm.getInstance().reloadConfig();
+        config.set("version", Craftorithm.instance().getDescription().getVersion());
+        Craftorithm.instance().saveConfig();
+        Craftorithm.instance().reloadConfig();
     }
 
 }

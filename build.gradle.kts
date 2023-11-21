@@ -38,11 +38,11 @@ dependencies {
     compileOnly("com.github.LoneDev6:API-ItemsAdder:3.5.0b")
     compileOnly("com.github.oraxen:oraxen:1.160.0")
     compileOnly("io.lumine:Mythic-Dist:5.3.5")
-    implementation("com.crypticlib:CrypticLib:0.2.1")
+    implementation("com.crypticlib:CrypticLib:0.2.3")
 }
 
 group = "com.github.yufiriamazenta"
-version = "1.5.0-pre1"
+version = "1.5.0-pre2"
 var pluginVersion: String = version.toString() + "-" + SimpleDateFormat("yyyyMMdd").format(System.currentTimeMillis())
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 java.targetCompatibility = JavaVersion.VERSION_1_8
@@ -72,6 +72,6 @@ tasks {
     }
     shadowJar {
         archiveFileName.set("Craftorithm-$version.jar")
-        relocate("crypticlib", "com.github.yufiriamazenta.crypticlib")
+        relocate("crypticlib", "com.github.yufiriamazenta.craftorithm.crypticlib")
     }
 }

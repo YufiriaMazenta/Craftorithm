@@ -4,7 +4,7 @@ import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import com.github.yufiriamazenta.craftorithm.arcenciel.obj.ArcencielSignal;
 import com.github.yufiriamazenta.craftorithm.arcenciel.obj.ReturnObj;
 import com.github.yufiriamazenta.craftorithm.arcenciel.token.IArcencielToken;
-import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
+import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import org.bukkit.entity.Player;
 
@@ -38,24 +38,24 @@ public class StringArcencielBlock implements IArcencielBlock<String> {
         if (keyword == null) {
             List<String> func = ArcencielDispatcher.INSTANCE.getFunc(keywordStr);
             if (func.isEmpty()) {
-                LangUtil.sendLang(player, "arcenciel.unknown_token", ContainerUtil.newHashMap("<token>", keywordStr));
+                LangUtil.sendLang(player, "arcenciel.unknown_token", CollectionsUtil.newHashMap("<token>", keywordStr));
                 return new ReturnObj<>(ArcencielSignal.CONTINUE);
             } else {
                 return ArcencielDispatcher.INSTANCE.dispatchArcencielFunc(player, func);
             }
         }
         ReturnObj<?> returnObj = keyword.exec(player, scriptChain.subList(1, scriptChain.size()));
-        Object obj = returnObj.getObj();
-        return new ReturnObj<>(returnObj.getSignal(), obj);
+        Object obj = returnObj.obj();
+        return new ReturnObj<>(returnObj.signal(), obj);
     }
 
     @Override
-    public String getArcencielBlockBody() {
+    public String arcencielBlockBody() {
         return arcencielBlockBody;
     }
 
     public static void regScriptKeyword(IArcencielToken<?> node) {
-        arcencielKeywordMap.put(node.getTokenStr(), node);
+        arcencielKeywordMap.put(node.tokenStr(), node);
     }
 
     public static Map<String, IArcencielToken<?>> getArcencielKeywordMap() {

@@ -2,7 +2,7 @@ package com.github.yufiriamazenta.craftorithm.arcenciel.token;
 
 import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import com.github.yufiriamazenta.craftorithm.arcenciel.obj.ReturnObj;
-import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
+import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -19,14 +19,14 @@ public class TokenIf extends AbstractArcencielToken<Boolean> {
 
     @Override
     public ReturnObj<Boolean> exec(Player player, List<String> args) {
-        if (args.size() < 1)
+        if (args.isEmpty())
             return new ReturnObj<>(IF, true);
         if ("true".equalsIgnoreCase(args.get(0)))
             return new ReturnObj<>(IF, true);
         else if ("false".equalsIgnoreCase(args.get(0)))
             return new ReturnObj<>(IF, false);
-        ReturnObj<Object> returnObj = ArcencielDispatcher.INSTANCE.dispatchArcencielBlock(player, ContainerUtil.list2ArcencielBlock(args));
-        Object obj = returnObj.getObj();
+        ReturnObj<Object> returnObj = ArcencielDispatcher.INSTANCE.dispatchArcencielBlock(player, CollectionsUtil.list2ArcencielBlock(args));
+        Object obj = returnObj.obj();
         if (obj instanceof Boolean)
             return new ReturnObj<>(IF, ((Boolean) obj));
         if (obj instanceof String) {

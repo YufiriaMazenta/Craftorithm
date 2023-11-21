@@ -20,7 +20,7 @@ public enum RecipeUnlockHandler implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        Map<NamespacedKey, Boolean> unlockMap = RecipeManager.getRecipeUnlockMap();
+        Map<NamespacedKey, Boolean> unlockMap = RecipeManager.recipeUnlockMap();
         List<NamespacedKey> unlockKeyList = new ArrayList<>(unlockMap.keySet());
         unlockKeyList.removeIf(key -> unlockMap.getOrDefault(key, false) && !player.hasDiscoveredRecipe(key));
         player.discoverRecipes(unlockKeyList);

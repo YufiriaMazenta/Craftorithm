@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
 
-public class ContainerUtil {
+public class CollectionsUtil {
 
     public static Map<String, String> newHashMap(String... str) {
         Map<String, String> hashMap = new HashMap<>();

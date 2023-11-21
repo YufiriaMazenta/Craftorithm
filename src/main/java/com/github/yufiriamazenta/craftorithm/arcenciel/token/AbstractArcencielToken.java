@@ -22,7 +22,7 @@ public abstract class AbstractArcencielToken<T> implements IArcencielToken<T> {
     }
 
     @Override
-    public String getTokenStr() {
+    public String tokenStr() {
         return tokenStr;
     }
 

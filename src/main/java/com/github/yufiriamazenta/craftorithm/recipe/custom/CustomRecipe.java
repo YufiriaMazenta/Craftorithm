@@ -6,8 +6,8 @@ import org.bukkit.inventory.Recipe;
 
 public interface CustomRecipe extends Recipe {
 
-    RecipeType getRecipeType();
+    RecipeType recipeType();
 
-    NamespacedKey getKey();
+    NamespacedKey key();
 
 }

@@ -28,7 +28,7 @@ public class RecipeGroupListMenuHolder extends BukkitMenuHandler {
     public RecipeGroupListMenuHolder() {
         super();
         Map<String, ItemStack> recipeResultMap = new HashMap<>();
-        RecipeManager.getRecipeGroupMap().forEach((recipeName, recipeKeys) -> {
+        RecipeManager.recipeGroupMap().forEach((recipeName, recipeKeys) -> {
             if (recipeKeys == null || recipeKeys.isEmpty())
                 return;
             Recipe firstRecipe = Bukkit.getRecipe(recipeKeys.get(0));
@@ -36,7 +36,7 @@ public class RecipeGroupListMenuHolder extends BukkitMenuHandler {
                 return;
             recipeResultMap.put(recipeName, firstRecipe.getResult());
         });
-        RecipeManager.getPotionMixGroupMap().forEach((recipeName, recipes) -> {
+        RecipeManager.potionMixGroupMap().forEach((recipeName, recipes) -> {
             if (recipes == null || recipes.isEmpty())
                 return;
             recipeResultMap.put(recipeName, recipes.get(0).getResult());
@@ -61,8 +61,8 @@ public class RecipeGroupListMenuHolder extends BukkitMenuHandler {
     public Inventory getInventory() {
         resetIcons();
         Inventory inventory = Bukkit.createInventory(this, 54, TextUtil.color(LangUtil.langMsg("menu.new_recipe_list.title")));
-        for (Integer slot : getMenuIconMap().keySet()) {
-            inventory.setItem(slot, getMenuIconMap().get(slot).getDisplay());
+        for (Integer slot : menuIconMap().keySet()) {
+            inventory.setItem(slot, menuIconMap().get(slot).display());
         }
         return inventory;
     }
@@ -76,18 +76,18 @@ public class RecipeGroupListMenuHolder extends BukkitMenuHandler {
     }
 
     private void resetIcons() {
-        getMenuIconMap().clear();
+        menuIconMap().clear();
         int []frameSlots = {45, 47, 48, 49, 50, 51, 53};
         ItemDisplayIcon frameIcon = ItemDisplayIcon.icon(Material.BLACK_STAINED_GLASS_PANE, LangUtil.langMsg("menu.new_recipe_list.icon.frame"));
         for (int frameSlot : frameSlots) {
-            getMenuIconMap().put(frameSlot, frameIcon);
+            menuIconMap().put(frameSlot, frameIcon);
         }
         ItemStack previousDisplay = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta previousMeta = (SkullMeta) Bukkit.getItemFactory().getItemMeta(Material.PLAYER_HEAD);
         previousMeta.setOwner("MHF_ArrowLeft");
         previousMeta.setDisplayName(TextUtil.color(LangUtil.langMsg("menu.new_recipe_list.icon.previous")));
         previousDisplay.setItemMeta(previousMeta);
-        getMenuIconMap().put(46, ItemDisplayIcon.icon(previousDisplay, (event -> {
+        menuIconMap().put(46, ItemDisplayIcon.icon(previousDisplay, (event -> {
             event.setCancelled(true);
             event.getWhoClicked().openInventory(getPreviousPage());
         })));
@@ -96,13 +96,13 @@ public class RecipeGroupListMenuHolder extends BukkitMenuHandler {
         nextMeta.setOwner("MHF_ArrowRight");
         nextMeta.setDisplayName(TextUtil.color(LangUtil.langMsg("menu.new_recipe_list.icon.next")));
         nextDisplay.setItemMeta(nextMeta);
-        getMenuIconMap().put(52, ItemDisplayIcon.icon(nextDisplay, (event -> {
+        menuIconMap().put(52, ItemDisplayIcon.icon(nextDisplay, (event -> {
             event.setCancelled(true);
             event.getWhoClicked().openInventory(getNextPage());
         })));
         int recipeSlot = page * 45;
         for (int invSlot = 0; invSlot < 45 && recipeSlot < recipeGroupResultList.size(); invSlot++, recipeSlot++) {
-            getMenuIconMap().put(invSlot, wrapIcon(recipeSlot));
+            menuIconMap().put(invSlot, wrapIcon(recipeSlot));
         }
     }
 
@@ -110,13 +110,13 @@ public class RecipeGroupListMenuHolder extends BukkitMenuHandler {
     private ItemDisplayIcon wrapIcon(int recipeSlot) {
         ItemStack display = recipeGroupResultList.get(recipeSlot).getValue();
         String recipeGroupName = recipeGroupResultList.get(recipeSlot).getKey();
-        if (RecipeManager.getRecipeGroupMap().containsKey(recipeGroupName)) {
+        if (RecipeManager.recipeGroupMap().containsKey(recipeGroupName)) {
             return ItemDisplayIcon.icon(display, event -> {
                 event.setCancelled(true);
                 event.getWhoClicked().openInventory(
                     new RecipeListMenuHolder(
                         (Player) event.getWhoClicked(),
-                        RecipeManager.getRecipeGroupMap().get(recipeGroupName),
+                        RecipeManager.recipeGroupMap().get(recipeGroupName),
                         this
                     ).getInventory()
                 );
@@ -127,7 +127,7 @@ public class RecipeGroupListMenuHolder extends BukkitMenuHandler {
                 event.getWhoClicked().openInventory(
                     new RecipeListMenuHolder(
                         (Player) event.getWhoClicked(),
-                        RecipeManager.getPotionMixGroupMap(),
+                        RecipeManager.potionMixGroupMap(),
                         recipeGroupName,
                         this
                     ).getInventory()

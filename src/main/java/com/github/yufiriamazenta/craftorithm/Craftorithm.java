@@ -37,7 +37,7 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
         loadBStat();
         
         LangUtil.info("load.finish");
-        UpdateUtil.checkUpdate(Bukkit.getConsoleSender());
+        UpdateUtil.pullUpdateCheckRequest(Bukkit.getConsoleSender());
     }
 
     @Override
@@ -49,7 +49,7 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
         if (!getConfig().getBoolean("bstats", true))
             return;
         Metrics metrics = new Metrics(this, 17821);
-        metrics.addCustomChart(new Metrics.SingleLineChart("recipes", () -> RecipeManager.getRecipeConfigWrapperMap().keySet().size()));
+        metrics.addCustomChart(new Metrics.SingleLineChart("recipes", () -> RecipeManager.recipeConfigWrapperMap().keySet().size()));
     }
 
     private void regListeners() {
@@ -64,18 +64,18 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
         ArcencielDispatcher.INSTANCE.loadFuncFile();
     }
 
-    public static Craftorithm getInstance() {
+    public static Craftorithm instance() {
         return INSTANCE;
     }
 
-    public static CraftorithmAPI getAPI() {
+    public static CraftorithmAPI api() {
         return CraftorithmAPI.INSTANCE;
     }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         if (event.getPlayer().isOp()) {
-            UpdateUtil.checkUpdate(event.getPlayer());
+            UpdateUtil.pullUpdateCheckRequest(event.getPlayer());
         }
     }
 

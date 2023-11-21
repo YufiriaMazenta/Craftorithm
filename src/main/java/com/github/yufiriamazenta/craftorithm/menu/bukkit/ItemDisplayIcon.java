@@ -49,7 +49,7 @@ public class ItemDisplayIcon implements IMenuIcon<ItemStack, InventoryClickEvent
     }
 
     @Override
-    public ItemStack getDisplay() {
+    public ItemStack display() {
         return this.display;
     }
 

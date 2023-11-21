@@ -1,7 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.cmd.sub;
 
 import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
-import com.github.yufiriamazenta.craftorithm.util.ContainerUtil;
+import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -34,7 +34,7 @@ public final class RunArcencielCmd extends AbstractSubCommand {
         }
         ArcencielDispatcher.INSTANCE.dispatchArcencielBlock((Player) sender, arcencielBlock.toString());
         long execTime = System.currentTimeMillis() - startTime;
-        LangUtil.sendLang(sender, "command.run_arcenciel.success", ContainerUtil.newHashMap("<time>", String.valueOf(execTime)));
+        LangUtil.sendLang(sender, "command.run_arcenciel.success", CollectionsUtil.newHashMap("<time>", String.valueOf(execTime)));
         return true;
     }
 }

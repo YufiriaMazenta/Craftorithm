@@ -25,12 +25,12 @@ public class PotionMixRecipe implements CustomRecipe {
     }
 
     @Override
-    public RecipeType getRecipeType() {
+    public RecipeType recipeType() {
         return RecipeType.POTION;
     }
 
     @Override
-    public NamespacedKey getKey() {
+    public NamespacedKey key() {
         return potionMix.getKey();
     }
 

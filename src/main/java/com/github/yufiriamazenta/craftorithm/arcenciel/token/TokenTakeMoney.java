@@ -18,7 +18,7 @@ public class TokenTakeMoney extends AbstractArcencielToken<Double> {
     @Override
     public ReturnObj<Double> exec(Player player, List<String> args) {
         Economy economy = PluginHookUtil.getEconomy();
-        if (args.size() < 1)
+        if (args.isEmpty())
             return new ReturnObj<>(economy.getBalance(player));
         double value = Double.parseDouble(args.get(0));
         if (value >= 0)
