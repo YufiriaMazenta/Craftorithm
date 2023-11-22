@@ -131,7 +131,11 @@ public class RecipeListMenuHolder extends BukkitMenuHandler implements IChildBuk
                 event.setCancelled(true);
                 event.getWhoClicked().openInventory(new RecipeDisplayMenuHolder(recipe, this).getInventory());
             })));
-
+        }
+        for (int i = 0; i < 45; i++) {
+            if (menuIconMap().containsKey(i))
+                continue;
+            menuIconMap().put(i, ItemDisplayIcon.icon(new ItemStack(Material.AIR)));
         }
     }
 

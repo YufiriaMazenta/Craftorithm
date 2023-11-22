@@ -104,6 +104,11 @@ public class RecipeGroupListMenuHolder extends BukkitMenuHandler {
         for (int invSlot = 0; invSlot < 45 && recipeSlot < recipeGroupResultList.size(); invSlot++, recipeSlot++) {
             menuIconMap().put(invSlot, wrapIcon(recipeSlot));
         }
+        for (int i = 0; i < 45; i++) {
+            if (menuIconMap().containsKey(i))
+                continue;
+            menuIconMap().put(i, ItemDisplayIcon.icon(new ItemStack(Material.AIR)));
+        }
     }
 
     @NotNull
