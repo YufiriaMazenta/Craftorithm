@@ -2,7 +2,7 @@ package com.github.yufiriamazenta.craftorithm.cmd.sub;
 
 import com.github.yufiriamazenta.craftorithm.cmd.sub.item.ItemGiveCommand;
 import com.github.yufiriamazenta.craftorithm.cmd.sub.item.ItemSaveCommand;
-import crypticlib.command.api.ISubcmdExecutor;
+import crypticlib.command.ISubcmdExecutor;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;

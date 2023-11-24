@@ -163,7 +163,7 @@ public class ItemManager {
      * @return 传入的物品名字
      */
     public static String getItemName(ItemStack item, boolean ignoreAmount, boolean regNew, String namespace, String regName) {
-        if (ItemUtil.isItemInvalidate(item))
+        if (ItemUtil.isAir(item))
             return null;
         AtomicReference<String> itemName = new AtomicReference<>("");
         itemMap.forEach((key, savedItem) -> {
