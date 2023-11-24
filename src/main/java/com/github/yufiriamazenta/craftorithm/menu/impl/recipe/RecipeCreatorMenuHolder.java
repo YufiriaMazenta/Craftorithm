@@ -29,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.util.*;
 
+//TODO 重构配方创建模块
 public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
 
     private RecipeType recipeType;
@@ -478,7 +479,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
     }
 
     private String getItemName(ItemStack item, boolean ignoreAmount) {
-        if (ItemUtil.isItemInvalidate(item)) {
+        if (ItemUtil.isAir(item)) {
             return null;
         }
         String itemName = checkIsOtherPluginName(item);

@@ -2,7 +2,7 @@ package com.github.yufiriamazenta.craftorithm.cmd.sub;
 
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import crypticlib.command.api.ISubcmdExecutor;
+import crypticlib.command.ISubcmdExecutor;
 import crypticlib.command.impl.SubcmdExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
