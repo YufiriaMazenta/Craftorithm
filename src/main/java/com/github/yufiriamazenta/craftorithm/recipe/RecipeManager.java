@@ -33,6 +33,7 @@ public class RecipeManager {
     private static final List<NamespacedKey> serverRecipeCache;
     private static final List<Recipe> removedRecipeRecycleBin;
     private static final String PLUGIN_RECIPE_NAMESPACE = "craftorithm";
+    private static boolean supportPotionMix;
 
     static {
         removedRecipeConfig = new YamlConfigWrapper(Craftorithm.instance(), "removed_recipes.yml");
@@ -43,11 +44,14 @@ public class RecipeManager {
         recipeUnlockMap = new ConcurrentHashMap<>();
         recipeSortIdMap = new ConcurrentHashMap<>();
         removedRecipeRecycleBin = new CopyOnWriteArrayList<>();
+        potionMixGroupMap = new ConcurrentHashMap<>();
 
-        if (supportPotionMix()) {
-            potionMixGroupMap = new ConcurrentHashMap<>();
-        } else {
-            potionMixGroupMap = null;
+
+        try {
+            Class.forName("io.papermc.paper.potion.PotionMix");
+            supportPotionMix = true;
+        } catch (Exception e) {
+            supportPotionMix = false;
         }
     }
 
@@ -280,6 +284,10 @@ public class RecipeManager {
     }
 
     private static void addRecipeToRemovedRecipeRecycleBin(List<NamespacedKey> recipeKeys) {
+        if (CrypticLib.minecraftVersion() < 11600) {
+            //因为1.16以下没有getRecipe，故直接返回
+            return;
+        }
         for (NamespacedKey recipeKey : recipeKeys) {
             Recipe recipe = Bukkit.getRecipe(recipeKey);
             if (recipe == null)
@@ -334,6 +342,9 @@ public class RecipeManager {
     }
 
     public static List<Recipe> getCraftorithmRecipe(String recipeName) {
+        //因为1.16以下没有getRecipe，故直接返回
+        if (CrypticLib.minecraftVersion() < 11600)
+            return new ArrayList<>();
         List<Recipe> recipes = new ArrayList<>();
         for (NamespacedKey key : recipeGroupMap.getOrDefault(recipeName, new ArrayList<>())) {
             Recipe recipe = Bukkit.getRecipe(key);
@@ -381,8 +392,7 @@ public class RecipeManager {
     }
 
     public static boolean supportPotionMix() {
-        IPlatform.Platform platform = CrypticLib.platform().platform();
-        return (CrypticLib.minecraftVersion() >= 11800) && (platform.equals(IPlatform.Platform.PAPER) || platform.equals(IPlatform.Platform.FOLIA));
+        return supportPotionMix;
     }
 
     private static void saveDefConfigFile(List<File> allFiles) {

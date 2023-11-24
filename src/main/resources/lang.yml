@@ -35,8 +35,8 @@ command:
     success: '<prefix> &a<recipe_type>类型配方<recipe_name>创建成功'
   run_arcenciel:
     success: '<prefix> &a运行成功，耗时<time>ms'
-  show:
-    not_exist_recipe: '<prefix> &c不存在的配方'
+  list:
+    unsupported_version: '<prefix> &c此功能只在1.16及以上版本可用'
 
 menu:
   recipe_list:

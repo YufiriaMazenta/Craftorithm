@@ -36,11 +36,13 @@ public class RecipeGroupListMenuHolder extends BukkitMenuHandler {
                 return;
             recipeResultMap.put(recipeName, firstRecipe.getResult());
         });
-        RecipeManager.potionMixGroupMap().forEach((recipeName, recipes) -> {
-            if (recipes == null || recipes.isEmpty())
-                return;
-            recipeResultMap.put(recipeName, recipes.get(0).getResult());
-        });
+        if (RecipeManager.supportPotionMix()) {
+            RecipeManager.potionMixGroupMap().forEach((recipeName, recipes) -> {
+                if (recipes == null || recipes.isEmpty())
+                    return;
+                recipeResultMap.put(recipeName, recipes.get(0).getResult());
+            });
+        }
         recipeGroupResultList = new ArrayList<>(recipeResultMap.entrySet());
         page = 0;
         int recipeGroupNum = recipeResultMap.size();

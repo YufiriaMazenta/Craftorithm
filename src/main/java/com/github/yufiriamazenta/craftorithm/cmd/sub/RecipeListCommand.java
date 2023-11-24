@@ -4,6 +4,7 @@ import com.github.yufiriamazenta.craftorithm.menu.impl.recipe.RecipeGroupListMen
 import com.github.yufiriamazenta.craftorithm.menu.impl.recipe.RecipeListMenuHolder;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import crypticlib.CrypticLib;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -23,6 +24,10 @@ public final class RecipeListCommand extends AbstractSubCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, List<String> args) {
+        if (CrypticLib.minecraftVersion() < 11600) {
+            LangUtil.sendLang(sender, "command.list.unsupported_version");
+            return true;
+        }
         if (!checkSenderIsPlayer(sender)) {
             LangUtil.sendLang(sender, "command.player_only");
             return true;

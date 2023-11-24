@@ -5,6 +5,7 @@ import com.github.yufiriamazenta.craftorithm.bstat.Metrics;
 import com.github.yufiriamazenta.craftorithm.config.ConfigUpdater;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.listener.FurnaceSmeltHandler;
+import com.github.yufiriamazenta.craftorithm.listener.ItemsAdderHandler;
 import com.github.yufiriamazenta.craftorithm.listener.SmithingHandler;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
@@ -82,6 +83,10 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
     @EventHandler
     public void onServerLoad(ServerLoadEvent event) {
         PluginHookUtil.hookPlugins();
-        RecipeManager.reloadRecipeManager();
+        if (!PluginHookUtil.isItemsAdderLoaded()) {
+            RecipeManager.reloadRecipeManager();
+            return;
+        }
+        Bukkit.getPluginManager().registerEvents(ItemsAdderHandler.INSTANCE, this);
     }
 }
