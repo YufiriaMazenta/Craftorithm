@@ -75,6 +75,10 @@ public class PluginHookUtil {
             LangUtil.info("load.items_adder_not_exist");
     }
 
+    public static boolean isItemsAdderLoaded() {
+        return itemsAdderLoaded;
+    }
+
     public static ItemStack getItemsAdderItem(String itemStr) {
         if (!itemsAdderLoaded)
             throw new UnsupportedOperationException("Can not found ItemsAdder plugin");
