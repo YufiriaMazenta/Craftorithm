@@ -1,16 +1,19 @@
 package com.github.yufiriamazenta.craftorithm.util;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
+import com.github.yufiriamazenta.craftorithm.item.ItemManager;
+import crypticlib.util.ItemUtil;
 import crypticlib.util.TextUtil;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-public class ItemUtil {
+public class ItemUtils {
 
     private static String cannotCraftLore;
     private static Pattern cannotCraftLorePattern;
@@ -66,5 +69,41 @@ public class ItemUtil {
         }
         return containsLore;
     }
+
+    public static String getItemName(ItemStack item, boolean ignoreAmount) {
+        if (ItemUtil.isAir(item)) {
+            return null;
+        }
+        String itemName = checkIsOtherPluginName(item);
+        if (itemName != null)
+            return itemName;
+        if (item.hasItemMeta()) {
+            itemName = ItemManager.getItemName(item, ignoreAmount, true, "gui_items", UUID.randomUUID().toString());
+            itemName = "items:" + itemName;
+        } else {
+            itemName = item.getType().name();
+        }
+        return itemName;
+    }
+
+    public static String checkIsOtherPluginName(ItemStack item) {
+        //识别是否是ItemsAdder的物品
+        String itemsAdderName = PluginHookUtil.getItemsAdderName(item);
+        if (itemsAdderName != null)
+            return "items_adder:" + itemsAdderName;
+
+        //识别是否是Oraxen的物品
+        String oraxenName = PluginHookUtil.getOraxenName(item);
+        if (oraxenName != null) {
+            return "oraxen:" + oraxenName;
+        }
+
+        //识别是否是MythicMobs的物品
+        String mythicName = PluginHookUtil.getMythicMobsName(item);
+        if (mythicName != null)
+            return "mythic_mobs:" + mythicName;
+        return null;
+    }
+
 
 }

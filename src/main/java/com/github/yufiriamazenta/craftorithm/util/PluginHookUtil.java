@@ -84,7 +84,7 @@ public class PluginHookUtil {
             throw new UnsupportedOperationException("Can not found ItemsAdder plugin");
         CustomStack customStack = CustomStack.getInstance(itemStr);
         if (customStack == null) {
-            throw new IllegalArgumentException(itemStr + " is a not exist ItemsAdder item");
+            throw new IllegalArgumentException("Can not found item " + itemStr + " from ItemsAdder");
         }
         return customStack.getItemStack();
     }
@@ -110,7 +110,7 @@ public class PluginHookUtil {
         if (!oraxenLoaded)
             throw new UnsupportedOperationException("Can not found Oraxen plugin");
         if (!OraxenItems.exists(itemStr)) {
-            throw new IllegalArgumentException(itemStr + " is a not exist Oraxen item");
+            throw new IllegalArgumentException("Can not found item " + itemStr + " from Oraxen");
         }
         return OraxenItems.getItemById(itemStr).build();
     }
@@ -137,7 +137,7 @@ public class PluginHookUtil {
         ItemExecutor executor = MythicBukkit.inst().getItemManager();
         Optional<MythicItem> itemOptional = executor.getItem(itemStr);
         if (!itemOptional.isPresent()) {
-            throw new IllegalArgumentException(itemStr + " is not a valid MythicMobs item");
+            throw new IllegalArgumentException("Can not found item " + itemStr + " from MythicMobs");
         }
         MythicItem mythicItem = itemOptional.get();
         int amount = mythicItem.getAmount();

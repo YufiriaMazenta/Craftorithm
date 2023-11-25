@@ -30,6 +30,7 @@ import java.io.File;
 import java.util.*;
 
 //TODO 重构配方创建模块
+@Deprecated
 public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
 
     private RecipeType recipeType;
