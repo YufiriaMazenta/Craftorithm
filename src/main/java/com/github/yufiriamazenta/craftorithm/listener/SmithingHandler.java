@@ -3,7 +3,7 @@ package com.github.yufiriamazenta.craftorithm.listener;
 import com.github.yufiriamazenta.craftorithm.CraftorithmAPI;
 import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
-import com.github.yufiriamazenta.craftorithm.util.ItemUtil;
+import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.HumanEntity;
@@ -55,7 +55,7 @@ public enum SmithingHandler implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void checkCannotCraftLore(PrepareSmithingEvent event) {
         ItemStack[] items = event.getInventory().getContents();
-        boolean containsLore = ItemUtil.hasCannotCraftLore(items);
+        boolean containsLore = ItemUtils.hasCannotCraftLore(items);
         if (containsLore)
             event.getInventory().setResult(null);
     }

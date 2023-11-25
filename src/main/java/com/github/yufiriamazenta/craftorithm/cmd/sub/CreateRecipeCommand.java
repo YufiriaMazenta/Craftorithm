@@ -3,12 +3,19 @@ package com.github.yufiriamazenta.craftorithm.cmd.sub;
 import com.github.yufiriamazenta.craftorithm.menu.impl.recipe.RecipeCreatorMenuHolder;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
+import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import com.google.common.collect.Maps;
 import crypticlib.CrypticLib;
+import crypticlib.ui.display.MenuDisplay;
+import crypticlib.ui.display.MenuLayout;
+import crypticlib.ui.menu.StoredMenu;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -59,6 +66,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
             return true;
         }
         RecipeType recipeType = RecipeType.valueOf(recipeTypeStr.toUpperCase(Locale.ROOT));
+        //TODO
         ((Player) sender).openInventory(new RecipeCreatorMenuHolder(recipeType, recipeName).getInventory());
         return true;
     }

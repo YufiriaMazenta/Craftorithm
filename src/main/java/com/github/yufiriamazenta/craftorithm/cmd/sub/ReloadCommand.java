@@ -4,7 +4,7 @@ import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
-import com.github.yufiriamazenta.craftorithm.util.ItemUtil;
+import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.command.ISubcmdExecutor;
 import org.bukkit.command.CommandSender;
@@ -39,7 +39,7 @@ public final class ReloadCommand extends AbstractSubCommand {
 
     public static void reloadConfigs() {
         Craftorithm.instance().reloadConfig();
-        ItemUtil.reloadCannotCraftLore();
+        ItemUtils.reloadCannotCraftLore();
         LangUtil.reloadLangConfig();
         ArcencielDispatcher.INSTANCE.functionFile().reloadConfig();
     }
