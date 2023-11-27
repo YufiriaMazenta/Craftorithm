@@ -32,6 +32,7 @@ command:
     unsupported_recipe_name: '<prefix> &c不支持的配方名字，只能使用[a-z0-9/._-]+允许的内容'
     name_used: '<prefix> &c配方ID已经被使用'
     null_result: '<prefix> &c配方结果不允许为空！'
+    null_source: '<prefix> &c配方原料不允许为空！'
     success: '<prefix> &a<recipe_type>类型配方<recipe_name>创建成功'
   run_arcenciel:
     success: '<prefix> &a运行成功，耗时<time>ms'

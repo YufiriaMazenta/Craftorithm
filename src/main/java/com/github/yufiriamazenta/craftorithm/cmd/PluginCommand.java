@@ -28,7 +28,7 @@ public class PluginCommand extends RootCmdExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         List<String> argList = Arrays.asList(args);
         if (argList.isEmpty()) {
-            LangUtil.sendLang(sender, "command.not_enough_param", CollectionsUtil.newHashMap("<number>", String.valueOf(1)));
+            LangUtil.sendLang(sender, "command.not_enough_param", CollectionsUtil.newStringHashMap("<number>", String.valueOf(1)));
             return true;
         }
         ISubcmdExecutor subCommand = subcommands().get(argList.get(0));

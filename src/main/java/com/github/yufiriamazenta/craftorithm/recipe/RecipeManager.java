@@ -7,7 +7,6 @@ import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.CrypticLib;
 import crypticlib.config.impl.YamlConfigWrapper;
-import crypticlib.platform.IPlatform;
 import crypticlib.util.FileUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
@@ -107,7 +106,7 @@ public class RecipeManager {
                     regRecipes(fileName, Arrays.asList(recipes), configWrapper);
                 }
             } catch (Throwable e) {
-                LangUtil.info("load.recipe_load_exception", CollectionsUtil.newHashMap("<recipe_name>", fileName));
+                LangUtil.info("load.recipe_load_exception", CollectionsUtil.newStringHashMap("<recipe_name>", fileName));
                 e.printStackTrace();
             }
         }

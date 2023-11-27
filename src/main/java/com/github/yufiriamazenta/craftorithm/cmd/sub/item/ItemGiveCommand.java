@@ -44,7 +44,7 @@ public class ItemGiveCommand extends AbstractSubCommand {
         }
 
         if (!ItemManager.isCraftorithmItem(args.get(0))) {
-            LangUtil.sendLang(sender, "command.item.give.not_exist_item", CollectionsUtil.newHashMap("<item_name>", args.get(0)));
+            LangUtil.sendLang(sender, "command.item.give.not_exist_item", CollectionsUtil.newStringHashMap("<item_name>", args.get(0)));
             return true;
         }
 

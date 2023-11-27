@@ -38,7 +38,7 @@ public class StringArcencielBlock implements IArcencielBlock<String> {
         if (keyword == null) {
             List<String> func = ArcencielDispatcher.INSTANCE.getFunc(keywordStr);
             if (func.isEmpty()) {
-                LangUtil.sendLang(player, "arcenciel.unknown_token", CollectionsUtil.newHashMap("<token>", keywordStr));
+                LangUtil.sendLang(player, "arcenciel.unknown_token", CollectionsUtil.newStringHashMap("<token>", keywordStr));
                 return new ReturnObj<>(ArcencielSignal.CONTINUE);
             } else {
                 return ArcencielDispatcher.INSTANCE.dispatchArcencielFunc(player, func);

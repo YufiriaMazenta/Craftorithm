@@ -34,7 +34,7 @@ public final class RunArcencielCmd extends AbstractSubCommand {
         }
         ArcencielDispatcher.INSTANCE.dispatchArcencielBlock((Player) sender, arcencielBlock.toString());
         long execTime = System.currentTimeMillis() - startTime;
-        LangUtil.sendLang(sender, "command.run_arcenciel.success", CollectionsUtil.newHashMap("<time>", String.valueOf(execTime)));
+        LangUtil.sendLang(sender, "command.run_arcenciel.success", CollectionsUtil.newStringHashMap("<time>", String.valueOf(execTime)));
         return true;
     }
 }
