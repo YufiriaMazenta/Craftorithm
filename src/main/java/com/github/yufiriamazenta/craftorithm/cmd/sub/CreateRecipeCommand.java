@@ -1,5 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.cmd.sub;
 
+import com.github.yufiriamazenta.craftorithm.menu.bukkit.ItemDisplayIcon;
 import com.github.yufiriamazenta.craftorithm.menu.impl.recipe.RecipeCreatorMenuHolder;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeFactory;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
@@ -17,9 +18,14 @@ import crypticlib.util.FileUtil;
 import crypticlib.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
 import java.util.*;
@@ -42,6 +48,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
         if (CrypticLib.minecraftVersion() < 11400) {
             unsupportedRecipeTypeList.add("stone_cutting");
             unsupportedRecipeTypeList.add("smithing");
+            unsupportedRecipeTypeList.add("cooking");
         }
         if (!RecipeManager.supportPotionMix()) {
             unsupportedRecipeTypeList.add("potion");
@@ -164,11 +171,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                             RecipeManager.regRecipes(recipeName, Arrays.asList(recipes), recipeConfig);
                             RecipeManager.recipeConfigWrapperMap().put(recipeName, recipeConfig);
                             event.getWhoClicked().closeInventory();
-                            LangUtil.sendLang(
-                                event.getWhoClicked(),
-                                "command.create.success",
-                                CollectionsUtil.newStringHashMap("<recipe_type>", recipeType.name(), "<recipe_name>", recipeName)
-                            );
+                            sendSuccessMsg(event.getWhoClicked(), recipeType, recipeName);
                         }
                     }
                     )
@@ -216,15 +219,70 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                         YamlConfigWrapper recipeConfig = new YamlConfigWrapper(recipeFile);
                         recipeConfig.set("type", "cooking");
                         recipeConfig.set("result", resultName);
-                        if (CrypticLib.minecraftVersion() >= 11400) {
-                            //todo
+                        recipeConfig.set("multiple", true);
+                        List<Map<String, String>> sourceList = new ArrayList<>();
+                        int[] toggleSlots = {38, 39, 41, 42};
+                        for (int toggleSlot : toggleSlots) {
+                            ItemStack item = event.getClickedInventory().getItem(toggleSlot);
+                            Material block = item.getType();
+                            boolean toggle = !item.getEnchantments().isEmpty();
+                            if (toggle) {
+                                Map<String, String> sourceMap = new HashMap<>();
+                                sourceMap.put("block", block.name().toLowerCase());
+                                sourceMap.put("item", sourceName);
+                                sourceList.add(sourceMap);
+                            }
                         }
-                        //todo
+                        recipeConfig.set("source", sourceList);
+                        recipeConfig.saveConfig();
+                        recipeConfig.reloadConfig();
+                        Recipe[] multipleRecipes = RecipeFactory.newMultipleRecipe(recipeConfig.config(), recipeName);
+                        RecipeManager.regRecipes(recipeName, Arrays.asList(multipleRecipes), recipeConfig);
+                        RecipeManager.recipeConfigWrapperMap().put(recipeName, recipeConfig);
+                        event.getWhoClicked().closeInventory();
+                        sendSuccessMsg(event.getWhoClicked(), recipeType, recipeName);
                     })
                 );
+                layoutMap.put('B', new Icon(
+                    Material.FURNACE,
+                    LangUtil.langMsg("menu.recipe_creator.icon.furnace_toggle"),
+                    event -> {
+                        setIconGlowing(event.getSlot(), event);
+                    }
+                ));
+                layoutMap.put('C', new Icon(
+                    Material.BLAST_FURNACE,
+                    LangUtil.langMsg("menu.recipe_creator.icon.blasting_toggle"),
+                    event -> {
+                        setIconGlowing(event.getSlot(), event);
+                    }
+                ));
+                layoutMap.put('D', new Icon(
+                    Material.SMOKER,
+                    LangUtil.langMsg("menu.recipe_creator.icon.smoking_toggle"),
+                    event -> {
+                        setIconGlowing(event.getSlot(), event);
+                    }
+                ));
+                layoutMap.put('E', new Icon(
+                    Material.CAMPFIRE,
+                    LangUtil.langMsg("menu.recipe_creator.icon.campfire_toggle"),
+                    event -> {
+                        setIconGlowing(event.getSlot(), event);
+                    }
+                ));
                 return layoutMap;
             })
         ));
+        storedMenu.openMenu();
+    }
+
+    private void sendSuccessMsg(HumanEntity receiver, RecipeType recipeType, String recipeName) {
+        LangUtil.sendLang(
+            receiver,
+            "command.create.success",
+            CollectionsUtil.newStringHashMap("<recipe_type>", recipeType.name(), "<recipe_name>", recipeName)
+        );
     }
 
     private File createRecipeFile(String recipeName) {
@@ -233,6 +291,22 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
             FileUtil.createNewFile(recipeFile);
         }
         return recipeFile;
+    }
+
+    private void setIconGlowing(int slot, InventoryClickEvent event) {
+        ItemStack display = event.getCurrentItem();
+        if (ItemUtil.isAir(display))
+            return;
+        if (!display.containsEnchantment(Enchantment.MENDING)) {
+            display.addUnsafeEnchantment(Enchantment.MENDING, 1);
+            ItemMeta meta = display.getItemMeta();
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            display.setItemMeta(meta);
+            event.getClickedInventory().setItem(slot, display);
+        } else {
+            display.removeEnchantment(Enchantment.MENDING);
+            event.getClickedInventory().setItem(slot, display);
+        }
     }
 
 }
