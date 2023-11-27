@@ -70,7 +70,7 @@ public class ItemManager {
             ItemStack bukkitItem = item.buildBukkit();
             itemMap.put(itemKey, bukkitItem);
         } catch (Exception e) {
-            LangUtil.info("load.item_load_exception", CollectionsUtil.newHashMap("<item_name>", itemKey));
+            LangUtil.info("load.item_load_exception", CollectionsUtil.newStringHashMap("<item_name>", itemKey));
             e.printStackTrace();
         }
     }

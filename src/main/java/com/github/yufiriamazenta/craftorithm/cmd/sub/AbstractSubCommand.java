@@ -42,7 +42,7 @@ public abstract class AbstractSubCommand extends SubcmdExecutor {
     }
 
     public void sendNotEnoughCmdParamMsg(CommandSender sender, String paramStr) {
-        LangUtil.sendLang(sender, "command.not_enough_param", CollectionsUtil.newHashMap("<number>", paramStr));
+        LangUtil.sendLang(sender, "command.not_enough_param", CollectionsUtil.newStringHashMap("<number>", paramStr));
     }
 
     public boolean checkSenderIsPlayer(CommandSender sender) {

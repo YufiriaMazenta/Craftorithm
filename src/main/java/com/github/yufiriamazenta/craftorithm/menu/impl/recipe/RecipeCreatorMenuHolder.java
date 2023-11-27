@@ -355,99 +355,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
     }
 
     private void setCraftMenuIcons() {
-        int[] frameSlots = {
-                0, 1, 2, 3, 4, 5, 6, 7, 8,
-                9, 13, 17,
-                18, 26,
-                27, 31, 35,
-                36, 37, 38, 39, 40, 41, 42, 43, 44
-        };
-        ItemDisplayIcon frameIcon = ItemDisplayIcon.icon(Material.BLACK_STAINED_GLASS_PANE, LangUtil.langMsg("menu.recipe_creator.icon.frame"));
-        for (int slot : frameSlots) {
-            menuIconMap().put(slot, frameIcon);
-        }
-        int[] resultFrameSlots = {
-                14, 15, 16,
-                23, 25,
-                32, 33, 34
-        };
-        ItemDisplayIcon resultFrameIcon = ItemDisplayIcon.icon(Material.LIME_STAINED_GLASS_PANE, LangUtil.langMsg("menu.recipe_creator.icon.result_frame"));
-        for (int slot : resultFrameSlots) {
-            menuIconMap().put(slot, resultFrameIcon);
-        }
-        ItemDisplayIcon confirmIcon = ItemDisplayIcon.icon(Material.CRAFTING_TABLE,
-                LangUtil.langMsg("menu.recipe_creator.icon.confirm"),
-                event -> {
-                    event.setCancelled(true);
-                    Inventory inventory = event.getView().getTopInventory();
-                    ItemStack result = inventory.getItem(24);
-                    if (result == null || result.getType().equals(Material.AIR)) {
-                        LangUtil.sendLang(event.getWhoClicked(), "command.create.null_result");
-                        return;
-                    }
-                    String resultName = getItemName(result, false);
-                    int[] sourceSlots = {
-                            10, 11, 12,
-                            19, 20, 21,
-                            28, 29, 30
-                    };
-                    List<String> sourceList = new ArrayList<>();
-                    for (int slot : sourceSlots) {
-                        ItemStack item = inventory.getItem(slot);
-                        if (item == null || item.getType().equals(Material.AIR)) {
-                            sourceList.add("");
-                            continue;
-                        }
-                        String itemName = getItemName(item, true);
-                        sourceList.add(itemName);
-                    }
-                    File recipeFile = new File(RecipeManager.recipeFileFolder(), recipeName + ".yml");
-                    if (!recipeFile.exists()) {
-                        FileUtil.createNewFile(recipeFile);
-                    }
-                    YamlConfigWrapper recipeConfig = new YamlConfigWrapper(recipeFile);
-                    switch (recipeType) {
-                        case SHAPED:
-                            List<String> shape = new ArrayList<>(Arrays.asList("abc", "def", "ghi"));
-                            Map<Character, String> itemMap = new HashMap<>();
-                            char[] tmp = "abcdefghi".toCharArray();
-                            for (int i = 0; i < sourceList.size(); i++) {
-                                if (sourceList.get(i).isEmpty()) {
-                                    continue;
-                                }
-                                itemMap.put(tmp[i], sourceList.get(i));
-                            }
-                            for (int i = 0; i < shape.size(); i++) {
-                                String s = shape.get(i);
-                                for (char c : s.toCharArray()) {
-                                    if (!itemMap.containsKey(c)) {
-                                        s = s.replace(c, ' ');
-                                    }
-                                }
-                                shape.set(i, s);
-                            }
-                            shape.removeIf(s -> s.trim().isEmpty());
-                            recipeConfig.config().set("type", "shaped");
-                            recipeConfig.config().set("result", resultName);
-                            recipeConfig.config().set("shape", shape);
-                            recipeConfig.config().set("source", itemMap);
-                            break;
-                        case SHAPELESS:
-                            sourceList.removeIf(String::isEmpty);
-                            recipeConfig.config().set("type", "shapeless");
-                            recipeConfig.config().set("result", resultName);
-                            recipeConfig.config().set("source", sourceList);
-                            break;
-                    }
-                    recipeConfig.saveConfig();
-                    recipeConfig.reloadConfig();
-                    Recipe[] recipes = RecipeFactory.newRecipe(recipeConfig.config(), recipeName);
-                    RecipeManager.regRecipes(recipeName, Arrays.asList(recipes), recipeConfig);
-                    RecipeManager.recipeConfigWrapperMap().put(recipeName, recipeConfig);
-                    event.getWhoClicked().closeInventory();
-                    sendSuccessMsgAndReloadMap(event.getWhoClicked());
-                });
-        menuIconMap().put(22, confirmIcon);
+
     }
 
     @NotNull
@@ -515,7 +423,7 @@ public class RecipeCreatorMenuHolder extends BukkitMenuHandler {
     }
 
     private void sendSuccessMsgAndReloadMap(HumanEntity entity) {
-        Map<String, String> replaceMap = CollectionsUtil.newHashMap("<recipe_type>", recipeType.name().toLowerCase(),
+        Map<String, String> replaceMap = CollectionsUtil.newStringHashMap("<recipe_type>", recipeType.name().toLowerCase(),
                 "<recipe_name>", recipeName);
         LangUtil.sendLang(entity, "command.create.success", replaceMap);
         RecipeManager.reloadServerRecipeCache();
