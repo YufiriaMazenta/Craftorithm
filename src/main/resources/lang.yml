@@ -71,6 +71,7 @@ menu:
       confirm: '&3&l确认创建'
       cooking_frame: '&a烧炼物品'
       smithing_frame: '&a锻造物品'
+      potion_frame: '&a酿造原料'
       furnace_toggle: '&a熔炉配方'
       blasting_toggle: '&a高炉配方'
       smoking_toggle: '&a烟熏炉配方'
