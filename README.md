@@ -1,12 +1,12 @@
 <div align="center">
 <h1>Craftorithm</h1>
-<h6>基于BukkitAPI开发，轻量级的配方管理插件</h6>
+<h6>合成配方管理系统</h6>
 
 <img src="imgs/craftorithm.png" width=150 height=150 alt="Craftorithm">
 </div>
 
 ----
-Craftorithm是一个基于BukkitAPI编写的配方管理插件，可以添加原版的各类配方，并可以进行合成限制，删除配方等管理操作
+Craftorithm是一个基于BukkitAPI编写的合成配方管理插件，可以添加各类配方，并可以进行合成限制，删除/禁用配方等管理操作
 
 ## 特性(Features)
 
@@ -33,6 +33,14 @@ Craftorithm是一个基于BukkitAPI编写的配方管理插件，可以添加原
 ### 添加酿造配方
 
 ![酿造配方](imgs/potion.gif)
+
+### 查看配方
+
+![查看配方](imgs/recipe_list.gif)
+
+### 禁用配方
+
+![禁用配方](imgs/disable_recipe.gif)
 
 ## 使用方式(Usage)
 #### [Craftorithm Wiki](https://yufiriamazenta.gitbook.io/craftorithm-wiki/)
