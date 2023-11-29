@@ -10,7 +10,7 @@ source:
     item: command_block
   - block: campfire
     item: command_block
-  - block: blast
+  - block: blast_furnace
     item: command_block
 exp: 10
 time: 200

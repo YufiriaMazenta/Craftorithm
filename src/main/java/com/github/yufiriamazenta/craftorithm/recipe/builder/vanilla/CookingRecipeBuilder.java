@@ -93,7 +93,7 @@ public class CookingRecipeBuilder extends AbstractRecipeBuilder {
             case SMOKER:
                 cookingRecipe = new SmokingRecipe(key(), result(), source, exp, time);
                 break;
-            case BLAST:
+            case BLAST_FURNACE:
                 cookingRecipe = new BlastingRecipe(key(), result(), source, exp, time);
                 break;
             case CAMPFIRE:
@@ -109,7 +109,7 @@ public class CookingRecipeBuilder extends AbstractRecipeBuilder {
 
     public enum CookingBlock {
         FURNACE,
-        BLAST,
+        BLAST_FURNACE,
         SMOKER,
         CAMPFIRE
     }

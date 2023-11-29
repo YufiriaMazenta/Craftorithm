@@ -187,7 +187,6 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                         recipeConfig.saveConfig();
                         recipeConfig.reloadConfig();
                         Recipe[] recipes = RecipeFactory.newRecipe(recipeConfig.config(), recipeName);
-                        System.out.println(Arrays.toString(recipes));
                         RecipeManager.regRecipes(recipeName, Arrays.asList(recipes), recipeConfig);
                         RecipeManager.recipeConfigWrapperMap().put(recipeName, recipeConfig);
                         event.getWhoClicked().closeInventory();

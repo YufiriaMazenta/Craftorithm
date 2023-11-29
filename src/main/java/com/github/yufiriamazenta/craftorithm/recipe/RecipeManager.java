@@ -170,6 +170,7 @@ public class RecipeManager {
         });
 
         if (supportPotionMix()) {
+            potionMixGroupMap.clear();
             Bukkit.getPotionBrewer().resetPotionMixes();
         }
 
@@ -395,6 +396,8 @@ public class RecipeManager {
     }
 
     private static void saveDefConfigFile(List<File> allFiles) {
+        if (!Craftorithm.instance().getConfig().getBoolean("release_default_recipes"))
+            return;
         Craftorithm.instance().saveResource("recipes/example_shaped.yml", false);
         Craftorithm.instance().saveResource("recipes/example_shapeless.yml", false);
         allFiles.add(new File(recipeFileFolder, "example_shaped.yml"));

@@ -82,6 +82,9 @@ public class ItemUtils {
             itemName = "items:" + itemName;
         } else {
             itemName = item.getType().name();
+            if (!ignoreAmount) {
+                itemName += (" " + item.getAmount());
+            }
         }
         return itemName;
     }
