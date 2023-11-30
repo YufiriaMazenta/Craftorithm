@@ -1,6 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.item;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
+import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import com.github.yufiriamazenta.craftorithm.util.PluginHookUtil;
@@ -70,7 +71,7 @@ public class ItemManager {
             ItemStack bukkitItem = item.buildBukkit();
             itemMap.put(itemKey, bukkitItem);
         } catch (Exception e) {
-            LangUtil.info("load.item_load_exception", CollectionsUtil.newStringHashMap("<item_name>", itemKey));
+            LangUtil.info(Languages.loadItemLoadException.value(), CollectionsUtil.newStringHashMap("<item_name>", itemKey));
             e.printStackTrace();
         }
     }

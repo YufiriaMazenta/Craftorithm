@@ -2,7 +2,7 @@ package com.github.yufiriamazenta.craftorithm.arcenciel.token;
 
 import com.github.yufiriamazenta.craftorithm.arcenciel.obj.ReturnObj;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
-import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import crypticlib.util.TextUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -18,7 +18,7 @@ public class TokenConsole extends AbstractArcencielToken<Boolean> {
 
     @Override
     public ReturnObj<Boolean> exec(Player player, List<String> args) {
-        String command = LangUtil.placeholder(player, CollectionsUtil.list2ArcencielBlock(args));
+        String command = TextUtil.placeholder(player, CollectionsUtil.list2ArcencielBlock(args));
         return new ReturnObj<>(Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command));
     }
 

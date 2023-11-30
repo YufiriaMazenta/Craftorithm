@@ -1,5 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.cmd.sub;
 
+import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.command.ISubcmdExecutor;
@@ -27,10 +28,10 @@ public final class RemoveRecipeCommand extends AbstractSubCommand {
         }
 
         if (RecipeManager.removeCraftorithmRecipe(args.get(0), true)) {
-            LangUtil.sendLang(sender, "command.remove.success");
+            LangUtil.sendLang(sender, Languages.commandRemoveSuccess.value());
         }
         else
-            LangUtil.sendLang(sender, "command.remove.not_exist");
+            LangUtil.sendLang(sender, Languages.commandRemoveNotExist.value());
         return true;
     }
 

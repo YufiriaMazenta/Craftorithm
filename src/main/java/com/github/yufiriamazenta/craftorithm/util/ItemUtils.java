@@ -1,6 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.util;
 
-import com.github.yufiriamazenta.craftorithm.Craftorithm;
+import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import crypticlib.util.ItemUtil;
 import crypticlib.util.TextUtil;
@@ -24,7 +24,7 @@ public class ItemUtils {
     }
 
     public static void reloadCannotCraftLore() {
-        cannotCraftLore = TextUtil.color(Craftorithm.instance().getConfig().getString("lore_cannot_craft", "lore_cannot_craft"));
+        cannotCraftLore = TextUtil.color(PluginConfigs.loreCannotCraft.value());
         try {
             cannotCraftLorePattern = Pattern.compile(cannotCraftLore);
             cannotCraftLoreIsRegex = true;
