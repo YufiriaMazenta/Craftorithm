@@ -1,6 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.cmd.sub;
 
 import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
+import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import org.bukkit.command.CommandSender;
@@ -19,10 +20,8 @@ public final class RunArcencielCmd extends AbstractSubCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, List<String> args) {
-        if (!(sender instanceof Player)) {
-            LangUtil.sendLang(sender, "command.player_only");
+        if (!checkSenderIsPlayer(sender))
             return true;
-        }
         if (args.isEmpty()) {
             sendNotEnoughCmdParamMsg(sender, 1);
             return true;
@@ -34,7 +33,7 @@ public final class RunArcencielCmd extends AbstractSubCommand {
         }
         ArcencielDispatcher.INSTANCE.dispatchArcencielBlock((Player) sender, arcencielBlock.toString());
         long execTime = System.currentTimeMillis() - startTime;
-        LangUtil.sendLang(sender, "command.run_arcenciel.success", CollectionsUtil.newStringHashMap("<time>", String.valueOf(execTime)));
+        LangUtil.sendLang(sender, Languages.commandRunArcencielSuccess.value(), CollectionsUtil.newStringHashMap("<time>", String.valueOf(execTime)));
         return true;
     }
 }

@@ -1,6 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.cmd.sub.item;
 
 import com.github.yufiriamazenta.craftorithm.cmd.sub.AbstractSubCommand;
+import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.command.ISubcmdExecutor;
@@ -32,12 +33,12 @@ public final class ItemSaveCommand extends AbstractSubCommand {
 
         ItemStack item = ((Player) sender).getInventory().getItemInMainHand();
         if (item.getType().equals(Material.AIR)) {
-            LangUtil.sendLang(sender, "command.item.save.failed_save_air");
+            LangUtil.sendLang(sender, Languages.commandItemSaveFailedSaveAir.value());
             return true;
         }
 
         ItemManager.addCraftorithmItem(args.get(0), args.get(1), item.clone());
-        LangUtil.sendLang(sender, "command.item.save.success");
+        LangUtil.sendLang(sender, Languages.commandItemSaveSuccess.value());
         return true;
     }
 

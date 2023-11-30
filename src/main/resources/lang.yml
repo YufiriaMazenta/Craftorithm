@@ -24,7 +24,7 @@ command:
     not_exist: '<prefix> &c配方不存在'
   disable:
     success: '<prefix> &c禁用配方成功'
-    not_exist: '<prefix> &c配方不存在'
+    not_exist: '<prefix> &c配方不存在或已经被禁用'
     failed: '<prefix> &c配方禁用失败，可能已被禁用或不存在'
   version: '<prefix> &a插件版本：<version>'
   create:
@@ -69,7 +69,7 @@ menu:
       frame: '&a创建配方'
       result_frame: '&a配方结果'
       confirm: '&3&l确认创建'
-      cooking_frame: '&a烧炼物品'
+      cooking_frame: '&a烧炼原料'
       smithing_frame: '&a锻造物品'
       potion_frame: '&a酿造原料'
       furnace_toggle: '&a熔炉配方'

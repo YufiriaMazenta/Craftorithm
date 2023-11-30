@@ -1,5 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.cmd.sub;
 
+import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import org.bukkit.NamespacedKey;
@@ -25,15 +26,15 @@ public final class DisableRecipeCommand extends AbstractSubCommand {
         }
         NamespacedKey removeRecipeKey = NamespacedKey.fromString(args.get(0));
         if (!RecipeManager.serverRecipeCache().contains(removeRecipeKey)) {
-            LangUtil.sendLang(sender, "command.disable.not_exist");
+            LangUtil.sendLang(sender, Languages.commandDisableNotExist.value());
             return true;
         }
         List<NamespacedKey> removeRecipeKeys = Collections.singletonList(removeRecipeKey);
         if (RecipeManager.disableOtherPluginsRecipe(removeRecipeKeys, true)) {
-            LangUtil.sendLang(sender, "command.disable.success");
+            LangUtil.sendLang(sender, Languages.commandDisableSuccess.value());
         }
         else
-            LangUtil.sendLang(sender, "command.disable.failed");
+            LangUtil.sendLang(sender, Languages.commandDisableFailed.value());
         return true;
     }
 

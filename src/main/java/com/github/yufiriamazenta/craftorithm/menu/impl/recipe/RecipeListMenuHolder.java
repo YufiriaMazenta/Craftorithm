@@ -1,10 +1,10 @@
 package com.github.yufiriamazenta.craftorithm.menu.impl.recipe;
 
+import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.BukkitMenuHandler;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.IChildBukkitMenu;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.ItemDisplayIcon;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.PotionMixRecipe;
-import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.CrypticLib;
 import crypticlib.util.TextUtil;
 import org.bukkit.Bukkit;
@@ -99,14 +99,14 @@ public class RecipeListMenuHolder extends BukkitMenuHandler implements IChildBuk
     private void resetIcons() {
         menuIconMap().clear();
         int []frame = {45, 47, 48, 49, 50, 51, 53};
-        ItemDisplayIcon frameIcon = ItemDisplayIcon.icon(Material.BLACK_STAINED_GLASS_PANE, LangUtil.langMsg("menu.recipe_list.icon.frame"));
+        ItemDisplayIcon frameIcon = ItemDisplayIcon.icon(Material.BLACK_STAINED_GLASS_PANE, Languages.menuRecipeListIconFrame.value());
         for (int i : frame) {
             menuIconMap().put(i, frameIcon);
         }
         ItemStack previousDisplay = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta previousMeta = (SkullMeta) previousDisplay.getItemMeta();
         previousMeta.setOwner("MHF_ArrowLeft");
-        previousMeta.setDisplayName(TextUtil.color(LangUtil.langMsg("menu.recipe_list.icon.previous")));
+        previousMeta.setDisplayName(TextUtil.color(Languages.menuRecipeListIconPrevious.value()));
         previousDisplay.setItemMeta(previousMeta);
         menuIconMap().put(46, ItemDisplayIcon.icon(previousDisplay, (event -> {
             event.setCancelled(true);
@@ -115,7 +115,7 @@ public class RecipeListMenuHolder extends BukkitMenuHandler implements IChildBuk
         ItemStack nextDisplay = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta nextMeta = (SkullMeta) nextDisplay.getItemMeta();
         nextMeta.setOwner("MHF_ArrowRight");
-        nextMeta.setDisplayName(TextUtil.color(LangUtil.langMsg("menu.recipe_list.icon.next")));
+        nextMeta.setDisplayName(TextUtil.color(Languages.menuRecipeListIconNext.value()));
         nextDisplay.setItemMeta(nextMeta);
         menuIconMap().put(52, ItemDisplayIcon.icon(nextDisplay, (event -> {
             event.setCancelled(true);
@@ -143,7 +143,7 @@ public class RecipeListMenuHolder extends BukkitMenuHandler implements IChildBuk
     @Override
     public Inventory getInventory() {
         resetIcons();
-        Inventory inventory = Bukkit.createInventory(this, 54, TextUtil.color(LangUtil.langMsg("menu.recipe_list.title")));
+        Inventory inventory = Bukkit.createInventory(this, 54, TextUtil.color(Languages.menuRecipeListTitle.value()));
         for (Integer slot : menuIconMap().keySet()) {
             inventory.setItem(slot, menuIconMap().get(slot).display());
         }

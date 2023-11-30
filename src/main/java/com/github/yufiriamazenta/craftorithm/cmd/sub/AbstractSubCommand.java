@@ -1,5 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.cmd.sub;
 
+import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.command.ISubcmdExecutor;
@@ -23,12 +24,12 @@ public abstract class AbstractSubCommand extends SubcmdExecutor {
     public boolean onCommand(CommandSender sender, List<String> args) {
         ISubcmdExecutor subCommand = subcommands().get(args.get(0));
         if (subCommand == null) {
-            LangUtil.sendLang(sender, "command.undefined_subcmd");
+            LangUtil.sendLang(sender, Languages.commandUndefinedSubcmd.value());
         } else {
             String perm = subCommand.permission();
             if (perm != null) {
                 if (!sender.hasPermission(perm)) {
-                    LangUtil.sendLang(sender, "command.no_perm");
+                    LangUtil.sendLang(sender, Languages.commandNoPerm.value());
                     return true;
                 }
             }
@@ -42,14 +43,14 @@ public abstract class AbstractSubCommand extends SubcmdExecutor {
     }
 
     public void sendNotEnoughCmdParamMsg(CommandSender sender, String paramStr) {
-        LangUtil.sendLang(sender, "command.not_enough_param", CollectionsUtil.newStringHashMap("<number>", paramStr));
+        LangUtil.sendLang(sender, Languages.commandNotEnoughParam.value(), CollectionsUtil.newStringHashMap("<number>", paramStr));
     }
 
     public boolean checkSenderIsPlayer(CommandSender sender) {
         if (sender instanceof Player) {
             return true;
         } else {
-            LangUtil.sendLang(sender, "command.player_only");
+            LangUtil.sendLang(sender, Languages.commandPlayerOnly.value());
             return false;
         }
     }

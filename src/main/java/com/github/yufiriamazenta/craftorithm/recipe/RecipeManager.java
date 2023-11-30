@@ -1,6 +1,8 @@
 package com.github.yufiriamazenta.craftorithm.recipe;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
+import com.github.yufiriamazenta.craftorithm.config.Languages;
+import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.CustomRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.PotionMixRecipe;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
@@ -106,7 +108,7 @@ public class RecipeManager {
                     regRecipes(fileName, Arrays.asList(recipes), configWrapper);
                 }
             } catch (Throwable e) {
-                LangUtil.info("load.recipe_load_exception", CollectionsUtil.newStringHashMap("<recipe_name>", fileName));
+                LangUtil.info(Languages.loadRecipeLoadException.value(), CollectionsUtil.newStringHashMap("<recipe_name>", fileName));
                 e.printStackTrace();
             }
         }
@@ -119,7 +121,7 @@ public class RecipeManager {
             NamespacedKey recipeKey = getRecipeKey(recipe);
             recipeKeyList.add(getRecipeKey(recipe));
             Bukkit.addRecipe(recipe);
-            boolean defUnlockCondition = Craftorithm.instance().getConfig().getBoolean("all_recipe_unlocked", false);
+            boolean defUnlockCondition = PluginConfigs.allRecipeUnlocked.value();
             if (config.contains("unlock")) {
                 recipeUnlockMap.put(recipeKey, config.getBoolean("unlock", defUnlockCondition));
             } else {
@@ -147,7 +149,7 @@ public class RecipeManager {
     private static void reloadRemovedRecipes() {
         removedRecipeConfig.reloadConfig();
         List<String> removedRecipes = removedRecipeConfig.config().getStringList("recipes");
-        if (Craftorithm.instance().getConfig().getBoolean("remove_all_vanilla_recipe", false)) {
+        if (PluginConfigs.removeAllVanillaRecipe.value()) {
             for (NamespacedKey key : serverRecipeCache) {
                 if (key.getNamespace().equals("minecraft")) {
                     if (removedRecipes.contains(key.toString()))
@@ -298,9 +300,8 @@ public class RecipeManager {
 
     private static void addKeyToRemovedConfig(List<NamespacedKey> keys) {
         List<String> removedList = removedRecipeConfig.config().getStringList("recipes");
-        boolean removeAllVanillaRecipe = Craftorithm.instance().getConfig().getBoolean("remove_all_vanilla_recipe");
         for (NamespacedKey key : keys) {
-            if (key.getNamespace().equals(NamespacedKey.MINECRAFT) && removeAllVanillaRecipe)
+            if (key.getNamespace().equals(NamespacedKey.MINECRAFT) && PluginConfigs.removeAllVanillaRecipe.value())
                 continue;
             String keyStr = key.toString();
             if (!removedList.contains(keyStr))
@@ -396,7 +397,7 @@ public class RecipeManager {
     }
 
     private static void saveDefConfigFile(List<File> allFiles) {
-        if (!Craftorithm.instance().getConfig().getBoolean("release_default_recipes"))
+        if (!PluginConfigs.releaseDefaultRecipes.value())
             return;
         Craftorithm.instance().saveResource("recipes/example_shaped.yml", false);
         Craftorithm.instance().saveResource("recipes/example_shapeless.yml", false);

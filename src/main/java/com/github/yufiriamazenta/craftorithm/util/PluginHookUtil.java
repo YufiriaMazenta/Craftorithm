@@ -1,5 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.util;
 
+import com.github.yufiriamazenta.craftorithm.config.Languages;
 import dev.lone.itemsadder.api.CustomStack;
 import io.lumine.mythic.bukkit.BukkitAdapter;
 import io.lumine.mythic.bukkit.MythicBukkit;
@@ -31,17 +32,17 @@ public class PluginHookUtil {
     private static void hookVault() {
         economyLoaded = Bukkit.getPluginManager().isPluginEnabled("Vault");
         if (!economyLoaded) {
-            LangUtil.info("load.vault_not_exist");
+            LangUtil.info(Languages.loadVaultNotExist.value());
             return;
         }
         RegisteredServiceProvider<Economy> vaultRsp = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
         if (vaultRsp == null) {
             economyLoaded = false;
-            LangUtil.info("load.vault_not_exist");
+            LangUtil.info(Languages.loadVaultNotExist.value());
             return;
         }
 
-        LangUtil.info("load.vault_hook");
+        LangUtil.info(Languages.loadVaultHook.value());
         economyLoaded = true;
         economy = vaultRsp.getProvider();
     }
@@ -56,9 +57,9 @@ public class PluginHookUtil {
         pointsLoaded = Bukkit.getPluginManager().isPluginEnabled("PlayerPoints");
         if (pointsLoaded) {
             playerPoints = (PlayerPoints) Bukkit.getPluginManager().getPlugin("PlayerPoints");
-            LangUtil.info("load.points_hook");
+            LangUtil.info(Languages.loadPointsHook.value());
         } else
-            LangUtil.info("load.points_not_exist");
+            LangUtil.info(Languages.loadPointsNotExist.value());
     }
 
     public static boolean isPlayerPointsLoaded() { return pointsLoaded; }
@@ -70,9 +71,9 @@ public class PluginHookUtil {
     private static void hookItemsAdder() {
         itemsAdderLoaded = Bukkit.getPluginManager().isPluginEnabled("ItemsAdder");
         if (itemsAdderLoaded)
-            LangUtil.info("load.items_adder_hook");
+            LangUtil.info(Languages.loadItemsAdderHook.value());
         else
-            LangUtil.info("load.items_adder_not_exist");
+            LangUtil.info(Languages.loadItemsAdderNotExist.value());
     }
 
     public static boolean isItemsAdderLoaded() {
@@ -101,9 +102,9 @@ public class PluginHookUtil {
     private static void hookOraxen() {
         oraxenLoaded = Bukkit.getPluginManager().isPluginEnabled("Oraxen");
         if (oraxenLoaded)
-            LangUtil.info("load.oraxen_hook");
+            LangUtil.info(Languages.loadOraxenHook.value());
         else
-            LangUtil.info("load.oraxen_not_exist");
+            LangUtil.info(Languages.loadOraxenNotExist.value());
     }
 
     public static ItemStack getOraxenItem(String itemStr) {
@@ -126,9 +127,9 @@ public class PluginHookUtil {
     private static void hookMythicMobs() {
         mythicLoaded = Bukkit.getPluginManager().isPluginEnabled("MythicMobs");
         if (mythicLoaded)
-            LangUtil.info("load.mythic_mobs_hook");
+            LangUtil.info(Languages.loadMythicMobsHook.value());
         else
-            LangUtil.info("load.mythic_mobs_not_exist");
+            LangUtil.info(Languages.loadMythicMobsNotExist.value());
     }
 
     public static ItemStack getMythicMobsItem(String itemStr) {

@@ -1,6 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.cmd.sub.item;
 
 import com.github.yufiriamazenta.craftorithm.cmd.sub.AbstractSubCommand;
+import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
@@ -31,20 +32,19 @@ public class ItemGiveCommand extends AbstractSubCommand {
         if (args.size() >= 2) {
             player = Bukkit.getPlayer(args.get(1));
             if (player == null) {
-                LangUtil.sendLang(sender, "command.item.give.player_offline");
+                LangUtil.sendLang(sender, Languages.commandItemGivePlayerOffline.value());
                 return true;
             }
         } else {
             if (checkSenderIsPlayer(sender)) {
                 player = (Player) sender;
             } else {
-                LangUtil.sendLang(sender, "command.player_only");
                 return true;
             }
         }
 
         if (!ItemManager.isCraftorithmItem(args.get(0))) {
-            LangUtil.sendLang(sender, "command.item.give.not_exist_item", CollectionsUtil.newStringHashMap("<item_name>", args.get(0)));
+            LangUtil.sendLang(sender, Languages.commandItemGiveNotExistItem.value(), CollectionsUtil.newStringHashMap("<item_name>", args.get(0)));
             return true;
         }
 

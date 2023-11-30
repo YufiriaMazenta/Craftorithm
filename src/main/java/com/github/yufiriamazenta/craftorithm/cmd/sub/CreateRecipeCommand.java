@@ -1,5 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.cmd.sub;
 
+import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeFactory;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
@@ -64,17 +65,17 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
         }
         String recipeTypeStr = args.get(0).toLowerCase(Locale.ROOT);
         if (!recipeTypeList.contains(recipeTypeStr)) {
-            LangUtil.sendLang(sender, "command.create.unsupported_recipe_type");
+            LangUtil.sendLang(sender, Languages.commandCreateUnsupportedRecipeType.value());
             return true;
         }
         String recipeName = args.get(1);
         Matcher matcher = recipeNamePattern.matcher(recipeName);
         if (!matcher.matches()) {
-            LangUtil.sendLang(sender, "command.create.unsupported_recipe_name");
+            LangUtil.sendLang(sender, Languages.commandCreateUnsupportedRecipeName.value());
             return true;
         }
         if (RecipeManager.recipeGroupMap().containsKey(recipeName) || RecipeManager.potionMixGroupMap().containsKey(recipeName)) {
-            LangUtil.sendLang(sender, "command.create.name_used");
+            LangUtil.sendLang(sender, Languages.commandCreateNameUsed.value());
             return true;
         }
         RecipeType recipeType = RecipeType.valueOf(recipeTypeStr.toUpperCase(Locale.ROOT));
@@ -96,7 +97,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                 openPotionMixCreator((Player) sender, recipeType, recipeName);
                 break;
             default:
-                LangUtil.sendLang(sender, "command.create.unsupported_recipe_type");
+                LangUtil.sendLang(sender, Languages.commandCreateUnsupportedRecipeType.value());
                 break;
         }
         return true;
@@ -114,7 +115,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
 
     private void openCraftingRecipeCreator(Player player, RecipeType recipeType, String recipeName) {
         StoredMenu craftingRecipeCreator = new StoredMenu(player, new MenuDisplay(
-            LangUtil.langMsg("menu.recipe_creator.title")
+            Languages.menuRecipeCreatorTitle.value()
                 .replace("<recipe_type>", recipeType.name())
                 .replace("<recipe_name>", recipeName),
             new MenuLayout(Arrays.asList(
@@ -129,13 +130,13 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                 layoutMap.put('*', getResultFrameIcon());
                 layoutMap.put('A', new Icon(
                     Material.CRAFTING_TABLE,
-                    LangUtil.langMsg("menu.recipe_creator.icon.confirm"),
+                    Languages.menuRecipeCreatorIconConfirm.value(),
                     event -> {
                         StoredMenu creator = (StoredMenu) Objects.requireNonNull(event.getClickedInventory()).getHolder();
                         Map<Integer, ItemStack> storedItems = Objects.requireNonNull(creator).storedItems();
                         ItemStack result = storedItems.get(24);
                         if (ItemUtil.isAir(result)) {
-                            LangUtil.sendLang(event.getWhoClicked(), "command.create.null_result");
+                            LangUtil.sendLang(event.getWhoClicked(), Languages.commandCreateNullResult.value());
                             return;
                         }
                         String resultName = ItemUtils.getItemName(result, false);
@@ -201,7 +202,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
 
     private void openCookingRecipeCreator(Player player, RecipeType recipeType, String recipeName) {
         StoredMenu cookingRecipeCreator = new StoredMenu(player, new MenuDisplay(
-            LangUtil.langMsg("menu.recipe_creator.title")
+            Languages.menuRecipeCreatorTitle.value()
                 .replace("<recipe_type>", recipeType.name())
                 .replace("<recipe_name>", recipeName),
             new MenuLayout(Arrays.asList(
@@ -214,20 +215,20 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                 Map<Character, Icon> layoutMap = new HashMap<>();
                 layoutMap.put('#', getFrameIcon());
                 layoutMap.put('%', getResultFrameIcon());
-                layoutMap.put('*', new Icon(Material.CYAN_STAINED_GLASS_PANE, LangUtil.langMsg("menu.recipe_creator.icon.cooking_frame")));
+                layoutMap.put('*', new Icon(Material.CYAN_STAINED_GLASS_PANE, Languages.menuRecipeCreatorIconCookingFrame.value()));
                 layoutMap.put('A', new Icon(
                     Material.FURNACE,
-                    LangUtil.langMsg("menu.recipe_creator.icon.confirm"),
+                    Languages.menuRecipeCreatorIconConfirm.value(),
                     event -> {
                         StoredMenu creator = (StoredMenu) Objects.requireNonNull(event.getClickedInventory()).getHolder();
                         ItemStack source = Objects.requireNonNull(creator).storedItems().get(20);
                         ItemStack result = creator.storedItems().get(24);
                         if (ItemUtil.isAir(source)) {
-                            LangUtil.sendLang(event.getWhoClicked(), "command.create.null_source");
+                            LangUtil.sendLang(event.getWhoClicked(), Languages.commandCreateNullSource.value());
                             return;
                         }
                         if (ItemUtil.isAir(result)) {
-                            LangUtil.sendLang(event.getWhoClicked(), "command.create.null_result");
+                            LangUtil.sendLang(event.getWhoClicked(), Languages.commandCreateNullResult.value());
                             return;
                         }
                         String sourceName = ItemUtils.getItemName(source, true);
@@ -261,22 +262,22 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                 );
                 layoutMap.put('B', new Icon(
                     Material.FURNACE,
-                    LangUtil.langMsg("menu.recipe_creator.icon.furnace_toggle"),
+                    Languages.menuRecipeCreatorIconFurnaceToggle.value(),
                     event -> setIconGlowing(event.getSlot(), event)
                 ));
                 layoutMap.put('C', new Icon(
                     Material.BLAST_FURNACE,
-                    LangUtil.langMsg("menu.recipe_creator.icon.blasting_toggle"),
+                    Languages.menuRecipeCreatorIconBlastingToggle.value(),
                     event -> setIconGlowing(event.getSlot(), event)
                 ));
                 layoutMap.put('D', new Icon(
                     Material.SMOKER,
-                    LangUtil.langMsg("menu.recipe_creator.icon.smoking_toggle"),
+                    Languages.menuRecipeCreatorIconSmokingToggle.value(),
                     event -> setIconGlowing(event.getSlot(), event)
                 ));
                 layoutMap.put('E', new Icon(
                     Material.CAMPFIRE,
-                    LangUtil.langMsg("menu.recipe_creator.icon.campfire_toggle"),
+                    Languages.menuRecipeCreatorIconCampfireToggle.value(),
                     event -> setIconGlowing(event.getSlot(), event)
                 ));
                 return layoutMap;
@@ -287,7 +288,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
 
     private void openSmithingRecipeCreator(Player player, RecipeType recipeType, String recipeName) {
         StoredMenu smithingCreator = new StoredMenu(player, new MenuDisplay(
-            LangUtil.langMsg("menu.recipe_creator.title")
+            Languages.menuRecipeCreatorTitle.value()
                 .replace("<recipe_type>", recipeType.name())
                 .replace("<recipe_name>", recipeName),
             new MenuLayout(
@@ -313,16 +314,16 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                 () -> {
                     Map<Character, Icon> layoutMap = new HashMap<>();
                     layoutMap.put('#', getFrameIcon());
-                    layoutMap.put('*', new Icon(Material.CYAN_STAINED_GLASS_PANE, LangUtil.langMsg("menu.recipe_creator.icon.smithing_frame")));
+                    layoutMap.put('*', new Icon(Material.CYAN_STAINED_GLASS_PANE, Languages.menuRecipeCreatorIconSmithingFrame.value()));
                     layoutMap.put('%', getResultFrameIcon());
                     layoutMap.put('A', new Icon(
                         Material.SMITHING_TABLE,
-                        LangUtil.langMsg("menu.recipe_creator.icon.confirm"),
+                        Languages.menuRecipeCreatorIconConfirm.value(),
                         event -> {
                             StoredMenu creator = (StoredMenu) Objects.requireNonNull(event.getClickedInventory()).getHolder();
                             ItemStack result = Objects.requireNonNull(creator).storedItems().get(24);
                             if (ItemUtil.isAir(result)) {
-                                LangUtil.sendLang(event.getWhoClicked(), "command.create.null_result");
+                                LangUtil.sendLang(event.getWhoClicked(), Languages.commandCreateNullResult.value());
                                 return;
                             }
                             String resultName = ItemUtils.getItemName(result, false);
@@ -336,6 +337,14 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                                 base = creator.storedItems().get(20);
                                 addition = creator.storedItems().get(21);
                                 templateName = ItemUtils.getItemName(template, true);
+                                if (ItemUtil.isAir(template)) {
+                                    LangUtil.sendLang(event.getWhoClicked(), Languages.commandCreateNullSource.value());
+                                    return;
+                                }
+                            }
+                            if (ItemUtil.isAir(base) || ItemUtil.isAir(addition)) {
+                                LangUtil.sendLang(event.getWhoClicked(), Languages.commandCreateNullSource.value());
+                                return;
                             }
                             baseName = ItemUtils.getItemName(base, true);
                             additionName = ItemUtils.getItemName(addition, true);
@@ -366,7 +375,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
 
     private void openStoneCuttingRecipeCreator(Player player, RecipeType recipeType, String recipeName) {
         StoredMenu stoneCuttingCreator = new StoredMenu(player, new MenuDisplay(
-            LangUtil.langMsg("menu.recipe_creator.title")
+            Languages.menuRecipeCreatorTitle.value()
                 .replace("<recipe_type>", recipeType.name())
                 .replace("<recipe_name>", recipeName),
             new MenuLayout(Arrays.asList(
@@ -378,7 +387,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
             ), () -> {
                 Map<Character, Icon> layoutMap = new HashMap<>();
                 layoutMap.put('#', getFrameIcon());
-                layoutMap.put('A', new Icon(Material.STONECUTTER, LangUtil.langMsg("menu.recipe_creator.icon.confirm"),
+                layoutMap.put('A', new Icon(Material.STONECUTTER, Languages.menuRecipeCreatorIconConfirm.value(),
                     event -> {
                         StoredMenu creator = (StoredMenu) event.getClickedInventory().getHolder();
                         List<String> sourceList = new ArrayList<>();
@@ -396,11 +405,11 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                             resultList.add(ItemUtils.getItemName(result, false));
                         }
                         if (sourceList.isEmpty()) {
-                            LangUtil.sendLang(event.getWhoClicked(), "command.create.null_source");
+                            LangUtil.sendLang(event.getWhoClicked(), Languages.commandCreateNullSource.value());
                             return;
                         }
                         if (resultList.isEmpty()) {
-                            LangUtil.sendLang(event.getWhoClicked(), "command.create.null_result");
+                            LangUtil.sendLang(event.getWhoClicked(), Languages.commandCreateNullResult.value());
                             return;
                         }
                         YamlConfigWrapper recipeConfig = createRecipeConfig(recipeName);
@@ -425,7 +434,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
 
     private void openPotionMixCreator(Player player, RecipeType recipeType, String recipeName) {
         StoredMenu potionMixCreator = new StoredMenu(player, new MenuDisplay(
-            LangUtil.langMsg("menu.recipe_creator.title")
+            Languages.menuRecipeCreatorTitle.value()
                 .replace("<recipe_type>", recipeType.name())
                 .replace("<recipe_name>", recipeName),
             new MenuLayout(Arrays.asList(
@@ -438,19 +447,19 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                 Map<Character, Icon> layoutMap = new HashMap<>();
                 layoutMap.put('#', getFrameIcon());
                 layoutMap.put('%', getResultFrameIcon());
-                layoutMap.put('*', new Icon(Material.CYAN_STAINED_GLASS_PANE, LangUtil.langMsg("menu.recipe_creator.icon.potion_frame")));
-                layoutMap.put('A', new Icon(Material.BREWING_STAND, LangUtil.langMsg("menu.recipe_creator.icon.confirm"),
+                layoutMap.put('*', new Icon(Material.CYAN_STAINED_GLASS_PANE, Languages.menuRecipeCreatorIconPotionFrame.value()));
+                layoutMap.put('A', new Icon(Material.BREWING_STAND, Languages.menuRecipeCreatorIconConfirm.value(),
                     event -> {
                         StoredMenu creator = (StoredMenu) event.getClickedInventory().getHolder();
                         ItemStack result = Objects.requireNonNull(creator).storedItems().get(24);
                         ItemStack input = creator.storedItems().get(19);
                         ItemStack ingredient = creator.storedItems().get(21);
                         if (ItemUtil.isAir(result)) {
-                            LangUtil.sendLang(event.getWhoClicked(), "command.create.null_result");
+                            LangUtil.sendLang(event.getWhoClicked(), Languages.commandCreateNullResult.value());
                             return;
                         }
                         if (ItemUtil.isAir(ingredient) || ItemUtil.isAir(input)) {
-                            LangUtil.sendLang(event.getWhoClicked(), "command.create.null_source");
+                            LangUtil.sendLang(event.getWhoClicked(), Languages.commandCreateNullSource.value());
                             return;
                         }
                         String resultName = ItemUtils.getItemName(result, false);
@@ -479,7 +488,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
     private void sendSuccessMsg(HumanEntity receiver, RecipeType recipeType, String recipeName) {
         LangUtil.sendLang(
             receiver,
-            "command.create.success",
+            Languages.commandCreateSuccess.value(),
             CollectionsUtil.newStringHashMap("<recipe_type>", recipeType.name(), "<recipe_name>", recipeName)
         );
     }
@@ -509,11 +518,11 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
     }
 
     private Icon getFrameIcon() {
-        return new Icon(Material.BLACK_STAINED_GLASS_PANE, LangUtil.langMsg("menu.recipe_creator.icon.frame"));
+        return new Icon(Material.BLACK_STAINED_GLASS_PANE, Languages.menuRecipeCreatorIconFrame.value());
     }
 
     private Icon getResultFrameIcon() {
-        return new Icon(Material.LIME_STAINED_GLASS_PANE, LangUtil.langMsg("menu.recipe_creator.icon.result_frame"));
+        return new Icon(Material.LIME_STAINED_GLASS_PANE, Languages.menuRecipeCreatorIconResultFrame.value());
     }
 
 }

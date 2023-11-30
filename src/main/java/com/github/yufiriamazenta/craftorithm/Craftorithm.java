@@ -2,7 +2,8 @@ package com.github.yufiriamazenta.craftorithm;
 
 import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import com.github.yufiriamazenta.craftorithm.bstat.Metrics;
-import com.github.yufiriamazenta.craftorithm.config.ConfigUpdater;
+import com.github.yufiriamazenta.craftorithm.config.Languages;
+import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.listener.FurnaceSmeltHandler;
 import com.github.yufiriamazenta.craftorithm.listener.ItemsAdderHandler;
@@ -30,14 +31,16 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
     @Override
     public void enable() {
         saveDefaultConfig();
-        ConfigUpdater.INSTANCE.updateConfig();
+//        ConfigUpdater.INSTANCE.updateConfig();
+        PluginConfigs.reloadConfigs();
+        Languages.reloadLanguages();
 
         ItemManager.reloadItemManager();
         regListeners();
         initArcenciel();
         loadBStat();
         
-        LangUtil.info("load.finish");
+        LangUtil.info(Languages.loadFinish.value());
         UpdateUtil.pullUpdateCheckRequest(Bukkit.getConsoleSender());
     }
 
@@ -47,7 +50,7 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
     }
 
     private void loadBStat() {
-        if (!getConfig().getBoolean("bstats", true))
+        if (!PluginConfigs.bStats.value())
             return;
         Metrics metrics = new Metrics(this, 17821);
         metrics.addCustomChart(new Metrics.SingleLineChart("recipes", () -> RecipeManager.recipeConfigWrapperMap().keySet().size()));
