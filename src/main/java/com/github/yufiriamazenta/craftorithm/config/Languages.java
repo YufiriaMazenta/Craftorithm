@@ -1,12 +1,9 @@
 package com.github.yufiriamazenta.craftorithm.config;
 
-import com.github.yufiriamazenta.craftorithm.config.entry.StringConfigEntry;
-import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import crypticlib.config.impl.YamlConfigWrapper;
-import org.bukkit.configuration.file.YamlConfiguration;
+import crypticlib.config.YamlConfigHandler;
+import crypticlib.config.entry.StringConfigEntry;
 
-import java.lang.reflect.Field;
-
+@YamlConfigHandler(path = "lang.yml")
 public class Languages {
 
     public static final StringConfigEntry prefix = new StringConfigEntry("prefix", "&8[&3Craftorithm&8]");
@@ -80,22 +77,5 @@ public class Languages {
     public static final StringConfigEntry loadOraxenNotExist = new StringConfigEntry("load.oraxen_not_exist", "<prefix> &c未发现Oraxen");
     public static final StringConfigEntry loadMythicMobsHook = new StringConfigEntry("load.mythic_mobs_hook", "<prefix> &a发现MythicMobs,已挂钩");
     public static final StringConfigEntry loadMythicMobsNotExist = new StringConfigEntry("load.mythic_mobs_exist", "<prefix> &c未发现MythicMobs");
-
-    public static void reloadLanguages() {
-        YamlConfigWrapper langConfig = LangUtil.langConfigFile();
-        langConfig.reloadConfig();
-        YamlConfiguration config = langConfig.config();
-        try {
-            for (Field field : Languages.class.getFields()) {
-                Object object = field.get(null);
-                if (object instanceof StringConfigEntry) {
-                    ((StringConfigEntry) object).load(config);
-                }
-            }
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        langConfig.saveConfig();
-    }
 
 }

@@ -5,7 +5,7 @@ import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import com.github.yufiriamazenta.craftorithm.util.PluginHookUtil;
-import crypticlib.config.impl.YamlConfigWrapper;
+import crypticlib.config.wrapper.YamlConfigWrapper;
 import crypticlib.nms.item.Item;
 import crypticlib.nms.item.ItemFactory;
 import crypticlib.util.FileUtil;

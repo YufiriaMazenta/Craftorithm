@@ -1,10 +1,11 @@
 package com.github.yufiriamazenta.craftorithm.config;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
-import com.github.yufiriamazenta.craftorithm.config.entry.BooleanConfigEntry;
-import com.github.yufiriamazenta.craftorithm.config.entry.StringConfigEntry;
-import org.bukkit.configuration.file.YamlConfiguration;
+import crypticlib.config.YamlConfigHandler;
+import crypticlib.config.entry.BooleanConfigEntry;
+import crypticlib.config.entry.StringConfigEntry;
 
+@YamlConfigHandler(path = "config.yml")
 public class PluginConfigs {
 
     public final static StringConfigEntry version = new StringConfigEntry("version", Craftorithm.instance().getDescription().getVersion());
@@ -14,18 +15,5 @@ public class PluginConfigs {
     public final static BooleanConfigEntry allRecipeUnlocked = new BooleanConfigEntry("all_recipe_unlocked", false);
     public final static BooleanConfigEntry bStats = new BooleanConfigEntry("bstats", true);
     public final static BooleanConfigEntry releaseDefaultRecipes = new BooleanConfigEntry("release_default_recipes", true);
-
-    public static void reloadConfigs() {
-        Craftorithm.instance().reloadConfig();
-        YamlConfiguration config = (YamlConfiguration) Craftorithm.instance().getConfig();
-        version.load(config);
-        checkUpdate.load(config);
-        removeAllVanillaRecipe.load(config);
-        loreCannotCraft.load(config);
-        allRecipeUnlocked.load(config);
-        bStats.load(config);
-        releaseDefaultRecipes.load(config);
-        Craftorithm.instance().saveConfig();
-    }
 
 }

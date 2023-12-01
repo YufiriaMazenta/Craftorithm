@@ -30,11 +30,6 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
 
     @Override
     public void enable() {
-        saveDefaultConfig();
-//        ConfigUpdater.INSTANCE.updateConfig();
-        PluginConfigs.reloadConfigs();
-        Languages.reloadLanguages();
-
         ItemManager.reloadItemManager();
         regListeners();
         initArcenciel();
