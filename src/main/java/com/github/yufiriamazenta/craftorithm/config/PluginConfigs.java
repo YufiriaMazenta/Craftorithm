@@ -1,9 +1,9 @@
 package com.github.yufiriamazenta.craftorithm.config;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
-import crypticlib.config.YamlConfigHandler;
-import crypticlib.config.entry.BooleanConfigEntry;
-import crypticlib.config.entry.StringConfigEntry;
+import crypticlib.config.yaml.YamlConfigHandler;
+import crypticlib.config.yaml.entry.BooleanConfigEntry;
+import crypticlib.config.yaml.entry.StringConfigEntry;
 
 @YamlConfigHandler(path = "config.yml")
 public class PluginConfigs {

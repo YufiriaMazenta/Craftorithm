@@ -1,7 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.config;
 
-import crypticlib.config.YamlConfigHandler;
-import crypticlib.config.entry.StringConfigEntry;
+import crypticlib.config.yaml.YamlConfigHandler;
+import crypticlib.config.yaml.entry.StringConfigEntry;
 
 @YamlConfigHandler(path = "lang.yml")
 public class Languages {
