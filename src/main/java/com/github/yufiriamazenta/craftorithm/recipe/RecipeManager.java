@@ -8,7 +8,7 @@ import com.github.yufiriamazenta.craftorithm.recipe.custom.PotionMixRecipe;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.CrypticLib;
-import crypticlib.config.wrapper.YamlConfigWrapper;
+import crypticlib.config.yaml.YamlConfigWrapper;
 import crypticlib.util.FileUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
