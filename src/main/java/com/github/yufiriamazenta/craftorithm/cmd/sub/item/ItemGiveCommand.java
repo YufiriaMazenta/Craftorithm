@@ -49,6 +49,7 @@ public class ItemGiveCommand extends AbstractSubCommand {
         }
 
         player.getInventory().addItem(ItemManager.getCraftorithmItem(args.get(0)));
+        LangUtil.sendLang(sender, Languages.commandItemGiveSuccess.value());
         return true;
     }
 
