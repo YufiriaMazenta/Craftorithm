@@ -18,6 +18,7 @@ repositories {
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     maven("https://repo.maven.apache.org/maven2/")
     maven("https://mvn.lumine.io/repository/maven-public/")
+    maven("https://r.irepo.space/maven/")
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://nexus.phoenixdevt.fr/repository/maven-public/")
     mavenCentral()
@@ -29,6 +30,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT") {
         targetConfiguration = "runtime"
     }
+    compileOnly("pers.neige.neigeitems:NeigeItems:1.15.113")
     compileOnly("net.kyori:adventure-api:4.14.0")
     compileOnly("org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
@@ -38,11 +40,11 @@ dependencies {
     compileOnly("com.github.LoneDev6:API-ItemsAdder:3.5.0b")
     compileOnly("com.github.oraxen:oraxen:1.160.0")
     compileOnly("io.lumine:Mythic-Dist:5.3.5")
-    implementation("com.crypticlib:CrypticLib:0.4.5")
+    implementation("com.crypticlib:CrypticLib:0.5.2")
 }
 
 group = "com.github.yufiriamazenta"
-version = "1.5.2-pre2"
+version = "1.5.2-pre3"
 var pluginVersion: String = version.toString() + "-" + SimpleDateFormat("yyyyMMdd").format(System.currentTimeMillis())
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 java.targetCompatibility = JavaVersion.VERSION_1_8

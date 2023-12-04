@@ -12,6 +12,10 @@ import org.black_ixx.playerpoints.PlayerPoints;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
+import pers.neige.neigeitems.item.ItemGenerator;
+import pers.neige.neigeitems.item.ItemInfo;
+import pers.neige.neigeitems.manager.ItemManager;
+import pers.neige.neigeitems.utils.ItemUtils;
 
 import java.util.Optional;
 
@@ -19,7 +23,7 @@ public class PluginHookUtil {
 
     private static Economy economy;
     private static PlayerPoints playerPoints;
-    private static boolean economyLoaded, pointsLoaded, itemsAdderLoaded, oraxenLoaded, mythicLoaded;
+    private static boolean economyLoaded, pointsLoaded, itemsAdderLoaded, oraxenLoaded, mythicLoaded, neigeItemsLoaded;
 
     public static void hookPlugins() {
         hookVault();
@@ -27,6 +31,7 @@ public class PluginHookUtil {
         hookItemsAdder();
         hookOraxen();
         hookMythicMobs();
+        hookNeigeItems();
     }
 
     private static void hookVault() {
@@ -158,6 +163,32 @@ public class PluginHookUtil {
         if (!mythicLoaded)
             throw new UnsupportedOperationException("Can not found MythicMobs plugin");
         return MythicBukkit.inst().getItemManager();
+    }
+
+    private static void hookNeigeItems() {
+        neigeItemsLoaded = Bukkit.getPluginManager().isPluginEnabled("NeigeItems");
+        if (neigeItemsLoaded)
+            LangUtil.info(Languages.loadNeigeItemsHook.value());
+        else
+            LangUtil.info(Languages.loadNeigeItemsNotExist.value());
+    }
+
+    public static ItemStack getNiItem(String itemName) {
+        if (!neigeItemsLoaded)
+            throw new UnsupportedOperationException("Can not found NeigeItems plugin");
+        if (!ItemManager.INSTANCE.hasItem(itemName))
+            return null;
+        return ItemManager.INSTANCE.getItemStack(itemName);
+    }
+
+    public static String getNiName(ItemStack item) {
+        if (!neigeItemsLoaded)
+            throw new UnsupportedOperationException("Can not found NeigeItems plugin");
+        ItemInfo niItem = ItemManager.INSTANCE.isNiItem(item);
+        if (niItem == null) {
+            return null;
+        }
+        return niItem.getId();
     }
 
 }

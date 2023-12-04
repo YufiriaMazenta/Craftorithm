@@ -6,7 +6,7 @@ import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import com.github.yufiriamazenta.craftorithm.util.PluginHookUtil;
 import crypticlib.config.yaml.YamlConfigWrapper;
-import crypticlib.nms.item.Item;
+import crypticlib.nms.item.NbtItem;
 import crypticlib.nms.item.ItemFactory;
 import crypticlib.util.FileUtil;
 import crypticlib.util.ItemUtil;
@@ -67,8 +67,8 @@ public class ItemManager {
 
     private static void loadItem(String itemKey, ConfigurationSection config) {
         try {
-            Item item = ItemFactory.item(config);
-            ItemStack bukkitItem = item.buildBukkit();
+            NbtItem item = ItemFactory.item(config);
+            ItemStack bukkitItem = item.saveNbtToBukkit();
             itemMap.put(itemKey, bukkitItem);
         } catch (Exception e) {
             LangUtil.info(Languages.loadItemLoadException.value(), CollectionsUtil.newStringHashMap("<item_name>", itemKey));
@@ -89,7 +89,7 @@ public class ItemManager {
         } else {
             itemConfigFile = itemFileMap.get(namespace);
         }
-        Item item = ItemFactory.item(bukkit);
+        NbtItem item = ItemFactory.item(bukkit);
         itemConfigFile.set(itemName, item.toMap());
         itemConfigFile.saveConfig();
         itemMap.put(namespace + ":" + itemName, bukkit);
@@ -139,6 +139,9 @@ public class ItemManager {
                     break;
                 case "mythic_mobs":
                     item = PluginHookUtil.getMythicMobsItem(key);
+                    break;
+                case "neige_items":
+                    item = PluginHookUtil.getNiItem(key);
                     break;
                 default:
                     throw new IllegalArgumentException(namespace + " is not a valid item namespace");

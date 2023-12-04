@@ -105,6 +105,11 @@ public class ItemUtils {
         String mythicName = PluginHookUtil.getMythicMobsName(item);
         if (mythicName != null)
             return "mythic_mobs:" + mythicName;
+
+        //识别是否是NeigeItems的物品
+        String niName = PluginHookUtil.getNiName(item);
+        if (niName != null)
+            return "neige_items:" + niName;
         return null;
     }
 
