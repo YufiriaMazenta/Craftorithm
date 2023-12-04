@@ -96,5 +96,7 @@ load:
   items_adder_not_exist: '<prefix> &c未发现ItemsAdder'
   oraxen_hook: '<prefix> &a发现Oraxen,已挂钩'
   oraxen_not_exist: '<prefix> &c未发现Oraxen'
-  mythic_mobs_hook: '<prefix> &c发现MythicMobs,已挂钩'
+  mythic_mobs_hook: '<prefix> &a发现MythicMobs,已挂钩'
   mythic_mobs_not_exist: '<prefix> &a未发现MythicMobs'
+  neige_items_hook: '<prefix> &a发现NeigeItems，已挂钩'
+  neige_items_not_exist: '<prefix> &c未发现NeigeItems'

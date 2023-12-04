@@ -76,6 +76,8 @@ public class Languages {
     public static final StringConfigEntry loadOraxenHook = new StringConfigEntry("load.oraxen_hook", "<prefix> &a发现Oraxen,已挂钩");
     public static final StringConfigEntry loadOraxenNotExist = new StringConfigEntry("load.oraxen_not_exist", "<prefix> &c未发现Oraxen");
     public static final StringConfigEntry loadMythicMobsHook = new StringConfigEntry("load.mythic_mobs_hook", "<prefix> &a发现MythicMobs,已挂钩");
-    public static final StringConfigEntry loadMythicMobsNotExist = new StringConfigEntry("load.mythic_mobs_exist", "<prefix> &c未发现MythicMobs");
+    public static final StringConfigEntry loadMythicMobsNotExist = new StringConfigEntry("load.mythic_mobs_not_exist", "<prefix> &c未发现MythicMobs");
+    public static final StringConfigEntry loadNeigeItemsHook = new StringConfigEntry("load.neige_items_hook", "<prefix> &a发现NeigeItems，已挂钩");
+    public static final StringConfigEntry loadNeigeItemsNotExist = new StringConfigEntry("load.neige_items_not_exist", "<prefix> &c未发现NeigeItems");
 
 }
