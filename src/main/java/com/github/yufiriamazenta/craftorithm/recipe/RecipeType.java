@@ -8,6 +8,7 @@ public enum RecipeType {
     STONE_CUTTING,
     RANDOM_COOKING,
     UNKNOWN,
-    POTION
+    POTION,
+    ANVIL
 
 }
