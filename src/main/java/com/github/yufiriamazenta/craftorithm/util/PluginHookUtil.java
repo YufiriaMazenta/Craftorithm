@@ -12,10 +12,8 @@ import org.black_ixx.playerpoints.PlayerPoints;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import pers.neige.neigeitems.item.ItemGenerator;
 import pers.neige.neigeitems.item.ItemInfo;
 import pers.neige.neigeitems.manager.ItemManager;
-import pers.neige.neigeitems.utils.ItemUtils;
 
 import java.util.Optional;
 
@@ -37,17 +35,17 @@ public class PluginHookUtil {
     private static void hookVault() {
         economyLoaded = Bukkit.getPluginManager().isPluginEnabled("Vault");
         if (!economyLoaded) {
-            LangUtil.info(Languages.loadVaultNotExist.value());
+            LangUtil.info(Languages.LOAD_VAULT_NOT_EXIST.value());
             return;
         }
         RegisteredServiceProvider<Economy> vaultRsp = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
         if (vaultRsp == null) {
             economyLoaded = false;
-            LangUtil.info(Languages.loadVaultNotExist.value());
+            LangUtil.info(Languages.LOAD_VAULT_NOT_EXIST.value());
             return;
         }
 
-        LangUtil.info(Languages.loadVaultHook.value());
+        LangUtil.info(Languages.LOAD_VAULT_HOOK.value());
         economyLoaded = true;
         economy = vaultRsp.getProvider();
     }
@@ -62,9 +60,9 @@ public class PluginHookUtil {
         pointsLoaded = Bukkit.getPluginManager().isPluginEnabled("PlayerPoints");
         if (pointsLoaded) {
             playerPoints = (PlayerPoints) Bukkit.getPluginManager().getPlugin("PlayerPoints");
-            LangUtil.info(Languages.loadPointsHook.value());
+            LangUtil.info(Languages.LOAD_POINTS_HOOK.value());
         } else
-            LangUtil.info(Languages.loadPointsNotExist.value());
+            LangUtil.info(Languages.LOAD_POINTS_NOT_EXIST.value());
     }
 
     public static boolean isPlayerPointsLoaded() { return pointsLoaded; }
@@ -76,9 +74,9 @@ public class PluginHookUtil {
     private static void hookItemsAdder() {
         itemsAdderLoaded = Bukkit.getPluginManager().isPluginEnabled("ItemsAdder");
         if (itemsAdderLoaded)
-            LangUtil.info(Languages.loadItemsAdderHook.value());
+            LangUtil.info(Languages.LOAD_ITEMS_ADDER_HOOK.value());
         else
-            LangUtil.info(Languages.loadItemsAdderNotExist.value());
+            LangUtil.info(Languages.LOAD_ITEMS_ADDER_NOT_EXIST.value());
     }
 
     public static boolean isItemsAdderLoaded() {
@@ -107,9 +105,9 @@ public class PluginHookUtil {
     private static void hookOraxen() {
         oraxenLoaded = Bukkit.getPluginManager().isPluginEnabled("Oraxen");
         if (oraxenLoaded)
-            LangUtil.info(Languages.loadOraxenHook.value());
+            LangUtil.info(Languages.LOAD_ORAXEN_HOOK.value());
         else
-            LangUtil.info(Languages.loadOraxenNotExist.value());
+            LangUtil.info(Languages.LOAD_ORAXEN_NOT_EXIST.value());
     }
 
     public static ItemStack getOraxenItem(String itemStr) {
@@ -132,9 +130,9 @@ public class PluginHookUtil {
     private static void hookMythicMobs() {
         mythicLoaded = Bukkit.getPluginManager().isPluginEnabled("MythicMobs");
         if (mythicLoaded)
-            LangUtil.info(Languages.loadMythicMobsHook.value());
+            LangUtil.info(Languages.LOAD_MYTHIC_MOBS_HOOK.value());
         else
-            LangUtil.info(Languages.loadMythicMobsNotExist.value());
+            LangUtil.info(Languages.LOAD_MYTHIC_MOBS_NOT_EXIST.value());
     }
 
     public static ItemStack getMythicMobsItem(String itemStr) {
@@ -168,9 +166,9 @@ public class PluginHookUtil {
     private static void hookNeigeItems() {
         neigeItemsLoaded = Bukkit.getPluginManager().isPluginEnabled("NeigeItems");
         if (neigeItemsLoaded)
-            LangUtil.info(Languages.loadNeigeItemsHook.value());
+            LangUtil.info(Languages.LOAD_NEIGE_ITEMS_HOOK.value());
         else
-            LangUtil.info(Languages.loadNeigeItemsNotExist.value());
+            LangUtil.info(Languages.LOAD_NEIGE_ITEMS_NOT_EXIST.value());
     }
 
     public static ItemStack getNiItem(String itemName) {

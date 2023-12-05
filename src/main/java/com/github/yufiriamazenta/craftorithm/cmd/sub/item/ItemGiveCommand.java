@@ -2,13 +2,14 @@ package com.github.yufiriamazenta.craftorithm.cmd.sub.item;
 
 import com.github.yufiriamazenta.craftorithm.cmd.sub.AbstractSubCommand;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
-import com.github.yufiriamazenta.craftorithm.item.ItemManager;
+import com.github.yufiriamazenta.craftorithm.item.impl.CraftorithmItemProvider;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.command.ISubcmdExecutor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ public class ItemGiveCommand extends AbstractSubCommand {
         if (args.size() >= 2) {
             player = Bukkit.getPlayer(args.get(1));
             if (player == null) {
-                LangUtil.sendLang(sender, Languages.commandItemGivePlayerOffline.value());
+                LangUtil.sendLang(sender, Languages.COMMAND_ITEM_GIVE_PLAYER_OFFLINE.value());
                 return true;
             }
         } else {
@@ -43,20 +44,21 @@ public class ItemGiveCommand extends AbstractSubCommand {
             }
         }
 
-        if (!ItemManager.isCraftorithmItem(args.get(0))) {
-            LangUtil.sendLang(sender, Languages.commandItemGiveNotExistItem.value(), CollectionsUtil.newStringHashMap("<item_name>", args.get(0)));
+        ItemStack itemStack = CraftorithmItemProvider.INSTANCE.getItem(args.get(0));
+        if (itemStack == null) {
+            LangUtil.sendLang(sender, Languages.COMMAND_ITEM_GIVE_NOT_EXIST_ITEM.value(), CollectionsUtil.newStringHashMap("<item_name>", args.get(0)));
             return true;
         }
 
-        player.getInventory().addItem(ItemManager.getCraftorithmItem(args.get(0)));
-        LangUtil.sendLang(sender, Languages.commandItemGiveSuccess.value());
+        player.getInventory().addItem(itemStack);
+        LangUtil.sendLang(sender, Languages.COMMAND_ITEM_GIVE_SUCCESS.value());
         return true;
     }
 
     @Override
     public List<String> onTabComplete(CommandSender sender, List<String> args) {
         if (args.size() < 2) {
-            List<String> tabList = new ArrayList<>(ItemManager.itemMap().keySet());
+            List<String> tabList = new ArrayList<>(CraftorithmItemProvider.INSTANCE.itemMap().keySet());
             filterTabList(tabList, args.get(0));
             return tabList;
         }

@@ -26,15 +26,15 @@ public final class DisableRecipeCommand extends AbstractSubCommand {
         }
         NamespacedKey removeRecipeKey = NamespacedKey.fromString(args.get(0));
         if (!RecipeManager.serverRecipeCache().contains(removeRecipeKey)) {
-            LangUtil.sendLang(sender, Languages.commandDisableNotExist.value());
+            LangUtil.sendLang(sender, Languages.COMMAND_DISABLE_NOT_EXIST.value());
             return true;
         }
         List<NamespacedKey> removeRecipeKeys = Collections.singletonList(removeRecipeKey);
         if (RecipeManager.disableOtherPluginsRecipe(removeRecipeKeys, true)) {
-            LangUtil.sendLang(sender, Languages.commandDisableSuccess.value());
+            LangUtil.sendLang(sender, Languages.COMMAND_DISABLE_SUCCESS.value());
         }
         else
-            LangUtil.sendLang(sender, Languages.commandDisableFailed.value());
+            LangUtil.sendLang(sender, Languages.COMMAND_DISABLE_FAILED.value());
         return true;
     }
 
