@@ -6,9 +6,9 @@
 </div>
 
 ----
-Craftorithm是一个基于BukkitAPI编写的合成配方管理插件，可以添加各类配方，并可以进行合成限制，删除/禁用配方等管理操作
+Craftorithm是一个合成配方管理插件，可以添加各类配方，并可以进行合成限制，删除/禁用配方等管理操作
 
-## 特性(Features)
+## 特性
 
 ### 添加有序配方
 
@@ -42,10 +42,10 @@ Craftorithm是一个基于BukkitAPI编写的合成配方管理插件，可以添
 
 ![禁用配方](imgs/disable_recipe.gif)
 
-## 使用方式(Usage)
+## 使用方式
 #### [Craftorithm Wiki](https://yufiriamazenta.gitbook.io/craftorithm-wiki/)
 
-## 下载(Download)
+## 下载
 
 #### [spigotmc](https://www.spigotmc.org/resources/craftorithm-customized-crafting-management-plugin-1-13-1-20-folia-supported.108429/)
 
