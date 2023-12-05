@@ -1,57 +1,50 @@
 <div align="center">
 <h1>Craftorithm</h1>
-<h6>合成配方管理系统</h6>
+<h6>Craft Recipe Management System</h6>
 
 <img src="imgs/craftorithm.png" width=150 height=150 alt="Craftorithm">
 </div>
 
 ----
-Craftorithm是一个基于BukkitAPI编写的合成配方管理插件，可以添加各类配方，并可以进行合成限制，删除/禁用配方等管理操作
 
-## 特性(Features)
+[**[中文版本]**](https://github.com/YufiriaMazenta/Craftorithm/blob/master/README-CN.md)
 
-### 添加有序配方
+Craftorithm is a recipe management plugin which can add recipes, remove/disable recipes, add limit to recipes, etc.
 
-![有序配方](imgs/shaped.gif)
+## Features
 
-### 添加无序配方
+### Add shaped recipe
 
-![无序配方](imgs/shapeless.gif)
+![Add Shaped Recipe](imgs/shaped.gif)
 
-### 添加烧炼配方(熔炉、高炉、烟熏炉、营火)
+### Add shapeless recipe
 
-![烧炼配方](imgs/cooking.gif)
+![Add Shapeless Recipe](imgs/shapeless.gif)
 
-### 添加锻造配方
+### Add cooking recipe(furnace、blast_furnace、smoker、campfire)
 
-![锻造配方](imgs/smithing.gif)
+![Add Cooking Recipe](imgs/cooking.gif)
 
-### 添加切石配方
+### Add smithing recipe
 
-![切石配方](imgs/stone_cutting.gif)
+![Add Smithing Recipe](imgs/smithing.gif)
 
-### 添加酿造配方
+### Add stone cutting recipe
 
-![酿造配方](imgs/potion.gif)
+![Add Stone Cutting Recipe](imgs/stone_cutting.gif)
 
-### 查看配方
+### Add brewing recipe
 
-![查看配方](imgs/recipe_list.gif)
+![Add Brewing Recipe](imgs/potion.gif)
 
-### 禁用配方
+### Show recipe list
 
-![禁用配方](imgs/disable_recipe.gif)
+![Show Recipe List](imgs/recipe_list.gif)
 
-## 使用方式(Usage)
+### Disable recipe
+
+![Disable recipe](imgs/disable_recipe.gif)
+
+## Usage
 #### [Craftorithm Wiki](https://yufiriamazenta.gitbook.io/craftorithm-wiki/)
-
-## 下载(Download)
-
-#### [spigotmc](https://www.spigotmc.org/resources/craftorithm-customized-crafting-management-plugin-1-13-1-20-folia-supported.108429/)
-
-#### [mcbbs](https://www.mcbbs.net/thread-1313942-1-1.html)
-
-#### [Modrinth](https://modrinth.com/plugin/craftorithm)
-
-
 
