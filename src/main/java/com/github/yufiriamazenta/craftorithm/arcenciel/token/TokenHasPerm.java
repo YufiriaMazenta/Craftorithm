@@ -19,7 +19,7 @@ public class TokenHasPerm extends AbstractArcencielToken<Boolean> {
     @Override
     public ReturnObj<Boolean> exec(Player player, List<String> args) {
         if (args.isEmpty()) {
-            LangUtil.sendLang(player, Languages.arcencielNotEnoughParam.value(), CollectionsUtil.newStringHashMap("<statement>", "if"));
+            LangUtil.sendLang(player, Languages.ARCENCIEL_NOT_ENOUGH_PARAM.value(), CollectionsUtil.newStringHashMap("<statement>", "if"));
             return new ReturnObj<>(false);
         }
         return new ReturnObj<>(player.hasPermission(args.get(0)));

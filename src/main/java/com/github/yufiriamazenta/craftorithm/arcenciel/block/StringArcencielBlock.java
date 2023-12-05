@@ -1,8 +1,8 @@
 package com.github.yufiriamazenta.craftorithm.arcenciel.block;
 
-import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import com.github.yufiriamazenta.craftorithm.arcenciel.obj.ArcencielSignal;
 import com.github.yufiriamazenta.craftorithm.arcenciel.obj.ReturnObj;
+import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import com.github.yufiriamazenta.craftorithm.arcenciel.token.IArcencielToken;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
@@ -39,7 +39,7 @@ public class StringArcencielBlock implements IArcencielBlock<String> {
         if (keyword == null) {
             List<String> func = ArcencielDispatcher.INSTANCE.getFunc(keywordStr);
             if (func.isEmpty()) {
-                LangUtil.sendLang(player, Languages.arcencielUnknownToken.value(), CollectionsUtil.newStringHashMap("<token>", keywordStr));
+                LangUtil.sendLang(player, Languages.ARCENCIEL_UNKNOWN_TOKEN.value(), CollectionsUtil.newStringHashMap("<token>", keywordStr));
                 return new ReturnObj<>(ArcencielSignal.CONTINUE);
             } else {
                 return ArcencielDispatcher.INSTANCE.dispatchArcencielFunc(player, func);

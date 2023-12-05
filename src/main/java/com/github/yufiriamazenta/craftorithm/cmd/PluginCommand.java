@@ -29,7 +29,7 @@ public class PluginCommand extends RootCmdExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         List<String> argList = Arrays.asList(args);
         if (argList.isEmpty()) {
-            LangUtil.sendLang(sender, Languages.commandNotEnoughParam.value(), CollectionsUtil.newStringHashMap("<number>", String.valueOf(1)));
+            LangUtil.sendLang(sender, Languages.COMMAND_NOT_ENOUGH_PARAM.value(), CollectionsUtil.newStringHashMap("<number>", String.valueOf(1)));
             return true;
         }
         ISubcmdExecutor subCommand = subcommands().get(argList.get(0));
@@ -37,14 +37,14 @@ public class PluginCommand extends RootCmdExecutor {
             String perm = subCommand.permission();
             if (perm != null) {
                 if (!sender.hasPermission(perm)) {
-                    LangUtil.sendLang(sender, Languages.commandNoPerm.value());
+                    LangUtil.sendLang(sender, Languages.COMMAND_NO_PERM.value());
                     return true;
                 }
             }
             return subCommand.onCommand(sender, argList.subList(1, argList.size()));
         }
         else {
-            LangUtil.sendLang(sender, Languages.commandUndefinedSubcmd.value());
+            LangUtil.sendLang(sender, Languages.COMMAND_UNDEFINED_SUBCMD.value());
             return true;
         }
     }

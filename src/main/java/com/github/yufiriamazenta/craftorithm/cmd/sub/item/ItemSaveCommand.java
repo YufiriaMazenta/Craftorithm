@@ -2,7 +2,7 @@ package com.github.yufiriamazenta.craftorithm.cmd.sub.item;
 
 import com.github.yufiriamazenta.craftorithm.cmd.sub.AbstractSubCommand;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
-import com.github.yufiriamazenta.craftorithm.item.ItemManager;
+import com.github.yufiriamazenta.craftorithm.item.impl.CraftorithmItemProvider;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.command.ISubcmdExecutor;
 import org.bukkit.Material;
@@ -33,12 +33,12 @@ public final class ItemSaveCommand extends AbstractSubCommand {
 
         ItemStack item = ((Player) sender).getInventory().getItemInMainHand();
         if (item.getType().equals(Material.AIR)) {
-            LangUtil.sendLang(sender, Languages.commandItemSaveFailedSaveAir.value());
+            LangUtil.sendLang(sender, Languages.COMMAND_ITEM_SAVE_FAILED_SAVE_AIR.value());
             return true;
         }
 
-        ItemManager.addCraftorithmItem(args.get(0), args.get(1), item.clone());
-        LangUtil.sendLang(sender, Languages.commandItemSaveSuccess.value());
+        CraftorithmItemProvider.INSTANCE.regCraftorithmItem(args.get(0), args.get(1), item.clone());
+        LangUtil.sendLang(sender, Languages.COMMAND_ITEM_SAVE_SUCCESS.value());
         return true;
     }
 
@@ -47,7 +47,7 @@ public final class ItemSaveCommand extends AbstractSubCommand {
         switch (args.size()) {
             case 0:
             case 1:
-                List<String> tabList = new ArrayList<>(ItemManager.itemFileMap().keySet());
+                List<String> tabList = new ArrayList<>(CraftorithmItemProvider.INSTANCE.itemConfigFileMap().keySet());
                 filterTabList(tabList, args.get(0));
                 return tabList;
             case 2:

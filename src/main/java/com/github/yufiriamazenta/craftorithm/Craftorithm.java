@@ -1,10 +1,10 @@
 package com.github.yufiriamazenta.craftorithm;
 
-import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import com.github.yufiriamazenta.craftorithm.bstat.Metrics;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
+import com.github.yufiriamazenta.craftorithm.item.impl.CraftorithmItemProvider;
 import com.github.yufiriamazenta.craftorithm.listener.FurnaceSmeltHandler;
 import com.github.yufiriamazenta.craftorithm.listener.ItemsAdderHandler;
 import com.github.yufiriamazenta.craftorithm.listener.SmithingHandler;
@@ -12,6 +12,7 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import com.github.yufiriamazenta.craftorithm.util.PluginHookUtil;
 import com.github.yufiriamazenta.craftorithm.util.UpdateUtil;
+import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import crypticlib.BukkitPlugin;
 import crypticlib.CrypticLib;
 import org.bukkit.Bukkit;
@@ -30,12 +31,12 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
 
     @Override
     public void enable() {
-        ItemManager.reloadItemManager();
+        ItemManager.INSTANCE.regItemProvider(CraftorithmItemProvider.INSTANCE);
         regListeners();
         initArcenciel();
         loadBStat();
         
-        LangUtil.info(Languages.loadFinish.value());
+        LangUtil.info(Languages.LOAD_FINISH.value());
         UpdateUtil.pullUpdateCheckRequest(Bukkit.getConsoleSender());
     }
 
@@ -45,7 +46,7 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
     }
 
     private void loadBStat() {
-        if (!PluginConfigs.bStats.value())
+        if (!PluginConfigs.BSTATS.value())
             return;
         Metrics metrics = new Metrics(this, 17821);
         metrics.addCustomChart(new Metrics.SingleLineChart("recipes", () -> RecipeManager.recipeConfigWrapperMap().keySet().size()));

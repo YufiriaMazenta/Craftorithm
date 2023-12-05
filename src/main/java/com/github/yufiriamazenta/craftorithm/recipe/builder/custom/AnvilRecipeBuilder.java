@@ -1,7 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.recipe.builder.custom;
 
-import com.github.yufiriamazenta.craftorithm.recipe.builder.AbstractRecipeBuilder;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
+import com.github.yufiriamazenta.craftorithm.recipe.builder.AbstractRecipeBuilder;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
 

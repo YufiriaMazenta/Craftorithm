@@ -1,11 +1,10 @@
 package com.github.yufiriamazenta.craftorithm.cmd.sub;
 
+import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
-import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
-import com.github.yufiriamazenta.craftorithm.item.ItemManager;
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
+import com.github.yufiriamazenta.craftorithm.item.impl.CraftorithmItemProvider;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.command.ISubcmdExecutor;
@@ -25,17 +24,17 @@ public final class ReloadCommand extends AbstractSubCommand {
     public boolean onCommand(CommandSender sender, List<String> args) {
         try {
             reloadPlugin();
-            LangUtil.sendLang(sender, Languages.commandReloadSuccess.value());
+            LangUtil.sendLang(sender, Languages.COMMAND_RELOAD_SUCCESS.value());
         } catch (Exception e) {
             e.printStackTrace();
-            LangUtil.sendLang(sender, Languages.commandReloadException.value());
+            LangUtil.sendLang(sender, Languages.COMMAND_RELOAD_EXCEPTION.value());
         }
         return true;
     }
 
     public static void reloadPlugin() {
         reloadConfigs();
-        ItemManager.reloadItemManager();
+        CraftorithmItemProvider.INSTANCE.reloadItemProvider();
         RecipeManager.reloadRecipeManager();
     }
 

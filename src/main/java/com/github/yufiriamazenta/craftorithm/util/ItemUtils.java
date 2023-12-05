@@ -24,7 +24,7 @@ public class ItemUtils {
     }
 
     public static void reloadCannotCraftLore() {
-        cannotCraftLore = TextUtil.color(PluginConfigs.loreCannotCraft.value());
+        cannotCraftLore = TextUtil.color(PluginConfigs.LORE_CANNOT_CRAFT.value());
         try {
             cannotCraftLorePattern = Pattern.compile(cannotCraftLore);
             cannotCraftLoreIsRegex = true;
@@ -70,16 +70,13 @@ public class ItemUtils {
         return containsLore;
     }
 
-    public static String getItemName(ItemStack item, boolean ignoreAmount) {
+    public static String matchItemName(ItemStack item, boolean ignoreAmount) {
         if (ItemUtil.isAir(item)) {
             return null;
         }
-        String itemName = checkIsOtherPluginName(item);
-        if (itemName != null)
-            return itemName;
+        String itemName;
         if (item.hasItemMeta()) {
-            itemName = ItemManager.getItemName(item, ignoreAmount, true, "gui_items", UUID.randomUUID().toString());
-            itemName = "items:" + itemName;
+            itemName = ItemManager.INSTANCE.matchItemName(item, ignoreAmount, true, "gui_items", UUID.randomUUID().toString());
         } else {
             itemName = item.getType().name();
             if (!ignoreAmount) {
@@ -88,30 +85,5 @@ public class ItemUtils {
         }
         return itemName;
     }
-
-    public static String checkIsOtherPluginName(ItemStack item) {
-        //识别是否是ItemsAdder的物品
-        String itemsAdderName = PluginHookUtil.getItemsAdderName(item);
-        if (itemsAdderName != null)
-            return "items_adder:" + itemsAdderName;
-
-        //识别是否是Oraxen的物品
-        String oraxenName = PluginHookUtil.getOraxenName(item);
-        if (oraxenName != null) {
-            return "oraxen:" + oraxenName;
-        }
-
-        //识别是否是MythicMobs的物品
-        String mythicName = PluginHookUtil.getMythicMobsName(item);
-        if (mythicName != null)
-            return "mythic_mobs:" + mythicName;
-
-        //识别是否是NeigeItems的物品
-        String niName = PluginHookUtil.getNiName(item);
-        if (niName != null)
-            return "neige_items:" + niName;
-        return null;
-    }
-
 
 }

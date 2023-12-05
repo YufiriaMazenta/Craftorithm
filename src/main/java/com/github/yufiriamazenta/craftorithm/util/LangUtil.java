@@ -20,7 +20,7 @@ public class LangUtil {
         if (receiver == null) {
             return;
         }
-        formatMap.put("<prefix>", Languages.prefix.value());
+        formatMap.put("<prefix>", Languages.PREFIX.value());
         formatMap.put("<version>", Craftorithm.instance().getDescription().getVersion());
 
         for (String formatStr : formatMap.keySet()) {

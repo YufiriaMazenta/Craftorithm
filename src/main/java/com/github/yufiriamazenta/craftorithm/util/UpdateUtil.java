@@ -1,8 +1,8 @@
 package com.github.yufiriamazenta.craftorithm.util;
 
-import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
+import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import crypticlib.CrypticLib;
 import org.bukkit.command.CommandSender;
 
@@ -15,7 +15,7 @@ import java.net.URLConnection;
 public class UpdateUtil {
 
     public static void pullUpdateCheckRequest(CommandSender sender) {
-        if (!PluginConfigs.checkUpdate.value())
+        if (!PluginConfigs.CHECK_UPDATE.value())
             return;
         CrypticLib.platform().scheduler().runTaskAsync(Craftorithm.instance(), () -> {
             try {
@@ -29,7 +29,7 @@ public class UpdateUtil {
                 pluginVersion = pluginVersion.substring(0, pluginVersion.indexOf("-"));
                 if (checkVersion(latestVersion, pluginVersion)) {
                     CrypticLib.platform().scheduler().runTask(Craftorithm.instance(), () -> {
-                        LangUtil.sendLang(sender, Languages.newVersion.value(), CollectionsUtil.newStringHashMap("<new_version>", latestVersion));
+                        LangUtil.sendLang(sender, Languages.NEW_VERSION.value(), CollectionsUtil.newStringHashMap("<new_version>", latestVersion));
                     });
                 }
                 is.close();

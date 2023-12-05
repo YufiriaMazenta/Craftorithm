@@ -203,7 +203,7 @@ public class RecipeFactory {
             List<Recipe> recipes = new ArrayList<>();
             List<String> resultList = config.getStringList("result");
             for (int i = 0; i < resultList.size(); i++) {
-                ItemStack result1 = ItemManager.matchItem(resultList.get(i));
+                ItemStack result1 = ItemManager.INSTANCE.matchItem(resultList.get(i));
                 String fullKey = key + "." + i;
                 NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.instance(), fullKey);
                 recipes.add(StoneCuttingRecipeBuilder.builder().setKey(namespacedKey).setResult(result1).setSource(choice).build());
@@ -224,7 +224,7 @@ public class RecipeFactory {
             List<String> sourceList = config.getStringList("source");
             StonecuttingRecipe[] stonecuttingRecipes = new StonecuttingRecipe[resultList.size() * sourceList.size()];
             for (int i = 0; i < resultList.size(); i++) {
-                ItemStack result = ItemManager.matchItem(resultList.get(i));
+                ItemStack result = ItemManager.INSTANCE.matchItem(resultList.get(i));
                 for (int j = 0; j < sourceList.size(); j++) {
                     String fullKey = String.format(key + ".%d.%d", i, j);
                     NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.instance(), fullKey);
@@ -303,7 +303,7 @@ public class RecipeFactory {
         if (resultStr.isEmpty()) {
             throw new IllegalArgumentException("Empty recipe result");
         }
-        return ItemManager.matchItem(resultStr);
+        return ItemManager.INSTANCE.matchItem(resultStr);
     }
 
     public static RecipeChoice getRecipeChoice(String itemStr) {
@@ -319,7 +319,7 @@ public class RecipeFactory {
                 }
                 return new RecipeChoice.MaterialChoice(materialTag);
             }
-            ItemStack item = ItemManager.matchItem(itemStr);
+            ItemStack item = ItemManager.INSTANCE.matchItem(itemStr);
             return new RecipeChoice.ExactChoice(item);
         } else {
             Material material = Material.matchMaterial(itemStr);
