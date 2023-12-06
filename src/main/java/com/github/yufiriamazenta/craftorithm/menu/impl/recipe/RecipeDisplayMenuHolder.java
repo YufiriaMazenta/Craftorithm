@@ -27,14 +27,14 @@ public class RecipeDisplayMenuHolder extends BukkitMenuHandler implements IChild
     private BukkitMenuHandler parentMenu;
 
     public RecipeDisplayMenuHolder(NamespacedKey recipeKey) {
-        this(Bukkit.getRecipe(recipeKey), null);
+        this(RecipeManager.INSTANCE.getRecipe(recipeKey), null);
     }
 
     public RecipeDisplayMenuHolder(Recipe recipe, RecipeListMenuHolder parentMenu) {
         super();
         this.parentMenu = parentMenu;
         this.recipe = recipe;
-        RecipeType recipeType = RecipeManager.getRecipeType(this.recipe);
+        RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(this.recipe);
         switch (recipeType) {
             case SHAPED:
                 setShapedRecipeMenu();

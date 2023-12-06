@@ -1,6 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.recipe.registry.impl;
 
-import com.github.yufiriamazenta.craftorithm.recipe.DefRecipeManager;
+import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import org.bukkit.NamespacedKey;
@@ -39,6 +39,6 @@ public class ShapelessRecipeRegistry extends RecipeRegistry {
             shapelessRecipe.addIngredient(choice);
         }
         shapelessRecipe.setGroup(group());
-        DefRecipeManager.INSTANCE.regRecipe(group(), shapelessRecipe, RecipeType.SHAPELESS);
+        RecipeManager.INSTANCE.regRecipe(group(), shapelessRecipe, RecipeType.SHAPELESS);
     }
 }

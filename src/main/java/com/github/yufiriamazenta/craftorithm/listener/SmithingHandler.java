@@ -23,8 +23,10 @@ public enum SmithingHandler implements Listener {
 
     @EventHandler
     public void onPrepareSmith(PrepareSmithingEvent event) {
-        NamespacedKey recipeKey = RecipeManager.getRecipeKey(event.getInventory().getRecipe());
-        YamlConfiguration config = RecipeManager.getRecipeConfig(recipeKey);
+        NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(event.getInventory().getRecipe());
+        if (recipeKey == null)
+            return;
+        YamlConfiguration config = RecipeManager.INSTANCE.getRecipeConfig(recipeKey);
         if (config == null)
             return;
 
@@ -43,8 +45,10 @@ public enum SmithingHandler implements Listener {
         if (!(entity instanceof Player)) {
             return;
         }
-        NamespacedKey recipeKey = RecipeManager.getRecipeKey(event.getInventory().getRecipe());
-        YamlConfiguration config = RecipeManager.getRecipeConfig(recipeKey);
+        NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(event.getInventory().getRecipe());
+        if (recipeKey == null)
+            return;
+        YamlConfiguration config = RecipeManager.INSTANCE.getRecipeConfig(recipeKey);
         if (config == null)
             return;
         Player player = (Player) entity;

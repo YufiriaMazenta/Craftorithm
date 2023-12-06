@@ -28,21 +28,16 @@ public class RecipeGroupListMenuHolder extends BukkitMenuHandler {
     public RecipeGroupListMenuHolder() {
         super();
         Map<String, ItemStack> recipeResultMap = new HashMap<>();
-        RecipeManager.recipeGroupMap().forEach((recipeName, recipeKeys) -> {
-            if (recipeKeys == null || recipeKeys.isEmpty())
-                return;
-            Recipe firstRecipe = Bukkit.getRecipe(recipeKeys.get(0));
-            if (firstRecipe == null)
-                return;
-            recipeResultMap.put(recipeName, firstRecipe.getResult());
-        });
-        if (RecipeManager.supportPotionMix()) {
-            RecipeManager.potionMixGroupMap().forEach((recipeName, recipes) -> {
-                if (recipes == null || recipes.isEmpty())
+        RecipeManager.INSTANCE.recipeMap().forEach((recipeType, recipeGroupMap) -> {
+            recipeGroupMap.forEach((groupName, recipeKeys) -> {
+                if (recipeKeys == null || recipeKeys.isEmpty())
                     return;
-                recipeResultMap.put(recipeName, recipes.get(0).getResult());
+                Recipe firstRecipe = RecipeManager.INSTANCE.getRecipe(recipeKeys.get(0));
+                if (firstRecipe == null)
+                    return;
+                recipeResultMap.put(groupName, firstRecipe.getResult());
             });
-        }
+        });
         recipeGroupResultList = new ArrayList<>(recipeResultMap.entrySet());
         page = 0;
         int recipeGroupNum = recipeResultMap.size();
@@ -52,8 +47,8 @@ public class RecipeGroupListMenuHolder extends BukkitMenuHandler {
             maxPage = recipeGroupNum / 45 + 1;
         }
         recipeGroupResultList.sort((o1, o2) -> {
-            int sortId = RecipeManager.getCraftorithmRecipeSortId(o1.getKey());
-            int sortId2 = RecipeManager.getCraftorithmRecipeSortId(o2.getKey());
+            int sortId = RecipeManager.INSTANCE.getCraftorithmRecipeSortId(o1.getKey());
+            int sortId2 = RecipeManager.INSTANCE.getCraftorithmRecipeSortId(o2.getKey());
             return Integer.compare(sortId, sortId2);
         });
     }
@@ -117,30 +112,16 @@ public class RecipeGroupListMenuHolder extends BukkitMenuHandler {
     private ItemDisplayIcon wrapIcon(int recipeSlot) {
         ItemStack display = recipeGroupResultList.get(recipeSlot).getValue();
         String recipeGroupName = recipeGroupResultList.get(recipeSlot).getKey();
-        if (RecipeManager.recipeGroupMap().containsKey(recipeGroupName)) {
-            return ItemDisplayIcon.icon(display, event -> {
-                event.setCancelled(true);
-                event.getWhoClicked().openInventory(
-                    new RecipeListMenuHolder(
-                        (Player) event.getWhoClicked(),
-                        RecipeManager.recipeGroupMap().get(recipeGroupName),
-                        this
-                    ).getInventory()
-                );
-            });
-        } else {
-            return ItemDisplayIcon.icon(display, event -> {
-                event.setCancelled(true);
-                event.getWhoClicked().openInventory(
-                    new RecipeListMenuHolder(
-                        (Player) event.getWhoClicked(),
-                        RecipeManager.potionMixGroupMap(),
-                        recipeGroupName,
-                        this
-                    ).getInventory()
-                );
-            });
-        }
+        return ItemDisplayIcon.icon(display, event -> {
+            event.setCancelled(true);
+            event.getWhoClicked().openInventory(
+                new RecipeListMenuHolder(
+                    (Player) event.getWhoClicked(),
+                    RecipeManager.INSTANCE.getCraftorithmRecipeGroup(recipeGroupName),
+                    this
+                ).getInventory()
+            );
+        });
     }
 
     public int page() {

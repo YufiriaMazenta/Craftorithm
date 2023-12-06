@@ -11,7 +11,7 @@ public enum ItemsAdderHandler implements Listener {
 
     @EventHandler
     public void onItemsAdderLoaded(ItemsAdderLoadDataEvent event) {
-        RecipeManager.reloadRecipeManager();
+        RecipeManager.INSTANCE.reloadRecipeManager();
     }
 
 }

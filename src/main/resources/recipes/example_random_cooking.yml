@@ -9,7 +9,7 @@ source:
     item: bedrock
   - block: smoking
     item: bedrock
-  - block: blasting
+  - block: blast_furnace
     item: bedrock
 exp: 10
 time: 100

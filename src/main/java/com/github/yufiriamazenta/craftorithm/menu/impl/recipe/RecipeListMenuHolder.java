@@ -2,6 +2,7 @@ package com.github.yufiriamazenta.craftorithm.menu.impl.recipe;
 
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.IChildBukkitMenu;
+import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.PotionMixRecipe;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.BukkitMenuHandler;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.ItemDisplayIcon;
@@ -18,9 +19,7 @@ import org.bukkit.inventory.SmithingTrimRecipe;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class RecipeListMenuHolder extends BukkitMenuHandler implements IChildBukkitMenu {
 
@@ -30,17 +29,17 @@ public class RecipeListMenuHolder extends BukkitMenuHandler implements IChildBuk
     private final boolean hasEditPermission;
     private BukkitMenuHandler parentMenu;
 
-    public RecipeListMenuHolder(Player player, List<NamespacedKey> recipeKeys) {
+    public RecipeListMenuHolder(Player player, Collection<NamespacedKey> recipeKeys) {
         this(player, recipeKeys, null);
     }
 
-    public RecipeListMenuHolder(Player player, List<NamespacedKey> recipeKeys, BukkitMenuHandler parentMenu) {
+    public RecipeListMenuHolder(Player player, Collection<NamespacedKey> recipeKeys, BukkitMenuHandler parentMenu) {
         super();
         this.parentMenu = parentMenu;
         this.hasEditPermission = player.hasPermission("craftorithm.recipe_list.manager");
         this.recipeList = new ArrayList<>();
         for (NamespacedKey key : recipeKeys) {
-            recipeList.add(Bukkit.getRecipe(key));
+            recipeList.add(RecipeManager.INSTANCE.getRecipe(key));
         }
         page = 0;
         recipeList.removeIf(recipe -> {

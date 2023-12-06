@@ -1,11 +1,13 @@
 package com.github.yufiriamazenta.craftorithm.item;
 
+import com.github.yufiriamazenta.craftorithm.item.impl.CraftorithmItemProvider;
 import crypticlib.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -16,7 +18,12 @@ public enum ItemManager {
     private final Map<String, ItemProvider> itemProviderMap;
 
     ItemManager() {
-        itemProviderMap = new ConcurrentHashMap<>();
+        itemProviderMap = new LinkedHashMap<>();
+    }
+
+    public void retDefaultProviders() {
+        regItemProvider(CraftorithmItemProvider.INSTANCE);
+        //todo 其他插件
     }
 
     public void regItemProvider(ItemProvider itemProvider) {

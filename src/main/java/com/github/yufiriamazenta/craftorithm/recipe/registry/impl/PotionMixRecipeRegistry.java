@@ -1,6 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.recipe.registry.impl;
 
-import com.github.yufiriamazenta.craftorithm.recipe.DefRecipeManager;
+import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.PotionMixRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
@@ -16,8 +16,8 @@ public class PotionMixRecipeRegistry extends RecipeRegistry {
 
     private RecipeChoice input, ingredient;
 
-    public PotionMixRecipeRegistry(@NotNull NamespacedKey namespacedKey, @NotNull ItemStack result) {
-        super(null, namespacedKey, result);
+    public PotionMixRecipeRegistry(@NotNull String recipeGroup, @NotNull NamespacedKey namespacedKey, @NotNull ItemStack result) {
+        super(recipeGroup, namespacedKey, result);
     }
 
     public RecipeChoice input() {
@@ -46,6 +46,6 @@ public class PotionMixRecipeRegistry extends RecipeRegistry {
         Objects.requireNonNull(input, "Recipe input cannot be null");
 
         PotionMixRecipe potionMixRecipe = new PotionMixRecipe(new PotionMix(namespacedKey(), result(), input, ingredient));
-        DefRecipeManager.INSTANCE.regRecipe(group(), potionMixRecipe, RecipeType.POTION);
+        RecipeManager.INSTANCE.regRecipe(group(), potionMixRecipe, RecipeType.POTION);
     }
 }
