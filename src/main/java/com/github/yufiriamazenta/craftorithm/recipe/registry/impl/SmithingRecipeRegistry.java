@@ -1,10 +1,8 @@
 package com.github.yufiriamazenta.craftorithm.recipe.registry.impl;
 
-import com.github.yufiriamazenta.craftorithm.exception.UnsupportedVersionException;
-import com.github.yufiriamazenta.craftorithm.recipe.DefRecipeManager;
+import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
-import crypticlib.CrypticLib;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
@@ -20,11 +18,8 @@ public class SmithingRecipeRegistry extends RecipeRegistry {
 
     private RecipeChoice base, addition;
 
-    public SmithingRecipeRegistry(@NotNull NamespacedKey namespacedKey, @NotNull ItemStack result) {
-        super(null, namespacedKey, result);
-        if (CrypticLib.minecraftVersion() >= 12000) {
-            throw new UnsupportedVersionException("Legacy smithing recipe registry, please use XSmithingRecipeRegistry");
-        }
+    public SmithingRecipeRegistry(@NotNull String recipeGroup, @NotNull NamespacedKey namespacedKey, ItemStack result) {
+        super(recipeGroup, namespacedKey, result);
     }
 
     public RecipeChoice base() {
@@ -53,6 +48,6 @@ public class SmithingRecipeRegistry extends RecipeRegistry {
         Objects.requireNonNull(addition, "Recipe addition cannot be null");
 
         SmithingRecipe smithingRecipe = new SmithingRecipe(namespacedKey(), result(), base, addition);
-        DefRecipeManager.INSTANCE.regRecipe(group(), smithingRecipe, RecipeType.SMITHING);
+        RecipeManager.INSTANCE.regRecipe(group(), smithingRecipe, RecipeType.SMITHING);
     }
 }

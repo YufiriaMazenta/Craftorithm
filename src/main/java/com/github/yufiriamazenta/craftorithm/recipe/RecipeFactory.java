@@ -158,9 +158,9 @@ public class RecipeFactory {
         if (CrypticLib.minecraftVersion() >= 12000) {
             RecipeChoice template = getRecipeChoice(config.getString("source.template", ""));
             XSmithingRecipeRegistry.SmithingType type = XSmithingRecipeRegistry.SmithingType.valueOf(config.getString("source.type", "default").toUpperCase());
-            recipeRegistry = new XSmithingRecipeRegistry(namespacedKey, result).setSmithingType(type).setTemplate(template).setBase(base).setAddition(addition);
+            recipeRegistry = new XSmithingRecipeRegistry(key, namespacedKey, result).setSmithingType(type).setTemplate(template).setBase(base).setAddition(addition);
         } else {
-            recipeRegistry = new SmithingRecipeRegistry(namespacedKey, result).setBase(base).setAddition(addition);
+            recipeRegistry = new SmithingRecipeRegistry(key, namespacedKey, result).setBase(base).setAddition(addition);
         }
 
         return Collections.singletonList(recipeRegistry);
@@ -183,9 +183,9 @@ public class RecipeFactory {
             if (CrypticLib.minecraftVersion() >= 12000) {
                 RecipeChoice template = getRecipeChoice((String) map.get("template"));
                 XSmithingRecipeRegistry.SmithingType type = XSmithingRecipeRegistry.SmithingType.valueOf(typeStr.toUpperCase());
-                recipeRegistries.add(new XSmithingRecipeRegistry(namespacedKey, result).setSmithingType(type).setTemplate(template).setBase(base).setAddition(addition));
+                recipeRegistries.add(new XSmithingRecipeRegistry(key, namespacedKey, result).setSmithingType(type).setTemplate(template).setBase(base).setAddition(addition));
             } else {
-                recipeRegistries.add(new SmithingRecipeRegistry(namespacedKey, result).setBase(base).setAddition(addition));
+                recipeRegistries.add(new SmithingRecipeRegistry(key, namespacedKey, result).setBase(base).setAddition(addition));
             }
         }
         return recipeRegistries;
@@ -245,7 +245,7 @@ public class RecipeFactory {
         ItemStack result = getResultItem(config);
         RecipeChoice input = getRecipeChoice(config.getString("source.input", ""));
         RecipeChoice ingredient = getRecipeChoice(config.getString("source.ingredient", ""));
-        return Collections.singletonList(new PotionMixRecipeRegistry(namespacedKey, result).setInput(input).setIngredient(ingredient));
+        return Collections.singletonList(new PotionMixRecipeRegistry(key, namespacedKey, result).setInput(input).setIngredient(ingredient));
     }
 
     public static List<RecipeRegistry> newMultiplePotionMixRecipe(YamlConfiguration config, String key) {
@@ -258,7 +258,7 @@ public class RecipeFactory {
             NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.instance(), fullKey);
             RecipeChoice input = getRecipeChoice((String) map.get("input"));
             RecipeChoice ingredient = getRecipeChoice((String) map.get("ingredient"));
-            recipeRegistries.add(new PotionMixRecipeRegistry(namespacedKey, result).setInput(input).setIngredient(ingredient));
+            recipeRegistries.add(new PotionMixRecipeRegistry(key, namespacedKey, result).setInput(input).setIngredient(ingredient));
         }
         return recipeRegistries;
     }

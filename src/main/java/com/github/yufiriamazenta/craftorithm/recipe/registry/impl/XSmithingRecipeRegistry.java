@@ -1,10 +1,11 @@
 package com.github.yufiriamazenta.craftorithm.recipe.registry.impl;
 
-import com.github.yufiriamazenta.craftorithm.recipe.DefRecipeManager;
+import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.*;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -13,8 +14,8 @@ public class XSmithingRecipeRegistry extends SmithingRecipeRegistry {
     private RecipeChoice template;
     private SmithingType smithingType;
 
-    public XSmithingRecipeRegistry(@NotNull NamespacedKey namespacedKey, @NotNull ItemStack result) {
-        super(namespacedKey, result);
+    public XSmithingRecipeRegistry(@NotNull String recipeGroup, @NotNull NamespacedKey namespacedKey, @Nullable ItemStack result) {
+        super(recipeGroup, namespacedKey, result);
         this.smithingType = SmithingType.TRANSFORM;
     }
 
@@ -48,7 +49,7 @@ public class XSmithingRecipeRegistry extends SmithingRecipeRegistry {
                 smithingRecipe = new SmithingTransformRecipe(namespacedKey(), result(), template, base(), addition());
                 break;
         }
-        DefRecipeManager.INSTANCE.regRecipe(group(), smithingRecipe, RecipeType.SMITHING);
+        RecipeManager.INSTANCE.regRecipe(group(), smithingRecipe, RecipeType.SMITHING);
     }
 
     public SmithingType smithingType() {

@@ -1,6 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.recipe.registry.impl;
 
-import com.github.yufiriamazenta.craftorithm.recipe.DefRecipeManager;
+import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import org.bukkit.inventory.ShapedRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
@@ -63,7 +63,7 @@ public final class ShapedRecipeRegistry extends RecipeRegistry {
 
         shapedRecipe.setGroup(group());
 
-        DefRecipeManager.INSTANCE.regRecipe(group(), shapedRecipe, RecipeType.SHAPED);
+        RecipeManager.INSTANCE.regRecipe(group(), shapedRecipe, RecipeType.SHAPED);
     }
 
 

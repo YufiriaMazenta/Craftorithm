@@ -4,10 +4,12 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.command.ISubcmdExecutor;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 重构为只能删除本身插件的配方，取消其他插件配方移动到disable命令
@@ -27,7 +29,7 @@ public final class RemoveRecipeCommand extends AbstractSubCommand {
             return true;
         }
 
-        if (RecipeManager.removeCraftorithmRecipe(args.get(0), true)) {
+        if (RecipeManager.INSTANCE.removeCraftorithmRecipe(args.get(0), true)) {
             LangUtil.sendLang(sender, Languages.COMMAND_REMOVE_SUCCESS.value());
         }
         else
@@ -39,13 +41,8 @@ public final class RemoveRecipeCommand extends AbstractSubCommand {
     public List<String> onTabComplete(CommandSender sender, List<String> args) {
         if (args.size() <= 1) {
             List<String> tabList = new ArrayList<>();
-            for (String key : RecipeManager.recipeGroupMap().keySet()) {
-                if (key.startsWith(args.get(0)))
-                    tabList.add(key);
-            }
-            for (String key : RecipeManager.potionMixGroupMap().keySet()) {
-                if (key.startsWith(args.get(0)))
-                    tabList.add(key);
+            for (Map<String, List<NamespacedKey>> recipeGroupMap : RecipeManager.INSTANCE.recipeMap().values()) {
+                tabList.addAll(recipeGroupMap.keySet());
             }
             filterTabList(tabList, args.get(0));
             return tabList;

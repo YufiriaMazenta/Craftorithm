@@ -1,6 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.recipe.registry.impl;
 
-import com.github.yufiriamazenta.craftorithm.recipe.DefRecipeManager;
+import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import org.bukkit.NamespacedKey;
@@ -26,7 +26,7 @@ public class StoneCuttingRecipeRegistry extends RecipeRegistry {
         Objects.requireNonNull(source, "Recipe ingredient cannot be null");
         StonecuttingRecipe stonecuttingRecipe = new StonecuttingRecipe(namespacedKey(), result(), source);
         stonecuttingRecipe.setGroup(group());
-        DefRecipeManager.INSTANCE.regRecipe(group(), stonecuttingRecipe, RecipeType.STONE_CUTTING);
+        RecipeManager.INSTANCE.regRecipe(group(), stonecuttingRecipe, RecipeType.STONE_CUTTING);
     }
 
     public RecipeChoice source() {

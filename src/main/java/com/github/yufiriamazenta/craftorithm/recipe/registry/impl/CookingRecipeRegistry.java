@@ -1,6 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.recipe.registry.impl;
 
-import com.github.yufiriamazenta.craftorithm.recipe.DefRecipeManager;
+import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import org.bukkit.NamespacedKey;
@@ -45,7 +45,7 @@ public class CookingRecipeRegistry extends RecipeRegistry {
                 break;
         }
         cookingRecipe.setGroup(group());
-        DefRecipeManager.INSTANCE.regRecipe(group(), cookingRecipe, RecipeType.COOKING);
+        RecipeManager.INSTANCE.regRecipe(group(), cookingRecipe, RecipeType.COOKING);
     }
 
     public RecipeChoice source() {

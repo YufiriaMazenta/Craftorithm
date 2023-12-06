@@ -27,7 +27,7 @@ public enum CraftHandler implements Listener {
     public void dispatchConditions(PrepareItemCraftEvent event) {
         if (event.getRecipe() == null)
             return;
-        YamlConfiguration config = RecipeManager.getRecipeConfig(RecipeManager.getRecipeKey(event.getRecipe()));
+        YamlConfiguration config = RecipeManager.INSTANCE.getRecipeConfig(RecipeManager.INSTANCE.getRecipeKey(event.getRecipe()));
         if (config == null)
             return;
 
@@ -51,8 +51,8 @@ public enum CraftHandler implements Listener {
         if (!(entity instanceof Player)) {
             return;
         }
-        NamespacedKey recipeKey = RecipeManager.getRecipeKey(event.getRecipe());
-        YamlConfiguration config = RecipeManager.getRecipeConfig(recipeKey);
+        NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(event.getRecipe());
+        YamlConfiguration config = RecipeManager.INSTANCE.getRecipeConfig(recipeKey);
         if (config == null)
             return;
         Player player = (Player) entity;

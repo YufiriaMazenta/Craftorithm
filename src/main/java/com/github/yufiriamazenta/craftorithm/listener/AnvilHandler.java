@@ -1,7 +1,5 @@
 package com.github.yufiriamazenta.craftorithm.listener;
 
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
-import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import crypticlib.listener.BukkitListener;
 import crypticlib.util.ItemUtil;
 import org.bukkit.event.EventHandler;
@@ -18,9 +16,9 @@ public class AnvilHandler implements Listener {
         ItemStack addition = event.getInventory().getSecondItem();
         if (ItemUtil.isAir(base) || ItemUtil.isAir(addition))
             return;
-        AnvilRecipe anvilRecipe = RecipeManager.matchAnvilRecipe(base, addition);
-        if (anvilRecipe == null)
-            return;
+//        AnvilRecipe anvilRecipe = RecipeManager.matchAnvilRecipe(base, addition);
+//        if (anvilRecipe == null)
+//            return;
         //todo 从RecipeManager获取配方
     }
 

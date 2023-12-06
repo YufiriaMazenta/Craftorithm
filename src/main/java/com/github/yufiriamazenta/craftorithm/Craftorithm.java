@@ -4,7 +4,6 @@ import com.github.yufiriamazenta.craftorithm.bstat.Metrics;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
-import com.github.yufiriamazenta.craftorithm.item.impl.CraftorithmItemProvider;
 import com.github.yufiriamazenta.craftorithm.listener.FurnaceSmeltHandler;
 import com.github.yufiriamazenta.craftorithm.listener.ItemsAdderHandler;
 import com.github.yufiriamazenta.craftorithm.listener.SmithingHandler;
@@ -31,7 +30,7 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
 
     @Override
     public void enable() {
-        ItemManager.INSTANCE.regItemProvider(CraftorithmItemProvider.INSTANCE);
+        ItemManager.INSTANCE.retDefaultProviders();
         regListeners();
         initArcenciel();
         loadBStat();
@@ -42,14 +41,14 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
 
     @Override
     public void disable() {
-        RecipeManager.resetRecipes();
+        RecipeManager.INSTANCE.resetRecipes();
     }
 
     private void loadBStat() {
         if (!PluginConfigs.BSTATS.value())
             return;
         Metrics metrics = new Metrics(this, 17821);
-        metrics.addCustomChart(new Metrics.SingleLineChart("recipes", () -> RecipeManager.recipeConfigWrapperMap().keySet().size()));
+        metrics.addCustomChart(new Metrics.SingleLineChart("recipes", () -> RecipeManager.INSTANCE.recipeConfigWrapperMap().keySet().size()));
     }
 
     private void regListeners() {
@@ -83,7 +82,7 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
     public void onServerLoad(ServerLoadEvent event) {
         PluginHookUtil.hookPlugins();
         if (!PluginHookUtil.isItemsAdderLoaded()) {
-            RecipeManager.reloadRecipeManager();
+            RecipeManager.INSTANCE.reloadRecipeManager();
             return;
         }
         Bukkit.getPluginManager().registerEvents(ItemsAdderHandler.INSTANCE, this);

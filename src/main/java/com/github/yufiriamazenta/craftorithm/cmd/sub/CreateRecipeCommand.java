@@ -1,7 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.cmd.sub;
 
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeFactory;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
+import com.github.yufiriamazenta.craftorithm.recipe.RecipeFactory;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
@@ -24,7 +24,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
@@ -50,7 +49,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
             unsupportedRecipeTypeList.add("smithing");
             unsupportedRecipeTypeList.add("cooking");
         }
-        if (!RecipeManager.supportPotionMix()) {
+        if (!RecipeManager.INSTANCE.supportPotionMix()) {
             unsupportedRecipeTypeList.add("potion");
         }
         recipeTypeList.removeAll(unsupportedRecipeTypeList);
@@ -75,7 +74,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
             LangUtil.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_NAME.value());
             return true;
         }
-        if (RecipeManager.recipeGroupMap().containsKey(recipeName) || RecipeManager.potionMixGroupMap().containsKey(recipeName)) {
+        if (RecipeManager.INSTANCE.hasCraftorithmRecipe(recipeName)) {
             LangUtil.sendLang(sender, Languages.COMMAND_CREATE_NAME_USED.value());
             return true;
         }
@@ -191,9 +190,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                         for (RecipeRegistry recipeRegistry : RecipeFactory.newRecipeRegistry(recipeConfig.config(), recipeName)) {
                             recipeRegistry.register();
                         }
-//                        RecipeManager.regRecipes(recipeName, Arrays.asList(recipes), recipeConfig);
-                        //TODO 配方注册
-                        RecipeManager.recipeConfigWrapperMap().put(recipeName, recipeConfig);
+                        RecipeManager.INSTANCE.recipeConfigWrapperMap().put(recipeName, recipeConfig);
                         event.getWhoClicked().closeInventory();
                         sendSuccessMsg(event.getWhoClicked(), recipeType, recipeName);
                     })
@@ -260,9 +257,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                         for (RecipeRegistry recipeRegistry : RecipeFactory.newRecipeRegistry(recipeConfig.config(), recipeName)) {
                             recipeRegistry.register();
                         }
-//                        RecipeManager.regRecipes(recipeName, Arrays.asList(multipleRecipes), recipeConfig);
-                        //TODO 注册文件
-                        RecipeManager.recipeConfigWrapperMap().put(recipeName, recipeConfig);
+                        RecipeManager.INSTANCE.recipeConfigWrapperMap().put(recipeName, recipeConfig);
                         event.getWhoClicked().closeInventory();
                         sendSuccessMsg(event.getWhoClicked(), recipeType, recipeName);
                     })
@@ -369,9 +364,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                             for (RecipeRegistry recipeRegistry : RecipeFactory.newRecipeRegistry(recipeConfig.config(), recipeName)) {
                                 recipeRegistry.register();
                             }
-//                            RecipeManager.regRecipes(recipeName, Arrays.asList(recipes), recipeConfig);
-                            //todo 注册文件
-                            RecipeManager.recipeConfigWrapperMap().put(recipeName, recipeConfig);
+                            RecipeManager.INSTANCE.recipeConfigWrapperMap().put(recipeName, recipeConfig);
                             event.getWhoClicked().closeInventory();
                             sendSuccessMsg(event.getWhoClicked(), recipeType, recipeName);
                         })
@@ -432,9 +425,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                         for (RecipeRegistry recipeRegistry : RecipeFactory.newRecipeRegistry(recipeConfig.config(), recipeName)) {
                             recipeRegistry.register();
                         }
-//                        RecipeManager.regRecipes(recipeName, Arrays.asList(recipes), recipeConfig);
-                        //TODO 注册文件
-                        RecipeManager.recipeConfigWrapperMap().put(recipeName, recipeConfig);
+                        RecipeManager.INSTANCE.recipeConfigWrapperMap().put(recipeName, recipeConfig);
                         event.getWhoClicked().closeInventory();
                         sendSuccessMsg(event.getWhoClicked(), recipeType, recipeName);
                     })
@@ -488,9 +479,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                         for (RecipeRegistry recipeRegistry : RecipeFactory.newRecipeRegistry(recipeConfig.config(), recipeName)) {
                             recipeRegistry.register();
                         }
-//                        RecipeManager.regPotionMix(recipeName, Arrays.asList(recipes), recipeConfig);
-                        //TODO 注册文件
-                        RecipeManager.recipeConfigWrapperMap().put(recipeName, recipeConfig);
+                        RecipeManager.INSTANCE.recipeConfigWrapperMap().put(recipeName, recipeConfig);
                         event.getWhoClicked().closeInventory();
                         sendSuccessMsg(player, recipeType, recipeName);
                     })
@@ -510,7 +499,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
     }
 
     private YamlConfigWrapper createRecipeConfig(String recipeName) {
-        File recipeFile = new File(RecipeManager.recipeFileFolder(), recipeName + ".yml");
+        File recipeFile = new File(RecipeManager.INSTANCE.RECIPE_FILE_FOLDER, recipeName + ".yml");
         if (!recipeFile.exists()) {
             FileUtil.createNewFile(recipeFile);
         }
