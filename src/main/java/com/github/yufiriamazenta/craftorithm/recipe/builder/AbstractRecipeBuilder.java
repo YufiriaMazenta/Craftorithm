@@ -9,8 +9,6 @@ public abstract class AbstractRecipeBuilder {
     private ItemStack result;
     private NamespacedKey key;
 
-    protected AbstractRecipeBuilder() {}
-
     public ItemStack result() {
         return result.clone();
     }

@@ -4,6 +4,7 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeFactory;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
+import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
@@ -139,7 +140,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                             LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_RESULT.value());
                             return;
                         }
-                        String resultName = ItemUtils.matchItemName(result, false);
+                        String resultName = ItemUtils.matchItemNameOrCreate(result, false);
                         int[] sourceSlots = {10, 11, 12, 19, 20, 21, 28, 29, 30};
                         List<String> sourceList = new ArrayList<>();
                         for (int slot : sourceSlots) {
@@ -148,7 +149,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                                 sourceList.add("");
                                 continue;
                             }
-                            String sourceName = ItemUtils.matchItemName(source, true);
+                            String sourceName = ItemUtils.matchItemNameOrCreate(source, true);
                             sourceList.add(sourceName);
                         }
                         YamlConfigWrapper recipeConfig = createRecipeConfig(recipeName);
@@ -187,8 +188,11 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                         recipeConfig.set("result", resultName);
                         recipeConfig.saveConfig();
                         recipeConfig.reloadConfig();
-                        Recipe[] recipes = RecipeFactory.newRecipe(recipeConfig.config(), recipeName);
-                        RecipeManager.regRecipes(recipeName, Arrays.asList(recipes), recipeConfig);
+                        for (RecipeRegistry recipeRegistry : RecipeFactory.newRecipeRegistry(recipeConfig.config(), recipeName)) {
+                            recipeRegistry.register();
+                        }
+//                        RecipeManager.regRecipes(recipeName, Arrays.asList(recipes), recipeConfig);
+                        //TODO 配方注册
                         RecipeManager.recipeConfigWrapperMap().put(recipeName, recipeConfig);
                         event.getWhoClicked().closeInventory();
                         sendSuccessMsg(event.getWhoClicked(), recipeType, recipeName);
@@ -231,8 +235,8 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                             LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_RESULT.value());
                             return;
                         }
-                        String sourceName = ItemUtils.matchItemName(source, true);
-                        String resultName = ItemUtils.matchItemName(result, false);
+                        String sourceName = ItemUtils.matchItemNameOrCreate(source, true);
+                        String resultName = ItemUtils.matchItemNameOrCreate(result, false);
                         YamlConfigWrapper recipeConfig = createRecipeConfig(recipeName);
                         recipeConfig.set("type", "cooking");
                         recipeConfig.set("result", resultName);
@@ -253,8 +257,11 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                         recipeConfig.set("source", sourceList);
                         recipeConfig.saveConfig();
                         recipeConfig.reloadConfig();
-                        Recipe[] multipleRecipes = RecipeFactory.newMultipleRecipe(recipeConfig.config(), recipeName);
-                        RecipeManager.regRecipes(recipeName, Arrays.asList(multipleRecipes), recipeConfig);
+                        for (RecipeRegistry recipeRegistry : RecipeFactory.newRecipeRegistry(recipeConfig.config(), recipeName)) {
+                            recipeRegistry.register();
+                        }
+//                        RecipeManager.regRecipes(recipeName, Arrays.asList(multipleRecipes), recipeConfig);
+                        //TODO 注册文件
                         RecipeManager.recipeConfigWrapperMap().put(recipeName, recipeConfig);
                         event.getWhoClicked().closeInventory();
                         sendSuccessMsg(event.getWhoClicked(), recipeType, recipeName);
@@ -326,7 +333,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                                 LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_RESULT.value());
                                 return;
                             }
-                            String resultName = ItemUtils.matchItemName(result, false);
+                            String resultName = ItemUtils.matchItemNameOrCreate(result, false);
                             ItemStack base, addition, template;
                             String baseName, additionName, templateName = null;
                             if (CrypticLib.minecraftVersion() < 12000) {
@@ -336,7 +343,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                                 template = creator.storedItems().get(19);
                                 base = creator.storedItems().get(20);
                                 addition = creator.storedItems().get(21);
-                                templateName = ItemUtils.matchItemName(template, true);
+                                templateName = ItemUtils.matchItemNameOrCreate(template, true);
                                 if (ItemUtil.isAir(template)) {
                                     LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_SOURCE.value());
                                     return;
@@ -346,8 +353,8 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                                 LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_SOURCE.value());
                                 return;
                             }
-                            baseName = ItemUtils.matchItemName(base, true);
-                            additionName = ItemUtils.matchItemName(addition, true);
+                            baseName = ItemUtils.matchItemNameOrCreate(base, true);
+                            additionName = ItemUtils.matchItemNameOrCreate(addition, true);
                             YamlConfigWrapper recipeConfig = createRecipeConfig(recipeName);
                             recipeConfig.set("result", resultName);
                             recipeConfig.set("source.base", baseName);
@@ -359,8 +366,11 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                             }
                             recipeConfig.saveConfig();
                             recipeConfig.reloadConfig();
-                            Recipe[] recipes = RecipeFactory.newRecipe(recipeConfig.config(), recipeName);
-                            RecipeManager.regRecipes(recipeName, Arrays.asList(recipes), recipeConfig);
+                            for (RecipeRegistry recipeRegistry : RecipeFactory.newRecipeRegistry(recipeConfig.config(), recipeName)) {
+                                recipeRegistry.register();
+                            }
+//                            RecipeManager.regRecipes(recipeName, Arrays.asList(recipes), recipeConfig);
+                            //todo 注册文件
                             RecipeManager.recipeConfigWrapperMap().put(recipeName, recipeConfig);
                             event.getWhoClicked().closeInventory();
                             sendSuccessMsg(event.getWhoClicked(), recipeType, recipeName);
@@ -396,13 +406,13 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                             ItemStack source = Objects.requireNonNull(creator).storedItems().get(i);
                             if (ItemUtil.isAir(source))
                                 continue;
-                            sourceList.add(ItemUtils.matchItemName(source, true));
+                            sourceList.add(ItemUtils.matchItemNameOrCreate(source, true));
                         }
                         for (int i = 28; i < 35; i++) {
                             ItemStack result = creator.storedItems().get(i);
                             if (ItemUtil.isAir(result))
                                 continue;
-                            resultList.add(ItemUtils.matchItemName(result, false));
+                            resultList.add(ItemUtils.matchItemNameOrCreate(result, false));
                         }
                         if (sourceList.isEmpty()) {
                             LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_SOURCE.value());
@@ -419,8 +429,11 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                         recipeConfig.set("source", sourceList);
                         recipeConfig.saveConfig();
                         recipeConfig.reloadConfig();
-                        Recipe[] recipes = RecipeFactory.newMultipleRecipe(recipeConfig.config(), recipeName);
-                        RecipeManager.regRecipes(recipeName, Arrays.asList(recipes), recipeConfig);
+                        for (RecipeRegistry recipeRegistry : RecipeFactory.newRecipeRegistry(recipeConfig.config(), recipeName)) {
+                            recipeRegistry.register();
+                        }
+//                        RecipeManager.regRecipes(recipeName, Arrays.asList(recipes), recipeConfig);
+                        //TODO 注册文件
                         RecipeManager.recipeConfigWrapperMap().put(recipeName, recipeConfig);
                         event.getWhoClicked().closeInventory();
                         sendSuccessMsg(event.getWhoClicked(), recipeType, recipeName);
@@ -462,9 +475,9 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                             LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_SOURCE.value());
                             return;
                         }
-                        String resultName = ItemUtils.matchItemName(result, false);
-                        String inputName = ItemUtils.matchItemName(input, true);
-                        String ingredientName = ItemUtils.matchItemName(ingredient, true);
+                        String resultName = ItemUtils.matchItemNameOrCreate(result, false);
+                        String inputName = ItemUtils.matchItemNameOrCreate(input, true);
+                        String ingredientName = ItemUtils.matchItemNameOrCreate(ingredient, true);
                         YamlConfigWrapper recipeConfig = createRecipeConfig(recipeName);
                         recipeConfig.set("type", "potion");
                         recipeConfig.set("source.input", inputName);
@@ -472,8 +485,11 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                         recipeConfig.set("result", resultName);
                         recipeConfig.saveConfig();
                         recipeConfig.reloadConfig();
-                        Recipe[] recipes = RecipeFactory.newRecipe(recipeConfig.config(), recipeName);
-                        RecipeManager.regPotionMix(recipeName, Arrays.asList(recipes), recipeConfig);
+                        for (RecipeRegistry recipeRegistry : RecipeFactory.newRecipeRegistry(recipeConfig.config(), recipeName)) {
+                            recipeRegistry.register();
+                        }
+//                        RecipeManager.regPotionMix(recipeName, Arrays.asList(recipes), recipeConfig);
+                        //TODO 注册文件
                         RecipeManager.recipeConfigWrapperMap().put(recipeName, recipeConfig);
                         event.getWhoClicked().closeInventory();
                         sendSuccessMsg(player, recipeType, recipeName);

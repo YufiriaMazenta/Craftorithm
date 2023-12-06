@@ -1,6 +1,5 @@
 package com.github.yufiriamazenta.craftorithm.item;
 
-import com.github.yufiriamazenta.craftorithm.item.impl.CraftorithmItemProvider;
 import crypticlib.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -62,15 +61,13 @@ public enum ItemManager {
     }
 
     /**
-     * 获取一个物品的Craftorithm名字
+     * 获取一个物品的完整名字,包含命名空间和id
      * @param item 传入的物品
      * @param ignoreAmount 是否忽略数量
-     * @param regNew 如果不存在，是否将此物品注册
-     * @param regName 注册的名字
      * @return 传入的物品名字
      */
     @Nullable
-    public String matchItemName(ItemStack item, boolean ignoreAmount, boolean regNew, String regFile, String regName) {
+    public String matchItemName(ItemStack item, boolean ignoreAmount) {
         if (ItemUtil.isAir(item))
             return null;
 
@@ -80,10 +77,6 @@ public enum ItemManager {
                 return itemProviderEntry.getKey() + ":" + tmpName;
         }
 
-        if (regNew) {
-            CraftorithmItemProvider.INSTANCE.regCraftorithmItem(regFile, regName, item);
-            return regFile + ":" + regName;
-        }
         return null;
     }
 

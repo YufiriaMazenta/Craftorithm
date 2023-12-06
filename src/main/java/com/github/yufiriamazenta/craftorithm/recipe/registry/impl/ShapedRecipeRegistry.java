@@ -1,13 +1,17 @@
 package com.github.yufiriamazenta.craftorithm.recipe.registry.impl;
 
+import com.github.yufiriamazenta.craftorithm.recipe.DefRecipeManager;
+import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import org.bukkit.inventory.ShapedRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public final class ShapedRecipeRegistry extends RecipeRegistry {
@@ -15,12 +19,8 @@ public final class ShapedRecipeRegistry extends RecipeRegistry {
     private String[] shape;
     private Map<Character, RecipeChoice> recipeChoiceMap;
 
-    public ShapedRecipeRegistry() {
-        super();
-    }
-
-    public ShapedRecipeRegistry(NamespacedKey namespacedKey, ItemStack result) {
-        super(namespacedKey, result);
+    public ShapedRecipeRegistry(@NotNull String group, @NotNull NamespacedKey namespacedKey, @NotNull ItemStack result) {
+        super(group, namespacedKey, result);
     }
 
     public String[] shape() {
@@ -42,13 +42,11 @@ public final class ShapedRecipeRegistry extends RecipeRegistry {
     }
 
     @Override
-    protected void register() {
-        if (namespacedKey() == null) {
-            throw new IllegalArgumentException("Recipe key cannot be null");
-        }
-        if (result() == null) {
-            throw new IllegalArgumentException("Recipe result cannot be null");
-        }
+    public void register() {
+        Objects.requireNonNull(namespacedKey(), "Recipe key cannot be null");
+        Objects.requireNonNull(result(), "Recipe key cannot be null");
+        Objects.requireNonNull(shape, "Recipe shape cannot be null");
+        Objects.requireNonNull(recipeChoiceMap, "Recipe ingredients cannot be null");
         ShapedRecipe shapedRecipe = new ShapedRecipe(namespacedKey(), result());
         shapedRecipe.shape(shape);
         Set<Character> shapeStrChars = new HashSet<>();
@@ -62,7 +60,10 @@ public final class ShapedRecipeRegistry extends RecipeRegistry {
         for (Character ingredientKey : keySet) {
             shapedRecipe.setIngredient(ingredientKey, recipeChoiceMap.get(ingredientKey));
         }
-        //TODO 通过RecipeManager注册配方
+
+        shapedRecipe.setGroup(group());
+
+        DefRecipeManager.INSTANCE.regRecipe(group(), shapedRecipe, RecipeType.SHAPED);
     }
 
 
