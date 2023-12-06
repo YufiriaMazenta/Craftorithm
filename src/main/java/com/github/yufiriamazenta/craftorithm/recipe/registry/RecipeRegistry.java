@@ -35,7 +35,7 @@ public abstract class RecipeRegistry {
         return this;
     }
 
-    @Nullable
+    @NotNull
     public String group() {
         return group;
     }
