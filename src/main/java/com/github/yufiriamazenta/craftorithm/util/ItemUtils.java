@@ -2,6 +2,7 @@ package com.github.yufiriamazenta.craftorithm.util;
 
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
+import com.github.yufiriamazenta.craftorithm.item.impl.CraftorithmItemProvider;
 import crypticlib.util.ItemUtil;
 import crypticlib.util.TextUtil;
 import org.bukkit.inventory.ItemStack;
@@ -70,16 +71,20 @@ public class ItemUtils {
         return containsLore;
     }
 
-    public static String matchItemName(ItemStack item, boolean ignoreAmount) {
+    public static String matchItemNameOrCreate(ItemStack item, boolean ignoreAmount) {
         if (ItemUtil.isAir(item)) {
             return null;
         }
         String itemName;
         if (item.hasItemMeta()) {
-            itemName = ItemManager.INSTANCE.matchItemName(item, ignoreAmount, true, "gui_items", UUID.randomUUID().toString());
+            itemName = ItemManager.INSTANCE.matchItemName(item, ignoreAmount);
+            if (itemName == null) {
+                String id = UUID.randomUUID().toString();
+                itemName = "items:" + CraftorithmItemProvider.INSTANCE.regCraftorithmItem("gui_items", id, item);
+            }
         } else {
             itemName = item.getType().name();
-            if (!ignoreAmount) {
+            if (!ignoreAmount && item.getAmount() > 1) {
                 itemName += (" " + item.getAmount());
             }
         }

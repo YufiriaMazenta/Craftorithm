@@ -92,26 +92,26 @@ public class RecipeManager {
     public static void reloadCraftorithmRecipes() {
         for (String fileName : RECIPE_CONFIG_WRAPPER_MAP.keySet()) {
             try {
-                YamlConfigWrapper configWrapper = RECIPE_CONFIG_WRAPPER_MAP.get(fileName);
-                YamlConfiguration config = configWrapper.config();
-                boolean multiple = config.getBoolean("multiple", false);
-                Recipe[] recipes;
-                if (multiple) {
-                    recipes = RecipeFactory.newMultipleRecipe(config, fileName);
-                } else {
-                    recipes = RecipeFactory.newRecipe(config, fileName);
-                }
-                if (!supportPotionMix()) {
-                    regRecipes(fileName, Arrays.asList(recipes), configWrapper);
-                    continue;
-                }
-
-                RecipeType recipeType = RecipeType.valueOf(config.getString("type", "shaped").toUpperCase());
-                if (recipeType.equals(RecipeType.POTION)) {
-                    regPotionMix(fileName, Arrays.asList(recipes), configWrapper);
-                } else {
-                    regRecipes(fileName, Arrays.asList(recipes), configWrapper);
-                }
+//                YamlConfigWrapper configWrapper = RECIPE_CONFIG_WRAPPER_MAP.get(fileName);
+//                YamlConfiguration config = configWrapper.config();
+//                boolean multiple = config.getBoolean("multiple", false);
+//                Recipe[] recipes;
+//                if (multiple) {
+//                    recipes = RecipeFactory.newMultipleRecipe(config, fileName);
+//                } else {
+//                    recipes = RecipeFactory.newRecipeRegistry(config, fileName);
+//                }
+//                if (!supportPotionMix()) {
+//                    regRecipes(fileName, Arrays.asList(recipes), configWrapper);
+//                    continue;
+//                }
+//
+//                RecipeType recipeType = RecipeType.valueOf(config.getString("type", "shaped").toUpperCase());
+//                if (recipeType.equals(RecipeType.POTION)) {
+//                    regPotionMix(fileName, Arrays.asList(recipes), configWrapper);
+//                } else {
+//                    regRecipes(fileName, Arrays.asList(recipes), configWrapper);
+//                }
             } catch (Throwable e) {
                 LangUtil.info(Languages.LOAD_RECIPE_LOAD_EXCEPTION.value(), CollectionsUtil.newStringHashMap("<recipe_name>", fileName));
                 e.printStackTrace();

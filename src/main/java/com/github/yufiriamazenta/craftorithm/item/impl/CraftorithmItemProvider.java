@@ -115,7 +115,7 @@ public enum CraftorithmItemProvider implements ItemProvider {
         }
     }
 
-    public void regCraftorithmItem(String namespace, String itemName, ItemStack item) {
+    public String regCraftorithmItem(String namespace, String itemName, ItemStack item) {
         YamlConfigWrapper itemConfigFile;
         if (!itemConfigFileMap.containsKey(namespace)) {
             File itemFile = new File(ITEM_FILE_FOLDER, namespace + ".yml");
@@ -130,7 +130,9 @@ public enum CraftorithmItemProvider implements ItemProvider {
         NbtItem nbtItem = ItemFactory.item(item);
         itemConfigFile.set(itemName, nbtItem.toMap());
         itemConfigFile.saveConfig();
-        itemMap.put(namespace + ":" + itemName, item);
+        String key = namespace + ":" + itemName;
+        itemMap.put(key, item);
+        return key;
     }
 
     public Map<String, ItemStack> itemMap() {
