@@ -1,5 +1,6 @@
 package com.github.yufiriamazenta.craftorithm;
 
+import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import com.github.yufiriamazenta.craftorithm.bstat.Metrics;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
@@ -11,7 +12,6 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import com.github.yufiriamazenta.craftorithm.util.PluginHookUtil;
 import com.github.yufiriamazenta.craftorithm.util.UpdateUtil;
-import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import crypticlib.BukkitPlugin;
 import crypticlib.CrypticLib;
 import org.bukkit.Bukkit;

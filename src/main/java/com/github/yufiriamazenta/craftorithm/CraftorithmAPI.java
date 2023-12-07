@@ -1,9 +1,9 @@
 package com.github.yufiriamazenta.craftorithm;
 
+import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.item.ItemProvider;
 import com.github.yufiriamazenta.craftorithm.item.impl.CraftorithmItemProvider;
-import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import org.bukkit.inventory.ItemStack;
 
 public enum CraftorithmAPI {

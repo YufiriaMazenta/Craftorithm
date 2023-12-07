@@ -1,9 +1,9 @@
 package com.github.yufiriamazenta.craftorithm.arcenciel.token;
 
+import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import com.github.yufiriamazenta.craftorithm.arcenciel.obj.ArcencielSignal;
 import com.github.yufiriamazenta.craftorithm.arcenciel.obj.ReturnObj;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
-import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import org.bukkit.entity.Player;
 
 import java.util.List;

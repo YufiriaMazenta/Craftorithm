@@ -2,11 +2,11 @@ package com.github.yufiriamazenta.craftorithm.recipe.registry.impl;
 
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
-import org.bukkit.inventory.ShapedRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
+import org.bukkit.inventory.ShapedRecipe;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;

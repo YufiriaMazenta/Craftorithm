@@ -1,10 +1,10 @@
 package com.github.yufiriamazenta.craftorithm.item.impl;
 
+import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.item.ItemProvider;
-import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
+import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.config.yaml.YamlConfigWrapper;
 import crypticlib.nms.item.ItemFactory;
 import crypticlib.nms.item.NbtItem;

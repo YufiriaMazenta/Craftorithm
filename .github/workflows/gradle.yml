@@ -34,5 +34,5 @@ jobs:
         arguments: clean build
     - uses: actions/upload-artifact@v3
       with:
-        name: Craftorithm
+        name: Craftorithm Artifacts
         path: build/libs/*.jar

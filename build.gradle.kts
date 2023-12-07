@@ -1,4 +1,5 @@
 import java.text.SimpleDateFormat
+version = "1.6.0-dev8"
 
 plugins {
     `java-library`
@@ -44,7 +45,6 @@ dependencies {
 }
 
 group = "com.github.yufiriamazenta"
-version = "1.6.0-dev7"
 var pluginVersion: String = version.toString() + "-" + SimpleDateFormat("yyyyMMdd").format(System.currentTimeMillis())
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 java.targetCompatibility = JavaVersion.VERSION_1_8
