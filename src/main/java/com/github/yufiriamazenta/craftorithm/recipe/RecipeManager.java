@@ -372,6 +372,8 @@ public enum RecipeManager {
             return RecipeType.STONE_CUTTING;
         else if (recipe instanceof PotionMixRecipe)
             return RecipeType.POTION;
+        else if (recipe instanceof AnvilRecipe)
+            return RecipeType.ANVIL;
         else
             return RecipeType.UNKNOWN;
     }
