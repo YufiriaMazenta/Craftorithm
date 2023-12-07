@@ -1,6 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.cmd.sub;
 
 import com.github.yufiriamazenta.craftorithm.config.Languages;
+import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeFactory;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
@@ -52,6 +53,8 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
         if (!RecipeManager.INSTANCE.supportPotionMix()) {
             unsupportedRecipeTypeList.add("potion");
         }
+        if (!PluginConfigs.ENABLE_ANVIL_RECIPE.value())
+            unsupportedRecipeTypeList.add("anvil");
         recipeTypeList.removeAll(unsupportedRecipeTypeList);
     }
 
@@ -95,6 +98,9 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                 break;
             case POTION:
                 openPotionMixCreator((Player) sender, recipeType, recipeName);
+                break;
+            case ANVIL:
+                openAnvilRecipeCreator((Player) sender, recipeType, recipeName);
                 break;
             default:
                 LangUtil.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE.value());
@@ -488,6 +494,69 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
             })
         ));
         potionMixCreator.openMenu();
+    }
+
+    private void openAnvilRecipeCreator(Player player, RecipeType recipeType, String recipeName) {
+        StoredMenu anvilRecipeCreator = new StoredMenu(player, new MenuDisplay(
+            Languages.MENU_RECIPE_CREATOR_TITLE.value()
+                .replace("<recipe_type>", recipeType.name())
+                .replace("<recipe_name>", recipeName),
+            new MenuLayout(Arrays.asList(
+                "#########",
+                "#***#%%%#",
+                "# * A% %#",
+                "#***#%%%#",
+                "####B####"
+            ), () -> {
+                Map<Character, Icon> layoutMap = new HashMap<>();
+                layoutMap.put('#', getFrameIcon());
+                layoutMap.put('%', getResultFrameIcon());
+                layoutMap.put('*', new Icon(Material.CYAN_STAINED_GLASS_PANE, Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_FRAME.value()));
+                Icon toggleCopyNbt = new Icon(
+                    Material.NAME_TAG,
+                    Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COPY_NBT_TOGGLE.value(),
+                    event -> setIconGlowing(event.getSlot(), event)
+                );
+                toggleCopyNbt.display().addUnsafeEnchantment(Enchantment.MENDING, 1);
+                toggleCopyNbt.display().addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                layoutMap.put('B', toggleCopyNbt);
+                layoutMap.put('A', new Icon(Material.ANVIL, Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(),
+                    event -> {
+                        StoredMenu creator = (StoredMenu) event.getClickedInventory().getHolder();
+                        ItemStack result = Objects.requireNonNull(creator).storedItems().get(24);
+                        ItemStack base = creator.storedItems().get(19);
+                        ItemStack addition = creator.storedItems().get(21);
+                        if (ItemUtil.isAir(result)) {
+                            LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_RESULT.value());
+                            return;
+                        }
+                        if (ItemUtil.isAir(addition) || ItemUtil.isAir(base)) {
+                            LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_SOURCE.value());
+                            return;
+                        }
+                        String resultName = ItemUtils.matchItemNameOrCreate(result, false);
+                        String inputName = ItemUtils.matchItemNameOrCreate(base, true);
+                        String ingredientName = ItemUtils.matchItemNameOrCreate(addition, true);
+                        YamlConfigWrapper recipeConfig = createRecipeConfig(recipeName);
+                        recipeConfig.set("source.copy_nbt", event.getInventory().getItem(40).getItemMeta().hasEnchants());
+                        recipeConfig.set("type", "anvil");
+                        recipeConfig.set("source.base", inputName);
+                        recipeConfig.set("source.addition", ingredientName);
+                        recipeConfig.set("result", resultName);
+                        recipeConfig.saveConfig();
+                        recipeConfig.reloadConfig();
+                        for (RecipeRegistry recipeRegistry : RecipeFactory.newRecipeRegistry(recipeConfig.config(), recipeName)) {
+                            recipeRegistry.register();
+                        }
+                        RecipeManager.INSTANCE.recipeConfigWrapperMap().put(recipeName, recipeConfig);
+                        event.getWhoClicked().closeInventory();
+                        sendSuccessMsg(player, recipeType, recipeName);
+                    })
+                );
+                return layoutMap;
+            })
+        ));
+        anvilRecipeCreator.openMenu();
     }
 
     private void sendSuccessMsg(HumanEntity receiver, RecipeType recipeType, String recipeName) {

@@ -72,6 +72,8 @@ menu:
       cooking_frame: '&a烧炼原料'
       smithing_frame: '&a锻造物品'
       potion_frame: '&a酿造原料'
+      anvil_frame: '&a打造原料'
+      anvil_copy_nbt_toggle: '&a是否保留物品NBT'
       furnace_toggle: '&a熔炉配方'
       blasting_toggle: '&a高炉配方'
       smoking_toggle: '&a烟熏炉配方'
