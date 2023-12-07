@@ -81,10 +81,9 @@ public enum RecipeManager {
                 anvilRecipeMap.put(getRecipeKey(recipe), (AnvilRecipe) recipe);
             });
             recipeRemoverMap.put(RecipeType.ANVIL, keys -> {
-                Map<String, RecipeGroup> recipeGroupMap = pluginRecipeMap.get(RecipeType.ANVIL);
-                recipeGroupMap.forEach((groupName, group) -> {
-                    group.groupRecipeKeys().removeAll(keys);
-                });
+                for (NamespacedKey key : keys) {
+                    anvilRecipeMap.remove(key);
+                }
             });
         }
 
@@ -387,6 +386,7 @@ public enum RecipeManager {
         });
 
         potionMixRecipeMap.clear();
+        anvilRecipeMap.clear();
 
         //先将已经删除的配方还原
         for (Recipe recipe : removeRecipeRecycleBin) {

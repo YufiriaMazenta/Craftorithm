@@ -535,8 +535,8 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                             return;
                         }
                         String resultName = ItemUtils.matchItemNameOrCreate(result, false);
-                        String inputName = ItemUtils.matchItemNameOrCreate(base, true);
-                        String ingredientName = ItemUtils.matchItemNameOrCreate(addition, true);
+                        String inputName = ItemUtils.matchItemNameOrCreate(base, false);
+                        String ingredientName = ItemUtils.matchItemNameOrCreate(addition, false);
                         YamlConfigWrapper recipeConfig = createRecipeConfig(recipeName);
                         recipeConfig.set("source.copy_nbt", event.getInventory().getItem(40).getItemMeta().hasEnchants());
                         recipeConfig.set("type", "anvil");
