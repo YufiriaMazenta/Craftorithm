@@ -432,13 +432,11 @@ public enum RecipeManager {
         Craftorithm.instance().saveResource("recipes/example_shapeless.yml", false);
         allFiles.add(new File(RECIPE_FILE_FOLDER, "example_shaped.yml"));
         allFiles.add(new File(RECIPE_FILE_FOLDER, "example_shapeless.yml"));
-        if (CrypticLib.minecraftVersion() >= 11300) {
-            Craftorithm.instance().saveResource("recipes/example_cooking.yml", false);
-            allFiles.add(new File(RECIPE_FILE_FOLDER, "example_cooking.yml"));
-        }
         if (CrypticLib.minecraftVersion() >= 11400) {
             Craftorithm.instance().saveResource("recipes/example_smithing.yml", false);
             Craftorithm.instance().saveResource("recipes/example_stone_cutting.yml", false);
+            Craftorithm.instance().saveResource("recipes/example_cooking.yml", false);
+            allFiles.add(new File(RECIPE_FILE_FOLDER, "example_cooking.yml"));
             allFiles.add(new File(RECIPE_FILE_FOLDER, "example_smithing.yml"));
             allFiles.add(new File(RECIPE_FILE_FOLDER, "example_stone_cutting.yml"));
         }
