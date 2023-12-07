@@ -1,6 +1,8 @@
 package com.github.yufiriamazenta.craftorithm.recipe;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
+import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
+import com.github.yufiriamazenta.craftorithm.exception.UnsupportedVersionException;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.impl.*;
@@ -23,22 +25,35 @@ public class RecipeFactory {
 
     static {
         recipeRegistryProviderMap = new HashMap<>();
+        multipleRecipeRegistryProviderMap = new HashMap<>();
+
         recipeRegistryProviderMap.put(RecipeType.SHAPED, RecipeFactory::newShapedRecipe);
         recipeRegistryProviderMap.put(RecipeType.SHAPELESS, RecipeFactory::newShapelessRecipe);
-        recipeRegistryProviderMap.put(RecipeType.COOKING, RecipeFactory::newCookingRecipe);
-        recipeRegistryProviderMap.put(RecipeType.STONE_CUTTING, RecipeFactory::newStoneCuttingRecipe);
-        recipeRegistryProviderMap.put(RecipeType.RANDOM_COOKING, RecipeFactory::newRandomCookingRecipe);
-        recipeRegistryProviderMap.put(RecipeType.SMITHING, RecipeFactory::newSmithingRecipe);
-        recipeRegistryProviderMap.put(RecipeType.POTION, RecipeFactory::newPotionMixRecipe);
-
-        multipleRecipeRegistryProviderMap = new HashMap<>();
         multipleRecipeRegistryProviderMap.put(RecipeType.SHAPED, RecipeFactory::newMultipleShapedRecipe);
         multipleRecipeRegistryProviderMap.put(RecipeType.SHAPELESS, RecipeFactory::newMultipleShapelessRecipe);
-        multipleRecipeRegistryProviderMap.put(RecipeType.COOKING, RecipeFactory::newMultipleCookingRecipe);
-        multipleRecipeRegistryProviderMap.put(RecipeType.STONE_CUTTING, RecipeFactory::newMultipleStoneCuttingRecipe);
-        multipleRecipeRegistryProviderMap.put(RecipeType.RANDOM_COOKING, RecipeFactory::newMultipleRandomCookingRecipe);
-        multipleRecipeRegistryProviderMap.put(RecipeType.SMITHING, RecipeFactory::newMultipleSmithingRecipe);
-        multipleRecipeRegistryProviderMap.put(RecipeType.POTION, RecipeFactory::newMultiplePotionMixRecipe);
+        if (CrypticLib.minecraftVersion() >= 11400) {
+            recipeRegistryProviderMap.put(RecipeType.COOKING, RecipeFactory::newCookingRecipe);
+            multipleRecipeRegistryProviderMap.put(RecipeType.COOKING, RecipeFactory::newMultipleCookingRecipe);
+            recipeRegistryProviderMap.put(RecipeType.STONE_CUTTING, RecipeFactory::newStoneCuttingRecipe);
+            multipleRecipeRegistryProviderMap.put(RecipeType.STONE_CUTTING, RecipeFactory::newMultipleStoneCuttingRecipe);
+            recipeRegistryProviderMap.put(RecipeType.SMITHING, RecipeFactory::newSmithingRecipe);
+            multipleRecipeRegistryProviderMap.put(RecipeType.SMITHING, RecipeFactory::newMultipleSmithingRecipe);
+        }
+
+        if (CrypticLib.minecraftVersion() >= 11700) {
+            recipeRegistryProviderMap.put(RecipeType.RANDOM_COOKING, RecipeFactory::newRandomCookingRecipe);
+            multipleRecipeRegistryProviderMap.put(RecipeType.RANDOM_COOKING, RecipeFactory::newMultipleRandomCookingRecipe);
+        }
+
+        if (RecipeManager.INSTANCE.supportPotionMix()) {
+            recipeRegistryProviderMap.put(RecipeType.POTION, RecipeFactory::newPotionMixRecipe);
+            multipleRecipeRegistryProviderMap.put(RecipeType.POTION, RecipeFactory::newMultiplePotionMixRecipe);
+        }
+
+        if (PluginConfigs.ENABLE_ANVIL_RECIPE.value()) {
+            recipeRegistryProviderMap.put(RecipeType.ANVIL, RecipeFactory::newAnvilRecipe);
+            multipleRecipeRegistryProviderMap.put(RecipeType.ANVIL, RecipeFactory::newMultipleAnvilRecipe);
+        }
     }
 
     public static List<RecipeRegistry> newRecipeRegistry(YamlConfiguration config, String key) {
@@ -47,9 +62,13 @@ public class RecipeFactory {
         RecipeType recipeType = RecipeType.valueOf(recipeTypeStr.toUpperCase(Locale.ROOT));
         boolean multiple = config.getBoolean("multiple", false);
         if (multiple) {
-            return multipleRecipeRegistryProviderMap.get(recipeType).apply(config, key);
+            return multipleRecipeRegistryProviderMap.getOrDefault(recipeType, (c, k) -> {
+                throw new UnsupportedVersionException("Can not create " + recipeType.name().toLowerCase() + " recipe registry");
+            }).apply(config, key);
         } else {
-            return recipeRegistryProviderMap.get(recipeType).apply(config, key);
+            return recipeRegistryProviderMap.getOrDefault(recipeType, (c, k) -> {
+                throw new UnsupportedVersionException("Can not create " + recipeType.name().toLowerCase() + " recipe registry");
+            }).apply(config, key);
         }
     }
 
@@ -292,6 +311,34 @@ public class RecipeFactory {
             RecipeChoice input = getRecipeChoice((String) map.get("input"));
             RecipeChoice ingredient = getRecipeChoice((String) map.get("ingredient"));
             recipeRegistries.add(new PotionMixRecipeRegistry(key, namespacedKey, result).setInput(input).setIngredient(ingredient));
+        }
+        return recipeRegistries;
+    }
+
+    public static List<RecipeRegistry> newAnvilRecipe(YamlConfiguration config, String key) {
+        NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.instance(), key);
+        ItemStack result = getResultItem(config);
+        ItemStack base = ItemManager.INSTANCE.matchItem(config.getString("source.base", ""));
+        ItemStack addition = ItemManager.INSTANCE.matchItem(config.getString("source.addition", ""));
+        int costLevel = config.getInt("source.cost_level", 0);
+        boolean copyNbt = config.getBoolean("source.copy_nbt", true);
+        RecipeRegistry recipeRegistry = new AnvilRecipeRegistry(key, namespacedKey, result).setBase(base).setAddition(addition).setCopyNbt(copyNbt).setCostLevel(costLevel);
+        return Collections.singletonList(recipeRegistry);
+    }
+
+    public static List<RecipeRegistry> newMultipleAnvilRecipe(YamlConfiguration config, String key) {
+        ItemStack result = getResultItem(config);
+        List<Map<?, ?>> sourceList = config.getMapList("source");
+        List<RecipeRegistry> recipeRegistries = new ArrayList<>();
+        for (int i = 0; i < sourceList.size(); i++) {
+            Map<?, ?> map = sourceList.get(i);
+            String fullKey = key + "." + i;
+            NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.instance(), fullKey);
+            ItemStack base = ItemManager.INSTANCE.matchItem((String) map.get("base"));
+            ItemStack addition = ItemManager.INSTANCE.matchItem((String) map.get("addition"));
+            int costLevel = map.containsKey("cost_level") ? (Integer) map.get("cost_level") : 0;
+            boolean copyNbt = map.containsKey("copy_nbt") ? (Boolean) map.get("copy_nbt") : true;
+            recipeRegistries.add(new AnvilRecipeRegistry(key, namespacedKey, result).setBase(base).setAddition(addition).setCopyNbt(copyNbt).setCostLevel(costLevel));
         }
         return recipeRegistries;
     }

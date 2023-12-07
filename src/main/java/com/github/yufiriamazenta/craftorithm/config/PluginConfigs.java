@@ -15,5 +15,6 @@ public class PluginConfigs {
     public final static BooleanConfigEntry ALL_RECIPE_UNLOCKED = new BooleanConfigEntry("all_recipe_unlocked", false);
     public final static BooleanConfigEntry BSTATS = new BooleanConfigEntry("bstats", true);
     public final static BooleanConfigEntry RELEASE_DEFAULT_RECIPES = new BooleanConfigEntry("release_default_recipes", true);
+    public final static BooleanConfigEntry ENABLE_ANVIL_RECIPE = new BooleanConfigEntry("enable_anvil_recipe", true);
 
 }
