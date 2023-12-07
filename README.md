@@ -48,6 +48,10 @@ Craftorithm is a recipe management plugin which can add recipes, remove/disable 
 ## Usage
 #### [Craftorithm Wiki](https://yufiriamazenta.gitbook.io/craftorithm-wiki/)
 
+## bStats
+
+![bStats](https://bstats.org/signatures/bukkit/Craftorithm.svg)
+
 ## Download
 
 #### [spigotmc](https://www.spigotmc.org/resources/craftorithm-customized-crafting-management-plugin-1-13-1-20-folia-supported.108429/)

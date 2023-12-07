@@ -67,17 +67,7 @@ public class Languages {
     public static final StringConfigEntry LOAD_FINISH = new StringConfigEntry("load.finish", "<prefix> &a插件加载完毕");
     public static final StringConfigEntry LOAD_RECIPE_LOAD_EXCEPTION = new StringConfigEntry("load.recipe_load_exception", "<prefix> &c加载配方<recipe_name>时出现错误");
     public static final StringConfigEntry LOAD_ITEM_LOAD_EXCEPTION = new StringConfigEntry("load.item_load_exception", "<prefix> &c加载物品<item_name>时出现错误");
-    public static final StringConfigEntry LOAD_VAULT_HOOK = new StringConfigEntry("load.vault_hook", "<prefix> &a发现经济插件,已挂钩");
-    public static final StringConfigEntry LOAD_VAULT_NOT_EXIST = new StringConfigEntry("load.vault_not_exist", "<prefix> &c未发现经济插件,金钱检查将不会生效");
-    public static final StringConfigEntry LOAD_POINTS_HOOK = new StringConfigEntry("load.points_hook", "<prefix> &a发现点券插件,已挂钩");
-    public static final StringConfigEntry LOAD_POINTS_NOT_EXIST = new StringConfigEntry("load.points_not_exist", "<prefix> &c未发现点券插件,点券检查将不会生效");
-    public static final StringConfigEntry LOAD_ITEMS_ADDER_HOOK = new StringConfigEntry("load.items_adder_hook", "<prefix> &a发现ItemsAdder,已挂钩");
-    public static final StringConfigEntry LOAD_ITEMS_ADDER_NOT_EXIST = new StringConfigEntry("load.items_adder_not_exist", "<prefix> &c未发现ItemsAdder");
-    public static final StringConfigEntry LOAD_ORAXEN_HOOK = new StringConfigEntry("load.oraxen_hook", "<prefix> &a发现Oraxen,已挂钩");
-    public static final StringConfigEntry LOAD_ORAXEN_NOT_EXIST = new StringConfigEntry("load.oraxen_not_exist", "<prefix> &c未发现Oraxen");
-    public static final StringConfigEntry LOAD_MYTHIC_MOBS_HOOK = new StringConfigEntry("load.mythic_mobs_hook", "<prefix> &a发现MythicMobs,已挂钩");
-    public static final StringConfigEntry LOAD_MYTHIC_MOBS_NOT_EXIST = new StringConfigEntry("load.mythic_mobs_not_exist", "<prefix> &c未发现MythicMobs");
-    public static final StringConfigEntry LOAD_NEIGE_ITEMS_HOOK = new StringConfigEntry("load.neige_items_hook", "<prefix> &a发现NeigeItems，已挂钩");
-    public static final StringConfigEntry LOAD_NEIGE_ITEMS_NOT_EXIST = new StringConfigEntry("load.neige_items_not_exist", "<prefix> &c未发现NeigeItems");
+    public static final StringConfigEntry LOAD_HOOK_PLUGIN_SUCCESS = new StringConfigEntry("load.hook_plugin.success", "<prefix> &a发现<plugin>，已挂钩");
+    public static final StringConfigEntry LOAD_HOOK_PLUGIN_NOT_EXIST = new StringConfigEntry("load.hook_plugin.not_exist", "<prefix> &c未发现<plugin>");
 
 }

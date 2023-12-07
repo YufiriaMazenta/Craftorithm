@@ -1,5 +1,3 @@
-#插件版本，涉及到自动更新config.yml内容，一般情况下请勿改动
-version: ${version}
 #是否开启版本更新检查
 check_update: true
 #是否移除所有的原版配方

@@ -1,11 +1,10 @@
 package com.github.yufiriamazenta.craftorithm.cmd.sub;
 
+import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
-import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.command.ISubcmdExecutor;
-import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;

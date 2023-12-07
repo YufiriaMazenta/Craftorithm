@@ -1,12 +1,12 @@
 package com.github.yufiriamazenta.craftorithm.menu.impl.recipe;
 
 import com.github.yufiriamazenta.craftorithm.config.Languages;
+import com.github.yufiriamazenta.craftorithm.menu.bukkit.BukkitMenuHandler;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.IChildBukkitMenu;
+import com.github.yufiriamazenta.craftorithm.menu.bukkit.ItemDisplayIcon;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.PotionMixRecipe;
-import com.github.yufiriamazenta.craftorithm.menu.bukkit.BukkitMenuHandler;
-import com.github.yufiriamazenta.craftorithm.menu.bukkit.ItemDisplayIcon;
 import crypticlib.CrypticLib;
 import crypticlib.util.TextUtil;
 import org.bukkit.Bukkit;

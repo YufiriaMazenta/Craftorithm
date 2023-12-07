@@ -1,8 +1,8 @@
 package com.github.yufiriamazenta.craftorithm.util;
 
+import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
-import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import crypticlib.CrypticLib;
 import org.bukkit.command.CommandSender;
 

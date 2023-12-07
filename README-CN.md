@@ -45,6 +45,10 @@ Craftorithm是一个合成配方管理插件，可以添加各类配方，并可
 ## 使用方式
 #### [Craftorithm Wiki](https://yufiriamazenta.gitbook.io/craftorithm-wiki/)
 
+## bStats
+
+![bStats](https://bstats.org/signatures/bukkit/Craftorithm.svg)
+
 ## 下载
 
 #### [spigotmc](https://www.spigotmc.org/resources/craftorithm-customized-crafting-management-plugin-1-13-1-20-folia-supported.108429/)
