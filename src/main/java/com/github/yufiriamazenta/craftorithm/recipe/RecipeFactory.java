@@ -27,7 +27,7 @@ public class RecipeFactory {
         recipeRegistryProviderMap.put(RecipeType.SHAPELESS, RecipeFactory::newShapelessRecipe);
         recipeRegistryProviderMap.put(RecipeType.COOKING, RecipeFactory::newCookingRecipe);
         recipeRegistryProviderMap.put(RecipeType.STONE_CUTTING, RecipeFactory::newStoneCuttingRecipe);
-        recipeRegistryProviderMap.put(RecipeType.RANDOM_COOKING, RecipeFactory::newCookingRecipe);
+        recipeRegistryProviderMap.put(RecipeType.RANDOM_COOKING, RecipeFactory::newRandomCookingRecipe);
         recipeRegistryProviderMap.put(RecipeType.SMITHING, RecipeFactory::newSmithingRecipe);
         recipeRegistryProviderMap.put(RecipeType.POTION, RecipeFactory::newPotionMixRecipe);
 
@@ -36,7 +36,7 @@ public class RecipeFactory {
         multipleRecipeRegistryProviderMap.put(RecipeType.SHAPELESS, RecipeFactory::newMultipleShapelessRecipe);
         multipleRecipeRegistryProviderMap.put(RecipeType.COOKING, RecipeFactory::newMultipleCookingRecipe);
         multipleRecipeRegistryProviderMap.put(RecipeType.STONE_CUTTING, RecipeFactory::newMultipleStoneCuttingRecipe);
-        multipleRecipeRegistryProviderMap.put(RecipeType.RANDOM_COOKING, RecipeFactory::newMultipleCookingRecipe);
+        multipleRecipeRegistryProviderMap.put(RecipeType.RANDOM_COOKING, RecipeFactory::newMultipleRandomCookingRecipe);
         multipleRecipeRegistryProviderMap.put(RecipeType.SMITHING, RecipeFactory::newMultipleSmithingRecipe);
         multipleRecipeRegistryProviderMap.put(RecipeType.POTION, RecipeFactory::newMultiplePotionMixRecipe);
     }
@@ -145,6 +145,39 @@ public class RecipeFactory {
             float exp = map.containsKey("exp") ? Float.parseFloat(String.valueOf(map.get("exp"))) : globalExp;
             int time = map.containsKey("time") ? (Integer) map.get("time") : globalTime;
             recipeRegistries.add(new CookingRecipeRegistry(key, namespacedKey, result).setCookingBlock(cookingBlock).setSource(source).setExp(exp).setTime(time));
+        }
+        return recipeRegistries;
+    }
+
+
+    private static List<RecipeRegistry> newRandomCookingRecipe(YamlConfiguration config, String key) {
+        NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.instance(), key);
+        ItemStack result = getResultItem(config);
+        String choiceStr = config.getString("source.item", "");
+        String cookingBlock = config.getString("source.block", "furnace");
+        RecipeChoice source = getRecipeChoice(choiceStr);
+        float exp = (float) config.getDouble("exp", 0);
+        int time = config.getInt("time", 200);
+        RecipeRegistry recipeRegistry = new RandomCookingRecipeRegistry(key, namespacedKey, result).setCookingBlock(cookingBlock).setSource(source).setExp(exp).setTime(time);
+        return Collections.singletonList(recipeRegistry);
+    }
+
+    private static List<RecipeRegistry> newMultipleRandomCookingRecipe(YamlConfiguration config, String key) {
+        ItemStack result = getResultItem(config);
+        float globalExp = (float) config.getDouble("exp", 0);
+        int globalTime = config.getInt("time", 200);
+        List<RecipeRegistry> recipeRegistries = new ArrayList<>();
+
+        List<Map<?, ?>> sourceList = config.getMapList("source");
+        for (int i = 0; i < sourceList.size(); i++) {
+            Map<?, ?> map = sourceList.get(i);
+            String fullKey = key + "." + i;
+            NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.instance(), fullKey);
+            RecipeChoice source = getRecipeChoice((String) map.get("item"));
+            String cookingBlock = (String) map.get("block");
+            float exp = map.containsKey("exp") ? Float.parseFloat(String.valueOf(map.get("exp"))) : globalExp;
+            int time = map.containsKey("time") ? (Integer) map.get("time") : globalTime;
+            recipeRegistries.add(new RandomCookingRecipeRegistry(key, namespacedKey, result).setCookingBlock(cookingBlock).setSource(source).setExp(exp).setTime(time));
         }
         return recipeRegistries;
     }
