@@ -17,6 +17,7 @@ import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.*;
@@ -30,7 +31,7 @@ public enum RecipeManager {
     public final File RECIPE_FILE_FOLDER = new File(Craftorithm.instance().getDataFolder().getPath(), "recipes");
     private final YamlConfigWrapper removedRecipesConfigWrapper = new YamlConfigWrapper(Craftorithm.instance(), "removed_recipes.yml");
     public final String PLUGIN_RECIPE_NAMESPACE = "craftorithm";
-    private final Map<RecipeType, Map<String, List<NamespacedKey>>> pluginRecipeMap;
+    private final Map<RecipeType, Map<String, RecipeGroup>> pluginRecipeMap;
     private final Map<RecipeType, Consumer<Recipe>> recipeRegisterMap;
     private final Map<RecipeType, Consumer<List<NamespacedKey>>> recipeRemoverMap;
     private final Map<NamespacedKey, Boolean> recipeUnlockMap;
@@ -58,7 +59,8 @@ public enum RecipeManager {
         if (CrypticLib.minecraftVersion() >= 11300) {
             recipeRegisterMap.put(RecipeType.COOKING, Bukkit::addRecipe);
             recipeRemoverMap.put(RecipeType.COOKING, this::removeRecipes);
-            //TODO 随机烧炼配方
+            recipeRegisterMap.put(RecipeType.RANDOM_COOKING, Bukkit::addRecipe);
+            recipeRemoverMap.put(RecipeType.RANDOM_COOKING, this::removeRecipes);
         }
         if (CrypticLib.minecraftVersion() >= 11400) {
             recipeRegisterMap.put(RecipeType.STONE_CUTTING, Bukkit::addRecipe);
@@ -68,9 +70,9 @@ public enum RecipeManager {
         }
         recipeRegisterMap.put(RecipeType.ANVIL, recipe -> {});
         recipeRemoverMap.put(RecipeType.ANVIL, keys -> {
-            Map<String, List<NamespacedKey>> recipeListMap = pluginRecipeMap.get(RecipeType.ANVIL);
-            recipeListMap.forEach((group, groupKeys) -> {
-                groupKeys.removeAll(keys);
+            Map<String, RecipeGroup> recipeGroupMap = pluginRecipeMap.get(RecipeType.ANVIL);
+            recipeGroupMap.forEach((groupName, group) -> {
+                group.groupRecipeKeys().removeAll(keys);
             });
         });
 
@@ -85,8 +87,8 @@ public enum RecipeManager {
                 Bukkit.getPotionBrewer().addPotionMix(((PotionMixRecipe) recipe).potionMix());
                 potionMixRecipeMap.put(((PotionMixRecipe) recipe).key(), (PotionMixRecipe) recipe);
             });
-            recipeRemoverMap.put(RecipeType.POTION, recipeKeys -> {
-                for (NamespacedKey recipeKey : recipeKeys) {
+            recipeRemoverMap.put(RecipeType.POTION, recipeList -> {
+                for (NamespacedKey recipeKey : recipeList) {
                     Bukkit.getPotionBrewer().removePotionMix(recipeKey);
 
                 }
@@ -127,7 +129,7 @@ public enum RecipeManager {
             if (!mkdirResult)
                 return;
         }
-        List<File> allFiles = FileUtil.allFiles(RECIPE_FILE_FOLDER, FileUtil.YAML_FILE_PATTERN);
+        List<File> allFiles = FileUtil.allYamlFiles(RECIPE_FILE_FOLDER);
         if (allFiles.isEmpty()) {
             saveDefConfigFile(allFiles);
         }
@@ -140,20 +142,20 @@ public enum RecipeManager {
         }
     }
 
-    public void regRecipe(String recipeGroup, Recipe recipe, RecipeType recipeType) {
+    public void regRecipe(String recipeGroupName, Recipe recipe, RecipeType recipeType) {
         if (!pluginRecipeMap.containsKey(recipeType))
             pluginRecipeMap.put(recipeType, new ConcurrentHashMap<>());
-        Map<String, List<NamespacedKey>> recipeMap = pluginRecipeMap.get(recipeType);
-        if (!recipeMap.containsKey(recipeGroup))
-            recipeMap.put(recipeGroup, new ArrayList<>());
-        List<NamespacedKey> recipes = recipeMap.get(recipeGroup);
-        recipes.add(getRecipeKey(recipe));
+        Map<String, RecipeGroup> recipeGroupMap = pluginRecipeMap.get(recipeType);
+        if (!recipeGroupMap.containsKey(recipeGroupName))
+            recipeGroupMap.put(recipeGroupName, new RecipeGroup(recipeGroupName));
+        RecipeGroup recipeGroup = recipeGroupMap.get(recipeGroupName);
+        recipeGroup.addRecipeKey(getRecipeKey(recipe));
         recipeRegisterMap.getOrDefault(recipeType, recipe1 -> {
             throw new UnsupportedVersionException("Can not register " + recipeType.name().toLowerCase() + " recipe");
         }).accept(recipe);
     }
 
-    public Map<RecipeType, Map<String, List<NamespacedKey>>> recipeMap() {
+    public Map<RecipeType, Map<String, RecipeGroup>> recipeMap() {
         return pluginRecipeMap;
     }
 
@@ -206,20 +208,20 @@ public enum RecipeManager {
     }
 
     public boolean removeCraftorithmRecipe(String recipeGroupName, boolean deleteFile) {
-        for (Map.Entry<RecipeType, Map<String, List<NamespacedKey>>> recipeTypeMapEntry : pluginRecipeMap.entrySet()) {
+        for (Map.Entry<RecipeType, Map<String, RecipeGroup>> recipeTypeMapEntry : pluginRecipeMap.entrySet()) {
             RecipeType recipeType = recipeTypeMapEntry.getKey();
-            Map<String, List<NamespacedKey>> recipeMap = recipeTypeMapEntry.getValue();
-            if (recipeMap.containsKey(recipeGroupName)) {
-                List<NamespacedKey> recipeKeys = recipeMap.get(recipeGroupName);
-                if (recipeKeys == null)
+            Map<String, RecipeGroup> recipeGroupMap = recipeTypeMapEntry.getValue();
+            if (recipeGroupMap.containsKey(recipeGroupName)) {
+                RecipeGroup recipeGroup = recipeGroupMap.get(recipeGroupName);
+                if (recipeGroup == null)
                     return false;
-                recipeRemoverMap.get(recipeType).accept(recipeKeys);
+                recipeRemoverMap.get(recipeType).accept(recipeGroup.groupRecipeKeys());
                 YamlConfigWrapper recipeConfig = recipeConfigWrapperMap.get(recipeGroupName);
                 if (recipeConfig != null && deleteFile) {
                     recipeConfig.configFile().delete();
                 }
                 recipeConfigWrapperMap.remove(recipeGroupName);
-                recipeMap.remove(recipeGroupName);
+                recipeGroupMap.remove(recipeGroupName);
                 recipeSortMap.remove(recipeGroupName);
                 return true;
             }
@@ -288,33 +290,34 @@ public enum RecipeManager {
     }
 
     public boolean hasCraftorithmRecipe(String recipeName) {
-        for (Map.Entry<RecipeType, Map<String, List<NamespacedKey>>> recipeTypeMapEntry : pluginRecipeMap.entrySet()) {
-            Map<String, List<NamespacedKey>> recipeGroupMap = recipeTypeMapEntry.getValue();
+        for (Map.Entry<RecipeType, Map<String, RecipeGroup>> recipeTypeMapEntry : pluginRecipeMap.entrySet()) {
+            Map<String, RecipeGroup> recipeGroupMap = recipeTypeMapEntry.getValue();
             if (recipeGroupMap.containsKey(recipeName))
                 return true;
         }
         return false;
     }
 
-    public List<NamespacedKey> getCraftorithmRecipeGroup(String groupName) {
-        for (Map.Entry<RecipeType, Map<String, List<NamespacedKey>>> recipeTypeMapEntry : pluginRecipeMap.entrySet()) {
-            Map<String, List<NamespacedKey>> recipeGroupMap = recipeTypeMapEntry.getValue();
+    @NotNull
+    public RecipeGroup getRecipeGroup(String groupName) {
+        for (Map.Entry<RecipeType, Map<String, RecipeGroup>> recipeTypeMapEntry : pluginRecipeMap.entrySet()) {
+            Map<String, RecipeGroup> recipeGroupMap = recipeTypeMapEntry.getValue();
             if (recipeGroupMap.containsKey(groupName)) {
                 return recipeGroupMap.get(groupName);
             }
         }
-        return new ArrayList<>();
+        return new RecipeGroup(groupName);
     }
 
     public YamlConfiguration getRecipeConfig(NamespacedKey recipeKey) {
         if (!recipeKey.getNamespace().equals(PLUGIN_RECIPE_NAMESPACE))
             return null;
-        for (Map.Entry<RecipeType, Map<String, List<NamespacedKey>>> recipeTypeMapEntry : pluginRecipeMap.entrySet()) {
-            Map<String, List<NamespacedKey>> recipeGroupMap = recipeTypeMapEntry.getValue();
-            for (String recipeName : recipeGroupMap.keySet()) {
-                List<NamespacedKey> recipeKeys = recipeGroupMap.getOrDefault(recipeName, new ArrayList<>());
-                if (recipeKeys.contains(recipeKey)) {
-                    return recipeConfigWrapperMap.get(recipeName).config();
+        for (Map.Entry<RecipeType, Map<String, RecipeGroup>> recipeTypeMapEntry : pluginRecipeMap.entrySet()) {
+            Map<String, RecipeGroup> recipeGroupMap = recipeTypeMapEntry.getValue();
+            for (String recipeGroupName : recipeGroupMap.keySet()) {
+                RecipeGroup recipeGroup = recipeGroupMap.get(recipeGroupName);
+                if (recipeGroup.contains(recipeKey)) {
+                    return recipeConfigWrapperMap.get(recipeGroupName).config();
                 }
             }
         }

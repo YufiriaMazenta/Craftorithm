@@ -1,8 +1,11 @@
 package com.github.yufiriamazenta.craftorithm.listener;
 
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
+import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
+import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
@@ -29,6 +32,17 @@ public enum FurnaceSmeltHandler implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onFurnaceStartSmelt(FurnaceStartSmeltEvent event) {
+        NamespacedKey recipeKey = event.getRecipe().getKey();
+        Map<String, RecipeGroup> randomCookingRecipeGroups = RecipeManager.INSTANCE.recipeMap().getOrDefault(RecipeType.RANDOM_COOKING, new HashMap<>());
+        boolean isRandomCooking = false;
+        for (RecipeGroup group : randomCookingRecipeGroups.values()) {
+            if (group.contains(recipeKey)) {
+                isRandomCooking = true;
+                break;
+            }
+        }
+        if (!isRandomCooking)
+            return;
         YamlConfiguration config = RecipeManager.INSTANCE.getRecipeConfig(event.getRecipe().getKey());
         if (config == null)
             return;

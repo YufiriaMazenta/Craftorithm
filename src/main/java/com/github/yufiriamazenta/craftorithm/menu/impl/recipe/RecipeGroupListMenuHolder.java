@@ -29,10 +29,10 @@ public class RecipeGroupListMenuHolder extends BukkitMenuHandler {
         super();
         Map<String, ItemStack> recipeResultMap = new HashMap<>();
         RecipeManager.INSTANCE.recipeMap().forEach((recipeType, recipeGroupMap) -> {
-            recipeGroupMap.forEach((groupName, recipeKeys) -> {
-                if (recipeKeys == null || recipeKeys.isEmpty())
+            recipeGroupMap.forEach((groupName, recipeGroup) -> {
+                if (recipeGroup == null || recipeGroup.isEmpty())
                     return;
-                Recipe firstRecipe = RecipeManager.INSTANCE.getRecipe(recipeKeys.get(0));
+                Recipe firstRecipe = RecipeManager.INSTANCE.getRecipe(recipeGroup.groupRecipeKeys().get(0));
                 if (firstRecipe == null)
                     return;
                 recipeResultMap.put(groupName, firstRecipe.getResult());
@@ -117,7 +117,7 @@ public class RecipeGroupListMenuHolder extends BukkitMenuHandler {
             event.getWhoClicked().openInventory(
                 new RecipeListMenuHolder(
                     (Player) event.getWhoClicked(),
-                    RecipeManager.INSTANCE.getCraftorithmRecipeGroup(recipeGroupName),
+                    RecipeManager.INSTANCE.getRecipeGroup(recipeGroupName).groupRecipeKeys(),
                     this
                 ).getInventory()
             );

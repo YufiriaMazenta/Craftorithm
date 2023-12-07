@@ -1,5 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.cmd.sub;
 
+import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
@@ -41,7 +42,7 @@ public final class RemoveRecipeCommand extends AbstractSubCommand {
     public List<String> onTabComplete(CommandSender sender, List<String> args) {
         if (args.size() <= 1) {
             List<String> tabList = new ArrayList<>();
-            for (Map<String, List<NamespacedKey>> recipeGroupMap : RecipeManager.INSTANCE.recipeMap().values()) {
+            for (Map<String, RecipeGroup> recipeGroupMap : RecipeManager.INSTANCE.recipeMap().values()) {
                 tabList.addAll(recipeGroupMap.keySet());
             }
             filterTabList(tabList, args.get(0));

@@ -1,6 +1,11 @@
 package com.github.yufiriamazenta.craftorithm.util;
 
 import com.github.yufiriamazenta.craftorithm.config.Languages;
+import com.github.yufiriamazenta.craftorithm.item.ItemManager;
+import com.github.yufiriamazenta.craftorithm.item.impl.ItemsAdderItemProvider;
+import com.github.yufiriamazenta.craftorithm.item.impl.MythicMobsItemProvider;
+import com.github.yufiriamazenta.craftorithm.item.impl.NeigeItemsItemProvider;
+import com.github.yufiriamazenta.craftorithm.item.impl.OraxenItemProvider;
 import dev.lone.itemsadder.api.CustomStack;
 import io.lumine.mythic.bukkit.BukkitAdapter;
 import io.lumine.mythic.bukkit.MythicBukkit;
@@ -13,7 +18,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import pers.neige.neigeitems.item.ItemInfo;
-import pers.neige.neigeitems.manager.ItemManager;
 
 import java.util.Optional;
 
@@ -26,10 +30,10 @@ public class PluginHookUtil {
     public static void hookPlugins() {
         hookVault();
         hookPlayerPoints();
+        hookNeigeItems();
         hookItemsAdder();
         hookOraxen();
         hookMythicMobs();
-        hookNeigeItems();
     }
 
     private static void hookVault() {
@@ -73,120 +77,58 @@ public class PluginHookUtil {
 
     private static void hookItemsAdder() {
         itemsAdderLoaded = Bukkit.getPluginManager().isPluginEnabled("ItemsAdder");
-        if (itemsAdderLoaded)
+        if (itemsAdderLoaded) {
             LangUtil.info(Languages.LOAD_ITEMS_ADDER_HOOK.value());
+            ItemManager.INSTANCE.regItemProvider(ItemsAdderItemProvider.INSTANCE);
+        }
         else
             LangUtil.info(Languages.LOAD_ITEMS_ADDER_NOT_EXIST.value());
+    }
+
+    private static void hookOraxen() {
+        oraxenLoaded = Bukkit.getPluginManager().isPluginEnabled("Oraxen");
+        if (oraxenLoaded) {
+            LangUtil.info(Languages.LOAD_ORAXEN_HOOK.value());
+            ItemManager.INSTANCE.regItemProvider(OraxenItemProvider.INSTANCE);
+        }
+        else
+            LangUtil.info(Languages.LOAD_ORAXEN_NOT_EXIST.value());
+    }
+
+    private static void hookMythicMobs() {
+        mythicLoaded = Bukkit.getPluginManager().isPluginEnabled("MythicMobs");
+        if (mythicLoaded) {
+            ItemManager.INSTANCE.regItemProvider(MythicMobsItemProvider.INSTANCE);
+            LangUtil.info(Languages.LOAD_MYTHIC_MOBS_HOOK.value());
+        }
+        else
+            LangUtil.info(Languages.LOAD_MYTHIC_MOBS_NOT_EXIST.value());
+    }
+
+    private static void hookNeigeItems() {
+        neigeItemsLoaded = Bukkit.getPluginManager().isPluginEnabled("NeigeItems");
+        if (neigeItemsLoaded) {
+            ItemManager.INSTANCE.regItemProvider(NeigeItemsItemProvider.INSTANCE);
+            LangUtil.info(Languages.LOAD_NEIGE_ITEMS_HOOK.value());
+        }
+        else
+            LangUtil.info(Languages.LOAD_NEIGE_ITEMS_NOT_EXIST.value());
     }
 
     public static boolean isItemsAdderLoaded() {
         return itemsAdderLoaded;
     }
 
-    public static ItemStack getItemsAdderItem(String itemStr) {
-        if (!itemsAdderLoaded)
-            throw new UnsupportedOperationException("Can not found ItemsAdder plugin");
-        CustomStack customStack = CustomStack.getInstance(itemStr);
-        if (customStack == null) {
-            throw new IllegalArgumentException("Can not found item " + itemStr + " from ItemsAdder");
-        }
-        return customStack.getItemStack();
+    public static boolean isOraxenLoaded() {
+        return oraxenLoaded;
     }
 
-    public static String getItemsAdderName(ItemStack itemStack) {
-        if (!itemsAdderLoaded)
-            return null;
-        CustomStack customStack = CustomStack.byItemStack(itemStack);
-        if (customStack == null)
-            return null;
-        return customStack.getId();
+    public static boolean isMythicMobsLoaded() {
+        return mythicLoaded;
     }
 
-    private static void hookOraxen() {
-        oraxenLoaded = Bukkit.getPluginManager().isPluginEnabled("Oraxen");
-        if (oraxenLoaded)
-            LangUtil.info(Languages.LOAD_ORAXEN_HOOK.value());
-        else
-            LangUtil.info(Languages.LOAD_ORAXEN_NOT_EXIST.value());
-    }
-
-    public static ItemStack getOraxenItem(String itemStr) {
-        if (!oraxenLoaded)
-            throw new UnsupportedOperationException("Can not found Oraxen plugin");
-        if (!OraxenItems.exists(itemStr)) {
-            throw new IllegalArgumentException("Can not found item " + itemStr + " from Oraxen");
-        }
-        return OraxenItems.getItemById(itemStr).build();
-    }
-
-    public static String getOraxenName(ItemStack itemStack) {
-        if (!oraxenLoaded)
-            return null;
-        if (!OraxenItems.exists(itemStack))
-            return null;
-        return OraxenItems.getIdByItem(itemStack);
-    }
-
-    private static void hookMythicMobs() {
-        mythicLoaded = Bukkit.getPluginManager().isPluginEnabled("MythicMobs");
-        if (mythicLoaded)
-            LangUtil.info(Languages.LOAD_MYTHIC_MOBS_HOOK.value());
-        else
-            LangUtil.info(Languages.LOAD_MYTHIC_MOBS_NOT_EXIST.value());
-    }
-
-    public static ItemStack getMythicMobsItem(String itemStr) {
-        if (!mythicLoaded)
-            throw new UnsupportedOperationException("Can not found MythicMobs plugin");
-        ItemExecutor executor = MythicBukkit.inst().getItemManager();
-        Optional<MythicItem> itemOptional = executor.getItem(itemStr);
-        if (!itemOptional.isPresent()) {
-            throw new IllegalArgumentException("Can not found item " + itemStr + " from MythicMobs");
-        }
-        MythicItem mythicItem = itemOptional.get();
-        int amount = mythicItem.getAmount();
-        return BukkitAdapter.adapt(itemOptional.get().generateItemStack(amount));
-    }
-
-    public static String getMythicMobsName(ItemStack itemStack) {
-        if (!mythicLoaded)
-            return null;
-        ItemExecutor itemExecutor = MythicBukkit.inst().getItemManager();
-        if (!itemExecutor.isMythicItem(itemStack))
-            return null;
-        return itemExecutor.getMythicTypeFromItem(itemStack);
-    }
-
-    public ItemExecutor getMythicMobsItemExecutor() {
-        if (!mythicLoaded)
-            throw new UnsupportedOperationException("Can not found MythicMobs plugin");
-        return MythicBukkit.inst().getItemManager();
-    }
-
-    private static void hookNeigeItems() {
-        neigeItemsLoaded = Bukkit.getPluginManager().isPluginEnabled("NeigeItems");
-        if (neigeItemsLoaded)
-            LangUtil.info(Languages.LOAD_NEIGE_ITEMS_HOOK.value());
-        else
-            LangUtil.info(Languages.LOAD_NEIGE_ITEMS_NOT_EXIST.value());
-    }
-
-    public static ItemStack getNiItem(String itemName) {
-        if (!neigeItemsLoaded)
-            throw new UnsupportedOperationException("Can not found NeigeItems plugin");
-        if (!ItemManager.INSTANCE.hasItem(itemName))
-            return null;
-        return ItemManager.INSTANCE.getItemStack(itemName);
-    }
-
-    public static String getNiName(ItemStack item) {
-        if (!neigeItemsLoaded)
-            throw new UnsupportedOperationException("Can not found NeigeItems plugin");
-        ItemInfo niItem = ItemManager.INSTANCE.isNiItem(item);
-        if (niItem == null) {
-            return null;
-        }
-        return niItem.getId();
+    public static boolean isNeigeItemsLoaded() {
+        return neigeItemsLoaded;
     }
 
 }
