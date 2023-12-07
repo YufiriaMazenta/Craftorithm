@@ -36,7 +36,7 @@ public class AnvilHandler implements Listener {
                 result.setItemMeta(base.getItemMeta());
         }
         event.getInventory().setRepairCost(anvilRecipe.costLevel());
-        event.setResult(anvilRecipe.getResult());
+        event.setResult(result);
     }
 
     @EventHandler
