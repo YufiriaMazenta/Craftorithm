@@ -4,6 +4,7 @@ import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.exception.UnsupportedVersionException;
+import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.CustomRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.PotionMixRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
@@ -18,6 +19,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.*;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.*;
@@ -39,6 +41,7 @@ public enum RecipeManager {
     private final List<Recipe> removeRecipeRecycleBin;
     private final Map<NamespacedKey, Recipe> serverRecipesCache;
     private final Map<NamespacedKey, PotionMixRecipe> potionMixRecipeMap;
+    private final Map<NamespacedKey, AnvilRecipe> anvilRecipeMap;
     private final Map<String, YamlConfigWrapper> recipeConfigWrapperMap;
     private boolean supportPotionMix;
 
@@ -50,31 +53,37 @@ public enum RecipeManager {
         recipeUnlockMap = new ConcurrentHashMap<>();
         recipeSortMap = new ConcurrentHashMap<>();
         potionMixRecipeMap = new ConcurrentHashMap<>();
+        anvilRecipeMap = new ConcurrentHashMap<>();
         removeRecipeRecycleBin = new CopyOnWriteArrayList<>();
         serverRecipesCache = new ConcurrentHashMap<>();
         recipeRegisterMap.put(RecipeType.SHAPED, Bukkit::addRecipe);
         recipeRemoverMap.put(RecipeType.SHAPED, this::removeRecipes);
         recipeRegisterMap.put(RecipeType.SHAPELESS, Bukkit::addRecipe);
         recipeRemoverMap.put(RecipeType.SHAPELESS, this::removeRecipes);
-        if (CrypticLib.minecraftVersion() >= 11300) {
+        if (CrypticLib.minecraftVersion() >= 11400) {
             recipeRegisterMap.put(RecipeType.COOKING, Bukkit::addRecipe);
             recipeRemoverMap.put(RecipeType.COOKING, this::removeRecipes);
-            recipeRegisterMap.put(RecipeType.RANDOM_COOKING, Bukkit::addRecipe);
-            recipeRemoverMap.put(RecipeType.RANDOM_COOKING, this::removeRecipes);
-        }
-        if (CrypticLib.minecraftVersion() >= 11400) {
             recipeRegisterMap.put(RecipeType.STONE_CUTTING, Bukkit::addRecipe);
             recipeRemoverMap.put(RecipeType.STONE_CUTTING, this::removeRecipes);
             recipeRegisterMap.put(RecipeType.SMITHING, Bukkit::addRecipe);
             recipeRemoverMap.put(RecipeType.SMITHING, this::removeRecipes);
         }
-        recipeRegisterMap.put(RecipeType.ANVIL, recipe -> {});
-        recipeRemoverMap.put(RecipeType.ANVIL, keys -> {
-            Map<String, RecipeGroup> recipeGroupMap = pluginRecipeMap.get(RecipeType.ANVIL);
-            recipeGroupMap.forEach((groupName, group) -> {
-                group.groupRecipeKeys().removeAll(keys);
+        if (CrypticLib.minecraftVersion() >= 11700) {
+            recipeRegisterMap.put(RecipeType.RANDOM_COOKING, Bukkit::addRecipe);
+            recipeRemoverMap.put(RecipeType.RANDOM_COOKING, this::removeRecipes);
+        }
+
+        if (PluginConfigs.ENABLE_ANVIL_RECIPE.value()) {
+            recipeRegisterMap.put(RecipeType.ANVIL, recipe -> {
+                anvilRecipeMap.put(getRecipeKey(recipe), (AnvilRecipe) recipe);
             });
-        });
+            recipeRemoverMap.put(RecipeType.ANVIL, keys -> {
+                Map<String, RecipeGroup> recipeGroupMap = pluginRecipeMap.get(RecipeType.ANVIL);
+                recipeGroupMap.forEach((groupName, group) -> {
+                    group.groupRecipeKeys().removeAll(keys);
+                });
+            });
+        }
 
         try {
             Class.forName("io.papermc.paper.potion.PotionMix");
@@ -164,7 +173,8 @@ public enum RecipeManager {
             if (potionMixRecipeMap.containsKey(namespacedKey))
                 return potionMixRecipeMap.get(namespacedKey);
         }
-        //TODO 铁砧配方
+        if (anvilRecipeMap.containsKey(namespacedKey))
+            return anvilRecipeMap.get(namespacedKey);
         if (CrypticLib.minecraftVersion() >= 11600) {
             return Bukkit.getRecipe(namespacedKey);
         } else {
@@ -326,6 +336,23 @@ public enum RecipeManager {
 
     public int getCraftorithmRecipeSortId(String recipeName) {
         return recipeSortMap.getOrDefault(recipeName, 0);
+    }
+
+    @Nullable
+    public AnvilRecipe matchAnvilRecipe(ItemStack base, ItemStack addition) {
+        for (Map.Entry<NamespacedKey, AnvilRecipe> anvilRecipeEntry : anvilRecipeMap.entrySet()) {
+            AnvilRecipe anvilRecipe = anvilRecipeEntry.getValue();
+            if (!anvilRecipe.base().isSimilar(base))
+                continue;
+            if (base.getAmount() < anvilRecipe.base().getAmount())
+                continue;
+            if (!anvilRecipe.addition().isSimilar(addition))
+                continue;
+            if (addition.getAmount() < anvilRecipe.addition().getAmount())
+                continue;
+            return anvilRecipe;
+        }
+        return null;
     }
 
     public RecipeType getRecipeType(Recipe recipe) {

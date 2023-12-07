@@ -1,0 +1,7 @@
+type: anvil
+result: bedrock
+source:
+  base: diamond
+  addition: iron_ingot
+  copy_nbt: true
+  cost_level: 1
