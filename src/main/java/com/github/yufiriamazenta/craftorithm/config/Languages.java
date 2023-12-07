@@ -58,6 +58,8 @@ public class Languages {
     public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_COOKING_FRAME = new StringConfigEntry("menu.recipe_creator.icon.cooking_frame", "&a烧炼原料");
     public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_SMITHING_FRAME = new StringConfigEntry("menu.recipe_creator.icon.smithing_frame", "&a锻造原料");
     public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_POTION_FRAME = new StringConfigEntry("menu.recipe_creator.icon.potion_frame", "&a酿造原料");
+    public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_ANVIL_FRAME = new StringConfigEntry("menu.recipe_creator.icon.anvil_frame", "&a打造原料");
+    public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_ANVIL_COPY_NBT_TOGGLE = new StringConfigEntry("menu.recipe_creator.icon.anvil_copy_nbt_toggle", "&a是否保留物品NBT");
     public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_FURNACE_TOGGLE = new StringConfigEntry("menu.recipe_creator.icon.furnace_toggle", "&a熔炉配方");
     public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_BLASTING_TOGGLE = new StringConfigEntry("menu.recipe_creator.icon.blasting_toggle", "&a高炉配方");
     public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_SMOKING_TOGGLE = new StringConfigEntry("menu.recipe_creator.icon.smoking_toggle", "&a烟熏炉配方");
