@@ -46,6 +46,8 @@ public class AnvilHandler implements Listener {
 
         if (!event.getInventory().getType().equals(InventoryType.ANVIL))
             return;
+        if (!(event.getInventory() instanceof AnvilInventory))
+            return;
         AnvilInventory anvilInventory = (AnvilInventory) event.getInventory();
         if (event.getSlot() != 2)
             return;
