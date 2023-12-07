@@ -63,6 +63,7 @@ menu:
       smithing: 锻造配方
       stone_cutting: 切石配方
       potion: 酿造配方
+      anvil: 铁砧配方
   recipe_creator:
     title: '&3创建<recipe_type>配方: <recipe_name>'
     icon:

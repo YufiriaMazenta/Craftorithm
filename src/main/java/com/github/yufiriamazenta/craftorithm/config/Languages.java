@@ -51,6 +51,7 @@ public class Languages {
     public static final StringConfigEntry MENU_RECIPE_DISPLAY_TITLE_SMITHING = new StringConfigEntry("menu.recipe_display.title.smithing", "锻造配方");
     public static final StringConfigEntry MENU_RECIPE_DISPLAY_TITLE_STONE_CUTTING = new StringConfigEntry("menu.recipe_display.title.stone_cutting", "切石配方");
     public static final StringConfigEntry MENU_RECIPE_DISPLAY_TITLE_POTION = new StringConfigEntry("menu.recipe_display.title.potion", "酿造配方");
+    public static final StringConfigEntry MENU_RECIPE_DISPLAY_TITLE_ANVIL = new StringConfigEntry("menu.recipe_display.title.anvil", "铁砧配方");
     public static final StringConfigEntry MENU_RECIPE_CREATOR_TITLE = new StringConfigEntry("menu.recipe_creator.title", "&3创建<recipe_type>配方: <recipe_name>");
     public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_FRAME = new StringConfigEntry("menu.recipe_creator.icon.frame", "&a创建配方");
     public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_RESULT_FRAME = new StringConfigEntry("menu.recipe_creator.icon.result_frame", "&a配方结果");

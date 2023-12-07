@@ -6,6 +6,7 @@ import com.github.yufiriamazenta.craftorithm.menu.bukkit.IChildBukkitMenu;
 import com.github.yufiriamazenta.craftorithm.menu.bukkit.ItemDisplayIcon;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
+import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.PotionMixRecipe;
 import crypticlib.CrypticLib;
 import crypticlib.util.TextUtil;
@@ -80,6 +81,11 @@ public class RecipeDisplayMenuHolder extends BukkitMenuHandler implements IChild
                 setPotionMixRecipeMenu();
                 inventoryType = InventoryType.BREWING;
                 invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_POTION.value();
+                break;
+            case ANVIL:
+                setAnvilRecipeMenu();
+                inventoryType = InventoryType.ANVIL;
+                invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_ANVIL.value();
                 break;
             default:
                 invTitle = "Unknown Type";
@@ -180,6 +186,18 @@ public class RecipeDisplayMenuHolder extends BukkitMenuHandler implements IChild
         menuIconMap().put(3, ItemDisplayIcon.icon(ingredient));
         menuIconMap().put(2, ItemDisplayIcon.icon(result));
     }
+
+
+    private void setAnvilRecipeMenu() {
+        AnvilRecipe anvilRecipe = (AnvilRecipe) recipe;
+        ItemStack base = anvilRecipe.base();
+        ItemStack addition = anvilRecipe.addition();
+        ItemStack result = anvilRecipe.getResult();
+        menuIconMap().put(0, ItemDisplayIcon.icon(base));
+        menuIconMap().put(1, ItemDisplayIcon.icon(addition));
+        menuIconMap().put(2, ItemDisplayIcon.icon(result));
+    }
+
 
 
     @Override
