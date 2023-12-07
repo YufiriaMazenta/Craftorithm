@@ -32,7 +32,7 @@ public class AnvilRecipe implements CustomRecipe {
     }
 
     public ItemStack base() {
-        return base;
+        return base.clone();
     }
 
     public AnvilRecipe setBase(ItemStack base) {
@@ -41,7 +41,7 @@ public class AnvilRecipe implements CustomRecipe {
     }
 
     public ItemStack addition() {
-        return addition;
+        return addition.clone();
     }
 
     public AnvilRecipe setAddition(ItemStack addition) {
@@ -61,11 +61,11 @@ public class AnvilRecipe implements CustomRecipe {
 
     @Override
     public @NotNull ItemStack getResult() {
-        return result;
+        return result();
     }
 
     public ItemStack result() {
-        return result;
+        return result.clone();
     }
 
     public int costLevel() {
