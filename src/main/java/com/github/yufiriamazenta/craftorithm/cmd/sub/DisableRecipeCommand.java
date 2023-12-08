@@ -44,7 +44,7 @@ public final class DisableRecipeCommand extends AbstractSubCommand {
             List<String> tabList = new ArrayList<>();
             for (NamespacedKey key : RecipeManager.INSTANCE.serverRecipesCache().keySet()) {
                 String str = key.toString();
-                if (str.startsWith(args.get(0)))
+                if (str.contains(args.get(0)))
                     tabList.add(key.toString());
             }
             filterTabList(tabList, args.get(0));
