@@ -1,7 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.item;
 
 import com.github.yufiriamazenta.craftorithm.item.impl.CraftorithmItemProvider;
-import com.github.yufiriamazenta.craftorithm.item.impl.MinecraftItemProvider;
 import crypticlib.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -23,7 +22,6 @@ public enum ItemManager {
 
     public void retDefaultProviders() {
         regItemProvider(CraftorithmItemProvider.INSTANCE);
-        regItemProvider(MinecraftItemProvider.INSTANCE);
     }
 
     public void regItemProvider(ItemProvider itemProvider) {

@@ -25,7 +25,13 @@ public enum MythicMobsItemProvider implements ItemProvider {
         ItemExecutor itemExecutor = MythicBukkit.inst().getItemManager();
         if (!itemExecutor.isMythicItem(itemStack))
             return null;
-        return itemExecutor.getMythicTypeFromItem(itemStack);
+        String mmItemName = itemExecutor.getMythicTypeFromItem(itemStack);
+        if (ignoreAmount)
+            return mmItemName;
+        else {
+            ItemStack mmItem = itemExecutor.getItemStack(mmItemName);
+            return mmItemName + " " + (itemStack.getAmount() / mmItem.getAmount());
+        }
     }
 
     @Override
