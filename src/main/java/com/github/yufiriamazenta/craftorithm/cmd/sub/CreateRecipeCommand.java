@@ -125,7 +125,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                 .replace("<recipe_type>", recipeType.name())
                 .replace("<recipe_name>", recipeName),
             new MenuLayout(Arrays.asList(
-                "#########",
+                "####F####",
                 "#   #***#",
                 "#   A* *#",
                 "#   #***#",
@@ -134,6 +134,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                 Map<Character, Icon> layoutMap = new HashMap<>();
                 layoutMap.put('#', getFrameIcon());
                 layoutMap.put('*', getResultFrameIcon());
+                layoutMap.put('F', getUnlockIcon());
                 layoutMap.put('A', new Icon(
                     Material.CRAFTING_TABLE,
                     Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(),
@@ -190,6 +191,9 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                                 recipeConfig.set("source", sourceList);
                                 break;
                         }
+                        if (!event.getClickedInventory().getItem(4).getEnchantments().isEmpty()) {
+                            recipeConfig.set("unlock", true);
+                        }
                         recipeConfig.set("result", resultName);
                         recipeConfig.saveConfig();
                         recipeConfig.reloadConfig();
@@ -213,7 +217,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                 .replace("<recipe_type>", recipeType.name())
                 .replace("<recipe_name>", recipeName),
             new MenuLayout(Arrays.asList(
-                "#########",
+                "####F####",
                 "#***#%%%#",
                 "#* *A% %#",
                 "#***#%%%#",
@@ -257,6 +261,12 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                                 sourceList.add(sourceMap);
                             }
                         }
+                        if (sourceList.isEmpty()) {
+                            sourceList.add(CollectionsUtil.newStringHashMap("block", "furnace", "item", sourceName));
+                        }
+                        if (!event.getClickedInventory().getItem(4).getEnchantments().isEmpty()) {
+                            recipeConfig.set("unlock", true);
+                        }
                         recipeConfig.set("source", sourceList);
                         recipeConfig.saveConfig();
                         recipeConfig.reloadConfig();
@@ -288,6 +298,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                     Languages.MENU_RECIPE_CREATOR_ICON_CAMPFIRE_TOGGLE.value(),
                     event -> setIconGlowing(event.getSlot(), event)
                 ));
+                layoutMap.put('F', getUnlockIcon());
                 return layoutMap;
             })
         ));
@@ -303,7 +314,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                 () -> {
                     if (CrypticLib.minecraftVersion() < 12000) {
                         return Arrays.asList(
-                            "#########",
+                            "####F####",
                             "#***#%%%#",
                             "# * A% %#",
                             "#***#%%%#",
@@ -311,7 +322,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                         );
                     } else {
                         return Arrays.asList(
-                            "#########",
+                            "####F####",
                             "#***#%%%#",
                             "#   A% %#",
                             "#***#%%%#",
@@ -324,6 +335,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                     layoutMap.put('#', getFrameIcon());
                     layoutMap.put('*', new Icon(Material.CYAN_STAINED_GLASS_PANE, Languages.MENU_RECIPE_CREATOR_ICON_SMITHING_FRAME.value()));
                     layoutMap.put('%', getResultFrameIcon());
+                    layoutMap.put('F', getUnlockIcon());
                     layoutMap.put('A', new Icon(
                         Material.SMITHING_TABLE,
                         Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(),
@@ -365,6 +377,9 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                                 recipeConfig.set("source.type", "transform");
                                 recipeConfig.set("source.template", templateName);
                             }
+                            if (!event.getClickedInventory().getItem(4).getEnchantments().isEmpty()) {
+                                recipeConfig.set("unlock", true);
+                            }
                             recipeConfig.saveConfig();
                             recipeConfig.reloadConfig();
                             for (RecipeRegistry recipeRegistry : RecipeFactory.newRecipeRegistry(recipeConfig.config(), recipeName)) {
@@ -396,6 +411,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
             ), () -> {
                 Map<Character, Icon> layoutMap = new HashMap<>();
                 layoutMap.put('#', getFrameIcon());
+                layoutMap.put('F', getUnlockIcon());
                 layoutMap.put('A', new Icon(Material.STONECUTTER, Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(),
                     event -> {
                         StoredMenu creator = (StoredMenu) event.getClickedInventory().getHolder();
@@ -426,6 +442,9 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                         recipeConfig.set("result", resultList);
                         recipeConfig.set("type", "stone_cutting");
                         recipeConfig.set("source", sourceList);
+                        if (!event.getClickedInventory().getItem(4).getEnchantments().isEmpty()) {
+                            recipeConfig.set("unlock", true);
+                        }
                         recipeConfig.saveConfig();
                         recipeConfig.reloadConfig();
                         for (RecipeRegistry recipeRegistry : RecipeFactory.newRecipeRegistry(recipeConfig.config(), recipeName)) {
@@ -593,6 +612,14 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
 
     private Icon getFrameIcon() {
         return new Icon(Material.BLACK_STAINED_GLASS_PANE, Languages.MENU_RECIPE_CREATOR_ICON_FRAME.value());
+    }
+
+    private Icon getUnlockIcon() {
+        return new Icon(
+            Material.KNOWLEDGE_BOOK,
+            Languages.MENU_RECIPE_CREATOR_ICON_UNLOCK.value(),
+            event -> setIconGlowing(event.getSlot(), event)
+        );
     }
 
     private Icon getResultFrameIcon() {
