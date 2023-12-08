@@ -1,5 +1,5 @@
 import java.text.SimpleDateFormat
-version = "1.6.0-pre5"
+version = "1.6.0"
 
 plugins {
     `java-library`
@@ -27,11 +27,10 @@ repositories {
 
 dependencies {
     compileOnly("org.jetbrains:annotations:24.0.1")
-    compileOnly("org.spigotmc:spigot:1.19.4-R0.1-SNAPSHOT")
     compileOnly("io.papermc.paper:paper-api:1.20.4")
     compileOnly("pers.neige.neigeitems:NeigeItems:1.15.113")
     compileOnly("net.kyori:adventure-api:4.14.0")
-    compileOnly("org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
     compileOnly("org.black_ixx:playerpoints:3.2.5")
     compileOnly("net.luckperms:api:5.4")
