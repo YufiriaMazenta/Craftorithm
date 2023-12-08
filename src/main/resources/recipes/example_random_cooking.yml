@@ -1,8 +1,8 @@
 type: random_cooking
 result:
-  - 'iron_ingot 0.8'
-  - 'diamond 0.05'
-  - 'copper_ingot 0.15'
+  - 'iron_ingot 80'
+  - 'diamond 5'
+  - 'copper_ingot 15'
 multiple: true
 source:
   - block: furnace
