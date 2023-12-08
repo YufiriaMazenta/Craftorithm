@@ -536,8 +536,11 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                     Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COPY_NBT_TOGGLE.value(),
                     event -> setIconGlowing(event.getSlot(), event)
                 );
-                toggleCopyNbt.display().addUnsafeEnchantment(Enchantment.MENDING, 1);
-                toggleCopyNbt.display().addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                ItemStack display = toggleCopyNbt.display();
+                ItemMeta displayMeta = display.getItemMeta();
+                displayMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                display.setItemMeta(displayMeta);
+                display.addUnsafeEnchantment(Enchantment.MENDING, 1);
                 layoutMap.put('B', toggleCopyNbt);
                 layoutMap.put('A', new Icon(Material.ANVIL, Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(),
                     event -> {
