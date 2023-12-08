@@ -34,6 +34,10 @@ Craftorithm是一个合成配方管理插件，可以添加各类配方，并可
 
 ![酿造配方](imgs/potion.gif)
 
+### 添加铁砧配方
+
+![Add Anvil Recipe](imgs/anvil.gif)
+
 ### 查看配方
 
 ![查看配方](imgs/recipe_list.gif)
