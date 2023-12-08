@@ -18,11 +18,16 @@ public enum NeigeItemsItemProvider implements ItemProvider {
 
     @Override
     public @Nullable String getItemName(ItemStack itemStack, boolean ignoreAmount) {
-        ItemInfo niItem = ItemManager.INSTANCE.isNiItem(itemStack);
-        if (niItem == null) {
+        ItemInfo niItemInfo = ItemManager.INSTANCE.isNiItem(itemStack);
+        if (niItemInfo == null) {
             return null;
         }
-        return niItem.getId();
+        if (ignoreAmount)
+            return niItemInfo.getId();
+        else {
+            ItemStack niItem = ItemManager.INSTANCE.getItemStack(niItemInfo.getId());
+            return niItemInfo.getId() + " " + (itemStack.getAmount() / niItem.getAmount());
+        }
     }
 
     @Override

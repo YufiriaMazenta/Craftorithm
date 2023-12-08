@@ -83,7 +83,7 @@ public class ItemUtils {
                 itemName = "items:" + CraftorithmItemProvider.INSTANCE.regCraftorithmItem("gui_items", id, item);
             }
         } else {
-            itemName = item.getType().name();
+            itemName = item.getType().getKey().toString();
             if (!ignoreAmount && item.getAmount() > 1) {
                 itemName += (" " + item.getAmount());
             }

@@ -19,7 +19,13 @@ public enum OraxenItemProvider implements ItemProvider {
     public @Nullable String getItemName(ItemStack itemStack, boolean ignoreAmount) {
         if (!OraxenItems.exists(itemStack))
             return null;
-        return OraxenItems.getIdByItem(itemStack);
+        String itemName = OraxenItems.getIdByItem(itemStack);
+        if (ignoreAmount) {
+            return itemName;
+        } else {
+            ItemStack oraxenItem = OraxenItems.getItemById(itemName).build();
+            return itemName + " " + (itemStack.getAmount() / oraxenItem.getAmount());
+        }
     }
 
     @Override

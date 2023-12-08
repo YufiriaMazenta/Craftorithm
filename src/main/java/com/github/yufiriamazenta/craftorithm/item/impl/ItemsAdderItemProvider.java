@@ -20,7 +20,11 @@ public enum ItemsAdderItemProvider implements ItemProvider {
         CustomStack customStack = CustomStack.byItemStack(itemStack);
         if (customStack == null)
             return null;
-        return customStack.getId();
+        if (ignoreAmount) {
+            return customStack.getId();
+        } else {
+            return customStack.getId() + " " + (itemStack.getAmount() / customStack.getItemStack().getAmount());
+        }
     }
 
     @Override
