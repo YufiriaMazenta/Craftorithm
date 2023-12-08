@@ -45,10 +45,7 @@ public enum ItemManager {
         }
         itemKey = itemKey.replace(" ", "");
         if (!itemKey.contains(":")) {
-            Material material = Material.matchMaterial(itemKey);
-            if (material == null)
-                throw new IllegalArgumentException("Can not found item " + itemKey);
-            return new ItemStack(material, amountScale);
+            return matchVanillaItem(itemKey, amountScale);
         }
 
         int index = itemKey.indexOf(":");
@@ -57,7 +54,7 @@ public enum ItemManager {
 
         ItemProvider provider = itemProviderMap.get(namespace);
         if (provider == null) {
-            throw new IllegalArgumentException("Can not found item provider: " + namespace);
+            return matchVanillaItem(itemKey, amountScale);
         }
 
         item = provider.getItem(name);
@@ -84,7 +81,20 @@ public enum ItemManager {
                 return itemProviderEntry.getKey() + ":" + tmpName;
         }
 
-        return null;
+        return item.getType().getKey().toString();
+    }
+
+    /**
+     * 获取原版物品
+     * @param itemKey 物品名字
+     * @param amount 物品数量
+     * @return 物品
+     */
+    public ItemStack matchVanillaItem(String itemKey, int amount) {
+        Material material = Material.matchMaterial(itemKey);
+        if (material == null)
+            throw new IllegalArgumentException("Can not found item " + itemKey);
+        return new ItemStack(material, amount);
     }
 
 }
