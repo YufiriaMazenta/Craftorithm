@@ -28,9 +28,7 @@ repositories {
 dependencies {
     compileOnly("org.jetbrains:annotations:24.0.1")
     compileOnly("org.spigotmc:spigot:1.19.4-R0.1-SNAPSHOT")
-    compileOnly("io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT") {
-        targetConfiguration = "runtime"
-    }
+    compileOnly("io.papermc.paper:paper-api:1.20.4")
     compileOnly("pers.neige.neigeitems:NeigeItems:1.15.113")
     compileOnly("net.kyori:adventure-api:4.14.0")
     compileOnly("org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT")
