@@ -23,8 +23,8 @@ public class AnvilHandler implements Listener {
     public void onPrepareAnvil(PrepareAnvilEvent event) {
         if (!PluginConfigs.ENABLE_ANVIL_RECIPE.value())
             return;
-        ItemStack base = event.getInventory().getFirstItem();
-        ItemStack addition = event.getInventory().getSecondItem();
+        ItemStack base = event.getInventory().getItem(0);
+        ItemStack addition = event.getInventory().getItem(1);
         if (ItemUtil.isAir(base) || ItemUtil.isAir(addition))
             return;
         AnvilRecipe anvilRecipe = RecipeManager.INSTANCE.matchAnvilRecipe(base, addition);
@@ -51,9 +51,9 @@ public class AnvilHandler implements Listener {
         AnvilInventory anvilInventory = (AnvilInventory) event.getInventory();
         if (event.getSlot() != 2)
             return;
-        ItemStack base = anvilInventory.getFirstItem();
-        ItemStack addition = anvilInventory.getSecondItem();
-        ItemStack result = anvilInventory.getResult();
+        ItemStack base = anvilInventory.getItem(0);
+        ItemStack addition = anvilInventory.getItem(1);
+        ItemStack result = anvilInventory.getItem(2);
         if (ItemUtil.isAir(base) || ItemUtil.isAir(addition) || ItemUtil.isAir(result))
             return;
         AnvilRecipe anvilRecipe = RecipeManager.INSTANCE.matchAnvilRecipe(base, addition);
@@ -137,10 +137,10 @@ public class AnvilHandler implements Listener {
         //更新页面
         AnvilRecipe afterClickRecipe = RecipeManager.INSTANCE.matchAnvilRecipe(base, addition);
         if (afterClickRecipe == null) {
-            anvilInventory.setResult(null);
+            anvilInventory.setItem(2, null);
             return;
         }
-        anvilInventory.setResult(afterClickRecipe.getResult());
+        anvilInventory.setItem(2, afterClickRecipe.getResult());
         anvilInventory.setRepairCost(anvilRecipe.costLevel());
     }
 

@@ -7,7 +7,7 @@ multiple: true
 source:
   - block: furnace
     item: bedrock
-  - block: smoking
+  - block: smoker
     item: bedrock
   - block: blast_furnace
     item: bedrock

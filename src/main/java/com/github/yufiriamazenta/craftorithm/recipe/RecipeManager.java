@@ -453,6 +453,10 @@ public enum RecipeManager {
             Craftorithm.instance().saveResource("recipes/example_potion.yml", false);
             allFiles.add(new File(RECIPE_FILE_FOLDER, "example_potion.yml"));
         }
+        if (PluginConfigs.ENABLE_ANVIL_RECIPE.value()) {
+            Craftorithm.instance().saveResource("recipes/example_anvil.yml", false);
+            allFiles.add(new File(RECIPE_FILE_FOLDER, "example_anvil.yml"));
+        }
     }
 
 }
