@@ -37,6 +37,10 @@ Craftorithm is a recipe management plugin which can add recipes, remove/disable 
 
 ![Add Brewing Recipe](imgs/potion.gif)
 
+### Add anvil recipe
+
+![Add Anvil Recipe](imgs/anvil.gif)
+
 ### Show recipe list
 
 ![Show Recipe List](imgs/recipe_list.gif)
