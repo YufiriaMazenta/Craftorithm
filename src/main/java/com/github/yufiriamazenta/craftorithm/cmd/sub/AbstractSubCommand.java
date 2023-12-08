@@ -56,7 +56,7 @@ public abstract class AbstractSubCommand extends SubcmdExecutor {
     }
 
     public void filterTabList(List<String> tabList, String input) {
-        tabList.removeIf(str -> !str.startsWith(input));
+        tabList.removeIf(str -> !str.contains(input));
     }
 
 }
