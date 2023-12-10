@@ -1,5 +1,5 @@
 import java.text.SimpleDateFormat
-version = "1.6.1-dev2"
+version = "1.6.1-dev3"
 
 plugins {
     `java-library`

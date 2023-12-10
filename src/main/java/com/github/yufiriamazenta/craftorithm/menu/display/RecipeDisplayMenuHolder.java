@@ -1,9 +1,9 @@
-package com.github.yufiriamazenta.craftorithm.menu.impl.recipe;
+package com.github.yufiriamazenta.craftorithm.menu.display;
 
 import com.github.yufiriamazenta.craftorithm.config.Languages;
-import com.github.yufiriamazenta.craftorithm.menu.bukkit.BukkitMenuHandler;
-import com.github.yufiriamazenta.craftorithm.menu.bukkit.IChildBukkitMenu;
-import com.github.yufiriamazenta.craftorithm.menu.bukkit.ItemDisplayIcon;
+import com.github.yufiriamazenta.craftorithm.menu.api.bukkit.BukkitMenuHandler;
+import com.github.yufiriamazenta.craftorithm.menu.api.bukkit.IChildBukkitMenu;
+import com.github.yufiriamazenta.craftorithm.menu.api.bukkit.ItemDisplayIcon;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;

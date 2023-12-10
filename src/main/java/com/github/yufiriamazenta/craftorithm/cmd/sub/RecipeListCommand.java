@@ -1,8 +1,8 @@
 package com.github.yufiriamazenta.craftorithm.cmd.sub;
 
 import com.github.yufiriamazenta.craftorithm.config.Languages;
-import com.github.yufiriamazenta.craftorithm.menu.impl.recipe.RecipeGroupListMenuHolder;
-import com.github.yufiriamazenta.craftorithm.menu.impl.recipe.RecipeListMenuHolder;
+import com.github.yufiriamazenta.craftorithm.menu.display.RecipeGroupListMenuHolder;
+import com.github.yufiriamazenta.craftorithm.menu.display.RecipeListMenuHolder;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.CrypticLib;
