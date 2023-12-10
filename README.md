@@ -4,7 +4,7 @@
 
 [**[中文版本]**](https://github.com/YufiriaMazenta/Craftorithm/blob/master/README-CN.md)
 
-Craftorithm is a recipe management plugin which can add recipes, remove/disable recipes, add limit to recipes, etc.
+Craftorithm is a recipe management plugin which can add recipes, remove/disable recipes, limit to recipes, etc.
 
 ## Features
 
