@@ -1,6 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.listener;
 
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
+import crypticlib.CrypticLib;
 import crypticlib.listener.BukkitListener;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -22,7 +23,10 @@ public enum RecipeUnlockHandler implements Listener {
         Player player = event.getPlayer();
         Map<NamespacedKey, Boolean> unlockMap = RecipeManager.INSTANCE.recipeUnlockMap();
         List<NamespacedKey> unlockKeyList = new ArrayList<>(unlockMap.keySet());
-        unlockKeyList.removeIf(key -> unlockMap.getOrDefault(key, false) && !player.hasDiscoveredRecipe(key));
+        if (CrypticLib.minecraftVersion() >= 11300)
+            unlockKeyList.removeIf(key -> unlockMap.getOrDefault(key, false) && !player.hasDiscoveredRecipe(key));
+        else
+            unlockKeyList.removeIf(key -> unlockMap.getOrDefault(key, false));
         player.discoverRecipes(unlockKeyList);
     }
 
