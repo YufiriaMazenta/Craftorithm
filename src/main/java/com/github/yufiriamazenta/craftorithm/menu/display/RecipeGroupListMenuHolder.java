@@ -1,8 +1,8 @@
-package com.github.yufiriamazenta.craftorithm.menu.impl.recipe;
+package com.github.yufiriamazenta.craftorithm.menu.display;
 
 import com.github.yufiriamazenta.craftorithm.config.Languages;
-import com.github.yufiriamazenta.craftorithm.menu.bukkit.BukkitMenuHandler;
-import com.github.yufiriamazenta.craftorithm.menu.bukkit.ItemDisplayIcon;
+import com.github.yufiriamazenta.craftorithm.menu.api.bukkit.BukkitMenuHandler;
+import com.github.yufiriamazenta.craftorithm.menu.api.bukkit.ItemDisplayIcon;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import crypticlib.util.TextUtil;
 import org.bukkit.Bukkit;

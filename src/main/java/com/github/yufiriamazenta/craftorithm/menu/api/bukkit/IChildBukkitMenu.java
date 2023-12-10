@@ -1,4 +1,4 @@
-package com.github.yufiriamazenta.craftorithm.menu.bukkit;
+package com.github.yufiriamazenta.craftorithm.menu.api.bukkit;
 
 public interface IChildBukkitMenu {
     BukkitMenuHandler parentMenu();
