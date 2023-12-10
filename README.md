@@ -1,9 +1,4 @@
-<div align="center">
-<h1>Craftorithm</h1>
-<h6>Craft Recipe Management System</h6>
-
-<img src="imgs/craftorithm.png" width=150 height=150 alt="Craftorithm">
-</div>
+![Craftorithm](imgs/banner.png)
 
 ----
 

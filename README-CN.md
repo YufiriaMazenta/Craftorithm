@@ -1,9 +1,4 @@
-<div align="center">
-<h1>Craftorithm</h1>
-<h6>合成配方管理系统</h6>
-
-<img src="imgs/craftorithm.png" width=150 height=150 alt="Craftorithm">
-</div>
+![Craftorithm](imgs/banner.png)
 
 ----
 Craftorithm是一个合成配方管理插件，可以添加各类配方，并可以进行合成限制，删除/禁用配方等管理操作
