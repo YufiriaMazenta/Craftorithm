@@ -9,6 +9,9 @@ import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.config.yaml.YamlConfigWrapper;
+import crypticlib.conversation.Conversation;
+import crypticlib.conversation.NumberPrompt;
+import crypticlib.conversation.Prompt;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.display.MenuLayout;
@@ -16,10 +19,6 @@ import crypticlib.ui.menu.StoredMenu;
 import crypticlib.util.ItemUtil;
 import crypticlib.util.TextUtil;
 import org.bukkit.Material;
-import org.bukkit.conversations.Conversation;
-import org.bukkit.conversations.ConversationContext;
-import org.bukkit.conversations.NumericPrompt;
-import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -115,14 +114,14 @@ public class AnvilRecipeCreator extends RecipeCreator {
             Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COPY_NBT_TOGGLE
                 .value()
                 .replace("<enable>", String.valueOf(copyNbt)),
-            event -> toggleCopyNbtIcon(event.getSlot(), event)
+            event -> toggleCopyNbt(event.getSlot(), event)
         );
         if (copyNbt)
             toggleItemGlowing(icon.display());
         return icon;
     }
 
-    protected void toggleCopyNbtIcon(int slot, InventoryClickEvent event) {
+    protected void toggleCopyNbt(int slot, InventoryClickEvent event) {
         super.toggleIconGlowing(slot, event);
         copyNbt = !copyNbt;
         ItemStack display = event.getCurrentItem();
@@ -147,11 +146,11 @@ public class AnvilRecipeCreator extends RecipeCreator {
                 Conversation conversation = new Conversation(
                     Craftorithm.instance(),
                     player,
-                    new CostLevelPrompt()
+                    new CostLevelPrompt(),
+                    () -> player().openInventory(openedInventory())
                 );
-                conversation.setLocalEchoEnabled(false);
                 inConversation = true;
-                conversation.begin();
+                conversation.start();
                 player.closeInventory();
             }
         );
@@ -170,9 +169,10 @@ public class AnvilRecipeCreator extends RecipeCreator {
         costLevelIcon.setItemMeta(itemMeta);
     }
 
-    class CostLevelPrompt extends NumericPrompt {
+    class CostLevelPrompt implements NumberPrompt {
         @Override
-        protected @Nullable Prompt acceptValidatedInput(@NotNull ConversationContext conversationContext, @NotNull Number number) {
+        @Nullable
+        public Prompt acceptValidatedInput(@NotNull Map<Object, Object> data, @NotNull Number number) {
             costLevel = number.intValue();
             player().openInventory(openedInventory());
             updateCostLevelIcon();
@@ -181,7 +181,7 @@ public class AnvilRecipeCreator extends RecipeCreator {
         }
 
         @Override
-        public @NotNull String getPromptText(@NotNull ConversationContext conversationContext) {
+        public @NotNull String promptText(@NotNull Map<Object, Object> data) {
             return TextUtil.color(Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_INPUT_HINT.value());
         }
     }

@@ -24,7 +24,7 @@ public abstract class UnlockableRecipeCreator extends RecipeCreator {
     protected Icon getUnlockIcon() {
         Icon icon = new Icon(
             Material.KNOWLEDGE_BOOK,
-            Languages.MENU_RECIPE_CREATOR_ICON_UNLOCK.value().replace("%unlock%", String.valueOf(unlock)),
+            Languages.MENU_RECIPE_CREATOR_ICON_UNLOCK.value().replace("<unlock>", String.valueOf(unlock)),
             event -> toggleUnlockIcon(event.getSlot(), event)
         );
         if (unlock) {

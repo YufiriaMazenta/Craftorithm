@@ -6,10 +6,12 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeFactory;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
-import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.config.yaml.YamlConfigWrapper;
+import crypticlib.conversation.Conversation;
+import crypticlib.conversation.NumberPrompt;
+import crypticlib.conversation.Prompt;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.display.MenuLayout;
@@ -17,7 +19,6 @@ import crypticlib.ui.menu.StoredMenu;
 import crypticlib.util.ItemUtil;
 import crypticlib.util.TextUtil;
 import org.bukkit.Material;
-import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -182,7 +183,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
         ItemMeta itemMeta = display.getItemMeta();
         itemMeta.setDisplayName(
             TextUtil.color(
-                displayName.replace("%enable%", String.valueOf(enable))
+                displayName.replace("<enable>", String.valueOf(enable))
             )
         );
         display.setItemMeta(itemMeta);
@@ -198,11 +199,11 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
                 Conversation timeInputConversation = new Conversation(
                     Craftorithm.instance(),
                     player,
-                    new CookingTimePrompt()
+                    new CookingTimePrompt(),
+                    () -> player().openInventory(openedInventory())
                 );
-                timeInputConversation.setLocalEchoEnabled(false);
                 inConversation = true;
-                timeInputConversation.begin();
+                timeInputConversation.start();
                 player.closeInventory();
             }
         );
@@ -222,11 +223,11 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
                 Conversation conversation = new Conversation(
                     Craftorithm.instance(),
                     player,
-                    new ExpPrompt()
+                    new ExpPrompt(),
+                    () -> player().openInventory(openedInventory())
                 );
-                conversation.setLocalEchoEnabled(false);
                 inConversation = true;
-                conversation.begin();
+                conversation.start();
                 player.closeInventory();
             }
         );
@@ -255,10 +256,10 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
         expIcon.setItemMeta(itemMeta);
     }
 
-    class CookingTimePrompt extends NumericPrompt {
+    class CookingTimePrompt implements NumberPrompt {
 
         @Override
-        protected @Nullable Prompt acceptValidatedInput(@NotNull ConversationContext conversationContext, @NotNull Number number) {
+        public @Nullable Prompt acceptValidatedInput(@NotNull Map<Object, Object> data, @NotNull Number number) {
             cookingTime = number.intValue();
             player().openInventory(openedInventory());
             updateCookingTimeIcon();
@@ -267,14 +268,14 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
         }
 
         @Override
-        public @NotNull String getPromptText(@NotNull ConversationContext conversationContext) {
+        public @NotNull String promptText(@NotNull Map<Object, Object> data) {
             return TextUtil.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_INPUT_HINT.value());
         }
     }
 
-    class ExpPrompt extends NumericPrompt {
+    class ExpPrompt implements NumberPrompt {
         @Override
-        protected @Nullable Prompt acceptValidatedInput(@NotNull ConversationContext conversationContext, @NotNull Number number) {
+        public @Nullable Prompt acceptValidatedInput(@NotNull Map<Object, Object> data, @NotNull Number number) {
             exp = number.intValue();
             player().openInventory(openedInventory());
             updateExpIcon();
@@ -283,7 +284,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
         }
 
         @Override
-        public @NotNull String getPromptText(@NotNull ConversationContext conversationContext) {
+        public @NotNull String promptText(@NotNull Map<Object, Object> data) {
             return TextUtil.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_INPUT_HINT.value());
         }
     }

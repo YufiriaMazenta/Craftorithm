@@ -80,11 +80,11 @@ menu:
         name: '&a烧炼时间: <time> tick'
         lore:
           - '&3点击修改烧炼时间'
-        input_hint: '&a请输入烧炼时间，单位为tick'
+        input_hint: '&a请输入烧炼时间, 单位为tick, 输入cancel取消'
       cooking_exp:
         name: '&a奖励经验: <exp>'
         lore:
-          - '&3点击修改奖励经验'
+          - '&3点击修改奖励经验, 输入cancel取消'
         input_hint: '&a请输入奖励经验'
       smithing_frame: '&a锻造物品'
       potion_frame: '&a酿造原料'
@@ -94,7 +94,7 @@ menu:
         name: '&a所需等级: <level>'
         lore:
           - '&3点击修改所需等级'
-        input_hint: '&a请输入所需等级'
+        input_hint: '&a请输入所需等级, 输入cancel取消'
 
 recipe_type_name:
   shaped: 有序
