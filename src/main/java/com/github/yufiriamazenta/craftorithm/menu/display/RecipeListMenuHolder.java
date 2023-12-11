@@ -1,43 +1,43 @@
 package com.github.yufiriamazenta.craftorithm.menu.display;
 
+import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
-import com.github.yufiriamazenta.craftorithm.menu.api.bukkit.BukkitMenuHandler;
-import com.github.yufiriamazenta.craftorithm.menu.api.bukkit.IChildBukkitMenu;
-import com.github.yufiriamazenta.craftorithm.menu.api.bukkit.ItemDisplayIcon;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
-import com.github.yufiriamazenta.craftorithm.recipe.custom.PotionMixRecipe;
 import crypticlib.CrypticLib;
+import crypticlib.ui.display.Icon;
+import crypticlib.ui.menu.Menu;
 import crypticlib.util.TextUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.SmithingTrimRecipe;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
-public class RecipeListMenuHolder extends BukkitMenuHandler implements IChildBukkitMenu {
+public class RecipeListMenuHolder extends Menu {
 
     private int page;
     private final int maxPage;
     private final List<Recipe> recipeList;
     private final boolean hasEditPermission;
-    private BukkitMenuHandler parentMenu;
+    private final Menu parentMenu;
 
     public RecipeListMenuHolder(Player player, Collection<NamespacedKey> recipeKeys) {
         this(player, recipeKeys, null);
     }
 
-    public RecipeListMenuHolder(Player player, Collection<NamespacedKey> recipeKeys, BukkitMenuHandler parentMenu) {
-        super();
+    public RecipeListMenuHolder(Player player, Collection<NamespacedKey> recipeKeys, Menu parentMenu) {
+        super(player, () -> null);
         this.parentMenu = parentMenu;
         this.hasEditPermission = player.hasPermission("craftorithm.recipe_list.manager");
         this.recipeList = new ArrayList<>();
@@ -66,62 +66,36 @@ public class RecipeListMenuHolder extends BukkitMenuHandler implements IChildBuk
         });
     }
 
-    /**
-     * 为了兼容PotionMix做的特殊构造方法
-     */
-    protected RecipeListMenuHolder(Player player, Map<String, List<PotionMixRecipe>> potionMixGroupMap, String recipeGroupName, BukkitMenuHandler parentMenu) {
-        super();
-        this.parentMenu = parentMenu;
-        this.hasEditPermission = player.hasPermission("craftorithm.recipe_list.manager");
-        List<PotionMixRecipe> potionMixRecipes = potionMixGroupMap.get(recipeGroupName);
-        this.recipeList = new ArrayList<>();
-        this.recipeList.addAll(potionMixRecipes);
-        int recipeNum = recipeList.size();
-        if (recipeNum % 45 == 0)
-            maxPage = recipeNum / 45;
-        else
-            maxPage = recipeNum / 45 + 1;
-        recipeList.sort((recipe1, recipe2) -> {
-            ItemStack result = recipe1.getResult();
-            ItemStack result1 = recipe2.getResult();
-            return Integer.compare(result.getType().ordinal(), result1.getType().ordinal());
-        });
+    public void nextPage() {
+        setPage(Math.min(page + 1, maxPage - 1)).resetIcons();
+        openedInventory().clear();
+        for (Integer slot : slotMap().keySet()) {
+            openedInventory().setItem(slot, slotMap().get(slot).display());
+        }
     }
 
-    public Inventory getNextPage() {
-        setPage(Math.min(page + 1, maxPage - 1));
-        return getInventory();
-    }
-
-    public Inventory getPreviousPage() {
-        setPage(Math.max(page - 1, 0));
-        return getInventory();
+    public void previousPage() {
+        setPage(Math.max(page - 1, 0)).resetIcons();
+        openedInventory().clear();
+        for (Integer slot : slotMap().keySet()) {
+            openedInventory().setItem(slot, slotMap().get(slot).display());
+        }
     }
 
     private void resetIcons() {
-        menuIconMap().clear();
+        slotMap().clear();
         int []frame = {45, 47, 48, 49, 50, 51, 53};
-        ItemDisplayIcon frameIcon = ItemDisplayIcon.icon(Material.BLACK_STAINED_GLASS_PANE, Languages.MENU_RECIPE_LIST_ICON_FRAME.value());
+        Icon frameIcon = new Icon(Material.BLACK_STAINED_GLASS_PANE, TextUtil.color(Languages.MENU_RECIPE_LIST_ICON_FRAME.value()));
         for (int i : frame) {
-            menuIconMap().put(i, frameIcon);
+            slotMap().put(i, frameIcon);
         }
-        ItemStack previousDisplay = new ItemStack(Material.PLAYER_HEAD);
-        SkullMeta previousMeta = (SkullMeta) previousDisplay.getItemMeta();
-        previousMeta.setOwner("MHF_ArrowLeft");
-        previousMeta.setDisplayName(TextUtil.color(Languages.MENU_RECIPE_LIST_ICON_PREVIOUS.value()));
-        previousDisplay.setItemMeta(previousMeta);
-        menuIconMap().put(46, ItemDisplayIcon.icon(previousDisplay, (event -> {
+        slotMap().put(46, new Icon(Material.PAPER, TextUtil.color(Languages.MENU_RECIPE_LIST_ICON_PREVIOUS.value()), (event -> {
             event.setCancelled(true);
-            event.getWhoClicked().openInventory(getPreviousPage());
+            previousPage();
         })));
-        ItemStack nextDisplay = new ItemStack(Material.PLAYER_HEAD);
-        SkullMeta nextMeta = (SkullMeta) nextDisplay.getItemMeta();
-        nextMeta.setOwner("MHF_ArrowRight");
-        nextMeta.setDisplayName(TextUtil.color(Languages.MENU_RECIPE_LIST_ICON_NEXT.value()));
-        nextDisplay.setItemMeta(nextMeta);
-        menuIconMap().put(52, ItemDisplayIcon.icon(nextDisplay, (event -> {
+        slotMap().put(52, new Icon(Material.PAPER, TextUtil.color(Languages.MENU_RECIPE_LIST_ICON_NEXT.value()), (event -> {
             event.setCancelled(true);
-            event.getWhoClicked().openInventory(getNextPage());
+            nextPage();
         })));
         int recipeSlot = page * 45;
         for (int i = 0; i < 45 && recipeSlot < recipeList.size(); i++, recipeSlot ++) {
@@ -129,15 +103,31 @@ public class RecipeListMenuHolder extends BukkitMenuHandler implements IChildBuk
             if (recipe == null)
                 continue;
             ItemStack display = recipe.getResult();
-            menuIconMap().put(i, ItemDisplayIcon.icon(display, (event -> {
+            slotMap().put(i, new Icon(display, (event -> {
                 event.setCancelled(true);
-                event.getWhoClicked().openInventory(new RecipeDisplayMenuHolder(recipe, this).getInventory());
+                new RecipeDisplayMenuHolder(player(), recipe, this).openMenu();
             })));
         }
         for (int i = 0; i < 45; i++) {
-            if (menuIconMap().containsKey(i))
+            if (slotMap().containsKey(i))
                 continue;
-            menuIconMap().put(i, ItemDisplayIcon.icon(new ItemStack(Material.AIR)));
+            slotMap().put(i, new Icon(new ItemStack(Material.AIR)));
+        }
+    }
+
+    @Override
+    public void onClose(InventoryCloseEvent event) {
+        if (parentMenu != null) {
+            CrypticLib.platform().scheduler().runTask(
+                Craftorithm.instance(),
+                () -> {
+                    InventoryType type = event.getPlayer().getOpenInventory().getType();
+                    List<InventoryType> typeWhenNotOpenInv = Arrays.asList(InventoryType.CRAFTING, InventoryType.CREATIVE);
+                    if (!typeWhenNotOpenInv.contains(type))
+                        return;
+                    parentMenu.openMenu();
+                }
+            );
         }
     }
 
@@ -146,8 +136,8 @@ public class RecipeListMenuHolder extends BukkitMenuHandler implements IChildBuk
     public Inventory getInventory() {
         resetIcons();
         Inventory inventory = Bukkit.createInventory(this, 54, TextUtil.color(Languages.MENU_RECIPE_LIST_TITLE.value()));
-        for (Integer slot : menuIconMap().keySet()) {
-            inventory.setItem(slot, menuIconMap().get(slot).display());
+        for (Integer slot : slotMap().keySet()) {
+            inventory.setItem(slot, slotMap().get(slot).display());
         }
         return inventory;
     }
@@ -156,17 +146,9 @@ public class RecipeListMenuHolder extends BukkitMenuHandler implements IChildBuk
         return page;
     }
 
-    public void setPage(int page) {
+    public RecipeListMenuHolder setPage(int page) {
         this.page = page;
+        return this;
     }
 
-    @Override
-    public BukkitMenuHandler parentMenu() {
-        return parentMenu;
-    }
-
-    @Override
-    public void setParentMenu(BukkitMenuHandler parentMenu) {
-        this.parentMenu = parentMenu;
-    }
 }

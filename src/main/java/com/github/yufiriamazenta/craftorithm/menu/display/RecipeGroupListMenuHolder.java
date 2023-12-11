@@ -1,9 +1,9 @@
 package com.github.yufiriamazenta.craftorithm.menu.display;
 
 import com.github.yufiriamazenta.craftorithm.config.Languages;
-import com.github.yufiriamazenta.craftorithm.menu.api.bukkit.BukkitMenuHandler;
-import com.github.yufiriamazenta.craftorithm.menu.api.bukkit.ItemDisplayIcon;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
+import crypticlib.ui.display.Icon;
+import crypticlib.ui.menu.Menu;
 import crypticlib.util.TextUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -19,14 +18,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RecipeGroupListMenuHolder extends BukkitMenuHandler {
+public class RecipeGroupListMenuHolder extends Menu {
 
     private int page;
     private final int maxPage;
     private final List<Map.Entry<String, ItemStack>> recipeGroupResultList;
 
-    public RecipeGroupListMenuHolder() {
-        super();
+    public RecipeGroupListMenuHolder(Player player) {
+        super(player, () -> null);
         Map<String, ItemStack> recipeResultMap = new HashMap<>();
         RecipeManager.INSTANCE.recipeMap().forEach((recipeType, recipeGroupMap) -> {
             recipeGroupMap.forEach((groupName, recipeGroup) -> {
@@ -58,61 +57,59 @@ public class RecipeGroupListMenuHolder extends BukkitMenuHandler {
     public Inventory getInventory() {
         resetIcons();
         Inventory inventory = Bukkit.createInventory(this, 54, TextUtil.color(Languages.MENU_NEW_RECIPE_LIST_TITLE.value()));
-        for (Integer slot : menuIconMap().keySet()) {
-            inventory.setItem(slot, menuIconMap().get(slot).display());
+        for (Integer slot : super.slotMap().keySet()) {
+            inventory.setItem(slot, slotMap().get(slot).display());
         }
         return inventory;
     }
 
-    public Inventory getNextPage() {
-        return setPage(Math.min(page + 1, maxPage - 1)).getInventory();
+    public void nextPage() {
+        setPage(Math.min(page + 1, maxPage - 1)).resetIcons();
+        openedInventory().clear();
+        for (Integer slot : slotMap().keySet()) {
+            openedInventory().setItem(slot, slotMap().get(slot).display());
+        }
     }
 
-    public Inventory getPreviousPage() {
-        return setPage(Math.max(page - 1, 0)).getInventory();
+    public void previousPage() {
+        setPage(Math.max(page - 1, 0)).resetIcons();
+        openedInventory().clear();
+        for (Integer slot : slotMap().keySet()) {
+            openedInventory().setItem(slot, slotMap().get(slot).display());
+        }
     }
 
     private void resetIcons() {
-        menuIconMap().clear();
+        slotMap().clear();
         int []frameSlots = {45, 47, 48, 49, 50, 51, 53};
-        ItemDisplayIcon frameIcon = ItemDisplayIcon.icon(Material.BLACK_STAINED_GLASS_PANE, Languages.MENU_NEW_RECIPE_LIST_ICON_FRAME.value());
+        Icon frameIcon = new Icon(Material.BLACK_STAINED_GLASS_PANE, TextUtil.color(Languages.MENU_NEW_RECIPE_LIST_ICON_FRAME.value()));
         for (int frameSlot : frameSlots) {
-            menuIconMap().put(frameSlot, frameIcon);
+            slotMap().put(frameSlot, frameIcon);
         }
-        ItemStack previousDisplay = new ItemStack(Material.PLAYER_HEAD);
-        SkullMeta previousMeta = (SkullMeta) Bukkit.getItemFactory().getItemMeta(Material.PLAYER_HEAD);
-        previousMeta.setOwner("MHF_ArrowLeft");
-        previousMeta.setDisplayName(TextUtil.color(Languages.MENU_NEW_RECIPE_LIST_ICON_PREVIOUS.value()));
-        previousDisplay.setItemMeta(previousMeta);
-        menuIconMap().put(46, ItemDisplayIcon.icon(previousDisplay, (event -> {
+        slotMap().put(46, new Icon(Material.PAPER, TextUtil.color(Languages.MENU_NEW_RECIPE_LIST_ICON_PREVIOUS.value()), (event -> {
             event.setCancelled(true);
-            event.getWhoClicked().openInventory(getPreviousPage());
+            previousPage();
         })));
-        ItemStack nextDisplay = new ItemStack(Material.PLAYER_HEAD);
-        SkullMeta nextMeta = (SkullMeta) Bukkit.getItemFactory().getItemMeta(Material.PLAYER_HEAD);
-        nextMeta.setOwner("MHF_ArrowRight");
-        nextMeta.setDisplayName(TextUtil.color(Languages.MENU_NEW_RECIPE_LIST_ICON_NEXT.value()));
-        nextDisplay.setItemMeta(nextMeta);
-        menuIconMap().put(52, ItemDisplayIcon.icon(nextDisplay, (event -> {
+        slotMap().put(52, new Icon(Material.PAPER, TextUtil.color(Languages.MENU_NEW_RECIPE_LIST_ICON_NEXT.value()), (event -> {
             event.setCancelled(true);
-            event.getWhoClicked().openInventory(getNextPage());
+            nextPage();
         })));
         int recipeSlot = page * 45;
         for (int invSlot = 0; invSlot < 45 && recipeSlot < recipeGroupResultList.size(); invSlot++, recipeSlot++) {
-            menuIconMap().put(invSlot, wrapIcon(recipeSlot));
+            slotMap().put(invSlot, wrapIcon(recipeSlot));
         }
         for (int i = 0; i < 45; i++) {
-            if (menuIconMap().containsKey(i))
+            if (slotMap().containsKey(i))
                 continue;
-            menuIconMap().put(i, ItemDisplayIcon.icon(new ItemStack(Material.AIR)));
+            slotMap().put(i, new Icon(new ItemStack(Material.AIR)));
         }
     }
 
     @NotNull
-    private ItemDisplayIcon wrapIcon(int recipeSlot) {
+    private Icon wrapIcon(int recipeSlot) {
         ItemStack display = recipeGroupResultList.get(recipeSlot).getValue();
         String recipeGroupName = recipeGroupResultList.get(recipeSlot).getKey();
-        return ItemDisplayIcon.icon(display, event -> {
+        return new Icon(display, event -> {
             event.setCancelled(true);
             event.getWhoClicked().openInventory(
                 new RecipeListMenuHolder(

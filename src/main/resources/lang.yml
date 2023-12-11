@@ -70,17 +70,25 @@ menu:
       frame: '&a创建配方'
       result_frame: '&a配方结果'
       confirm: '&3&l确认创建'
-      unlock: '&a是否为玩家解锁配方'
+      unlock: '&a是否为玩家解锁配方:<unlock>'
       cooking_frame: '&a烧炼原料'
       smithing_frame: '&a锻造物品'
       potion_frame: '&a酿造原料'
       anvil_frame: '&a打造原料'
-      anvil_copy_nbt_toggle: '&a是否保留物品NBT'
-      furnace_toggle: '&a启用熔炉配方'
-      blasting_toggle: '&a启用高炉配方'
-      smoking_toggle: '&a启用烟熏炉配方'
-      campfire_toggle: '&a启用营火配方'
+      anvil_copy_nbt_toggle: '&a保留物品NBT:<enable>'
+      furnace_toggle: '&a启用熔炉配方:<enable>'
+      blast_furnace_toggle: '&a启用高炉配方:<enable>'
+      smoker_toggle: '&a启用烟熏炉配方:<enable>'
+      campfire_toggle: '&a启用营火配方:<enable>'
 
+recipe_type_name:
+  shaped: 有序
+  shapeless: 无序
+  cooking: 烧炼
+  smithing: 锻造
+  stone_cutting: 切石
+  potion: 酿造
+  anvil: 铁砧
 
 #Arcenciel脚本的提示消息
 arcenciel:
