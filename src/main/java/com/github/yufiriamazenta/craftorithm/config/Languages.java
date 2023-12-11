@@ -56,16 +56,16 @@ public class Languages {
     public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_FRAME = new StringConfigEntry("menu.recipe_creator.icon.frame", "&a创建配方");
     public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_RESULT_FRAME = new StringConfigEntry("menu.recipe_creator.icon.result_frame", "&a配方结果");
     public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_CONFIRM = new StringConfigEntry("menu.recipe_creator.icon.confirm", "&3&l确认创建");
-    public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_UNLOCK = new StringConfigEntry("menu.recipe_creator.icon.unlock", "&a是否为玩家解锁配方");
+    public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_UNLOCK = new StringConfigEntry("menu.recipe_creator.icon.unlock", "&a是否为玩家解锁配方:%unlock%");
     public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_COOKING_FRAME = new StringConfigEntry("menu.recipe_creator.icon.cooking_frame", "&a烧炼原料");
     public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_SMITHING_FRAME = new StringConfigEntry("menu.recipe_creator.icon.smithing_frame", "&a锻造原料");
     public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_POTION_FRAME = new StringConfigEntry("menu.recipe_creator.icon.potion_frame", "&a酿造原料");
     public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_ANVIL_FRAME = new StringConfigEntry("menu.recipe_creator.icon.anvil_frame", "&a打造原料");
-    public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_ANVIL_COPY_NBT_TOGGLE = new StringConfigEntry("menu.recipe_creator.icon.anvil_copy_nbt_toggle", "&a是否保留物品NBT");
-    public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_FURNACE_TOGGLE = new StringConfigEntry("menu.recipe_creator.icon.furnace_toggle", "&a启用熔炉配方");
-    public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_BLASTING_TOGGLE = new StringConfigEntry("menu.recipe_creator.icon.blasting_toggle", "&a启用高炉配方");
-    public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_SMOKING_TOGGLE = new StringConfigEntry("menu.recipe_creator.icon.smoking_toggle", "&a启用烟熏炉配方");
-    public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_CAMPFIRE_TOGGLE = new StringConfigEntry("menu.recipe_creator.icon.campfire_toggle", "&a启用营火配方");
+    public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_ANVIL_COPY_NBT_TOGGLE = new StringConfigEntry("menu.recipe_creator.icon.anvil_copy_nbt_toggle", "&a保留物品NBT:<enable>");
+    public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_FURNACE_TOGGLE = new StringConfigEntry("menu.recipe_creator.icon.furnace_toggle", "&a启用熔炉配方:%enable%");
+    public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_BLAST_FURNACE_TOGGLE = new StringConfigEntry("menu.recipe_creator.icon.blast_furnace_toggle", "&a启用高炉配方:%enable%");
+    public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_SMOKER_TOGGLE = new StringConfigEntry("menu.recipe_creator.icon.smoker_toggle", "&a启用烟熏炉配方:%enable%");
+    public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_CAMPFIRE_TOGGLE = new StringConfigEntry("menu.recipe_creator.icon.campfire_toggle", "&a启用营火配方:%enable%");
     public static final StringConfigEntry ARCENCIEL_NOT_ENOUGH_PARAM = new StringConfigEntry("arcenciel.not_enough_param", "<prefix> &c语句\"<statement>\"不完整");
     public static final StringConfigEntry ARCENCIEL_UNKNOWN_TOKEN = new StringConfigEntry("arcenciel.unknown_token", "<prefix> &c未定义的关键词或函数<token>");
     public static final StringConfigEntry LOAD_FINISH = new StringConfigEntry("load.finish", "<prefix> &a插件加载完毕");
@@ -73,5 +73,12 @@ public class Languages {
     public static final StringConfigEntry LOAD_ITEM_LOAD_EXCEPTION = new StringConfigEntry("load.item_load_exception", "<prefix> &c加载物品<item_name>时出现错误");
     public static final StringConfigEntry LOAD_HOOK_PLUGIN_SUCCESS = new StringConfigEntry("load.hook_plugin.success", "<prefix> &a发现<plugin>，已挂钩");
     public static final StringConfigEntry LOAD_HOOK_PLUGIN_NOT_EXIST = new StringConfigEntry("load.hook_plugin.not_exist", "<prefix> &c未发现<plugin>");
+    public static final StringConfigEntry RECIPE_TYPE_NAME_SHAPED = new StringConfigEntry("recipe_type_name.shaped", "有序");
+    public static final StringConfigEntry RECIPE_TYPE_NAME_SHAPELESS = new StringConfigEntry("recipe_type_name.shapeless", "无序");
+    public static final StringConfigEntry RECIPE_TYPE_NAME_COOKING = new StringConfigEntry("recipe_type_name.cooking", "烧炼");
+    public static final StringConfigEntry RECIPE_TYPE_NAME_SMITHING = new StringConfigEntry("recipe_type_name.smithing", "锻造");
+    public static final StringConfigEntry RECIPE_TYPE_NAME_STONE_CUTTING = new StringConfigEntry("recipe_type_name.stone_cutting", "切石");
+    public static final StringConfigEntry RECIPE_TYPE_NAME_POTION = new StringConfigEntry("recipe_type_name.potion", "酿造");
+    public static final StringConfigEntry RECIPE_TYPE_NAME_ANVIL = new StringConfigEntry("recipe_type_name.anvil", "铁砧");
 
 }

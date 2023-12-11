@@ -28,7 +28,6 @@ public enum CraftorithmItemProvider implements ItemProvider {
     private final Map<String, ItemStack> itemMap;
     private final Map<String, YamlConfigWrapper> itemConfigFileMap;
 
-
     CraftorithmItemProvider() {
         itemConfigFileMap = new HashMap<>();
         itemMap = new ConcurrentHashMap<>();

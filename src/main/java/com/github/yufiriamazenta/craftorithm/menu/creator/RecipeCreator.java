@@ -7,8 +7,6 @@ import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.config.yaml.YamlConfigWrapper;
 import crypticlib.ui.display.Icon;
-import crypticlib.ui.display.MenuDisplay;
-import crypticlib.ui.display.MenuLayout;
 import crypticlib.ui.menu.StoredMenu;
 import crypticlib.util.FileUtil;
 import crypticlib.util.ItemUtil;
@@ -23,7 +21,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.function.Supplier;
 
 public abstract class RecipeCreator extends StoredMenu {
 
@@ -40,43 +37,41 @@ public abstract class RecipeCreator extends StoredMenu {
         this.recipeName = recipeName;
         this.recipeType = recipeType;
         this.title = Languages.MENU_RECIPE_CREATOR_TITLE.value()
-            .replace("<recipe_type>", recipeType.name())
+            .replace("<recipe_type>", RecipeManager.INSTANCE.getRecipeTypeName(recipeType))
             .replace("<recipe_name>", recipeName);
     }
 
-    protected void setIconGlowing(int slot, InventoryClickEvent event) {
+    protected void toggleItemGlowing(ItemStack item) {
+        if (item.containsEnchantment(Enchantment.MENDING)) {
+            item.removeEnchantment(Enchantment.MENDING);
+            ItemMeta itemMeta = item.getItemMeta();
+            itemMeta.removeItemFlags(ItemFlag.HIDE_ENCHANTS);
+            item.setItemMeta(itemMeta);
+        } else {
+            item.addUnsafeEnchantment(Enchantment.MENDING, 1);
+            ItemMeta itemMeta = item.getItemMeta();
+            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            item.setItemMeta(itemMeta);
+        }
+    }
+
+    protected void toggleIconGlowing(int slot, InventoryClickEvent event) {
         ItemStack display = event.getCurrentItem();
         if (ItemUtil.isAir(display))
             return;
-        if (!display.containsEnchantment(Enchantment.MENDING)) {
-            display.addUnsafeEnchantment(Enchantment.MENDING, 1);
-            ItemMeta meta = display.getItemMeta();
-            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-            display.setItemMeta(meta);
-            event.getClickedInventory().setItem(slot, display);
-        } else {
-            display.removeEnchantment(Enchantment.MENDING);
-            event.getClickedInventory().setItem(slot, display);
-        }
+        toggleItemGlowing(display);
+        event.getClickedInventory().setItem(slot, display);
     }
 
     protected Icon getFrameIcon() {
         return new Icon(Material.BLACK_STAINED_GLASS_PANE, Languages.MENU_RECIPE_CREATOR_ICON_FRAME.value());
     }
 
-    protected Icon getUnlockIcon() {
-        return new Icon(
-            Material.KNOWLEDGE_BOOK,
-            Languages.MENU_RECIPE_CREATOR_ICON_UNLOCK.value(),
-            event -> setIconGlowing(event.getSlot(), event)
-        );
-    }
-
-    protected void sendSuccessMsg(HumanEntity receiver, RecipeType recipeType, String recipeName) {
+    protected void sendSuccessMsg(HumanEntity receiver, String recipeName) {
         LangUtil.sendLang(
             receiver,
             Languages.COMMAND_CREATE_SUCCESS.value(),
-            CollectionsUtil.newStringHashMap("<recipe_type>", recipeType.name(), "<recipe_name>", recipeName)
+            CollectionsUtil.newStringHashMap("<recipe_type>", RecipeManager.INSTANCE.getRecipeTypeName(recipeType), "<recipe_name>", recipeName)
         );
     }
 

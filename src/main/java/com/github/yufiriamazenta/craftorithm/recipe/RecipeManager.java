@@ -120,7 +120,7 @@ public enum RecipeManager {
             try {
                 YamlConfigWrapper configWrapper = recipeConfigWrapperMap.get(fileName);
                 YamlConfiguration config = configWrapper.config();
-                boolean unlock =  config.getBoolean("unlock", PluginConfigs.ALL_RECIPE_UNLOCKED.value());
+                boolean unlock =  config.getBoolean("unlock", PluginConfigs.DEFAULT_RECIPE_UNLOCK.value());
                 for (RecipeRegistry recipeRegistry : RecipeFactory.newRecipeRegistry(config, fileName)) {
                     recipeRegistry.register();
                     recipeUnlockMap.put(recipeRegistry.namespacedKey(), unlock);
@@ -378,6 +378,26 @@ public enum RecipeManager {
             return RecipeType.UNKNOWN;
     }
 
+    public String getRecipeTypeName(RecipeType recipeType) {
+        switch (recipeType) {
+            case SHAPED:
+                return Languages.RECIPE_TYPE_NAME_SHAPED.value();
+            case SHAPELESS:
+                return Languages.RECIPE_TYPE_NAME_SHAPELESS.value();
+            case COOKING:
+                return Languages.RECIPE_TYPE_NAME_COOKING.value();
+            case SMITHING:
+                return Languages.RECIPE_TYPE_NAME_SMITHING.value();
+            case STONE_CUTTING:
+                return Languages.RECIPE_TYPE_NAME_STONE_CUTTING.value();
+            case POTION:
+                return Languages.RECIPE_TYPE_NAME_POTION.value();
+            case ANVIL:
+                return Languages.RECIPE_TYPE_NAME_ANVIL.value();
+            default:
+                return recipeType.name();
+        }
+    }
 
     public void resetRecipes() {
         //删除Craftorithm的配方

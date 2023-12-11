@@ -40,11 +40,11 @@ public final class RecipeListCommand extends AbstractSubCommand {
         Player player = (Player) sender;
         switch (listType) {
             case SERVER:
-                player.openInventory(new RecipeListMenuHolder(player, RecipeManager.INSTANCE.serverRecipesCache().keySet()).getInventory());
+                new RecipeListMenuHolder(player, RecipeManager.INSTANCE.serverRecipesCache().keySet()).openMenu();
                 break;
             case CRAFTORITHM:
             default:
-                player.openInventory(new RecipeGroupListMenuHolder().getInventory());
+                new RecipeGroupListMenuHolder(player).openMenu();
                 break;
         }
         return true;
