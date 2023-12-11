@@ -1,5 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.menu.creator;
 
+import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeFactory;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
@@ -15,11 +16,17 @@ import crypticlib.ui.menu.StoredMenu;
 import crypticlib.util.ItemUtil;
 import crypticlib.util.TextUtil;
 import org.bukkit.Material;
+import org.bukkit.conversations.Conversation;
+import org.bukkit.conversations.ConversationContext;
+import org.bukkit.conversations.NumericPrompt;
+import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -29,15 +36,19 @@ import java.util.Objects;
 public class AnvilRecipeCreator extends RecipeCreator {
 
     private boolean copyNbt;
+    private int costLevel;
+    private boolean inConversation;
 
     public AnvilRecipeCreator(@NotNull Player player, @NotNull String recipeName) {
         super(player, RecipeType.ANVIL, recipeName);
         this.copyNbt = true;
+        this.inConversation = false;
+        this.costLevel = 0;
         setDisplay(
             new MenuDisplay(
                 title(),
                 new MenuLayout(Arrays.asList(
-                    "#########",
+                    "####C####",
                     "#***#%%%#",
                     "# * A% %#",
                     "#***#%%%#",
@@ -48,6 +59,7 @@ public class AnvilRecipeCreator extends RecipeCreator {
                     layoutMap.put('%', getResultFrameIcon());
                     layoutMap.put('*', new Icon(Material.CYAN_STAINED_GLASS_PANE, Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_FRAME.value()));
                     layoutMap.put('B', getCopyNbtIcon());
+                    layoutMap.put('C', getCostLevelIcon());
                     layoutMap.put('A', new Icon(Material.ANVIL, Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(),
                         event -> {
                             StoredMenu creator = (StoredMenu) event.getClickedInventory().getHolder();
@@ -70,6 +82,7 @@ public class AnvilRecipeCreator extends RecipeCreator {
                             recipeConfig.set("type", "anvil");
                             recipeConfig.set("source.base", inputName);
                             recipeConfig.set("source.addition", ingredientName);
+                            recipeConfig.set("source.cost_level", costLevel);
                             recipeConfig.set("result", resultName);
                             recipeConfig.saveConfig();
                             recipeConfig.reloadConfig();
@@ -85,6 +98,15 @@ public class AnvilRecipeCreator extends RecipeCreator {
                 })
             )
         );
+    }
+
+    @Override
+    public void onClose(InventoryCloseEvent event) {
+        if (!inConversation) {
+            super.onClose(event);
+        } else {
+            this.refreshStoredItems(event.getInventory());
+        }
     }
 
     protected Icon getCopyNbtIcon() {
@@ -114,4 +136,54 @@ public class AnvilRecipeCreator extends RecipeCreator {
         );
         display.setItemMeta(itemMeta);
     }
+
+    protected Icon getCostLevelIcon() {
+        Icon icon = new Icon(
+            Material.EXPERIENCE_BOTTLE,
+            TextUtil.color(Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_NAME.value())
+                .replace("<level>", String.valueOf(costLevel)),
+            event -> {
+                Player player = (Player) event.getWhoClicked();
+                Conversation conversation = new Conversation(
+                    Craftorithm.instance(),
+                    player,
+                    new CostLevelPrompt()
+                );
+                conversation.setLocalEchoEnabled(false);
+                inConversation = true;
+                conversation.begin();
+                player.closeInventory();
+            }
+        );
+        icon.display().setLore(Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_LORE.value());
+        icon.display().getLore().replaceAll(TextUtil::color);
+        return icon;
+    }
+
+    public void updateCostLevelIcon() {
+        ItemStack costLevelIcon = this.openedInventory().getItem(4);
+        if (costLevelIcon == null)
+            return;
+        ItemMeta itemMeta = costLevelIcon.getItemMeta();
+        itemMeta.setDisplayName(TextUtil.color(Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_NAME.value())
+            .replace("<level>", String.valueOf(costLevel)));
+        costLevelIcon.setItemMeta(itemMeta);
+    }
+
+    class CostLevelPrompt extends NumericPrompt {
+        @Override
+        protected @Nullable Prompt acceptValidatedInput(@NotNull ConversationContext conversationContext, @NotNull Number number) {
+            costLevel = number.intValue();
+            player().openInventory(openedInventory());
+            updateCostLevelIcon();
+            inConversation = false;
+            return null;
+        }
+
+        @Override
+        public @NotNull String getPromptText(@NotNull ConversationContext conversationContext) {
+            return TextUtil.color(Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_INPUT_HINT.value());
+        }
+    }
+
 }
