@@ -1,5 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.menu.creator;
 
+import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeFactory;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
@@ -16,31 +17,39 @@ import crypticlib.ui.menu.StoredMenu;
 import crypticlib.util.ItemUtil;
 import crypticlib.util.TextUtil;
 import org.bukkit.Material;
+import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
 public class CookingRecipeCreator extends UnlockableRecipeCreator {
 
     private final Map<Material, Boolean> cookingToggleMap;
+    private int cookingTime;
+    private float exp;
+    private boolean inConversation = false;
 
     public CookingRecipeCreator(@NotNull Player player, @NotNull String recipeName) {
         super(player, RecipeType.COOKING, recipeName);
         //todo 添加时间和经验输入
-        cookingToggleMap = new HashMap<>();
-        cookingToggleMap.put(Material.FURNACE, true);
-        cookingToggleMap.put(Material.BLAST_FURNACE, false);
-        cookingToggleMap.put(Material.SMOKER, false);
-        cookingToggleMap.put(Material.CAMPFIRE, false);
+        this.cookingTime = 200;
+        this.exp = 0;
+        this.cookingToggleMap = new HashMap<>();
+        this.cookingToggleMap.put(Material.FURNACE, true);
+        this.cookingToggleMap.put(Material.BLAST_FURNACE, false);
+        this.cookingToggleMap.put(Material.SMOKER, false);
+        this.cookingToggleMap.put(Material.CAMPFIRE, false);
         setDisplay(
             new MenuDisplay(
                 title(),
                 new MenuLayout(Arrays.asList(
-                    "####F####",
+                    "###GFH###",
                     "#***#%%%#",
                     "#* *A% %#",
                     "#***#%%%#",
@@ -50,6 +59,13 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
                     layoutMap.put('#', getFrameIcon());
                     layoutMap.put('%', getResultFrameIcon());
                     layoutMap.put('*', new Icon(Material.CYAN_STAINED_GLASS_PANE, Languages.MENU_RECIPE_CREATOR_ICON_COOKING_FRAME.value()));
+                    layoutMap.put('B', getCookingToggleIcon(Material.FURNACE));
+                    layoutMap.put('C', getCookingToggleIcon(Material.BLAST_FURNACE));
+                    layoutMap.put('D', getCookingToggleIcon(Material.SMOKER));
+                    layoutMap.put('E', getCookingToggleIcon(Material.CAMPFIRE));
+                    layoutMap.put('F', getUnlockIcon());
+                    layoutMap.put('G', getCookingTimeIcon());
+                    layoutMap.put('H', getExpIcon());
                     layoutMap.put('A', new Icon(
                         Material.FURNACE,
                         Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(),
@@ -71,20 +87,19 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
                             recipeConfig.set("type", "cooking");
                             recipeConfig.set("result", resultName);
                             recipeConfig.set("multiple", true);
-                            List<Map<String, String>> sourceList = new ArrayList<>();
+                            List<Map<String, Object>> sourceList = new ArrayList<>();
                             cookingToggleMap.forEach(
                                 (type, enable) -> {
                                     if (!enable)
                                         return;
-                                    Map<String, String> sourceMap = new HashMap<>();
+                                    Map<String, Object> sourceMap = new HashMap<>();
                                     sourceMap.put("block", type.name().toLowerCase());
                                     sourceMap.put("item", sourceName);
+                                    sourceMap.put("time", cookingTime);
+                                    sourceMap.put("exp", exp);
                                     sourceList.add(sourceMap);
                                 }
                             );
-                            if (sourceList.isEmpty()) {
-                                sourceList.add(CollectionsUtil.newStringHashMap("block", "furnace", "item", sourceName));
-                            }
                             recipeConfig.set("unlock", unlock());
                             recipeConfig.set("source", sourceList);
                             recipeConfig.saveConfig();
@@ -97,15 +112,19 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
                             sendSuccessMsg(event.getWhoClicked(), recipeName);
                         })
                     );
-                    layoutMap.put('B', getCookingToggleIcon(Material.FURNACE));
-                    layoutMap.put('C', getCookingToggleIcon(Material.BLAST_FURNACE));
-                    layoutMap.put('D', getCookingToggleIcon(Material.SMOKER));
-                    layoutMap.put('E', getCookingToggleIcon(Material.CAMPFIRE));
-                    layoutMap.put('F', getUnlockIcon());
                     return layoutMap;
                 })
             )
         );
+    }
+
+    @Override
+    public void onClose(InventoryCloseEvent event) {
+        if (!inConversation) {
+            super.onClose(event);
+        } else {
+            this.refreshStoredItems(event.getInventory());
+        }
     }
 
     protected Icon getCookingToggleIcon(Material material) {
@@ -167,6 +186,106 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
             )
         );
         display.setItemMeta(itemMeta);
+    }
+
+    protected Icon getCookingTimeIcon() {
+        Icon icon = new Icon(
+            Material.CLOCK,
+            TextUtil.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_NAME.value())
+                .replace("<time>", String.valueOf(cookingTime)),
+            event -> {
+                Player player = (Player) event.getWhoClicked();
+                Conversation timeInputConversation = new Conversation(
+                    Craftorithm.instance(),
+                    player,
+                    new CookingTimePrompt()
+                );
+                timeInputConversation.setLocalEchoEnabled(false);
+                inConversation = true;
+                timeInputConversation.begin();
+                player.closeInventory();
+            }
+        );
+        icon.display().setLore(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_LORE.value());
+        icon.display().getLore().replaceAll(TextUtil::color);
+
+        return icon;
+    }
+
+    protected Icon getExpIcon() {
+        Icon icon = new Icon(
+            Material.EXPERIENCE_BOTTLE,
+            TextUtil.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_NAME.value())
+                .replace("<exp>", String.valueOf(exp)),
+            event -> {
+                Player player = (Player) event.getWhoClicked();
+                Conversation conversation = new Conversation(
+                    Craftorithm.instance(),
+                    player,
+                    new ExpPrompt()
+                );
+                conversation.setLocalEchoEnabled(false);
+                inConversation = true;
+                conversation.begin();
+                player.closeInventory();
+            }
+        );
+        icon.display().setLore(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_LORE.value());
+        icon.display().getLore().replaceAll(TextUtil::color);
+        return icon;
+    }
+
+    protected void updateCookingTimeIcon() {
+        ItemStack cookingTimeIcon = this.openedInventory().getItem(3);
+        if (cookingTimeIcon == null)
+            return;
+        ItemMeta itemMeta = cookingTimeIcon.getItemMeta();
+        itemMeta.setDisplayName(TextUtil.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_NAME.value())
+            .replace("<time>", String.valueOf(cookingTime)));
+        cookingTimeIcon.setItemMeta(itemMeta);
+    }
+
+    protected void updateExpIcon() {
+        ItemStack expIcon = this.openedInventory().getItem(5);
+        if (expIcon == null)
+            return;
+        ItemMeta itemMeta = expIcon.getItemMeta();
+        itemMeta.setDisplayName(TextUtil.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_NAME.value())
+            .replace("<exp>", String.valueOf(exp)));
+        expIcon.setItemMeta(itemMeta);
+    }
+
+    class CookingTimePrompt extends NumericPrompt {
+
+        @Override
+        protected @Nullable Prompt acceptValidatedInput(@NotNull ConversationContext conversationContext, @NotNull Number number) {
+            cookingTime = number.intValue();
+            player().openInventory(openedInventory());
+            updateCookingTimeIcon();
+            inConversation = false;
+            return null;
+        }
+
+        @Override
+        public @NotNull String getPromptText(@NotNull ConversationContext conversationContext) {
+            return TextUtil.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_INPUT_HINT.value());
+        }
+    }
+
+    class ExpPrompt extends NumericPrompt {
+        @Override
+        protected @Nullable Prompt acceptValidatedInput(@NotNull ConversationContext conversationContext, @NotNull Number number) {
+            exp = number.intValue();
+            player().openInventory(openedInventory());
+            updateExpIcon();
+            inConversation = false;
+            return null;
+        }
+
+        @Override
+        public @NotNull String getPromptText(@NotNull ConversationContext conversationContext) {
+            return TextUtil.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_INPUT_HINT.value());
+        }
     }
 
 }

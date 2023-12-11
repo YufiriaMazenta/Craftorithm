@@ -2,6 +2,9 @@ package com.github.yufiriamazenta.craftorithm.config;
 
 import crypticlib.config.yaml.YamlConfigHandler;
 import crypticlib.config.yaml.entry.StringConfigEntry;
+import crypticlib.config.yaml.entry.StringListConfigEntry;
+
+import java.util.Collections;
 
 @YamlConfigHandler(path = "lang.yml")
 public class Languages {
@@ -56,12 +59,21 @@ public class Languages {
     public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_FRAME = new StringConfigEntry("menu.recipe_creator.icon.frame", "&a创建配方");
     public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_RESULT_FRAME = new StringConfigEntry("menu.recipe_creator.icon.result_frame", "&a配方结果");
     public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_CONFIRM = new StringConfigEntry("menu.recipe_creator.icon.confirm", "&3&l确认创建");
-    public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_UNLOCK = new StringConfigEntry("menu.recipe_creator.icon.unlock", "&a是否为玩家解锁配方:%unlock%");
+    public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_UNLOCK = new StringConfigEntry("menu.recipe_creator.icon.unlock", "&a是否为玩家解锁配方:<unlock>");
     public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_COOKING_FRAME = new StringConfigEntry("menu.recipe_creator.icon.cooking_frame", "&a烧炼原料");
     public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_SMITHING_FRAME = new StringConfigEntry("menu.recipe_creator.icon.smithing_frame", "&a锻造原料");
     public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_POTION_FRAME = new StringConfigEntry("menu.recipe_creator.icon.potion_frame", "&a酿造原料");
     public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_ANVIL_FRAME = new StringConfigEntry("menu.recipe_creator.icon.anvil_frame", "&a打造原料");
     public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_ANVIL_COPY_NBT_TOGGLE = new StringConfigEntry("menu.recipe_creator.icon.anvil_copy_nbt_toggle", "&a保留物品NBT:<enable>");
+    public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_NAME = new StringConfigEntry("menu.recipe_creator.icon.anvil_cost_level.name", "&a所需等级: <level>");
+    public static final StringListConfigEntry MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_LORE = new StringListConfigEntry("menu.recipe_creator.icon.anvil_cost_level.lore", Collections.singletonList("&3点击修改所需等级"));
+    public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_INPUT_HINT = new StringConfigEntry("menu.recipe_creator.icon.anvil_cost_level.input_hint", "&a请输入所需等级");
+    public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_COOKING_TIME_NAME = new StringConfigEntry("menu.recipe_creator.icon.cooking_time.name", "&a烧炼时间: <time> tick");
+    public static final StringListConfigEntry MENU_RECIPE_CREATOR_ICON_COOKING_TIME_LORE = new StringListConfigEntry("menu.recipe_creator.icon.cooking_time.lore", Collections.singletonList("&3点击修改烧炼时间"));
+    public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_COOKING_TIME_INPUT_HINT = new StringConfigEntry("menu.recipe_creator.icon.cooking_time.input_hint", "&a请输入烧炼时间，单位为tick");
+    public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_COOKING_EXP_NAME = new StringConfigEntry("menu.recipe_creator.icon.cooking_exp.name", "&a奖励经验: <exp>");
+    public static final StringListConfigEntry MENU_RECIPE_CREATOR_ICON_COOKING_EXP_LORE = new StringListConfigEntry("menu.recipe_creator.icon.cooking_exp.lore", Collections.singletonList("&3点击修改奖励经验"));
+    public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_COOKING_EXP_INPUT_HINT = new StringConfigEntry("menu.recipe_creator.icon.cooking_exp.input_hint", "&a请输入奖励经验");
     public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_FURNACE_TOGGLE = new StringConfigEntry("menu.recipe_creator.icon.furnace_toggle", "&a启用熔炉配方:%enable%");
     public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_BLAST_FURNACE_TOGGLE = new StringConfigEntry("menu.recipe_creator.icon.blast_furnace_toggle", "&a启用高炉配方:%enable%");
     public static final StringConfigEntry MENU_RECIPE_CREATOR_ICON_SMOKER_TOGGLE = new StringConfigEntry("menu.recipe_creator.icon.smoker_toggle", "&a启用烟熏炉配方:%enable%");
