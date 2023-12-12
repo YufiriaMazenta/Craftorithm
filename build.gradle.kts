@@ -1,5 +1,5 @@
 import java.text.SimpleDateFormat
-version = "1.6.1-beta2"
+version = "1.6.1-beta3"
 
 plugins {
     `java-library`
@@ -38,7 +38,7 @@ dependencies {
     compileOnly("com.github.LoneDev6:API-ItemsAdder:3.5.0b")
     compileOnly("com.github.oraxen:oraxen:1.160.0")
     compileOnly("io.lumine:Mythic-Dist:5.3.5")
-    implementation("com.crypticlib:CrypticLib:0.7.0")
+    implementation("com.crypticlib:CrypticLib:0.7.1")
 }
 
 group = "com.github.yufiriamazenta"
