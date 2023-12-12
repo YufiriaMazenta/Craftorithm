@@ -3,6 +3,7 @@ package com.github.yufiriamazenta.craftorithm.util;
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.item.impl.CraftorithmItemProvider;
+import com.google.common.base.Preconditions;
 import crypticlib.util.ItemUtil;
 import crypticlib.util.TextUtil;
 import org.bukkit.inventory.ItemStack;
@@ -89,6 +90,18 @@ public class ItemUtils {
             }
         }
         return itemName;
+    }
+
+    public static void setLore(ItemStack item, List<String> lore) {
+        setLore(item, lore, true);
+    }
+
+    public static void setLore(ItemStack item, List<String> lore, boolean format) {
+        Preconditions.checkArgument(!ItemUtil.isAir(item), "Item can not be air");
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.setLore(lore);
+        if (format)
+            itemMeta.getLore().replaceAll(TextUtil::color);
     }
 
 }

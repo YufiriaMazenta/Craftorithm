@@ -154,8 +154,7 @@ public class AnvilRecipeCreator extends RecipeCreator {
                 player.closeInventory();
             }
         );
-        icon.display().setLore(Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_LORE.value());
-        icon.display().getLore().replaceAll(TextUtil::color);
+        ItemUtils.setLore(icon.display(), Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_LORE.value());
         return icon;
     }
 

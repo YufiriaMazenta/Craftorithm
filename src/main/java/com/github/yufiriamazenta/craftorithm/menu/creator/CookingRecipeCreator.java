@@ -206,9 +206,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
                 player.closeInventory();
             }
         );
-        icon.display().setLore(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_LORE.value());
-        icon.display().getLore().replaceAll(TextUtil::color);
-
+        ItemUtils.setLore(icon.display(), Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_LORE.value());
         return icon;
     }
 
@@ -230,8 +228,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
                 player.closeInventory();
             }
         );
-        icon.display().setLore(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_LORE.value());
-        icon.display().getLore().replaceAll(TextUtil::color);
+        ItemUtils.setLore(icon.display(), Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_LORE.value());
         return icon;
     }
 
