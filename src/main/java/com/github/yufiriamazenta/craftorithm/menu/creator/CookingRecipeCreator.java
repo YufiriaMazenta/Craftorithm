@@ -38,7 +38,6 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
 
     public CookingRecipeCreator(@NotNull Player player, @NotNull String recipeName) {
         super(player, RecipeType.COOKING, recipeName);
-        //todo 添加时间和经验输入
         this.cookingTime = 200;
         this.exp = 0;
         this.cookingToggleMap = new HashMap<>();
@@ -200,7 +199,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
                     Craftorithm.instance(),
                     player,
                     new CookingTimePrompt(),
-                    () -> player().openInventory(openedInventory())
+                    data -> player().openInventory(openedInventory())
                 );
                 inConversation = true;
                 timeInputConversation.start();
@@ -224,7 +223,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
                     Craftorithm.instance(),
                     player,
                     new ExpPrompt(),
-                    () -> player().openInventory(openedInventory())
+                    data -> player().openInventory(openedInventory())
                 );
                 inConversation = true;
                 conversation.start();

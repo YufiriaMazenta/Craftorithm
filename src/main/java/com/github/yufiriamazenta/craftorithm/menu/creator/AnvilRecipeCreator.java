@@ -147,7 +147,7 @@ public class AnvilRecipeCreator extends RecipeCreator {
                     Craftorithm.instance(),
                     player,
                     new CostLevelPrompt(),
-                    () -> player().openInventory(openedInventory())
+                    data -> player().openInventory(openedInventory())
                 );
                 inConversation = true;
                 conversation.start();
