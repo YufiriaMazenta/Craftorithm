@@ -1,7 +1,7 @@
-![craftorithm-1.svg](https://github.com/YufiriaMazenta/Imgs/raw/main/craftorithm/craftorithm-cn-1.svg)
-![craftorithm-2.svg](https://github.com/YufiriaMazenta/Imgs/raw/main/craftorithm/craftorithm-cn-2.svg)
-![craftorithm-3.svg](https://github.com/YufiriaMazenta/Imgs/raw/main/craftorithm/craftorithm-cn-3.svg)
-![craftorithm-4.svg](https://github.com/YufiriaMazenta/Imgs/raw/main/craftorithm/craftorithm-cn-4.svg)
+![craftorithm-cn-1.svg](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/craftorithm-cn-1.6mp9kh7kbm40.webp)
+![craftorithm-cn-2.svg](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/craftorithm-cn-2.2wjpdhwcu2m0.webp)
+![craftorithm-cn-3.svg](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/craftorithm-cn-4.2006hggxef28.webp)
+![craftorithm-cn-4.svg](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/craftorithm-cn-3.owmogk9n8ow.webp)
 
 ----
 Craftorithm是一个合成配方管理插件，可以添加各类配方，并可以进行合成限制，删除/禁用配方等管理操作

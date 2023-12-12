@@ -1,7 +1,7 @@
-![craftorithm-1.svg](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/20231212/craftorithm-1.79u9rkocfdo0.svg)
-![craftorithm-2.svg](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/20231212/craftorithm-2.6mxc8g0bxao0.svg)
-![craftorithm-3.svg](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/20231212/craftorithm-3.4iflhrodcaw0.svg)
-![craftorithm-4.svg](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/20231212/craftorithm-4.1vrnqkpgq1nk.svg)
+![craftorithm-1.svg](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/craftorithm-1.44xvguj0tmu0.webp)
+![craftorithm-2.svg](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/craftorithm-2.7ib464btjgs0.webp)
+![craftorithm-3.svg](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/craftorithm-4.75b46vrhrvc0.webp)
+![craftorithm-4.svg](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/craftorithm-3.5bbyou9ftmk.webp)
 
 ----
 
