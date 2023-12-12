@@ -16,8 +16,8 @@ source:
   a: 'bedrock'
   b: 'command_block'
   c: 'items:example_item:example_item'
-  d: 'diamond'
-  e: 'iron_ingot'
+  d: 'barrier'
+  e: 'chain_command_block'
 #是否在配方书中为玩家解锁此配方，默认为config.yml中的all_recipe_unlocked配置项
 unlock: true
 #配方的排序ID，影响在配方展示页面的排序顺序，从小到大排序，默认为0

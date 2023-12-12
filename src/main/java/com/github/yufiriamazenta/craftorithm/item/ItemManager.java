@@ -1,8 +1,10 @@
 package com.github.yufiriamazenta.craftorithm.item;
 
 import com.github.yufiriamazenta.craftorithm.item.impl.CraftorithmItemProvider;
+import com.google.common.base.Preconditions;
 import crypticlib.util.ItemUtil;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,6 +27,10 @@ public enum ItemManager {
     }
 
     public void regItemProvider(ItemProvider itemProvider) {
+        Preconditions.checkArgument(
+            !itemProvider.namespace().equalsIgnoreCase(NamespacedKey.MINECRAFT),
+            "Item provider cannot use namespace minecraft"
+        );
         itemProviderMap.put(itemProvider.namespace(), itemProvider);
     }
 
