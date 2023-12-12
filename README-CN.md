@@ -1,4 +1,7 @@
-![Craftorithm](imgs/banner.png)
+![imgs/craftorithm-1.svg](imgs/craftorithm-1.svg)
+![imgs/craftorithm-2.svg](imgs/craftorithm-2.svg)
+![imgs/craftorithm-3.svg](imgs/craftorithm-3.svg)
+![imgs/craftorithm-4.svg](imgs/craftorithm-4.svg)
 
 ----
 Craftorithm是一个合成配方管理插件，可以添加各类配方，并可以进行合成限制，删除/禁用配方等管理操作
