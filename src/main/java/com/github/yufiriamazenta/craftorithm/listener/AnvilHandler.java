@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
@@ -17,7 +16,9 @@ import org.bukkit.inventory.ItemStack;
 import java.util.HashMap;
 
 @BukkitListener
-public class AnvilHandler implements Listener {
+public enum AnvilHandler implements Listener {
+
+    INSTANCE;
 
     @EventHandler
     public void onPrepareAnvil(PrepareAnvilEvent event) {
@@ -44,8 +45,6 @@ public class AnvilHandler implements Listener {
         if (!PluginConfigs.ENABLE_ANVIL_RECIPE.value())
             return;
 
-        if (!event.getInventory().getType().equals(InventoryType.ANVIL))
-            return;
         if (!(event.getInventory() instanceof AnvilInventory))
             return;
         AnvilInventory anvilInventory = (AnvilInventory) event.getInventory();
