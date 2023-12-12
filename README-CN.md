@@ -10,39 +10,39 @@ Craftorithm是一个合成配方管理插件，可以添加各类配方，并可
 
 ### 添加有序配方
 
-![有序配方](https://github.com/YufiriaMazenta/Imgs/raw/main/craftorithm/shaped.gif)
+![有序](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/20231212/shaped.5gktkvxw2600.gif)
 
 ### 添加无序配方
 
-![无序配方](https://github.com/YufiriaMazenta/Imgs/raw/main/craftorithm/shapeless.gif)
+![无序](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/20231212/shapeless.4gt7hfa9ek80.gif)
 
 ### 添加烧炼配方(熔炉、高炉、烟熏炉、营火)
 
-![烧炼配方](https://github.com/YufiriaMazenta/Imgs/raw/main/craftorithm/cooking.gif)
+![烧炼](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/20231212/cooking.1ytg2zzs960w.gif)
 
 ### 添加锻造配方
 
-![锻造配方](https://github.com/YufiriaMazenta/Imgs/raw/main/craftorithm/smithing.gif)
+![锻造](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/20231212/smithing.1up27pkg4h1c.gif)
 
 ### 添加切石配方
 
-![切石配方](https://github.com/YufiriaMazenta/Imgs/raw/main/craftorithm/stone_cutting.gif)
+![切石](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/20231212/stone_cutting.60acpuxpzu00.gif)
 
 ### 添加酿造配方
 
-![酿造配方](https://github.com/YufiriaMazenta/Imgs/raw/main/craftorithm/potion.gif)
+![酿造](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/20231212/potion.3n4rwdgekwe0.gif)
 
 ### 添加铁砧配方
 
-![添加铁砧配方](https://github.com/YufiriaMazenta/Imgs/raw/main/craftorithm/anvil.gif)
+![铁砧](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/20231212/anvil.69ytfchr9tw0.gif)
 
-### 查看配方
+### 查看配方列表
 
-![查看配方](https://github.com/YufiriaMazenta/Imgs/raw/main/craftorithm/recipe_list.gif)
+![配方列表](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/20231212/recipe_list.4rapvo4rxtk0.gif)
 
 ### 禁用配方
 
-![禁用配方](https://github.com/YufiriaMazenta/Imgs/raw/main/craftorithm/disable_recipe.gif)
+![禁用配方](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/20231212/disable_recipe.59ziucs7mcc0.gif)
 
 ## 使用方式
 #### [Craftorithm Wiki](https://yufiriamazenta.gitbook.io/craftorithm-wiki/)

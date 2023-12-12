@@ -1,7 +1,7 @@
-![craftorithm-1.svg](https://github.com/YufiriaMazenta/Imgs/raw/main/craftorithm/craftorithm-1.svg)
-![craftorithm-2.svg](https://github.com/YufiriaMazenta/Imgs/raw/main/craftorithm/craftorithm-2.svg)
-![craftorithm-3.svg](https://github.com/YufiriaMazenta/Imgs/raw/main/craftorithm/craftorithm-3.svg)
-![craftorithm-4.svg](https://github.com/YufiriaMazenta/Imgs/raw/main/craftorithm/craftorithm-4.svg)
+![craftorithm-1.svg](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/20231212/craftorithm-1.79u9rkocfdo0.svg)
+![craftorithm-2.svg](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/20231212/craftorithm-2.6mxc8g0bxao0.svg)
+![craftorithm-3.svg](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/20231212/craftorithm-3.4iflhrodcaw0.svg)
+![craftorithm-4.svg](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/20231212/craftorithm-4.1vrnqkpgq1nk.svg)
 
 ----
 
@@ -13,39 +13,39 @@ Craftorithm is a recipe management plugin which can add recipes, remove/disable 
 
 ### Add shaped recipe
 
-![Add Shaped Recipe](https://github.com/YufiriaMazenta/Imgs/raw/main/craftorithm/shaped.gif)
+![Add Shaped Recipe](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/20231212/shaped.5gktkvxw2600.gif)
 
 ### Add shapeless recipe
 
-![Add Shapeless Recipe](https://github.com/YufiriaMazenta/Imgs/raw/main/craftorithm/shapeless.gif)
+![Add Shapeless Recipe](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/20231212/shapeless.4gt7hfa9ek80.gif)
 
 ### Add cooking recipe(furnace、blast_furnace、smoker、campfire)
 
-![Add Cooking Recipe](https://github.com/YufiriaMazenta/Imgs/raw/main/craftorithm/cooking.gif)
+![Add Cooking Recipe](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/20231212/cooking.1ytg2zzs960w.gif)
 
 ### Add smithing recipe
 
-![Add Smithing Recipe](https://github.com/YufiriaMazenta/Imgs/raw/main/craftorithm/smithing.gif)
+![Add Smithing Recipe](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/20231212/smithing.1up27pkg4h1c.gif)
 
 ### Add stone cutting recipe
 
-![Add Stone Cutting Recipe](https://github.com/YufiriaMazenta/Imgs/raw/main/craftorithm/stone_cutting.gif)
+![Add Stone Cutting Recipe](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/20231212/stone_cutting.60acpuxpzu00.gif)
 
 ### Add brewing recipe
 
-![Add Brewing Recipe](https://github.com/YufiriaMazenta/Imgs/raw/main/craftorithm/potion.gif)
+![Add Brewing Recipe](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/20231212/potion.3n4rwdgekwe0.gif)
 
 ### Add anvil recipe
 
-![Add Anvil Recipe](https://github.com/YufiriaMazenta/Imgs/raw/main/craftorithm/anvil.gif)
+![Add Anvil Recipe](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/20231212/anvil.69ytfchr9tw0.gif)
 
 ### Show recipe list
 
-![Show Recipe List](https://github.com/YufiriaMazenta/Imgs/raw/main/craftorithm/recipe_list.gif)
+![Show Recipe List](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/20231212/recipe_list.4rapvo4rxtk0.gif)
 
 ### Disable recipe
 
-![Disable recipe](https://github.com/YufiriaMazenta/Imgs/raw/main/craftorithm/disable_recipe.gif)
+![Disable recipe](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/20231212/disable_recipe.59ziucs7mcc0.gif)
 
 ## Usage
 #### [Craftorithm Wiki](https://yufiriamazenta.gitbook.io/craftorithm-wiki/)
