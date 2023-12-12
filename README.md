@@ -1,4 +1,7 @@
-![Craftorithm](imgs/banner.png)
+![imgs/craftorithm-1.svg](imgs/craftorithm-1.svg)
+![imgs/craftorithm-2.svg](imgs/craftorithm-2.svg)
+![imgs/craftorithm-3.svg](imgs/craftorithm-3.svg)
+![imgs/craftorithm-4.svg](imgs/craftorithm-4.svg)
 
 ----
 
