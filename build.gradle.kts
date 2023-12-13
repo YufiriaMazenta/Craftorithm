@@ -1,5 +1,5 @@
 import java.text.SimpleDateFormat
-version = "1.6.1"
+version = "1.6.2-dev1"
 
 plugins {
     `java-library`
@@ -38,6 +38,8 @@ dependencies {
     compileOnly("com.github.LoneDev6:API-ItemsAdder:3.5.0b")
     compileOnly("com.github.oraxen:oraxen:1.160.0")
     compileOnly("io.lumine:Mythic-Dist:5.3.5")
+    compileOnly("io.lumine:MythicLib-dist:1.6.2-SNAPSHOT")
+    compileOnly("net.Indyuce:MMOItems-API:6.9.5-SNAPSHOT")
     implementation("com.crypticlib:CrypticLib:0.7.1")
 }
 

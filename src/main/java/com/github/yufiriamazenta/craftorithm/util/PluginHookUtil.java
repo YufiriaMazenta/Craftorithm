@@ -2,10 +2,7 @@ package com.github.yufiriamazenta.craftorithm.util;
 
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
-import com.github.yufiriamazenta.craftorithm.item.impl.ItemsAdderItemProvider;
-import com.github.yufiriamazenta.craftorithm.item.impl.MythicMobsItemProvider;
-import com.github.yufiriamazenta.craftorithm.item.impl.NeigeItemsItemProvider;
-import com.github.yufiriamazenta.craftorithm.item.impl.OraxenItemProvider;
+import com.github.yufiriamazenta.craftorithm.item.impl.*;
 import net.milkbowl.vault.economy.Economy;
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.bukkit.Bukkit;
@@ -15,7 +12,7 @@ public class PluginHookUtil {
 
     private static Economy economy;
     private static PlayerPoints playerPoints;
-    private static boolean economyLoaded, pointsLoaded, itemsAdderLoaded, oraxenLoaded, mythicLoaded, neigeItemsLoaded;
+    private static boolean economyLoaded, pointsLoaded, itemsAdderLoaded, oraxenLoaded, mythicLoaded, neigeItemsLoaded, mmoitemsLoaded;
 
     public static void hookPlugins() {
         hookVault();
@@ -23,6 +20,7 @@ public class PluginHookUtil {
         hookNeigeItems();
         hookItemsAdder();
         hookOraxen();
+        hookMMOItems();
         hookMythicMobs();
     }
 
@@ -105,6 +103,16 @@ public class PluginHookUtil {
             LangUtil.info(Languages.LOAD_HOOK_PLUGIN_NOT_EXIST.value(), CollectionsUtil.newStringHashMap("<plugin>", "NeigeItems"));
     }
 
+    private static void hookMMOItems() {
+        mmoitemsLoaded = Bukkit.getPluginManager().isPluginEnabled("MMOItems");
+        if (mmoitemsLoaded) {
+            ItemManager.INSTANCE.regItemProvider(MMOItemsItemProvider.INSTANCE);
+            LangUtil.info(Languages.LOAD_HOOK_PLUGIN_SUCCESS.value(), CollectionsUtil.newStringHashMap("<plugin>", "MMOItems"));
+        }
+        else
+            LangUtil.info(Languages.LOAD_HOOK_PLUGIN_NOT_EXIST.value(), CollectionsUtil.newStringHashMap("<plugin>", "MMOItems"));
+    }
+
     public static boolean isItemsAdderLoaded() {
         return itemsAdderLoaded;
     }
@@ -119,6 +127,10 @@ public class PluginHookUtil {
 
     public static boolean isNeigeItemsLoaded() {
         return neigeItemsLoaded;
+    }
+
+    public static boolean isMmoitemsLoaded() {
+        return mmoitemsLoaded;
     }
 
 }
