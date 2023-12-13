@@ -32,7 +32,7 @@ public enum MMOItemsItemProvider implements ItemProvider {
             if (ItemUtil.isAir(item)) {
                 return null;
             }
-            return type + id + " " + (itemStack.getAmount() / item.getAmount());
+            return itemKey + " " + (itemStack.getAmount() / item.getAmount());
         }
 
     }
