@@ -18,7 +18,7 @@ Craftorithm是一个合成配方管理插件，可以添加各类配方，并可
 
 ### 添加烧炼配方(熔炉、高炉、烟熏炉、营火)
 
-![烧炼](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/20231212/cooking.1ytg2zzs960w.gif)
+![烧炼](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/cooking.1wlzi971r3q8.gif)
 
 ### 添加锻造配方
 

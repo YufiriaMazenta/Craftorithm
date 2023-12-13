@@ -21,7 +21,7 @@ Craftorithm is a recipe management plugin which can add recipes, remove/disable 
 
 ### Add cooking recipe(furnace、blast_furnace、smoker、campfire)
 
-![Add Cooking Recipe](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/20231212/cooking.1ytg2zzs960w.gif)
+![Add Cooking Recipe](https://cdn.statically.io/gh/YufiriaMazenta/picx-images-hosting@master/cooking.1wlzi971r3q8.gif)
 
 ### Add smithing recipe
 
