@@ -25,7 +25,7 @@ public class RecipeGroupListMenuHolder extends Menu {
     private final List<Map.Entry<String, ItemStack>> recipeGroupResultList;
 
     public RecipeGroupListMenuHolder(Player player) {
-        super(player, () -> null);
+        super(player);
         Map<String, ItemStack> recipeResultMap = new HashMap<>();
         RecipeManager.INSTANCE.recipeMap().forEach((recipeType, recipeGroupMap) -> {
             recipeGroupMap.forEach((groupName, recipeGroup) -> {

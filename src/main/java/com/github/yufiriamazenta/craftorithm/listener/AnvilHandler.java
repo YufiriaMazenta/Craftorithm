@@ -7,6 +7,7 @@ import crypticlib.listener.BukkitListener;
 import crypticlib.util.ItemUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
@@ -20,7 +21,7 @@ public enum AnvilHandler implements Listener {
 
     INSTANCE;
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPrepareAnvil(PrepareAnvilEvent event) {
         if (!PluginConfigs.ENABLE_ANVIL_RECIPE.value())
             return;
@@ -40,7 +41,7 @@ public enum AnvilHandler implements Listener {
         event.setResult(result);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onClickAnvil(InventoryClickEvent event) {
         if (!PluginConfigs.ENABLE_ANVIL_RECIPE.value())
             return;

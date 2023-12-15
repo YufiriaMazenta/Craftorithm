@@ -37,7 +37,7 @@ public class RecipeListMenuHolder extends Menu {
     }
 
     public RecipeListMenuHolder(Player player, Collection<NamespacedKey> recipeKeys, Menu parentMenu) {
-        super(player, () -> null);
+        super(player);
         this.parentMenu = parentMenu;
         this.hasEditPermission = player.hasPermission("craftorithm.recipe_list.manager");
         this.recipeList = new ArrayList<>();
