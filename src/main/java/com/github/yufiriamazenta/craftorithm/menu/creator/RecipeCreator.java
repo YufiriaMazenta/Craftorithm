@@ -33,7 +33,7 @@ public abstract class RecipeCreator extends StoredMenu {
         @NotNull RecipeType recipeType,
         @NotNull String recipeName
     ) {
-        super(player, () -> null);
+        super(player);
         this.recipeName = recipeName;
         this.recipeType = recipeType;
         this.title = Languages.MENU_RECIPE_CREATOR_TITLE.value()

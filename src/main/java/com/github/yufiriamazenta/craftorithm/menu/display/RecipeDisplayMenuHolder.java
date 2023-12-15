@@ -30,7 +30,7 @@ public class RecipeDisplayMenuHolder extends Menu {
     private final Menu parentMenu;
 
     public RecipeDisplayMenuHolder(Player player, Recipe recipe, RecipeListMenuHolder parentMenu) {
-        super(player, () -> null);
+        super(player);
 
         this.parentMenu = parentMenu;
         this.recipe = recipe;
