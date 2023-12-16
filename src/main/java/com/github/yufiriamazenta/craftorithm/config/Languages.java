@@ -2,7 +2,7 @@ package com.github.yufiriamazenta.craftorithm.config;
 
 import crypticlib.chat.LangConfigHandler;
 import crypticlib.chat.entry.StringLangConfigEntry;
-import crypticlib.config.entry.StringListConfigEntry;
+import crypticlib.chat.entry.StringListLangConfigEntry;
 
 import java.util.Collections;
 
@@ -66,13 +66,13 @@ public class Languages {
     public static final StringLangConfigEntry MENU_RECIPE_CREATOR_ICON_ANVIL_FRAME = new StringLangConfigEntry("menu.recipe_creator.icon.anvil_frame", "&a打造原料");
     public static final StringLangConfigEntry MENU_RECIPE_CREATOR_ICON_ANVIL_COPY_NBT_TOGGLE = new StringLangConfigEntry("menu.recipe_creator.icon.anvil_copy_nbt_toggle", "&a保留物品NBT: <enable>");
     public static final StringLangConfigEntry MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_NAME = new StringLangConfigEntry("menu.recipe_creator.icon.anvil_cost_level.name", "&a所需等级: <level>");
-    public static final StringListConfigEntry MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_LORE = new StringListConfigEntry("menu.recipe_creator.icon.anvil_cost_level.lore", Collections.singletonList("&3点击修改所需等级"));
+    public static final StringListLangConfigEntry MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_LORE = new StringListLangConfigEntry("menu.recipe_creator.icon.anvil_cost_level.lore", Collections.singletonList("&3点击修改所需等级"));
     public static final StringLangConfigEntry MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_INPUT_HINT = new StringLangConfigEntry("menu.recipe_creator.icon.anvil_cost_level.input_hint", "&a请输入所需等级, 输入cancel取消");
     public static final StringLangConfigEntry MENU_RECIPE_CREATOR_ICON_COOKING_TIME_NAME = new StringLangConfigEntry("menu.recipe_creator.icon.cooking_time.name", "&a烧炼时间: <time> tick");
-    public static final StringListConfigEntry MENU_RECIPE_CREATOR_ICON_COOKING_TIME_LORE = new StringListConfigEntry("menu.recipe_creator.icon.cooking_time.lore", Collections.singletonList("&3点击修改烧炼时间"));
+    public static final StringListLangConfigEntry MENU_RECIPE_CREATOR_ICON_COOKING_TIME_LORE = new StringListLangConfigEntry("menu.recipe_creator.icon.cooking_time.lore", Collections.singletonList("&3点击修改烧炼时间"));
     public static final StringLangConfigEntry MENU_RECIPE_CREATOR_ICON_COOKING_TIME_INPUT_HINT = new StringLangConfigEntry("menu.recipe_creator.icon.cooking_time.input_hint", "&a请输入烧炼时间, 单位为tick, 输入cancel取消");
     public static final StringLangConfigEntry MENU_RECIPE_CREATOR_ICON_COOKING_EXP_NAME = new StringLangConfigEntry("menu.recipe_creator.icon.cooking_exp.name", "&a奖励经验: <exp>");
-    public static final StringListConfigEntry MENU_RECIPE_CREATOR_ICON_COOKING_EXP_LORE = new StringListConfigEntry("menu.recipe_creator.icon.cooking_exp.lore", Collections.singletonList("&3点击修改奖励经验"));
+    public static final StringListLangConfigEntry MENU_RECIPE_CREATOR_ICON_COOKING_EXP_LORE = new StringListLangConfigEntry("menu.recipe_creator.icon.cooking_exp.lore", Collections.singletonList("&3点击修改奖励经验"));
     public static final StringLangConfigEntry MENU_RECIPE_CREATOR_ICON_COOKING_EXP_INPUT_HINT = new StringLangConfigEntry("menu.recipe_creator.icon.cooking_exp.input_hint", "&a请输入奖励经验, 输入cancel取消");
     public static final StringLangConfigEntry MENU_RECIPE_CREATOR_ICON_FURNACE_TOGGLE = new StringLangConfigEntry("menu.recipe_creator.icon.furnace_toggle", "&a启用熔炉配方:<enable>");
     public static final StringLangConfigEntry MENU_RECIPE_CREATOR_ICON_BLAST_FURNACE_TOGGLE = new StringLangConfigEntry("menu.recipe_creator.icon.blast_furnace_toggle", "&a启用高炉配方:<enable>");

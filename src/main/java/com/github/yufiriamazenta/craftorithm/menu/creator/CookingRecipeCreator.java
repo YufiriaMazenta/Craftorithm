@@ -59,7 +59,10 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
                     Map<Character, Icon> layoutMap = new HashMap<>();
                     layoutMap.put('#', getFrameIcon());
                     layoutMap.put('%', getResultFrameIcon());
-                    layoutMap.put('*', new Icon(Material.CYAN_STAINED_GLASS_PANE, Languages.MENU_RECIPE_CREATOR_ICON_COOKING_FRAME.value()));
+                    layoutMap.put('*', new Icon(
+                        Material.CYAN_STAINED_GLASS_PANE,
+                        Languages.MENU_RECIPE_CREATOR_ICON_COOKING_FRAME.value(player)
+                    ));
                     layoutMap.put('B', getCookingToggleIcon(Material.FURNACE));
                     layoutMap.put('C', getCookingToggleIcon(Material.BLAST_FURNACE));
                     layoutMap.put('D', getCookingToggleIcon(Material.SMOKER));
@@ -69,7 +72,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
                     layoutMap.put('H', getExpIcon());
                     layoutMap.put('A', new Icon(
                         Material.FURNACE,
-                        Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(),
+                        Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(player),
                         event -> {
                             StoredMenu creator = (StoredMenu) Objects.requireNonNull(event.getClickedInventory()).getHolder();
                             ItemStack source = Objects.requireNonNull(creator).storedItems().get(20);
@@ -134,16 +137,16 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
         switch (material) {
             case FURNACE:
             default:
-                displayName = Languages.MENU_RECIPE_CREATOR_ICON_FURNACE_TOGGLE.value();
+                displayName = Languages.MENU_RECIPE_CREATOR_ICON_FURNACE_TOGGLE.value(player());
                 break;
             case BLAST_FURNACE:
-                displayName = Languages.MENU_RECIPE_CREATOR_ICON_BLAST_FURNACE_TOGGLE.value();
+                displayName = Languages.MENU_RECIPE_CREATOR_ICON_BLAST_FURNACE_TOGGLE.value(player());
                 break;
             case SMOKER:
-                displayName = Languages.MENU_RECIPE_CREATOR_ICON_SMOKER_TOGGLE.value();
+                displayName = Languages.MENU_RECIPE_CREATOR_ICON_SMOKER_TOGGLE.value(player());
                 break;
             case CAMPFIRE:
-                displayName = Languages.MENU_RECIPE_CREATOR_ICON_CAMPFIRE_TOGGLE.value();
+                displayName = Languages.MENU_RECIPE_CREATOR_ICON_CAMPFIRE_TOGGLE.value(player());
                 break;
         }
         displayName = displayName.replace("<enable>", String.valueOf(enable));
@@ -165,16 +168,16 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
         switch (display.getType()) {
             case FURNACE:
             default:
-                displayName = Languages.MENU_RECIPE_CREATOR_ICON_FURNACE_TOGGLE.value();
+                displayName = Languages.MENU_RECIPE_CREATOR_ICON_FURNACE_TOGGLE.value(player());
                 break;
             case BLAST_FURNACE:
-                displayName = Languages.MENU_RECIPE_CREATOR_ICON_BLAST_FURNACE_TOGGLE.value();
+                displayName = Languages.MENU_RECIPE_CREATOR_ICON_BLAST_FURNACE_TOGGLE.value(player());
                 break;
             case SMOKER:
-                displayName = Languages.MENU_RECIPE_CREATOR_ICON_SMOKER_TOGGLE.value();
+                displayName = Languages.MENU_RECIPE_CREATOR_ICON_SMOKER_TOGGLE.value(player());
                 break;
             case CAMPFIRE:
-                displayName = Languages.MENU_RECIPE_CREATOR_ICON_CAMPFIRE_TOGGLE.value();
+                displayName = Languages.MENU_RECIPE_CREATOR_ICON_CAMPFIRE_TOGGLE.value(player());
                 break;
         }
         boolean enable = !cookingToggleMap.getOrDefault(display.getType(), false);
@@ -192,7 +195,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
     protected Icon getCookingTimeIcon() {
         Icon icon = new Icon(
             Material.CLOCK,
-            TextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_NAME.value())
+            TextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_NAME.value(player()))
                 .replace("<time>", String.valueOf(cookingTime)),
             event -> {
                 Player player = (Player) event.getWhoClicked();
@@ -207,14 +210,14 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
                 player.closeInventory();
             }
         );
-        ItemUtils.setLore(icon.display(), Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_LORE.value());
+        ItemUtils.setLore(icon.display(), Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_LORE.value(player()));
         return icon;
     }
 
     protected Icon getExpIcon() {
         Icon icon = new Icon(
             Material.EXPERIENCE_BOTTLE,
-            TextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_NAME.value())
+            TextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_NAME.value(player()))
                 .replace("<exp>", String.valueOf(exp)),
             event -> {
                 Player player = (Player) event.getWhoClicked();
@@ -229,7 +232,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
                 player.closeInventory();
             }
         );
-        ItemUtils.setLore(icon.display(), Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_LORE.value());
+        ItemUtils.setLore(icon.display(), Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_LORE.value(player()));
         return icon;
     }
 
@@ -238,7 +241,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
         if (cookingTimeIcon == null)
             return;
         ItemMeta itemMeta = cookingTimeIcon.getItemMeta();
-        itemMeta.setDisplayName(TextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_NAME.value())
+        itemMeta.setDisplayName(TextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_NAME.value(player()))
             .replace("<time>", String.valueOf(cookingTime)));
         cookingTimeIcon.setItemMeta(itemMeta);
     }
@@ -248,7 +251,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
         if (expIcon == null)
             return;
         ItemMeta itemMeta = expIcon.getItemMeta();
-        itemMeta.setDisplayName(TextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_NAME.value())
+        itemMeta.setDisplayName(TextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_NAME.value(player()))
             .replace("<exp>", String.valueOf(exp)));
         expIcon.setItemMeta(itemMeta);
     }

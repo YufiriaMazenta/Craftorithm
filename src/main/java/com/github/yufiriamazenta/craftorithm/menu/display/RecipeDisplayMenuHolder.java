@@ -39,52 +39,52 @@ public class RecipeDisplayMenuHolder extends Menu {
             case SHAPED:
                 setShapedRecipeMenu();
                 inventoryType = InventoryType.WORKBENCH;
-                invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_SHAPED.value();
+                invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_SHAPED.value(player);
                 break;
             case SHAPELESS:
                 setShapelessRecipeMenu();
                 inventoryType = InventoryType.WORKBENCH;
-                invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_SHAPELESS.value();
+                invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_SHAPELESS.value(player);
                 break;
             case COOKING:
             case RANDOM_COOKING:
                 setCookingRecipeMenu();
                 if (recipe instanceof FurnaceRecipe) {
                     inventoryType = InventoryType.FURNACE;
-                    invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_FURNACE.value();
+                    invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_FURNACE.value(player);
                 }
                 else if (recipe instanceof BlastingRecipe) {
                     inventoryType = InventoryType.BLAST_FURNACE;
-                    invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_BLASTING.value();
+                    invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_BLASTING.value(player);
                 }
                 else if (recipe instanceof SmokingRecipe) {
                     inventoryType = InventoryType.SMOKER;
-                    invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_SMOKING.value();
+                    invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_SMOKING.value(player);
                 }
                 else {
                     inventoryType = InventoryType.FURNACE;
-                    invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_CAMPFIRE.value();
+                    invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_CAMPFIRE.value(player);
                 }
                 break;
             case SMITHING:
                 setSmithingRecipeMenu();
                 inventoryType = InventoryType.SMITHING;
-                invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_SMITHING.value();
+                invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_SMITHING.value(player);
                 break;
             case STONE_CUTTING:
                 setStoneCuttingRecipeMenu();
                 inventoryType = InventoryType.CHEST;
-                invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_STONE_CUTTING.value();
+                invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_STONE_CUTTING.value(player);
                 break;
             case POTION:
                 setPotionMixRecipeMenu();
                 inventoryType = InventoryType.BREWING;
-                invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_POTION.value();
+                invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_POTION.value(player);
                 break;
             case ANVIL:
                 setAnvilRecipeMenu();
                 inventoryType = InventoryType.ANVIL;
-                invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_ANVIL.value();
+                invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_ANVIL.value(player);
                 break;
             default:
                 invTitle = "Unknown Type";

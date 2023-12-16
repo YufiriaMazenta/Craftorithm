@@ -57,10 +57,10 @@ public class AnvilRecipeCreator extends RecipeCreator {
                     Map<Character, Icon> layoutMap = new HashMap<>();
                     layoutMap.put('#', getFrameIcon());
                     layoutMap.put('%', getResultFrameIcon());
-                    layoutMap.put('*', new Icon(Material.CYAN_STAINED_GLASS_PANE, Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_FRAME.value()));
+                    layoutMap.put('*', new Icon(Material.CYAN_STAINED_GLASS_PANE, Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_FRAME.value(player)));
                     layoutMap.put('B', getCopyNbtIcon());
                     layoutMap.put('C', getCostLevelIcon());
-                    layoutMap.put('A', new Icon(Material.ANVIL, Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(),
+                    layoutMap.put('A', new Icon(Material.ANVIL, Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(player),
                         event -> {
                             StoredMenu creator = (StoredMenu) event.getClickedInventory().getHolder();
                             ItemStack result = Objects.requireNonNull(creator).storedItems().get(24);
@@ -113,7 +113,7 @@ public class AnvilRecipeCreator extends RecipeCreator {
         Icon icon = new Icon(
             Material.NAME_TAG,
             Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COPY_NBT_TOGGLE
-                .value()
+                .value(player())
                 .replace("<enable>", String.valueOf(copyNbt)),
             event -> toggleCopyNbt(event.getSlot(), event)
         );
@@ -130,7 +130,7 @@ public class AnvilRecipeCreator extends RecipeCreator {
         itemMeta.setDisplayName(
             TextProcessor.color(
                 Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COPY_NBT_TOGGLE
-                    .value()
+                    .value(player())
                     .replace("<enable>", String.valueOf(copyNbt))
             )
         );
@@ -140,7 +140,7 @@ public class AnvilRecipeCreator extends RecipeCreator {
     protected Icon getCostLevelIcon() {
         Icon icon = new Icon(
             Material.EXPERIENCE_BOTTLE,
-            TextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_NAME.value())
+            TextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_NAME.value(player()))
                 .replace("<level>", String.valueOf(costLevel)),
             event -> {
                 Player player = (Player) event.getWhoClicked();
@@ -155,7 +155,7 @@ public class AnvilRecipeCreator extends RecipeCreator {
                 player.closeInventory();
             }
         );
-        ItemUtils.setLore(icon.display(), Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_LORE.value());
+        ItemUtils.setLore(icon.display(), Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_LORE.value(player()));
         return icon;
     }
 
@@ -164,7 +164,7 @@ public class AnvilRecipeCreator extends RecipeCreator {
         if (costLevelIcon == null)
             return;
         ItemMeta itemMeta = costLevelIcon.getItemMeta();
-        itemMeta.setDisplayName(TextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_NAME.value())
+        itemMeta.setDisplayName(TextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_NAME.value(player()))
             .replace("<level>", String.valueOf(costLevel)));
         costLevelIcon.setItemMeta(itemMeta);
     }

@@ -40,8 +40,13 @@ public class PotionMixCreator extends RecipeCreator {
                     Map<Character, Icon> layoutMap = new HashMap<>();
                     layoutMap.put('#', getFrameIcon());
                     layoutMap.put('%', getResultFrameIcon());
-                    layoutMap.put('*', new Icon(Material.CYAN_STAINED_GLASS_PANE, Languages.MENU_RECIPE_CREATOR_ICON_POTION_FRAME.value()));
-                    layoutMap.put('A', new Icon(Material.BREWING_STAND, Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(),
+                    layoutMap.put('*', new Icon(
+                        Material.CYAN_STAINED_GLASS_PANE,
+                        Languages.MENU_RECIPE_CREATOR_ICON_POTION_FRAME.value(player)
+                    ));
+                    layoutMap.put('A', new Icon(
+                        Material.BREWING_STAND,
+                        Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(player),
                         event -> {
                             StoredMenu creator = (StoredMenu) event.getClickedInventory().getHolder();
                             ItemStack result = Objects.requireNonNull(creator).storedItems().get(24);

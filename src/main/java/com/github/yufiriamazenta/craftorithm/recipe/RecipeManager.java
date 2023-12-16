@@ -11,6 +11,7 @@ import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.CrypticLib;
+import crypticlib.chat.entry.StringLangConfigEntry;
 import crypticlib.config.ConfigWrapper;
 import crypticlib.util.FileUtil;
 import org.bukkit.Bukkit;
@@ -378,24 +379,24 @@ public enum RecipeManager {
             return RecipeType.UNKNOWN;
     }
 
-    public String getRecipeTypeName(RecipeType recipeType) {
+    public StringLangConfigEntry getRecipeTypeName(RecipeType recipeType) {
         switch (recipeType) {
             case SHAPED:
-                return Languages.RECIPE_TYPE_NAME_SHAPED.value();
+                return Languages.RECIPE_TYPE_NAME_SHAPED;
             case SHAPELESS:
-                return Languages.RECIPE_TYPE_NAME_SHAPELESS.value();
+                return Languages.RECIPE_TYPE_NAME_SHAPELESS;
             case COOKING:
-                return Languages.RECIPE_TYPE_NAME_COOKING.value();
+                return Languages.RECIPE_TYPE_NAME_COOKING;
             case SMITHING:
-                return Languages.RECIPE_TYPE_NAME_SMITHING.value();
+                return Languages.RECIPE_TYPE_NAME_SMITHING;
             case STONE_CUTTING:
-                return Languages.RECIPE_TYPE_NAME_STONE_CUTTING.value();
+                return Languages.RECIPE_TYPE_NAME_STONE_CUTTING;
             case POTION:
-                return Languages.RECIPE_TYPE_NAME_POTION.value();
+                return Languages.RECIPE_TYPE_NAME_POTION;
             case ANVIL:
-                return Languages.RECIPE_TYPE_NAME_ANVIL.value();
+                return Languages.RECIPE_TYPE_NAME_ANVIL;
             default:
-                return recipeType.name();
+                return null;
         }
     }
 
