@@ -29,7 +29,7 @@ public class UpdateUtil {
                 pluginVersion = pluginVersion.substring(0, pluginVersion.indexOf("-"));
                 if (checkVersion(latestVersion, pluginVersion)) {
                     CrypticLib.platform().scheduler().runTask(Craftorithm.instance(), () -> {
-                        LangUtil.sendLang(sender, Languages.NEW_VERSION.value(), CollectionsUtil.newStringHashMap("<new_version>", latestVersion));
+                        LangUtil.sendLang(sender, Languages.NEW_VERSION, CollectionsUtil.newStringHashMap("<new_version>", latestVersion));
                     });
                 }
                 is.close();

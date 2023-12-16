@@ -8,7 +8,9 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import crypticlib.config.yaml.YamlConfigWrapper;
+import crypticlib.chat.TextProcessor;
+import crypticlib.chat.entry.StringLangConfigEntry;
+import crypticlib.config.ConfigWrapper;
 import crypticlib.conversation.Conversation;
 import crypticlib.conversation.NumberPrompt;
 import crypticlib.conversation.Prompt;
@@ -17,7 +19,6 @@ import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.display.MenuLayout;
 import crypticlib.ui.menu.StoredMenu;
 import crypticlib.util.ItemUtil;
-import crypticlib.util.TextUtil;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -74,16 +75,16 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
                             ItemStack source = Objects.requireNonNull(creator).storedItems().get(20);
                             ItemStack result = creator.storedItems().get(24);
                             if (ItemUtil.isAir(source)) {
-                                LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_SOURCE.value());
+                                LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_SOURCE);
                                 return;
                             }
                             if (ItemUtil.isAir(result)) {
-                                LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_RESULT.value());
+                                LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_RESULT);
                                 return;
                             }
                             String sourceName = ItemUtils.matchItemNameOrCreate(source, true);
                             String resultName = ItemUtils.matchItemNameOrCreate(result, false);
-                            YamlConfigWrapper recipeConfig = createRecipeConfig(recipeName);
+                            ConfigWrapper recipeConfig = createRecipeConfig(recipeName);
                             recipeConfig.set("type", "cooking");
                             recipeConfig.set("result", resultName);
                             recipeConfig.set("multiple", true);
@@ -181,7 +182,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
 
         ItemMeta itemMeta = display.getItemMeta();
         itemMeta.setDisplayName(
-            TextUtil.color(
+            TextProcessor.color(
                 displayName.replace("<enable>", String.valueOf(enable))
             )
         );
@@ -191,7 +192,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
     protected Icon getCookingTimeIcon() {
         Icon icon = new Icon(
             Material.CLOCK,
-            TextUtil.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_NAME.value())
+            TextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_NAME.value())
                 .replace("<time>", String.valueOf(cookingTime)),
             event -> {
                 Player player = (Player) event.getWhoClicked();
@@ -213,7 +214,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
     protected Icon getExpIcon() {
         Icon icon = new Icon(
             Material.EXPERIENCE_BOTTLE,
-            TextUtil.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_NAME.value())
+            TextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_NAME.value())
                 .replace("<exp>", String.valueOf(exp)),
             event -> {
                 Player player = (Player) event.getWhoClicked();
@@ -237,7 +238,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
         if (cookingTimeIcon == null)
             return;
         ItemMeta itemMeta = cookingTimeIcon.getItemMeta();
-        itemMeta.setDisplayName(TextUtil.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_NAME.value())
+        itemMeta.setDisplayName(TextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_NAME.value())
             .replace("<time>", String.valueOf(cookingTime)));
         cookingTimeIcon.setItemMeta(itemMeta);
     }
@@ -247,7 +248,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
         if (expIcon == null)
             return;
         ItemMeta itemMeta = expIcon.getItemMeta();
-        itemMeta.setDisplayName(TextUtil.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_NAME.value())
+        itemMeta.setDisplayName(TextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_NAME.value())
             .replace("<exp>", String.valueOf(exp)));
         expIcon.setItemMeta(itemMeta);
     }
@@ -264,8 +265,8 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
         }
 
         @Override
-        public @NotNull String promptText(@NotNull Map<Object, Object> data) {
-            return TextUtil.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_INPUT_HINT.value());
+        public @NotNull StringLangConfigEntry promptText(@NotNull Map<Object, Object> data) {
+            return Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_INPUT_HINT;
         }
     }
 
@@ -280,8 +281,8 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
         }
 
         @Override
-        public @NotNull String promptText(@NotNull Map<Object, Object> data) {
-            return TextUtil.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_INPUT_HINT.value());
+        public @NotNull StringLangConfigEntry promptText(@NotNull Map<Object, Object> data) {
+            return Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_INPUT_HINT;
         }
     }
 

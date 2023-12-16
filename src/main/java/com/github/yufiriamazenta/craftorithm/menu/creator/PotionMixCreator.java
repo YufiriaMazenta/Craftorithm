@@ -7,7 +7,7 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import crypticlib.config.yaml.YamlConfigWrapper;
+import crypticlib.config.ConfigWrapper;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.display.MenuLayout;
@@ -48,17 +48,17 @@ public class PotionMixCreator extends RecipeCreator {
                             ItemStack input = creator.storedItems().get(19);
                             ItemStack ingredient = creator.storedItems().get(21);
                             if (ItemUtil.isAir(result)) {
-                                LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_RESULT.value());
+                                LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_RESULT);
                                 return;
                             }
                             if (ItemUtil.isAir(ingredient) || ItemUtil.isAir(input)) {
-                                LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_SOURCE.value());
+                                LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_SOURCE);
                                 return;
                             }
                             String resultName = ItemUtils.matchItemNameOrCreate(result, false);
                             String inputName = ItemUtils.matchItemNameOrCreate(input, true);
                             String ingredientName = ItemUtils.matchItemNameOrCreate(ingredient, true);
-                            YamlConfigWrapper recipeConfig = createRecipeConfig(recipeName);
+                            ConfigWrapper recipeConfig = createRecipeConfig(recipeName);
                             recipeConfig.set("type", "potion");
                             recipeConfig.set("source.input", inputName);
                             recipeConfig.set("source.ingredient", ingredientName);

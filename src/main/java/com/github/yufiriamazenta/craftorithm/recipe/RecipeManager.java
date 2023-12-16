@@ -11,7 +11,7 @@ import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.CrypticLib;
-import crypticlib.config.yaml.YamlConfigWrapper;
+import crypticlib.config.ConfigWrapper;
 import crypticlib.util.FileUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
@@ -34,7 +34,7 @@ public enum RecipeManager {
 
     INSTANCE;
     public final File RECIPE_FILE_FOLDER = new File(Craftorithm.instance().getDataFolder().getPath(), "recipes");
-    private final YamlConfigWrapper removedRecipesConfigWrapper = new YamlConfigWrapper(Craftorithm.instance(), "removed_recipes.yml");
+    private final ConfigWrapper removedRecipesConfigWrapper = new ConfigWrapper(Craftorithm.instance(), "removed_recipes.yml");
     public final String PLUGIN_RECIPE_NAMESPACE = "craftorithm";
     private final Map<RecipeType, Map<String, RecipeGroup>> pluginRecipeMap;
     private final Map<RecipeType, Consumer<Recipe>> recipeRegisterMap;
@@ -45,7 +45,7 @@ public enum RecipeManager {
     private final Map<NamespacedKey, Recipe> serverRecipesCache;
     private final Map<NamespacedKey, PotionMixRecipe> potionMixRecipeMap;
     private final Map<NamespacedKey, AnvilRecipe> anvilRecipeMap;
-    private final Map<String, YamlConfigWrapper> recipeConfigWrapperMap;
+    private final Map<String, ConfigWrapper> recipeConfigWrapperMap;
     private boolean supportPotionMix;
 
     RecipeManager() {
@@ -118,7 +118,7 @@ public enum RecipeManager {
     private void loadRecipes() {
         for (String fileName : recipeConfigWrapperMap.keySet()) {
             try {
-                YamlConfigWrapper configWrapper = recipeConfigWrapperMap.get(fileName);
+                ConfigWrapper configWrapper = recipeConfigWrapperMap.get(fileName);
                 YamlConfiguration config = configWrapper.config();
                 boolean unlock =  config.getBoolean("unlock", PluginConfigs.DEFAULT_RECIPE_UNLOCK.value());
                 for (RecipeRegistry recipeRegistry : RecipeFactory.newRecipeRegistry(config, fileName)) {
@@ -127,7 +127,7 @@ public enum RecipeManager {
                 }
                 recipeSortMap.put(fileName, config.getInt("sort_id", 0));
             } catch (Throwable e) {
-                LangUtil.info(Languages.LOAD_RECIPE_LOAD_EXCEPTION.value(), CollectionsUtil.newStringHashMap("<recipe_name>", fileName));
+                LangUtil.info(Languages.LOAD_RECIPE_LOAD_EXCEPTION, CollectionsUtil.newStringHashMap("<recipe_name>", fileName));
                 e.printStackTrace();
             }
         }
@@ -149,7 +149,7 @@ public enum RecipeManager {
             key = key.replace("\\", "/");
             int lastDotIndex = key.lastIndexOf(".");
             key = key.substring(0, lastDotIndex);
-            recipeConfigWrapperMap.put(key, new YamlConfigWrapper(file));
+            recipeConfigWrapperMap.put(key, new ConfigWrapper(file));
         }
     }
 
@@ -228,7 +228,7 @@ public enum RecipeManager {
                 if (recipeGroup == null)
                     return false;
                 recipeRemoverMap.get(recipeType).accept(recipeGroup.groupRecipeKeys());
-                YamlConfigWrapper recipeConfig = recipeConfigWrapperMap.get(recipeGroupName);
+                ConfigWrapper recipeConfig = recipeConfigWrapperMap.get(recipeGroupName);
                 if (recipeConfig != null && deleteFile) {
                     recipeConfig.configFile().delete();
                 }
@@ -434,7 +434,7 @@ public enum RecipeManager {
         return potionMixRecipeMap;
     }
 
-    public Map<String, YamlConfigWrapper> recipeConfigWrapperMap() {
+    public Map<String, ConfigWrapper> recipeConfigWrapperMap() {
         return recipeConfigWrapperMap;
     }
 

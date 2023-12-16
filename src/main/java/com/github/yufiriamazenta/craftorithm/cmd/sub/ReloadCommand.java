@@ -24,10 +24,10 @@ public final class ReloadCommand extends AbstractSubCommand {
     public boolean onCommand(CommandSender sender, List<String> args) {
         try {
             reloadPlugin();
-            LangUtil.sendLang(sender, Languages.COMMAND_RELOAD_SUCCESS.value());
+            LangUtil.sendLang(sender, Languages.COMMAND_RELOAD_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
-            LangUtil.sendLang(sender, Languages.COMMAND_RELOAD_EXCEPTION.value());
+            LangUtil.sendLang(sender, Languages.COMMAND_RELOAD_EXCEPTION);
         }
         return true;
     }

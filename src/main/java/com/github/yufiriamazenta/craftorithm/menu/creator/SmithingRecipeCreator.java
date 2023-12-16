@@ -8,7 +8,7 @@ import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.CrypticLib;
-import crypticlib.config.yaml.YamlConfigWrapper;
+import crypticlib.config.ConfigWrapper;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.display.MenuLayout;
@@ -63,7 +63,7 @@ public class SmithingRecipeCreator extends UnlockableRecipeCreator {
                                 StoredMenu creator = (StoredMenu) Objects.requireNonNull(event.getClickedInventory()).getHolder();
                                 ItemStack result = Objects.requireNonNull(creator).storedItems().get(24);
                                 if (ItemUtil.isAir(result)) {
-                                    LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_RESULT.value());
+                                    LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_RESULT);
                                     return;
                                 }
                                 String resultName = ItemUtils.matchItemNameOrCreate(result, false);
@@ -78,17 +78,17 @@ public class SmithingRecipeCreator extends UnlockableRecipeCreator {
                                     addition = creator.storedItems().get(21);
                                     templateName = ItemUtils.matchItemNameOrCreate(template, true);
                                     if (ItemUtil.isAir(template)) {
-                                        LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_SOURCE.value());
+                                        LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_SOURCE);
                                         return;
                                     }
                                 }
                                 if (ItemUtil.isAir(base) || ItemUtil.isAir(addition)) {
-                                    LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_SOURCE.value());
+                                    LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_SOURCE);
                                     return;
                                 }
                                 baseName = ItemUtils.matchItemNameOrCreate(base, true);
                                 additionName = ItemUtils.matchItemNameOrCreate(addition, true);
-                                YamlConfigWrapper recipeConfig = createRecipeConfig(recipeName);
+                                ConfigWrapper recipeConfig = createRecipeConfig(recipeName);
                                 recipeConfig.set("result", resultName);
                                 recipeConfig.set("source.base", baseName);
                                 recipeConfig.set("source.addition", additionName);

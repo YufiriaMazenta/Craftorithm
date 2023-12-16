@@ -7,9 +7,9 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.PotionMixRecipe;
 import crypticlib.CrypticLib;
+import crypticlib.chat.TextProcessor;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.menu.Menu;
-import crypticlib.util.TextUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -97,7 +97,7 @@ public class RecipeDisplayMenuHolder extends Menu {
     @NotNull
     @Override
     public Inventory getInventory() {
-        Inventory inventory = Bukkit.createInventory(this, inventoryType, TextUtil.color(invTitle));
+        Inventory inventory = Bukkit.createInventory(this, inventoryType, TextProcessor.color(invTitle));
         for (Integer slot : slotMap().keySet()) {
             inventory.setItem(slot, slotMap().get(slot).display());
         }

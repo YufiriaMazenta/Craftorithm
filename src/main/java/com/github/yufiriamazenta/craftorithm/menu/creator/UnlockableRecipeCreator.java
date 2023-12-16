@@ -3,8 +3,8 @@ package com.github.yufiriamazenta.craftorithm.menu.creator;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
+import crypticlib.chat.TextProcessor;
 import crypticlib.ui.display.Icon;
-import crypticlib.util.TextUtil;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -48,7 +48,7 @@ public abstract class UnlockableRecipeCreator extends RecipeCreator {
         ItemStack display = event.getCurrentItem();
         ItemMeta itemMeta = display.getItemMeta();
         itemMeta.setDisplayName(
-            TextUtil.color(
+            TextProcessor.color(
                 Languages.MENU_RECIPE_CREATOR_ICON_UNLOCK
                     .value()
                     .replace("<unlock>", String.valueOf(unlock))

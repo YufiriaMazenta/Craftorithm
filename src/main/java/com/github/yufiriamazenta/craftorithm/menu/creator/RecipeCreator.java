@@ -5,7 +5,7 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import crypticlib.config.yaml.YamlConfigWrapper;
+import crypticlib.config.ConfigWrapper;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.menu.StoredMenu;
 import crypticlib.util.FileUtil;
@@ -70,17 +70,17 @@ public abstract class RecipeCreator extends StoredMenu {
     protected void sendSuccessMsg(HumanEntity receiver, String recipeName) {
         LangUtil.sendLang(
             receiver,
-            Languages.COMMAND_CREATE_SUCCESS.value(),
+            Languages.COMMAND_CREATE_SUCCESS,
             CollectionsUtil.newStringHashMap("<recipe_type>", RecipeManager.INSTANCE.getRecipeTypeName(recipeType), "<recipe_name>", recipeName)
         );
     }
 
-    protected YamlConfigWrapper createRecipeConfig(String recipeName) {
+    protected ConfigWrapper createRecipeConfig(String recipeName) {
         File recipeFile = new File(RecipeManager.INSTANCE.RECIPE_FILE_FOLDER, recipeName + ".yml");
         if (!recipeFile.exists()) {
             FileUtil.createNewFile(recipeFile);
         }
-        return new YamlConfigWrapper(recipeFile);
+        return new ConfigWrapper(recipeFile);
     }
 
     protected Icon getResultFrameIcon() {

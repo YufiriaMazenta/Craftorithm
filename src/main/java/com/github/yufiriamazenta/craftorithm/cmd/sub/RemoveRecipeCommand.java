@@ -30,10 +30,10 @@ public final class RemoveRecipeCommand extends AbstractSubCommand {
         }
 
         if (RecipeManager.INSTANCE.removeCraftorithmRecipe(args.get(0), true)) {
-            LangUtil.sendLang(sender, Languages.COMMAND_REMOVE_SUCCESS.value());
+            LangUtil.sendLang(sender, Languages.COMMAND_REMOVE_SUCCESS);
         }
         else
-            LangUtil.sendLang(sender, Languages.COMMAND_REMOVE_NOT_EXIST.value());
+            LangUtil.sendLang(sender, Languages.COMMAND_REMOVE_NOT_EXIST);
         return true;
     }
 

@@ -33,7 +33,7 @@ public class ItemGiveCommand extends AbstractSubCommand {
         if (args.size() >= 2) {
             player = Bukkit.getPlayer(args.get(1));
             if (player == null) {
-                LangUtil.sendLang(sender, Languages.COMMAND_ITEM_GIVE_PLAYER_OFFLINE.value());
+                LangUtil.sendLang(sender, Languages.COMMAND_ITEM_GIVE_PLAYER_OFFLINE);
                 return true;
             }
         } else {
@@ -46,12 +46,12 @@ public class ItemGiveCommand extends AbstractSubCommand {
 
         ItemStack itemStack = CraftorithmItemProvider.INSTANCE.getItem(args.get(0));
         if (itemStack == null) {
-            LangUtil.sendLang(sender, Languages.COMMAND_ITEM_GIVE_NOT_EXIST_ITEM.value(), CollectionsUtil.newStringHashMap("<item_name>", args.get(0)));
+            LangUtil.sendLang(sender, Languages.COMMAND_ITEM_GIVE_NOT_EXIST_ITEM, CollectionsUtil.newStringHashMap("<item_name>", args.get(0)));
             return true;
         }
 
         player.getInventory().addItem(itemStack);
-        LangUtil.sendLang(sender, Languages.COMMAND_ITEM_GIVE_SUCCESS.value());
+        LangUtil.sendLang(sender, Languages.COMMAND_ITEM_GIVE_SUCCESS);
         return true;
     }
 

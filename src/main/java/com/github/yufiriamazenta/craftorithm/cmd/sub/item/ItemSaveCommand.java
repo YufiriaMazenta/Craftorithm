@@ -33,12 +33,12 @@ public final class ItemSaveCommand extends AbstractSubCommand {
 
         ItemStack item = ((Player) sender).getInventory().getItemInMainHand();
         if (item.getType().equals(Material.AIR)) {
-            LangUtil.sendLang(sender, Languages.COMMAND_ITEM_SAVE_FAILED_SAVE_AIR.value());
+            LangUtil.sendLang(sender, Languages.COMMAND_ITEM_SAVE_FAILED_SAVE_AIR);
             return true;
         }
 
         CraftorithmItemProvider.INSTANCE.regCraftorithmItem(args.get(0), args.get(1), item.clone());
-        LangUtil.sendLang(sender, Languages.COMMAND_ITEM_SAVE_SUCCESS.value());
+        LangUtil.sendLang(sender, Languages.COMMAND_ITEM_SAVE_SUCCESS);
         return true;
     }
 

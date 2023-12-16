@@ -1,10 +1,10 @@
 package com.github.yufiriamazenta.craftorithm.config;
 
-import crypticlib.config.yaml.YamlConfigHandler;
-import crypticlib.config.yaml.entry.BooleanConfigEntry;
-import crypticlib.config.yaml.entry.StringConfigEntry;
+import crypticlib.config.ConfigHandler;
+import crypticlib.config.entry.BooleanConfigEntry;
+import crypticlib.config.entry.StringConfigEntry;
 
-@YamlConfigHandler(path = "config.yml")
+@ConfigHandler(path = "config.yml")
 public class PluginConfigs {
 
     public final static BooleanConfigEntry CHECK_UPDATE = new BooleanConfigEntry("check_update", true);

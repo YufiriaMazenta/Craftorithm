@@ -35,7 +35,7 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
         initArcenciel();
         loadBStat();
         
-        LangUtil.info(Languages.LOAD_FINISH.value());
+        LangUtil.info(Languages.LOAD_FINISH);
         UpdateUtil.pullUpdateCheckRequest(Bukkit.getConsoleSender());
     }
 
