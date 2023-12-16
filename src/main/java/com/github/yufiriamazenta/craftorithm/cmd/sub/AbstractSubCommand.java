@@ -24,12 +24,12 @@ public abstract class AbstractSubCommand extends SubcmdExecutor {
     public boolean onCommand(CommandSender sender, List<String> args) {
         ISubcmdExecutor subCommand = subcommands().get(args.get(0));
         if (subCommand == null) {
-            LangUtil.sendLang(sender, Languages.COMMAND_UNDEFINED_SUBCMD.value());
+            LangUtil.sendLang(sender, Languages.COMMAND_UNDEFINED_SUBCMD);
         } else {
             String perm = subCommand.permission();
             if (perm != null) {
                 if (!sender.hasPermission(perm)) {
-                    LangUtil.sendLang(sender, Languages.COMMAND_NO_PERM.value());
+                    LangUtil.sendLang(sender, Languages.COMMAND_NO_PERM);
                     return true;
                 }
             }
@@ -43,14 +43,14 @@ public abstract class AbstractSubCommand extends SubcmdExecutor {
     }
 
     public void sendNotEnoughCmdParamMsg(CommandSender sender, String paramStr) {
-        LangUtil.sendLang(sender, Languages.COMMAND_NOT_ENOUGH_PARAM.value(), CollectionsUtil.newStringHashMap("<number>", paramStr));
+        LangUtil.sendLang(sender, Languages.COMMAND_NOT_ENOUGH_PARAM, CollectionsUtil.newStringHashMap("<number>", paramStr));
     }
 
     public boolean checkSenderIsPlayer(CommandSender sender) {
         if (sender instanceof Player) {
             return true;
         } else {
-            LangUtil.sendLang(sender, Languages.COMMAND_PLAYER_ONLY.value());
+            LangUtil.sendLang(sender, Languages.COMMAND_PLAYER_ONLY);
             return false;
         }
     }

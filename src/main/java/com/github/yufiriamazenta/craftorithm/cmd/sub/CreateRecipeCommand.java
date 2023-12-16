@@ -50,17 +50,17 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
         }
         String recipeTypeStr = args.get(0).toLowerCase(Locale.ROOT);
         if (!recipeTypeList.contains(recipeTypeStr)) {
-            LangUtil.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE.value());
+            LangUtil.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
             return true;
         }
         String recipeName = args.get(1);
         Matcher matcher = recipeNamePattern.matcher(recipeName);
         if (!matcher.matches()) {
-            LangUtil.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_NAME.value());
+            LangUtil.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_NAME);
             return true;
         }
         if (RecipeManager.INSTANCE.hasCraftorithmRecipe(recipeName)) {
-            LangUtil.sendLang(sender, Languages.COMMAND_CREATE_NAME_USED.value());
+            LangUtil.sendLang(sender, Languages.COMMAND_CREATE_NAME_USED);
             return true;
         }
         RecipeType recipeType = RecipeType.valueOf(recipeTypeStr.toUpperCase(Locale.ROOT));
@@ -86,7 +86,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                 new AnvilRecipeCreator(player, recipeName).openMenu();
                 break;
             default:
-                LangUtil.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE.value());
+                LangUtil.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
                 break;
         }
         return true;

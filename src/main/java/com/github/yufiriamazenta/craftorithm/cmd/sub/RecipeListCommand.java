@@ -26,7 +26,7 @@ public final class RecipeListCommand extends AbstractSubCommand {
     @Override
     public boolean onCommand(CommandSender sender, List<String> args) {
         if (CrypticLib.minecraftVersion() < 11600) {
-            LangUtil.sendLang(sender, Languages.COMMAND_LIST_UNSUPPORTED_VERSION.value());
+            LangUtil.sendLang(sender, Languages.COMMAND_LIST_UNSUPPORTED_VERSION);
             return true;
         }
         if (!checkSenderIsPlayer(sender)) {

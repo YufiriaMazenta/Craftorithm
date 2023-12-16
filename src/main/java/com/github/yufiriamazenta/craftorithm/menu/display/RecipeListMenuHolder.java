@@ -4,9 +4,9 @@ import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import crypticlib.CrypticLib;
+import crypticlib.chat.TextProcessor;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.menu.Menu;
-import crypticlib.util.TextUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -85,15 +85,15 @@ public class RecipeListMenuHolder extends Menu {
     private void resetIcons() {
         slotMap().clear();
         int []frame = {45, 47, 48, 49, 50, 51, 53};
-        Icon frameIcon = new Icon(Material.BLACK_STAINED_GLASS_PANE, TextUtil.color(Languages.MENU_RECIPE_LIST_ICON_FRAME.value()));
+        Icon frameIcon = new Icon(Material.BLACK_STAINED_GLASS_PANE, TextProcessor.color(Languages.MENU_RECIPE_LIST_ICON_FRAME.value()));
         for (int i : frame) {
             slotMap().put(i, frameIcon);
         }
-        slotMap().put(46, new Icon(Material.PAPER, TextUtil.color(Languages.MENU_RECIPE_LIST_ICON_PREVIOUS.value()), (event -> {
+        slotMap().put(46, new Icon(Material.PAPER, TextProcessor.color(Languages.MENU_RECIPE_LIST_ICON_PREVIOUS.value()), (event -> {
             event.setCancelled(true);
             previousPage();
         })));
-        slotMap().put(52, new Icon(Material.PAPER, TextUtil.color(Languages.MENU_RECIPE_LIST_ICON_NEXT.value()), (event -> {
+        slotMap().put(52, new Icon(Material.PAPER, TextProcessor.color(Languages.MENU_RECIPE_LIST_ICON_NEXT.value()), (event -> {
             event.setCancelled(true);
             nextPage();
         })));
@@ -135,7 +135,7 @@ public class RecipeListMenuHolder extends Menu {
     @Override
     public Inventory getInventory() {
         resetIcons();
-        Inventory inventory = Bukkit.createInventory(this, 54, TextUtil.color(Languages.MENU_RECIPE_LIST_TITLE.value()));
+        Inventory inventory = Bukkit.createInventory(this, 54, TextProcessor.color(Languages.MENU_RECIPE_LIST_TITLE.value()));
         for (Integer slot : slotMap().keySet()) {
             inventory.setItem(slot, slotMap().get(slot).display());
         }

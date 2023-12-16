@@ -4,8 +4,8 @@ import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.item.impl.CraftorithmItemProvider;
 import com.google.common.base.Preconditions;
+import crypticlib.chat.TextProcessor;
 import crypticlib.util.ItemUtil;
-import crypticlib.util.TextUtil;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -26,7 +26,7 @@ public class ItemUtils {
     }
 
     public static void reloadCannotCraftLore() {
-        cannotCraftLore = TextUtil.color(PluginConfigs.LORE_CANNOT_CRAFT.value());
+        cannotCraftLore = TextProcessor.color(PluginConfigs.LORE_CANNOT_CRAFT.value());
         try {
             cannotCraftLorePattern = Pattern.compile(cannotCraftLore);
             cannotCraftLoreIsRegex = true;
@@ -101,7 +101,7 @@ public class ItemUtils {
         ItemMeta itemMeta = item.getItemMeta();
         itemMeta.setLore(lore);
         if (format)
-            itemMeta.getLore().replaceAll(TextUtil::color);
+            itemMeta.getLore().replaceAll(TextProcessor::color);
     }
 
 }

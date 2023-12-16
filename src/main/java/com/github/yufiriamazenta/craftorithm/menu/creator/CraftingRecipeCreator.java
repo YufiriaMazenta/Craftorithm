@@ -8,7 +8,7 @@ import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import com.google.common.base.Preconditions;
-import crypticlib.config.yaml.YamlConfigWrapper;
+import crypticlib.config.ConfigWrapper;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.display.MenuLayout;
@@ -50,7 +50,7 @@ public class CraftingRecipeCreator extends UnlockableRecipeCreator {
                         Map<Integer, ItemStack> storedItems = Objects.requireNonNull(creator).storedItems();
                         ItemStack result = storedItems.get(24);
                         if (ItemUtil.isAir(result)) {
-                            LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_RESULT.value());
+                            LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_RESULT);
                             return;
                         }
                         String resultName = ItemUtils.matchItemNameOrCreate(result, false);
@@ -65,7 +65,7 @@ public class CraftingRecipeCreator extends UnlockableRecipeCreator {
                             String sourceName = ItemUtils.matchItemNameOrCreate(source, true);
                             sourceList.add(sourceName);
                         }
-                        YamlConfigWrapper recipeConfig = createRecipeConfig(recipeName);
+                        ConfigWrapper recipeConfig = createRecipeConfig(recipeName);
                         switch (recipeType()) {
                             case SHAPED:
                                 List<String> shape = new ArrayList<>(Arrays.asList("abc", "def", "ghi"));

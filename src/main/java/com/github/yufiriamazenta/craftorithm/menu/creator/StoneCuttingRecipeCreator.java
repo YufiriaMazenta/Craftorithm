@@ -7,7 +7,7 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import crypticlib.config.yaml.YamlConfigWrapper;
+import crypticlib.config.ConfigWrapper;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.display.MenuLayout;
@@ -55,14 +55,14 @@ public class StoneCuttingRecipeCreator extends UnlockableRecipeCreator {
                                 resultList.add(ItemUtils.matchItemNameOrCreate(result, false));
                             }
                             if (sourceList.isEmpty()) {
-                                LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_SOURCE.value());
+                                LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_SOURCE);
                                 return;
                             }
                             if (resultList.isEmpty()) {
-                                LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_RESULT.value());
+                                LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_RESULT);
                                 return;
                             }
-                            YamlConfigWrapper recipeConfig = createRecipeConfig(recipeName);
+                            ConfigWrapper recipeConfig = createRecipeConfig(recipeName);
                             recipeConfig.set("multiple", true);
                             recipeConfig.set("result", resultList);
                             recipeConfig.set("type", "stone_cutting");
