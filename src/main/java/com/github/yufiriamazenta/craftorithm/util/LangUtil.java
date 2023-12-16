@@ -3,8 +3,6 @@ package com.github.yufiriamazenta.craftorithm.util;
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import crypticlib.chat.MessageSender;
-import crypticlib.chat.TextProcessor;
-import crypticlib.chat.entry.LangConfigEntry;
 import crypticlib.chat.entry.StringLangConfigEntry;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -23,7 +21,12 @@ public class LangUtil {
         if (receiver == null) {
             return;
         }
-        formatMap.put("<prefix>", Languages.PREFIX.value());
+        String prefix;
+        if (receiver instanceof Player)
+            prefix = Languages.PREFIX.value((Player) receiver);
+        else
+            prefix = Languages.PREFIX.value();
+        formatMap.put("<prefix>", prefix);
         formatMap.put("<version>", Craftorithm.instance().getDescription().getVersion());
         MessageSender.sendMsg(receiver, message, formatMap);
     }

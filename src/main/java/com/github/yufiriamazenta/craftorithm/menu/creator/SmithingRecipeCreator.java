@@ -53,12 +53,15 @@ public class SmithingRecipeCreator extends UnlockableRecipeCreator {
                     () -> {
                         Map<Character, Icon> layoutMap = new HashMap<>();
                         layoutMap.put('#', getFrameIcon());
-                        layoutMap.put('*', new Icon(Material.CYAN_STAINED_GLASS_PANE, Languages.MENU_RECIPE_CREATOR_ICON_SMITHING_FRAME.value()));
+                        layoutMap.put('*', new Icon(
+                            Material.CYAN_STAINED_GLASS_PANE,
+                            Languages.MENU_RECIPE_CREATOR_ICON_SMITHING_FRAME.value(player)
+                        ));
                         layoutMap.put('%', getResultFrameIcon());
                         layoutMap.put('F', getUnlockIcon());
                         layoutMap.put('A', new Icon(
                             Material.SMITHING_TABLE,
-                            Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(),
+                            Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(player),
                             event -> {
                                 StoredMenu creator = (StoredMenu) Objects.requireNonNull(event.getClickedInventory()).getHolder();
                                 ItemStack result = Objects.requireNonNull(creator).storedItems().get(24);

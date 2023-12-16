@@ -36,8 +36,8 @@ public abstract class RecipeCreator extends StoredMenu {
         super(player);
         this.recipeName = recipeName;
         this.recipeType = recipeType;
-        this.title = Languages.MENU_RECIPE_CREATOR_TITLE.value()
-            .replace("<recipe_type>", RecipeManager.INSTANCE.getRecipeTypeName(recipeType))
+        this.title = Languages.MENU_RECIPE_CREATOR_TITLE.value(player)
+            .replace("<recipe_type>", RecipeManager.INSTANCE.getRecipeTypeName(recipeType).value(player))
             .replace("<recipe_name>", recipeName);
     }
 
@@ -64,14 +64,19 @@ public abstract class RecipeCreator extends StoredMenu {
     }
 
     protected Icon getFrameIcon() {
-        return new Icon(Material.BLACK_STAINED_GLASS_PANE, Languages.MENU_RECIPE_CREATOR_ICON_FRAME.value());
+        return new Icon(Material.BLACK_STAINED_GLASS_PANE, Languages.MENU_RECIPE_CREATOR_ICON_FRAME.value(player()));
     }
 
     protected void sendSuccessMsg(HumanEntity receiver, String recipeName) {
         LangUtil.sendLang(
             receiver,
             Languages.COMMAND_CREATE_SUCCESS,
-            CollectionsUtil.newStringHashMap("<recipe_type>", RecipeManager.INSTANCE.getRecipeTypeName(recipeType), "<recipe_name>", recipeName)
+            CollectionsUtil.newStringHashMap(
+                "<recipe_type>",
+                RecipeManager.INSTANCE.getRecipeTypeName(recipeType).value((Player) receiver),
+                "<recipe_name>",
+                recipeName
+            )
         );
     }
 
@@ -84,7 +89,7 @@ public abstract class RecipeCreator extends StoredMenu {
     }
 
     protected Icon getResultFrameIcon() {
-        return new Icon(Material.LIME_STAINED_GLASS_PANE, Languages.MENU_RECIPE_CREATOR_ICON_RESULT_FRAME.value());
+        return new Icon(Material.LIME_STAINED_GLASS_PANE, Languages.MENU_RECIPE_CREATOR_ICON_RESULT_FRAME.value(player()));
     }
 
     public RecipeType recipeType() {

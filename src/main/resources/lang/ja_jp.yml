@@ -1,0 +1,115 @@
+prefix: '&8[&3Craftorithm&8]'
+unsupported_version: '<prefix> サポートされていないバージョン'
+new_version: '<prefix> &a新しいバージョン <new_version> が検出されました。新しいバージョンにアップデートしてください。'
+#使用命令的一些反馈消息
+command:
+  no_perm: '<prefix> &cこのコマンドを使用する権限がありません。'
+  player_only: '<prefix> &cこのコマンドはプレイヤーのみが実行できます。'
+  not_enough_param: '<prefix> &cコマンドにはパラメータが不足しており、<number> 個のパラメータが必要です。'
+  undefined_subcmd: '<prefix> &c未定義のサブコマンド'
+  item:
+    save:
+      success: '<prefix> &aアイテムが保存されました。'
+      failed_save_air: '<prefix> &cアイテムの保存に失敗しました。理由：存在しないアイテムを保存することはできません。'
+    give:
+      success: '<prefix> &aアイテムの取得に成功しました。'
+      not_exist_item: '<prefix> &c存在しないアイテム <item_name>'
+      player_offline: '<prefix> &cそのプレイヤーはオフラインであるか、存在しません。'
+  reload:
+    success: '<prefix> &aプラグインのリロードが成功しました。'
+    exception: '<prefix> &cプラグインのリロード中にエラーが発生しました。コンソールを確認してください。'
+  remove:
+    success: '<prefix> &aレシピが削除されました。'
+    not_exist: '<prefix> &cそのレシピは存在しません。'
+  disable:
+    success: '<prefix> &cレシピの無効化に成功しました。'
+    not_exist: '<prefix> &cそのレシピは存在しないか、すでに無効化されています。'
+    failed: '<prefix> &cレシピの無効化に失敗しました。おそらくすでに無効化されているか、存在しない可能性があります。'
+  version: '<prefix> &aプラグインのバージョン: <version>'
+  create:
+    unsupported_recipe_type: '<prefix> &cサポートされていないレシピの種類'
+    unsupported_recipe_name: '<prefix> &cサポートされていないレシピ名です。使用可能な[a-z0-9/._-]+の文字のみが許可されています。'
+    name_used: '<prefix> &cそのレシピIDはすでに使用されています。'
+    null_result: '<prefix> &cレシピの結果は空にすることはできません！'
+    null_source: '<prefix> &cレシピの材料を空にすることはできません！'
+    success: '<prefix> &a<recipe_type>のタイプのレシピ<recipe_name>が作成されました。'
+  run_arcenciel:
+    success: '<prefix> &a実行に成功しました。所要時間<time>ミリ秒'
+  list:
+    unsupported_version: '<prefix> &cこの機能は1.16以降のバージョンでのみ利用可能です。'
+menu:
+  recipe_list:
+    title: '&3&lレシピリスト'
+    icon:
+      frame: '&3&lレシピリスト'
+      previous: '&a前のページ'
+      next: '&a次のページ'
+  new_recipe_list:
+    title: '&3&lCraftorithmの新しいレシピリスト'
+    icon:
+      frame: '&3&l新しいレシピリスト'
+      previous: '&a前のページ'
+      next: '&a次のページ'
+  recipe_display:
+    title:
+      shaped: 順序付きのレシピ
+      shapeless: 順不同のレシピ
+      furnace: 溶鉱炉のレシピ
+      blasting: 高炉のレシピ
+      smoking: 燻製炉のレシピ
+      campfire: キャンプファイアのレシピ
+      smithing: 鍛冶のレシピ
+      stone_cutting: 切り石のレシピ
+      potion: 醸造台のレシピ
+      anvil: 鉄床のレシピ
+  recipe_creator:
+    title: '&3<recipe_type>レシピの作成: <recipe_name>'
+    icon:
+      frame: '&aレシピの作成'
+      result_frame: '&aレシピの結果'
+      confirm: '&3&l作成を確認'
+      unlock: '&aプレイヤーによるレシピのアンロック:<unlock>'
+      cooking_frame: '&a製錬素材'
+      furnace_toggle: '&a溶鉱炉のレシピを有効にする:<enable>'
+      blast_furnace_toggle: '&a高炉のレシピを有効にする:<enable>'
+      smoker_toggle: '&a燻製炉のレシピを有効にする:<enable>'
+      campfire_toggle: '&aキャンプファイアのレシピを有効にする:<enable>'
+      cooking_time:
+        name: '&a製錬時間: <time> tick'
+        lore:
+          - '&3製錬時間を変更するをクリック'
+        input_hint: '&a製錬時間を入力してください。単位はtickです。キャンセルするにはcancelと入力してください。'
+      cooking_exp:
+        name: '&a経験値報酬: <exp>'
+        lore:
+          - '&3経験値報酬を変更するをクリックし、キャンセルするにはcancelと入力してください。'
+        input_hint: '&a経験値報酬を入力してください'
+      smithing_frame: '&a鍛冶アイテム'
+      potion_frame: '&a醸造素材'
+      anvil_frame: '&a鍛冶素材'
+      anvil_copy_nbt_toggle: '&aアイテムNBTを保持:<enable>'
+      anvil_cost_level:
+        name: '&a必要レベル: <level>'
+        lore:
+          - '&3必要レベルを変更するをクリック'
+        input_hint: '&a必要レベルを入力してください。キャンセルするにはcancelと入力してください。'
+recipe_type_name:
+  shaped: 順序
+  shapeless: 順不同
+  cooking: 製錬
+  smithing: 鍛冶
+  stone_cutting: 切り石
+  potion: 醸造
+  anvil: 鉄床
+#Arcenciel脚本的提示消息
+arcenciel:
+  not_enough_param: '<prefix> &c文"<statement>"は不完全です'
+  unknown_token: '<prefix> &c未定義のキーワードや関数<token>'
+#插件加载的反馈信息
+load:
+  finish: '<prefix> &aプラグインが正常に読み込まれました'
+  recipe_load_exception: '<prefix> &c<recipe_name>のレシピの読み込み中にエラーが発生しました'
+  item_load_exception: '<prefix> &c<item_name>のアイテムの読み込み中にエラーが発生しました'
+  hook_plugin:
+    success: '<prefix> &a<plugin>が見つかり、フックされました'
+    not_exist: '<prefix> &c<plugin>が見つかりません'

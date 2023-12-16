@@ -37,7 +37,9 @@ public class StoneCuttingRecipeCreator extends UnlockableRecipeCreator {
                     Map<Character, Icon> layoutMap = new HashMap<>();
                     layoutMap.put('#', getFrameIcon());
                     layoutMap.put('F', getUnlockIcon());
-                    layoutMap.put('A', new Icon(Material.STONECUTTER, Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(),
+                    layoutMap.put('A', new Icon(
+                        Material.STONECUTTER,
+                        Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(player),
                         event -> {
                             StoredMenu creator = (StoredMenu) event.getClickedInventory().getHolder();
                             List<String> sourceList = new ArrayList<>();

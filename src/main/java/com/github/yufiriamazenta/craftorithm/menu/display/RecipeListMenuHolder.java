@@ -85,18 +85,29 @@ public class RecipeListMenuHolder extends Menu {
     private void resetIcons() {
         slotMap().clear();
         int []frame = {45, 47, 48, 49, 50, 51, 53};
-        Icon frameIcon = new Icon(Material.BLACK_STAINED_GLASS_PANE, TextProcessor.color(Languages.MENU_RECIPE_LIST_ICON_FRAME.value()));
+        Icon frameIcon = new Icon(
+            Material.BLACK_STAINED_GLASS_PANE,
+            TextProcessor.color(Languages.MENU_RECIPE_LIST_ICON_FRAME.value(player()))
+        );
         for (int i : frame) {
             slotMap().put(i, frameIcon);
         }
-        slotMap().put(46, new Icon(Material.PAPER, TextProcessor.color(Languages.MENU_RECIPE_LIST_ICON_PREVIOUS.value()), (event -> {
-            event.setCancelled(true);
-            previousPage();
-        })));
-        slotMap().put(52, new Icon(Material.PAPER, TextProcessor.color(Languages.MENU_RECIPE_LIST_ICON_NEXT.value()), (event -> {
-            event.setCancelled(true);
-            nextPage();
-        })));
+        slotMap().put(46, new Icon(
+            Material.PAPER,
+            TextProcessor.color(Languages.MENU_RECIPE_LIST_ICON_PREVIOUS.value(player())),
+            event -> {
+                event.setCancelled(true);
+                previousPage();
+            }
+        ));
+        slotMap().put(52, new Icon(
+            Material.PAPER,
+            TextProcessor.color(Languages.MENU_RECIPE_LIST_ICON_NEXT.value(player())),
+            event -> {
+                event.setCancelled(true);
+                nextPage();
+            }
+        ));
         int recipeSlot = page * 45;
         for (int i = 0; i < 45 && recipeSlot < recipeList.size(); i++, recipeSlot ++) {
             Recipe recipe = recipeList.get(recipeSlot);
@@ -135,7 +146,11 @@ public class RecipeListMenuHolder extends Menu {
     @Override
     public Inventory getInventory() {
         resetIcons();
-        Inventory inventory = Bukkit.createInventory(this, 54, TextProcessor.color(Languages.MENU_RECIPE_LIST_TITLE.value()));
+        Inventory inventory = Bukkit.createInventory(
+            this,
+            54,
+            TextProcessor.color(Languages.MENU_RECIPE_LIST_TITLE.value(player()))
+        );
         for (Integer slot : slotMap().keySet()) {
             inventory.setItem(slot, slotMap().get(slot).display());
         }
