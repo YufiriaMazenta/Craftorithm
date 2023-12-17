@@ -82,8 +82,8 @@ menu:
       cooking_exp:
         name: '&a獎勵經驗值： <exp>'
         lore:
-          - '&3點擊修改獎勵經驗，輸入"cancel"取消。'
-        input_hint: '&a請輸入獎勵經驗'
+          - '&3點擊修改獎勵經驗'
+        input_hint: '&a請輸入獎勵經驗，輸入"cancel"取消。'
       smithing_frame: '&a鍛造物品'
       potion_frame: '&a釀造原料'
       anvil_frame: '&a製作材料'

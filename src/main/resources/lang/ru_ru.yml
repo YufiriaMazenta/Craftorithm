@@ -1,6 +1,6 @@
 prefix: '&8[&3Craftorithm&8]'
 unsupported_version: '<prefix> неподдерживаемая версия.'
-new_version: '<prefix> &aОбнаружена новая версия <new_version>, пожалуйста, обновитесь вовремя.'
+new_version: '<prefix> &aОбнаружена новая версия <new_version>, пожалуйста, обновитесь.'
 #使用命令的一些反馈消息
 command:
   no_perm: '<prefix> &cУ вас нет разрешения на выполнение этой команды.'

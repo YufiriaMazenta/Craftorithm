@@ -82,8 +82,8 @@ menu:
       cooking_exp:
         name: '&a経験値報酬: <exp>'
         lore:
-          - '&3経験値報酬を変更するをクリックし、キャンセルするにはcancelと入力してください。'
-        input_hint: '&a経験値報酬を入力してください'
+          - '&3経験値報酬を変更するをクリックし'
+        input_hint: '&a経験値報酬を入力してください、キャンセルするにはcancelと入力してください。'
       smithing_frame: '&a鍛冶アイテム'
       potion_frame: '&a醸造素材'
       anvil_frame: '&a鍛冶素材'

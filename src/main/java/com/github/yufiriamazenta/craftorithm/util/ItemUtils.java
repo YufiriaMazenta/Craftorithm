@@ -102,6 +102,7 @@ public class ItemUtils {
         itemMeta.setLore(lore);
         if (format)
             itemMeta.getLore().replaceAll(TextProcessor::color);
+        item.setItemMeta(itemMeta);
     }
 
 }

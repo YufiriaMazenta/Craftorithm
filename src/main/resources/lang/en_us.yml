@@ -78,12 +78,12 @@ menu:
         name: '&aCooking Time: <time> tick'
         lore:
           - '&3Click to Modify Cooking Time'
-        input_hint: '&aPlease enter cooking time in ticks. Type ''cancel'' to cancel.'
+        input_hint: '&aPlease enter cooking time in ticks. Type "cancel" to cancel.'
       cooking_exp:
         name: '&aExperience Reward: <exp>'
         lore:
-          - '&3Click to Modify Experience Reward. Type ''cancel'' to cancel.'
-        input_hint: '&aPlease enter experience reward.'
+          - '&3Click to Modify Experience Reward.'
+        input_hint: '&aPlease enter experience reward. Type "cancel" to cancel.'
       smithing_frame: '&aSmithing Ingredients'
       potion_frame: '&aBrewing Ingredients'
       anvil_frame: '&aAnvil Ingredients'

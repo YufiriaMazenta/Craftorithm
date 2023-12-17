@@ -181,8 +181,8 @@ public class AnvilRecipeCreator extends RecipeCreator {
         }
 
         @Override
-        public @NotNull StringLangConfigEntry promptText(@NotNull Map<Object, Object> data) {
-            return Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_INPUT_HINT;
+        public @NotNull String promptText(@NotNull Map<Object, Object> data) {
+            return Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_INPUT_HINT.value(player());
         }
     }
 

@@ -82,8 +82,8 @@ menu:
       cooking_exp:
         name: '&aBelohnung Erfahrung: <exp>'
         lore:
-          - '&3Klicken Sie auf Änderung der Belohnung Erfahrung, geben Sie "cancel" ein, um abzubrechen'
-        input_hint: '&aBitte geben Sie die Belohnung Erfahrung ein'
+          - '&3Klicken Sie auf Änderung der Belohnung Erfahrung'
+        input_hint: '&aBitte geben Sie die Belohnung Erfahrung ein, geben Sie "cancel" ein, um abzubrechen'
       smithing_frame: '&aGegenstände schmieden'
       potion_frame: '&aZum Brauen bestimmte Zutaten'
       anvil_frame: '&aSchmiede-Materialien'
