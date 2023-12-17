@@ -268,8 +268,8 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
         }
 
         @Override
-        public @NotNull StringLangConfigEntry promptText(@NotNull Map<Object, Object> data) {
-            return Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_INPUT_HINT;
+        public @NotNull String promptText(@NotNull Map<Object, Object> data) {
+            return Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_INPUT_HINT.value(player());
         }
     }
 
@@ -284,8 +284,8 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
         }
 
         @Override
-        public @NotNull StringLangConfigEntry promptText(@NotNull Map<Object, Object> data) {
-            return Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_INPUT_HINT;
+        public @NotNull String promptText(@NotNull Map<Object, Object> data) {
+            return Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_INPUT_HINT.value(player());
         }
     }
 
