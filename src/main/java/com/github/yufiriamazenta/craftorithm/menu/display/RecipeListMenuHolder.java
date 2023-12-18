@@ -68,45 +68,39 @@ public class RecipeListMenuHolder extends Menu {
 
     public void nextPage() {
         setPage(Math.min(page + 1, maxPage - 1)).resetIcons();
-        openedInventory().clear();
-        for (Integer slot : slotMap().keySet()) {
-            openedInventory().setItem(slot, slotMap().get(slot).display());
+        openedInventory.clear();
+        for (Integer slot : slotMap.keySet()) {
+            openedInventory.setItem(slot, slotMap.get(slot).display());
         }
     }
 
     public void previousPage() {
         setPage(Math.max(page - 1, 0)).resetIcons();
-        openedInventory().clear();
-        for (Integer slot : slotMap().keySet()) {
-            openedInventory().setItem(slot, slotMap().get(slot).display());
+        openedInventory.clear();
+        for (Integer slot : slotMap.keySet()) {
+            openedInventory.setItem(slot, slotMap.get(slot).display());
         }
     }
 
     private void resetIcons() {
-        slotMap().clear();
+        slotMap.clear();
         int []frame = {45, 47, 48, 49, 50, 51, 53};
         Icon frameIcon = new Icon(
             Material.BLACK_STAINED_GLASS_PANE,
-            TextProcessor.color(Languages.MENU_RECIPE_LIST_ICON_FRAME.value(player()))
+            TextProcessor.color(Languages.MENU_RECIPE_LIST_ICON_FRAME.value(player))
         );
         for (int i : frame) {
-            slotMap().put(i, frameIcon);
+            slotMap.put(i, frameIcon);
         }
-        slotMap().put(46, new Icon(
+        slotMap.put(46, new Icon(
             Material.PAPER,
-            TextProcessor.color(Languages.MENU_RECIPE_LIST_ICON_PREVIOUS.value(player())),
-            event -> {
-                event.setCancelled(true);
-                previousPage();
-            }
+            TextProcessor.color(Languages.MENU_RECIPE_LIST_ICON_PREVIOUS.value(player)),
+            event -> previousPage()
         ));
-        slotMap().put(52, new Icon(
+        slotMap.put(52, new Icon(
             Material.PAPER,
-            TextProcessor.color(Languages.MENU_RECIPE_LIST_ICON_NEXT.value(player())),
-            event -> {
-                event.setCancelled(true);
-                nextPage();
-            }
+            TextProcessor.color(Languages.MENU_RECIPE_LIST_ICON_NEXT.value(player)),
+            event -> nextPage()
         ));
         int recipeSlot = page * 45;
         for (int i = 0; i < 45 && recipeSlot < recipeList.size(); i++, recipeSlot ++) {
@@ -114,15 +108,12 @@ public class RecipeListMenuHolder extends Menu {
             if (recipe == null)
                 continue;
             ItemStack display = recipe.getResult();
-            slotMap().put(i, new Icon(display, (event -> {
-                event.setCancelled(true);
-                new RecipeDisplayMenuHolder(player(), recipe, this).openMenu();
-            })));
+            slotMap.put(i, new Icon(display, (event -> new RecipeDisplayMenuHolder(player, recipe, this).openMenu())));
         }
         for (int i = 0; i < 45; i++) {
-            if (slotMap().containsKey(i))
+            if (slotMap.containsKey(i))
                 continue;
-            slotMap().put(i, new Icon(new ItemStack(Material.AIR)));
+            slotMap.put(i, new Icon(new ItemStack(Material.AIR)));
         }
     }
 
@@ -149,15 +140,15 @@ public class RecipeListMenuHolder extends Menu {
         Inventory inventory = Bukkit.createInventory(
             this,
             54,
-            TextProcessor.color(Languages.MENU_RECIPE_LIST_TITLE.value(player()))
+            TextProcessor.color(Languages.MENU_RECIPE_LIST_TITLE.value(player))
         );
-        for (Integer slot : slotMap().keySet()) {
-            inventory.setItem(slot, slotMap().get(slot).display());
+        for (Integer slot : slotMap.keySet()) {
+            inventory.setItem(slot, slotMap.get(slot).display());
         }
         return inventory;
     }
 
-    public int getPage() {
+    public int page() {
         return page;
     }
 

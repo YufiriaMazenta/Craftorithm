@@ -9,7 +9,6 @@ import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.chat.TextProcessor;
-import crypticlib.chat.entry.StringLangConfigEntry;
 import crypticlib.config.ConfigWrapper;
 import crypticlib.conversation.Conversation;
 import crypticlib.conversation.NumberPrompt;
@@ -113,7 +112,7 @@ public class AnvilRecipeCreator extends RecipeCreator {
         Icon icon = new Icon(
             Material.NAME_TAG,
             Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COPY_NBT_TOGGLE
-                .value(player())
+                .value(player)
                 .replace("<enable>", String.valueOf(copyNbt)),
             event -> toggleCopyNbt(event.getSlot(), event)
         );
@@ -130,7 +129,7 @@ public class AnvilRecipeCreator extends RecipeCreator {
         itemMeta.setDisplayName(
             TextProcessor.color(
                 Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COPY_NBT_TOGGLE
-                    .value(player())
+                    .value(player)
                     .replace("<enable>", String.valueOf(copyNbt))
             )
         );
@@ -140,7 +139,7 @@ public class AnvilRecipeCreator extends RecipeCreator {
     protected Icon getCostLevelIcon() {
         Icon icon = new Icon(
             Material.EXPERIENCE_BOTTLE,
-            TextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_NAME.value(player()))
+            TextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_NAME.value(player))
                 .replace("<level>", String.valueOf(costLevel)),
             event -> {
                 Player player = (Player) event.getWhoClicked();
@@ -148,14 +147,14 @@ public class AnvilRecipeCreator extends RecipeCreator {
                     Craftorithm.instance(),
                     player,
                     new CostLevelPrompt(),
-                    data -> player().openInventory(openedInventory())
+                    data -> player.openInventory(openedInventory())
                 );
                 inConversation = true;
                 conversation.start();
                 player.closeInventory();
             }
         );
-        ItemUtils.setLore(icon.display(), Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_LORE.value(player()));
+        ItemUtils.setLore(icon.display(), Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_LORE.value(player));
         return icon;
     }
 
@@ -164,7 +163,7 @@ public class AnvilRecipeCreator extends RecipeCreator {
         if (costLevelIcon == null)
             return;
         ItemMeta itemMeta = costLevelIcon.getItemMeta();
-        itemMeta.setDisplayName(TextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_NAME.value(player()))
+        itemMeta.setDisplayName(TextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_NAME.value(player))
             .replace("<level>", String.valueOf(costLevel)));
         costLevelIcon.setItemMeta(itemMeta);
     }
@@ -174,7 +173,7 @@ public class AnvilRecipeCreator extends RecipeCreator {
         @Nullable
         public Prompt acceptValidatedInput(@NotNull Map<Object, Object> data, @NotNull Number number) {
             costLevel = number.intValue();
-            player().openInventory(openedInventory());
+            player.openInventory(openedInventory());
             updateCostLevelIcon();
             inConversation = false;
             return null;
@@ -182,7 +181,7 @@ public class AnvilRecipeCreator extends RecipeCreator {
 
         @Override
         public @NotNull String promptText(@NotNull Map<Object, Object> data) {
-            return Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_INPUT_HINT.value(player());
+            return Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_INPUT_HINT.value(player);
         }
     }
 

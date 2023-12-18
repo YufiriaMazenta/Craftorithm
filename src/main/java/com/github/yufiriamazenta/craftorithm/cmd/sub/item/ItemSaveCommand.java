@@ -23,7 +23,7 @@ public final class ItemSaveCommand extends AbstractSubCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, List<String> args) {
+    public Boolean onCommand(CommandSender sender, List<String> args) {
         if (args.size() < 2) {
             sendNotEnoughCmdParamMsg(sender, 2 - args.size());
             return true;

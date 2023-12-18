@@ -27,7 +27,7 @@ public class RecipeGroupListMenuHolder extends Menu {
     public RecipeGroupListMenuHolder(Player player) {
         super(player);
         Map<String, ItemStack> recipeResultMap = new HashMap<>();
-        RecipeManager.INSTANCE.recipeMap().forEach((recipeType, recipeGroupMap) -> {
+        RecipeManager.INSTANCE.recipeMap().forEach((recipeType, recipeGroupMap) ->
             recipeGroupMap.forEach((groupName, recipeGroup) -> {
                 if (recipeGroup == null || recipeGroup.isEmpty())
                     return;
@@ -35,8 +35,8 @@ public class RecipeGroupListMenuHolder extends Menu {
                 if (firstRecipe == null)
                     return;
                 recipeResultMap.put(groupName, firstRecipe.getResult());
-            });
-        });
+            })
+        );
         recipeGroupResultList = new ArrayList<>(recipeResultMap.entrySet());
         page = 0;
         int recipeGroupNum = recipeResultMap.size();
@@ -59,64 +59,58 @@ public class RecipeGroupListMenuHolder extends Menu {
         Inventory inventory = Bukkit.createInventory(
             this,
             54,
-            TextProcessor.color(Languages.MENU_NEW_RECIPE_LIST_TITLE.value(player())
+            TextProcessor.color(Languages.MENU_NEW_RECIPE_LIST_TITLE.value(player)
             ));
-        for (Integer slot : super.slotMap().keySet()) {
-            inventory.setItem(slot, slotMap().get(slot).display());
+        for (Integer slot : super.slotMap.keySet()) {
+            inventory.setItem(slot, slotMap.get(slot).display());
         }
         return inventory;
     }
 
     public void nextPage() {
         setPage(Math.min(page + 1, maxPage - 1)).resetIcons();
-        openedInventory().clear();
-        for (Integer slot : slotMap().keySet()) {
-            openedInventory().setItem(slot, slotMap().get(slot).display());
+        openedInventory.clear();
+        for (Integer slot : slotMap.keySet()) {
+            openedInventory.setItem(slot, slotMap.get(slot).display());
         }
     }
 
     public void previousPage() {
         setPage(Math.max(page - 1, 0)).resetIcons();
-        openedInventory().clear();
-        for (Integer slot : slotMap().keySet()) {
-            openedInventory().setItem(slot, slotMap().get(slot).display());
+        openedInventory.clear();
+        for (Integer slot : slotMap.keySet()) {
+            openedInventory.setItem(slot, slotMap.get(slot).display());
         }
     }
 
     private void resetIcons() {
-        slotMap().clear();
+        slotMap.clear();
         int []frameSlots = {45, 47, 48, 49, 50, 51, 53};
         Icon frameIcon = new Icon(
             Material.BLACK_STAINED_GLASS_PANE,
-            TextProcessor.color(Languages.MENU_NEW_RECIPE_LIST_ICON_FRAME.value(player())
+            TextProcessor.color(Languages.MENU_NEW_RECIPE_LIST_ICON_FRAME.value(player)
         ));
         for (int frameSlot : frameSlots) {
-            slotMap().put(frameSlot, frameIcon);
+            slotMap.put(frameSlot, frameIcon);
         }
-        slotMap().put(46, new Icon(
+        slotMap.put(46, new Icon(
             Material.PAPER,
-            TextProcessor.color(Languages.MENU_NEW_RECIPE_LIST_ICON_PREVIOUS.value(player())),
-            event -> {
-                event.setCancelled(true);
-                previousPage();
-            }
+            TextProcessor.color(Languages.MENU_NEW_RECIPE_LIST_ICON_PREVIOUS.value(player)),
+            event -> previousPage()
         ));
-        slotMap().put(52, new Icon(
+        slotMap.put(52, new Icon(
             Material.PAPER,
-            TextProcessor.color(Languages.MENU_NEW_RECIPE_LIST_ICON_NEXT.value(player())),
-            event -> {
-                event.setCancelled(true);
-                nextPage();
-            }
+            TextProcessor.color(Languages.MENU_NEW_RECIPE_LIST_ICON_NEXT.value(player)),
+            event -> nextPage()
         ));
         int recipeSlot = page * 45;
         for (int invSlot = 0; invSlot < 45 && recipeSlot < recipeGroupResultList.size(); invSlot++, recipeSlot++) {
-            slotMap().put(invSlot, wrapIcon(recipeSlot));
+            slotMap.put(invSlot, wrapIcon(recipeSlot));
         }
         for (int i = 0; i < 45; i++) {
-            if (slotMap().containsKey(i))
+            if (slotMap.containsKey(i))
                 continue;
-            slotMap().put(i, new Icon(new ItemStack(Material.AIR)));
+            slotMap.put(i, new Icon(new ItemStack(Material.AIR)));
         }
     }
 
@@ -124,16 +118,13 @@ public class RecipeGroupListMenuHolder extends Menu {
     private Icon wrapIcon(int recipeSlot) {
         ItemStack display = recipeGroupResultList.get(recipeSlot).getValue();
         String recipeGroupName = recipeGroupResultList.get(recipeSlot).getKey();
-        return new Icon(display, event -> {
-            event.setCancelled(true);
-            event.getWhoClicked().openInventory(
-                new RecipeListMenuHolder(
-                    (Player) event.getWhoClicked(),
-                    RecipeManager.INSTANCE.getRecipeGroup(recipeGroupName).groupRecipeKeys(),
-                    this
-                ).getInventory()
-            );
-        });
+        return new Icon(display, event -> event.getWhoClicked().openInventory(
+            new RecipeListMenuHolder(
+                (Player) event.getWhoClicked(),
+                RecipeManager.INSTANCE.getRecipeGroup(recipeGroupName).groupRecipeKeys(),
+                this
+            ).getInventory()
+        ));
     }
 
     public int page() {

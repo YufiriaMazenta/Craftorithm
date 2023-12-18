@@ -19,7 +19,7 @@ public final class RunArcencielCmd extends AbstractSubCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, List<String> args) {
+    public Boolean onCommand(CommandSender sender, List<String> args) {
         if (!checkSenderIsPlayer(sender))
             return true;
         if (args.isEmpty()) {
