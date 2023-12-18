@@ -21,7 +21,7 @@ public abstract class AbstractSubCommand extends SubcmdExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, List<String> args) {
+    public Boolean onCommand(CommandSender sender, List<String> args) {
         ISubcmdExecutor subCommand = subcommands().get(args.get(0));
         if (subCommand == null) {
             LangUtil.sendLang(sender, Languages.COMMAND_UNDEFINED_SUBCMD);

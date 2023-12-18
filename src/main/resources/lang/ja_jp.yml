@@ -5,7 +5,7 @@ new_version: '<prefix> &a新しいバージョン <new_version> が検出され�
 command:
   no_perm: '<prefix> &cこのコマンドを使用する権限がありません。'
   player_only: '<prefix> &cこのコマンドはプレイヤーのみが実行できます。'
-  not_enough_param: '<prefix> &cコマンドにはパラメータが不足しており、<number> 個のパラメータが必要です。'
+  not_enough_param: '<prefix> &cコマンドにはパラメータが不足し、<number> 個のパラメータが必要です。'
   undefined_subcmd: '<prefix> &c未定義のサブコマンド'
   item:
     save:
@@ -27,14 +27,14 @@ command:
     failed: '<prefix> &cレシピの無効化に失敗しました。おそらくすでに無効化されているか、存在しない可能性があります。'
   version: '<prefix> &aプラグインのバージョン: <version>'
   create:
-    unsupported_recipe_type: '<prefix> &cサポートされていないレシピの種類'
-    unsupported_recipe_name: '<prefix> &cサポートされていないレシピ名です。使用可能な[a-z0-9/._-]+の文字のみが許可されています。'
+    unsupported_recipe_type: '<prefix> &cサポートされていないレシピタイプ'
+    unsupported_recipe_name: '<prefix> &cサポートされていないレシピ名です。[a-z0-9/._-]+許可された内容のみ使用できます。'
     name_used: '<prefix> &cそのレシピIDはすでに使用されています。'
-    null_result: '<prefix> &cレシピの結果は空にすることはできません！'
+    null_result: '<prefix> &cレシピの結果を空にすることはできません！'
     null_source: '<prefix> &cレシピの材料を空にすることはできません！'
     success: '<prefix> &a<recipe_type>のタイプのレシピ<recipe_name>が作成されました。'
   run_arcenciel:
-    success: '<prefix> &a実行に成功しました。所要時間<time>ミリ秒'
+    success: '<prefix> &a実行に成功しました。所要時間<time>ミリセカンド｡'
   list:
     unsupported_version: '<prefix> &cこの機能は1.16以降のバージョンでのみ利用可能です。'
 menu:
@@ -45,69 +45,69 @@ menu:
       previous: '&a前のページ'
       next: '&a次のページ'
   new_recipe_list:
-    title: '&3&lCraftorithmの新しいレシピリスト'
+    title: '&3&lCraftorithmが新しく追加したシピリスト'
     icon:
-      frame: '&3&l新しいレシピリスト'
+      frame: '&3&l新しく追加したシピリスト'
       previous: '&a前のページ'
       next: '&a次のページ'
   recipe_display:
     title:
-      shaped: 順序付きのレシピ
-      shapeless: 順不同のレシピ
-      furnace: 溶鉱炉のレシピ
-      blasting: 高炉のレシピ
-      smoking: 燻製炉のレシピ
-      campfire: キャンプファイアのレシピ
-      smithing: 鍛冶のレシピ
-      stone_cutting: 切り石のレシピ
-      potion: 醸造台のレシピ
-      anvil: 鉄床のレシピ
+      shaped: 定形レシピ
+      shapeless: 不定形レシピ
+      furnace: かまどレシピ
+      blasting: 溶鉱炉レシピ
+      smoking: 燻製器レシピ
+      campfire: 焚き火レシピ
+      smithing: 鍛冶台レシピ
+      stone_cutting: 石切台レシピ
+      potion: 醸造台レシピ
+      anvil: 金床レシピ
   recipe_creator:
     title: '&3<recipe_type>レシピの作成: <recipe_name>'
     icon:
-      frame: '&aレシピの作成'
-      result_frame: '&aレシピの結果'
-      confirm: '&3&l作成を確認'
+      frame: '&aレシピ作成'
+      result_frame: '&aレシピ結果'
+      confirm: '&3&l作成の確認'
       unlock: '&aプレイヤーによるレシピのアンロック:<unlock>'
-      cooking_frame: '&a製錬素材'
-      furnace_toggle: '&a溶鉱炉のレシピを有効にする:<enable>'
-      blast_furnace_toggle: '&a高炉のレシピを有効にする:<enable>'
-      smoker_toggle: '&a燻製炉のレシピを有効にする:<enable>'
-      campfire_toggle: '&aキャンプファイアのレシピを有効にする:<enable>'
+      cooking_frame: '&a精錬素材'
+      furnace_toggle: '&aかまどレシピを有効にする:<enable>'
+      blast_furnace_toggle: '&a溶鉱炉レシピを有効にする:<enable>'
+      smoker_toggle: '&a燻製器レシピを有効にする:<enable>'
+      campfire_toggle: '&a焚き火レシピを有効にする:<enable>'
       cooking_time:
-        name: '&a製錬時間: <time> tick'
+        name: '&a精錬時間: <time> tick'
         lore:
-          - '&3製錬時間を変更するをクリック'
-        input_hint: '&a製錬時間を入力してください。単位はtickです。キャンセルするにはcancelと入力してください。'
+          - '&3クリックで精錬時間を変更する'
+        input_hint: '&a精錬時間を入力してください。単位はtickです。キャンセルするにはcancelと入力してください。'
       cooking_exp:
-        name: '&a経験値報酬: <exp>'
+        name: '&a経験値ドロップ量: <exp>'
         lore:
-          - '&3経験値報酬を変更するをクリックし'
-        input_hint: '&a経験値報酬を入力してください、キャンセルするにはcancelと入力してください。'
-      smithing_frame: '&a鍛冶アイテム'
+          - '&3クリックで経験値ドロップ量を変更する。キャンセルするにはcancelと入力してください。'
+        input_hint: '&a経験値ドロップ量を入力してください'
+      smithing_frame: '&a精錬アイテム'
       potion_frame: '&a醸造素材'
       anvil_frame: '&a鍛冶素材'
-      anvil_copy_nbt_toggle: '&aアイテムNBTを保持:<enable>'
+      anvil_copy_nbt_toggle: '&aアイテムNBTを保存する:<enable>'
       anvil_cost_level:
         name: '&a必要レベル: <level>'
         lore:
-          - '&3必要レベルを変更するをクリック'
+          - '&3クリックで必要レベルを変更する'
         input_hint: '&a必要レベルを入力してください。キャンセルするにはcancelと入力してください。'
 recipe_type_name:
-  shaped: 順序
-  shapeless: 順不同
-  cooking: 製錬
+  shaped: 定形
+  shapeless: 不定形
+  cooking: 精錬
   smithing: 鍛冶
-  stone_cutting: 切り石
+  stone_cutting: 石切
   potion: 醸造
-  anvil: 鉄床
+  anvil: 金床
 #Arcenciel脚本的提示消息
 arcenciel:
   not_enough_param: '<prefix> &c文"<statement>"は不完全です'
   unknown_token: '<prefix> &c未定義のキーワードや関数<token>'
 #插件加载的反馈信息
 load:
-  finish: '<prefix> &aプラグインが正常に読み込まれました'
+  finish: '<prefix> &aプラグインの読み込みが完了しました'
   recipe_load_exception: '<prefix> &c<recipe_name>のレシピの読み込み中にエラーが発生しました'
   item_load_exception: '<prefix> &c<item_name>のアイテムの読み込み中にエラーが発生しました'
   hook_plugin:

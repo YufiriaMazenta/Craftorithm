@@ -64,7 +64,7 @@ public abstract class RecipeCreator extends StoredMenu {
     }
 
     protected Icon getFrameIcon() {
-        return new Icon(Material.BLACK_STAINED_GLASS_PANE, Languages.MENU_RECIPE_CREATOR_ICON_FRAME.value(player()));
+        return new Icon(Material.BLACK_STAINED_GLASS_PANE, Languages.MENU_RECIPE_CREATOR_ICON_FRAME.value(player));
     }
 
     protected void sendSuccessMsg(HumanEntity receiver, String recipeName) {
@@ -89,7 +89,7 @@ public abstract class RecipeCreator extends StoredMenu {
     }
 
     protected Icon getResultFrameIcon() {
-        return new Icon(Material.LIME_STAINED_GLASS_PANE, Languages.MENU_RECIPE_CREATOR_ICON_RESULT_FRAME.value(player()));
+        return new Icon(Material.LIME_STAINED_GLASS_PANE, Languages.MENU_RECIPE_CREATOR_ICON_RESULT_FRAME.value(player));
     }
 
     public RecipeType recipeType() {

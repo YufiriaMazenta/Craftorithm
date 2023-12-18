@@ -23,7 +23,7 @@ public final class RemoveRecipeCommand extends AbstractSubCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, List<String> args) {
+    public Boolean onCommand(CommandSender sender, List<String> args) {
         if (args.isEmpty()) {
             sendNotEnoughCmdParamMsg(sender, 1);
             return true;

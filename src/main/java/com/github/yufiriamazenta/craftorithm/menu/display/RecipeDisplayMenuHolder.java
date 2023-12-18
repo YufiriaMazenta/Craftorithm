@@ -89,7 +89,7 @@ public class RecipeDisplayMenuHolder extends Menu {
             default:
                 invTitle = "Unknown Type";
                 inventoryType = InventoryType.CHEST;
-                slotMap().put(15, new Icon(recipe.getResult()));
+                slotMap.put(15, new Icon(recipe.getResult()));
                 break;
         }
     }
@@ -98,8 +98,8 @@ public class RecipeDisplayMenuHolder extends Menu {
     @Override
     public Inventory getInventory() {
         Inventory inventory = Bukkit.createInventory(this, inventoryType, TextProcessor.color(invTitle));
-        for (Integer slot : slotMap().keySet()) {
-            inventory.setItem(slot, slotMap().get(slot).display());
+        for (Integer slot : slotMap.keySet()) {
+            inventory.setItem(slot, slotMap.get(slot).display());
         }
         return inventory;
     }
@@ -118,14 +118,14 @@ public class RecipeDisplayMenuHolder extends Menu {
                         item = new ItemStack(Material.AIR);
                     else
                         item = item.clone();
-                    slotMap().put(columnStart, new Icon(item));
+                    slotMap.put(columnStart, new Icon(item));
                 }
                 columnStart ++;
             }
             line ++;
             columnStart = 1 + 3 * line;
         }
-        slotMap().put(0, new Icon(recipe.getResult()));
+        slotMap.put(0, new Icon(recipe.getResult()));
     }
 
     private void setShapelessRecipeMenu() {
@@ -135,36 +135,36 @@ public class RecipeDisplayMenuHolder extends Menu {
         for (ItemStack item : ingredientList) {
             ItemStack display = item.clone();
             display.setAmount(1);
-            slotMap().put(slot, new Icon(display));
+            slotMap.put(slot, new Icon(display));
             slot ++;
         }
-        slotMap().put(0, new Icon(recipe.getResult()));
+        slotMap.put(0, new Icon(recipe.getResult()));
     }
 
     private void setCookingRecipeMenu() {
         CookingRecipe<?> cookingRecipe = (CookingRecipe<?>) recipe;
-        slotMap().put(2, new Icon(recipe.getResult()));
+        slotMap.put(2, new Icon(recipe.getResult()));
         ItemStack input = cookingRecipe.getInput();
         input.setAmount(1);
-        slotMap().put(0, new Icon(input));
-        slotMap().put(1, new Icon(new ItemStack(Material.LAVA_BUCKET)));
+        slotMap.put(0, new Icon(input));
+        slotMap.put(1, new Icon(new ItemStack(Material.LAVA_BUCKET)));
     }
 
     private void setSmithingRecipeMenu() {
         SmithingRecipe smithingRecipe = (SmithingRecipe) recipe;
         if (CrypticLib.minecraftVersion() >= 12000) {
-            slotMap().put(1, new Icon(smithingRecipe.getBase().getItemStack()));
-            slotMap().put(2, new Icon(smithingRecipe.getAddition().getItemStack()));
-            slotMap().put(3, new Icon(smithingRecipe.getResult()));
+            slotMap.put(1, new Icon(smithingRecipe.getBase().getItemStack()));
+            slotMap.put(2, new Icon(smithingRecipe.getAddition().getItemStack()));
+            slotMap.put(3, new Icon(smithingRecipe.getResult()));
             if (recipe instanceof SmithingTransformRecipe) {
-                slotMap().put(0, new Icon(((SmithingTransformRecipe) recipe).getTemplate().getItemStack()));
+                slotMap.put(0, new Icon(((SmithingTransformRecipe) recipe).getTemplate().getItemStack()));
             } else if (recipe instanceof SmithingTrimRecipe){
-                slotMap().put(0, new Icon(((SmithingTrimRecipe) recipe).getTemplate().getItemStack()));
+                slotMap.put(0, new Icon(((SmithingTrimRecipe) recipe).getTemplate().getItemStack()));
             }
         } else {
-            slotMap().put(0, new Icon(smithingRecipe.getBase().getItemStack()));
-            slotMap().put(1, new Icon(smithingRecipe.getAddition().getItemStack()));
-            slotMap().put(2, new Icon(smithingRecipe.getResult()));
+            slotMap.put(0, new Icon(smithingRecipe.getBase().getItemStack()));
+            slotMap.put(1, new Icon(smithingRecipe.getAddition().getItemStack()));
+            slotMap.put(2, new Icon(smithingRecipe.getResult()));
         }
     }
 
@@ -172,8 +172,8 @@ public class RecipeDisplayMenuHolder extends Menu {
         StonecuttingRecipe stonecuttingRecipe = (StonecuttingRecipe) recipe;
         ItemStack input = stonecuttingRecipe.getInput();
         input.setAmount(1);
-        slotMap().put(11, new Icon(input));
-        slotMap().put(15, new Icon(stonecuttingRecipe.getResult()));
+        slotMap.put(11, new Icon(input));
+        slotMap.put(15, new Icon(stonecuttingRecipe.getResult()));
     }
 
     private void setPotionMixRecipeMenu() {
@@ -181,9 +181,9 @@ public class RecipeDisplayMenuHolder extends Menu {
         ItemStack input = potionMixRecipe.input().getItemStack();
         ItemStack ingredient = potionMixRecipe.ingredient().getItemStack();
         ItemStack result = potionMixRecipe.getResult();
-        slotMap().put(0, new Icon(input));
-        slotMap().put(3, new Icon(ingredient));
-        slotMap().put(2, new Icon(result));
+        slotMap.put(0, new Icon(input));
+        slotMap.put(3, new Icon(ingredient));
+        slotMap.put(2, new Icon(result));
     }
 
     private void setAnvilRecipeMenu() {
@@ -191,9 +191,9 @@ public class RecipeDisplayMenuHolder extends Menu {
         ItemStack base = anvilRecipe.base();
         ItemStack addition = anvilRecipe.addition();
         ItemStack result = anvilRecipe.getResult();
-        slotMap().put(0, new Icon(base));
-        slotMap().put(1, new Icon(addition));
-        slotMap().put(2, new Icon(result));
+        slotMap.put(0, new Icon(base));
+        slotMap.put(1, new Icon(addition));
+        slotMap.put(2, new Icon(result));
     }
 
     @Override
