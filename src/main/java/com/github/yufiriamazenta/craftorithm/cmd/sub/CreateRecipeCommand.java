@@ -19,7 +19,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
 
     public static final CreateRecipeCommand INSTANCE = new CreateRecipeCommand();
     private final List<String> recipeTypeList;
-    private final Pattern recipeNamePattern = Pattern.compile("[a-z0-9/._-]+");
+    private final Pattern recipeNamePattern = Pattern.compile("^[a-z0-9._-]+$");
 
     private CreateRecipeCommand() {
         super("create", "craftorithm.command.create");
