@@ -1,3 +1,6 @@
 files:
   - source: src/main/resources/lang/en_us.yml
     translation: src/main/resources/lang/%two_letters_code%.yml
+    translation_replace:
+      zh_CN: ""
+      
