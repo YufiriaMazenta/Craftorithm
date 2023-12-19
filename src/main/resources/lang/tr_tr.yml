@@ -28,7 +28,7 @@ command:
   version: '<prefix> &aEklenti sürümü: <version>'
   create:
     unsupported_recipe_type: '<prefix> &cDesteklenmeyen tarif tipi.'
-    unsupported_recipe_name: '<prefix> &cDesteklenmeyen tarif adı, yalnızca [a-z0-9/._-]+ izin verilen içeriği kullanabilirsiniz.'
+    unsupported_recipe_name: '<prefix> &cDesteklenmeyen tarif adı, yalnızca [a-z0-9/._-] izin verilen içeriği kullanabilirsiniz.'
     name_used: '<prefix> &cTarif kimliği zaten kullanılmış.'
     null_result: '<prefix> &cTarif sonucu boş bırakılamaz!'
     null_source: '<prefix> &cTarif malzemeleri boş olamaz!'
