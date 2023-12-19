@@ -1,115 +1,115 @@
 prefix: '&8[&3Craftorithm&8]'
-unsupported_version: '<prefix> Unsupported Version'
-new_version: '<prefix> &aDetected a new version <new_version>, please update to the latest version promptly!'
+unsupported_version: '<prefix> Nicht unterstützte Version'
+new_version: '<prefix> &aDie neue Version <new_version> wurde erkannt, bitte aktualisieren Sie rechtzeitig auf die neue Version.'
 #使用命令的一些反馈消息
 command:
-  no_perm: '<prefix> &cYou do not have permission to use this command.'
-  player_only: '<prefix> &cOnly players can execute this command.'
-  not_enough_param: '<prefix> &cThe Command is missing parameters, <number> parameters required.'
-  undefined_subcmd: '<prefix> &cUndefined subcommand!'
+  no_perm: '<prefix> &cSie haben keine Berechtigung, diesen Befehl zu verwenden.'
+  player_only: '<prefix> &cNur Spieler können diesen Befehl ausführen.'
+  not_enough_param: '<prefix> &cBefehl fehlt Parameter, es fehlen <number> Parameter'
+  undefined_subcmd: '<prefix> &cUndefinierter Unterbefehl'
   item:
     save:
-      success: '<prefix> &aItem saved successfully.'
-      failed_save_air: '<prefix> &cItem save failed. Reason: Cannot save a non-existent item.'
+      success: '<prefix> &aGegenstand erfolgreich gespeichert.'
+      failed_save_air: '<prefix> &cGegenstandspeicherung fehlgeschlagen. Grund: Kann nicht existierenden Gegenstand speichern.'
     give:
-      success: '<prefix> &aGive item successfully'
-      not_exist_item: '<prefix> &cItem <item_name> does not exist.'
-      player_offline: '<prefix> &cThe player is not online or does not have a profile.'
+      success: '<prefix> &aGegenstand erfolgreich erhalten.'
+      not_exist_item: '<prefix> &cGegenstand <item_name> existiert nicht.'
+      player_offline: '<prefix> &cDer Spieler ist offline oder existiert nicht.'
   reload:
-    success: '<prefix> &aPlugin reload!'
-    exception: '<prefix> &cError occurred during plugin reload, please check the console.'
+    success: '<prefix> &aDas Plugin wurde erfolgreich neu geladen.'
+    exception: '<prefix> &cBeim Neuladen des Plugins ist ein Fehler aufgetreten. Bitte überprüfen Sie die Konsole.'
   remove:
-    success: '<prefix> &aRecipe removed successfully.'
-    not_exist: '<prefix> &cRecipe does not exist.'
+    success: '<prefix> &aRezept erfolgreich gelöscht.'
+    not_exist: '<prefix> &cRezept existiert nicht.'
   disable:
-    success: '<prefix> &cRecipe disabled successfully.'
-    not_exist: '<prefix> &cRecipe does not exist or has already been disabled.'
-    failed: '<prefix> &cFailed to disable recipe, it may already be disabled or does not exist.'
-  version: '<prefix> &aPlugin version: <version>'
+    success: '<prefix> &cRezept erfolgreich deaktiviert.'
+    not_exist: '<prefix> &cDas Rezept existiert nicht oder wurde bereits deaktiviert.'
+    failed: '<prefix> &cFehler beim Deaktivieren des Rezepts. Möglicherweise wurde es bereits deaktiviert oder existiert nicht.'
+  version: '<prefix> &aPlugin Version: <version>'
   create:
-    unsupported_recipe_type: '<prefix> &cUnsupported recipe type.'
-    unsupported_recipe_name: '<prefix> &cUnsupported recipe name, only lowercase letters, numbers, ''_'', ''-'', and ''.'' are allowed.'
-    name_used: '<prefix> &cRecipe ID has already been used.'
-    null_result: '<prefix> &cRecipe result cannot be empty!'
-    null_source: '<prefix> &cRecipe ingredients cannot be empty!'
-    success: '<prefix> &a<recipe_type> recipe <recipe_name> created successfully.'
+    unsupported_recipe_type: '<prefix> &cNicht unterstützter Rezepttyp'
+    unsupported_recipe_name: '<prefix> &cNicht unterstützter Rezeptname, es sind nur [a-z0-9/._-]+ erlaubt.'
+    name_used: '<prefix> &cRezept-ID ist bereits vergeben.'
+    null_result: '<prefix> &cDas Rezeptergebnis darf nicht leer sein!'
+    null_source: '<prefix> &cDie Rezeptzutaten dürfen nicht leer sein!'
+    success: '<prefix> &a<recipe_type>-Rezept <recipe_name> erfolgreich erstellt.'
   run_arcenciel:
-    success: '<prefix> &aExecution successful, took <time> ms.'
+    success: '<prefix> &aErfolgreich ausgeführt, dauerte <time> ms.'
   list:
-    unsupported_version: '<prefix> &cThis feature is only available in version 1.16 and above.'
+    unsupported_version: '<prefix> &cDiese Funktion ist nur in Version 1.16 und höher verfügbar.'
 menu:
   recipe_list:
-    title: '&3&lRecipe List'
+    title: '&3&lRezeptliste'
     icon:
-      frame: '&3&lRecipe List'
-      previous: '&aPrevious Page'
-      next: '&aNext Page'
+      frame: '&3&lRezeptliste'
+      previous: '&aVorherige Seite'
+      next: '&aNächste Seite'
   new_recipe_list:
-    title: '&3&lCraftorithm New Recipe List'
+    title: '&3&lCraftorithm neue Rezeptliste'
     icon:
-      frame: '&3&lNew recipe list'
-      previous: '&aPrevious Page'
-      next: '&aNext Page'
+      frame: '&3&lNeue Rezeptliste'
+      previous: '&aVorherige Seite'
+      next: '&aNächste Seite'
   recipe_display:
     title:
-      shaped: Shaped Recipe
-      shapeless: Shapeless Recipe
-      furnace: Furnace Recipe
-      blasting: Blast Furnace Recipe
-      smoking: Smoker Recipe
-      campfire: Campfire Recipe
-      smithing: Smithing Recipe
-      stone_cutting: Stonecutter Recipe
-      potion: Brewing Recipe
-      anvil: Anvil Recipe
+      shaped: Geordnetes Rezept
+      shapeless: Ungeordnetes Rezept
+      furnace: Schmelzrezept
+      blasting: Hochöfen-Rezept
+      smoking: Räucherofen-Rezept
+      campfire: Lagerfeuer-Rezept
+      smithing: Schmiede-Rezept
+      stone_cutting: Steinschneide-Rezept
+      potion: Braustand-Rezept
+      anvil: Amboss-Rezept
   recipe_creator:
-    title: '&3Creating <recipe_type> recipe: <recipe_name>'
+    title: '&3Erstelle <recipe_type>-Rezept: <recipe_name>'
     icon:
-      frame: '&aCreating Recipe'
-      result_frame: '&aRecipe Result'
-      confirm: '&3&lConfirm Creation'
-      unlock: '&aUnlock Recipe for Player: <unlock>'
-      cooking_frame: '&aCooking Ingredients'
-      furnace_toggle: '&aEnable Furnace Recipe: <enable>'
-      blast_furnace_toggle: '&aEnable Blast Furnace Recipe: <enable>'
-      smoker_toggle: '&aEnable Smoker Recipe: <enable>'
-      campfire_toggle: '&aEnable Campfire Recipe: <enable>'
+      frame: '&aRezept erstellen'
+      result_frame: '&aRezeptergebnis'
+      confirm: '&3&lBestätigen Sie die Erstellung'
+      unlock: '&aHast du das Rezept freigeschaltet: <unlock>'
+      cooking_frame: '&aRohstoffe schmelzen'
+      furnace_toggle: '&aSchmelzofenrezept aktiviert: <enable>'
+      blast_furnace_toggle: '&aHochöfenrezept aktiviert: <enable>'
+      smoker_toggle: '&a Rauchofen-Rezept aktivieren: <enable>'
+      campfire_toggle: '& Lagerfeuer-Rezept aktivieren: <enable>'
       cooking_time:
-        name: '&aCooking Time: <time> tick'
+        name: '&aVeredelungszeit: <time> Tick'
         lore:
-          - '&3Click to Modify Cooking Time'
-        input_hint: '&aPlease enter cooking time in ticks. Type "cancel" to cancel.'
+          - '&3Klicken Sie zum Ändern der Veredelungszeit'
+        input_hint: '&aBitte geben Sie die Veredelungszeit ein, in Tick, geben Sie "cancel" ein, um abzubrechen'
       cooking_exp:
-        name: '&aExperience Reward: <exp>'
+        name: '&aBelohnung Erfahrung: <exp>'
         lore:
-          - '&3Click to Modify Experience Reward.'
-        input_hint: '&aPlease enter experience reward. Type "cancel" to cancel.'
-      smithing_frame: '&aSmithing Ingredients'
-      potion_frame: '&aBrewing Ingredients'
-      anvil_frame: '&aAnvil Ingredients'
-      anvil_copy_nbt_toggle: '&aPreserve Item NBT: <enable>'
+          - '&3Klicken Sie auf Änderung der Belohnung Erfahrung'
+        input_hint: '&aBitte geben Sie die Belohnung Erfahrung ein, geben Sie "cancel" ein, um abzubrechen'
+      smithing_frame: '&aGegenstände schmieden'
+      potion_frame: '&aZum Brauen bestimmte Zutaten'
+      anvil_frame: '&aSchmiede-Materialien'
+      anvil_copy_nbt_toggle: '&aBehalte Gegenstand-NBT: <enable>'
       anvil_cost_level:
-        name: '&aRequired Level: <level>'
+        name: '&aErforderliches Level: <level>'
         lore:
-          - '&3Click to Modify Required Level'
-        input_hint: '&aPlease enter required level. Type ''cancel'' to cancel.'
+          - '&3Klicken Sie zum Ändern des erforderlichen Levels'
+        input_hint: '&aBitte geben Sie das erforderliche Level ein, geben Sie "cancel" ein, um abzubrechen'
 recipe_type_name:
-  shaped: Shaped
-  shapeless: Shapeless
-  cooking: Cooking
-  smithing: Smithing
-  stone_cutting: Stonecutting
-  potion: Brewing
-  anvil: Anvil
+  shaped: Geordnet
+  shapeless: Unsortiert
+  cooking: Schmelzen
+  smithing: Schmieden
+  stone_cutting: Steinschneiden
+  potion: Brauen
+  anvil: der Amboss
 #Arcenciel脚本的提示消息
 arcenciel:
-  not_enough_param: '<prefix> &cStatement "<statement>" is incomplete.'
-  unknown_token: '<prefix> &cUndefined keyword or function: <token>'
+  not_enough_param: '<prefix> &cDie Anweisung "<statement>" ist unvollständig.'
+  unknown_token: '<prefix> &cUndefined Schlüsselwort oder Funktion <token>.'
 #插件加载的反馈信息
 load:
-  finish: '<prefix> &aPlugin loaded successfully.'
-  recipe_load_exception: '<prefix> &cError occurred while loading recipe <recipe_name>.'
-  item_load_exception: '<prefix> &cError occurred while loading item <item_name>.'
+  finish: '<prefix> &aDas Plugin wurde erfolgreich geladen.'
+  recipe_load_exception: '<prefix> &cFehler beim Laden des Rezepts <recipe_name>.'
+  item_load_exception: '<prefix> &cBeim Laden des Gegenstands <item_name> ist ein Fehler aufgetreten.'
   hook_plugin:
-    success: '<prefix> &aFound <plugin>, hooked successfully.'
-    not_exist: '<prefix> &cPlugin <plugin> not found.'
+    success: '<prefix> &aDas Plugin <plugin> wurde gefunden und ist eingehakt.'
+    not_exist: '<prefix> &cPlugin <plugin> wurde nicht gefunden.'
