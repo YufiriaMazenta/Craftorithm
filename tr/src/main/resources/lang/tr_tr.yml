@@ -1,115 +1,115 @@
 prefix: '&8[&3Craftorithm&8]'
-unsupported_version: '<prefix> Unsupported Version'
-new_version: '<prefix> &aDetected a new version <new_version>, please update to the latest version promptly!'
+unsupported_version: '<prefix> Desteklenmeyen sürüm.'
+new_version: '<prefix> &aYeni sürüm <new_version> algılandı, lütfen güncellemeyi unutmayın'
 #使用命令的一些反馈消息
 command:
-  no_perm: '<prefix> &cYou do not have permission to use this command.'
-  player_only: '<prefix> &cOnly players can execute this command.'
-  not_enough_param: '<prefix> &cThe Command is missing parameters, <number> parameters required.'
-  undefined_subcmd: '<prefix> &cUndefined subcommand!'
+  no_perm: '<prefix> &cBu komutu kullanma izniniz yok.'
+  player_only: '<prefix> &cBu komutu sadece oyuncular çalıştırabilir'
+  not_enough_param: '<prefix> &cKomut eksik parametre içeriyor, <number> parametre eksik.'
+  undefined_subcmd: '<prefix> &cTanımsız alt komut!'
   item:
     save:
-      success: '<prefix> &aItem saved successfully.'
-      failed_save_air: '<prefix> &cItem save failed. Reason: Cannot save a non-existent item.'
+      success: '<prefix> &aEşya başarıyla kaydedildi.'
+      failed_save_air: '<prefix> &cEşya kaydedilemedi, neden: Var olmayan bir eşya kaydedilemez.'
     give:
-      success: '<prefix> &aGive item successfully'
-      not_exist_item: '<prefix> &cItem <item_name> does not exist.'
-      player_offline: '<prefix> &cThe player is not online or does not have a profile.'
+      success: '<prefix> &aEşya başarıyla alındı'
+      not_exist_item: '<prefix> &c<item_name> adlı eşya bulunmuyor.'
+      player_offline: '<prefix> &cOyuncu çevrimdışı veya mevcut değil.'
   reload:
-    success: '<prefix> &aPlugin reload!'
-    exception: '<prefix> &cError occurred during plugin reload, please check the console.'
+    success: '<prefix> &aEklenti başarıyla yeniden yüklendi!'
+    exception: '<prefix> &cEklenti yeniden yüklenirken bir hata oluştu, lütfen konsolu kontrol edin.'
   remove:
-    success: '<prefix> &aRecipe removed successfully.'
-    not_exist: '<prefix> &cRecipe does not exist.'
+    success: '<prefix> &aTarif silindi.'
+    not_exist: '<prefix> &cTarif mevcut değil.'
   disable:
-    success: '<prefix> &cRecipe disabled successfully.'
-    not_exist: '<prefix> &cRecipe does not exist or has already been disabled.'
-    failed: '<prefix> &cFailed to disable recipe, it may already be disabled or does not exist.'
-  version: '<prefix> &aPlugin version: <version>'
+    success: '<prefix> &cTarif devre dışı bırakıldı.'
+    not_exist: '<prefix> &cTarif mevcut değil veya zaten devre dışı bırakıldı.'
+    failed: '<prefix> &cTarif devre dışı bırakılamadı, belki zaten devre dışı bırakılmış ya da mevcut değil.'
+  version: '<prefix> &aEklenti sürümü: <version>'
   create:
-    unsupported_recipe_type: '<prefix> &cUnsupported recipe type.'
-    unsupported_recipe_name: '<prefix> &cUnsupported recipe name, only lowercase letters, numbers, ''_'', ''-'', and ''.'' are allowed.'
-    name_used: '<prefix> &cRecipe ID has already been used.'
-    null_result: '<prefix> &cRecipe result cannot be empty!'
-    null_source: '<prefix> &cRecipe ingredients cannot be empty!'
-    success: '<prefix> &a<recipe_type> recipe <recipe_name> created successfully.'
+    unsupported_recipe_type: '<prefix> &cDesteklenmeyen tarif tipi.'
+    unsupported_recipe_name: '<prefix> &cDesteklenmeyen tarif adı, yalnızca [a-z0-9/._-]+ izin verilen içeriği kullanabilirsiniz.'
+    name_used: '<prefix> &cTarif kimliği zaten kullanılmış.'
+    null_result: '<prefix> &cTarif sonucu boş bırakılamaz!'
+    null_source: '<prefix> &cTarif malzemeleri boş olamaz!'
+    success: '<prefix> &a<recipe_type> türü tarif <recipe_name> başarıyla oluşturuldu.'
   run_arcenciel:
-    success: '<prefix> &aExecution successful, took <time> ms.'
+    success: '<prefix> &aBaşarıyla çalıştırıldı, süre <time>ms.'
   list:
-    unsupported_version: '<prefix> &cThis feature is only available in version 1.16 and above.'
+    unsupported_version: '<prefix> &cBu özellik sadece 1.16 sürümü ve sonrasında kullanılabilir.'
 menu:
   recipe_list:
-    title: '&3&lRecipe List'
+    title: '&3&lTarif Listesi'
     icon:
-      frame: '&3&lRecipe List'
-      previous: '&aPrevious Page'
-      next: '&aNext Page'
+      frame: '&3&lTarif Listesi'
+      previous: '&aÖnceki Sayfa'
+      next: '&aSonraki Sayfa'
   new_recipe_list:
-    title: '&3&lCraftorithm New Recipe List'
+    title: '&3&lCraftorithm Yeni tarif listesi'
     icon:
-      frame: '&3&lNew recipe list'
-      previous: '&aPrevious Page'
-      next: '&aNext Page'
+      frame: '&3&lYeni tarif listesi'
+      previous: '&aÖnceki Sayfa'
+      next: '&aSonraki Sayfa'
   recipe_display:
     title:
-      shaped: Shaped Recipe
-      shapeless: Shapeless Recipe
-      furnace: Furnace Recipe
-      blasting: Blast Furnace Recipe
-      smoking: Smoker Recipe
-      campfire: Campfire Recipe
-      smithing: Smithing Recipe
-      stone_cutting: Stonecutter Recipe
-      potion: Brewing Recipe
-      anvil: Anvil Recipe
+      shaped: Şekilde tarifi
+      shapeless: Şekilsiz tarifi
+      furnace: Ocak tarifi
+      blasting: Maden Eritme Ocağı tarifi
+      smoking: Duman Fırını tarifi
+      campfire: Kamp ateşi tarifi
+      smithing: Demirci tarifi
+      stone_cutting: Taş Yontma Tarifi
+      potion: Mayalama tarifi
+      anvil: Örs tarifi
   recipe_creator:
-    title: '&3Creating <recipe_type> recipe: <recipe_name>'
+    title: '&3<recipe_type> tarifi oluştur: <recipe_name>'
     icon:
-      frame: '&aCreating Recipe'
-      result_frame: '&aRecipe Result'
-      confirm: '&3&lConfirm Creation'
-      unlock: '&aUnlock Recipe for Player: <unlock>'
-      cooking_frame: '&aCooking Ingredients'
-      furnace_toggle: '&aEnable Furnace Recipe: <enable>'
-      blast_furnace_toggle: '&aEnable Blast Furnace Recipe: <enable>'
-      smoker_toggle: '&aEnable Smoker Recipe: <enable>'
-      campfire_toggle: '&aEnable Campfire Recipe: <enable>'
+      frame: '&aTarif oluştur'
+      result_frame: '&aTarif sonucu'
+      confirm: '&3&lOluşturmayı Onayla'
+      unlock: '&aOyuncunun tarifi açtığından emin misiniz: <unlock>'
+      cooking_frame: '&aEritme malzemeleri'
+      furnace_toggle: '&aOcak tarifini etkinleştirin: <enable>'
+      blast_furnace_toggle: '&aMaden Eritme Ocağı tarifleri etkin: <enable>'
+      smoker_toggle: '&aDuman Fırını tarifleri etkin: <enable>'
+      campfire_toggle: '&aKamp ateşi tarifleri etkin: <enable>'
       cooking_time:
-        name: '&aCooking Time: <time> tick'
+        name: '&aEritme zamanı: <time> tick'
         lore:
-          - '&3Click to Modify Cooking Time'
-        input_hint: '&aPlease enter cooking time in ticks. Type "cancel" to cancel.'
+          - '&3Külleniş süresini değiştirmek için tıklayın'
+        input_hint: '&aLütfen eritme zamanını tick cinsinden girin, "cancel" yazarak işlemi iptal edebilirsiniz.'
       cooking_exp:
-        name: '&aExperience Reward: <exp>'
+        name: '&aTecrübe ödülü: <exp>'
         lore:
           - '&3Click to Modify Experience Reward.'
-        input_hint: '&aPlease enter experience reward. Type "cancel" to cancel.'
-      smithing_frame: '&aSmithing Ingredients'
-      potion_frame: '&aBrewing Ingredients'
-      anvil_frame: '&aAnvil Ingredients'
-      anvil_copy_nbt_toggle: '&aPreserve Item NBT: <enable>'
+        input_hint: '&aLütfen gerekli seviyeyi girin, İptal etmek için "cancel" yazın.'
+      smithing_frame: '&aDemir işlenmiş eşya'
+      potion_frame: '&aMayalanma malzemeleri'
+      anvil_frame: '&aÖrs malzemeleri'
+      anvil_copy_nbt_toggle: '&aÖzel eşya veri NBT korunsun mu: <enable>'
       anvil_cost_level:
-        name: '&aRequired Level: <level>'
+        name: '&aGerekli seviye: <level>'
         lore:
-          - '&3Click to Modify Required Level'
-        input_hint: '&aPlease enter required level. Type ''cancel'' to cancel.'
+          - '&3Gerekli seviye değiştirmek için tıklayın'
+        input_hint: '&aLütfen gerekli seviyeyi girin, İptal etmek için "cancel" yazın.'
 recipe_type_name:
-  shaped: Shaped
-  shapeless: Shapeless
-  cooking: Cooking
-  smithing: Smithing
-  stone_cutting: Stonecutting
+  shaped: Şekilde
+  shapeless: Şekilsiz
+  cooking: Ocağa koyma
+  smithing: Demirci Masası
+  stone_cutting: Taş Kesici
   potion: Brewing
-  anvil: Anvil
+  anvil: Örs
 #Arcenciel脚本的提示消息
 arcenciel:
-  not_enough_param: '<prefix> &cStatement "<statement>" is incomplete.'
-  unknown_token: '<prefix> &cUndefined keyword or function: <token>'
+  not_enough_param: '<prefix> &c"<statement>" ifadesi eksik.'
+  unknown_token: '<prefix> &cTanımsız anahtar kelime veya fonksiyon <token>'
 #插件加载的反馈信息
 load:
-  finish: '<prefix> &aPlugin loaded successfully.'
-  recipe_load_exception: '<prefix> &cError occurred while loading recipe <recipe_name>.'
-  item_load_exception: '<prefix> &cError occurred while loading item <item_name>.'
+  finish: '<prefix> &aEklenti başarıyla yüklendi.'
+  recipe_load_exception: '<prefix> &c<recipe_name> tarifini yüklerken bir hata oluştu.'
+  item_load_exception: '<prefix> &c<item_name> eşyası yüklenirken bir hata oluştu.'
   hook_plugin:
-    success: '<prefix> &aFound <plugin>, hooked successfully.'
-    not_exist: '<prefix> &cPlugin <plugin> not found.'
+    success: '<prefix> &a<plugin> bulundu, bağlandı.'
+    not_exist: '<prefix> &c<plugin> bulunamadı.'
