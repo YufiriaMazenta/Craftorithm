@@ -28,7 +28,7 @@ command:
   version: '<prefix> &aPlugin version: <version>'
   create:
     unsupported_recipe_type: '<prefix> &cUnsupported recipe type.'
-    unsupported_recipe_name: '<prefix> &cUnsupported recipe name, only [a-z0-9/._-]+ characters are allowed.'
+    unsupported_recipe_name: '<prefix> &cUnsupported recipe name, only lowercase letters, numbers, '_', '-', and '.' are allowed.'
     name_used: '<prefix> &cRecipe ID has already been used.'
     null_result: '<prefix> &cRecipe result cannot be empty!'
     null_source: '<prefix> &cRecipe ingredients cannot be empty!'
