@@ -1,115 +1,115 @@
 prefix: '&8[&3Craftorithm&8]'
-unsupported_version: '<prefix> Unsupported Version'
-new_version: '<prefix> &aDetected a new version <new_version>, please update to the latest version promptly!'
+unsupported_version: '<prefix> неподдерживаемая версия.'
+new_version: '<prefix> &aОбнаружена новая версия <new_version>, пожалуйста, обновитесь.'
 #使用命令的一些反馈消息
 command:
-  no_perm: '<prefix> &cYou do not have permission to use this command.'
-  player_only: '<prefix> &cOnly players can execute this command.'
-  not_enough_param: '<prefix> &cThe Command is missing parameters, <number> parameters required.'
-  undefined_subcmd: '<prefix> &cUndefined subcommand!'
+  no_perm: '<prefix> &cУ вас нет разрешения на выполнение этой команды.'
+  player_only: '<prefix> &cЭта команда доступна только игрокам.'
+  not_enough_param: '<prefix> &cОтсутствуют аргументы команды, недостающих <number>.'
+  undefined_subcmd: '<prefix> &cэто неподдерживаемая подкоманда.'
   item:
     save:
-      success: '<prefix> &aItem saved successfully.'
-      failed_save_air: '<prefix> &cItem save failed. Reason: Cannot save a non-existent item.'
+      success: '<prefix> &aЭлемент успешно сохранен.'
+      failed_save_air: '<prefix> &cНе удалось сохранить предмет, так как он не существует. Причина: попытка сохранить несуществующий предмет.'
     give:
-      success: '<prefix> &aGive item successfully'
-      not_exist_item: '<prefix> &cItem <item_name> does not exist.'
-      player_offline: '<prefix> &cThe player is not online or does not have a profile.'
+      success: '<prefix> &aПредмет успешно получен.'
+      not_exist_item: '<prefix> &cПредмет <item_name> не существует.'
+      player_offline: '<prefix> &cЭтот игрок офлайн или не существует.'
   reload:
-    success: '<prefix> &aPlugin reload!'
-    exception: '<prefix> &cError occurred during plugin reload, please check the console.'
+    success: '<prefix> &aПерезагрузка плагина выполнена успешно.'
+    exception: '<prefix> &cВпроцессе перезагрузки плагина произошла ошибка. Пожалуйста, проверьте консоль.'
   remove:
-    success: '<prefix> &aRecipe removed successfully.'
-    not_exist: '<prefix> &cRecipe does not exist.'
+    success: '<prefix> &aРецепт успешно удален.'
+    not_exist: '<prefix> &cРецепт не существует.'
   disable:
-    success: '<prefix> &cRecipe disabled successfully.'
-    not_exist: '<prefix> &cRecipe does not exist or has already been disabled.'
-    failed: '<prefix> &cFailed to disable recipe, it may already be disabled or does not exist.'
-  version: '<prefix> &aPlugin version: <version>'
+    success: '<prefix> &cРецепт успешно отключен.'
+    not_exist: '<prefix> &cРецепт не существует или уже отключен.'
+    failed: '<prefix> &cНе удалось отключить рецепт, возможно уже отключен или не существует.'
+  version: '<prefix> &aВерсия плагина: <version>'
   create:
-    unsupported_recipe_type: '<prefix> &cUnsupported recipe type.'
-    unsupported_recipe_name: '<prefix> &cUnsupported recipe name, only lowercase letters, numbers, ''_'', ''-'', and ''.'' are allowed.'
-    name_used: '<prefix> &cRecipe ID has already been used.'
-    null_result: '<prefix> &cRecipe result cannot be empty!'
-    null_source: '<prefix> &cRecipe ingredients cannot be empty!'
-    success: '<prefix> &a<recipe_type> recipe <recipe_name> created successfully.'
+    unsupported_recipe_type: '<prefix> &cНеподдерживаемый тип рецепта.'
+    unsupported_recipe_name: '<prefix> &cНедопустимое имя рецепта. Можно использовать только символы ^[a-z0-9._-]+$.'
+    name_used: '<prefix> &cИдентификатор рецепта уже используется.'
+    null_result: '<prefix> &cРезультат рецепта не может быть пустым!'
+    null_source: '<prefix> &cИнгредиенты рецепта не могут быть пустыми!'
+    success: '<prefix> &aРецепт <recipe_name> типа <recipe_type> успешно создан.'
   run_arcenciel:
-    success: '<prefix> &aExecution successful, took <time> ms.'
+    success: '<prefix> &aУспешно завершено, время выполнения <time> мс.'
   list:
-    unsupported_version: '<prefix> &cThis feature is only available in version 1.16 and above.'
+    unsupported_version: '<prefix> &cЭта функция доступна только в версии 1.16 и выше.'
 menu:
   recipe_list:
-    title: '&3&lRecipe List'
+    title: '&3&lСписок рецептов'
     icon:
-      frame: '&3&lRecipe List'
-      previous: '&aPrevious Page'
-      next: '&aNext Page'
+      frame: '&3&lСписок рецептов'
+      previous: '&aПредыдущая'
+      next: '&aСледующая'
   new_recipe_list:
-    title: '&3&lCraftorithm New Recipe List'
+    title: '&3&lCraftorithm Создание списка рецептов'
     icon:
-      frame: '&3&lNew recipe list'
-      previous: '&aPrevious Page'
-      next: '&aNext Page'
+      frame: '&3&lСоздание списка новых рецептов'
+      previous: '&aПредыдущая'
+      next: '&aСледующая'
   recipe_display:
     title:
-      shaped: Shaped Recipe
-      shapeless: Shapeless Recipe
-      furnace: Furnace Recipe
-      blasting: Blast Furnace Recipe
-      smoking: Smoker Recipe
-      campfire: Campfire Recipe
-      smithing: Smithing Recipe
-      stone_cutting: Stonecutter Recipe
-      potion: Brewing Recipe
-      anvil: Anvil Recipe
+      shaped: Упорядоченный рецепт
+      shapeless: Неупорядоченный рецепт
+      furnace: Плавильный рецепт
+      blasting: Коксовый рецепт
+      smoking: Дымчатый рецепт
+      campfire: Рецепт на костре
+      smithing: Рецепт на наковальне
+      stone_cutting: Тесаковочный станок
+      potion: Рецепт на дистилляторе
+      anvil: Кузнечный рецепт
   recipe_creator:
-    title: '&3Creating <recipe_type> recipe: <recipe_name>'
+    title: '&3Создание рецепта <recipe_type>: <recipe_name>'
     icon:
-      frame: '&aCreating Recipe'
-      result_frame: '&aRecipe Result'
-      confirm: '&3&lConfirm Creation'
-      unlock: '&aUnlock Recipe for Player: <unlock>'
-      cooking_frame: '&aCooking Ingredients'
-      furnace_toggle: '&aEnable Furnace Recipe: <enable>'
-      blast_furnace_toggle: '&aEnable Blast Furnace Recipe: <enable>'
-      smoker_toggle: '&aEnable Smoker Recipe: <enable>'
-      campfire_toggle: '&aEnable Campfire Recipe: <enable>'
+      frame: '&aСоздание рецепта'
+      result_frame: '&aРезультат рецепта'
+      confirm: '&3&lПодтвердить создание'
+      unlock: '&aРазблокировать рецепт для игрока: <unlock>'
+      cooking_frame: '&aПлавление материалов'
+      furnace_toggle: '&aВключить плавильный рецепт: <enable>'
+      blast_furnace_toggle: '&aВключить коксовый рецепт: <enable>'
+      smoker_toggle: '&aВключить рецепты для коптильни: <enable>'
+      campfire_toggle: '&aВключить рецепты для костра: <enable>'
       cooking_time:
-        name: '&aCooking Time: <time> tick'
+        name: '&aВремя плавления: <time> такт'
         lore:
-          - '&3Click to Modify Cooking Time'
-        input_hint: '&aPlease enter cooking time in ticks. Type "cancel" to cancel.'
+          - '&3Нажмите, чтобы изменить время плавления'
+        input_hint: '&aВведите время плавления в тактах, введите "cancel" для отмены.'
       cooking_exp:
-        name: '&aExperience Reward: <exp>'
+        name: '&aНаграда опытом: <exp>'
         lore:
-          - '&3Click to Modify Experience Reward.'
-        input_hint: '&aPlease enter experience reward. Type "cancel" to cancel.'
-      smithing_frame: '&aSmithing Ingredients'
-      potion_frame: '&aBrewing Ingredients'
-      anvil_frame: '&aAnvil Ingredients'
-      anvil_copy_nbt_toggle: '&aPreserve Item NBT: <enable>'
+          - '&3Нажмите, чтобы изменить награду опытом, введите "cancel" для отмены.'
+        input_hint: '&aПожалуйста, введите количество опыта для награды.'
+      smithing_frame: '&aИзготовление предметов'
+      potion_frame: '&aСырье для зельеварения'
+      anvil_frame: '&aМатериалы для ковки'
+      anvil_copy_nbt_toggle: '&aСохранить данные NBT предмета: <enable>'
       anvil_cost_level:
-        name: '&aRequired Level: <level>'
+        name: '&aТребуемый уровень: <level>'
         lore:
-          - '&3Click to Modify Required Level'
-        input_hint: '&aPlease enter required level. Type ''cancel'' to cancel.'
+          - '&3Нажмите, чтобы изменить требуемый уровень'
+        input_hint: '&aВведите требуемый уровень, введите "cancel" для отмены.'
 recipe_type_name:
-  shaped: Shaped
-  shapeless: Shapeless
-  cooking: Cooking
-  smithing: Smithing
-  stone_cutting: Stonecutting
-  potion: Brewing
-  anvil: Anvil
+  shaped: последовательно
+  shapeless: неупорядоченный
+  cooking: плавка
+  smithing: ковка
+  stone_cutting: Резка камня
+  potion: Зельеварение
+  anvil: кузнечное дело
 #Arcenciel脚本的提示消息
 arcenciel:
-  not_enough_param: '<prefix> &cStatement "<statement>" is incomplete.'
-  unknown_token: '<prefix> &cUndefined keyword or function: <token>'
+  not_enough_param: '<prefix> &cПредложение "<statement>" неполное'
+  unknown_token: '<prefix> &cНеизвестное ключевое слово или функция <token>'
 #插件加载的反馈信息
 load:
-  finish: '<prefix> &aPlugin loaded successfully.'
-  recipe_load_exception: '<prefix> &cError occurred while loading recipe <recipe_name>.'
-  item_load_exception: '<prefix> &cError occurred while loading item <item_name>.'
+  finish: '<prefix> &aПлагин успешно загружен.'
+  recipe_load_exception: '<prefix> &cОшибка при загрузке рецепта <recipe_name>'
+  item_load_exception: '<prefix> &cОшибка при загрузке предмета <item_name>'
   hook_plugin:
-    success: '<prefix> &aFound <plugin>, hooked successfully.'
-    not_exist: '<prefix> &cPlugin <plugin> not found.'
+    success: '<prefix> &aОбнаружен <plugin>, подключен.'
+    not_exist: '<prefix> &cПлагин <plugin> не найден'
