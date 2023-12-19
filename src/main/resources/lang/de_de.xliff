@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file id="2" original="/lang.yml" source-language="en" target-language="de" datatype="plaintext" project-id="633834" tool-id="crowdin">
+    <header>
+      <tool tool-id="crowdin" tool-name="Crowdin" tool-version="1.1"/>
+    </header>
+    <body>
+      <trans-unit id="2" resname="prefix" approved="yes">
+        <source>&amp;8[&amp;3Craftorithm&amp;8]</source>
+        <target state="final">&amp;8[&amp;3Craftorithm&amp;8]</target>
+        <context-group purpose="information">
+          <context context-type="source"> -&gt; prefix</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="168" resname="unsupported_version" approved="yes">
+        <source>&lt;prefix&gt; Unsupported Version</source>
+        <target state="final">&lt;prefix&gt; Nicht unterstützte Version</target>
+        <context-group purpose="information">
+          <context context-type="source"> -&gt; unsupported_version</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="170" resname="new_version" approved="yes">
+        <source>&lt;prefix&gt; &amp;aDetected a new version &lt;new_version&gt;, please update to the latest version promptly!</source>
+        <target state="final">&lt;prefix&gt; &amp;aDie neue Version &lt;new_version&gt; wurde erkannt, bitte aktualisieren Sie rechtzeitig auf die neue Version.</target>
+        <context-group purpose="information">
+          <context context-type="source"> -&gt; new_version</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="172" resname="command.no_perm" approved="yes">
+        <source>&lt;prefix&gt; &amp;cYou do not have permission to use this command.</source>
+        <target state="final">&lt;prefix&gt; &amp;cSie haben keine Berechtigung, diesen Befehl zu verwenden.</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; no_perm</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="174" resname="command.player_only" approved="yes">
+        <source>&lt;prefix&gt; &amp;cOnly players can execute this command.</source>
+        <target state="final">&lt;prefix&gt; &amp;cNur Spieler können diesen Befehl ausführen.</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; player_only</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="176" resname="command.not_enough_param" approved="yes">
+        <source>&lt;prefix&gt; &amp;cThe Command is missing parameters, &lt;number&gt; parameters required.</source>
+        <target state="final">&lt;prefix&gt; &amp;cBefehl fehlt Parameter, es fehlen &lt;number&gt; Parameter</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; not_enough_param</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="178" resname="command.undefined_subcmd" approved="yes">
+        <source>&lt;prefix&gt; &amp;cUndefined subcommand!</source>
+        <target state="final">&lt;prefix&gt; &amp;cUndefinierter Unterbefehl</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; undefined_subcmd</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="180" resname="command.item.save.success" approved="yes">
+        <source>&lt;prefix&gt; &amp;aItem saved successfully.</source>
+        <target state="final">&lt;prefix&gt; &amp;aGegenstand erfolgreich gespeichert.</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; item -&gt; save -&gt; success</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="182" resname="command.item.save.failed_save_air" approved="yes">
+        <source>&lt;prefix&gt; &amp;cItem save failed. Reason: Cannot save a non-existent item.</source>
+        <target state="final">&lt;prefix&gt; &amp;cGegenstandspeicherung fehlgeschlagen. Grund: Kann nicht existierenden Gegenstand speichern.</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; item -&gt; save -&gt; failed_save_air</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="184" resname="command.item.give.success" approved="yes">
+        <source>&lt;prefix&gt; &amp;aGive item successfully</source>
+        <target state="final">&lt;prefix&gt; &amp;aGegenstand erfolgreich erhalten.</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; item -&gt; give -&gt; success</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="186" resname="command.item.give.not_exist_item" approved="yes">
+        <source>&lt;prefix&gt; &amp;cItem &lt;item_name&gt; does not exist.</source>
+        <target state="final">&lt;prefix&gt; &amp;cGegenstand &lt;item_name&gt; existiert nicht.</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; item -&gt; give -&gt; not_exist_item</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="188" resname="command.item.give.player_offline" approved="yes">
+        <source>&lt;prefix&gt; &amp;cThe player is not online or does not have a profile.</source>
+        <target state="final">&lt;prefix&gt; &amp;cDer Spieler ist offline oder existiert nicht.</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; item -&gt; give -&gt; player_offline</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="190" resname="command.reload.success" approved="yes">
+        <source>&lt;prefix&gt; &amp;aPlugin reload!</source>
+        <target state="final">&lt;prefix&gt; &amp;aDas Plugin wurde erfolgreich neu geladen.</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; reload -&gt; success</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="192" resname="command.reload.exception" approved="yes">
+        <source>&lt;prefix&gt; &amp;cError occurred during plugin reload, please check the console.</source>
+        <target state="final">&lt;prefix&gt; &amp;cBeim Neuladen des Plugins ist ein Fehler aufgetreten. Bitte überprüfen Sie die Konsole.</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; reload -&gt; exception</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="194" resname="command.remove.success" approved="yes">
+        <source>&lt;prefix&gt; &amp;aRecipe removed successfully.</source>
+        <target state="final">&lt;prefix&gt; &amp;aRezept erfolgreich gelöscht.</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; remove -&gt; success</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="196" resname="command.remove.not_exist" approved="yes">
+        <source>&lt;prefix&gt; &amp;cRecipe does not exist.</source>
+        <target state="final">&lt;prefix&gt; &amp;cRezept existiert nicht.</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; remove -&gt; not_exist</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="198" resname="command.disable.success" approved="yes">
+        <source>&lt;prefix&gt; &amp;cRecipe disabled successfully.</source>
+        <target state="final">&lt;prefix&gt; &amp;cRezept erfolgreich deaktiviert.</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; disable -&gt; success</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="200" resname="command.disable.not_exist" approved="yes">
+        <source>&lt;prefix&gt; &amp;cRecipe does not exist or has already been disabled.</source>
+        <target state="final">&lt;prefix&gt; &amp;cDas Rezept existiert nicht oder wurde bereits deaktiviert.</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; disable -&gt; not_exist</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="202" resname="command.disable.failed" approved="yes">
+        <source>&lt;prefix&gt; &amp;cFailed to disable recipe, it may already be disabled or does not exist.</source>
+        <target state="final">&lt;prefix&gt; &amp;cFehler beim Deaktivieren des Rezepts. Möglicherweise wurde es bereits deaktiviert oder existiert nicht.</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; disable -&gt; failed</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="204" resname="command.version" approved="yes">
+        <source>&lt;prefix&gt; &amp;aPlugin version: &lt;version&gt;</source>
+        <target state="final">&lt;prefix&gt; &amp;aPlugin Version: &lt;version&gt;</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; version</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="206" resname="command.create.unsupported_recipe_type" approved="yes">
+        <source>&lt;prefix&gt; &amp;cUnsupported recipe type.</source>
+        <target state="final">&lt;prefix&gt; &amp;cNicht unterstützter Rezepttyp</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; create -&gt; unsupported_recipe_type</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="208" resname="command.create.unsupported_recipe_name" approved="yes">
+        <source>&lt;prefix&gt; &amp;cUnsupported recipe name, only lowercase letters, numbers, '_', '-', and '.' are allowed.</source>
+        <target state="final">&lt;prefix&gt; &amp;cNicht unterstützter Rezeptname, es sind nur [a-z0-9/._-]+ erlaubt.</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; create -&gt; unsupported_recipe_name</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="210" resname="command.create.name_used" approved="yes">
+        <source>&lt;prefix&gt; &amp;cRecipe ID has already been used.</source>
+        <target state="final">&lt;prefix&gt; &amp;cRezept-ID ist bereits vergeben.</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; create -&gt; name_used</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="212" resname="command.create.null_result" approved="yes">
+        <source>&lt;prefix&gt; &amp;cRecipe result cannot be empty!</source>
+        <target state="final">&lt;prefix&gt; &amp;cDas Rezeptergebnis darf nicht leer sein!</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; create -&gt; null_result</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="214" resname="command.create.null_source" approved="yes">
+        <source>&lt;prefix&gt; &amp;cRecipe ingredients cannot be empty!</source>
+        <target state="final">&lt;prefix&gt; &amp;cDie Rezeptzutaten dürfen nicht leer sein!</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; create -&gt; null_source</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="216" resname="command.create.success" approved="yes">
+        <source>&lt;prefix&gt; &amp;a&lt;recipe_type&gt; recipe &lt;recipe_name&gt; created successfully.</source>
+        <target state="final">&lt;prefix&gt; &amp;a&lt;recipe_type&gt;-Rezept &lt;recipe_name&gt; erfolgreich erstellt.</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; create -&gt; success</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="218" resname="command.run_arcenciel.success" approved="yes">
+        <source>&lt;prefix&gt; &amp;aExecution successful, took &lt;time&gt; ms.</source>
+        <target state="final">&lt;prefix&gt; &amp;aErfolgreich ausgeführt, dauerte &lt;time&gt; ms.</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; run_arcenciel -&gt; success</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="220" resname="command.list.unsupported_version" approved="yes">
+        <source>&lt;prefix&gt; &amp;cThis feature is only available in version 1.16 and above.</source>
+        <target state="final">&lt;prefix&gt; &amp;cDiese Funktion ist nur in Version 1.16 und höher verfügbar.</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; list -&gt; unsupported_version</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="222" resname="menu.recipe_list.title" approved="yes">
+        <source>&amp;3&amp;lRecipe List</source>
+        <target state="final">&amp;3&amp;lRezeptliste</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_list -&gt; title</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="224" resname="menu.recipe_list.icon.frame" approved="yes">
+        <source>&amp;3&amp;lRecipe List</source>
+        <target state="final">&amp;3&amp;lRezeptliste</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_list -&gt; icon -&gt; frame</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="226" resname="menu.recipe_list.icon.previous" approved="yes">
+        <source>&amp;aPrevious Page</source>
+        <target state="final">&amp;aVorherige Seite</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_list -&gt; icon -&gt; previous</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="228" resname="menu.recipe_list.icon.next" approved="yes">
+        <source>&amp;aNext Page</source>
+        <target state="final">&amp;aNächste Seite</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_list -&gt; icon -&gt; next</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="230" resname="menu.new_recipe_list.title" approved="yes">
+        <source>&amp;3&amp;lCraftorithm New Recipe List</source>
+        <target state="final">&amp;3&amp;lCraftorithm neue Rezeptliste</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; new_recipe_list -&gt; title</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="232" resname="menu.new_recipe_list.icon.frame" approved="yes">
+        <source>&amp;3&amp;lNew recipe list</source>
+        <target state="final">&amp;3&amp;lNeue Rezeptliste</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; new_recipe_list -&gt; icon -&gt; frame</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="234" resname="menu.new_recipe_list.icon.previous" approved="yes">
+        <source>&amp;aPrevious Page</source>
+        <target state="final">&amp;aVorherige Seite</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; new_recipe_list -&gt; icon -&gt; previous</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="236" resname="menu.new_recipe_list.icon.next" approved="yes">
+        <source>&amp;aNext Page</source>
+        <target state="final">&amp;aNächste Seite</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; new_recipe_list -&gt; icon -&gt; next</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="238" resname="menu.recipe_display.title.shaped" approved="yes">
+        <source>Shaped Recipe</source>
+        <target state="final">Geordnetes Rezept</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_display -&gt; title -&gt; shaped</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="240" resname="menu.recipe_display.title.shapeless" approved="yes">
+        <source>Shapeless Recipe</source>
+        <target state="final">Ungeordnetes Rezept</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_display -&gt; title -&gt; shapeless</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="242" resname="menu.recipe_display.title.furnace" approved="yes">
+        <source>Furnace Recipe</source>
+        <target state="final">Schmelzrezept</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_display -&gt; title -&gt; furnace</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="244" resname="menu.recipe_display.title.blasting" approved="yes">
+        <source>Blast Furnace Recipe</source>
+        <target state="final">Hochöfen-Rezept</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_display -&gt; title -&gt; blasting</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="246" resname="menu.recipe_display.title.smoking" approved="yes">
+        <source>Smoker Recipe</source>
+        <target state="final">Räucherofen-Rezept</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_display -&gt; title -&gt; smoking</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="248" resname="menu.recipe_display.title.campfire" approved="yes">
+        <source>Campfire Recipe</source>
+        <target state="final">Lagerfeuer-Rezept</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_display -&gt; title -&gt; campfire</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="250" resname="menu.recipe_display.title.smithing" approved="yes">
+        <source>Smithing Recipe</source>
+        <target state="final">Schmiede-Rezept</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_display -&gt; title -&gt; smithing</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="252" resname="menu.recipe_display.title.stone_cutting" approved="yes">
+        <source>Stonecutter Recipe</source>
+        <target state="final">Steinschneide-Rezept</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_display -&gt; title -&gt; stone_cutting</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="254" resname="menu.recipe_display.title.potion" approved="yes">
+        <source>Brewing Recipe</source>
+        <target state="final">Braustand-Rezept</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_display -&gt; title -&gt; potion</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="256" resname="menu.recipe_display.title.anvil" approved="yes">
+        <source>Anvil Recipe</source>
+        <target state="final">Amboss-Rezept</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_display -&gt; title -&gt; anvil</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="258" resname="menu.recipe_creator.title" approved="yes">
+        <source>&amp;3Creating &lt;recipe_type&gt; recipe: &lt;recipe_name&gt;</source>
+        <target state="final">&amp;3Erstelle &lt;recipe_type&gt;-Rezept: &lt;recipe_name&gt;</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; title</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="260" resname="menu.recipe_creator.icon.frame" approved="yes">
+        <source>&amp;aCreating Recipe</source>
+        <target state="final">&amp;aRezept erstellen</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; frame</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="262" resname="menu.recipe_creator.icon.result_frame" approved="yes">
+        <source>&amp;aRecipe Result</source>
+        <target state="final">&amp;aRezeptergebnis</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; result_frame</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="264" resname="menu.recipe_creator.icon.confirm" approved="yes">
+        <source>&amp;3&amp;lConfirm Creation</source>
+        <target state="final">&amp;3&amp;lBestätigen Sie die Erstellung</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; confirm</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="266" resname="menu.recipe_creator.icon.unlock" approved="yes">
+        <source>&amp;aUnlock Recipe for Player: &lt;unlock&gt;</source>
+        <target state="final">&amp;aHast du das Rezept freigeschaltet: &lt;unlock&gt;</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; unlock</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="268" resname="menu.recipe_creator.icon.cooking_frame" approved="yes">
+        <source>&amp;aCooking Ingredients</source>
+        <target state="final">&amp;aRohstoffe schmelzen</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; cooking_frame</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="270" resname="menu.recipe_creator.icon.furnace_toggle" approved="yes">
+        <source>&amp;aEnable Furnace Recipe: &lt;enable&gt;</source>
+        <target state="final">&amp;aSchmelzofenrezept aktiviert: &lt;enable&gt;</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; furnace_toggle</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="272" resname="menu.recipe_creator.icon.blast_furnace_toggle" approved="yes">
+        <source>&amp;aEnable Blast Furnace Recipe: &lt;enable&gt;</source>
+        <target state="final">&amp;aHochöfenrezept aktiviert: &lt;enable&gt;</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; blast_furnace_toggle</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="274" resname="menu.recipe_creator.icon.smoker_toggle" approved="yes">
+        <source>&amp;aEnable Smoker Recipe: &lt;enable&gt;</source>
+        <target state="final">&amp;a Rauchofen-Rezept aktivieren: &lt;enable&gt;</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; smoker_toggle</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="276" resname="menu.recipe_creator.icon.campfire_toggle" approved="yes">
+        <source>&amp;aEnable Campfire Recipe: &lt;enable&gt;</source>
+        <target state="final">&amp; Lagerfeuer-Rezept aktivieren: &lt;enable&gt;</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; campfire_toggle</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="278" resname="menu.recipe_creator.icon.cooking_time.name" approved="yes">
+        <source>&amp;aCooking Time: &lt;time&gt; tick</source>
+        <target state="final">&amp;aVeredelungszeit: &lt;time&gt; Tick</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; cooking_time -&gt; name</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="280" resname="menu.recipe_creator.icon.cooking_time.lore.0" approved="yes">
+        <source>&amp;3Click to Modify Cooking Time</source>
+        <target state="final">&amp;3Klicken Sie zum Ändern der Veredelungszeit</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; cooking_time -&gt; lore -&gt; 0</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="282" resname="menu.recipe_creator.icon.cooking_time.input_hint" approved="yes">
+        <source>&amp;aPlease enter cooking time in ticks. Type &quot;cancel&quot; to cancel.</source>
+        <target state="final">&amp;aBitte geben Sie die Veredelungszeit ein, in Tick, geben Sie &quot;cancel&quot; ein, um abzubrechen</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; cooking_time -&gt; input_hint</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="284" resname="menu.recipe_creator.icon.cooking_exp.name" approved="yes">
+        <source>&amp;aExperience Reward: &lt;exp&gt;</source>
+        <target state="final">&amp;aBelohnung Erfahrung: &lt;exp&gt;</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; cooking_exp -&gt; name</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="286" resname="menu.recipe_creator.icon.cooking_exp.lore.0" approved="yes">
+        <source>&amp;3Click to Modify Experience Reward.</source>
+        <target state="final">&amp;3Klicken Sie auf Änderung der Belohnung Erfahrung</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; cooking_exp -&gt; lore -&gt; 0</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="288" resname="menu.recipe_creator.icon.cooking_exp.input_hint" approved="yes">
+        <source>&amp;aPlease enter experience reward. Type &quot;cancel&quot; to cancel.</source>
+        <target state="final">&amp;aBitte geben Sie die Belohnung Erfahrung ein, geben Sie &quot;cancel&quot; ein, um abzubrechen</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; cooking_exp -&gt; input_hint</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="290" resname="menu.recipe_creator.icon.smithing_frame" approved="yes">
+        <source>&amp;aSmithing Ingredients</source>
+        <target state="final">&amp;aGegenstände schmieden</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; smithing_frame</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="292" resname="menu.recipe_creator.icon.potion_frame" approved="yes">
+        <source>&amp;aBrewing Ingredients</source>
+        <target state="final">&amp;aZum Brauen bestimmte Zutaten</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; potion_frame</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="294" resname="menu.recipe_creator.icon.anvil_frame" approved="yes">
+        <source>&amp;aAnvil Ingredients</source>
+        <target state="final">&amp;aSchmiede-Materialien</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; anvil_frame</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="296" resname="menu.recipe_creator.icon.anvil_copy_nbt_toggle" approved="yes">
+        <source>&amp;aPreserve Item NBT: &lt;enable&gt;</source>
+        <target state="final">&amp;aBehalte Gegenstand-NBT: &lt;enable&gt;</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; anvil_copy_nbt_toggle</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="298" resname="menu.recipe_creator.icon.anvil_cost_level.name" approved="yes">
+        <source>&amp;aRequired Level: &lt;level&gt;</source>
+        <target state="final">&amp;aErforderliches Level: &lt;level&gt;</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; anvil_cost_level -&gt; name</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="300" resname="menu.recipe_creator.icon.anvil_cost_level.lore.0" approved="yes">
+        <source>&amp;3Click to Modify Required Level</source>
+        <target state="final">&amp;3Klicken Sie zum Ändern des erforderlichen Levels</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; anvil_cost_level -&gt; lore -&gt; 0</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="302" resname="menu.recipe_creator.icon.anvil_cost_level.input_hint" approved="yes">
+        <source>&amp;aPlease enter required level. Type 'cancel' to cancel.</source>
+        <target state="final">&amp;aBitte geben Sie das erforderliche Level ein, geben Sie &quot;cancel&quot; ein, um abzubrechen</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; anvil_cost_level -&gt; input_hint</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="304" resname="recipe_type_name.shaped" approved="yes">
+        <source>Shaped</source>
+        <target state="final">Geordnet</target>
+        <context-group purpose="information">
+          <context context-type="source">recipe_type_name -&gt; shaped</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="306" resname="recipe_type_name.shapeless" approved="yes">
+        <source>Shapeless</source>
+        <target state="final">Unsortiert</target>
+        <context-group purpose="information">
+          <context context-type="source">recipe_type_name -&gt; shapeless</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="308" resname="recipe_type_name.cooking" approved="yes">
+        <source>Cooking</source>
+        <target state="final">Schmelzen</target>
+        <context-group purpose="information">
+          <context context-type="source">recipe_type_name -&gt; cooking</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="310" resname="recipe_type_name.smithing" approved="yes">
+        <source>Smithing</source>
+        <target state="final">Schmieden</target>
+        <context-group purpose="information">
+          <context context-type="source">recipe_type_name -&gt; smithing</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="312" resname="recipe_type_name.stone_cutting" approved="yes">
+        <source>Stonecutting</source>
+        <target state="final">Steinschneiden</target>
+        <context-group purpose="information">
+          <context context-type="source">recipe_type_name -&gt; stone_cutting</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="314" resname="recipe_type_name.potion" approved="yes">
+        <source>Brewing</source>
+        <target state="final">Brauen</target>
+        <context-group purpose="information">
+          <context context-type="source">recipe_type_name -&gt; potion</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="316" resname="recipe_type_name.anvil" approved="yes">
+        <source>Anvil</source>
+        <target state="final">der Amboss</target>
+        <context-group purpose="information">
+          <context context-type="source">recipe_type_name -&gt; anvil</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="318" resname="arcenciel.not_enough_param" approved="yes">
+        <source>&lt;prefix&gt; &amp;cStatement &quot;&lt;statement&gt;&quot; is incomplete.</source>
+        <target state="final">&lt;prefix&gt; &amp;cDie Anweisung &quot;&lt;statement&gt;&quot; ist unvollständig.</target>
+        <context-group purpose="information">
+          <context context-type="source">arcenciel -&gt; not_enough_param</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="320" resname="arcenciel.unknown_token" approved="yes">
+        <source>&lt;prefix&gt; &amp;cUndefined keyword or function: &lt;token&gt;</source>
+        <target state="final">&lt;prefix&gt; &amp;cUndefined Schlüsselwort oder Funktion &lt;token&gt;.</target>
+        <context-group purpose="information">
+          <context context-type="source">arcenciel -&gt; unknown_token</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="322" resname="load.finish" approved="yes">
+        <source>&lt;prefix&gt; &amp;aPlugin loaded successfully.</source>
+        <target state="final">&lt;prefix&gt; &amp;aDas Plugin wurde erfolgreich geladen.</target>
+        <context-group purpose="information">
+          <context context-type="source">load -&gt; finish</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="324" resname="load.recipe_load_exception" approved="yes">
+        <source>&lt;prefix&gt; &amp;cError occurred while loading recipe &lt;recipe_name&gt;.</source>
+        <target state="final">&lt;prefix&gt; &amp;cFehler beim Laden des Rezepts &lt;recipe_name&gt;.</target>
+        <context-group purpose="information">
+          <context context-type="source">load -&gt; recipe_load_exception</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="326" resname="load.item_load_exception" approved="yes">
+        <source>&lt;prefix&gt; &amp;cError occurred while loading item &lt;item_name&gt;.</source>
+        <target state="final">&lt;prefix&gt; &amp;cBeim Laden des Gegenstands &lt;item_name&gt; ist ein Fehler aufgetreten.</target>
+        <context-group purpose="information">
+          <context context-type="source">load -&gt; item_load_exception</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="328" resname="load.hook_plugin.success" approved="yes">
+        <source>&lt;prefix&gt; &amp;aFound &lt;plugin&gt;, hooked successfully.</source>
+        <target state="final">&lt;prefix&gt; &amp;aDas Plugin &lt;plugin&gt; wurde gefunden und ist eingehakt.</target>
+        <context-group purpose="information">
+          <context context-type="source">load -&gt; hook_plugin -&gt; success</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="330" resname="load.hook_plugin.not_exist" approved="yes">
+        <source>&lt;prefix&gt; &amp;cPlugin &lt;plugin&gt; not found.</source>
+        <target state="final">&lt;prefix&gt; &amp;cPlugin &lt;plugin&gt; wurde nicht gefunden.</target>
+        <context-group purpose="information">
+          <context context-type="source">load -&gt; hook_plugin -&gt; not_exist</context>
+        </context-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
