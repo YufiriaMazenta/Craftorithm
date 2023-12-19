@@ -28,7 +28,7 @@ command:
   version: '<prefix> &a插件版本：<version>。'
   create:
     unsupported_recipe_type: '<prefix> &c不支援的配方類型。'
-    unsupported_recipe_name: '<prefix> &c不支援的配方名稱，只能使用小写英文字母、数字、"_"、"-"和"."。'
+    unsupported_recipe_name: '<prefix> &c不支援的配方名稱，只能使用小写字母、数字、“-”、“_”和“.”。'
     name_used: '<prefix> &c配方ID已經被使用。'
     null_result: '<prefix> &c配方結果不允許為空！'
     null_source: '<prefix> &c配方原料不允許為空！'
