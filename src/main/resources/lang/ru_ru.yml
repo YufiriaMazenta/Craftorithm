@@ -28,7 +28,7 @@ command:
   version: '<prefix> &aВерсия плагина: <version>'
   create:
     unsupported_recipe_type: '<prefix> &cНеподдерживаемый тип рецепта.'
-    unsupported_recipe_name: '<prefix> &cНедопустимое имя рецепта. Можно использовать только символы [a-z0-9/._-].'
+    unsupported_recipe_name: '<prefix> &cНедопустимое имя рецепта. Можно использовать только символы ^[a-z0-9._-]+$.'
     name_used: '<prefix> &cИдентификатор рецепта уже используется.'
     null_result: '<prefix> &cРезультат рецепта не может быть пустым!'
     null_source: '<prefix> &cИнгредиенты рецепта не могут быть пустыми!'
