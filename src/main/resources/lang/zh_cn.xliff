@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file id="2" original="/lang.yml" source-language="en" target-language="zh-CN" datatype="plaintext" project-id="633834" tool-id="crowdin">
+    <header>
+      <tool tool-id="crowdin" tool-name="Crowdin" tool-version="1.1"/>
+    </header>
+    <body>
+      <trans-unit id="2" resname="prefix" approved="yes">
+        <source>&amp;8[&amp;3Craftorithm&amp;8]</source>
+        <target state="final">&amp;8[&amp;3Craftorithm&amp;8]</target>
+        <context-group purpose="information">
+          <context context-type="source"> -&gt; prefix</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="168" resname="unsupported_version" approved="yes">
+        <source>&lt;prefix&gt; Unsupported Version</source>
+        <target state="final">&lt;prefix&gt; 不支持的版本</target>
+        <context-group purpose="information">
+          <context context-type="source"> -&gt; unsupported_version</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="170" resname="new_version" approved="yes">
+        <source>&lt;prefix&gt; &amp;aDetected a new version &lt;new_version&gt;, please update to the latest version promptly!</source>
+        <target state="final">&lt;prefix&gt; &amp;a检测到有新版本&lt;new_version&gt;, 请及时更新到新版本</target>
+        <context-group purpose="information">
+          <context context-type="source"> -&gt; new_version</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="172" resname="command.no_perm" approved="yes">
+        <source>&lt;prefix&gt; &amp;cYou do not have permission to use this command.</source>
+        <target state="final">&lt;prefix&gt; &amp;c你没有使用此命令的权限</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; no_perm</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="174" resname="command.player_only" approved="yes">
+        <source>&lt;prefix&gt; &amp;cOnly players can execute this command.</source>
+        <target state="final">&lt;prefix&gt; &amp;c只有玩家才能执行此命令</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; player_only</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="176" resname="command.not_enough_param" approved="yes">
+        <source>&lt;prefix&gt; &amp;cThe Command is missing parameters, &lt;number&gt; parameters required.</source>
+        <target state="final">&lt;prefix&gt; &amp;c命令缺少参数，缺少&lt;number&gt;个参数</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; not_enough_param</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="178" resname="command.undefined_subcmd" approved="yes">
+        <source>&lt;prefix&gt; &amp;cUndefined subcommand!</source>
+        <target state="final">&lt;prefix&gt; &amp;c未定义的子命令</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; undefined_subcmd</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="180" resname="command.item.save.success" approved="yes">
+        <source>&lt;prefix&gt; &amp;aItem saved successfully.</source>
+        <target state="final">&lt;prefix&gt; &amp;a物品保存成功</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; item -&gt; save -&gt; success</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="182" resname="command.item.save.failed_save_air" approved="yes">
+        <source>&lt;prefix&gt; &amp;cItem save failed. Reason: Cannot save a non-existent item.</source>
+        <target state="final">&lt;prefix&gt; &amp;c物品保存失败，原因：不能保存不存在的物品</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; item -&gt; save -&gt; failed_save_air</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="184" resname="command.item.give.success" approved="yes">
+        <source>&lt;prefix&gt; &amp;aGive item successfully</source>
+        <target state="final">&lt;prefix&gt; &amp;a物品获取成功</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; item -&gt; give -&gt; success</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="186" resname="command.item.give.not_exist_item" approved="yes">
+        <source>&lt;prefix&gt; &amp;cItem &lt;item_name&gt; does not exist.</source>
+        <target state="final">&lt;prefix&gt; &amp;c不存在物品 &lt;item_name&gt;</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; item -&gt; give -&gt; not_exist_item</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="188" resname="command.item.give.player_offline" approved="yes">
+        <source>&lt;prefix&gt; &amp;cThe player is not online or does not have a profile.</source>
+        <target state="final">&lt;prefix&gt; &amp;c该玩家不在线或不存在</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; item -&gt; give -&gt; player_offline</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="190" resname="command.reload.success" approved="yes">
+        <source>&lt;prefix&gt; &amp;aPlugin reload!</source>
+        <target state="final">&lt;prefix&gt; &amp;a插件重载成功</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; reload -&gt; success</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="192" resname="command.reload.exception" approved="yes">
+        <source>&lt;prefix&gt; &amp;cError occurred during plugin reload, please check the console.</source>
+        <target state="final">&lt;prefix&gt; &amp;c插件重载过程中发生错误，请查看控制台</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; reload -&gt; exception</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="194" resname="command.remove.success" approved="yes">
+        <source>&lt;prefix&gt; &amp;aRecipe removed successfully.</source>
+        <target state="final">&lt;prefix&gt; &amp;a配方删除成功</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; remove -&gt; success</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="196" resname="command.remove.not_exist" approved="yes">
+        <source>&lt;prefix&gt; &amp;cRecipe does not exist.</source>
+        <target state="final">&lt;prefix&gt; &amp;c配方不存在</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; remove -&gt; not_exist</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="198" resname="command.disable.success" approved="yes">
+        <source>&lt;prefix&gt; &amp;cRecipe disabled successfully.</source>
+        <target state="final">&lt;prefix&gt; &amp;c禁用配方成功</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; disable -&gt; success</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="200" resname="command.disable.not_exist" approved="yes">
+        <source>&lt;prefix&gt; &amp;cRecipe does not exist or has already been disabled.</source>
+        <target state="final">&lt;prefix&gt; &amp;c配方不存在或已经被禁用</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; disable -&gt; not_exist</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="202" resname="command.disable.failed" approved="yes">
+        <source>&lt;prefix&gt; &amp;cFailed to disable recipe, it may already be disabled or does not exist.</source>
+        <target state="final">&lt;prefix&gt; &amp;c配方禁用失败，可能已被禁用或不存在</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; disable -&gt; failed</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="204" resname="command.version" approved="yes">
+        <source>&lt;prefix&gt; &amp;aPlugin version: &lt;version&gt;</source>
+        <target state="final">&lt;prefix&gt; &amp;a插件版本：&lt;version&gt;</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; version</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="206" resname="command.create.unsupported_recipe_type" approved="yes">
+        <source>&lt;prefix&gt; &amp;cUnsupported recipe type.</source>
+        <target state="final">&lt;prefix&gt; &amp;c不支持的配方类型</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; create -&gt; unsupported_recipe_type</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="208" resname="command.create.unsupported_recipe_name" approved="yes">
+        <source>&lt;prefix&gt; &amp;cUnsupported recipe name, only lowercase letters, numbers, '_', '-', and '.' are allowed.</source>
+        <target state="final">&lt;prefix&gt; &amp;c不支持的配方名字，只能使用^[a-z0-9._-]+$允许的内容</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; create -&gt; unsupported_recipe_name</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="210" resname="command.create.name_used" approved="yes">
+        <source>&lt;prefix&gt; &amp;cRecipe ID has already been used.</source>
+        <target state="final">&lt;prefix&gt; &amp;c配方ID已经被使用</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; create -&gt; name_used</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="212" resname="command.create.null_result" approved="yes">
+        <source>&lt;prefix&gt; &amp;cRecipe result cannot be empty!</source>
+        <target state="final">&lt;prefix&gt; &amp;c配方结果不允许为空！</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; create -&gt; null_result</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="214" resname="command.create.null_source" approved="yes">
+        <source>&lt;prefix&gt; &amp;cRecipe ingredients cannot be empty!</source>
+        <target state="final">&lt;prefix&gt; &amp;c配方原料不允许为空！</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; create -&gt; null_source</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="216" resname="command.create.success" approved="yes">
+        <source>&lt;prefix&gt; &amp;a&lt;recipe_type&gt; recipe &lt;recipe_name&gt; created successfully.</source>
+        <target state="final">&lt;prefix&gt; &amp;a&lt;recipe_type&gt;类型配方&lt;recipe_name&gt;创建成功</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; create -&gt; success</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="218" resname="command.run_arcenciel.success" approved="yes">
+        <source>&lt;prefix&gt; &amp;aExecution successful, took &lt;time&gt; ms.</source>
+        <target state="final">&lt;prefix&gt; &amp;a运行成功，耗时&lt;time&gt;ms</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; run_arcenciel -&gt; success</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="220" resname="command.list.unsupported_version" approved="yes">
+        <source>&lt;prefix&gt; &amp;cThis feature is only available in version 1.16 and above.</source>
+        <target state="final">&lt;prefix&gt; &amp;c此功能只在1.16及以上版本可用</target>
+        <context-group purpose="information">
+          <context context-type="source">command -&gt; list -&gt; unsupported_version</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="222" resname="menu.recipe_list.title" approved="yes">
+        <source>&amp;3&amp;lRecipe List</source>
+        <target state="final">&amp;3&amp;l配方列表</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_list -&gt; title</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="224" resname="menu.recipe_list.icon.frame" approved="yes">
+        <source>&amp;3&amp;lRecipe List</source>
+        <target state="final">&amp;3&amp;l配方列表</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_list -&gt; icon -&gt; frame</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="226" resname="menu.recipe_list.icon.previous" approved="yes">
+        <source>&amp;aPrevious Page</source>
+        <target state="final">&amp;a上一页</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_list -&gt; icon -&gt; previous</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="228" resname="menu.recipe_list.icon.next" approved="yes">
+        <source>&amp;aNext Page</source>
+        <target state="final">&amp;a下一页</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_list -&gt; icon -&gt; next</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="230" resname="menu.new_recipe_list.title" approved="yes">
+        <source>&amp;3&amp;lCraftorithm New Recipe List</source>
+        <target state="final">&amp;3&amp;lCraftorithm新增配方列表</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; new_recipe_list -&gt; title</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="232" resname="menu.new_recipe_list.icon.frame" approved="yes">
+        <source>&amp;3&amp;lNew recipe list</source>
+        <target state="final">&amp;3&amp;l新增配方列表</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; new_recipe_list -&gt; icon -&gt; frame</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="234" resname="menu.new_recipe_list.icon.previous" approved="yes">
+        <source>&amp;aPrevious Page</source>
+        <target state="final">&amp;a上一页</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; new_recipe_list -&gt; icon -&gt; previous</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="236" resname="menu.new_recipe_list.icon.next" approved="yes">
+        <source>&amp;aNext Page</source>
+        <target state="final">&amp;a下一页</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; new_recipe_list -&gt; icon -&gt; next</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="238" resname="menu.recipe_display.title.shaped" approved="yes">
+        <source>Shaped Recipe</source>
+        <target state="final">有序配方</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_display -&gt; title -&gt; shaped</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="240" resname="menu.recipe_display.title.shapeless" approved="yes">
+        <source>Shapeless Recipe</source>
+        <target state="final">无序配方</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_display -&gt; title -&gt; shapeless</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="242" resname="menu.recipe_display.title.furnace" approved="yes">
+        <source>Furnace Recipe</source>
+        <target state="final">熔炉配方</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_display -&gt; title -&gt; furnace</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="244" resname="menu.recipe_display.title.blasting" approved="yes">
+        <source>Blast Furnace Recipe</source>
+        <target state="final">高炉配方</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_display -&gt; title -&gt; blasting</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="246" resname="menu.recipe_display.title.smoking" approved="yes">
+        <source>Smoker Recipe</source>
+        <target state="final">烟熏炉配方</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_display -&gt; title -&gt; smoking</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="248" resname="menu.recipe_display.title.campfire" approved="yes">
+        <source>Campfire Recipe</source>
+        <target state="final">营火配方</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_display -&gt; title -&gt; campfire</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="250" resname="menu.recipe_display.title.smithing" approved="yes">
+        <source>Smithing Recipe</source>
+        <target state="final">锻造配方</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_display -&gt; title -&gt; smithing</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="252" resname="menu.recipe_display.title.stone_cutting" approved="yes">
+        <source>Stonecutter Recipe</source>
+        <target state="final">切石配方</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_display -&gt; title -&gt; stone_cutting</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="254" resname="menu.recipe_display.title.potion" approved="yes">
+        <source>Brewing Recipe</source>
+        <target state="final">酿造配方</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_display -&gt; title -&gt; potion</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="256" resname="menu.recipe_display.title.anvil" approved="yes">
+        <source>Anvil Recipe</source>
+        <target state="final">铁砧配方</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_display -&gt; title -&gt; anvil</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="258" resname="menu.recipe_creator.title" approved="yes">
+        <source>&amp;3Creating &lt;recipe_type&gt; recipe: &lt;recipe_name&gt;</source>
+        <target state="final">&amp;3创建&lt;recipe_type&gt;配方: &lt;recipe_name&gt;</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; title</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="260" resname="menu.recipe_creator.icon.frame" approved="yes">
+        <source>&amp;aCreating Recipe</source>
+        <target state="final">&amp;a创建配方</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; frame</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="262" resname="menu.recipe_creator.icon.result_frame" approved="yes">
+        <source>&amp;aRecipe Result</source>
+        <target state="final">&amp;a配方结果</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; result_frame</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="264" resname="menu.recipe_creator.icon.confirm" approved="yes">
+        <source>&amp;3&amp;lConfirm Creation</source>
+        <target state="final">&amp;3&amp;l确认创建</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; confirm</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="266" resname="menu.recipe_creator.icon.unlock" approved="yes">
+        <source>&amp;aUnlock Recipe for Player: &lt;unlock&gt;</source>
+        <target state="final">&amp;a是否为玩家解锁配方:&lt;unlock&gt;</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; unlock</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="268" resname="menu.recipe_creator.icon.cooking_frame" approved="yes">
+        <source>&amp;aCooking Ingredients</source>
+        <target state="final">&amp;a烧炼原料</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; cooking_frame</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="270" resname="menu.recipe_creator.icon.furnace_toggle" approved="yes">
+        <source>&amp;aEnable Furnace Recipe: &lt;enable&gt;</source>
+        <target state="final">&amp;a启用熔炉配方:&lt;enable&gt;</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; furnace_toggle</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="272" resname="menu.recipe_creator.icon.blast_furnace_toggle" approved="yes">
+        <source>&amp;aEnable Blast Furnace Recipe: &lt;enable&gt;</source>
+        <target state="final">&amp;a启用高炉配方:&lt;enable&gt;</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; blast_furnace_toggle</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="274" resname="menu.recipe_creator.icon.smoker_toggle" approved="yes">
+        <source>&amp;aEnable Smoker Recipe: &lt;enable&gt;</source>
+        <target state="final">&amp;a启用烟熏炉配方:&lt;enable&gt;</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; smoker_toggle</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="276" resname="menu.recipe_creator.icon.campfire_toggle" approved="yes">
+        <source>&amp;aEnable Campfire Recipe: &lt;enable&gt;</source>
+        <target state="final">&amp;a启用营火配方:&lt;enable&gt;</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; campfire_toggle</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="278" resname="menu.recipe_creator.icon.cooking_time.name" approved="yes">
+        <source>&amp;aCooking Time: &lt;time&gt; tick</source>
+        <target state="final">&amp;a烧炼时间: &lt;time&gt; tick</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; cooking_time -&gt; name</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="280" resname="menu.recipe_creator.icon.cooking_time.lore.0" approved="yes">
+        <source>&amp;3Click to Modify Cooking Time</source>
+        <target state="final">&amp;3点击修改烧炼时间</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; cooking_time -&gt; lore -&gt; 0</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="282" resname="menu.recipe_creator.icon.cooking_time.input_hint" approved="yes">
+        <source>&amp;aPlease enter cooking time in ticks. Type &quot;cancel&quot; to cancel.</source>
+        <target state="final">&amp;a请输入烧炼时间, 单位为tick, 输入cancel取消</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; cooking_time -&gt; input_hint</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="284" resname="menu.recipe_creator.icon.cooking_exp.name" approved="yes">
+        <source>&amp;aExperience Reward: &lt;exp&gt;</source>
+        <target state="final">&amp;a奖励经验: &lt;exp&gt;</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; cooking_exp -&gt; name</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="286" resname="menu.recipe_creator.icon.cooking_exp.lore.0" approved="yes">
+        <source>&amp;3Click to Modify Experience Reward.</source>
+        <target state="final">&amp;3点击修改奖励经验</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; cooking_exp -&gt; lore -&gt; 0</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="288" resname="menu.recipe_creator.icon.cooking_exp.input_hint" approved="yes">
+        <source>&amp;aPlease enter experience reward. Type &quot;cancel&quot; to cancel.</source>
+        <target state="final">&amp;a请输入奖励经验, 输入cancel取消</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; cooking_exp -&gt; input_hint</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="290" resname="menu.recipe_creator.icon.smithing_frame" approved="yes">
+        <source>&amp;aSmithing Ingredients</source>
+        <target state="final">&amp;a锻造物品</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; smithing_frame</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="292" resname="menu.recipe_creator.icon.potion_frame" approved="yes">
+        <source>&amp;aBrewing Ingredients</source>
+        <target state="final">&amp;a酿造原料</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; potion_frame</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="294" resname="menu.recipe_creator.icon.anvil_frame" approved="yes">
+        <source>&amp;aAnvil Ingredients</source>
+        <target state="final">&amp;a打造原料</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; anvil_frame</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="296" resname="menu.recipe_creator.icon.anvil_copy_nbt_toggle" approved="yes">
+        <source>&amp;aPreserve Item NBT: &lt;enable&gt;</source>
+        <target state="final">&amp;a保留物品NBT:&lt;enable&gt;</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; anvil_copy_nbt_toggle</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="298" resname="menu.recipe_creator.icon.anvil_cost_level.name" approved="yes">
+        <source>&amp;aRequired Level: &lt;level&gt;</source>
+        <target state="final">&amp;a所需等级: &lt;level&gt;</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; anvil_cost_level -&gt; name</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="300" resname="menu.recipe_creator.icon.anvil_cost_level.lore.0" approved="yes">
+        <source>&amp;3Click to Modify Required Level</source>
+        <target state="final">&amp;3点击修改所需等级</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; anvil_cost_level -&gt; lore -&gt; 0</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="302" resname="menu.recipe_creator.icon.anvil_cost_level.input_hint" approved="yes">
+        <source>&amp;aPlease enter required level. Type 'cancel' to cancel.</source>
+        <target state="final">&amp;a请输入所需等级, 输入cancel取消</target>
+        <context-group purpose="information">
+          <context context-type="source">menu -&gt; recipe_creator -&gt; icon -&gt; anvil_cost_level -&gt; input_hint</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="304" resname="recipe_type_name.shaped" approved="yes">
+        <source>Shaped</source>
+        <target state="final">有序</target>
+        <context-group purpose="information">
+          <context context-type="source">recipe_type_name -&gt; shaped</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="306" resname="recipe_type_name.shapeless" approved="yes">
+        <source>Shapeless</source>
+        <target state="final">无序</target>
+        <context-group purpose="information">
+          <context context-type="source">recipe_type_name -&gt; shapeless</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="308" resname="recipe_type_name.cooking" approved="yes">
+        <source>Cooking</source>
+        <target state="final">烧炼</target>
+        <context-group purpose="information">
+          <context context-type="source">recipe_type_name -&gt; cooking</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="310" resname="recipe_type_name.smithing" approved="yes">
+        <source>Smithing</source>
+        <target state="final">锻造</target>
+        <context-group purpose="information">
+          <context context-type="source">recipe_type_name -&gt; smithing</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="312" resname="recipe_type_name.stone_cutting" approved="yes">
+        <source>Stonecutting</source>
+        <target state="final">切石</target>
+        <context-group purpose="information">
+          <context context-type="source">recipe_type_name -&gt; stone_cutting</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="314" resname="recipe_type_name.potion" approved="yes">
+        <source>Brewing</source>
+        <target state="final">酿造</target>
+        <context-group purpose="information">
+          <context context-type="source">recipe_type_name -&gt; potion</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="316" resname="recipe_type_name.anvil" approved="yes">
+        <source>Anvil</source>
+        <target state="final">铁砧</target>
+        <context-group purpose="information">
+          <context context-type="source">recipe_type_name -&gt; anvil</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="318" resname="arcenciel.not_enough_param" approved="yes">
+        <source>&lt;prefix&gt; &amp;cStatement &quot;&lt;statement&gt;&quot; is incomplete.</source>
+        <target state="final">&lt;prefix&gt; &amp;c语句&quot;&lt;statement&gt;&quot;不完整</target>
+        <context-group purpose="information">
+          <context context-type="source">arcenciel -&gt; not_enough_param</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="320" resname="arcenciel.unknown_token" approved="yes">
+        <source>&lt;prefix&gt; &amp;cUndefined keyword or function: &lt;token&gt;</source>
+        <target state="final">&lt;prefix&gt; &amp;c未定义的关键词或函数&lt;token&gt;</target>
+        <context-group purpose="information">
+          <context context-type="source">arcenciel -&gt; unknown_token</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="322" resname="load.finish" approved="yes">
+        <source>&lt;prefix&gt; &amp;aPlugin loaded successfully.</source>
+        <target state="final">&lt;prefix&gt; &amp;a插件加载完毕</target>
+        <context-group purpose="information">
+          <context context-type="source">load -&gt; finish</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="324" resname="load.recipe_load_exception" approved="yes">
+        <source>&lt;prefix&gt; &amp;cError occurred while loading recipe &lt;recipe_name&gt;.</source>
+        <target state="final">&lt;prefix&gt; &amp;c加载配方&lt;recipe_name&gt;时出现错误</target>
+        <context-group purpose="information">
+          <context context-type="source">load -&gt; recipe_load_exception</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="326" resname="load.item_load_exception" approved="yes">
+        <source>&lt;prefix&gt; &amp;cError occurred while loading item &lt;item_name&gt;.</source>
+        <target state="final">&lt;prefix&gt; &amp;c加载物品&lt;item_name&gt;时出现错误</target>
+        <context-group purpose="information">
+          <context context-type="source">load -&gt; item_load_exception</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="328" resname="load.hook_plugin.success" approved="yes">
+        <source>&lt;prefix&gt; &amp;aFound &lt;plugin&gt;, hooked successfully.</source>
+        <target state="final">&lt;prefix&gt; &amp;a发现&lt;plugin&gt;，已挂钩</target>
+        <context-group purpose="information">
+          <context context-type="source">load -&gt; hook_plugin -&gt; success</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="330" resname="load.hook_plugin.not_exist" approved="yes">
+        <source>&lt;prefix&gt; &amp;cPlugin &lt;plugin&gt; not found.</source>
+        <target state="final">&lt;prefix&gt; &amp;c未发现&lt;plugin&gt;</target>
+        <context-group purpose="information">
+          <context context-type="source">load -&gt; hook_plugin -&gt; not_exist</context>
+        </context-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
