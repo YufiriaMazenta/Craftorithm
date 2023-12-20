@@ -40,7 +40,7 @@ dependencies {
     compileOnly("io.lumine:Mythic-Dist:5.3.5")
     compileOnly("io.lumine:MythicLib-dist:1.6.2-SNAPSHOT")
     compileOnly("net.Indyuce:MMOItems-API:6.9.5-SNAPSHOT")
-    implementation("com.crypticlib:CrypticLib:0.9.3")
+    implementation("com.crypticlib:CrypticLib:0.9.5")
 }
 
 group = "com.github.yufiriamazenta"
