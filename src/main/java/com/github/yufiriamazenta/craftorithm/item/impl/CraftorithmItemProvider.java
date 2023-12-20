@@ -106,7 +106,7 @@ public enum CraftorithmItemProvider implements ItemProvider {
     private void loadItem(String itemKey, ConfigurationSection config) {
         try {
             NbtItem item = ItemFactory.item(config);
-            ItemStack bukkitItem = item.saveNbtToBukkit();
+            ItemStack bukkitItem = item.saveNbtToItem();
             itemMap.put(itemKey, bukkitItem);
         } catch (Exception e) {
             LangUtil.info(Languages.LOAD_ITEM_LOAD_EXCEPTION, CollectionsUtil.newStringHashMap("<item_name>", itemKey));
