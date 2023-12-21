@@ -14,11 +14,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public final class SaveCommand extends AbstractSubCommand {
+public final class SaveItemCommand extends AbstractSubCommand {
 
-    public static final ISubcmdExecutor INSTANCE = new SaveCommand();
+    public static final ISubcmdExecutor INSTANCE = new SaveItemCommand();
 
-    private SaveCommand() {
+    private SaveItemCommand() {
         super("save");
     }
 

@@ -36,7 +36,6 @@ public final class ReloadCommand extends AbstractSubCommand {
     public static void reloadPlugin() {
         reloadConfigs();
         CraftorithmItemProvider.INSTANCE.reloadItemProvider();
-        ItemManager.INSTANCE.reloadCannotCraftItems();
         RecipeManager.INSTANCE.reloadRecipeManager();
     }
 

@@ -27,7 +27,7 @@ public enum AnvilHandler implements Listener {
 
     INSTANCE;
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPrepareAnvil(PrepareAnvilEvent event) {
         if (!PluginConfigs.ENABLE_ANVIL_RECIPE.value())
             return;
@@ -35,19 +35,12 @@ public enum AnvilHandler implements Listener {
         ItemStack addition = event.getInventory().getItem(1);
         if (ItemUtil.isAir(base) || ItemUtil.isAir(addition))
             return;
-
-        //检查是否是不能参与合成的物品
-        if (ItemManager.INSTANCE.isCannotCraftItem(base) || ItemManager.INSTANCE.isCannotCraftItem(addition)) {
-            event.setResult(null);
-            return;
-        }
         boolean containsLore = ItemUtils.hasCannotCraftLore(base, addition);
         if (containsLore) {
             event.setResult(null);
             return;
         }
-
-        //获取配方
+        
         AnvilRecipe anvilRecipe = RecipeManager.INSTANCE.matchAnvilRecipe(base, addition);
         if (anvilRecipe == null)
             return;
@@ -66,7 +59,7 @@ public enum AnvilHandler implements Listener {
             }
         }
 
-        //设置合成内容
+        //正常合成流程
         ItemStack result = anvilRecipe.result();
         if (anvilRecipe.copyNbt()) {
             if (base.hasItemMeta())
@@ -76,7 +69,7 @@ public enum AnvilHandler implements Listener {
         event.setResult(result);
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onClickAnvil(InventoryClickEvent event) {
         if (!PluginConfigs.ENABLE_ANVIL_RECIPE.value())
             return;

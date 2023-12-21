@@ -60,12 +60,6 @@ public enum SmithingHandler implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void checkCannotCraftLore(PrepareSmithingEvent event) {
         ItemStack[] items = event.getInventory().getContents();
-        for (ItemStack item : items) {
-            if (ItemManager.INSTANCE.isCannotCraftItem(item)) {
-                event.getInventory().setResult(null);
-                return;
-            }
-        }
         boolean containsLore = ItemUtils.hasCannotCraftLore(items);
         if (containsLore)
             event.getInventory().setResult(null);

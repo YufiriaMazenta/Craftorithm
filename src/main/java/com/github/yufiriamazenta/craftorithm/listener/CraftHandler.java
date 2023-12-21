@@ -61,15 +61,9 @@ public enum CraftHandler implements Listener {
         CraftorithmAPI.INSTANCE.arcencielDispatcher().dispatchArcencielFunc(player, actions);
     }
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void checkCannotCraft(PrepareItemCraftEvent event) {
         ItemStack[] items = event.getInventory().getMatrix();
-        for (ItemStack item : items) {
-            if (ItemManager.INSTANCE.isCannotCraftItem(item)) {
-                event.getInventory().setResult(null);
-                return;
-            }
-        }
         boolean containsLore = ItemUtils.hasCannotCraftLore(items);
         if (containsLore) {
             event.getInventory().setResult(null);
