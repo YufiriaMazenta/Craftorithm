@@ -21,7 +21,7 @@ public enum FurnaceSmeltHandler implements Listener {
     INSTANCE;
 
     private final Map<Block, YamlConfiguration> randomFurnaceBlockMap;
-    private Random random;
+    private final Random random;
 
     FurnaceSmeltHandler() {
         random = new Random();

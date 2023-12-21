@@ -1,5 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.item;
 
+import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.item.impl.CraftorithmItemProvider;
 import com.google.common.base.Preconditions;
 import crypticlib.util.ItemUtil;
@@ -11,15 +12,19 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public enum ItemManager {
 
     INSTANCE;
 
     private final Map<String, ItemProvider> itemProviderMap;
+    private final Map<String, ItemStack> cannotCraftItems;
 
     ItemManager() {
         itemProviderMap = new LinkedHashMap<>();
+        cannotCraftItems = new ConcurrentHashMap<>();
+        reloadCannotCraftItems();
     }
 
     public void retDefaultProviders() {
@@ -99,6 +104,29 @@ public enum ItemManager {
         if (material == null)
             throw new IllegalArgumentException("Can not found item " + itemKey);
         return new ItemStack(material, amount);
+    }
+
+    public void reloadCannotCraftItems() {
+        cannotCraftItems.clear();
+        for (String itemName : PluginConfigs.CANNOT_CRAFT_ITEMS.value()) {
+            try {
+                ItemStack item = matchItem(itemName);
+                cannotCraftItems.put(itemName, item);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public boolean isCannotCraftItem(ItemStack itemStack) {
+        boolean result = false;
+        for (Map.Entry<String, ItemStack> cannotCraftItems : cannotCraftItems.entrySet()) {
+            if (cannotCraftItems.getValue().isSimilar(itemStack)) {
+                result = true;
+                break;
+            }
+        }
+        return result;
     }
 
 }

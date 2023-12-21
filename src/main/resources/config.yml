@@ -2,7 +2,7 @@
 check_update: true
 #是否移除所有的原版配方
 remove_all_vanilla_recipe: false
-#含有此Lore的物品不能参与合成，可以使用正则表达式
+#含有此Lore的物品不能参与工作台、铁砧、锻造台合成，可以使用正则表达式
 lore_cannot_craft: '.*不可用于合成.*'
 #配方是否解锁的默认值
 #也可以在每个配方的配置文件里定义是否解锁，配方配置文件中的优先级高于此处的优先级
@@ -13,3 +13,6 @@ enable_anvil_recipe: true
 bstats: true
 #是否释放默认的配方模板文件
 release_default_recipes: true
+#在此列表内的物品不能参与工作台、铁砧、锻造台合成
+cannot_craft_items:
+  - barrier

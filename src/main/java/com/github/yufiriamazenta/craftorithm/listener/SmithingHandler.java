@@ -2,6 +2,7 @@ package com.github.yufiriamazenta.craftorithm.listener;
 
 import com.github.yufiriamazenta.craftorithm.CraftorithmAPI;
 import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
+import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import org.bukkit.NamespacedKey;
@@ -21,7 +22,7 @@ public enum SmithingHandler implements Listener {
 
     INSTANCE;
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onPrepareSmith(PrepareSmithingEvent event) {
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(event.getInventory().getRecipe());
         if (recipeKey == null)
@@ -56,9 +57,15 @@ public enum SmithingHandler implements Listener {
         CraftorithmAPI.INSTANCE.arcencielDispatcher().dispatchArcencielFunc(player, actions);
     }
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void checkCannotCraftLore(PrepareSmithingEvent event) {
         ItemStack[] items = event.getInventory().getContents();
+        for (ItemStack item : items) {
+            if (ItemManager.INSTANCE.isCannotCraftItem(item)) {
+                event.getInventory().setResult(null);
+                return;
+            }
+        }
         boolean containsLore = ItemUtils.hasCannotCraftLore(items);
         if (containsLore)
             event.getInventory().setResult(null);

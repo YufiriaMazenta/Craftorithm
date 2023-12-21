@@ -40,7 +40,7 @@ public class ItemUtils {
      * @param items 传入的物品数组
      * @return 是否包含所需字符串
      */
-    public static boolean hasCannotCraftLore(ItemStack[] items) {
+    public static boolean hasCannotCraftLore(ItemStack... items) {
         boolean containsLore = false;
 
         for (ItemStack item : items) {

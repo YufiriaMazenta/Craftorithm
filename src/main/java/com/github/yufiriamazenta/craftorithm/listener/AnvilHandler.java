@@ -1,10 +1,15 @@
 package com.github.yufiriamazenta.craftorithm.listener;
 
+import com.github.yufiriamazenta.craftorithm.CraftorithmAPI;
+import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
+import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
+import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import crypticlib.listener.BukkitListener;
 import crypticlib.util.ItemUtil;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,13 +20,14 @@ import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
+import java.util.List;
 
 @BukkitListener
 public enum AnvilHandler implements Listener {
 
     INSTANCE;
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPrepareAnvil(PrepareAnvilEvent event) {
         if (!PluginConfigs.ENABLE_ANVIL_RECIPE.value())
             return;
@@ -29,9 +35,38 @@ public enum AnvilHandler implements Listener {
         ItemStack addition = event.getInventory().getItem(1);
         if (ItemUtil.isAir(base) || ItemUtil.isAir(addition))
             return;
+
+        //检查是否是不能参与合成的物品
+        if (ItemManager.INSTANCE.isCannotCraftItem(base) || ItemManager.INSTANCE.isCannotCraftItem(addition)) {
+            event.setResult(null);
+            return;
+        }
+        boolean containsLore = ItemUtils.hasCannotCraftLore(base, addition);
+        if (containsLore) {
+            event.setResult(null);
+            return;
+        }
+
+        //获取配方
         AnvilRecipe anvilRecipe = RecipeManager.INSTANCE.matchAnvilRecipe(base, addition);
         if (anvilRecipe == null)
             return;
+
+        //进行condition判断
+        YamlConfiguration config = RecipeManager.INSTANCE.getRecipeConfig(anvilRecipe.key());
+        if (config != null) {
+            Player player = (Player) event.getView().getPlayer();
+            String condition = config.getString("condition", "true");
+            condition = "if " + condition;
+            boolean conditionResult = (boolean) ArcencielDispatcher.INSTANCE.dispatchArcencielBlock(player, condition).obj();
+            if (!conditionResult) {
+                event.getInventory().setRepairCost(0);
+                event.setResult(null);
+                return;
+            }
+        }
+
+        //设置合成内容
         ItemStack result = anvilRecipe.result();
         if (anvilRecipe.copyNbt()) {
             if (base.hasItemMeta())
@@ -41,7 +76,7 @@ public enum AnvilHandler implements Listener {
         event.setResult(result);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onClickAnvil(InventoryClickEvent event) {
         if (!PluginConfigs.ENABLE_ANVIL_RECIPE.value())
             return;
@@ -132,6 +167,13 @@ public enum AnvilHandler implements Listener {
                 break;
             default:
                 break;
+        }
+
+        //执行动作
+        YamlConfiguration config = RecipeManager.INSTANCE.getRecipeConfig(anvilRecipe.key());
+        if (config != null) {
+            List<String> actions = config.getStringList("actions");
+            CraftorithmAPI.INSTANCE.arcencielDispatcher().dispatchArcencielFunc(player, actions);
         }
 
         //更新页面
