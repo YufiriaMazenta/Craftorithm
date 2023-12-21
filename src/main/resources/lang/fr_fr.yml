@@ -1,0 +1,115 @@
+prefix: '&8[&3Craftorithm&8]'
+unsupported_version: '<prefix> Version non prise en charge'
+new_version: '<prefix> &aDétecté une nouvelle version <new_version>, veuillez mettre à jour vers la nouvelle version dès que possible!'
+#使用命令的一些反馈消息
+command:
+  no_perm: '<prefix> &cVous n''avez pas l''autorisation d''utiliser cette commande.'
+  player_only: '<prefix> &cSeuls les joueurs peuvent exécuter cette commande.'
+  not_enough_param: '<prefix> &cLa commande manque de paramètres, il manque <number> paramètre(s).'
+  undefined_subcmd: '<prefix> &cSous-commande non définie!'
+  item:
+    save:
+      success: '<prefix> &aL''objet a été enregistré avec succès.'
+      failed_save_air: '<prefix> &cÉchec de l''enregistrement de l''objet, raison : impossible d''enregistrer un objet inexistant.'
+    give:
+      success: '<prefix> &aRécupération de l''objet réussie'
+      not_exist_item: '<prefix> &cL''objet <item_name> n''existe pas.'
+      player_offline: '<prefix> &cLe joueur n''est pas en ligne ou n''existe pas.'
+  reload:
+    success: '<prefix> &aRelance du plugin réussie!'
+    exception: '<prefix> &cUne erreur s''est produite lors du rechargement du plugin, veuillez consulter la console.'
+  remove:
+    success: '<prefix> &aRecette supprimée avec succès.'
+    not_exist: '<prefix> &cRecette inexistante.'
+  disable:
+    success: '<prefix> &cDésactivation de la recette réussie.'
+    not_exist: '<prefix> &cLa recette n''existe pas ou a déjà été désactivée.'
+    failed: '<prefix> &cÉchec de la désactivation de la recette, elle est peut-être déjà désactivée ou n''existe pas.'
+  version: '<prefix> &aVersion du plugin : <version>'
+  create:
+    unsupported_recipe_type: '<prefix> &cType de recette non pris en charge.'
+    unsupported_recipe_name: '<prefix> &cNom de recette non pris en charge, seules les lettres minuscules, les chiffres, ''_'', ''-'', et ''.'' sont autorisés.'
+    name_used: '<prefix> &cL''identifiant de la recette est déjà utilisé.'
+    null_result: '<prefix> &cLe résultat de la recette ne peut pas être vide !'
+    null_source: '<prefix> &cLes ingrédients de la recette ne peuvent pas être vides !'
+    success: '<prefix> &aRecette de type <recipe_type> <recipe_name> créée avec succès.'
+  run_arcenciel:
+    success: '<prefix> &aExécution réussie, durée <time> ms.'
+  list:
+    unsupported_version: '<prefix> &cCette fonctionnalité n''est disponible que dans la version 1.16 et ultérieure.'
+menu:
+  recipe_list:
+    title: '&3&lListe des recettes'
+    icon:
+      frame: '&3&lListe des recettes'
+      previous: '&aPage précédente'
+      next: '&aPage suivante'
+  new_recipe_list:
+    title: '&3&lCraftorithm Liste des nouvelles recettes'
+    icon:
+      frame: '&3&lListe des nouvelles recettes'
+      previous: '&aPage précédente'
+      next: '&aPage suivante'
+  recipe_display:
+    title:
+      shaped: Recettes de forme
+      shapeless: Recettes d'informe
+      furnace: Recettes de fourneau
+      blasting: Recettes de haut fourneau
+      smoking: Recettes de fumoir
+      campfire: Recettes de feu de camp
+      smithing: Recettes de forge
+      stone_cutting: Recettes de tailleur de pierre
+      potion: Recettes d'alambic
+      anvil: Recettes d'enclume
+  recipe_creator:
+    title: '&3Création de recette <recipe_type> : <recipe_name>'
+    icon:
+      frame: '&aCréation de recette'
+      result_frame: '&aRésultat de la recette'
+      confirm: '&3&lConfirmer la création'
+      unlock: '&aDébloquer la recette pour le joueur : <unlock>'
+      cooking_frame: '&aCuisiner des ingrédients'
+      furnace_toggle: '&aActiver les recettes de fourneau : <enable>'
+      blast_furnace_toggle: '&aActiver les recettes de haut fourneau : <enable>'
+      smoker_toggle: '&aActiver les recettes de fumoir : <enable>'
+      campfire_toggle: '&aActiver les recettes de feu de camp : <enable>'
+      cooking_time:
+        name: '&aTemps de cuisson : <time> tick(s)'
+        lore:
+          - '&3Cliquez pour modifier le temps de cuisson'
+        input_hint: '&aVeuillez entrer le temps de cuisson, en tick. Tapez "cancel" pour annuler.'
+      cooking_exp:
+        name: '&aRécompense d''expérience : <exp>'
+        lore:
+          - '&aVeuillez entrer la récompense d''expérience.'
+        input_hint: '&3Cliquez pour modifier la récompense d''expérience. Entrez "cancel" pour annuler.'
+      smithing_frame: '&aObjets de forge'
+      potion_frame: '&aIngrédients de brassage'
+      anvil_frame: '&aIngrédients d''enclume'
+      anvil_copy_nbt_toggle: '&aConserver les données NBT de l''objet : <enable>'
+      anvil_cost_level:
+        name: '&aNiveau requis : <level>'
+        lore:
+          - '&3Cliquez pour modifier le niveau requis'
+        input_hint: '&aVeuillez entrer le niveau requis. Entrez "cancel" pour annuler.'
+recipe_type_name:
+  shaped: Forme
+  shapeless: Informe
+  cooking: Cuisson
+  smithing: Forge
+  stone_cutting: Tailleur de pierre
+  potion: Brassage
+  anvil: Enclume
+#Arcenciel脚本的提示消息
+arcenciel:
+  not_enough_param: '<prefix> &cL''instruction "<statement>" est incomplète.'
+  unknown_token: '<prefix> &cMot-clé ou fonction <token> non défini'
+#插件加载的反馈信息
+load:
+  finish: '<prefix> &aLe plugin est chargé.'
+  recipe_load_exception: '<prefix> &cErreur lors du chargement de la recette <recipe_name>.'
+  item_load_exception: '<prefix> &cErreur lors du chargement de l''objet <item_name>.'
+  hook_plugin:
+    success: '<prefix> &aPlugin <plugin> trouvé, accroché.'
+    not_exist: '<prefix> &cPlugin <plugin> non trouvé.'

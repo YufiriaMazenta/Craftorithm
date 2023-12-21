@@ -28,7 +28,7 @@ command:
   version: '<prefix> &aEklenti sürümü: <version>'
   create:
     unsupported_recipe_type: '<prefix> &cDesteklenmeyen tarif tipi.'
-    unsupported_recipe_name: '<prefix> &cDesteklenmeyen tarif adı, yalnızca [a-z0-9/._-] izin verilen içeriği kullanabilirsiniz.'
+    unsupported_recipe_name: '<prefix> &cDesteklenmeyen tarif adı, yalnızca küçük harfli İngilizce harfler, rakamlar, "_", "-" ve "." kullanılmasına izin verilir.'
     name_used: '<prefix> &cTarif kimliği zaten kullanılmış.'
     null_result: '<prefix> &cTarif sonucu boş bırakılamaz!'
     null_source: '<prefix> &cTarif malzemeleri boş olamaz!'
@@ -77,15 +77,15 @@ menu:
       cooking_time:
         name: '&aEritme zamanı: <time> tick'
         lore:
-          - '&3Külleniş süresini değiştirmek için tıklayın'
-        input_hint: '&aLütfen eritme zamanını tick cinsinden girin, "cancel" yazarak işlemi iptal edebilirsiniz.'
+          - '&3Eritme Zamanını Değiştirmek İçin Tıklayın'
+        input_hint: '&aLütfen eritme zamanını tick cinsinden girin, İptal etmek için "cancel" yazın.'
       cooking_exp:
         name: '&aTecrübe ödülü: <exp>'
         lore:
-          - '&3Click to Modify Experience Reward.'
+          - '&3Tecrübe Ödülünü Değiştirmek İçin Tıklayın.'
         input_hint: '&aLütfen gerekli seviyeyi girin, İptal etmek için "cancel" yazın.'
       smithing_frame: '&aDemir işlenmiş eşya'
-      potion_frame: '&aMayalanma malzemeleri'
+      potion_frame: '&aİksir Tarifi'
       anvil_frame: '&aÖrs malzemeleri'
       anvil_copy_nbt_toggle: '&aÖzel eşya veri NBT korunsun mu: <enable>'
       anvil_cost_level:
@@ -96,10 +96,10 @@ menu:
 recipe_type_name:
   shaped: Şekilde
   shapeless: Şekilsiz
-  cooking: Ocağa koyma
+  cooking: Eritme
   smithing: Demirci Masası
   stone_cutting: Taş Kesici
-  potion: Brewing
+  potion: İksir Tezgahı
   anvil: Örs
 #Arcenciel脚本的提示消息
 arcenciel:
