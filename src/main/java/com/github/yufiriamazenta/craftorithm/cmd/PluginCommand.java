@@ -1,6 +1,11 @@
 package com.github.yufiriamazenta.craftorithm.cmd;
 
 import com.github.yufiriamazenta.craftorithm.cmd.sub.*;
+import com.github.yufiriamazenta.craftorithm.cmd.sub.item.ItemCommand;
+import com.github.yufiriamazenta.craftorithm.cmd.sub.recipe.CreateRecipeCommand;
+import com.github.yufiriamazenta.craftorithm.cmd.sub.recipe.DisableRecipeCommand;
+import com.github.yufiriamazenta.craftorithm.cmd.sub.recipe.RecipeListCommand;
+import com.github.yufiriamazenta.craftorithm.cmd.sub.recipe.RemoveRecipeCommand;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;

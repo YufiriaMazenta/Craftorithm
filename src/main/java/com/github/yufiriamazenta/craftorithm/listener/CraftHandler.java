@@ -2,6 +2,7 @@ package com.github.yufiriamazenta.craftorithm.listener;
 
 import com.github.yufiriamazenta.craftorithm.CraftorithmAPI;
 import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
+import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import crypticlib.listener.BukkitListener;
@@ -61,11 +62,18 @@ public enum CraftHandler implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void checkCannotCraftLore(PrepareItemCraftEvent event) {
+    public void checkCannotCraft(PrepareItemCraftEvent event) {
         ItemStack[] items = event.getInventory().getMatrix();
+        for (ItemStack item : items) {
+            if (ItemManager.INSTANCE.isCannotCraftItem(item)) {
+                event.getInventory().setResult(null);
+                return;
+            }
+        }
         boolean containsLore = ItemUtils.hasCannotCraftLore(items);
-        if (containsLore)
+        if (containsLore) {
             event.getInventory().setResult(null);
+        }
     }
 
 }

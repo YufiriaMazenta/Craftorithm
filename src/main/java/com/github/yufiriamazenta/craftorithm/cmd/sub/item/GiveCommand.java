@@ -14,11 +14,11 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemGiveCommand extends AbstractSubCommand {
+public class GiveCommand extends AbstractSubCommand {
 
-    public static final ISubcmdExecutor INSTANCE = new ItemGiveCommand();
+    public static final ISubcmdExecutor INSTANCE = new GiveCommand();
 
-    private ItemGiveCommand() {
+    private GiveCommand() {
         super("give");
     }
 

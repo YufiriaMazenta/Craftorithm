@@ -1,5 +1,6 @@
-package com.github.yufiriamazenta.craftorithm.cmd.sub;
+package com.github.yufiriamazenta.craftorithm.cmd.sub.recipe;
 
+import com.github.yufiriamazenta.craftorithm.cmd.sub.AbstractSubCommand;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;

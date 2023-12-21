@@ -2,7 +2,12 @@ package com.github.yufiriamazenta.craftorithm.config;
 
 import crypticlib.config.ConfigHandler;
 import crypticlib.config.entry.BooleanConfigEntry;
+import crypticlib.config.entry.ShortListConfigEntry;
 import crypticlib.config.entry.StringConfigEntry;
+import crypticlib.config.entry.StringListConfigEntry;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 @ConfigHandler(path = "config.yml")
 public class PluginConfigs {
@@ -14,5 +19,6 @@ public class PluginConfigs {
     public final static BooleanConfigEntry BSTATS = new BooleanConfigEntry("bstats", true);
     public final static BooleanConfigEntry RELEASE_DEFAULT_RECIPES = new BooleanConfigEntry("release_default_recipes", true);
     public final static BooleanConfigEntry ENABLE_ANVIL_RECIPE = new BooleanConfigEntry("enable_anvil_recipe", true);
+    public final static StringListConfigEntry CANNOT_CRAFT_ITEMS = new StringListConfigEntry("cannot_craft_items", new ArrayList<>(Collections.singletonList("barrier")));
 
 }
