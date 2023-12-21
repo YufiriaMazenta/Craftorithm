@@ -377,8 +377,24 @@ public class RecipeFactory {
     }
 
     public static RecipeChoice getRecipeChoice(String itemStr) {
-        if (itemStr.contains(":")) {
-            if (itemStr.startsWith("tag:")) {
+        if (!itemStr.contains(":")) {
+            Material material = Material.matchMaterial(itemStr);
+            if (material == null) {
+                throw new IllegalArgumentException(itemStr + " is a not exist item type");
+            }
+            return new RecipeChoice.MaterialChoice(material);
+        }
+        itemStr = itemStr.toLowerCase();
+        int index = itemStr.indexOf(":");
+        String namespace = itemStr.substring(0, index);
+        switch (namespace) {
+            case "minecraft":
+                Material material = Material.matchMaterial(itemStr);
+                if (material == null) {
+                    throw new IllegalArgumentException(itemStr + " is a not exist item type");
+                }
+                return new RecipeChoice.MaterialChoice(material);
+            case "tag":
                 String tagStr = itemStr.substring(4).toUpperCase(Locale.ROOT);
                 Tag<Material> materialTag;
                 try {
@@ -388,15 +404,9 @@ public class RecipeFactory {
                     throw new RuntimeException(e);
                 }
                 return new RecipeChoice.MaterialChoice(materialTag);
-            }
-            ItemStack item = ItemManager.INSTANCE.matchItem(itemStr);
-            return new RecipeChoice.ExactChoice(item);
-        } else {
-            Material material = Material.matchMaterial(itemStr);
-            if (material == null) {
-                throw new IllegalArgumentException(itemStr + " is a not exist item type");
-            }
-            return new RecipeChoice.MaterialChoice(material);
+            default:
+                ItemStack item = ItemManager.INSTANCE.matchItem(itemStr);
+                return new RecipeChoice.ExactChoice(item);
         }
     }
 

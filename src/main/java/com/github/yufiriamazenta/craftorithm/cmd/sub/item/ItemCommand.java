@@ -12,7 +12,7 @@ public final class ItemCommand extends AbstractSubCommand {
 
     private ItemCommand() {
         super("item", "craftorithm.command.item");
-        regSub(SaveCommand.INSTANCE).regSub(GiveCommand.INSTANCE);
+        regSub(SaveItemCommand.INSTANCE).regSub(GiveItemCommand.INSTANCE);
     }
 
     @Override

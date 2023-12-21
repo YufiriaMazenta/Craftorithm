@@ -13,6 +13,3 @@ enable_anvil_recipe: true
 bstats: true
 #是否释放默认的配方模板文件
 release_default_recipes: true
-#在此列表内的物品不能参与工作台、铁砧、锻造台合成
-cannot_craft_items:
-  - barrier
