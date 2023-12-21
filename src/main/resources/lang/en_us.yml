@@ -69,34 +69,34 @@ menu:
       result_frame: '&aRecipe Result'
       confirm: '&3&lConfirm Creation'
       unlock: '&aUnlock Recipe for Player: <unlock>'
-      cooking_frame: '&aCooking Ingredients'
+      cooking_frame: '&aSmelting Ingredients'
       furnace_toggle: '&aEnable Furnace Recipe: <enable>'
       blast_furnace_toggle: '&aEnable Blast Furnace Recipe: <enable>'
       smoker_toggle: '&aEnable Smoker Recipe: <enable>'
       campfire_toggle: '&aEnable Campfire Recipe: <enable>'
       cooking_time:
-        name: '&aCooking Time: <time> tick'
+        name: '&aSmelting Time: <time> tick'
         lore:
-          - '&3Click to Modify Cooking Time'
-        input_hint: '&aPlease enter cooking time in ticks. Type "cancel" to cancel.'
+          - '&3Click to modify smelting time'
+        input_hint: '&aPlease enter smelting time in ticks. Type "cancel" to cancel.'
       cooking_exp:
         name: '&aExperience Reward: <exp>'
         lore:
-          - '&3Click to Modify Experience Reward.'
+          - '&3Click to modify experience reward.'
         input_hint: '&aPlease enter experience reward. Type "cancel" to cancel.'
       smithing_frame: '&aSmithing Ingredients'
       potion_frame: '&aBrewing Ingredients'
       anvil_frame: '&aAnvil Ingredients'
-      anvil_copy_nbt_toggle: '&aPreserve Item NBT: <enable>'
+      anvil_copy_nbt_toggle: '&aPreserve item NBT: <enable>'
       anvil_cost_level:
         name: '&aRequired Level: <level>'
         lore:
-          - '&3Click to Modify Required Level'
+          - '&3Click to modify required level'
         input_hint: '&aPlease enter required level. Type ''cancel'' to cancel.'
 recipe_type_name:
   shaped: Shaped
   shapeless: Shapeless
-  cooking: Cooking
+  cooking: Smelting
   smithing: Smithing
   stone_cutting: Stonecutting
   potion: Brewing
