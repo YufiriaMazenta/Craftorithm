@@ -28,7 +28,7 @@ command:
   version: '<prefix> &aプラグインのバージョン: <version>'
   create:
     unsupported_recipe_type: '<prefix> &cサポートされていないレシピタイプ'
-    unsupported_recipe_name: '<prefix> &cサポートされていないレシピ名です。[a-z0-9/._-]許可された内容のみ使用できます。'
+    unsupported_recipe_name: '<prefix> &c対応していないレシピ名です。小文字の英字、数字、"_"、"-"、"."のみが使用できます。'
     name_used: '<prefix> &cそのレシピIDはすでに使用されています。'
     null_result: '<prefix> &cレシピの結果を空にすることはできません！'
     null_source: '<prefix> &cレシピの材料を空にすることはできません！'

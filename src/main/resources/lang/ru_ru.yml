@@ -28,7 +28,7 @@ command:
   version: '<prefix> &aВерсия плагина: <version>'
   create:
     unsupported_recipe_type: '<prefix> &cНеподдерживаемый тип рецепта.'
-    unsupported_recipe_name: '<prefix> &cНедопустимое имя рецепта. Можно использовать только символы [a-z0-9._-].'
+    unsupported_recipe_name: '<prefix> &cНеподдерживаемое имя рецепта, разрешены только строчные буквы, цифры, "_", "-" и ".".'
     name_used: '<prefix> &cИдентификатор рецепта уже используется.'
     null_result: '<prefix> &cРезультат рецепта не может быть пустым!'
     null_source: '<prefix> &cИнгредиенты рецепта не могут быть пустыми!'
@@ -96,7 +96,7 @@ menu:
 recipe_type_name:
   shaped: последовательно
   shapeless: неупорядоченный
-  cooking: плавка
+  cooking: Выплавка
   smithing: ковка
   stone_cutting: Резка камня
   potion: Зельеварение
