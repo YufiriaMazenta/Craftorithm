@@ -384,9 +384,9 @@ public class RecipeFactory {
             }
             return new RecipeChoice.MaterialChoice(material);
         }
-        itemStr = itemStr.toLowerCase();
         int index = itemStr.indexOf(":");
         String namespace = itemStr.substring(0, index);
+        namespace = namespace.toLowerCase();
         switch (namespace) {
             case "minecraft":
                 Material material = Material.matchMaterial(itemStr);
