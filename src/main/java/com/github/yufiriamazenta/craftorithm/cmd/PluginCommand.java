@@ -10,8 +10,8 @@ import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.command.BukkitCommand;
-import crypticlib.command.ISubcmdExecutor;
-import crypticlib.command.impl.RootCmdExecutor;
+import crypticlib.command.SubcmdExecutor;
+import crypticlib.command.RootCmdExecutor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +37,7 @@ public class PluginCommand extends RootCmdExecutor {
             LangUtil.sendLang(sender, Languages.COMMAND_NOT_ENOUGH_PARAM, CollectionsUtil.newStringHashMap("<number>", String.valueOf(1)));
             return true;
         }
-        ISubcmdExecutor subCommand = subcommands().get(argList.get(0));
+        SubcmdExecutor subCommand = subcommands().get(argList.get(0));
         if (subCommand != null) {
             String perm = subCommand.permission();
             if (perm != null) {
