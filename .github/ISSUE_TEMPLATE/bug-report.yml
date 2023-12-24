@@ -4,6 +4,7 @@ body:
   - type: textarea
     id: Describe-the-bug
     attributes:
+      label: Describe the bug | 描述你遇到的bug
       description: A description of what the bug is | 简要介绍你遇到的bug.
       placeholder: Tell me what happened | 告诉我发生了什么事情
     validations:
