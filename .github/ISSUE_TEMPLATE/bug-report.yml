@@ -1,5 +1,5 @@
-8name: Bug Report | Bug报告
-labels: ["type: bug"]
+name: Bug Report | Bug报告
+labels: ["bug"]
 description: "Report a bug | 报告一个Bug"
 body:
   - type: textarea
