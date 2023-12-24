@@ -45,8 +45,8 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
     public Boolean onCommand(CommandSender sender, List<String> args) {
         if (!checkSenderIsPlayer(sender))
             return true;
-        if (args.size() < 2) {
-            sendNotEnoughCmdParamMsg(sender, 2 - args.size());
+        if (args.isEmpty()) {
+            sendNotEnoughCmdParamMsg(sender, 2);
             return true;
         }
         String recipeTypeStr = args.get(0).toLowerCase(Locale.ROOT);
@@ -54,7 +54,12 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
             LangUtil.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
             return true;
         }
-        String recipeName = args.get(1);
+        String recipeName;
+        if (args.size() < 2)
+            recipeName = UUID.randomUUID().toString();
+        else
+            recipeName = args.get(1);
+
         Matcher matcher = recipeNamePattern.matcher(recipeName);
         if (!matcher.matches()) {
             LangUtil.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_NAME);
