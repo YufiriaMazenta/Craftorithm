@@ -1,4 +1,4 @@
-name: Bug Report | Bug报告
+8name: Bug Report | Bug报告
 labels: ["type: bug"]
 description: "Report a bug | 报告一个Bug"
 body:
@@ -50,5 +50,5 @@ body:
   - type: textarea
     id: screenshots
     attributes:
-      label: Screenshots | 相关图片
+      label: Images | 相关图片
       description: "If applicable, add screenshots to help explain your problem | 通过图片辅助你描述你遇到的bug"
