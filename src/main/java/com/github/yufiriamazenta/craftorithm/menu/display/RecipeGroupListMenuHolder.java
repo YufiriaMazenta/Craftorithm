@@ -1,6 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.menu.display;
 
 import com.github.yufiriamazenta.craftorithm.config.Languages;
+import com.github.yufiriamazenta.craftorithm.menu.editor.RecipeGroupEditor;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import crypticlib.chat.TextProcessor;
 import crypticlib.ui.display.Icon;
@@ -118,13 +119,28 @@ public class RecipeGroupListMenuHolder extends Menu {
     private Icon wrapIcon(int recipeSlot) {
         ItemStack display = recipeGroupResultList.get(recipeSlot).getValue();
         String recipeGroupName = recipeGroupResultList.get(recipeSlot).getKey();
-        return new Icon(display, event -> event.getWhoClicked().openInventory(
-            new RecipeListMenuHolder(
-                (Player) event.getWhoClicked(),
-                RecipeManager.INSTANCE.getRecipeGroup(recipeGroupName).groupRecipeKeys(),
-                this
-            ).getInventory()
-        ));
+        //TODO 添加Lore说明左右点击功能
+        return new Icon(display, event -> {
+            switch (event.getClick()) {
+                case RIGHT:
+                case SHIFT_RIGHT:
+                    new RecipeGroupEditor(
+                        (Player) event.getWhoClicked(),
+                        RecipeManager.INSTANCE.getRecipeGroup(recipeGroupName)
+                    ).openMenu();
+                    break;
+                case LEFT:
+                case SHIFT_LEFT:
+                default:
+                    new RecipeListMenuHolder(
+                        (Player) event.getWhoClicked(),
+                        RecipeManager.INSTANCE.getRecipeGroup(recipeGroupName).groupRecipeKeys(),
+                        this
+                    ).openMenu();
+                    break;
+            }
+
+        });
     }
 
     public int page() {

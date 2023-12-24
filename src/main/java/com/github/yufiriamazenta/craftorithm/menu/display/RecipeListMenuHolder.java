@@ -29,7 +29,6 @@ public class RecipeListMenuHolder extends Menu {
     private int page;
     private final int maxPage;
     private final List<Recipe> recipeList;
-    private final boolean hasEditPermission;
     private final Menu parentMenu;
 
     public RecipeListMenuHolder(Player player, Collection<NamespacedKey> recipeKeys) {
@@ -39,7 +38,6 @@ public class RecipeListMenuHolder extends Menu {
     public RecipeListMenuHolder(Player player, Collection<NamespacedKey> recipeKeys, Menu parentMenu) {
         super(player);
         this.parentMenu = parentMenu;
-        this.hasEditPermission = player.hasPermission("craftorithm.recipe_list.manager");
         this.recipeList = new ArrayList<>();
         for (NamespacedKey key : recipeKeys) {
             recipeList.add(RecipeManager.INSTANCE.getRecipe(key));
