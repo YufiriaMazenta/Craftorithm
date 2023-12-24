@@ -1,0 +1,16 @@
+name: Feature request | 功能建议
+labels: ["type: 新功能/特性(new features)"]
+description: "Suggest an idea for this project | 提交一个关于插件的建议"
+body:
+  - type: textarea
+    id: Describe-the-bug
+    attributes:
+      label: Describe your idea | 描述你的想法
+      description: "A description of your idea | 简要介绍你的想法."
+    validations:
+      required: true
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots | 相关图片
+      description: "If applicable, add screenshots to help explain your idea | 通过图片辅助你描述你的想法"
