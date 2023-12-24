@@ -41,7 +41,7 @@ body:
     id: Full-server-log
     attributes:
       label: FULL server log | 完整服务器日志
-      description: "Upload your full server log | 上传发生bug时你的完整服务器日志
+      description: "Upload your full server log | 上传发生bug时你的完整服务器日志"
       placeholder: |-
         You can drag and drop your full server log here
         你可以拖拽你的服务器日志到这里上传
