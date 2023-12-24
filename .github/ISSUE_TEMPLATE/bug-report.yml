@@ -1,4 +1,4 @@
-name: Bug Report
+name: Bug Report | Bug报告
 labels: ["type: bug"]
 description: "Report a bug | 报告一个Bug"
 body:
