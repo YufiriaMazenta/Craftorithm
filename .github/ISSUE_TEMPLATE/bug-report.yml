@@ -5,7 +5,7 @@ body:
     id: Describe-the-bug
     attributes:
       label: Describe the bug | 描述你遇到的bug
-      description: A description of what the bug is | 简要介绍你遇到的bug.
+      description: "A description of what the bug is | 简要介绍你遇到的bug."
       placeholder: Tell me what happened | 告诉我发生了什么事情
     validations:
       required: true
@@ -13,8 +13,8 @@ body:
     id: Reproduce-steps
     attributes:
       label: Steps to reproduce the bug | 复现此Bug的步骤
-      description: Describe how to reproduce the issue step by step | 介绍如何一步步复现这个bug
-      placeholder: |
+      description: "Describe how to reproduce the issue step by step | 介绍如何一步步复现这个bug"
+      placeholder: |-
         1. First '...' | 首先...
         2. Next '....' | 然后...
         3. See error | Bug触发
@@ -25,14 +25,14 @@ body:
     attributes:
       label: Server version | 服务器版本
       description: "(run `/version` command and paste it here | 使用命令`/version`并将返回信息粘贴在这里)"
-      placeholder: |
+      placeholder: |-
         Run `/version` command and paste it here | 使用命令`/version`并将返回信息粘贴在这里
   - type: textarea
     id: Plugin-version
     attributes:
       label: Craftorithm Version | Craftorithm的版本
       description: "(run `/craft version` command and paste it here | 使用命令`/craft version`并将返回信息粘贴在这里)"
-      placeholder: |
+      placeholder: |-
         DO NOT WRITE 'LATEST', run command `/craft version` and paste it here.
         请不要使用“最后版本”等描述，请使用命令`/craft version`并将返回信息粘贴在这里
     validations:
@@ -49,9 +49,9 @@ body:
     id: configuration-files
     attributes:
       label: Other files, you can drag and drop them here to upload | 其他文件，你可以拖拽文件到这里上传
-      description: Drag and drop your files here | 拖拽你的文件到这里上传
+      description: "Drag and drop your files here | 拖拽你的文件到这里上传"
   - type: textarea
     id: screenshots
     attributes:
       label: Screenshots | 相关图片
-      description: If applicable, add screenshots to help explain your problem | 通过图片辅助你描述你遇到的bug
+      description: "If applicable, add screenshots to help explain your problem | 通过图片辅助你描述你遇到的bug"
