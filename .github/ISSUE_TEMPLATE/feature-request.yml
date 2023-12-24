@@ -12,5 +12,5 @@ body:
   - type: textarea
     id: screenshots
     attributes:
-      label: Screenshots | 相关图片
+      label: Images | 相关图片
       description: "If applicable, add screenshots to help explain your idea | 通过图片辅助你描述你的想法"
