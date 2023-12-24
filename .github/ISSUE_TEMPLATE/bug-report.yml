@@ -31,6 +31,7 @@ body:
     id: Plugin-version
     attributes:
       label: Craftorithm Version | Craftorithm的版本
+      description: "(run `/craft version` command and paste it here | 使用命令`/craft version`并将返回信息粘贴在这里)"
       placeholder: |
         DO NOT WRITE 'LATEST', run command `/craft version` and paste it here.
         请不要使用“最后版本”等描述，请使用命令`/craft version`并将返回信息粘贴在这里
@@ -40,6 +41,7 @@ body:
     id: Full-server-log
     attributes:
       label: FULL server log | 完整服务器日志
+      description: "Upload your full server log | 上传发生bug时你的完整服务器日志
       placeholder: |-
         You can drag and drop your full server log here
         你可以拖拽你的服务器日志到这里上传
