@@ -1,6 +1,6 @@
 name: Bug Report
 labels: ["type: bug"]
-description: "Report a bug"
+description: "Report a bug | 报告一个Bug"
 body:
   - type: textarea
     id: Describe-the-bug
