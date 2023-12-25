@@ -24,18 +24,18 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-public class RecipeListMenuHolder extends Menu {
+public class RecipeListMenu extends Menu {
 
     private int page;
     private final int maxPage;
     private final List<Recipe> recipeList;
     private final Menu parentMenu;
 
-    public RecipeListMenuHolder(Player player, Collection<NamespacedKey> recipeKeys) {
+    public RecipeListMenu(Player player, Collection<NamespacedKey> recipeKeys) {
         this(player, recipeKeys, null);
     }
 
-    public RecipeListMenuHolder(Player player, Collection<NamespacedKey> recipeKeys, Menu parentMenu) {
+    public RecipeListMenu(Player player, Collection<NamespacedKey> recipeKeys, Menu parentMenu) {
         super(player);
         this.parentMenu = parentMenu;
         this.recipeList = new ArrayList<>();
@@ -106,7 +106,7 @@ public class RecipeListMenuHolder extends Menu {
             if (recipe == null)
                 continue;
             ItemStack display = recipe.getResult();
-            slotMap.put(i, new Icon(display, (event -> new RecipeDisplayMenuHolder(player, recipe, this).openMenu())));
+            slotMap.put(i, new Icon(display, (event -> new RecipeDisplayMenu(player, recipe, this).openMenu())));
         }
         for (int i = 0; i < 45; i++) {
             if (slotMap.containsKey(i))
@@ -150,7 +150,7 @@ public class RecipeListMenuHolder extends Menu {
         return page;
     }
 
-    public RecipeListMenuHolder setPage(int page) {
+    public RecipeListMenu setPage(int page) {
         this.page = page;
         return this;
     }

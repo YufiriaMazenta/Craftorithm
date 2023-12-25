@@ -4,7 +4,6 @@ import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
-import com.sun.tools.javac.jvm.Items;
 import crypticlib.chat.TextProcessor;
 import crypticlib.config.ConfigWrapper;
 import crypticlib.conversation.Conversation;
@@ -15,7 +14,6 @@ import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.display.MenuLayout;
 import crypticlib.ui.menu.Menu;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -44,9 +42,15 @@ public class RecipeGroupEditor extends Menu {
                 ),
                 () -> {
                     Map<Character, Icon> iconMap = new HashMap<>();
-                    iconMap.put('A', sortIdEditIcon());
+                    iconMap.put('A', getSortIdEditIcon());
                     switch (recipeGroup.recipeType()) {
-
+                        case SHAPED:
+                        case SMITHING:
+                            iconMap.put('B', getUnlockIcon());
+                            iconMap.put('C', getConditionIcon());
+                            iconMap.put('D', getActionIcon());
+                            break;
+                            //todo 各种配方的编辑
                     }
                     return iconMap;
                 }
@@ -54,7 +58,22 @@ public class RecipeGroupEditor extends Menu {
         ));
     }
 
-    private Icon sortIdEditIcon() {
+    private Icon getActionIcon() {
+        //TODO 执行动作的按钮
+        return null;
+    }
+
+    private Icon getConditionIcon() {
+        //TODO 限制合成的按钮
+        return null;
+    }
+
+    private Icon getUnlockIcon() {
+        //TODO 切换解锁的按钮
+        return null;
+    }
+
+    private Icon getSortIdEditIcon() {
         return new Icon(
             Material.OAK_SIGN,
             Languages.MENU_RECIPE_EDITOR_ICON_SORT_ID_NAME.value(player)

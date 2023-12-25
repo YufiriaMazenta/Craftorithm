@@ -20,13 +20,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RecipeGroupListMenuHolder extends Menu {
+public class RecipeGroupListMenu extends Menu {
 
     private int page;
     private final int maxPage;
     private final List<Map.Entry<String, ItemStack>> recipeGroupResultList;
 
-    public RecipeGroupListMenuHolder(Player player) {
+    public RecipeGroupListMenu(Player player) {
         super(player);
         Map<String, ItemStack> recipeResultMap = new HashMap<>();
         RecipeManager.INSTANCE.recipeMap().forEach((recipeType, recipeGroupMap) ->
@@ -120,11 +120,13 @@ public class RecipeGroupListMenuHolder extends Menu {
     private Icon wrapIcon(int recipeSlot) {
         ItemStack display = recipeGroupResultList.get(recipeSlot).getValue();
         String recipeGroupName = recipeGroupResultList.get(recipeSlot).getKey();
-        //TODO 添加Lore说明左右点击功能
         Icon icon = new Icon(display, event -> {
             switch (event.getClick()) {
                 case RIGHT:
                 case SHIFT_RIGHT:
+                    if (!player.hasPermission("craftorithm.edit_recipe")) {
+                        return;
+                    }
                     new RecipeGroupEditor(
                         (Player) event.getWhoClicked(),
                         RecipeManager.INSTANCE.getRecipeGroup(recipeGroupName)
@@ -133,7 +135,7 @@ public class RecipeGroupListMenuHolder extends Menu {
                 case LEFT:
                 case SHIFT_LEFT:
                 default:
-                    new RecipeListMenuHolder(
+                    new RecipeListMenu(
                         (Player) event.getWhoClicked(),
                         RecipeManager.INSTANCE.getRecipeGroup(recipeGroupName).groupRecipeKeys(),
                         this
@@ -149,7 +151,7 @@ public class RecipeGroupListMenuHolder extends Menu {
         return page;
     }
 
-    public RecipeGroupListMenuHolder setPage(int page) {
+    public RecipeGroupListMenu setPage(int page) {
         this.page = page;
         return this;
     }

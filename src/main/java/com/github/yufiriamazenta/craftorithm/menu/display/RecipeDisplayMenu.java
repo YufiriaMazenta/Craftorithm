@@ -22,14 +22,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class RecipeDisplayMenuHolder extends Menu {
+public class RecipeDisplayMenu extends Menu {
 
     private final Recipe recipe;
     private final InventoryType inventoryType;
     private final String invTitle;
     private final Menu parentMenu;
 
-    public RecipeDisplayMenuHolder(Player player, Recipe recipe, RecipeListMenuHolder parentMenu) {
+    public RecipeDisplayMenu(Player player, Recipe recipe, RecipeListMenu parentMenu) {
         super(player);
 
         this.parentMenu = parentMenu;
