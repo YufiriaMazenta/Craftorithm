@@ -3,9 +3,10 @@ package com.github.yufiriamazenta.craftorithm.util;
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.item.impl.CraftorithmItemProvider;
-import com.google.common.base.Preconditions;
 import crypticlib.chat.TextProcessor;
 import crypticlib.util.ItemUtil;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -92,19 +93,18 @@ public class ItemUtils {
         return itemName;
     }
 
-    public static void setLore(ItemStack item, List<String> lore) {
-        setLore(item, lore, true);
-    }
-
-    public static void setLore(ItemStack item, List<String> lore, boolean format) {
-        Preconditions.checkArgument(!ItemUtil.isAir(item), "Item can not be air");
-        ItemMeta itemMeta = item.getItemMeta();
-        if (format) {
-            lore.replaceAll(TextProcessor::color);
+    public static void toggleItemGlowing(ItemStack item) {
+        if (item.containsEnchantment(Enchantment.MENDING)) {
+            item.removeEnchantment(Enchantment.MENDING);
+            ItemMeta itemMeta = item.getItemMeta();
+            itemMeta.removeItemFlags(ItemFlag.HIDE_ENCHANTS);
+            item.setItemMeta(itemMeta);
+        } else {
+            item.addUnsafeEnchantment(Enchantment.MENDING, 1);
+            ItemMeta itemMeta = item.getItemMeta();
+            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            item.setItemMeta(itemMeta);
         }
-        itemMeta.setLore(lore);
-
-        item.setItemMeta(itemMeta);
     }
 
 }

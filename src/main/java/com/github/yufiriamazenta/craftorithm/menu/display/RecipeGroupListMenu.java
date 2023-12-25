@@ -3,10 +3,10 @@ package com.github.yufiriamazenta.craftorithm.menu.display;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.menu.editor.RecipeGroupEditor;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
-import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import crypticlib.chat.TextProcessor;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.menu.Menu;
+import crypticlib.util.ItemUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -143,7 +143,7 @@ public class RecipeGroupListMenu extends Menu {
                     break;
             }
         });
-        ItemUtils.setLore(icon.display(), Languages.MENU_NEW_RECIPE_LIST_ICON_ELEMENTS_LORE.value(player));
+        ItemUtil.setLore(icon.display(), Languages.MENU_NEW_RECIPE_LIST_ICON_ELEMENTS_LORE.value(player));
         return icon;
     }
 

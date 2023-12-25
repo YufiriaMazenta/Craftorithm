@@ -4,7 +4,6 @@ import com.github.yufiriamazenta.craftorithm.cmd.sub.AbstractSubCommand;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.item.impl.CraftorithmItemProvider;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import crypticlib.command.SubcmdExecutor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -23,7 +22,7 @@ public final class SaveItemCommand extends AbstractSubCommand {
     }
 
     @Override
-    public Boolean onCommand(CommandSender sender, List<String> args) {
+    public boolean onCommand(CommandSender sender, List<String> args) {
         if (args.size() < 2) {
             sendNotEnoughCmdParamMsg(sender, 2 - args.size());
             return true;

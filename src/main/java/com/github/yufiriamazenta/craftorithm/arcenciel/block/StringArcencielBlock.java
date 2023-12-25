@@ -7,7 +7,6 @@ import com.github.yufiriamazenta.craftorithm.arcenciel.token.IArcencielToken;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import crypticlib.chat.MessageSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;

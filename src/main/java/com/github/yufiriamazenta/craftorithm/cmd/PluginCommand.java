@@ -1,6 +1,8 @@
 package com.github.yufiriamazenta.craftorithm.cmd;
 
-import com.github.yufiriamazenta.craftorithm.cmd.sub.*;
+import com.github.yufiriamazenta.craftorithm.cmd.sub.ReloadCommand;
+import com.github.yufiriamazenta.craftorithm.cmd.sub.RunArcencielCmd;
+import com.github.yufiriamazenta.craftorithm.cmd.sub.VersionCommand;
 import com.github.yufiriamazenta.craftorithm.cmd.sub.item.ItemCommand;
 import com.github.yufiriamazenta.craftorithm.cmd.sub.recipe.CreateRecipeCommand;
 import com.github.yufiriamazenta.craftorithm.cmd.sub.recipe.DisableRecipeCommand;
@@ -10,8 +12,8 @@ import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.command.BukkitCommand;
-import crypticlib.command.SubcmdExecutor;
 import crypticlib.command.RootCmdExecutor;
+import crypticlib.command.SubcmdExecutor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;

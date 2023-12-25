@@ -2,7 +2,6 @@ package com.github.yufiriamazenta.craftorithm.config;
 
 import crypticlib.config.ConfigHandler;
 import crypticlib.config.entry.BooleanConfigEntry;
-import crypticlib.config.entry.ShortListConfigEntry;
 import crypticlib.config.entry.StringConfigEntry;
 import crypticlib.config.entry.StringListConfigEntry;
 

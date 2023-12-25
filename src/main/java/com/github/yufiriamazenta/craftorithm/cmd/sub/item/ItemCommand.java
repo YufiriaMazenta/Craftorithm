@@ -1,7 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.cmd.sub.item;
 
 import com.github.yufiriamazenta.craftorithm.cmd.sub.AbstractSubCommand;
-import crypticlib.command.SubcmdExecutor;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
@@ -16,7 +15,7 @@ public final class ItemCommand extends AbstractSubCommand {
     }
 
     @Override
-    public Boolean onCommand(CommandSender sender, List<String> args) {
+    public boolean onCommand(CommandSender sender, List<String> args) {
         if (args.size() < 2) {
             sendNotEnoughCmdParamMsg(sender, 2 - args.size());
             return true;
