@@ -5,6 +5,7 @@ import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import crypticlib.chat.TextProcessor;
 import crypticlib.config.ConfigWrapper;
 import crypticlib.conversation.Conversation;
 import crypticlib.conversation.NumberPrompt;
@@ -255,7 +256,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
 
         @Override
         public @NotNull BaseComponent promptText(@NotNull Map<Object, Object> data) {
-            return new TextComponent(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_INPUT_HINT.value(player));
+            return TextProcessor.toComponent(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_INPUT_HINT.value(player));
         }
     }
 
@@ -271,7 +272,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
 
         @Override
         public @NotNull BaseComponent promptText(@NotNull Map<Object, Object> data) {
-            return new TextComponent(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_INPUT_HINT.value(player));
+            return TextProcessor.toComponent(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_INPUT_HINT.value(player));
         }
     }
 
