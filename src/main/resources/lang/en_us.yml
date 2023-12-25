@@ -82,11 +82,13 @@ menu:
       cooking_time:
         name: '&aSmelting Time: <time> tick'
         lore:
+          - ''
           - '&3Click to modify smelting time'
         input_hint: '&aPlease enter smelting time in ticks. Type "cancel" to cancel.'
       cooking_exp:
         name: '&aExperience Reward: <exp>'
         lore:
+          - ''
           - '&3Click to modify experience reward.'
         input_hint: '&aPlease enter experience reward. Type "cancel" to cancel.'
       smithing_frame: '&aSmithing Ingredients'
@@ -96,8 +98,9 @@ menu:
       anvil_cost_level:
         name: '&aRequired Level: <level>'
         lore:
+          - ''
           - '&3Click to modify required level'
-        input_hint: '&aPlease enter required level. Type ''cancel'' to cancel.'
+        input_hint: '&aPlease enter required level. Type "cancel" to cancel.'
   recipe_editor:
     title: '&3&lEdit Recipe: &b&l<recipe_name>'
     icon:
@@ -106,6 +109,8 @@ menu:
         lore:
           - ''
           - '&3Click to modify sort id'
+        input_hint: '&aPlease enter sort id. Type "cancel" to cancel'
+      unlock: '&aUnlock Recipe for Player: <unlock>'
 
 recipe_type_name:
   shaped: Shaped

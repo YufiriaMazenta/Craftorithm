@@ -7,6 +7,7 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
+import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.config.ConfigWrapper;
 import crypticlib.ui.display.Icon;
@@ -14,13 +15,10 @@ import crypticlib.ui.menu.StoredMenu;
 import crypticlib.util.FileUtil;
 import crypticlib.util.ItemUtil;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -44,25 +42,11 @@ public abstract class RecipeCreator extends StoredMenu {
             .replace("<recipe_name>", recipeName);
     }
 
-    protected void toggleItemGlowing(ItemStack item) {
-        if (item.containsEnchantment(Enchantment.MENDING)) {
-            item.removeEnchantment(Enchantment.MENDING);
-            ItemMeta itemMeta = item.getItemMeta();
-            itemMeta.removeItemFlags(ItemFlag.HIDE_ENCHANTS);
-            item.setItemMeta(itemMeta);
-        } else {
-            item.addUnsafeEnchantment(Enchantment.MENDING, 1);
-            ItemMeta itemMeta = item.getItemMeta();
-            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-            item.setItemMeta(itemMeta);
-        }
-    }
-
     protected void toggleIconGlowing(int slot, InventoryClickEvent event) {
         ItemStack display = event.getCurrentItem();
         if (ItemUtil.isAir(display))
             return;
-        toggleItemGlowing(display);
+        ItemUtils.toggleItemGlowing(display);
         event.getClickedInventory().setItem(slot, display);
     }
 

@@ -2,14 +2,9 @@ package com.github.yufiriamazenta.craftorithm.menu.creator;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeFactory;
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
-import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import crypticlib.chat.TextProcessor;
 import crypticlib.config.ConfigWrapper;
 import crypticlib.conversation.Conversation;
 import crypticlib.conversation.NumberPrompt;
@@ -26,7 +21,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -117,7 +111,7 @@ public class AnvilRecipeCreator extends RecipeCreator {
             event -> toggleCopyNbt(event.getSlot(), event)
         );
         if (copyNbt)
-            toggleItemGlowing(icon.display());
+            ItemUtils.toggleItemGlowing(icon.display());
         return icon;
     }
 
@@ -125,15 +119,12 @@ public class AnvilRecipeCreator extends RecipeCreator {
         super.toggleIconGlowing(slot, event);
         copyNbt = !copyNbt;
         ItemStack display = event.getCurrentItem();
-        ItemMeta itemMeta = display.getItemMeta();
-        itemMeta.setDisplayName(
-            TextProcessor.color(
-                Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COPY_NBT_TOGGLE
-                    .value(player)
-                    .replace("<enable>", String.valueOf(copyNbt))
-            )
+        ItemUtil.setDisplayName(
+            display,
+            Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COPY_NBT_TOGGLE
+                .value(player)
+                .replace("<enable>", String.valueOf(copyNbt))
         );
-        display.setItemMeta(itemMeta);
     }
 
     protected Icon getCostLevelIcon() {
@@ -160,10 +151,12 @@ public class AnvilRecipeCreator extends RecipeCreator {
         ItemStack costLevelIcon = this.openedInventory().getItem(4);
         if (costLevelIcon == null)
             return;
-        ItemMeta itemMeta = costLevelIcon.getItemMeta();
-        itemMeta.setDisplayName(TextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_NAME.value(player))
-            .replace("<level>", String.valueOf(costLevel)));
-        costLevelIcon.setItemMeta(itemMeta);
+        ItemUtil.setDisplayName(
+            costLevelIcon,
+            Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_NAME
+                .value(player)
+                .replace("<level>", String.valueOf(costLevel))
+        );
     }
 
     class CostLevelPrompt implements NumberPrompt {

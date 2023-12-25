@@ -3,7 +3,6 @@ package com.github.yufiriamazenta.craftorithm.listener;
 import com.github.yufiriamazenta.craftorithm.CraftorithmAPI;
 import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
-import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;

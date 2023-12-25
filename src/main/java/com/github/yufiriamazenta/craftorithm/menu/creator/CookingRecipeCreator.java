@@ -2,14 +2,9 @@ package com.github.yufiriamazenta.craftorithm.menu.creator;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeFactory;
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
-import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import crypticlib.chat.TextProcessor;
 import crypticlib.config.ConfigWrapper;
 import crypticlib.conversation.Conversation;
 import crypticlib.conversation.NumberPrompt;
@@ -26,7 +21,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -155,7 +149,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
             event -> toggleCookingIcon(event.getSlot(), event)
         );
         if (enable) {
-            toggleItemGlowing(icon.display());
+            ItemUtils.toggleItemGlowing(icon.display());
         }
         return icon;
     }
@@ -182,13 +176,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
         boolean enable = !cookingToggleMap.getOrDefault(display.getType(), false);
         cookingToggleMap.put(display.getType(), enable);
 
-        ItemMeta itemMeta = display.getItemMeta();
-        itemMeta.setDisplayName(
-            TextProcessor.color(
-                displayName.replace("<enable>", String.valueOf(enable))
-            )
-        );
-        display.setItemMeta(itemMeta);
+        ItemUtil.setDisplayName(display, displayName.replace("<enable>", String.valueOf(enable)));
     }
 
     protected Icon getCookingTimeIcon() {
@@ -235,20 +223,23 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
         ItemStack cookingTimeIcon = this.openedInventory().getItem(3);
         if (cookingTimeIcon == null)
             return;
-        ItemMeta itemMeta = cookingTimeIcon.getItemMeta();
-        itemMeta.setDisplayName(TextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_NAME.value(player))
-            .replace("<time>", String.valueOf(cookingTime)));
-        cookingTimeIcon.setItemMeta(itemMeta);
+        ItemUtil.setDisplayName(
+            cookingTimeIcon,
+            Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_NAME
+                .value(player)
+                .replace("<time>", String.valueOf(cookingTime)
+        ));
     }
 
     protected void updateExpIcon() {
         ItemStack expIcon = this.openedInventory().getItem(5);
         if (expIcon == null)
             return;
-        ItemMeta itemMeta = expIcon.getItemMeta();
-        itemMeta.setDisplayName(TextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_NAME.value(player))
-            .replace("<exp>", String.valueOf(exp)));
-        expIcon.setItemMeta(itemMeta);
+        ItemUtil.setDisplayName(
+            expIcon,
+            Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_NAME.value(player)
+                .replace("<exp>", String.valueOf(exp)
+        ));
     }
 
     class CookingTimePrompt implements NumberPrompt {
