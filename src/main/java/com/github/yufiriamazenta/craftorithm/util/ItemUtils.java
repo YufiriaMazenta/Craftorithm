@@ -99,9 +99,11 @@ public class ItemUtils {
     public static void setLore(ItemStack item, List<String> lore, boolean format) {
         Preconditions.checkArgument(!ItemUtil.isAir(item), "Item can not be air");
         ItemMeta itemMeta = item.getItemMeta();
+        if (format) {
+            lore.replaceAll(TextProcessor::color);
+        }
         itemMeta.setLore(lore);
-        if (format)
-            itemMeta.getLore().replaceAll(TextProcessor::color);
+
         item.setItemMeta(itemMeta);
     }
 

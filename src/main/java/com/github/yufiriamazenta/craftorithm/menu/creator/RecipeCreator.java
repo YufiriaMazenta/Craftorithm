@@ -1,8 +1,11 @@
 package com.github.yufiriamazenta.craftorithm.menu.creator;
 
 import com.github.yufiriamazenta.craftorithm.config.Languages;
+import com.github.yufiriamazenta.craftorithm.recipe.RecipeFactory;
+import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
+import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.config.ConfigWrapper;
@@ -117,6 +120,14 @@ public abstract class RecipeCreator extends StoredMenu {
     public RecipeCreator setTitle(String title) {
         this.title = title;
         return this;
+    }
+
+    public void regRecipeGroup(ConfigWrapper recipeConfig) {
+        RecipeGroup recipeGroup = new RecipeGroup(recipeName, recipeType(), recipeConfig);
+        RecipeManager.INSTANCE.addRecipeGroup(recipeGroup);
+        for (RecipeRegistry recipeRegistry : RecipeFactory.newRecipeRegistry(recipeConfig.config(), recipeName)) {
+            recipeRegistry.register();
+        }
     }
 
 }

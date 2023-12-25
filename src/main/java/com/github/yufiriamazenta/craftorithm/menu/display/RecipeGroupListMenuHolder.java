@@ -3,6 +3,7 @@ package com.github.yufiriamazenta.craftorithm.menu.display;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.menu.editor.RecipeGroupEditor;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
+import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import crypticlib.chat.TextProcessor;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.menu.Menu;
@@ -47,8 +48,8 @@ public class RecipeGroupListMenuHolder extends Menu {
             maxPage = recipeGroupNum / 45 + 1;
         }
         recipeGroupResultList.sort((o1, o2) -> {
-            int sortId = RecipeManager.INSTANCE.getCraftorithmRecipeSortId(o1.getKey());
-            int sortId2 = RecipeManager.INSTANCE.getCraftorithmRecipeSortId(o2.getKey());
+            int sortId = RecipeManager.INSTANCE.getRecipeGroupSortId(o1.getKey());
+            int sortId2 = RecipeManager.INSTANCE.getRecipeGroupSortId(o2.getKey());
             return Integer.compare(sortId, sortId2);
         });
     }
@@ -60,8 +61,8 @@ public class RecipeGroupListMenuHolder extends Menu {
         Inventory inventory = Bukkit.createInventory(
             this,
             54,
-            TextProcessor.color(Languages.MENU_NEW_RECIPE_LIST_TITLE.value(player)
-            ));
+            TextProcessor.color(Languages.MENU_NEW_RECIPE_LIST_TITLE.value(player))
+        );
         for (Integer slot : super.slotMap.keySet()) {
             inventory.setItem(slot, slotMap.get(slot).display());
         }
@@ -120,7 +121,7 @@ public class RecipeGroupListMenuHolder extends Menu {
         ItemStack display = recipeGroupResultList.get(recipeSlot).getValue();
         String recipeGroupName = recipeGroupResultList.get(recipeSlot).getKey();
         //TODO 添加Lore说明左右点击功能
-        return new Icon(display, event -> {
+        Icon icon = new Icon(display, event -> {
             switch (event.getClick()) {
                 case RIGHT:
                 case SHIFT_RIGHT:
@@ -139,8 +140,9 @@ public class RecipeGroupListMenuHolder extends Menu {
                     ).openMenu();
                     break;
             }
-
         });
+        ItemUtils.setLore(icon.display(), Languages.MENU_NEW_RECIPE_LIST_ICON_ELEMENTS_LORE.value(player));
+        return icon;
     }
 
     public int page() {

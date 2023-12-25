@@ -50,6 +50,10 @@ menu:
       frame: '&3&lNew recipe list'
       previous: '&aPrevious Page'
       next: '&aNext Page'
+      elements:
+        lore:
+          - '&bLeft click to view'
+          - '&3Right click to edit'
   recipe_display:
     title:
       shaped: Shaped Recipe
@@ -94,8 +98,13 @@ menu:
           - '&3Click to modify required level'
         input_hint: '&aPlease enter required level. Type ''cancel'' to cancel.'
   recipe_editor:
-    title: 'Edit Recipe: <recipe_name>'
-    #TODO 编辑页面相关文本
+    title: '&3&lEdit Recipe: &b&l<recipe_name>'
+    icon:
+      slot_id:
+        name: '&aSort id: <id>'
+        lore:
+          - '&3Click to modify sort id'
+
 recipe_type_name:
   shaped: Shaped
   shapeless: Shapeless

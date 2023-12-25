@@ -41,25 +41,23 @@ public enum RecipeManager {
     private final Map<RecipeType, Consumer<Recipe>> recipeRegisterMap;
     private final Map<RecipeType, Consumer<List<NamespacedKey>>> recipeRemoverMap;
     private final Map<NamespacedKey, Boolean> recipeUnlockMap;
-    private final Map<String, Integer> recipeSortMap;
     private final List<Recipe> removeRecipeRecycleBin;
     private final Map<NamespacedKey, Recipe> serverRecipesCache;
     private final Map<NamespacedKey, PotionMixRecipe> potionMixRecipeMap;
     private final Map<NamespacedKey, AnvilRecipe> anvilRecipeMap;
-    private final Map<String, ConfigWrapper> recipeConfigWrapperMap;
     private boolean supportPotionMix;
 
     RecipeManager() {
         pluginRecipeMap = new ConcurrentHashMap<>();
-        recipeConfigWrapperMap = new ConcurrentHashMap<>();
         recipeRegisterMap = new ConcurrentHashMap<>();
         recipeRemoverMap = new ConcurrentHashMap<>();
         recipeUnlockMap = new ConcurrentHashMap<>();
-        recipeSortMap = new ConcurrentHashMap<>();
         potionMixRecipeMap = new ConcurrentHashMap<>();
         anvilRecipeMap = new ConcurrentHashMap<>();
         removeRecipeRecycleBin = new CopyOnWriteArrayList<>();
         serverRecipesCache = new ConcurrentHashMap<>();
+
+        //设置各类型配方的注册方法
         recipeRegisterMap.put(RecipeType.SHAPED, Bukkit::addRecipe);
         recipeRemoverMap.put(RecipeType.SHAPED, this::removeRecipes);
         recipeRegisterMap.put(RecipeType.SHAPELESS, Bukkit::addRecipe);
@@ -117,25 +115,36 @@ public enum RecipeManager {
     }
 
     private void loadRecipes() {
-        for (String fileName : recipeConfigWrapperMap.keySet()) {
-            try {
-                ConfigWrapper configWrapper = recipeConfigWrapperMap.get(fileName);
-                YamlConfiguration config = configWrapper.config();
-                boolean unlock =  config.getBoolean("unlock", PluginConfigs.DEFAULT_RECIPE_UNLOCK.value());
-                for (RecipeRegistry recipeRegistry : RecipeFactory.newRecipeRegistry(config, fileName)) {
-                    recipeRegistry.register();
-                    recipeUnlockMap.put(recipeRegistry.namespacedKey(), unlock);
+        for (Map.Entry<RecipeType, Map<String, RecipeGroup>> pluginRecipeMapEntry : pluginRecipeMap.entrySet()) {
+            Map<String, RecipeGroup> recipeGroupMap = pluginRecipeMapEntry.getValue();
+            recipeGroupMap.forEach((recipeGroupName, recipeGroup) -> {
+                try {
+                    YamlConfiguration config = recipeGroup.recipeGroupConfig().config();
+                    for (RecipeRegistry recipeRegistry : RecipeFactory.newRecipeRegistry(config, recipeGroupName)) {
+                        recipeRegistry.register();
+                    }
+                } catch (Throwable throwable) {
+                    LangUtil.info(Languages.LOAD_RECIPE_LOAD_EXCEPTION, CollectionsUtil.newStringHashMap("<recipe_name>", recipeGroupName));
+                    throwable.printStackTrace();
                 }
-                recipeSortMap.put(fileName, config.getInt("sort_id", 0));
-            } catch (Throwable e) {
-                LangUtil.info(Languages.LOAD_RECIPE_LOAD_EXCEPTION, CollectionsUtil.newStringHashMap("<recipe_name>", fileName));
-                e.printStackTrace();
-            }
+            });
+        }
+    }
+
+    public void addRecipeGroup(RecipeGroup recipeGroup) {
+        RecipeType recipeType = recipeGroup.recipeType();
+        if (pluginRecipeMap.containsKey(recipeType)) {
+            Map<String, RecipeGroup> recipeGroupMap = pluginRecipeMap.get(recipeType);
+            recipeGroupMap.put(recipeGroup.groupName(), recipeGroup);
+        } else {
+            Map<String, RecipeGroup> recipeGroupMap = new ConcurrentHashMap<>();
+            recipeGroupMap.put(recipeGroup.groupName(), recipeGroup);
+            pluginRecipeMap.put(recipeType, recipeGroupMap);
         }
     }
 
     private void loadRecipeFiles() {
-        recipeConfigWrapperMap.clear();
+        pluginRecipeMap.clear();
         if (!RECIPE_FILE_FOLDER.exists()) {
             boolean mkdirResult = RECIPE_FILE_FOLDER.mkdir();
             if (!mkdirResult)
@@ -146,11 +155,14 @@ public enum RecipeManager {
             saveDefConfigFile(allFiles);
         }
         for (File file : allFiles) {
-            String key = file.getPath().substring(RECIPE_FILE_FOLDER.getPath().length() + 1);
-            key = key.replace("\\", "/");
-            int lastDotIndex = key.lastIndexOf(".");
-            key = key.substring(0, lastDotIndex);
-            recipeConfigWrapperMap.put(key, new ConfigWrapper(file));
+            String recipeGroupName = file.getPath().substring(RECIPE_FILE_FOLDER.getPath().length() + 1);
+            recipeGroupName = recipeGroupName.replace("\\", "/");
+            int lastDotIndex = recipeGroupName.lastIndexOf(".");
+            recipeGroupName = recipeGroupName.substring(0, lastDotIndex);
+            ConfigWrapper recipeGroupConfigWrapper = new ConfigWrapper(file);
+            RecipeType recipeType = RecipeType.valueOf(recipeGroupConfigWrapper.config().getString("type").toUpperCase());
+            RecipeGroup recipeGroup = new RecipeGroup(recipeGroupName, recipeType, recipeGroupConfigWrapper);
+            addRecipeGroup(recipeGroup);
         }
     }
 
@@ -159,7 +171,7 @@ public enum RecipeManager {
             pluginRecipeMap.put(recipeType, new ConcurrentHashMap<>());
         Map<String, RecipeGroup> recipeGroupMap = pluginRecipeMap.get(recipeType);
         if (!recipeGroupMap.containsKey(recipeGroupName))
-            recipeGroupMap.put(recipeGroupName, new RecipeGroup(recipeGroupName));
+            recipeGroupMap.put(recipeGroupName, new RecipeGroup(recipeGroupName, recipeType));
         RecipeGroup recipeGroup = recipeGroupMap.get(recipeGroupName);
         recipeGroup.addRecipeKey(getRecipeKey(recipe));
         recipeRegisterMap.getOrDefault(recipeType, recipe1 -> {
@@ -229,13 +241,11 @@ public enum RecipeManager {
                 if (recipeGroup == null)
                     return false;
                 recipeRemoverMap.get(recipeType).accept(recipeGroup.groupRecipeKeys());
-                ConfigWrapper recipeConfig = recipeConfigWrapperMap.get(recipeGroupName);
+                ConfigWrapper recipeConfig = recipeGroupMap.get(recipeGroupName).recipeGroupConfig();
                 if (recipeConfig != null && deleteFile) {
                     recipeConfig.configFile().delete();
                 }
-                recipeConfigWrapperMap.remove(recipeGroupName);
                 recipeGroupMap.remove(recipeGroupName);
-                recipeSortMap.remove(recipeGroupName);
                 return true;
             }
         }
@@ -303,12 +313,7 @@ public enum RecipeManager {
     }
 
     public boolean hasCraftorithmRecipe(String recipeName) {
-        for (Map.Entry<RecipeType, Map<String, RecipeGroup>> recipeTypeMapEntry : pluginRecipeMap.entrySet()) {
-            Map<String, RecipeGroup> recipeGroupMap = recipeTypeMapEntry.getValue();
-            if (recipeGroupMap.containsKey(recipeName))
-                return true;
-        }
-        return false;
+        return getRecipeGroups().contains(recipeName);
     }
 
     @NotNull
@@ -319,7 +324,7 @@ public enum RecipeManager {
                 return recipeGroupMap.get(groupName);
             }
         }
-        return new RecipeGroup(groupName);
+        return new RecipeGroup(groupName, RecipeType.SHAPED);
     }
 
     public YamlConfiguration getRecipeConfig(NamespacedKey recipeKey) {
@@ -330,15 +335,32 @@ public enum RecipeManager {
             for (String recipeGroupName : recipeGroupMap.keySet()) {
                 RecipeGroup recipeGroup = recipeGroupMap.get(recipeGroupName);
                 if (recipeGroup.contains(recipeKey)) {
-                    return recipeConfigWrapperMap.get(recipeGroupName).config();
+                    ConfigWrapper configWrapper = recipeGroup.recipeGroupConfig();
+                    return configWrapper == null ? null : configWrapper.config();
                 }
             }
         }
         return null;
     }
 
-    public int getCraftorithmRecipeSortId(String recipeName) {
-        return recipeSortMap.getOrDefault(recipeName, 0);
+    public int getRecipeGroupSortId(String recipeGroupName) {
+        for (Map.Entry<RecipeType, Map<String, RecipeGroup>> pluginRecipeMapEntry : pluginRecipeMap.entrySet()) {
+            Map<String, RecipeGroup> recipeGroupMap = pluginRecipeMapEntry.getValue();
+            if (recipeGroupMap.containsKey(recipeGroupName)) {
+                return recipeGroupMap.get(recipeGroupName).sortId();
+            }
+        }
+        return 0;
+    }
+
+    public RecipeManager setRecipeGroupSortId(String recipeGroupName, int sortId) {
+        for (Map.Entry<RecipeType, Map<String, RecipeGroup>> pluginRecipeMapEntry : pluginRecipeMap.entrySet()) {
+            Map<String, RecipeGroup> recipeGroupMap = pluginRecipeMapEntry.getValue();
+            if (recipeGroupMap.containsKey(recipeGroupName)) {
+                recipeGroupMap.get(recipeGroupName).setSortId(sortId);
+            }
+        }
+        return this;
     }
 
     @Nullable
@@ -418,7 +440,6 @@ public enum RecipeManager {
         removeRecipeRecycleBin.clear();
         pluginRecipeMap.clear();
         recipeUnlockMap.clear();
-        recipeSortMap.clear();
     }
 
     public void reloadServerRecipeCache() {
@@ -435,8 +456,13 @@ public enum RecipeManager {
         return potionMixRecipeMap;
     }
 
-    public Map<String, ConfigWrapper> recipeConfigWrapperMap() {
-        return recipeConfigWrapperMap;
+    public List<String> getRecipeGroups() {
+        //TODO 可能需要缓存一下
+        List<String> recipes = new ArrayList<>();
+        for (Map<String, RecipeGroup> value : pluginRecipeMap.values()) {
+            recipes.addAll(value.keySet());
+        }
+        return recipes;
     }
 
     public Map<NamespacedKey, Boolean> recipeUnlockMap() {
