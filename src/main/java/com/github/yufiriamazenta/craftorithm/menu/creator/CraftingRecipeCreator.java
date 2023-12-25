@@ -2,6 +2,7 @@ package com.github.yufiriamazenta.craftorithm.menu.creator;
 
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeFactory;
+import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
@@ -102,10 +103,7 @@ public class CraftingRecipeCreator extends UnlockableRecipeCreator {
                         recipeConfig.set("result", resultName);
                         recipeConfig.saveConfig();
                         recipeConfig.reloadConfig();
-                        for (RecipeRegistry recipeRegistry : RecipeFactory.newRecipeRegistry(recipeConfig.config(), recipeName)) {
-                            recipeRegistry.register();
-                        }
-                        RecipeManager.INSTANCE.recipeConfigWrapperMap().put(recipeName, recipeConfig);
+                        regRecipeGroup(recipeConfig);
                         event.getWhoClicked().closeInventory();
                         sendSuccessMsg(event.getWhoClicked(), recipeName);
                     })

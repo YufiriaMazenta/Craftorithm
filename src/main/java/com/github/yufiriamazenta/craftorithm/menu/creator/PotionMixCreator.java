@@ -70,10 +70,7 @@ public class PotionMixCreator extends RecipeCreator {
                             recipeConfig.set("result", resultName);
                             recipeConfig.saveConfig();
                             recipeConfig.reloadConfig();
-                            for (RecipeRegistry recipeRegistry : RecipeFactory.newRecipeRegistry(recipeConfig.config(), recipeName)) {
-                                recipeRegistry.register();
-                            }
-                            RecipeManager.INSTANCE.recipeConfigWrapperMap().put(recipeName, recipeConfig);
+                            regRecipeGroup(recipeConfig);
                             event.getWhoClicked().closeInventory();
                             sendSuccessMsg(player, recipeName);
                         })

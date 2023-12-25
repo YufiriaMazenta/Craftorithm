@@ -3,6 +3,7 @@ package com.github.yufiriamazenta.craftorithm.menu.creator;
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeFactory;
+import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
@@ -18,6 +19,8 @@ import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.display.MenuLayout;
 import crypticlib.ui.menu.StoredMenu;
 import crypticlib.util.ItemUtil;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -85,10 +88,7 @@ public class AnvilRecipeCreator extends RecipeCreator {
                             recipeConfig.set("result", resultName);
                             recipeConfig.saveConfig();
                             recipeConfig.reloadConfig();
-                            for (RecipeRegistry recipeRegistry : RecipeFactory.newRecipeRegistry(recipeConfig.config(), recipeName)) {
-                                recipeRegistry.register();
-                            }
-                            RecipeManager.INSTANCE.recipeConfigWrapperMap().put(recipeName, recipeConfig);
+                            regRecipeGroup(recipeConfig);
                             event.getWhoClicked().closeInventory();
                             sendSuccessMsg(player, recipeName);
                         })
@@ -137,12 +137,12 @@ public class AnvilRecipeCreator extends RecipeCreator {
     }
 
     protected Icon getCostLevelIcon() {
-        Icon icon = new Icon(
+        return new Icon(
             Material.EXPERIENCE_BOTTLE,
-            TextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_NAME.value(player))
+            Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_NAME.value(player)
                 .replace("<level>", String.valueOf(costLevel)),
+            Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_LORE.value(player),
             event -> {
-                Player player = (Player) event.getWhoClicked();
                 Conversation conversation = new Conversation(
                     Craftorithm.instance(),
                     player,
@@ -154,8 +154,6 @@ public class AnvilRecipeCreator extends RecipeCreator {
                 player.closeInventory();
             }
         );
-        ItemUtils.setLore(icon.display(), Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_LORE.value(player));
-        return icon;
     }
 
     public void updateCostLevelIcon() {
@@ -180,8 +178,8 @@ public class AnvilRecipeCreator extends RecipeCreator {
         }
 
         @Override
-        public @NotNull String promptText(@NotNull Map<Object, Object> data) {
-            return Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_INPUT_HINT.value(player);
+        public @NotNull BaseComponent promptText(@NotNull Map<Object, Object> data) {
+            return new TextComponent(Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_INPUT_HINT.value(player));
         }
     }
 

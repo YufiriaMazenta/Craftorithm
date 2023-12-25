@@ -4,6 +4,7 @@ import crypticlib.chat.LangConfigHandler;
 import crypticlib.chat.entry.StringLangConfigEntry;
 import crypticlib.chat.entry.StringListLangConfigEntry;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 @LangConfigHandler(langFileFolder = "lang")
@@ -45,6 +46,7 @@ public class Languages {
     public static final StringLangConfigEntry MENU_NEW_RECIPE_LIST_ICON_FRAME = new StringLangConfigEntry("menu.new_recipe_list.icon.frame", "&3&l新增配方列表");
     public static final StringLangConfigEntry MENU_NEW_RECIPE_LIST_ICON_PREVIOUS = new StringLangConfigEntry("menu.new_recipe_list.icon.previous", "&a上一页");
     public static final StringLangConfigEntry MENU_NEW_RECIPE_LIST_ICON_NEXT = new StringLangConfigEntry("menu.new_recipe_list.icon.next", "&a下一页");
+    public static final StringListLangConfigEntry MENU_NEW_RECIPE_LIST_ICON_ELEMENTS_LORE = new StringListLangConfigEntry("menu.new_recipe_list.icon.elements", Arrays.asList("&bLeft click to view", "&3Right click to edit"));
     public static final StringLangConfigEntry MENU_RECIPE_DISPLAY_TITLE_SHAPED = new StringLangConfigEntry("menu.recipe_display.title.shaped", "有序配方");
     public static final StringLangConfigEntry MENU_RECIPE_DISPLAY_TITLE_SHAPELESS = new StringLangConfigEntry("menu.recipe_display.title.shapeless", "无序配方");
     public static final StringLangConfigEntry MENU_RECIPE_DISPLAY_TITLE_FURNACE = new StringLangConfigEntry("menu.recipe_display.title.furnace", "熔炉配方");
@@ -78,6 +80,9 @@ public class Languages {
     public static final StringLangConfigEntry MENU_RECIPE_CREATOR_ICON_BLAST_FURNACE_TOGGLE = new StringLangConfigEntry("menu.recipe_creator.icon.blast_furnace_toggle", "&a启用高炉配方:<enable>");
     public static final StringLangConfigEntry MENU_RECIPE_CREATOR_ICON_SMOKER_TOGGLE = new StringLangConfigEntry("menu.recipe_creator.icon.smoker_toggle", "&a启用烟熏炉配方:<enable>");
     public static final StringLangConfigEntry MENU_RECIPE_CREATOR_ICON_CAMPFIRE_TOGGLE = new StringLangConfigEntry("menu.recipe_creator.icon.campfire_toggle", "&a启用营火配方:<enable>");
+    public static final StringLangConfigEntry MENU_RECIPE_EDITOR_TITLE = new StringLangConfigEntry("menu.recipe_editor.title", "&3&lEdit Recipe: &b&l<recipe_name>");
+    public static final StringLangConfigEntry MENU_RECIPE_EDITOR_ICON_SORT_ID_NAME = new StringLangConfigEntry("menu.recipe_editor.icon.slot_id.name", "&aSort id: <id>");
+    public static final StringListLangConfigEntry MENU_RECIPE_EDITOR_ICON_SORT_ID_LORE = new StringListLangConfigEntry("menu.recipe_editor.icon.slot_id.lore", Collections.singletonList("&3Click to modify sort id"));
     public static final StringLangConfigEntry ARCENCIEL_NOT_ENOUGH_PARAM = new StringLangConfigEntry("arcenciel.not_enough_param", "<prefix> &c语句\"<statement>\"不完整");
     public static final StringLangConfigEntry ARCENCIEL_UNKNOWN_TOKEN = new StringLangConfigEntry("arcenciel.unknown_token", "<prefix> &c未定义的关键词或函数<token>");
     public static final StringLangConfigEntry LOAD_FINISH = new StringLangConfigEntry("load.finish", "<prefix> &a插件加载完毕");

@@ -103,10 +103,7 @@ public class SmithingRecipeCreator extends UnlockableRecipeCreator {
                                 recipeConfig.set("unlock", unlock());
                                 recipeConfig.saveConfig();
                                 recipeConfig.reloadConfig();
-                                for (RecipeRegistry recipeRegistry : RecipeFactory.newRecipeRegistry(recipeConfig.config(), recipeName)) {
-                                    recipeRegistry.register();
-                                }
-                                RecipeManager.INSTANCE.recipeConfigWrapperMap().put(recipeName, recipeConfig);
+                                regRecipeGroup(recipeConfig);
                                 event.getWhoClicked().closeInventory();
                                 sendSuccessMsg(event.getWhoClicked(), recipeName);
                             })

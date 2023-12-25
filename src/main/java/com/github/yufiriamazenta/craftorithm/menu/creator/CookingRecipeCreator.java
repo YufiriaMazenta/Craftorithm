@@ -3,6 +3,7 @@ package com.github.yufiriamazenta.craftorithm.menu.creator;
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeFactory;
+import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
@@ -18,6 +19,8 @@ import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.display.MenuLayout;
 import crypticlib.ui.menu.StoredMenu;
 import crypticlib.util.ItemUtil;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -107,10 +110,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
                             recipeConfig.set("source", sourceList);
                             recipeConfig.saveConfig();
                             recipeConfig.reloadConfig();
-                            for (RecipeRegistry recipeRegistry : RecipeFactory.newRecipeRegistry(recipeConfig.config(), recipeName)) {
-                                recipeRegistry.register();
-                            }
-                            RecipeManager.INSTANCE.recipeConfigWrapperMap().put(recipeName, recipeConfig);
+                            regRecipeGroup(recipeConfig);
                             event.getWhoClicked().closeInventory();
                             sendSuccessMsg(event.getWhoClicked(), recipeName);
                         })
@@ -192,12 +192,12 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
     }
 
     protected Icon getCookingTimeIcon() {
-        Icon icon = new Icon(
+        return new Icon(
             Material.CLOCK,
-            TextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_NAME.value(player))
+            Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_NAME.value(player)
                 .replace("<time>", String.valueOf(cookingTime)),
+            Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_LORE.value(player),
             event -> {
-                Player player = (Player) event.getWhoClicked();
                 Conversation timeInputConversation = new Conversation(
                     Craftorithm.instance(),
                     player,
@@ -209,17 +209,15 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
                 player.closeInventory();
             }
         );
-        ItemUtils.setLore(icon.display(), Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_LORE.value(player));
-        return icon;
     }
 
     protected Icon getExpIcon() {
-        Icon icon = new Icon(
+        return new Icon(
             Material.EXPERIENCE_BOTTLE,
-            TextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_NAME.value(player))
+            Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_NAME.value(player)
                 .replace("<exp>", String.valueOf(exp)),
+            Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_LORE.value(player),
             event -> {
-                Player player = (Player) event.getWhoClicked();
                 Conversation conversation = new Conversation(
                     Craftorithm.instance(),
                     player,
@@ -231,8 +229,6 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
                 player.closeInventory();
             }
         );
-        ItemUtils.setLore(icon.display(), Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_LORE.value(player));
-        return icon;
     }
 
     protected void updateCookingTimeIcon() {
@@ -267,8 +263,8 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
         }
 
         @Override
-        public @NotNull String promptText(@NotNull Map<Object, Object> data) {
-            return Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_INPUT_HINT.value(player);
+        public @NotNull BaseComponent promptText(@NotNull Map<Object, Object> data) {
+            return new TextComponent(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_INPUT_HINT.value(player));
         }
     }
 
@@ -283,8 +279,8 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
         }
 
         @Override
-        public @NotNull String promptText(@NotNull Map<Object, Object> data) {
-            return Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_INPUT_HINT.value(player);
+        public @NotNull BaseComponent promptText(@NotNull Map<Object, Object> data) {
+            return new TextComponent(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_INPUT_HINT.value(player));
         }
     }
 
