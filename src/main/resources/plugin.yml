@@ -11,5 +11,5 @@ website: https://github.com/YufiriaMazenta/Craftorithm
 permissions:
   craftorithm.command:
     description: Plugin command main permissions
-  craftorithm.recipe_list.manager:
+  craftorithm.edit_recipe:
     default: op

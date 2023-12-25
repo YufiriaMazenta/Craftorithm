@@ -2,8 +2,8 @@ package com.github.yufiriamazenta.craftorithm.cmd.sub.recipe;
 
 import com.github.yufiriamazenta.craftorithm.cmd.sub.AbstractSubCommand;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
-import com.github.yufiriamazenta.craftorithm.menu.display.RecipeGroupListMenuHolder;
-import com.github.yufiriamazenta.craftorithm.menu.display.RecipeListMenuHolder;
+import com.github.yufiriamazenta.craftorithm.menu.display.RecipeGroupListMenu;
+import com.github.yufiriamazenta.craftorithm.menu.display.RecipeListMenu;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.CrypticLib;
@@ -41,11 +41,11 @@ public final class RecipeListCommand extends AbstractSubCommand {
         Player player = (Player) sender;
         switch (listType) {
             case SERVER:
-                new RecipeListMenuHolder(player, RecipeManager.INSTANCE.serverRecipesCache().keySet()).openMenu();
+                new RecipeListMenu(player, RecipeManager.INSTANCE.serverRecipesCache().keySet()).openMenu();
                 break;
             case CRAFTORITHM:
             default:
-                new RecipeGroupListMenuHolder(player).openMenu();
+                new RecipeGroupListMenu(player).openMenu();
                 break;
         }
         return true;
