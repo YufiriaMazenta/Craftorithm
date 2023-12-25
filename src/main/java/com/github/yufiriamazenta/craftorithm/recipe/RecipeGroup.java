@@ -7,11 +7,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class RecipeGroup {
 
     private String groupName;
-    private List<NamespacedKey> groupRecipeKeys;
+    private List<NamespacedKey> groupRecipeKeys = new CopyOnWriteArrayList<>();
     private final RecipeType recipeType;
     private ConfigWrapper recipeGroupConfig;
     private int sortId;
@@ -27,7 +28,7 @@ public class RecipeGroup {
 
     public RecipeGroup(String groupName, List<NamespacedKey> groupRecipeKeys, RecipeType recipeType, ConfigWrapper recipeGroupConfig) {
         this.groupName = groupName;
-        this.groupRecipeKeys = groupRecipeKeys;
+        this.groupRecipeKeys.addAll(groupRecipeKeys);
         this.recipeType = recipeType;
         this.recipeGroupConfig = recipeGroupConfig;
         this.sortId = recipeGroupConfig.config().getInt("sort_id", 0);
