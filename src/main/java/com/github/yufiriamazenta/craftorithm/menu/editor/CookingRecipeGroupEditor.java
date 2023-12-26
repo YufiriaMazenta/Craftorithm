@@ -1,20 +1,28 @@
 package com.github.yufiriamazenta.craftorithm.menu.editor;
 
+import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.impl.CookingRecipeRegistry;
+import crypticlib.chat.TextProcessor;
 import crypticlib.config.ConfigWrapper;
+import crypticlib.conversation.Conversation;
+import crypticlib.conversation.NumberPrompt;
+import crypticlib.conversation.Prompt;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.display.MenuLayout;
 import crypticlib.util.ItemUtil;
+import net.md_5.bungee.api.chat.BaseComponent;
 import org.apache.commons.lang.Validate;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -54,15 +62,10 @@ public class CookingRecipeGroupEditor extends UnlockableRecipeGroupEditor {
 
     private void loadElements() {
         List<Icon> elements = new ArrayList<>();
-        for (CookingRecipeInfo recipeInfo : cookingRecipeInfoList) {
-            Icon icon = new Icon(
-                recipeInfo.ingredient,
-                event -> {
-
-                }
-            );
-//            ItemUtil.setDisplayName(icon.display());
-            //TODO
+        for (int i = 0; i < cookingRecipeInfoList.size(); i++) {
+            CookingRecipeInfo cookingRecipeInfo = cookingRecipeInfoList.get(i);
+            Icon icon = new CookingIcon(cookingRecipeInfo.ingredient, i, cookingRecipeInfo);
+            elements.add(icon);
         }
         setElements(elements);
     }
@@ -110,16 +113,38 @@ public class CookingRecipeGroupEditor extends UnlockableRecipeGroupEditor {
     protected class CookingIcon extends Icon {
 
         private CookingRecipeInfo cookingRecipeInfo;
+        private int recipeId;
 
-        public CookingIcon(@NotNull ItemStack display, Consumer<InventoryClickEvent> clickConsumer, CookingRecipeInfo cookingRecipeInfo) {
-            super(display, clickConsumer);
+        public CookingIcon(@NotNull ItemStack display, int recipeId, CookingRecipeInfo cookingRecipeInfo) {
+            super(display);
             this.cookingRecipeInfo = cookingRecipeInfo;
+            this.recipeId = recipeId;
             List<String> lore = new ArrayList<>(Languages.MENU_RECIPE_EDITOR_ICON_COOKING_ELEMENT_LORE.value(player));
             lore.replaceAll(it -> it
                 .replace("<time>", cookingRecipeInfo.cookingTime + "")
                 .replace("<exp>", cookingRecipeInfo.exp + "")
             );
             ItemUtil.setLore(display(), lore);
+            setClickAction(event -> {
+                switch (event.getClick()) {
+                    case LEFT:
+                    case SHIFT_LEFT:
+                        new Conversation(
+                            Craftorithm.instance(),
+                            player,
+                            new CookingTimePrompt(recipeId)
+                        ).start();
+                        player.closeInventory();
+                        break;
+                    case RIGHT:
+                    case SHIFT_RIGHT:
+                        //TODO 修改奖励经验
+                        break;
+                    default:
+                        event.setCancelled(true);
+                        break;
+                }
+            });
         }
 
         public CookingRecipeInfo cookingRecipeInfo() {
@@ -131,9 +156,17 @@ public class CookingRecipeGroupEditor extends UnlockableRecipeGroupEditor {
             return this;
         }
 
+        public int recipeId() {
+            return recipeId;
+        }
+
+        public void setRecipeId(int recipeId) {
+            this.recipeId = recipeId;
+        }
+
     }
 
-    protected class CookingRecipeInfo {
+    class CookingRecipeInfo {
         private int cookingTime;
         private float exp;
         private ItemStack ingredient;
@@ -182,6 +215,28 @@ public class CookingRecipeGroupEditor extends UnlockableRecipeGroupEditor {
             return this;
         }
 
+    }
+
+    class CookingTimePrompt implements NumberPrompt {
+
+        private int cookingRecipeId;
+
+        public CookingTimePrompt(int cookingRecipeId) {
+            this.cookingRecipeId = cookingRecipeId;
+        }
+
+        @Override
+        public @Nullable Prompt acceptValidatedInput(@NotNull Map<Object, Object> data, @NotNull Number number) {
+            int cookingTime = number.intValue();
+            //TODO 更新配方
+            YamlConfiguration config = recipeGroup.recipeGroupConfig().config();
+            return null;
+        }
+
+        @Override
+        public @NotNull BaseComponent promptText(@NotNull Map<Object, Object> data) {
+            return TextProcessor.toComponent(Languages.MENU_RECIPE_EDITOR_ICON_COOKING_ELEMENT_INPUT_COOKING_TIME_HINT.value(player));
+        }
     }
 
 }

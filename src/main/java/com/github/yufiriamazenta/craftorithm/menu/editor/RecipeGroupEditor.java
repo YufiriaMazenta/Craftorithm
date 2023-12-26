@@ -102,7 +102,7 @@ public abstract class RecipeGroupEditor extends MultipageMenu {
         @Override
         public @Nullable Prompt acceptValidatedInput(@NotNull Map<Object, Object> data, @NotNull Number number) {
             int sortId = number.intValue();
-            RecipeManager.INSTANCE.setRecipeGroupSortId(recipeGroup.groupName(), sortId);
+            recipeGroup.setSortId(sortId);
             ConfigWrapper configWrapper = recipeGroup.recipeGroupConfig();
             configWrapper.set("sort_id", sortId);
             configWrapper.saveConfig();

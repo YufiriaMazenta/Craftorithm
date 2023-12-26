@@ -353,16 +353,6 @@ public enum RecipeManager {
         return 0;
     }
 
-    public RecipeManager setRecipeGroupSortId(String recipeGroupName, int sortId) {
-        for (Map.Entry<RecipeType, Map<String, RecipeGroup>> pluginRecipeMapEntry : pluginRecipeMap.entrySet()) {
-            Map<String, RecipeGroup> recipeGroupMap = pluginRecipeMapEntry.getValue();
-            if (recipeGroupMap.containsKey(recipeGroupName)) {
-                recipeGroupMap.get(recipeGroupName).setSortId(sortId);
-            }
-        }
-        return this;
-    }
-
     @Nullable
     public AnvilRecipe matchAnvilRecipe(ItemStack base, ItemStack addition) {
         for (Map.Entry<NamespacedKey, AnvilRecipe> anvilRecipeEntry : anvilRecipeMap.entrySet()) {

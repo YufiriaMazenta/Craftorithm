@@ -122,6 +122,8 @@ menu:
           - ''
           - '&aLeft click to modify smelting time'
           - '&aRight click to modify experience reward'
+        input_cooking_time_hint: '&aPlease enter smelting time in ticks. Type "cancel" to cancel.'
+        input_cooking_exp_hint: '&aPlease enter experience reward. Type "cancel" to cancel.'
 recipe_type_name:
   shaped: Shaped
   shapeless: Shapeless
