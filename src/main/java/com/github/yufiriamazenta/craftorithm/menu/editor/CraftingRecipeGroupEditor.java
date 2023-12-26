@@ -7,6 +7,7 @@ import crypticlib.ui.display.MenuLayout;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,8 +20,10 @@ public class CraftingRecipeGroupEditor extends UnlockableRecipeGroupEditor {
             new MenuDisplay(
                 title,
                 new MenuLayout(
-                    Collections.singletonList(
-                        "ABCDEFGHI"
+                    Arrays.asList(
+                        "ABCDEFGHI",
+                        "%%%%%%%%%",
+                        "X#######Y"
                     ),
                     () -> {
                         Map<Character, Icon> iconMap = new HashMap<>();

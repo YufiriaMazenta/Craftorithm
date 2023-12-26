@@ -78,10 +78,14 @@ public class Languages {
     public static final StringLangConfigEntry MENU_RECIPE_CREATOR_ICON_SMOKER_TOGGLE = new StringLangConfigEntry("menu.recipe_creator.icon.smoker_toggle");
     public static final StringLangConfigEntry MENU_RECIPE_CREATOR_ICON_CAMPFIRE_TOGGLE = new StringLangConfigEntry("menu.recipe_creator.icon.campfire_toggle");
     public static final StringLangConfigEntry MENU_RECIPE_EDITOR_TITLE = new StringLangConfigEntry("menu.recipe_editor.title");
+    public static final StringLangConfigEntry MENU_RECIPE_EDITOR_ICON_FRAME = new StringLangConfigEntry("menu.recipe_editor.icon.frame");
+    public static final StringLangConfigEntry MENU_RECIPE_EDITOR_ICON_NEXT = new StringLangConfigEntry("menu.recipe_editor.icon.next");
+    public static final StringLangConfigEntry MENU_RECIPE_EDITOR_ICON_PREVIOUS = new StringLangConfigEntry("menu.recipe_editor.icon.previous");
     public static final StringLangConfigEntry MENU_RECIPE_EDITOR_ICON_SORT_ID_NAME = new StringLangConfigEntry("menu.recipe_editor.icon.slot_id.name");
     public static final StringListLangConfigEntry MENU_RECIPE_EDITOR_ICON_SORT_ID_LORE = new StringListLangConfigEntry("menu.recipe_editor.icon.slot_id.lore");
     public static final StringLangConfigEntry MENU_RECIPE_EDITOR_ICON_SORT_ID_INPUT_HINT = new StringLangConfigEntry("menu.recipe_editor.icon.slot_id.input_hint");
     public static final StringLangConfigEntry MENU_RECIPE_EDITOR_ICON_UNLOCK = new StringLangConfigEntry("menu.recipe_editor.icon.unlock");
+    public static final StringListLangConfigEntry MENU_RECIPE_EDITOR_ICON_COOKING_ELEMENT_LORE = new StringListLangConfigEntry("menu.recipe_editor.icon.cooking_element.lore");
     public static final StringLangConfigEntry ARCENCIEL_NOT_ENOUGH_PARAM = new StringLangConfigEntry("arcenciel.not_enough_param");
     public static final StringLangConfigEntry ARCENCIEL_UNKNOWN_TOKEN = new StringLangConfigEntry("arcenciel.unknown_token");
     public static final StringLangConfigEntry LOAD_FINISH = new StringLangConfigEntry("load.finish");

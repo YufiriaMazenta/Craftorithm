@@ -1,5 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.menu.editor;
 
+import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.impl.CookingRecipeRegistry;
@@ -7,13 +8,17 @@ import crypticlib.config.ConfigWrapper;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.display.MenuLayout;
+import crypticlib.util.ItemUtil;
 import org.apache.commons.lang.Validate;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Consumer;
 
 public class CookingRecipeGroupEditor extends UnlockableRecipeGroupEditor {
 
@@ -22,24 +27,44 @@ public class CookingRecipeGroupEditor extends UnlockableRecipeGroupEditor {
     public CookingRecipeGroupEditor(@NotNull Player player, @NotNull RecipeGroup recipeGroup) {
         super(player, recipeGroup);
         loadCookingRecipeInfoList();
+        loadElements();
         setDisplay(
             new MenuDisplay(
                 title,
                 new MenuLayout(
                     Arrays.asList(
                         "ABCDEFGHI",
-                        "#########"
+                        "%%%%%%%%%",
+                        "X#######Y"
                     ),
                     () -> {
                         Map<Character, Icon> layoutMap = new HashMap<>();
                         layoutMap.put('A', getSortIdEditIcon(0));
                         layoutMap.put('B', getUnlockIcon());
+                        layoutMap.put('#', getFrameIcon());
+                        layoutMap.put('X', getPreviousIcon());
+                        layoutMap.put('Y', getNextIcon());
                         return layoutMap;
                     }
                 )
             )
         );
         //TODO 烧炼配方编辑，考虑到可能会有多个配方，逻辑可能有问题
+    }
+
+    private void loadElements() {
+        List<Icon> elements = new ArrayList<>();
+        for (CookingRecipeInfo recipeInfo : cookingRecipeInfoList) {
+            Icon icon = new Icon(
+                recipeInfo.ingredient,
+                event -> {
+
+                }
+            );
+//            ItemUtil.setDisplayName(icon.display());
+            //TODO
+        }
+        setElements(elements);
     }
 
     private void loadCookingRecipeInfoList() {
@@ -80,6 +105,32 @@ public class CookingRecipeGroupEditor extends UnlockableRecipeGroupEditor {
             ItemStack ingredient = ItemManager.INSTANCE.matchItem(Objects.requireNonNull(configWrapper.config().getString("source.item")));
             cookingRecipeInfoList.add(new CookingRecipeInfo(time, exp, ingredient, cookingBlock));
         }
+    }
+
+    protected class CookingIcon extends Icon {
+
+        private CookingRecipeInfo cookingRecipeInfo;
+
+        public CookingIcon(@NotNull ItemStack display, Consumer<InventoryClickEvent> clickConsumer, CookingRecipeInfo cookingRecipeInfo) {
+            super(display, clickConsumer);
+            this.cookingRecipeInfo = cookingRecipeInfo;
+            List<String> lore = new ArrayList<>(Languages.MENU_RECIPE_EDITOR_ICON_COOKING_ELEMENT_LORE.value(player));
+            lore.replaceAll(it -> it
+                .replace("<time>", cookingRecipeInfo.cookingTime + "")
+                .replace("<exp>", cookingRecipeInfo.exp + "")
+            );
+            ItemUtil.setLore(display(), lore);
+        }
+
+        public CookingRecipeInfo cookingRecipeInfo() {
+            return cookingRecipeInfo;
+        }
+
+        public CookingIcon setCookingRecipeInfo(CookingRecipeInfo cookingRecipeInfo) {
+            this.cookingRecipeInfo = cookingRecipeInfo;
+            return this;
+        }
+
     }
 
     protected class CookingRecipeInfo {
