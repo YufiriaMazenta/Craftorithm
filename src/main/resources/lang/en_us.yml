@@ -104,6 +104,9 @@ menu:
   recipe_editor:
     title: '&3&lEdit Recipe: &b&l<recipe_name>'
     icon:
+      frame: ''
+      next: '&aNext Page'
+      previous: '&aPrevious Page'
       slot_id:
         name: '&aSort id: <id>'
         lore:
@@ -111,7 +114,14 @@ menu:
           - '&3Click to modify sort id'
         input_hint: '&aPlease enter sort id. Type "cancel" to cancel'
       unlock: '&aUnlock Recipe for Player: <unlock>'
-
+      cooking_element:
+        lore:
+          - ''
+          - '&3Smelting Time: <time>'
+          - '&3Experience Reward: <exp>'
+          - ''
+          - '&aLeft click to modify smelting time'
+          - '&aRight click to modify experience reward'
 recipe_type_name:
   shaped: Shaped
   shapeless: Shapeless

@@ -11,6 +11,7 @@ import crypticlib.conversation.NumberPrompt;
 import crypticlib.conversation.Prompt;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.menu.Menu;
+import crypticlib.ui.menu.MultipageMenu;
 import crypticlib.util.ItemUtil;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.apache.commons.lang.Validate;
@@ -22,14 +23,16 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
-public abstract class RecipeGroupEditor extends Menu {
+public abstract class RecipeGroupEditor extends MultipageMenu {
 
     protected RecipeGroup recipeGroup;
     protected String title;
     protected int sortId;
+    protected final Character ELEMENT_KEY = '%';
 
     protected RecipeGroupEditor(@NotNull Player player, @NotNull RecipeGroup recipeGroup) {
         super(player);
+        setElementKey(ELEMENT_KEY);
         Validate.notNull(recipeGroup);
         this.recipeGroup = recipeGroup;
         this.title = Languages.MENU_RECIPE_EDITOR_TITLE.value(player).replace("<recipe_name>", recipeGroup.groupName());
@@ -122,6 +125,18 @@ public abstract class RecipeGroupEditor extends Menu {
             return this;
         }
 
+    }
+
+    public Icon getFrameIcon() {
+        return new Icon(Material.LIGHT_GRAY_STAINED_GLASS_PANE, Languages.MENU_RECIPE_EDITOR_ICON_FRAME.value(player));
+    }
+
+    public Icon getNextIcon() {
+        return new Icon(Material.PAPER, Languages.MENU_RECIPE_EDITOR_ICON_NEXT.value(player), event -> nextPage());
+    }
+
+    public Icon getPreviousIcon() {
+        return new Icon(Material.PAPER, Languages.MENU_RECIPE_EDITOR_ICON_PREVIOUS.value(player), event -> previousPage());
     }
 
 }
