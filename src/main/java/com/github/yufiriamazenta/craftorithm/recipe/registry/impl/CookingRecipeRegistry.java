@@ -3,6 +3,7 @@ package com.github.yufiriamazenta.craftorithm.recipe.registry.impl;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.*;
 import org.jetbrains.annotations.NotNull;
@@ -90,10 +91,21 @@ public class CookingRecipeRegistry extends RecipeRegistry {
     }
 
     public enum CookingBlock {
-        FURNACE,
-        BLAST_FURNACE,
-        SMOKER,
-        CAMPFIRE
+        FURNACE(Material.FURNACE),
+        BLAST_FURNACE(Material.BLAST_FURNACE),
+        SMOKER(Material.SMOKER),
+        CAMPFIRE(Material.CAMPFIRE);
+
+        private final Material blockMaterial;
+
+        CookingBlock(Material blockMaterial) {
+            this.blockMaterial = blockMaterial;
+        }
+
+        public Material blockMaterial() {
+            return blockMaterial;
+        }
+
     }
 
 

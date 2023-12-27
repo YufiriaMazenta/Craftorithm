@@ -117,7 +117,8 @@ menu:
       cooking_element:
         lore:
           - ''
-          - '&3Smelting Time: <time>'
+          - '&3Ingredient: <ingredient>'
+          - '&3Smelting Time: <time> tick'
           - '&3Experience Reward: <exp>'
           - ''
           - '&aLeft click to modify smelting time'

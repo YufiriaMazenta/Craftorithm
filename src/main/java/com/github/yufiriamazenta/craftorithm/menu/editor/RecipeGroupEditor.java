@@ -128,7 +128,7 @@ public abstract class RecipeGroupEditor extends MultipageMenu {
     }
 
     public Icon getFrameIcon() {
-        return new Icon(Material.LIGHT_GRAY_STAINED_GLASS_PANE, Languages.MENU_RECIPE_EDITOR_ICON_FRAME.value(player));
+        return new Icon(Material.BLACK_STAINED_GLASS_PANE, Languages.MENU_RECIPE_EDITOR_ICON_FRAME.value(player));
     }
 
     public Icon getNextIcon() {

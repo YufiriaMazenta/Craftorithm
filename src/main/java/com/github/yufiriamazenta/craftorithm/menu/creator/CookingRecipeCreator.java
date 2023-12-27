@@ -248,15 +248,15 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
         @Override
         public @Nullable Prompt acceptValidatedInput(@NotNull Map<Object, Object> data, @NotNull Number number) {
             cookingTime = number.intValue();
-            player.openInventory(openedInventory());
             updateCookingTimeIcon();
+            openMenu();
             inConversation = false;
             return null;
         }
 
         @Override
         public @NotNull BaseComponent promptText(@NotNull Map<Object, Object> data) {
-            return TextProcessor.toComponent(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_INPUT_HINT.value(player));
+            return TextProcessor.toComponent(TextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_INPUT_HINT.value(player)));
         }
     }
 
@@ -264,15 +264,15 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
         @Override
         public @Nullable Prompt acceptValidatedInput(@NotNull Map<Object, Object> data, @NotNull Number number) {
             exp = number.intValue();
-            player.openInventory(openedInventory());
             updateExpIcon();
+            openMenu();
             inConversation = false;
             return null;
         }
 
         @Override
         public @NotNull BaseComponent promptText(@NotNull Map<Object, Object> data) {
-            return TextProcessor.toComponent(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_INPUT_HINT.value(player));
+            return TextProcessor.toComponent(TextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_INPUT_HINT.value(player)));
         }
     }
 

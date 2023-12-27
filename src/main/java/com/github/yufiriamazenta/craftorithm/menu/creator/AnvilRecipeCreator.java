@@ -173,7 +173,7 @@ public class AnvilRecipeCreator extends RecipeCreator {
 
         @Override
         public @NotNull BaseComponent promptText(@NotNull Map<Object, Object> data) {
-            return TextProcessor.toComponent(Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_INPUT_HINT.value(player));
+            return TextProcessor.toComponent(TextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_INPUT_HINT.value(player)));
         }
     }
 
