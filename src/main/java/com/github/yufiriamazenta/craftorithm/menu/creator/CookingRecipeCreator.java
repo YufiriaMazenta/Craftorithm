@@ -16,7 +16,6 @@ import crypticlib.ui.display.MenuLayout;
 import crypticlib.ui.menu.StoredMenu;
 import crypticlib.util.ItemUtil;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -190,7 +189,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
                 Conversation timeInputConversation = new Conversation(
                     Craftorithm.instance(),
                     player,
-                    new CookingTimePrompt(),
+                    new TimeInputPrompt(),
                     data -> player.openInventory(openedInventory())
                 );
                 inConversation = true;
@@ -210,7 +209,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
                 Conversation conversation = new Conversation(
                     Craftorithm.instance(),
                     player,
-                    new ExpPrompt(),
+                    new ExpInputPrompt(),
                     data -> player.openInventory(openedInventory())
                 );
                 inConversation = true;
@@ -243,7 +242,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
         ));
     }
 
-    class CookingTimePrompt implements NumberPrompt {
+    class TimeInputPrompt implements NumberPrompt {
 
         @Override
         public @Nullable Prompt acceptValidatedInput(@NotNull Map<Object, Object> data, @NotNull Number number) {
@@ -260,7 +259,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
         }
     }
 
-    class ExpPrompt implements NumberPrompt {
+    class ExpInputPrompt implements NumberPrompt {
         @Override
         public @Nullable Prompt acceptValidatedInput(@NotNull Map<Object, Object> data, @NotNull Number number) {
             exp = number.intValue();

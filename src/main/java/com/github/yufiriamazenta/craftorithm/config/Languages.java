@@ -88,6 +88,10 @@ public class Languages {
     public static final StringListLangConfigEntry MENU_RECIPE_EDITOR_ICON_COOKING_ELEMENT_LORE = new StringListLangConfigEntry("menu.recipe_editor.icon.cooking_element.lore");
     public static final StringLangConfigEntry MENU_RECIPE_EDITOR_ICON_COOKING_ELEMENT_INPUT_COOKING_TIME_HINT = new StringLangConfigEntry("menu.recipe_editor.icon.cooking_element.input_cooking_time_hint");
     public static final StringLangConfigEntry MENU_RECIPE_EDITOR_ICON_COOKING_ELEMENT_INPUT_COOKING_EXP_HINT = new StringLangConfigEntry("menu.recipe_editor.icon.cooking_element.input_cooking_exp_hint");
+    public static final StringLangConfigEntry MENU_RECIPE_EDITOR_ICON_COOKING_ELEMENT_TYPE_NAME_FURNACE = new StringLangConfigEntry("menu.recipe_editor.icon.cooking_element.type_name.furnace");
+    public static final StringLangConfigEntry MENU_RECIPE_EDITOR_ICON_COOKING_ELEMENT_TYPE_NAME_BLAST_FURNACE = new StringLangConfigEntry("menu.recipe_editor.icon.cooking_element.type_name.blast_furnace");
+    public static final StringLangConfigEntry MENU_RECIPE_EDITOR_ICON_COOKING_ELEMENT_TYPE_NAME_SMOKER = new StringLangConfigEntry("menu.recipe_editor.icon.cooking_element.type_name.smoker");
+    public static final StringLangConfigEntry MENU_RECIPE_EDITOR_ICON_COOKING_ELEMENT_TYPE_NAME_CAMPFIRE = new StringLangConfigEntry("menu.recipe_editor.icon.cooking_element.type_name.campfire");
     public static final StringLangConfigEntry ARCENCIEL_NOT_ENOUGH_PARAM = new StringLangConfigEntry("arcenciel.not_enough_param");
     public static final StringLangConfigEntry ARCENCIEL_UNKNOWN_TOKEN = new StringLangConfigEntry("arcenciel.unknown_token");
     public static final StringLangConfigEntry LOAD_FINISH = new StringLangConfigEntry("load.finish");
