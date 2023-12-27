@@ -6,6 +6,7 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import crypticlib.chat.TextProcessor;
+import crypticlib.function.TernaryFunction;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.menu.Menu;
 import crypticlib.util.ItemUtil;
@@ -29,7 +30,7 @@ public class RecipeGroupListMenu extends Menu {
     private int page;
     private final int maxPage;
     private final List<Map.Entry<String, ItemStack>> recipeGroupResultList;
-    private final Map<RecipeType, BiFunction<Player, RecipeGroup, RecipeGroupEditor>> recipeGroupEditorMap;
+    private final Map<RecipeType, TernaryFunction<Player, RecipeGroup, Menu, RecipeGroupEditor>> recipeGroupEditorMap;
 
     public RecipeGroupListMenu(Player player) {
         super(player);
@@ -142,17 +143,24 @@ public class RecipeGroupListMenu extends Menu {
                         return;
                     }
                     RecipeGroup recipeGroup = RecipeManager.INSTANCE.getRecipeGroup(recipeGroupName);
-                    recipeGroupEditorMap.getOrDefault(recipeGroup.recipeType(), (player, group) -> {
+                    if (recipeGroup == null) {
+                        throw new IllegalArgumentException("Can not find recipe group " + recipeGroupName);
+                    }
+                    recipeGroupEditorMap.getOrDefault(recipeGroup.recipeType(), (player, group, parent) -> {
                         //TODO 提醒暂不支持编辑
                         throw new RuntimeException("Unknown recipe type editor");
-                    }).apply(player, recipeGroup).openMenu();
+                    }).apply(player, recipeGroup, this).openMenu();
                     break;
                 case LEFT:
                 case SHIFT_LEFT:
                 default:
+                    RecipeGroup recipeGroup1 = RecipeManager.INSTANCE.getRecipeGroup(recipeGroupName);
+                    if (recipeGroup1 == null) {
+                        throw new IllegalArgumentException("Can not find recipe group " + recipeGroupName);
+                    }
                     new RecipeListMenu(
                         (Player) event.getWhoClicked(),
-                        RecipeManager.INSTANCE.getRecipeGroup(recipeGroupName).groupRecipeKeys(),
+                        recipeGroup1.groupRecipeKeys(),
                         this
                     ).openMenu();
                     break;

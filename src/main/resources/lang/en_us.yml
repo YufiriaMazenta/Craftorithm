@@ -125,6 +125,11 @@ menu:
           - '&aRight click to modify experience reward'
         input_cooking_time_hint: '&aPlease enter smelting time in ticks. Type "cancel" to cancel.'
         input_cooking_exp_hint: '&aPlease enter experience reward. Type "cancel" to cancel.'
+        type_name:
+          furnace: '&3&lFurnace Recipe'
+          blast_furnace: '&3&lBlast Furnace Recipe'
+          smoker: '&3&lSmoker Recipe'
+          campfire: '&3&lCampfire Recipe'
 recipe_type_name:
   shaped: Shaped
   shapeless: Shapeless

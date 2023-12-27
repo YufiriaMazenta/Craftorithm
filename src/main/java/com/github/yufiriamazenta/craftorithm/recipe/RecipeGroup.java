@@ -3,6 +3,7 @@ package com.github.yufiriamazenta.craftorithm.recipe;
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import crypticlib.config.ConfigWrapper;
 import org.bukkit.NamespacedKey;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -18,15 +19,11 @@ public class RecipeGroup {
     private int sortId;
     private boolean unlock;
 
-    public RecipeGroup(String groupName, RecipeType recipeType) {
-        this(groupName, recipeType, null);
-    }
-
-    public RecipeGroup(String groupName, RecipeType recipeType, ConfigWrapper recipeGroupConfig) {
+    public RecipeGroup(@NotNull String groupName, @NotNull RecipeType recipeType, @NotNull ConfigWrapper recipeGroupConfig) {
         this(groupName, new ArrayList<>(), recipeType, recipeGroupConfig);
     }
 
-    public RecipeGroup(String groupName, List<NamespacedKey> groupRecipeKeys, RecipeType recipeType, ConfigWrapper recipeGroupConfig) {
+    public RecipeGroup(@NotNull String groupName, @NotNull List<NamespacedKey> groupRecipeKeys, @NotNull RecipeType recipeType, @NotNull ConfigWrapper recipeGroupConfig) {
         this.groupName = groupName;
         this.groupRecipeKeys.addAll(groupRecipeKeys);
         this.recipeType = recipeType;
@@ -88,7 +85,7 @@ public class RecipeGroup {
         return this;
     }
 
-    public @Nullable ConfigWrapper recipeGroupConfig() {
+    public @NotNull ConfigWrapper recipeGroupConfig() {
         return recipeGroupConfig;
     }
 

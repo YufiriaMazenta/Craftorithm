@@ -176,7 +176,7 @@ public enum RecipeManager {
             pluginRecipeMap.put(recipeType, new ConcurrentHashMap<>());
         Map<String, RecipeGroup> recipeGroupMap = pluginRecipeMap.get(recipeType);
         if (!recipeGroupMap.containsKey(recipeGroupName))
-            recipeGroupMap.put(recipeGroupName, new RecipeGroup(recipeGroupName, recipeType));
+            throw new IllegalArgumentException("Can not find recipe group " + recipeGroupName + ", use addRecipeGroup() method to add recipe group.");
         RecipeGroup recipeGroup = recipeGroupMap.get(recipeGroupName);
         recipeGroup.addRecipeKey(getRecipeKey(recipe));
         recipeRegisterMap.getOrDefault(recipeType, recipe1 -> {
@@ -247,7 +247,7 @@ public enum RecipeManager {
                     return false;
                 recipeRemoverMap.get(recipeType).accept(recipeGroup.groupRecipeKeys());
                 ConfigWrapper recipeConfig = recipeGroupMap.get(recipeGroupName).recipeGroupConfig();
-                if (recipeConfig != null && deleteFile) {
+                if (deleteFile) {
                     recipeConfig.configFile().delete();
                 }
                 recipeGroupMap.remove(recipeGroupName);
@@ -321,7 +321,7 @@ public enum RecipeManager {
         return getRecipeGroups().contains(recipeName);
     }
 
-    @NotNull
+    @Nullable
     public RecipeGroup getRecipeGroup(String groupName) {
         for (Map.Entry<RecipeType, Map<String, RecipeGroup>> recipeTypeMapEntry : pluginRecipeMap.entrySet()) {
             Map<String, RecipeGroup> recipeGroupMap = recipeTypeMapEntry.getValue();
@@ -329,7 +329,7 @@ public enum RecipeManager {
                 return recipeGroupMap.get(groupName);
             }
         }
-        return new RecipeGroup(groupName, RecipeType.SHAPED);
+        return null;
     }
 
     public YamlConfiguration getRecipeConfig(NamespacedKey recipeKey) {

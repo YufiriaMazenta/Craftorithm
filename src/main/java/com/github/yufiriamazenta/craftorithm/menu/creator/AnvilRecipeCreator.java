@@ -16,7 +16,6 @@ import crypticlib.ui.display.MenuLayout;
 import crypticlib.ui.menu.StoredMenu;
 import crypticlib.util.ItemUtil;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -138,7 +137,7 @@ public class AnvilRecipeCreator extends RecipeCreator {
                 Conversation conversation = new Conversation(
                     Craftorithm.instance(),
                     player,
-                    new CostLevelPrompt(),
+                    new CostLevelInputPrompt(),
                     data -> player.openInventory(openedInventory())
                 );
                 inConversation = true;
@@ -160,7 +159,7 @@ public class AnvilRecipeCreator extends RecipeCreator {
         );
     }
 
-    class CostLevelPrompt implements NumberPrompt {
+    class CostLevelInputPrompt implements NumberPrompt {
         @Override
         @Nullable
         public Prompt acceptValidatedInput(@NotNull Map<Object, Object> data, @NotNull Number number) {

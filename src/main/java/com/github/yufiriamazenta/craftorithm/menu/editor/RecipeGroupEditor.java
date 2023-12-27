@@ -2,8 +2,10 @@ package com.github.yufiriamazenta.craftorithm.menu.editor;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
+import com.github.yufiriamazenta.craftorithm.menu.display.RecipeGroupListMenu;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
+import crypticlib.CrypticLib;
 import crypticlib.chat.TextProcessor;
 import crypticlib.config.ConfigWrapper;
 import crypticlib.conversation.Conversation;
@@ -17,25 +19,32 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 public abstract class RecipeGroupEditor extends MultipageMenu {
 
     protected RecipeGroup recipeGroup;
+    protected Menu parent;
     protected String title;
     protected int sortId;
     protected final Character ELEMENT_KEY = '%';
+    protected boolean inConversation = false;
 
-    protected RecipeGroupEditor(@NotNull Player player, @NotNull RecipeGroup recipeGroup) {
+    protected RecipeGroupEditor(@NotNull Player player, @NotNull RecipeGroup recipeGroup, Menu parent) {
         super(player);
         setElementKey(ELEMENT_KEY);
         Validate.notNull(recipeGroup);
         this.recipeGroup = recipeGroup;
         this.title = Languages.MENU_RECIPE_EDITOR_TITLE.value(player).replace("<recipe_name>", recipeGroup.groupName());
+        this.parent = parent;
     }
 
     public RecipeGroup recipeGroup() {
@@ -77,6 +86,7 @@ public abstract class RecipeGroupEditor extends MultipageMenu {
                     player,
                     new SortIdEditPrompt(event.getInventory().getItem(slot))
                 ).start();
+                inConversation = true;
                 player.closeInventory();
             }
         );
@@ -89,6 +99,33 @@ public abstract class RecipeGroupEditor extends MultipageMenu {
                 .value(player)
                 .replace("<id>", RecipeManager.INSTANCE.getRecipeGroupSortId(recipeGroup.groupName()) + ""))
         );
+    }
+
+    @Override
+    public void onClose(InventoryCloseEvent event) {
+        if (inConversation)
+            return;
+        if (parent != null) {
+            CrypticLib.platform().scheduler().runTask(
+                Craftorithm.instance(),
+                () -> {
+                    InventoryType type = event.getPlayer().getOpenInventory().getType();
+                    List<InventoryType> typeWhenNotOpenInv = Arrays.asList(InventoryType.CRAFTING, InventoryType.CREATIVE);
+                    if (!typeWhenNotOpenInv.contains(type))
+                        return;
+                    parent.openMenu();
+                }
+            );
+        }
+    }
+
+    public Menu parent() {
+        return parent;
+    }
+
+    public RecipeGroupEditor setParent(Menu parent) {
+        this.parent = parent;
+        return this;
     }
 
     protected class SortIdEditPrompt implements NumberPrompt {
@@ -108,6 +145,7 @@ public abstract class RecipeGroupEditor extends MultipageMenu {
             configWrapper.saveConfig();
             updateSortIdEditIcon(sortIdEditIconDisplay);
             openMenu();
+            inConversation = false;
             return null;
         }
 
