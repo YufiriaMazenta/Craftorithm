@@ -117,17 +117,22 @@ public enum RecipeManager {
     private void loadRecipes() {
         for (Map.Entry<RecipeType, Map<String, RecipeGroup>> pluginRecipeMapEntry : pluginRecipeMap.entrySet()) {
             Map<String, RecipeGroup> recipeGroupMap = pluginRecipeMapEntry.getValue();
-            recipeGroupMap.forEach((recipeGroupName, recipeGroup) -> {
-                try {
-                    YamlConfiguration config = recipeGroup.recipeGroupConfig().config();
-                    for (RecipeRegistry recipeRegistry : RecipeFactory.newRecipeRegistry(config, recipeGroupName)) {
-                        recipeRegistry.register();
-                    }
-                } catch (Throwable throwable) {
-                    LangUtil.info(Languages.LOAD_RECIPE_LOAD_EXCEPTION, CollectionsUtil.newStringHashMap("<recipe_name>", recipeGroupName));
-                    throwable.printStackTrace();
-                }
-            });
+            recipeGroupMap.forEach((recipeGroupName, recipeGroup) -> loadRecipeGroup(recipeGroup));
+        }
+    }
+
+    public void loadRecipeGroup(RecipeGroup recipeGroup) {
+        try {
+            YamlConfiguration config = recipeGroup.recipeGroupConfig().config();
+            for (RecipeRegistry recipeRegistry : RecipeFactory.newRecipeRegistry(config, recipeGroup.groupName())) {
+                recipeRegistry.register();
+            }
+            if (!hasCraftorithmRecipe(recipeGroup.groupName())) {
+                addRecipeGroup(recipeGroup);
+            }
+        } catch (Throwable throwable) {
+            LangUtil.info(Languages.LOAD_RECIPE_LOAD_EXCEPTION, CollectionsUtil.newStringHashMap("<recipe_name>", recipeGroup.groupName()));
+            throwable.printStackTrace();
         }
     }
 

@@ -5,7 +5,9 @@ import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.item.impl.CraftorithmItemProvider;
 import crypticlib.chat.TextProcessor;
 import crypticlib.util.ItemUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -105,6 +107,19 @@ public class ItemUtils {
             itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             item.setItemMeta(itemMeta);
         }
+    }
+
+    public static String getItemName(ItemStack itemStack) {
+        if (itemStack == null)
+            return null;
+        if (!itemStack.hasItemMeta()) {
+            return itemStack.getType().getKey().toString();
+        }
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        if (itemMeta.hasDisplayName()) {
+            return itemMeta.getDisplayName();
+        }
+        return itemStack.getType().getKey().toString();
     }
 
 }
