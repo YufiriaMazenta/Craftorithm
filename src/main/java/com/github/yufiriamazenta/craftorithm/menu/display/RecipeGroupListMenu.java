@@ -67,6 +67,7 @@ public class RecipeGroupListMenu extends Menu {
         recipeGroupEditorMap.put(RecipeType.SMITHING, SmithingRecipeGroupEditor::new);
         recipeGroupEditorMap.put(RecipeType.ANVIL, AnvilRecipeGroupEditor::new);
         recipeGroupEditorMap.put(RecipeType.POTION, PotionMixGroupEditor::new);
+        recipeGroupEditorMap.put(RecipeType.STONE_CUTTING, StoneCuttingRecipeGroupEditor::new);
     }
 
     @NotNull

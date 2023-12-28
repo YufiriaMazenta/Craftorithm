@@ -97,12 +97,14 @@ public enum AnvilHandler implements Listener {
         event.setCancelled(true);
         int canCraftNum = Math.min(baseNum / needBaseNum, additionNum / needAdditionNum);
         canCraftNum = Math.min(result.getMaxStackSize(), canCraftNum);
+        boolean craftResult = false;
         switch (event.getClick()) {
             case LEFT:
             case RIGHT:
             case DOUBLE_CLICK:
-                if (player.getLevel() < costLevel)
-                    return;
+                if (player.getLevel() < costLevel) {
+                    break;
+                }
                 ItemStack cursor = event.getCursor();
                 if (ItemUtil.isAir(cursor)) {
                     base.setAmount(baseNum - needBaseNum);
@@ -118,6 +120,7 @@ public enum AnvilHandler implements Listener {
                     event.getView().getCursor().setAmount(resultCursor);
                     player.setLevel(player.getLevel() - costLevel);
                 }
+                craftResult = true;
                 break;
             case SHIFT_LEFT:
             case SHIFT_RIGHT:
@@ -136,6 +139,7 @@ public enum AnvilHandler implements Listener {
                 for (ItemStack value : failedItems.values()) {
                     player.getWorld().dropItem(event.getWhoClicked().getLocation(), value);
                 }
+                craftResult = true;
                 break;
             case DROP:
                 if (player.getLevel() < costLevel)
@@ -144,6 +148,7 @@ public enum AnvilHandler implements Listener {
                 addition.setAmount(additionNum - needAdditionNum);
                 player.setLevel(player.getLevel() - costLevel);
                 player.getWorld().dropItem(event.getWhoClicked().getLocation(), result);
+                craftResult = true;
                 break;
             case CONTROL_DROP:
                 int costAmount11 = needBaseNum * canCraftNum;
@@ -156,16 +161,19 @@ public enum AnvilHandler implements Listener {
                 result.setAmount(canCraftNum * result.getAmount());
                 player.setLevel(player.getLevel() - finalCostLevel2);
                 player.getWorld().dropItem(event.getWhoClicked().getLocation(), result);
+                craftResult = true;
                 break;
             default:
                 break;
         }
 
         //执行动作
-        YamlConfiguration config = RecipeManager.INSTANCE.getRecipeConfig(anvilRecipe.key());
-        if (config != null) {
-            List<String> actions = config.getStringList("actions");
-            CraftorithmAPI.INSTANCE.arcencielDispatcher().dispatchArcencielFunc(player, actions);
+        if (craftResult) {
+            YamlConfiguration config = RecipeManager.INSTANCE.getRecipeConfig(anvilRecipe.key());
+            if (config != null) {
+                List<String> actions = config.getStringList("actions");
+                CraftorithmAPI.INSTANCE.arcencielDispatcher().dispatchArcencielFunc(player, actions);
+            }
         }
 
         //更新页面

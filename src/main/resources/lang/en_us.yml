@@ -108,7 +108,7 @@ menu:
       next: '&aNext Page'
       previous: '&aPrevious Page'
       slot_id:
-        name: '&aSort id: <id>'
+        name: '&3Sort id: &a<id>'
         lore:
           - ''
           - '&3Click to modify sort id'
@@ -117,9 +117,9 @@ menu:
       cooking_element:
         lore:
           - ''
-          - '&3Ingredient: <ingredient>'
-          - '&3Smelting Time: <time> tick'
-          - '&3Experience Reward: <exp>'
+          - '&3Ingredient: &a<ingredient>'
+          - '&3Smelting Time: &l<time> tick'
+          - '&3Experience Reward: &l<exp>'
           - ''
           - '&aLeft click to modify smelting time'
           - '&aRight click to modify experience reward'
@@ -130,6 +130,15 @@ menu:
           blast_furnace: '&3&lBlast Furnace Recipe'
           smoker: '&3&lSmoker Recipe'
           campfire: '&3&lCampfire Recipe'
+      anvil_element:
+        lore:
+          - ''
+          - '&3Cost Level: &a<level>'
+          - '&3Preserve Item NBT: &a<enable>'
+          - ''
+          - '&aLeft click to modify cost level'
+          - '&aRight click to toggle preserve item nbt'
+        input_hint: '&aPlease enter cost level. Type "cancel" to cancel'
 recipe_type_name:
   shaped: Shaped
   shapeless: Shapeless
