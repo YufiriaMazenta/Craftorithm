@@ -4,11 +4,9 @@ import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.impl.CookingRecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import crypticlib.chat.TextProcessor;
-import crypticlib.config.ConfigWrapper;
 import crypticlib.conversation.Conversation;
 import crypticlib.conversation.NumberPrompt;
 import crypticlib.conversation.Prompt;
@@ -18,8 +16,6 @@ import crypticlib.ui.display.MenuLayout;
 import crypticlib.ui.menu.Menu;
 import crypticlib.util.ItemUtil;
 import net.md_5.bungee.api.chat.BaseComponent;
-import org.apache.commons.lang.Validate;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -27,11 +23,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class CookingRecipeGroupEditor extends UnlockableRecipeGroupEditor {
 
-    private final List<CookingRecipeSource> cookingRecipeSourceList = new CopyOnWriteArrayList<>();
+    private final List<CookingRecipeSource> cookingRecipeSourceList = new ArrayList<>();
 
     public CookingRecipeGroupEditor(@NotNull Player player, @NotNull RecipeGroup recipeGroup, Menu parent) {
         super(player, recipeGroup, parent);
@@ -64,25 +59,7 @@ public class CookingRecipeGroupEditor extends UnlockableRecipeGroupEditor {
         List<Icon> elements = new ArrayList<>();
         for (int i = 0; i < cookingRecipeSourceList.size(); i++) {
             CookingRecipeSource cookingRecipeSource = cookingRecipeSourceList.get(i);
-            String block;
-            switch (cookingRecipeSource.cookingBlock) {
-                case FURNACE:
-                default:
-                    block = Languages.MENU_RECIPE_EDITOR_ICON_COOKING_ELEMENT_TYPE_NAME_FURNACE.value(player);
-                    break;
-                case BLAST_FURNACE:
-                    block = Languages.MENU_RECIPE_EDITOR_ICON_COOKING_ELEMENT_TYPE_NAME_BLAST_FURNACE.value(player);
-                    break;
-                case SMOKER:
-                    block = Languages.MENU_RECIPE_EDITOR_ICON_COOKING_ELEMENT_TYPE_NAME_SMOKER.value(player);
-                    break;
-                case CAMPFIRE:
-                    block = Languages.MENU_RECIPE_EDITOR_ICON_COOKING_ELEMENT_TYPE_NAME_CAMPFIRE.value(player);
-                    break;
-            }
-            Icon icon = new CookingEditorIcon(
-                cookingRecipeSource.cookingBlock.blockMaterial(),
-                TextProcessor.color(block),
+            Icon icon = new CookingSourceIcon(
                 i,
                 cookingRecipeSource);
             elements.add(icon);
@@ -92,66 +69,66 @@ public class CookingRecipeGroupEditor extends UnlockableRecipeGroupEditor {
 
     private void loadCookingRecipeInfoList() {
         cookingRecipeSourceList.clear();
-        ConfigWrapper configWrapper = recipeGroup.recipeGroupConfig();
-        Validate.notNull(configWrapper);
-        if (configWrapper.config().isList("source")) {
-            for (Map<?, ?> map : configWrapper.config().getMapList("source")) {
+        YamlConfiguration config = recipeGroup.recipeGroupConfig().config();
+        if (config.isList("source")) {
+            for (Map<?, ?> map : config.getMapList("source")) {
                 CookingRecipeRegistry.CookingBlock cookingBlock = CookingRecipeRegistry.CookingBlock.valueOf(map.get("block").toString().toUpperCase());
                 float exp;
                 if (map.containsKey("exp")) {
                     exp = Float.parseFloat(String.valueOf(map.get("exp")));
                 } else {
-                    if (configWrapper.contains("exp")) {
-                        exp = (float) configWrapper.config().getDouble("exp");
-                    }
-                    else {
-                        exp = 0;
-                    }
+                    exp = config.contains("exp") ? (float) config.getDouble("exp") : 0;
                 }
                 int time;
                 if (map.containsKey("time")) {
                     time = (int) map.get("time");
                 } else {
-                    if (configWrapper.contains("time")) {
-                        time = configWrapper.config().getInt("time");
-                    } else {
-                        time = 200;
-                    }
+                    time = config.contains("time") ? config.getInt("time") : 200;
                 }
                 ItemStack ingredient = ItemManager.INSTANCE.matchItem(map.get("item").toString());
                 ingredient.setAmount(1);
                 cookingRecipeSourceList.add(new CookingRecipeSource(time, exp, ingredient, cookingBlock));
             }
         } else {
-            CookingRecipeRegistry.CookingBlock cookingBlock = CookingRecipeRegistry.CookingBlock.valueOf(configWrapper.config().getString("source.block").toUpperCase());
-            float exp = (float) configWrapper.config().getDouble("exp");
-            int time = configWrapper.config().getInt("time");
-            ItemStack ingredient = ItemManager.INSTANCE.matchItem(Objects.requireNonNull(configWrapper.config().getString("source.item")));
+            CookingRecipeRegistry.CookingBlock cookingBlock = CookingRecipeRegistry.CookingBlock.valueOf(config.getString("source.block", "furnace").toUpperCase());
+            float exp = (float) config.getDouble("source.exp", config.getInt("exp", 0));
+            int time = config.getInt("source.time", config.getInt("time", 200));
+            ItemStack ingredient = ItemManager.INSTANCE.matchItem(Objects.requireNonNull(config.getString("source.item")));
             cookingRecipeSourceList.add(new CookingRecipeSource(time, exp, ingredient, cookingBlock));
         }
     }
 
-    protected void updateCookingIcon(CookingEditorIcon cookingEditorIcon, CookingRecipeSource cookingRecipeSource) {
+    protected void updateCookingIcon(CookingSourceIcon cookingSourceIcon, CookingRecipeSource cookingRecipeSource) {
         List<String> lore = new ArrayList<>(Languages.MENU_RECIPE_EDITOR_ICON_COOKING_ELEMENT_LORE.value(player));
         lore.replaceAll(it -> it
             .replace("<time>", cookingRecipeSource.cookingTime + "")
             .replace("<exp>", cookingRecipeSource.exp + "")
             .replace("<ingredient>", ItemUtils.getItemName(cookingRecipeSource.ingredient))
         );
-        ItemUtil.setLore(cookingEditorIcon.display(), lore);
+        ItemUtil.setLore(cookingSourceIcon.display(), lore);
     }
 
-    protected void reloadCookingRecipe() {
-        RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeGroup().groupName(), false);
-        RecipeManager.INSTANCE.addRecipeGroup(recipeGroup);
-        RecipeManager.INSTANCE.loadRecipeGroup(recipeGroup);
-    }
+    public class CookingSourceIcon extends Icon {
 
-    public class CookingEditorIcon extends Icon {
-
-        public CookingEditorIcon(@NotNull Material material, String name, int sourceIndex, CookingRecipeSource cookingRecipeSource) {
-            super(material, name);
+        public CookingSourceIcon(int sourceIndex, CookingRecipeSource cookingRecipeSource) {
+            super(cookingRecipeSource.cookingBlock.blockMaterial());
             updateCookingIcon(this, cookingRecipeSource);
+            switch (cookingRecipeSource.cookingBlock) {
+                case FURNACE:
+                default:
+                    setName(Languages.MENU_RECIPE_EDITOR_ICON_COOKING_ELEMENT_TYPE_NAME_FURNACE.value(player));
+                    break;
+                case BLAST_FURNACE:
+                    setName(Languages.MENU_RECIPE_EDITOR_ICON_COOKING_ELEMENT_TYPE_NAME_BLAST_FURNACE.value(player));
+                    break;
+                case SMOKER:
+                    setName(Languages.MENU_RECIPE_EDITOR_ICON_COOKING_ELEMENT_TYPE_NAME_SMOKER.value(player));
+                    break;
+                case CAMPFIRE:
+                    setName(Languages.MENU_RECIPE_EDITOR_ICON_COOKING_ELEMENT_TYPE_NAME_CAMPFIRE.value(player));
+                    break;
+            }
+
             setClickAction(event -> {
                 switch (event.getClick()) {
                     case LEFT:
@@ -159,7 +136,8 @@ public class CookingRecipeGroupEditor extends UnlockableRecipeGroupEditor {
                         new Conversation(
                             Craftorithm.instance(),
                             player,
-                            new TimeInputPrompt(sourceIndex, this)
+                            new TimeInputPrompt(sourceIndex, this),
+                            data -> openMenu()
                         ).start();
                         inConversation = true;
                         player.closeInventory();
@@ -169,7 +147,8 @@ public class CookingRecipeGroupEditor extends UnlockableRecipeGroupEditor {
                         new Conversation(
                             Craftorithm.instance(),
                             player,
-                            new ExpInputPrompt(sourceIndex, this)
+                            new ExpInputPrompt(sourceIndex, this),
+                            data -> openMenu()
                         ).start();
                         inConversation = true;
                         player.closeInventory();
@@ -186,8 +165,8 @@ public class CookingRecipeGroupEditor extends UnlockableRecipeGroupEditor {
     public static class CookingRecipeSource {
         private int cookingTime;
         private float exp;
-        private ItemStack ingredient;
-        private CookingRecipeRegistry.CookingBlock cookingBlock;
+        private final ItemStack ingredient;
+        private final CookingRecipeRegistry.CookingBlock cookingBlock;
 
         public CookingRecipeSource(int cookingTime, float exp, ItemStack ingredient, CookingRecipeRegistry.CookingBlock cookingBlock) {
             this.cookingTime = cookingTime;
@@ -196,50 +175,14 @@ public class CookingRecipeGroupEditor extends UnlockableRecipeGroupEditor {
             this.cookingBlock = cookingBlock;
         }
 
-        public int cookingTime() {
-            return cookingTime;
-        }
-
-        public CookingRecipeSource setCookingTime(int cookingTime) {
-            this.cookingTime = cookingTime;
-            return this;
-        }
-
-        public float exp() {
-            return exp;
-        }
-
-        public CookingRecipeSource setExp(float exp) {
-            this.exp = exp;
-            return this;
-        }
-
-        public ItemStack source() {
-            return ingredient;
-        }
-
-        public CookingRecipeSource setIngredient(ItemStack ingredient) {
-            this.ingredient = ingredient;
-            return this;
-        }
-
-        public CookingRecipeRegistry.CookingBlock cookingBlock() {
-            return cookingBlock;
-        }
-
-        public CookingRecipeSource setCookingBlock(CookingRecipeRegistry.CookingBlock cookingBlock) {
-            this.cookingBlock = cookingBlock;
-            return this;
-        }
-
     }
 
     class TimeInputPrompt implements NumberPrompt {
 
         private final int sourceIndex;
-        private final CookingEditorIcon cookingRecipeIcon;
+        private final CookingSourceIcon cookingRecipeIcon;
 
-        public TimeInputPrompt(int sourceIndex, CookingEditorIcon cookingRecipeIcon) {
+        public TimeInputPrompt(int sourceIndex, CookingSourceIcon cookingRecipeIcon) {
             this.sourceIndex = sourceIndex;
             this.cookingRecipeIcon = cookingRecipeIcon;
         }
@@ -254,13 +197,12 @@ public class CookingRecipeGroupEditor extends UnlockableRecipeGroupEditor {
                 source.put("time", cookingTime);
                 sourceList.set(sourceIndex, source);
                 config.set("source", sourceList);
-                recipeGroup.recipeGroupConfig().saveConfig();
             } else {
                 config.set("source.time", cookingTime);
-                recipeGroup.recipeGroupConfig().saveConfig();
             }
-            reloadCookingRecipe();
-            cookingRecipeSourceList.get(sourceIndex).setCookingTime(cookingTime);
+            recipeGroup.recipeGroupConfig().saveConfig();
+            reloadRecipeGroup();
+            cookingRecipeSourceList.get(sourceIndex).cookingTime = cookingTime;
             updateCookingIcon(cookingRecipeIcon, cookingRecipeSourceList.get(sourceIndex));
             draw(openedInventory);
             openMenu();
@@ -278,9 +220,9 @@ public class CookingRecipeGroupEditor extends UnlockableRecipeGroupEditor {
     class ExpInputPrompt implements NumberPrompt {
 
         private final int sourceIndex;
-        private final CookingEditorIcon cookingRecipeIcon;
+        private final CookingSourceIcon cookingRecipeIcon;
 
-        public ExpInputPrompt(int sourceIndex, CookingEditorIcon cookingRecipeIcon) {
+        public ExpInputPrompt(int sourceIndex, CookingSourceIcon cookingRecipeIcon) {
             this.sourceIndex = sourceIndex;
             this.cookingRecipeIcon = cookingRecipeIcon;
         }
@@ -300,8 +242,8 @@ public class CookingRecipeGroupEditor extends UnlockableRecipeGroupEditor {
                 config.set("source.exp", exp);
                 recipeGroup.recipeGroupConfig().saveConfig();
             }
-            reloadCookingRecipe();
-            cookingRecipeSourceList.get(sourceIndex).setExp(exp);
+            reloadRecipeGroup();
+            cookingRecipeSourceList.get(sourceIndex).exp = exp;
             updateCookingIcon(cookingRecipeIcon, cookingRecipeSourceList.get(sourceIndex));
             draw(openedInventory);
             openMenu();

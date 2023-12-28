@@ -210,7 +210,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
                     Craftorithm.instance(),
                     player,
                     new ExpInputPrompt(),
-                    data -> player.openInventory(openedInventory())
+                    data -> player.openInventory(openedInventory)
                 );
                 inConversation = true;
                 conversation.start();

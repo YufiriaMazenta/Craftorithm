@@ -2,7 +2,6 @@ package com.github.yufiriamazenta.craftorithm.menu.editor;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
-import com.github.yufiriamazenta.craftorithm.menu.display.RecipeGroupListMenu;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import crypticlib.CrypticLib;
@@ -84,7 +83,8 @@ public abstract class RecipeGroupEditor extends MultipageMenu {
                 new Conversation(
                     Craftorithm.instance(),
                     player,
-                    new SortIdEditPrompt(event.getInventory().getItem(slot))
+                    new SortIdInputPrompt(event.getInventory().getItem(slot)),
+                    data -> openMenu()
                 ).start();
                 inConversation = true;
                 player.closeInventory();
@@ -128,11 +128,17 @@ public abstract class RecipeGroupEditor extends MultipageMenu {
         return this;
     }
 
-    protected class SortIdEditPrompt implements NumberPrompt {
+    protected void reloadRecipeGroup() {
+        RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeGroup().groupName(), false);
+        RecipeManager.INSTANCE.addRecipeGroup(recipeGroup);
+        RecipeManager.INSTANCE.loadRecipeGroup(recipeGroup);
+    }
+
+    protected class SortIdInputPrompt implements NumberPrompt {
 
         protected ItemStack sortIdEditIconDisplay;
 
-        public SortIdEditPrompt(ItemStack sortIdEditIconDisplay) {
+        public SortIdInputPrompt(ItemStack sortIdEditIconDisplay) {
             this.sortIdEditIconDisplay = sortIdEditIconDisplay;
         }
 
@@ -158,7 +164,7 @@ public abstract class RecipeGroupEditor extends MultipageMenu {
             return sortIdEditIconDisplay;
         }
 
-        public SortIdEditPrompt setSortIdEditIconDisplay(ItemStack sortIdEditIconDisplay) {
+        public SortIdInputPrompt setSortIdEditIconDisplay(ItemStack sortIdEditIconDisplay) {
             this.sortIdEditIconDisplay = sortIdEditIconDisplay;
             return this;
         }
