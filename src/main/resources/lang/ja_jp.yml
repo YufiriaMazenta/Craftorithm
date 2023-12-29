@@ -76,13 +76,9 @@ menu:
       campfire_toggle: '&a焚き火レシピを有効にする:<enable>'
       cooking_time:
         name: '&a精錬時間: <time> tick'
-        lore:
-          - '&3クリックで精錬時間を変更する'
         input_hint: '&a精錬時間を入力してください。単位はtickです。キャンセルするにはcancelと入力してください。'
       cooking_exp:
         name: '&a経験値ドロップ量: <exp>'
-        lore:
-          - '&3クリックで経験値ドロップ量を変更する。キャンセルするにはcancelと入力してください。'
         input_hint: '&a経験値ドロップ量を入力してください'
       smithing_frame: '&a精錬アイテム'
       potion_frame: '&a醸造素材'
@@ -90,8 +86,6 @@ menu:
       anvil_copy_nbt_toggle: '&aアイテムNBTを保存する:<enable>'
       anvil_cost_level:
         name: '&a必要レベル: <level>'
-        lore:
-          - '&3クリックで必要レベルを変更する'
         input_hint: '&a必要レベルを入力してください。キャンセルするにはcancelと入力してください。'
 recipe_type_name:
   shaped: 定形

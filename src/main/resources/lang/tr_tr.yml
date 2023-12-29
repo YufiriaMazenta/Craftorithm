@@ -76,13 +76,9 @@ menu:
       campfire_toggle: '&aKamp ateşi tarifleri etkin: <enable>'
       cooking_time:
         name: '&aEritme zamanı: <time> tick'
-        lore:
-          - '&3Eritme Zamanını Değiştirmek İçin Tıklayın'
         input_hint: '&aLütfen eritme zamanını tick cinsinden girin, İptal etmek için "cancel" yazın.'
       cooking_exp:
         name: '&aTecrübe ödülü: <exp>'
-        lore:
-          - '&3Tecrübe Ödülünü Değiştirmek İçin Tıklayın.'
         input_hint: '&aLütfen gerekli seviyeyi girin, İptal etmek için "cancel" yazın.'
       smithing_frame: '&aDemir işlenmiş eşya'
       potion_frame: '&aİksir Tarifi'
@@ -90,8 +86,6 @@ menu:
       anvil_copy_nbt_toggle: '&aÖzel eşya veri NBT korunsun mu: <enable>'
       anvil_cost_level:
         name: '&aGerekli seviye: <level>'
-        lore:
-          - '&3Gerekli seviye değiştirmek için tıklayın'
         input_hint: '&aLütfen gerekli seviyeyi girin, İptal etmek için "cancel" yazın.'
 recipe_type_name:
   shaped: Şekilde

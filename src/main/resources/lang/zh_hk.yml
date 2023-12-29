@@ -76,13 +76,9 @@ menu:
       campfire_toggle: '&a啟用營火配方：<enable>'
       cooking_time:
         name: '&a燒煉時間： <time> tick'
-        lore:
-          - '&3點擊修改燒煉時間'
         input_hint: '&a請輸入燒煉時間，單位為tick，輸入"cancel"取消。'
       cooking_exp:
         name: '&a獎勵經驗值： <exp>'
-        lore:
-          - '&3點擊修改獎勵經驗'
         input_hint: '&a請輸入獎勵經驗，輸入"cancel"取消。'
       smithing_frame: '&a鍛造物品'
       potion_frame: '&a釀造原料'
@@ -90,8 +86,6 @@ menu:
       anvil_copy_nbt_toggle: '&a保留物品NBT：<enable>'
       anvil_cost_level:
         name: '&a所需等級: <level>'
-        lore:
-          - '&3點擊修改所需等級'
         input_hint: '&a請輸入所需等級，輸入“cancel”取消。'
 recipe_type_name:
   shaped: 有序

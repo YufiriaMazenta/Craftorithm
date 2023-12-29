@@ -1,6 +1,6 @@
 prefix: '&8[&3Craftorithm&8]'
 unsupported_version: '<prefix> 不支持的版本'
-new_version: '<prefix> &a检测到有新版本<new_version>, 请及时更新到新版本'
+new_version: '<prefix> &a检测到有新版本<new_version>，请及时更新到新版本'
 #使用命令的一些反馈消息
 command:
   no_perm: '<prefix> &c你没有使用此命令的权限'
@@ -50,6 +50,11 @@ menu:
       frame: '&3&l新增配方列表'
       previous: '&a上一页'
       next: '&a下一页'
+      elements:
+        lore:
+          - ''
+          - '&3左键查看配方'
+          - '&3右键编辑配方'
   recipe_display:
     title:
       shaped: 有序配方
@@ -63,36 +68,76 @@ menu:
       potion: 酿造配方
       anvil: 铁砧配方
   recipe_creator:
-    title: '&3创建<recipe_type>配方: <recipe_name>'
+    title: '&3创建<recipe_type>配方：<recipe_name>'
     icon:
       frame: '&a创建配方'
       result_frame: '&a配方结果'
       confirm: '&3&l确认创建'
-      unlock: '&a是否为玩家解锁配方:<unlock>'
+      unlock: '&a是否为玩家解锁配方：<unlock>'
       cooking_frame: '&a烧炼原料'
-      furnace_toggle: '&a启用熔炉配方:<enable>'
-      blast_furnace_toggle: '&a启用高炉配方:<enable>'
-      smoker_toggle: '&a启用烟熏炉配方:<enable>'
-      campfire_toggle: '&a启用营火配方:<enable>'
+      furnace_toggle: '&a启用熔炉配方：<enable>'
+      blast_furnace_toggle: '&a启用高炉配方：<enable>'
+      smoker_toggle: '&a启用烟熏炉配方：<enable>'
+      campfire_toggle: '&a启用营火配方：<enable>'
       cooking_time:
-        name: '&a烧炼时间: <time> tick'
+        name: '&a烧炼时间： <time> tick'
         lore:
+          - ''
           - '&3点击修改烧炼时间'
-        input_hint: '&a请输入烧炼时间, 单位为tick, 输入cancel取消'
+        input_hint: '&a请输入烧炼时间, 单位为tick，输入“cancel”取消'
       cooking_exp:
-        name: '&a奖励经验: <exp>'
+        name: '&a奖励经验：<exp>'
         lore:
+          - ''
           - '&3点击修改奖励经验'
-        input_hint: '&a请输入奖励经验, 输入cancel取消'
+        input_hint: '&a请输入奖励经验，输入“cancel”取消'
       smithing_frame: '&a锻造物品'
       potion_frame: '&a酿造原料'
       anvil_frame: '&a打造原料'
-      anvil_copy_nbt_toggle: '&a保留物品NBT:<enable>'
+      anvil_copy_nbt_toggle: '&a保留物品NBT：<enable>'
       anvil_cost_level:
-        name: '&a所需等级: <level>'
+        name: '&a所需等级：<level>'
         lore:
+          - ''
           - '&3点击修改所需等级'
-        input_hint: '&a请输入所需等级, 输入cancel取消'
+        input_hint: '&a请输入所需等级，输入“cancel”取消'
+  recipe_editor:
+    title: '&3&l编辑配方：&b&l<recipe_name>'
+    icon:
+      next: '&a下一页'
+      previous: '&a上一页'
+      slot_id:
+        name: '&3排序ID：&a<id>'
+        lore:
+          - ''
+          - '&3点击修改排序ID'
+        input_hint: '&a请输入新的排序ID，输入“cancel”取消'
+      unlock: '&a是否为玩家解锁配方：<unlock>'
+      cooking_element:
+        lore:
+          - ''
+          - '&3原材料：&a<ingredient>'
+          - '&3烧炼时间：&a<time> tick'
+          - '&3奖励经验：&a<exp>'
+          - ''
+          - '&a左键修改烧炼时间'
+          - '&a右键修改奖励经验'
+        input_cooking_time_hint: '&a请输入烧炼时间，单位为tick，输入“cancel”取消'
+        input_cooking_exp_hint: '&a请输入奖励经验，输入“cancel”取消'
+        type_name:
+          furnace: '&3&l熔炉配方'
+          blast_furnace: '&3&l高炉配方'
+          smoker: '&3&l烟熏炉配方'
+          campfire: '&3&l营火配方'
+      anvil_element:
+        lore:
+          - ''
+          - '&3消耗等级：&a<level>'
+          - '&3保留物品NBT：&a<enable>'
+          - ''
+          - '&a左键修改消耗等级'
+          - '&a右键切换保留物品NBT'
+        input_hint: '&a请输入新的消耗等级，输入“cancel”取消'
 recipe_type_name:
   shaped: 有序
   shapeless: 无序

@@ -76,13 +76,9 @@ menu:
       campfire_toggle: '&aActiver les recettes de feu de camp : <enable>'
       cooking_time:
         name: '&aTemps de cuisson : <time> tick(s)'
-        lore:
-          - '&3Cliquez pour modifier le temps de cuisson'
         input_hint: '&aVeuillez entrer le temps de cuisson, en tick. Tapez "cancel" pour annuler.'
       cooking_exp:
         name: '&aRécompense d''expérience : <exp>'
-        lore:
-          - '&aVeuillez entrer la récompense d''expérience.'
         input_hint: '&3Cliquez pour modifier la récompense d''expérience. Entrez "cancel" pour annuler.'
       smithing_frame: '&aObjets de forge'
       potion_frame: '&aIngrédients de brassage'
@@ -90,8 +86,6 @@ menu:
       anvil_copy_nbt_toggle: '&aConserver les données NBT de l''objet : <enable>'
       anvil_cost_level:
         name: '&aNiveau requis : <level>'
-        lore:
-          - '&3Cliquez pour modifier le niveau requis'
         input_hint: '&aVeuillez entrer le niveau requis. Entrez "cancel" pour annuler.'
 recipe_type_name:
   shaped: Forme
