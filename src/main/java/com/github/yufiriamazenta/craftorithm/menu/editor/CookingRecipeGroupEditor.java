@@ -3,6 +3,7 @@ package com.github.yufiriamazenta.craftorithm.menu.editor;
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
+import com.github.yufiriamazenta.craftorithm.menu.display.RecipeGroupListMenu;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.impl.CookingRecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
@@ -13,7 +14,6 @@ import crypticlib.conversation.Prompt;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.display.MenuLayout;
-import crypticlib.ui.menu.Menu;
 import crypticlib.util.ItemUtil;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -28,14 +28,14 @@ public class CookingRecipeGroupEditor extends UnlockableRecipeGroupEditor {
 
     private final List<CookingRecipeSource> cookingRecipeSourceList = new ArrayList<>();
 
-    public CookingRecipeGroupEditor(@NotNull Player player, @NotNull RecipeGroup recipeGroup, Menu parent) {
+    public CookingRecipeGroupEditor(@NotNull Player player, @NotNull RecipeGroup recipeGroup, RecipeGroupListMenu parent) {
         super(player, recipeGroup, parent);
         setDisplay(
             new MenuDisplay(
                 title,
                 new MenuLayout(
                     Arrays.asList(
-                        "###A#B###",
+                        "###A#B##Z",
                         "X%%%%%%%Y",
                         "#########"
                     ),
@@ -46,6 +46,7 @@ public class CookingRecipeGroupEditor extends UnlockableRecipeGroupEditor {
                         layoutMap.put('#', getFrameIcon());
                         layoutMap.put('X', getPreviousIcon());
                         layoutMap.put('Y', getNextIcon());
+                        layoutMap.put('Z', getRemoveIcon());
                         return layoutMap;
                     }
                 )

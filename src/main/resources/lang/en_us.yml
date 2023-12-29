@@ -139,6 +139,9 @@ menu:
           - '&aLeft click to modify cost level'
           - '&aRight click to toggle preserve item nbt'
         input_hint: '&aPlease enter cost level. Type "cancel" to cancel'
+      remove:
+        name: '&c&lClick to remove this recipe group'
+        message: '<prefix> &aRecipe <recipe_name> removed successfully.'
 recipe_type_name:
   shaped: Shaped
   shapeless: Shapeless

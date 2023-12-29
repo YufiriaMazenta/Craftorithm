@@ -3,6 +3,7 @@ package com.github.yufiriamazenta.craftorithm.menu.editor;
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
+import com.github.yufiriamazenta.craftorithm.menu.display.RecipeGroupListMenu;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import crypticlib.chat.TextProcessor;
 import crypticlib.config.ConfigWrapper;
@@ -12,7 +13,6 @@ import crypticlib.conversation.Prompt;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.display.MenuLayout;
-import crypticlib.ui.menu.Menu;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -27,14 +27,14 @@ public class AnvilRecipeGroupEditor extends RecipeGroupEditor {
 
     private final List<AnvilRecipeSource> anvilRecipeSourceList = new ArrayList<>();
 
-    public AnvilRecipeGroupEditor(@NotNull Player player, @NotNull RecipeGroup recipeGroup, Menu parent) {
+    public AnvilRecipeGroupEditor(@NotNull Player player, @NotNull RecipeGroup recipeGroup, RecipeGroupListMenu parent) {
         super(player, recipeGroup, parent);
         setDisplay(
             new MenuDisplay(
                 title,
                 new MenuLayout(
                     Arrays.asList(
-                        "####A####",
+                        "####A###Z",
                         "X%%%%%%%Y",
                         "#########"
                     ),
@@ -44,6 +44,7 @@ public class AnvilRecipeGroupEditor extends RecipeGroupEditor {
                         iconMap.put('A', getSortIdEditIcon(4));
                         iconMap.put('X', getPreviousIcon());
                         iconMap.put('Y', getNextIcon());
+                        iconMap.put('Z', getRemoveIcon());
                         //TODO condition和action
                         return iconMap;
                     }
