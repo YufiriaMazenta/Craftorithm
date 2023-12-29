@@ -76,13 +76,9 @@ menu:
       campfire_toggle: '&aLagerfeuer-Rezept aktivieren: <enable>'
       cooking_time:
         name: '&aErhitzungszeit: <time> Tick'
-        lore:
-          - '&3Klicke, um die Erhitzungszeit anzupassen'
         input_hint: '&aBitte gib die Erhitzungszeit in Ticks ein. Gib "cancel" ein, um abzubrechen.'
       cooking_exp:
         name: '&aBelohnung Erfahrung: <exp>'
-        lore:
-          - '&aBitte gib die Belohnung Erfahrung ein.'
         input_hint: '&3Klicke, um die Belohnung Erfahrung zu ändern. Gib "cancel" ein, um abzubrechen.'
       smithing_frame: '&aSchmiede Gegenstand'
       potion_frame: '&aBrauen von Zutaten'
@@ -90,8 +86,6 @@ menu:
       anvil_copy_nbt_toggle: '&aBehalte Gegenstand-NBT: <enable>'
       anvil_cost_level:
         name: '&aErforderliches Level: <level>'
-        lore:
-          - '&3Klicke, um das erforderliche Level zu ändern'
         input_hint: '&aBitte gib das erforderliche Level ein. Gib "cancel" ein, um abzubrechen.'
 recipe_type_name:
   shaped: Geformt

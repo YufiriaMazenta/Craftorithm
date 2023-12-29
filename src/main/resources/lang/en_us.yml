@@ -118,8 +118,8 @@ menu:
         lore:
           - ''
           - '&3Ingredient: &a<ingredient>'
-          - '&3Smelting Time: &l<time> tick'
-          - '&3Experience Reward: &l<exp>'
+          - '&3Smelting Time: &a<time> tick'
+          - '&3Experience Reward: &a<exp>'
           - ''
           - '&aLeft click to modify smelting time'
           - '&aRight click to modify experience reward'
