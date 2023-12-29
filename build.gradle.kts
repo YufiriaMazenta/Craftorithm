@@ -1,5 +1,5 @@
 import java.text.SimpleDateFormat
-version = "1.8.0-beta2"
+version = "1.8.0-beta3"
 
 plugins {
     `java-library`
@@ -40,7 +40,7 @@ dependencies {
     compileOnly("io.lumine:Mythic-Dist:5.3.5")
     compileOnly("io.lumine:MythicLib-dist:1.6.2-SNAPSHOT")
     compileOnly("net.Indyuce:MMOItems-API:6.9.5-SNAPSHOT")
-    implementation("com.crypticlib:CrypticLib:0.10.22")
+    implementation("com.crypticlib:CrypticLib:0.10.23")
 }
 
 group = "com.github.yufiriamazenta"

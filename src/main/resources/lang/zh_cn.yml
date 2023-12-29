@@ -138,6 +138,9 @@ menu:
           - '&a左键修改消耗等级'
           - '&a右键切换保留物品NBT'
         input_hint: '&a请输入新的消耗等级，输入“cancel”取消'
+      remove:
+        name: '&c&l点击删除此配方组'
+        message: '<prefix> &a配方<recipe_name>删除成功'
 recipe_type_name:
   shaped: 有序
   shapeless: 无序

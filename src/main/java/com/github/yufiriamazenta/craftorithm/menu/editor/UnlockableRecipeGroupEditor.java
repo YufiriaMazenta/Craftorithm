@@ -1,10 +1,10 @@
 package com.github.yufiriamazenta.craftorithm.menu.editor;
 
 import com.github.yufiriamazenta.craftorithm.config.Languages;
+import com.github.yufiriamazenta.craftorithm.menu.display.RecipeGroupListMenu;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import crypticlib.ui.display.Icon;
-import crypticlib.ui.menu.Menu;
 import crypticlib.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -15,7 +15,7 @@ public abstract class UnlockableRecipeGroupEditor extends RecipeGroupEditor {
 
     protected boolean unlock;
 
-    protected UnlockableRecipeGroupEditor(@NotNull Player player, @NotNull RecipeGroup recipeGroup, Menu parent) {
+    protected UnlockableRecipeGroupEditor(@NotNull Player player, @NotNull RecipeGroup recipeGroup, RecipeGroupListMenu parent) {
         super(player, recipeGroup, parent);
         this.unlock = recipeGroup.unlock();
     }

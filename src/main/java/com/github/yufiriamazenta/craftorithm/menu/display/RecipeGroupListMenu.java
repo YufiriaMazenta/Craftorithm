@@ -23,41 +23,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BiFunction;
 
 public class RecipeGroupListMenu extends Menu {
 
     private int page;
-    private final int maxPage;
-    private final List<Map.Entry<String, ItemStack>> recipeGroupResultList;
-    private final Map<RecipeType, TernaryFunction<Player, RecipeGroup, Menu, RecipeGroupEditor>> recipeGroupEditorMap;
+    private int maxPage;
+    private List<Map.Entry<String, ItemStack>> recipeGroupResultList;
+    private final Map<RecipeType, TernaryFunction<Player, RecipeGroup, RecipeGroupListMenu, RecipeGroupEditor>> recipeGroupEditorMap;
 
     public RecipeGroupListMenu(Player player) {
         super(player);
-        Map<String, ItemStack> recipeResultMap = new HashMap<>();
-        RecipeManager.INSTANCE.recipeMap().forEach((recipeType, recipeGroupMap) ->
-            recipeGroupMap.forEach((groupName, recipeGroup) -> {
-                if (recipeGroup == null || recipeGroup.isEmpty())
-                    return;
-                Recipe firstRecipe = RecipeManager.INSTANCE.getRecipe(recipeGroup.groupRecipeKeys().get(0));
-                if (firstRecipe == null)
-                    return;
-                recipeResultMap.put(groupName, firstRecipe.getResult());
-            })
-        );
-        recipeGroupResultList = new ArrayList<>(recipeResultMap.entrySet());
-        page = 0;
-        int recipeGroupNum = recipeResultMap.size();
-        if (recipeGroupNum % 45 == 0) {
-            maxPage = recipeGroupNum / 45;
-        } else {
-            maxPage = recipeGroupNum / 45 + 1;
-        }
-        recipeGroupResultList.sort((o1, o2) -> {
-            int sortId = RecipeManager.INSTANCE.getRecipeGroupSortId(o1.getKey());
-            int sortId2 = RecipeManager.INSTANCE.getRecipeGroupSortId(o2.getKey());
-            return Integer.compare(sortId, sortId2);
-        });
+        recipeGroupResultList = new CopyOnWriteArrayList<>();
+        refreshRecipes();
 
         recipeGroupEditorMap = new ConcurrentHashMap<>();
         recipeGroupEditorMap.put(RecipeType.SHAPED, CraftingRecipeGroupEditor::new);
@@ -74,34 +53,57 @@ public class RecipeGroupListMenu extends Menu {
     @Override
     public Inventory getInventory() {
         resetIcons();
-        Inventory inventory = Bukkit.createInventory(
-            this,
-            54,
-            TextProcessor.color(Languages.MENU_NEW_RECIPE_LIST_TITLE.value(player))
-        );
-        for (Integer slot : super.slotMap.keySet()) {
-            inventory.setItem(slot, slotMap.get(slot).display());
+        if (openedInventory == null) {
+            openedInventory = Bukkit.createInventory(
+                this,
+                54,
+                TextProcessor.color(Languages.MENU_NEW_RECIPE_LIST_TITLE.value(player))
+            );
         }
-        return inventory;
+        refreshInventory();
+
+        return openedInventory;
     }
 
     public void nextPage() {
         setPage(Math.min(page + 1, maxPage - 1)).resetIcons();
-        openedInventory.clear();
-        for (Integer slot : slotMap.keySet()) {
-            openedInventory.setItem(slot, slotMap.get(slot).display());
-        }
+        refreshInventory();
     }
 
     public void previousPage() {
         setPage(Math.max(page - 1, 0)).resetIcons();
-        openedInventory.clear();
-        for (Integer slot : slotMap.keySet()) {
-            openedInventory.setItem(slot, slotMap.get(slot).display());
-        }
+        refreshInventory();
     }
 
-    private void resetIcons() {
+    public RecipeGroupListMenu refreshRecipes() {
+        Map<String, ItemStack> recipeResultMap = new HashMap<>();
+        RecipeManager.INSTANCE.recipeMap().forEach((recipeType, recipeGroupMap) ->
+            recipeGroupMap.forEach((groupName, recipeGroup) -> {
+                if (recipeGroup == null || recipeGroup.isEmpty())
+                    return;
+                Recipe firstRecipe = RecipeManager.INSTANCE.getRecipe(recipeGroup.groupRecipeKeys().get(0));
+                if (firstRecipe == null)
+                    return;
+                recipeResultMap.put(groupName, firstRecipe.getResult());
+            })
+        );
+        recipeGroupResultList = new CopyOnWriteArrayList<>(recipeResultMap.entrySet());
+        page = 0;
+        int recipeGroupNum = recipeResultMap.size();
+        if (recipeGroupNum % 45 == 0) {
+            maxPage = recipeGroupNum / 45;
+        } else {
+            maxPage = recipeGroupNum / 45 + 1;
+        }
+        recipeGroupResultList.sort((o1, o2) -> {
+            int sortId = RecipeManager.INSTANCE.getRecipeGroupSortId(o1.getKey());
+            int sortId2 = RecipeManager.INSTANCE.getRecipeGroupSortId(o2.getKey());
+            return Integer.compare(sortId, sortId2);
+        });
+        return this;
+    }
+
+    public RecipeGroupListMenu resetIcons() {
         slotMap.clear();
         int []frameSlots = {45, 47, 48, 49, 50, 51, 53};
         Icon frameIcon = new Icon(
@@ -130,6 +132,15 @@ public class RecipeGroupListMenu extends Menu {
                 continue;
             slotMap.put(i, new Icon(new ItemStack(Material.AIR)));
         }
+        return this;
+    }
+
+    public RecipeGroupListMenu refreshInventory() {
+        openedInventory.clear();
+        for (Integer slot : slotMap.keySet()) {
+            openedInventory.setItem(slot, slotMap.get(slot).display());
+        }
+        return this;
     }
 
     @NotNull

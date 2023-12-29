@@ -2,9 +2,13 @@ package com.github.yufiriamazenta.craftorithm.menu.editor;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
+import com.github.yufiriamazenta.craftorithm.menu.display.RecipeGroupListMenu;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
+import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
+import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.CrypticLib;
+import crypticlib.chat.MessageSender;
 import crypticlib.chat.TextProcessor;
 import crypticlib.config.ConfigWrapper;
 import crypticlib.conversation.Conversation;
@@ -25,19 +29,20 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 public abstract class RecipeGroupEditor extends MultipageMenu {
 
     protected RecipeGroup recipeGroup;
-    protected Menu parent;
+    protected RecipeGroupListMenu parent;
     protected String title;
     protected int sortId;
     protected final Character ELEMENT_KEY = '%';
     protected boolean inConversation = false;
 
-    protected RecipeGroupEditor(@NotNull Player player, @NotNull RecipeGroup recipeGroup, Menu parent) {
+    protected RecipeGroupEditor(@NotNull Player player, @NotNull RecipeGroup recipeGroup, RecipeGroupListMenu parent) {
         super(player);
         setElementKey(ELEMENT_KEY);
         Validate.notNull(recipeGroup);
@@ -92,6 +97,22 @@ public abstract class RecipeGroupEditor extends MultipageMenu {
         );
     }
 
+    protected Icon getRemoveIcon() {
+        return new Icon(
+            Material.BARRIER,
+            Languages.MENU_RECIPE_EDITOR_ICON_REMOVE_NAME.value(player),
+            event -> {
+                RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeGroup().groupName(), true);
+                player.closeInventory();
+                LangUtil.sendLang(
+                    player,
+                    Languages.MENU_RECIPE_EDITOR_ICON_REMOVE_MESSAGE,
+                    CollectionsUtil.newStringHashMap("<recipe_name>", recipeGroup.groupName())
+                );
+            }
+        );
+    }
+
     protected void updateSortIdEditIcon(ItemStack sortIdEditIconDisplay) {
         ItemUtil.setDisplayName(
             sortIdEditIconDisplay,
@@ -113,7 +134,7 @@ public abstract class RecipeGroupEditor extends MultipageMenu {
                     List<InventoryType> typeWhenNotOpenInv = Arrays.asList(InventoryType.CRAFTING, InventoryType.CREATIVE);
                     if (!typeWhenNotOpenInv.contains(type))
                         return;
-                    parent.openMenu();
+                    parent.refreshRecipes().resetIcons().refreshInventory().openMenu();
                 }
             );
         }
@@ -123,7 +144,7 @@ public abstract class RecipeGroupEditor extends MultipageMenu {
         return parent;
     }
 
-    public RecipeGroupEditor setParent(Menu parent) {
+    public RecipeGroupEditor setParent(RecipeGroupListMenu parent) {
         this.parent = parent;
         return this;
     }
