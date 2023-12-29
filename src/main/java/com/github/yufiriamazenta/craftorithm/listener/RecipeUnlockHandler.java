@@ -36,6 +36,4 @@ public enum RecipeUnlockHandler implements Listener {
         player.undiscoverRecipes(notUnlockKeyList);
     }
 
-
-
 }
