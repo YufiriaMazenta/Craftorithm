@@ -55,6 +55,8 @@ public class RecipeGroup {
     }
 
     public RecipeGroup addRecipeKey(NamespacedKey namespacedKey) {
+        if (groupRecipeKeys.contains(namespacedKey))
+            return this;
         groupRecipeKeys.add(namespacedKey);
         return this;
     }

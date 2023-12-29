@@ -19,14 +19,10 @@ import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.*;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
@@ -45,6 +41,15 @@ public enum RecipeManager {
     private final Map<NamespacedKey, Recipe> serverRecipesCache;
     private final Map<NamespacedKey, PotionMixRecipe> potionMixRecipeMap;
     private final Map<NamespacedKey, AnvilRecipe> anvilRecipeMap;
+    private final List<RecipeType> UNLOCKABLE_RECIPE_TYPE =
+        Collections.unmodifiableList(Arrays.asList(
+            RecipeType.SHAPED,
+            RecipeType.SHAPELESS,
+            RecipeType.COOKING,
+            RecipeType.SMITHING,
+            RecipeType.STONE_CUTTING,
+            RecipeType.RANDOM_COOKING
+        ));
     private boolean supportPotionMix;
 
     RecipeManager() {
@@ -100,7 +105,6 @@ public enum RecipeManager {
             recipeRemoverMap.put(RecipeType.POTION, recipeList -> {
                 for (NamespacedKey recipeKey : recipeList) {
                     Bukkit.getPotionBrewer().removePotionMix(recipeKey);
-
                 }
             });
         }
@@ -108,7 +112,7 @@ public enum RecipeManager {
 
     public void reloadRecipeManager() {
         resetRecipes();
-        loadRecipeFiles();
+        loadRecipeGroups();
         loadRecipes();
         reloadRemovedRecipes();
         reloadServerRecipeCache();
@@ -124,11 +128,14 @@ public enum RecipeManager {
     public void loadRecipeGroup(RecipeGroup recipeGroup) {
         try {
             YamlConfiguration config = recipeGroup.recipeGroupConfig().config();
-            for (RecipeRegistry recipeRegistry : RecipeFactory.newRecipeRegistry(config, recipeGroup.groupName())) {
-                recipeRegistry.register();
-            }
             if (!hasCraftorithmRecipe(recipeGroup.groupName())) {
                 addRecipeGroup(recipeGroup);
+            }
+            for (RecipeRegistry recipeRegistry : RecipeFactory.newRecipeRegistry(config, recipeGroup.groupName())) {
+                recipeRegistry.register();
+                if (UNLOCKABLE_RECIPE_TYPE.contains(recipeGroup.recipeType())) {
+                    recipeUnlockMap.put(recipeRegistry.namespacedKey(), recipeGroup.unlock());
+                }
             }
         } catch (Throwable throwable) {
             LangUtil.info(Languages.LOAD_RECIPE_LOAD_EXCEPTION, CollectionsUtil.newStringHashMap("<recipe_name>", recipeGroup.groupName()));
@@ -148,7 +155,7 @@ public enum RecipeManager {
         }
     }
 
-    private void loadRecipeFiles() {
+    private void loadRecipeGroups() {
         pluginRecipeMap.clear();
         if (!RECIPE_FILE_FOLDER.exists()) {
             boolean mkdirResult = RECIPE_FILE_FOLDER.mkdir();
