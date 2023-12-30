@@ -112,7 +112,7 @@ menu:
           - ''
           - '&3点击修改排序ID'
         input_hint: '&a请输入新的排序ID，输入“cancel”取消'
-      unlock: '&a是否为玩家解锁配方：<unlock>'
+      unlock: '&3是否为玩家解锁配方：&a<unlock>'
       cooking_element:
         lore:
           - ''
