@@ -63,30 +63,69 @@ menu:
       potion: Mayalama tarifi
       anvil: Örs tarifi
   recipe_creator:
-    title: '&3<recipe_type> tarifi oluştur: <recipe_name>'
+    title: '&a<recipe_type> &3tarifi oluştur: &a<recipe_name>'
     icon:
       frame: '&aTarif oluştur'
       result_frame: '&aTarif sonucu'
       confirm: '&3&lOluşturmayı Onayla'
-      unlock: '&aOyuncunun tarifi açtığından emin misiniz: <unlock>'
+      unlock: '&3Oyuncunun tarifi açtığından emin misiniz: &a<unlock>'
       cooking_frame: '&aEritme malzemeleri'
-      furnace_toggle: '&aOcak tarifini etkinleştirin: <enable>'
-      blast_furnace_toggle: '&aMaden Eritme Ocağı tarifleri etkin: <enable>'
-      smoker_toggle: '&aDuman Fırını tarifleri etkin: <enable>'
-      campfire_toggle: '&aKamp ateşi tarifleri etkin: <enable>'
+      furnace_toggle: '&3Ocak tarifini etkinleştirin: &a<enable>'
+      blast_furnace_toggle: '&3Maden Eritme Ocağı tarifleri etkin: &a<enable>'
+      smoker_toggle: '&3Duman Fırını tarifleri etkin: &a<enable>'
+      campfire_toggle: '&3Kamp ateşi tarifleri etkin: &a<enable>'
       cooking_time:
-        name: '&aEritme zamanı: <time> tick'
+        name: '&3Eritme zamanı: &a<time> tick'
+        lore:
+          - ''
+          - '&3Eritme Zamanını Değiştirmek İçin Tıklayın'
         input_hint: '&aLütfen eritme zamanını tick cinsinden girin, İptal etmek için "cancel" yazın.'
       cooking_exp:
-        name: '&aTecrübe ödülü: <exp>'
+        name: '&3Tecrübe ödülü: &a<exp>'
+        lore:
+          - ''
+          - '&3Tecrübe Ödülünü Değiştirmek İçin Tıklayın.'
         input_hint: '&aLütfen gerekli seviyeyi girin, İptal etmek için "cancel" yazın.'
       smithing_frame: '&aDemir işlenmiş eşya'
       potion_frame: '&aİksir Tarifi'
       anvil_frame: '&aÖrs malzemeleri'
-      anvil_copy_nbt_toggle: '&aÖzel eşya veri NBT korunsun mu: <enable>'
+      anvil_copy_nbt_toggle: '&3Özel eşya veri NBT korunsun mu: &a<enable>'
       anvil_cost_level:
-        name: '&aGerekli seviye: <level>'
+        name: '&3Gerekli seviye: &a<level>'
+        lore:
+          - ''
+          - '&3Gerekli seviye değiştirmek için tıklayın'
         input_hint: '&aLütfen gerekli seviyeyi girin, İptal etmek için "cancel" yazın.'
+  recipe_editor:
+    icon:
+      next: '&aSonraki Sayfa'
+      previous: '&aÖnceki Sayfa'
+      unlock: '&3Oyuncunun tarifi açtığından emin misiniz: &a<unlock>'
+      cooking_element:
+        lore:
+          - ''
+          - ''
+          - '&3Eritme zamanı: &a<time> tick'
+          - '&3Tecrübe ödülü: &a<exp>'
+          - ''
+          - ''
+          - ''
+        input_cooking_time_hint: '&aLütfen eritme zamanını tick cinsinden girin, İptal etmek için "cancel" yazın.'
+        input_cooking_exp_hint: '&aLütfen gerekli seviyeyi girin, İptal etmek için "cancel" yazın.'
+        type_name:
+          furnace: '&3&lOcak tarifi'
+          blast_furnace: '&3&lMaden Eritme Ocağı tarifi'
+          smoker: '&3&lDuman Fırını tarifi'
+          campfire: '&3&lKamp ateşi tarifi'
+      anvil_element:
+        lore:
+          - ''
+          - '&3Gerekli seviye: &a<level>'
+          - '&3Özel eşya veri NBT korunsun mu: &a<enable>'
+          - ''
+          - ''
+          - ''
+        input_hint: '&aLütfen gerekli seviyeyi girin, İptal etmek için "cancel" yazın'
 recipe_type_name:
   shaped: Şekilde
   shapeless: Şekilsiz

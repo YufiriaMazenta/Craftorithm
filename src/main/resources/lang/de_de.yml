@@ -50,6 +50,11 @@ menu:
       frame: '&3&lNeue Rezeptliste'
       previous: '&aVorherige Seite'
       next: '&aNächste Seite'
+      elements:
+        lore:
+          - ''
+          - '&3Linksklick zum Anzeigen'
+          - '&3Rechtsklick zum Bearbeiten des Rezepts'
   recipe_display:
     title:
       shaped: Geformt-Rezept
@@ -63,30 +68,79 @@ menu:
       potion: Braustand-Rezept
       anvil: Amboss-Rezept
   recipe_creator:
-    title: '&3Erstelle <recipe_type>-Rezept: <recipe_name>'
+    title: '&3Erstelle &a<recipe_type> &3Rezept: &a<recipe_name>'
     icon:
       frame: '&aRezept erstellen'
       result_frame: '&aRezeptergebnis'
       confirm: '&3&lBestätigen Sie die Erstellung'
-      unlock: '&aHast du das Rezept freigeschaltet: <unlock>'
+      unlock: '&3Hast du das Rezept freigeschaltet: &a<unlock>'
       cooking_frame: '&aErhitzen von Zutaten'
-      furnace_toggle: '&aOfen-Rezept aktiviert: <enable>'
-      blast_furnace_toggle: '&aSchmelzofen-Rezept aktiviert: <enable>'
-      smoker_toggle: '&aRauchofen-Rezept aktivieren: <enable>'
-      campfire_toggle: '&aLagerfeuer-Rezept aktivieren: <enable>'
+      furnace_toggle: '&3Schmelzofenrezept aktiviert: &a<enable>'
+      blast_furnace_toggle: '&3Hochöfenrezept aktiviert: &a<enable>'
+      smoker_toggle: '&3Rauchofen-Rezept aktivieren: &a<enable>'
+      campfire_toggle: '&3Lagerfeuer-Rezept aktivieren: &a<enable>'
       cooking_time:
-        name: '&aErhitzungszeit: <time> Tick'
+        name: '&3Erhitzungszeit: &a<time> Tick'
+        lore:
+          - ''
+          - '&3Klicke, um die Erhitzungszeit anzupassen'
         input_hint: '&aBitte gib die Erhitzungszeit in Ticks ein. Gib "cancel" ein, um abzubrechen.'
       cooking_exp:
-        name: '&aBelohnung Erfahrung: <exp>'
+        name: '&3Belohnung Erfahrung: &a<exp>'
+        lore:
+          - ''
+          - '&aBitte gib die Belohnung Erfahrung ein.'
         input_hint: '&3Klicke, um die Belohnung Erfahrung zu ändern. Gib "cancel" ein, um abzubrechen.'
       smithing_frame: '&aSchmiede Gegenstand'
       potion_frame: '&aBrauen von Zutaten'
       anvil_frame: '&aSchmiede-Materialien'
-      anvil_copy_nbt_toggle: '&aBehalte Gegenstand-NBT: <enable>'
+      anvil_copy_nbt_toggle: '&3Behalte Gegenstand-NBT: &a<enable>'
       anvil_cost_level:
-        name: '&aErforderliches Level: <level>'
+        name: '&3Erforderliches Level: &a<level>'
+        lore:
+          - ''
+          - '&3Klicke, um das erforderliche Level zu ändern'
         input_hint: '&aBitte gib das erforderliche Level ein. Gib "cancel" ein, um abzubrechen.'
+  recipe_editor:
+    title: '&3&lRezept bearbeiten: &b&l<recipe_name>'
+    icon:
+      next: '&aNächste Seite'
+      previous: '&aVorherige Seite'
+      slot_id:
+        name: '&3Sortiere-Id: &a<id>'
+        lore:
+          - ''
+          - '&3Klicken, um Sortier-Id zu ändern'
+        input_hint: '&aBitte Sortier-Id eingeben. Geben Sie "cancel" ein, um abzubrechen'
+      unlock: '&3Hast du das Rezept freigeschaltet: &a<unlock>'
+      cooking_element:
+        lore:
+          - ''
+          - '&3Zutat: &a<ingredient>'
+          - '&3Erhitzungszeit: &a<time> Tick'
+          - '&3Belohnung Erfahrung: &a<exp>'
+          - ''
+          - '&3Linksklick, um die Erhitzungszeit anzupassen'
+          - '&aRechtsklick um Erfahrungsprämie zu ändern'
+        input_cooking_time_hint: '&aBitte gib die Erhitzungszeit in Ticks ein. Gib "cancel" ein, um abzubrechen.'
+        input_cooking_exp_hint: '&3Klicke, um die Belohnung Erfahrung zu ändern. Gib "cancel" ein, um abzubrechen.'
+        type_name:
+          furnace: '&3&lSchmelzrezept'
+          blast_furnace: '&3&lHochöfen-Rezept'
+          smoker: '&3&lRäucherofen-Rezept'
+          campfire: '&3&lLagerfeuer-Rezept'
+      anvil_element:
+        lore:
+          - ''
+          - '&3Erforderliches Level: &a<level>'
+          - '&3Behalte Gegenstand-NBT: &a<enable>'
+          - ''
+          - '&aLinksklick zum Ändern des benötigten Levels'
+          - '&aRechtsklick um den Bewahrungsgegenstand nbt umzuschalten'
+        input_hint: '&aBitte gib das erforderliche Level ein. Gib "cancel" ein, um abzubrechen'
+      remove:
+        name: '&c&lKlicken um diese Rezeptgruppe zu löschen'
+        message: '<prefix> &aRezept <recipe_name> erfolgreich gelöscht.'
 recipe_type_name:
   shaped: Geformt
   shapeless: Formlos

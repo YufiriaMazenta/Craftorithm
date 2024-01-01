@@ -50,6 +50,11 @@ menu:
       frame: '&3&lListe des nouvelles recettes'
       previous: '&aPage précédente'
       next: '&aPage suivante'
+      elements:
+        lore:
+          - ''
+          - '&3Clic gauche pour voir la recette'
+          - '&3Clic droit pour éditer la recette'
   recipe_display:
     title:
       shaped: Recettes de forme
@@ -63,30 +68,79 @@ menu:
       potion: Recettes d'alambic
       anvil: Recettes d'enclume
   recipe_creator:
-    title: '&3Création de recette <recipe_type> : <recipe_name>'
+    title: '&3Création de recette &a<recipe_type> &3: &a<recipe_name>'
     icon:
       frame: '&aCréation de recette'
       result_frame: '&aRésultat de la recette'
       confirm: '&3&lConfirmer la création'
-      unlock: '&aDébloquer la recette pour le joueur : <unlock>'
+      unlock: '&3Débloquer la recette pour le joueur : &a<unlock>'
       cooking_frame: '&aCuisiner des ingrédients'
-      furnace_toggle: '&aActiver les recettes de fourneau : <enable>'
-      blast_furnace_toggle: '&aActiver les recettes de haut fourneau : <enable>'
-      smoker_toggle: '&aActiver les recettes de fumoir : <enable>'
-      campfire_toggle: '&aActiver les recettes de feu de camp : <enable>'
+      furnace_toggle: '&3Activer les recettes de fourneau : &a<enable>'
+      blast_furnace_toggle: '&3Activer les recettes de haut fourneau : &a<enable>'
+      smoker_toggle: '&3Activer les recettes de fumoir : &a<enable>'
+      campfire_toggle: '&3Activer les recettes de feu de camp : &a<enable>'
       cooking_time:
-        name: '&aTemps de cuisson : <time> tick(s)'
+        name: '&3Temps de cuisson : &a<time> tick'
+        lore:
+          - ''
+          - '&3Cliquez pour modifier le temps de cuisson'
         input_hint: '&aVeuillez entrer le temps de cuisson, en tick. Tapez "cancel" pour annuler.'
       cooking_exp:
-        name: '&aRécompense d''expérience : <exp>'
+        name: '&3Récompense d''expérience : &a<exp>'
+        lore:
+          - ''
+          - '&3Veuillez entrer la récompense d''expérience.'
         input_hint: '&3Cliquez pour modifier la récompense d''expérience. Entrez "cancel" pour annuler.'
       smithing_frame: '&aObjets de forge'
       potion_frame: '&aIngrédients de brassage'
       anvil_frame: '&aIngrédients d''enclume'
-      anvil_copy_nbt_toggle: '&aConserver les données NBT de l''objet : <enable>'
+      anvil_copy_nbt_toggle: '&3Conserver les données NBT de l''objet : &a<enable>'
       anvil_cost_level:
-        name: '&aNiveau requis : <level>'
+        name: '&3Niveau requis : &a<level>'
+        lore:
+          - ''
+          - '&3Cliquez pour modifier le niveau requis'
         input_hint: '&aVeuillez entrer le niveau requis. Entrez "cancel" pour annuler.'
+  recipe_editor:
+    title: '&3&lÉditer la recette: &b&l<recipe_name>'
+    icon:
+      next: '&aPage suivante'
+      previous: '&aPage précédente'
+      slot_id:
+        name: '&3Trier l''id : &a<id>'
+        lore:
+          - ''
+          - '&3Cliquez pour modifier trier l''id'
+        input_hint: '&aVeuillez entrer trier l''id. Entrez "cancel" pour annuler'
+      unlock: '&3Débloquer la recette pour le joueur : &a<unlock>'
+      cooking_element:
+        lore:
+          - ''
+          - '&3Ingrédient: &a<ingredient>'
+          - '&3Temps de cuisson : &a<time> tick'
+          - '&3Récompense d''expérience : &a<exp>'
+          - ''
+          - '&3Clic gauche pour modifier le temps de cuisson'
+          - '&aClic droit pour modifier la récompense d''expérience'
+        input_cooking_time_hint: '&aVeuillez entrer le temps de cuisson, en tick. Tapez "cancel" pour annuler.'
+        input_cooking_exp_hint: '&3Cliquez pour modifier la récompense d''expérience. Entrez "cancel" pour annuler.'
+        type_name:
+          furnace: '&3&lRecettes de fourneau'
+          blast_furnace: '&3&lRecettes de haut fourneau'
+          smoker: '&3&lRecettes de fumoir'
+          campfire: '&3&lRecettes de feu de camp'
+      anvil_element:
+        lore:
+          - ''
+          - '&3Niveau requis : &a<level>'
+          - '&3Conserver les données NBT de l''objet : &a<enable>'
+          - ''
+          - '&aClic gauche pour modifier le niveau requis'
+          - '&aClic droit pour activer/désactiver la conservation de l''élément nbt'
+        input_hint: '&aVeuillez entrer le niveau requis. Entrez "cancel" pour annuler'
+      remove:
+        name: '&c&lCliquez pour supprimer ce groupe de recettes'
+        message: '<prefix> &aRecette <recipe_name> supprimée avec succès.'
 recipe_type_name:
   shaped: Forme
   shapeless: Informe

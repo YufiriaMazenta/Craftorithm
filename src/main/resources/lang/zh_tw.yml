@@ -50,6 +50,11 @@ menu:
       frame: '&3&l新增配方列表'
       previous: '&a上一頁'
       next: '&a下一頁'
+      elements:
+        lore:
+          - ''
+          - '&3左鍵查看配方'
+          - '&3右鍵編輯配方'
   recipe_display:
     title:
       shaped: 有序配方
@@ -63,30 +68,79 @@ menu:
       potion: 釀造配方
       anvil: 鐵砧配方
   recipe_creator:
-    title: '&3創建<recipe_type>配方： <recipe_name>'
+    title: '&3創建&a<recipe_type>配方： &a<recipe_name>'
     icon:
       frame: '&a創建配方'
       result_frame: '&a配方結果'
       confirm: '&3&l確認創建'
-      unlock: '&a是否為玩家解鎖配方：<unlock>'
+      unlock: '&3是否為玩家解鎖配方：&a<unlock>'
       cooking_frame: '&a燒煉原料'
-      furnace_toggle: '&a啟用熔爐配方：<enable>'
-      blast_furnace_toggle: '&a啟用高爐配方：<enable>'
-      smoker_toggle: '&a啟用煙燻爐配方：<enable>'
-      campfire_toggle: '&a啟用營火配方：<enable>'
+      furnace_toggle: '&3啟用熔爐配方：&a<enable>'
+      blast_furnace_toggle: '&3啟用高爐配方：&a<enable>'
+      smoker_toggle: '&3啟用煙燻爐配方：&a<enable>'
+      campfire_toggle: '&3啟用營火配方：&a<enable>'
       cooking_time:
-        name: '&a燒煉時間： <time> tick'
+        name: '&3燒煉時間： &a<time> tick'
+        lore:
+          - ''
+          - '&3點擊修改燒煉時間'
         input_hint: '&a請輸入燒煉時間，單位為tick，輸入"cancel"取消。'
       cooking_exp:
-        name: '&a獎勵經驗值： <exp>'
+        name: '&3獎勵經驗值： &a<exp>'
+        lore:
+          - ''
+          - '&3點擊修改獎勵經驗'
         input_hint: '&a請輸入獎勵經驗，輸入"cancel"取消。'
       smithing_frame: '&a鍛造物品'
       potion_frame: '&a釀造原料'
       anvil_frame: '&a製作材料'
-      anvil_copy_nbt_toggle: '&a保留物品NBT：<enable>'
+      anvil_copy_nbt_toggle: '&3保留物品NBT：&a<enable>'
       anvil_cost_level:
-        name: '&a所需等級: <level>'
+        name: '&3所需等級: &a<level>'
+        lore:
+          - ''
+          - '&3點擊修改所需等級'
         input_hint: '&a請輸入所需等級，輸入“cancel”取消。'
+  recipe_editor:
+    title: '&3&l編輯配方：&b&l<recipe_name>'
+    icon:
+      next: '&a下一頁'
+      previous: '&a上一頁'
+      slot_id:
+        name: '&3排序ID: &a<id>'
+        lore:
+          - ''
+          - '&3點擊修改排序ID'
+        input_hint: '&a請輸入新的排序ID，輸入“cancel”取消。'
+      unlock: '&3是否為玩家解鎖配方：&a<unlock>'
+      cooking_element:
+        lore:
+          - ''
+          - '&3配方原料：&a<ingredient>'
+          - '&3燒煉時間： &a<time> tick'
+          - '&3獎勵經驗值： &a<exp>'
+          - ''
+          - '&3左鍵修改燒煉時間'
+          - '&a左鍵修改獎勵經驗'
+        input_cooking_time_hint: '&a請輸入燒煉時間，單位為tick，輸入"cancel"取消。'
+        input_cooking_exp_hint: '&a請輸入獎勵經驗，輸入"cancel"取消。'
+        type_name:
+          furnace: '&3&l熔爐配方'
+          blast_furnace: '&3&l高爐配方'
+          smoker: '&3&l煙燻爐配方'
+          campfire: '&3&l營火配方'
+      anvil_element:
+        lore:
+          - ''
+          - '&3所需等級: &a<level>'
+          - '&3保留物品NBT：&a<enable>'
+          - ''
+          - '&a左鍵修改所需等级'
+          - '&a右鍵切換是否保留NBT'
+        input_hint: '&a請輸入所需等級，輸入“cancel”取消。'
+      remove:
+        name: '&c&l點擊刪除此配方組'
+        message: '<prefix> &a配方<recipe_name>刪除成功。'
 recipe_type_name:
   shaped: 有序
   shapeless: 無序
