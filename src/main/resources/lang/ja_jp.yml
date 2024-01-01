@@ -50,6 +50,11 @@ menu:
       frame: '&3&l新しく追加したシピリスト'
       previous: '&a前のページ'
       next: '&a次のページ'
+      elements:
+        lore:
+          - ''
+          - '&3左クリックしてレシピを表示します'
+          - '&3右クリックしてレシピを編集します'
   recipe_display:
     title:
       shaped: 定形レシピ
@@ -63,30 +68,79 @@ menu:
       potion: 醸造台レシピ
       anvil: 金床レシピ
   recipe_creator:
-    title: '&3<recipe_type>レシピの作成: <recipe_name>'
+    title: '&a<recipe_type>&3レシピの作成: &a<recipe_name>'
     icon:
       frame: '&aレシピ作成'
       result_frame: '&aレシピ結果'
       confirm: '&3&l作成の確認'
-      unlock: '&aプレイヤーによるレシピのアンロック:<unlock>'
+      unlock: '&3プレイヤーによるレシピのアンロック: &a<unlock>'
       cooking_frame: '&a精錬素材'
-      furnace_toggle: '&aかまどレシピを有効にする:<enable>'
-      blast_furnace_toggle: '&a溶鉱炉レシピを有効にする:<enable>'
-      smoker_toggle: '&a燻製器レシピを有効にする:<enable>'
-      campfire_toggle: '&a焚き火レシピを有効にする:<enable>'
+      furnace_toggle: '&3かまどレシピを有効にする: &a<enable>'
+      blast_furnace_toggle: '&3溶鉱炉レシピを有効にする: &a<enable>'
+      smoker_toggle: '&3燻製器レシピを有効にする: &a<enable>'
+      campfire_toggle: '&3焚き火レシピを有効にする: &a<enable>'
       cooking_time:
-        name: '&a精錬時間: <time> tick'
+        name: '&3精錬時間: &a<time> tick'
+        lore:
+          - ''
+          - '&3クリックで精錬時間を変更する'
         input_hint: '&a精錬時間を入力してください。単位はtickです。キャンセルするにはcancelと入力してください。'
       cooking_exp:
-        name: '&a経験値ドロップ量: <exp>'
+        name: '&3経験値ドロップ量: &a<exp>'
+        lore:
+          - ''
+          - '&3クリックで経験値ドロップ量を変更する。キャンセルするにはcancelと入力してください。'
         input_hint: '&a経験値ドロップ量を入力してください'
       smithing_frame: '&a精錬アイテム'
       potion_frame: '&a醸造素材'
       anvil_frame: '&a鍛冶素材'
-      anvil_copy_nbt_toggle: '&aアイテムNBTを保存する:<enable>'
+      anvil_copy_nbt_toggle: '&3アイテムNBTを保存する:<enable>'
       anvil_cost_level:
-        name: '&a必要レベル: <level>'
+        name: '&3必要レベル: &a<level>'
+        lore:
+          - ''
+          - '&3クリックで必要レベルを変更する'
         input_hint: '&a必要レベルを入力してください。キャンセルするにはcancelと入力してください。'
+  recipe_editor:
+    title: '&3&l編集レシピ: &b&l<recipe_name>'
+    icon:
+      next: '&a次のページ'
+      previous: '&a前のページ'
+      slot_id:
+        name: '&3ソートID: &a<id>'
+        lore:
+          - ''
+          - '&3ソートIDを変更するにはクリックしてください'
+        input_hint: '&aソートIDを入力してください。キャンセルするには「cancel」と入力してください'
+      unlock: '&3プレイヤーによるレシピのアンロック: &a<unlock>'
+      cooking_element:
+        lore:
+          - ''
+          - '&3材料: &a<ingredient>'
+          - '&3精錬時間: &a<time> tick'
+          - '&3経験値ドロップ量: &a<exp>'
+          - ''
+          - '&a製錬時間を変更するには左クリックしてください'
+          - '&a右クリックで経験値報酬を変更します'
+        input_cooking_time_hint: '&a精錬時間を入力してください。単位はtickです。キャンセルするにはcancelと入力してください。'
+        input_cooking_exp_hint: '&a経験値ドロップ量を入力してください'
+        type_name:
+          furnace: '&3&lかまどレシピ'
+          blast_furnace: '&3&l溶鉱炉レシピ'
+          smoker: '&3&l燻製器レシピ'
+          campfire: '&3&l焚き火レシピ'
+      anvil_element:
+        lore:
+          - ''
+          - '&3必要レベル: &a<level>'
+          - '&3アイテムNBTを保存する: &a<enable>'
+          - ''
+          - '&a左クリックして必要なレベルを変更します'
+          - '&a右クリックでnbtの保存を切り替える'
+        input_hint: '&a必要レベルを入力してください。キャンセルするにはcancelと入力してください。'
+      remove:
+        name: '&c&lクリックしてこのレシピグループを削除'
+        message: '<prefix> &aレシピ <recipe_name> の削除に成功しました。'
 recipe_type_name:
   shaped: 定形
   shapeless: 不定形
