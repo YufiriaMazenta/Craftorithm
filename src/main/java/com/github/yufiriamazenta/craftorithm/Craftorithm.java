@@ -34,7 +34,8 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
         regListeners();
         initArcenciel();
         loadBStat();
-        
+
+        PluginHookUtil.hookPlugins();
         LangUtil.info(Languages.LOAD_FINISH);
         UpdateUtil.pullUpdateCheckRequest(Bukkit.getConsoleSender());
     }
@@ -76,7 +77,6 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
 
     @EventHandler
     public void onServerLoad(ServerLoadEvent event) {
-        PluginHookUtil.hookPlugins();
         if (!PluginHookUtil.isItemsAdderLoaded()) {
             RecipeManager.INSTANCE.reloadRecipeManager();
             return;
