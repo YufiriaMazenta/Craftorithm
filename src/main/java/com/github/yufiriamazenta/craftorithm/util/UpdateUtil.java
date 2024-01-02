@@ -19,7 +19,7 @@ public class UpdateUtil {
             return;
         CrypticLib.platform().scheduler().runTaskAsync(Craftorithm.instance(), () -> {
             try {
-                URL url = new URL("https://api.spigotmc.org/legacy/update.php?resource=108429/~");
+                URL url = new URL("https://api.spigotmc.org/legacy/update.php?resource=108429/");
                 URLConnection conn = url.openConnection();
                 conn.setConnectTimeout(15000);
                 conn.setReadTimeout(60000);
