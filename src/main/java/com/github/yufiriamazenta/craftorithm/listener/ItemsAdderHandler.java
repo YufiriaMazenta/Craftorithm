@@ -1,6 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.listener;
 
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
+import crypticlib.util.ReflectUtil;
 import dev.lone.itemsadder.api.Events.ItemsAdderLoadDataEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -12,9 +13,11 @@ import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.inventory.PrepareSmithingEvent;
 import org.bukkit.event.inventory.SmithItemEvent;
 import org.bukkit.inventory.Recipe;
+import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredListener;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +29,7 @@ public enum ItemsAdderHandler implements Listener {
     private final List<RegisteredListener> smithIAListeners = new ArrayList<>();
     private final Plugin ITEMS_ADDER_PLUGIN;
     private final String ITEMS_ADDER_PLUGIN_NAME = "ItemsAdder";
+    private final Field executorField = ReflectUtil.getDeclaredField(RegisteredListener.class, "executor");
 
     ItemsAdderHandler() {
         ITEMS_ADDER_PLUGIN = Bukkit.getPluginManager().getPlugin(ITEMS_ADDER_PLUGIN_NAME);
@@ -79,7 +83,7 @@ public enum ItemsAdderHandler implements Listener {
     public void executeIAPrepareCraftItemListener(PrepareItemCraftEvent event) {
         for (RegisteredListener prepareCraftIAListener : prepareCraftIAListeners) {
             try {
-                prepareCraftIAListener.getExecutor().execute(prepareCraftIAListener.getListener(), event);
+                getRegisteredListenerExecutor(prepareCraftIAListener).execute(prepareCraftIAListener.getListener(), event);
             } catch (EventException e) {
                 throw new RuntimeException(e);
             }
@@ -103,7 +107,7 @@ public enum ItemsAdderHandler implements Listener {
     public void executeIAPrepareSmithingListener(PrepareSmithingEvent event) {
         for (RegisteredListener prepareSmithingIAListener : prepareSmithingIAListeners) {
             try {
-                prepareSmithingIAListener.getExecutor().execute(prepareSmithingIAListener.getListener(), event);
+                getRegisteredListenerExecutor(prepareSmithingIAListener).execute(prepareSmithingIAListener.getListener(), event);
             } catch (EventException e) {
                 throw new RuntimeException(e);
             }
@@ -128,11 +132,15 @@ public enum ItemsAdderHandler implements Listener {
     public void executeIASmithItemListener(SmithItemEvent event) {
         for (RegisteredListener smithIAListener : smithIAListeners) {
             try {
-                smithIAListener.getExecutor().execute(smithIAListener.getListener(), event);
+                getRegisteredListenerExecutor(smithIAListener).execute(smithIAListener.getListener(), event);
             } catch (EventException e) {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    public EventExecutor getRegisteredListenerExecutor(RegisteredListener registeredListener) {
+        return (EventExecutor) ReflectUtil.getDeclaredFieldObj(executorField, registeredListener);
     }
 
 }
