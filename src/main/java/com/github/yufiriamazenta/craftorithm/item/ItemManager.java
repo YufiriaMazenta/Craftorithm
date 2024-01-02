@@ -81,11 +81,12 @@ public enum ItemManager {
 
         for (Map.Entry<String, ItemProvider> itemProviderEntry : itemProviderMap.entrySet()) {
             String tmpName = itemProviderEntry.getValue().getItemName(item, ignoreAmount);
-            if (tmpName != null)
+            if (tmpName != null) {
                 return itemProviderEntry.getKey() + ":" + tmpName;
+            }
         }
 
-        return item.getType().getKey().toString();
+        return null;
     }
 
     /**
