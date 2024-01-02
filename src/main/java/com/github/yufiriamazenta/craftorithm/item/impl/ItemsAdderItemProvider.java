@@ -21,9 +21,9 @@ public enum ItemsAdderItemProvider implements ItemProvider {
         if (customStack == null)
             return null;
         if (ignoreAmount) {
-            return customStack.getId();
+            return customStack.getNamespacedID();
         } else {
-            return customStack.getId() + " " + (itemStack.getAmount() / customStack.getItemStack().getAmount());
+            return customStack.getNamespacedID() + " " + (itemStack.getAmount() / customStack.getItemStack().getAmount());
         }
     }
 
