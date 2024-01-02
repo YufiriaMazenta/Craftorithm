@@ -36,30 +36,30 @@ public enum ItemsAdderHandler implements Listener {
     @EventHandler
     public void onItemsAdderLoaded(ItemsAdderLoadDataEvent event) {
         RecipeManager.INSTANCE.reloadRecipeManager();
-        if (prepareCraftIAListeners.isEmpty()) {
-            for (RegisteredListener registeredListener : PrepareItemCraftEvent.getHandlerList().getRegisteredListeners()) {
-                if (registeredListener.getPlugin().getName().equals(ITEMS_ADDER_PLUGIN_NAME)) {
-                    prepareCraftIAListeners.add(registeredListener);
-                }
+        //注销IA合成监听器
+        prepareCraftIAListeners.clear();
+        for (RegisteredListener registeredListener : PrepareItemCraftEvent.getHandlerList().getRegisteredListeners()) {
+            if (registeredListener.getPlugin().getName().equals(ITEMS_ADDER_PLUGIN_NAME)) {
+                prepareCraftIAListeners.add(registeredListener);
             }
-            PrepareItemCraftEvent.getHandlerList().unregister(ITEMS_ADDER_PLUGIN);
         }
-        if (prepareSmithingIAListeners.isEmpty()) {
-            for (RegisteredListener registeredListener : PrepareSmithingEvent.getHandlerList().getRegisteredListeners()) {
-                if (registeredListener.getPlugin().getName().equals(ITEMS_ADDER_PLUGIN_NAME)) {
-                    prepareSmithingIAListeners.add(registeredListener);
-                }
+        PrepareItemCraftEvent.getHandlerList().unregister(ITEMS_ADDER_PLUGIN);
+
+        //注销IA锻造监听器
+        prepareSmithingIAListeners.clear();
+        for (RegisteredListener registeredListener : PrepareSmithingEvent.getHandlerList().getRegisteredListeners()) {
+            if (registeredListener.getPlugin().getName().equals(ITEMS_ADDER_PLUGIN_NAME)) {
+                prepareSmithingIAListeners.add(registeredListener);
             }
-            PrepareSmithingEvent.getHandlerList().unregister(ITEMS_ADDER_PLUGIN);
         }
-        if (smithIAListeners.isEmpty()) {
-            for (RegisteredListener registeredListener : SmithItemEvent.getHandlerList().getRegisteredListeners()) {
-                if (registeredListener.getPlugin().getName().equals(ITEMS_ADDER_PLUGIN_NAME)) {
-                    smithIAListeners.add(registeredListener);
-                }
+        smithIAListeners.clear();
+        PrepareSmithingEvent.getHandlerList().unregister(ITEMS_ADDER_PLUGIN);
+        for (RegisteredListener registeredListener : SmithItemEvent.getHandlerList().getRegisteredListeners()) {
+            if (registeredListener.getPlugin().getName().equals(ITEMS_ADDER_PLUGIN_NAME)) {
+                smithIAListeners.add(registeredListener);
             }
-            SmithItemEvent.getHandlerList().unregister(ITEMS_ADDER_PLUGIN);
         }
+        SmithItemEvent.getHandlerList().unregister(ITEMS_ADDER_PLUGIN);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
