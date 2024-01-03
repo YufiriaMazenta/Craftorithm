@@ -6,7 +6,3 @@ source:
     addition: 'command_block'
     type: transform
     template: diamond
-  - base: 'bedrock'
-    addition: 'bedrock'
-    type: trim
-    template: diamond
