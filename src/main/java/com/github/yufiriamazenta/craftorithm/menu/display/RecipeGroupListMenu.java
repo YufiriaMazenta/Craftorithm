@@ -159,7 +159,6 @@ public class RecipeGroupListMenu extends Menu {
                         throw new IllegalArgumentException("Can not find recipe group " + recipeGroupName);
                     }
                     recipeGroupEditorMap.getOrDefault(recipeGroup.recipeType(), (player, group, parent) -> {
-                        //TODO 提醒暂不支持编辑
                         throw new RuntimeException("Unknown recipe type editor");
                     }).apply(player, recipeGroup, this).openMenu();
                     break;
@@ -170,11 +169,19 @@ public class RecipeGroupListMenu extends Menu {
                     if (recipeGroup1 == null) {
                         throw new IllegalArgumentException("Can not find recipe group " + recipeGroupName);
                     }
-                    new RecipeListMenu(
-                        (Player) event.getWhoClicked(),
-                        recipeGroup1.groupRecipeKeys(),
-                        this
-                    ).openMenu();
+                    if (recipeGroup1.groupRecipeKeys().size() < 2) {
+                        new RecipeDisplayMenu(
+                            player,
+                            RecipeManager.INSTANCE.getRecipe(recipeGroup1.groupRecipeKeys().get(0)),
+                            this
+                        ).openMenu();
+                    } else {
+                        new RecipeListMenu(
+                            player,
+                            recipeGroup1.groupRecipeKeys(),
+                            this
+                        ).openMenu();
+                    }
                     break;
             }
         });

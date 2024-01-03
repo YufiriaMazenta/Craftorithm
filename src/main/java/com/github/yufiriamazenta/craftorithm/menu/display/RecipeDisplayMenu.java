@@ -29,7 +29,7 @@ public class RecipeDisplayMenu extends Menu {
     private final String invTitle;
     private final Menu parentMenu;
 
-    public RecipeDisplayMenu(Player player, Recipe recipe, RecipeListMenu parentMenu) {
+    public RecipeDisplayMenu(Player player, Recipe recipe, Menu parentMenu) {
         super(player);
 
         this.parentMenu = parentMenu;
