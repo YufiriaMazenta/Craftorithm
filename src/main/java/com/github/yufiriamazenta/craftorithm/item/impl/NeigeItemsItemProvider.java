@@ -22,11 +22,12 @@ public enum NeigeItemsItemProvider implements ItemProvider {
         if (niItemInfo == null) {
             return null;
         }
+        String id = niItemInfo.getId();
         if (ignoreAmount)
-            return niItemInfo.getId();
+            return id;
         else {
-            ItemStack niItem = ItemManager.INSTANCE.getItemStack(niItemInfo.getId());
-            return niItemInfo.getId() + " " + (itemStack.getAmount() / niItem.getAmount());
+            ItemStack niItem = getItem(id);
+            return id + " " + (itemStack.getAmount() / niItem.getAmount());
         }
     }
 

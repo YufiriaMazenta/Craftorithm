@@ -28,11 +28,11 @@ public enum MMOItemsItemProvider implements ItemProvider {
         if (ignoreAmount) {
             return itemKey;
         } else {
-            ItemStack item = getItem(type + ":" + id);
-            if (ItemUtil.isAir(item)) {
+            ItemStack miItem = getItem(itemKey);
+            if (ItemUtil.isAir(miItem)) {
                 return null;
             }
-            return itemKey + " " + (itemStack.getAmount() / item.getAmount());
+            return itemKey + " " + (itemStack.getAmount() / miItem.getAmount());
         }
 
     }
