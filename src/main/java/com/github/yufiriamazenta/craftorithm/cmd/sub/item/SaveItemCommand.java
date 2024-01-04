@@ -18,7 +18,7 @@ public final class SaveItemCommand extends AbstractSubCommand {
     public static final SaveItemCommand INSTANCE = new SaveItemCommand();
 
     private SaveItemCommand() {
-        super("save");
+        super("save", "craftorithm.command.item.save");
     }
 
     @Override
