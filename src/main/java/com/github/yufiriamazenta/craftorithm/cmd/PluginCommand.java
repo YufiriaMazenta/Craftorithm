@@ -23,7 +23,7 @@ import java.util.List;
 
 @BukkitCommand(
         name = "craftorithm",
-        aliases = {"craft"},
+        aliases = {"craft", "cra"},
         permission = "craftorithm.command"
 )
 public class PluginCommand extends RootCmdExecutor {
