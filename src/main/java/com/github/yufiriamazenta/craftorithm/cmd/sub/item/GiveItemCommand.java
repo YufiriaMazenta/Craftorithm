@@ -18,7 +18,7 @@ public class GiveItemCommand extends AbstractSubCommand {
     public static final GiveItemCommand INSTANCE = new GiveItemCommand();
 
     private GiveItemCommand() {
-        super("give");
+        super("give", "craftorithm.command.item.give");
     }
 
     @Override
