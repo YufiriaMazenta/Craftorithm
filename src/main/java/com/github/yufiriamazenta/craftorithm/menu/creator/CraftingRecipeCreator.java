@@ -62,6 +62,17 @@ public class CraftingRecipeCreator extends UnlockableRecipeCreator {
                             String sourceName = ItemUtils.matchItemNameOrCreate(source, true);
                             sourceList.add(sourceName);
                         }
+                        boolean allEmpty = true;
+                        for (String choice : sourceList) {
+                            if (!choice.isEmpty()) {
+                                allEmpty = false;
+                                break;
+                            }
+                        }
+                        if (allEmpty) {
+                            LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_SOURCE);
+                            return;
+                        }
                         ConfigWrapper recipeConfig = createRecipeConfig(recipeName);
                         switch (recipeType()) {
                             case SHAPED:

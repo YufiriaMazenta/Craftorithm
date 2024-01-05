@@ -10,10 +10,9 @@ import crypticlib.CrypticLib;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
+
+import static crypticlib.command.CommandManager.subcommand;
 
 public final class RecipeListCommand extends AbstractSubCommand {
 
@@ -22,42 +21,29 @@ public final class RecipeListCommand extends AbstractSubCommand {
 
     private RecipeListCommand() {
         super("list", "craftorithm.command.list");
+        regSub(subcommand(SERVER)
+            .setPermission("craftorithm.command.list.server")
+            .setExecutor((sender, args) -> {
+                new RecipeListMenu((Player) sender, RecipeManager.INSTANCE.serverRecipesCache().keySet()).openMenu();
+                return true;
+            }));
+        regSub(subcommand(CRAFTORITHM)
+            .setPermission("craftorithm.command.list.craftorithm")
+            .setExecutor((sender, arg) -> {
+                new RecipeGroupListMenu((Player) sender).openMenu();
+                return true;
+            }));
     }
 
     @Override
     public boolean onCommand(CommandSender sender, List<String> args) {
-        if (CrypticLib.minecraftVersion() < 11600) {
-            LangUtil.sendLang(sender, Languages.COMMAND_LIST_UNSUPPORTED_VERSION);
-            return true;
-        }
         if (!checkSenderIsPlayer(sender)) {
             return true;
         }
-        String listType;
-        if (args.isEmpty())
-            listType = CRAFTORITHM;
-        else
-            listType = args.get(0).toLowerCase(Locale.ENGLISH);
-        Player player = (Player) sender;
-        switch (listType) {
-            case SERVER:
-                new RecipeListMenu(player, RecipeManager.INSTANCE.serverRecipesCache().keySet()).openMenu();
-                break;
-            case CRAFTORITHM:
-            default:
-                new RecipeGroupListMenu(player).openMenu();
-                break;
+        if (args.isEmpty()) {
+            args = new ArrayList<>(Collections.singletonList(CRAFTORITHM));
         }
-        return true;
+        return super.onCommand(sender, args);
     }
 
-    @Override
-    public List<String> onTabComplete(CommandSender sender, List<String> args) {
-        if (args.size() <= 1) {
-            List<String> list = new ArrayList<>(Arrays.asList(CRAFTORITHM, SERVER));
-            filterTabList(list, args.get(0));
-            return list;
-        }
-        return super.onTabComplete(sender, args);
-    }
 }
