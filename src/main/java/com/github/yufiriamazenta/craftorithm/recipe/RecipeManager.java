@@ -115,7 +115,7 @@ public enum RecipeManager {
         loadRecipeGroups();
         loadRecipes();
         reloadRemovedRecipes();
-        reloadServerRecipeCache();
+        loadServerRecipeCache();
     }
 
     private void loadRecipes() {
@@ -444,7 +444,7 @@ public enum RecipeManager {
         recipeUnlockMap.clear();
     }
 
-    public void reloadServerRecipeCache() {
+    public void loadServerRecipeCache() {
         Iterator<Recipe> recipeIterator = Bukkit.recipeIterator();
         serverRecipesCache.clear();
         while (recipeIterator.hasNext()) {

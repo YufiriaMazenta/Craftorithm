@@ -21,6 +21,10 @@ public abstract class AbstractSubCommand extends SubcmdExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, List<String> args) {
+        if (args.isEmpty()) {
+            sendNotEnoughCmdParamMsg(sender, 1);
+            return true;
+        }
         SubcmdExecutor subCommand = subcommands().get(args.get(0));
         if (subCommand == null) {
             LangUtil.sendLang(sender, Languages.COMMAND_UNDEFINED_SUBCMD);
