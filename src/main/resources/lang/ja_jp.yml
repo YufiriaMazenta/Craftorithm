@@ -15,10 +15,14 @@ command:
       success: '<prefix> &aアイテムの取得に成功しました。'
       not_exist_item: '<prefix> &c存在しないアイテム <item_name>'
       player_offline: '<prefix> &cそのプレイヤーはオフラインであるか、存在しません。'
-    add_fuel:
-      success: '<prefix> &aカスタム燃料を正常に追加しました'
-      failed_add_air: '<prefix> &cカスタム燃料の追加に失敗しました。 理由: 存在しないアイテムを燃料として追加することはできません。'
-      failed_exist: '<prefix> &cカスタム燃料の追加に失敗しました。 理由: この燃料はすでに存在します。'
+    fuel:
+      add:
+        success: '<prefix> &aカスタム燃料を正常に追加しました.'
+        failed_add_air: '<prefix> &cカスタム燃料の追加に失敗しました。 理由: 存在しないアイテムを燃料として追加することはできません。'
+        failed_exist: '<prefix> &cカスタム燃料の追加に失敗しました。 理由: この燃料はすでに存在します。'
+      remove:
+        success: '<prefix> &aカスタム燃料を正常に削除しました。'
+        failed_not_exist: '<prefix> &cカスタム燃料の削除に失敗しました。 理由: この燃料は存在しません。'
   reload:
     success: '<prefix> &aプラグインのリロードが成功しました。'
     exception: '<prefix> &cプラグインのリロード中にエラーが発生しました。コンソールを確認してください。'
