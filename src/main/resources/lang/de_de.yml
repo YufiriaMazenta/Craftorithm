@@ -15,6 +15,10 @@ command:
       success: '<prefix> &aGegenstand erfolgreich erhalten.'
       not_exist_item: '<prefix> &cGegenstand <item_name> existiert nicht.'
       player_offline: '<prefix> &cDer Spieler ist nicht online oder existiert nicht.'
+    add_fuel:
+      success: '<prefix> &aBenutzerdefinierten Kraftstoff erfolgreich hinzufügen'
+      failed_add_air: '<prefix> &cDas Hinzufügen des benutzerdefinierten Kraftstoffs ist fehlgeschlagen. Grund: Ein nicht vorhandener Artikel kann nicht als Treibstoff hinzugefügt werden.'
+      failed_exist: '<prefix> &cDas Hinzufügen des benutzerdefinierten Kraftstoffs ist fehlgeschlagen. Grund: Dieser Kraftstoff existiert bereits.'
   reload:
     success: '<prefix> &aDas Plugin wurde erfolgreich neu geladen.'
     exception: '<prefix> &cBeim Neuladen des Plugins ist ein Fehler aufgetreten. Bitte überprüfen Sie die Konsole.'

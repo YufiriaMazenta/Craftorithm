@@ -15,6 +15,10 @@ command:
       success: '<prefix> &a物品獲取成功。'
       not_exist_item: '<prefix> &c不存在物品 <item_name>。'
       player_offline: '<prefix> &c該玩家不在線上或不存在。'
+    add_fuel:
+      success: '<prefix> &a添加自定義燃料成功'
+      failed_add_air: '<prefix> &c添加自定義燃料失敗，原因：不能將不存在的物品作為燃料。'
+      failed_exist: '<prefix> &c添加自定義燃料失敗。原因：此燃料已存在。'
   reload:
     success: '<prefix> &a插件重載成功。'
     exception: '<prefix> &c插件重載過程中發生錯誤，請查看控制台。'
