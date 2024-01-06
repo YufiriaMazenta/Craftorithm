@@ -4,6 +4,7 @@ import com.github.yufiriamazenta.craftorithm.cmd.sub.AbstractSubCommand;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.item.impl.CraftorithmItemProvider;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import crypticlib.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -31,7 +32,7 @@ public final class SaveItemCommand extends AbstractSubCommand {
             return true;
 
         ItemStack item = ((Player) sender).getInventory().getItemInMainHand();
-        if (item.getType().equals(Material.AIR)) {
+        if (ItemUtil.isAir(item)) {
             LangUtil.sendLang(sender, Languages.COMMAND_ITEM_SAVE_FAILED_SAVE_AIR);
             return true;
         }

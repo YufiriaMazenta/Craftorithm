@@ -5,15 +5,12 @@ import com.github.yufiriamazenta.craftorithm.bstat.Metrics;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
-import com.github.yufiriamazenta.craftorithm.listener.FurnaceSmeltHandler;
 import com.github.yufiriamazenta.craftorithm.listener.ItemsAdderHandler;
-import com.github.yufiriamazenta.craftorithm.listener.SmithingHandler;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import com.github.yufiriamazenta.craftorithm.util.PluginHookUtil;
 import com.github.yufiriamazenta.craftorithm.util.UpdateUtil;
 import crypticlib.BukkitPlugin;
-import crypticlib.CrypticLib;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -30,7 +27,7 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
 
     @Override
     public void enable() {
-        ItemManager.INSTANCE.retDefaultProviders();
+        ItemManager.INSTANCE.loadItemManager();
         regListeners();
         initArcenciel();
         loadBStat();

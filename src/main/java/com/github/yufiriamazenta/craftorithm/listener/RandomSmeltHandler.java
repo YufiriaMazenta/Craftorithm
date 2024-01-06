@@ -18,14 +18,14 @@ import org.bukkit.inventory.ItemStack;
 import java.util.*;
 
 @BukkitListener
-public enum FurnaceSmeltHandler implements Listener {
+public enum RandomSmeltHandler implements Listener {
 
     INSTANCE;
 
     private final Map<Block, YamlConfiguration> randomFurnaceBlockMap;
     private final Random random;
 
-    FurnaceSmeltHandler() {
+    RandomSmeltHandler() {
         random = new Random();
         randomFurnaceBlockMap = new HashMap<>();
     }
