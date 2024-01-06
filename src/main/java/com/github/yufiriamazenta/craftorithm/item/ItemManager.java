@@ -5,9 +5,12 @@ import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.item.impl.CraftorithmItemProvider;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.google.common.base.Preconditions;
+import crypticlib.config.ConfigWrapper;
 import crypticlib.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public enum ItemManager {
@@ -23,6 +27,8 @@ public enum ItemManager {
 
     private final Map<String, ItemProvider> itemProviderMap;
     private final Map<String, Integer> customCookingFuelMap;
+    private final ConfigWrapper customFuelConfig = new ConfigWrapper(Craftorithm.instance(), "custom_fuels.yml");
+    private final String BURN_TIME_KEY = "burn_time";
 
     ItemManager() {
         itemProviderMap = new LinkedHashMap<>();
@@ -115,18 +121,17 @@ public enum ItemManager {
     }
 
     public void reloadCustomCookingFuel() {
+        customFuelConfig.reloadConfig();
         customCookingFuelMap.clear();
-        for (String fuel : PluginConfigs.CUSTOM_COOKING_FUELS.value()) {
-            try {
-                String[] split = fuel.split(" ");
-                if (split.length < 2) {
-                    throw new IllegalArgumentException("Unable to parse the smelting time of this fuel: " + fuel);
-                }
-                int burnTime = Integer.parseInt(split[1]);
-                customCookingFuelMap.put(split[0], burnTime);
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-            }
+        YamlConfiguration config = customFuelConfig.config();
+        Set<String> keys = config.getKeys(false);
+        for (String fuel : keys) {
+            ConfigurationSection fuelConfig = config.getConfigurationSection(fuel);
+            if (fuelConfig == null)
+                continue;
+            int time = fuelConfig.getInt(BURN_TIME_KEY, 200);
+            if (time != 0)
+                customCookingFuelMap.put(fuel, time);
         }
     }
 
@@ -150,13 +155,12 @@ public enum ItemManager {
         String itemName = ItemUtils.matchItemNameOrCreate(item, true);
         if (customCookingFuelMap.containsKey(itemName))
             return false;
+        if (itemName == null)
+            throw new IllegalArgumentException("Cannot add this item as a fuel");
         customCookingFuelMap.put(itemName, burnTime);
-        String fuel = itemName + " " + burnTime;
-        List<String> customCookingFuels = Craftorithm.instance().getConfig().getStringList("custom_cooking_fuels");
-        customCookingFuels.add(fuel);
-        Craftorithm.instance().getConfig().set("custom_cooking_fuels", customCookingFuels);
-        Craftorithm.instance().saveConfig();
-        PluginConfigs.CUSTOM_COOKING_FUELS.value().add(fuel);
+        customFuelConfig.config().set(itemName + "." + BURN_TIME_KEY, burnTime);
+        customFuelConfig.saveConfig();
+        customFuelConfig.reloadConfig();
         return true;
     }
 
