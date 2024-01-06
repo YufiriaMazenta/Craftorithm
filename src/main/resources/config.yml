@@ -13,3 +13,6 @@ enable_anvil_recipe: true
 bstats: true
 #是否释放默认的配方模板文件
 release_default_recipes: true
+#自定义燃料
+custom_cooking_fuels:
+  - 'minecraft:command_block 100'

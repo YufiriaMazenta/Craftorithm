@@ -109,17 +109,4 @@ public class ItemUtils {
         }
     }
 
-    public static String getItemName(ItemStack itemStack) {
-        if (itemStack == null)
-            return null;
-        if (!itemStack.hasItemMeta()) {
-            return itemStack.getType().getKey().toString();
-        }
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        if (itemMeta.hasDisplayName()) {
-            return itemMeta.getDisplayName();
-        }
-        return itemStack.getType().getKey().toString();
-    }
-
 }

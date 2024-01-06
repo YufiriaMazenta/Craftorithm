@@ -101,10 +101,11 @@ public class CookingRecipeGroupEditor extends UnlockableRecipeGroupEditor {
 
     protected void updateCookingIcon(CookingSourceIcon cookingSourceIcon, CookingRecipeSource cookingRecipeSource) {
         List<String> lore = new ArrayList<>(Languages.MENU_RECIPE_EDITOR_ICON_COOKING_ELEMENT_LORE.value(player));
+        String ingredientName = ItemUtils.matchItemNameOrCreate(cookingRecipeSource.ingredient, false);
         lore.replaceAll(it -> it
             .replace("<time>", cookingRecipeSource.cookingTime + "")
             .replace("<exp>", cookingRecipeSource.exp + "")
-            .replace("<ingredient>", ItemUtils.getItemName(cookingRecipeSource.ingredient))
+            .replace("<ingredient>", Objects.requireNonNull(ingredientName))
         );
         ItemUtil.setLore(cookingSourceIcon.display(), lore);
     }

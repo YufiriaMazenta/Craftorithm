@@ -19,6 +19,9 @@ public class Languages {
     public static final StringLangConfigEntry COMMAND_ITEM_GIVE_SUCCESS = new StringLangConfigEntry("command.item.give.success");
     public static final StringLangConfigEntry COMMAND_ITEM_GIVE_NOT_EXIST_ITEM = new StringLangConfigEntry("command.item.give.not_exist_item");
     public static final StringLangConfigEntry COMMAND_ITEM_GIVE_PLAYER_OFFLINE = new StringLangConfigEntry("command.item.give.player_offline");
+    public static final StringLangConfigEntry COMMAND_ITEM_ADD_FUEL_SUCCESS = new StringLangConfigEntry("command.item.add_fuel.success");
+    public static final StringLangConfigEntry COMMAND_ITEM_ADD_FUEL_FAILED_ADD_AIR = new StringLangConfigEntry("command.item.add_fuel.failed_add_air");
+    public static final StringLangConfigEntry COMMAND_ITEM_ADD_FUEL_FAILED_EXIST = new StringLangConfigEntry("command.item.add_fuel.failed_exist");
     public static final StringLangConfigEntry COMMAND_RELOAD_SUCCESS = new StringLangConfigEntry("command.reload.success");
     public static final StringLangConfigEntry COMMAND_RELOAD_EXCEPTION = new StringLangConfigEntry("command.reload.exception");
     public static final StringLangConfigEntry COMMAND_REMOVE_SUCCESS = new StringLangConfigEntry("command.remove.success");
