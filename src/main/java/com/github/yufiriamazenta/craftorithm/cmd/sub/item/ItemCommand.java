@@ -1,6 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.cmd.sub.item;
 
 import com.github.yufiriamazenta.craftorithm.cmd.sub.AbstractSubCommand;
+import com.github.yufiriamazenta.craftorithm.cmd.sub.item.fuel.FuelCommand;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
@@ -11,7 +12,7 @@ public final class ItemCommand extends AbstractSubCommand {
 
     private ItemCommand() {
         super("item", "craftorithm.command.item");
-        regSub(SaveItemCommand.INSTANCE).regSub(GiveItemCommand.INSTANCE).regSub(AddFuelCommand.INSTANCE);
+        regSub(SaveItemCommand.INSTANCE).regSub(GiveItemCommand.INSTANCE).regSub(FuelCommand.INSTANCE);
     }
 
     @Override

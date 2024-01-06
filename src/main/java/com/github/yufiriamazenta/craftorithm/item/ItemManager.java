@@ -153,15 +153,29 @@ public enum ItemManager {
 
     public boolean addCustomFuel(ItemStack item, int burnTime) {
         String itemName = ItemUtils.matchItemNameOrCreate(item, true);
+        if (itemName == null)
+            throw new IllegalArgumentException("Cannot add null item as a fuel");
         if (customCookingFuelMap.containsKey(itemName))
             return false;
-        if (itemName == null)
-            throw new IllegalArgumentException("Cannot add this item as a fuel");
         customCookingFuelMap.put(itemName, burnTime);
         customFuelConfig.config().set(itemName + "." + BURN_TIME_KEY, burnTime);
         customFuelConfig.saveConfig();
         customFuelConfig.reloadConfig();
         return true;
+    }
+
+    public boolean removeCustomFuel(@NotNull String fuelName) {
+        if (!customCookingFuelMap.containsKey(fuelName))
+            return false;
+        customCookingFuelMap.remove(fuelName);
+        customFuelConfig.config().set(fuelName, null);
+        customFuelConfig.saveConfig();
+        customFuelConfig.reloadConfig();
+        return true;
+    }
+
+    public Map<String, Integer> customCookingFuelMap() {
+        return customCookingFuelMap;
     }
 
 }

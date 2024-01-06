@@ -15,10 +15,14 @@ command:
       success: '<prefix> &aRécupération de l''objet réussie'
       not_exist_item: '<prefix> &cL''objet <item_name> n''existe pas.'
       player_offline: '<prefix> &cLe joueur n''est pas en ligne ou n''existe pas.'
-    add_fuel:
-      success: '<prefix> &aAjouter du carburant personnalisé avec succès'
-      failed_add_air: '<prefix> &cL''ajout de carburant personnalisé a échoué. Raison : Impossible d''ajouter un élément inexistant comme carburant.'
-      failed_exist: '<prefix> &cL''ajout de carburant personnalisé a échoué. Raison : Ce carburant existe déjà.'
+    fuel:
+      add:
+        success: '<prefix> &aAjouter du carburant personnalisé avec succès.'
+        failed_add_air: '<prefix> &cL''ajout de carburant personnalisé a échoué. Raison : Impossible d''ajouter un élément inexistant comme carburant.'
+        failed_exist: '<prefix> &cL''ajout de carburant personnalisé a échoué. Raison : Ce carburant existe déjà.'
+      remove:
+        success: '<prefix> &aSupprimer le carburant personnalisé avec succès.'
+        failed_not_exist: '<prefix> &cLa suppression du carburant personnalisé a échoué. Raison : Ce carburant n’existe pas.'
   reload:
     success: '<prefix> &aRelance du plugin réussie!'
     exception: '<prefix> &cUne erreur s''est produite lors du rechargement du plugin, veuillez consulter la console.'

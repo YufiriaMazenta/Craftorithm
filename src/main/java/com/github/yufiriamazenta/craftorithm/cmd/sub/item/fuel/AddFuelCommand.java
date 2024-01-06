@@ -1,4 +1,4 @@
-package com.github.yufiriamazenta.craftorithm.cmd.sub.item;
+package com.github.yufiriamazenta.craftorithm.cmd.sub.item.fuel;
 
 import com.github.yufiriamazenta.craftorithm.cmd.sub.AbstractSubCommand;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
@@ -19,7 +19,7 @@ public class AddFuelCommand extends AbstractSubCommand {
     public static final AddFuelCommand INSTANCE = new AddFuelCommand();
 
     protected AddFuelCommand() {
-        super("add-fuel", "craftorithm.command.item.add-fuel");
+        super("add", "craftorithm.command.item.fuel.add");
     }
 
     @Override
@@ -33,15 +33,15 @@ public class AddFuelCommand extends AbstractSubCommand {
 
         ItemStack item = ((Player) sender).getInventory().getItemInMainHand();
         if (ItemUtil.isAir(item)) {
-            LangUtil.sendLang(sender, Languages.COMMAND_ITEM_ADD_FUEL_FAILED_ADD_AIR);
+            LangUtil.sendLang(sender, Languages.COMMAND_ITEM_FUEL_ADD_FAILED_ADD_AIR);
             return true;
         }
 
         boolean result = ItemManager.INSTANCE.addCustomFuel(item, Integer.parseInt(args.get(0)));
         if (result) {
-            LangUtil.sendLang(sender, Languages.COMMAND_ITEM_ADD_FUEL_SUCCESS);
+            LangUtil.sendLang(sender, Languages.COMMAND_ITEM_FUEL_ADD_SUCCESS);
         } else {
-            LangUtil.sendLang(sender, Languages.COMMAND_ITEM_ADD_FUEL_FAILED_EXIST);
+            LangUtil.sendLang(sender, Languages.COMMAND_ITEM_FUEL_ADD_FAILED_EXIST);
         }
         return true;
     }
