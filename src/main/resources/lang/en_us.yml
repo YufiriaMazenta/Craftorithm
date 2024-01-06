@@ -17,8 +17,8 @@ command:
       player_offline: '<prefix> &cThe player is not online or does not have a profile.'
     add_fuel:
       success: '<prefix> &aAdd custom fuel successfully'
-      failed_add_air: '<prefix> &cAdd custom fuel failed. Reason: Cannot add a non-existent item.'
-      failed_exist: '<prefix> &cAdd custom fuel failed. Reason: This fuel already exists'
+      failed_add_air: '<prefix> &cAdd custom fuel failed. Reason: Cannot add a non-existent item as fuel.'
+      failed_exist: '<prefix> &cAdd custom fuel failed. Reason: This fuel already exists.'
   reload:
     success: '<prefix> &aPlugin reload!'
     exception: '<prefix> &cError occurred during plugin reload, please check the console.'
