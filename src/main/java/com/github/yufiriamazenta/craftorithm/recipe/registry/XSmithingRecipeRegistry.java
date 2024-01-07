@@ -1,4 +1,4 @@
-package com.github.yufiriamazenta.craftorithm.recipe.registry.impl;
+package com.github.yufiriamazenta.craftorithm.recipe.registry;
 
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;

@@ -1,9 +1,8 @@
-package com.github.yufiriamazenta.craftorithm.recipe.registry.impl;
+package com.github.yufiriamazenta.craftorithm.recipe.registry;
 
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
-import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import com.google.common.base.Preconditions;
 import crypticlib.util.ItemUtil;
 import org.bukkit.NamespacedKey;

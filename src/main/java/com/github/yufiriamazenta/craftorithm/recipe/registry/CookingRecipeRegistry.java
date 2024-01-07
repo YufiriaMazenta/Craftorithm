@@ -1,8 +1,7 @@
-package com.github.yufiriamazenta.craftorithm.recipe.registry.impl;
+package com.github.yufiriamazenta.craftorithm.recipe.registry;
 
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
-import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.*;

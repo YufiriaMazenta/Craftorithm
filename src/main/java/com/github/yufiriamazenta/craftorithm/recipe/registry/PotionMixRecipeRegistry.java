@@ -1,9 +1,8 @@
-package com.github.yufiriamazenta.craftorithm.recipe.registry.impl;
+package com.github.yufiriamazenta.craftorithm.recipe.registry;
 
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.PotionMixRecipe;
-import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import io.papermc.paper.potion.PotionMix;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;

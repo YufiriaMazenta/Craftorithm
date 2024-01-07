@@ -1,19 +1,25 @@
 package com.github.yufiriamazenta.craftorithm.recipe;
 
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
+import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import crypticlib.config.ConfigWrapper;
 import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+//TODO 重构RecipeGroup
 public class RecipeGroup {
 
     private String groupName;
     private List<NamespacedKey> groupRecipeKeys = new CopyOnWriteArrayList<>();
+    private Map<NamespacedKey, RecipeRegistry> groupRegistrys = new ConcurrentHashMap<>();
     private final RecipeType recipeType;
     private ConfigWrapper recipeGroupConfig;
     private int sortId;

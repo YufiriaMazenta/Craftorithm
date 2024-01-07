@@ -5,7 +5,7 @@ import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.menu.display.RecipeGroupListMenu;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
-import com.github.yufiriamazenta.craftorithm.recipe.registry.impl.CookingRecipeRegistry;
+import com.github.yufiriamazenta.craftorithm.recipe.registry.CookingRecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import crypticlib.chat.TextProcessor;
 import crypticlib.conversation.Conversation;

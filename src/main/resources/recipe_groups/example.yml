@@ -1,0 +1,20 @@
+type: shaped
+result: minecraft:bedrock
+sort_id: 1
+recipe1:
+  type: shaped
+  result: minecraft:bedrock
+  source:
+    shape:
+      - 'aaa'
+      - 'bbb'
+      - 'ccc'
+    ingredient_map:
+      a: minecraft:command_block
+      b: minecraft:barrier
+      c: minecraft:chain_command_block
+  unlock: true
+
+recipe2:
+  type:
+  其他键:
