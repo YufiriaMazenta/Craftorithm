@@ -13,7 +13,6 @@ public class RandomCookingRecipeRegistry extends CookingRecipeRegistry {
 
     private List<RandomCookingResult> results;
 
-    //TODO 存抽奖结果
     public RandomCookingRecipeRegistry(@NotNull String group, @NotNull NamespacedKey namespacedKey, @NotNull ItemStack result) {
         super(group, namespacedKey, result);
     }
@@ -32,6 +31,11 @@ public class RandomCookingRecipeRegistry extends CookingRecipeRegistry {
     public RandomCookingRecipeRegistry setResults(List<RandomCookingResult> results) {
         this.results = results;
         return this;
+    }
+
+    @Override
+    public RecipeType recipeType() {
+        return RecipeType.RANDOM_COOKING;
     }
 
     public static class RandomCookingResult {

@@ -5,6 +5,9 @@ shaped:
   type: shaped
   result: minecraft:bedrock
   unlock: true
+  condition: if all perm craftorithm.perm.example && level < 100
+  actions:
+    - console me hello
   source:
     shape:
       - aaa

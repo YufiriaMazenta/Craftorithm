@@ -12,6 +12,7 @@ import crypticlib.ui.menu.Menu;
 import crypticlib.util.ItemUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -24,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.function.BiFunction;
 
 public class RecipeGroupListMenu extends Menu {
 
@@ -77,15 +77,16 @@ public class RecipeGroupListMenu extends Menu {
 
     public RecipeGroupListMenu refreshRecipes() {
         Map<String, ItemStack> recipeResultMap = new HashMap<>();
-        RecipeManager.INSTANCE.recipeMap().forEach((recipeType, recipeGroupMap) ->
-            recipeGroupMap.forEach((groupName, recipeGroup) -> {
-                if (recipeGroup == null || recipeGroup.isEmpty())
-                    return;
-                Recipe firstRecipe = RecipeManager.INSTANCE.getRecipe(recipeGroup.groupRecipeKeys().get(0));
+        RecipeManager.INSTANCE.recipeGroupMap().forEach(
+            (groupName, recipeGroup) -> {
+                NamespacedKey randomRecipeKey = recipeGroup.groupRecipeKeyMap().get(
+                    new ArrayList<>(recipeGroup.groupRecipeKeyMap().keySet()).get(0)
+                );
+                Recipe firstRecipe = RecipeManager.INSTANCE.getRecipe(randomRecipeKey);
                 if (firstRecipe == null)
                     return;
                 recipeResultMap.put(groupName, firstRecipe.getResult());
-            })
+            }
         );
         recipeGroupResultList = new CopyOnWriteArrayList<>(recipeResultMap.entrySet());
         page = 0;
@@ -158,9 +159,10 @@ public class RecipeGroupListMenu extends Menu {
                     if (recipeGroup == null) {
                         throw new IllegalArgumentException("Can not find recipe group " + recipeGroupName);
                     }
-                    recipeGroupEditorMap.getOrDefault(recipeGroup.recipeType(), (player, group, parent) -> {
-                        throw new RuntimeException("Unknown recipe type editor");
-                    }).apply(player, recipeGroup, this).openMenu();
+                    //TODO 重写配方编辑
+//                    recipeGroupEditorMap.getOrDefault(recipeGroup.recipeType(), (player, group, parent) -> {
+//                        throw new RuntimeException("Unknown recipe type editor");
+//                    }).apply(player, recipeGroup, this).openMenu();
                     break;
                 case LEFT:
                 case SHIFT_LEFT:
@@ -169,16 +171,16 @@ public class RecipeGroupListMenu extends Menu {
                     if (recipeGroup1 == null) {
                         throw new IllegalArgumentException("Can not find recipe group " + recipeGroupName);
                     }
-                    if (recipeGroup1.groupRecipeKeys().size() < 2) {
+                    if (recipeGroup1.groupRecipeKeyMap().size() < 2) {
                         new RecipeDisplayMenu(
                             player,
-                            RecipeManager.INSTANCE.getRecipe(recipeGroup1.groupRecipeKeys().get(0)),
+                            RecipeManager.INSTANCE.getRecipe(new ArrayList<>(recipeGroup1.groupRecipeKeyMap().values()).get(0)),
                             this
                         ).openMenu();
                     } else {
                         new RecipeListMenu(
                             player,
-                            recipeGroup1.groupRecipeKeys(),
+                            recipeGroup1.groupRecipeKeyMap().values(),
                             this
                         ).openMenu();
                     }

@@ -1,6 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.recipe;
 
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
+import com.github.yufiriamazenta.craftorithm.recipe.registry.StoneCuttingRecipeRegistry;
 import crypticlib.config.ConfigWrapper;
 import org.bukkit.NamespacedKey;
 import org.jetbrains.annotations.NotNull;
@@ -63,8 +64,16 @@ public class RecipeGroup {
             throw new IllegalArgumentException(
                 "Cannot add recipe " + recipeName + " to group " + groupName + " because its group is " + recipeRegistry.group()
             );
-        groupRecipeKeyMap.put(recipeName, recipeRegistry.namespacedKey());
-        groupRecipeRegistryMap.put(recipeRegistry.namespacedKey(), recipeRegistry);
+        if (recipeRegistry.recipeType().equals(RecipeType.STONE_CUTTING)) {
+            StoneCuttingRecipeRegistry stoneCuttingRecipeRegistry = (StoneCuttingRecipeRegistry) recipeRegistry;
+            groupRecipeKeyMap.putAll(stoneCuttingRecipeRegistry.subRecipeKeyMap());
+            for (NamespacedKey key : stoneCuttingRecipeRegistry.subRecipeMap().keySet()) {
+                groupRecipeRegistryMap.put(key, recipeRegistry);
+            }
+        } else {
+            groupRecipeKeyMap.put(recipeName, recipeRegistry.namespacedKey());
+            groupRecipeRegistryMap.put(recipeRegistry.namespacedKey(), recipeRegistry);
+        }
         return this;
     }
 
@@ -90,6 +99,14 @@ public class RecipeGroup {
         return groupRecipeRegistryMap.get(recipeKey);
     }
 
+    public boolean contains(String recipeName) {
+        return groupRecipeKeyMap.containsKey(recipeName);
+    }
+
+    public boolean contains(NamespacedKey namespacedKey) {
+        return groupRecipeRegistryMap.containsKey(namespacedKey);
+    }
+
     public void register() {
         for (RecipeRegistry registry : groupRecipeRegistryMap.values()) {
             registry.register();
@@ -97,7 +114,18 @@ public class RecipeGroup {
     }
 
     public void unregister(boolean deleteFile) {
-        RecipeManager.INSTANCE.removeCraftorithmRecipe(groupName, deleteFile);
+        RecipeManager.INSTANCE.removeRecipeGroup(groupName, deleteFile);
+    }
+
+    public void updateRecipeGroup() {
+        RecipeGroup newGroup = new RecipeGroupLoader(groupName, recipeGroupConfig).load();
+        this.groupRecipeKeyMap = newGroup.groupRecipeKeyMap;
+        this.groupRecipeRegistryMap = newGroup.groupRecipeRegistryMap;
+        this.sortId = newGroup.sortId;
+        if (RecipeManager.INSTANCE.hasRecipeGroup(groupName)) {
+            RecipeManager.INSTANCE.removeRecipeGroup(groupName, false);
+        }
+        RecipeManager.INSTANCE.loadRecipeGroup(this);
     }
 
 }

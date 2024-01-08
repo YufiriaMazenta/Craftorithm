@@ -35,8 +35,8 @@ public class AnvilRecipeCreator extends RecipeCreator {
     private int costLevel;
     private boolean inConversation;
 
-    public AnvilRecipeCreator(@NotNull Player player, @NotNull String recipeName) {
-        super(player, RecipeType.ANVIL, recipeName);
+    public AnvilRecipeCreator(@NotNull Player player, @NotNull String groupName, @NotNull String recipeName) {
+        super(player, RecipeType.ANVIL, groupName, recipeName);
         this.copyNbt = true;
         this.inConversation = false;
         this.costLevel = 0;
@@ -82,7 +82,8 @@ public class AnvilRecipeCreator extends RecipeCreator {
                             recipeConfig.set("result", resultName);
                             recipeConfig.saveConfig();
                             recipeConfig.reloadConfig();
-                            regRecipeGroup(recipeConfig);
+                            //TODO 修改创建配方
+//                            getRecipeGroup(recipeConfig);
                             event.getWhoClicked().closeInventory();
                             sendSuccessMsg(player, recipeName);
                         })

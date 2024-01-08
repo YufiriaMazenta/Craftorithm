@@ -47,4 +47,10 @@ public class PotionMixRecipeRegistry extends RecipeRegistry {
         PotionMixRecipe potionMixRecipe = new PotionMixRecipe(new PotionMix(namespacedKey, result, input, ingredient));
         RecipeManager.INSTANCE.regRecipe(group, potionMixRecipe, RecipeType.POTION);
     }
+
+    @Override
+    public RecipeType recipeType() {
+        return RecipeType.POTION;
+    }
+
 }

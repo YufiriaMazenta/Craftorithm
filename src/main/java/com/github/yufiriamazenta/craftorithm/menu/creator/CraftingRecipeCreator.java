@@ -1,6 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.menu.creator;
 
 import com.github.yufiriamazenta.craftorithm.config.Languages;
+import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
@@ -12,6 +13,7 @@ import crypticlib.ui.display.MenuLayout;
 import crypticlib.ui.menu.StoredMenu;
 import crypticlib.util.ItemUtil;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -20,8 +22,8 @@ import java.util.*;
 
 public class CraftingRecipeCreator extends UnlockableRecipeCreator {
 
-    public CraftingRecipeCreator(@NotNull Player player, RecipeType recipeType, @NotNull String recipeName) {
-        super(player, recipeType, recipeName);
+    public CraftingRecipeCreator(@NotNull Player player, RecipeType recipeType, @NotNull String groupName, @NotNull String recipeName) {
+        super(player, recipeType, groupName, recipeName);
         Preconditions.checkArgument(
             recipeType.equals(RecipeType.SHAPED) || recipeType.equals(RecipeType.SHAPELESS),
             "Crafting recipe only allow shaped and shapeless type"
@@ -73,7 +75,9 @@ public class CraftingRecipeCreator extends UnlockableRecipeCreator {
                             LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_SOURCE);
                             return;
                         }
-                        ConfigWrapper recipeConfig = createRecipeConfig(recipeName);
+                        RecipeGroup recipeGroup = getRecipeGroup(groupName);
+                        ConfigWrapper recipeConfig = recipeGroup.recipeGroupConfig();
+                        ConfigurationSection recipeCfgSection = recipeConfig.config().createSection(recipeName);
                         switch (recipeType()) {
                             case SHAPED:
                                 List<String> shape = new ArrayList<>(Arrays.asList("abc", "def", "ghi"));
@@ -96,21 +100,21 @@ public class CraftingRecipeCreator extends UnlockableRecipeCreator {
                                     shape.set(i, s);
                                 }
                                 shape.removeIf(s -> s.trim().isEmpty());
-                                recipeConfig.set("type", "shaped");
-                                recipeConfig.set("shape", shape);
-                                recipeConfig.set("source", itemNameMap);
+                                recipeCfgSection.set("type", "shaped");
+                                recipeCfgSection.set("source.shape", shape);
+                                recipeCfgSection.set("source.ingredients", itemNameMap);
                                 break;
                             case SHAPELESS:
                                 sourceList.removeIf(String::isEmpty);
-                                recipeConfig.set("type", "shapeless");
-                                recipeConfig.set("source", sourceList);
+                                recipeCfgSection.set("type", "shapeless");
+                                recipeCfgSection.set("source.ingredients", sourceList);
                                 break;
                         }
-                        recipeConfig.set("unlock", unlock());
-                        recipeConfig.set("result", resultName);
+                        recipeCfgSection.set("unlock", unlock());
+                        recipeCfgSection.set("result", resultName);
                         recipeConfig.saveConfig();
                         recipeConfig.reloadConfig();
-                        regRecipeGroup(recipeConfig);
+                        recipeGroup.updateRecipeGroup();
                         event.getWhoClicked().closeInventory();
                         sendSuccessMsg(event.getWhoClicked(), recipeName);
                     })

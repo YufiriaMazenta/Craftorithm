@@ -1,28 +1,30 @@
 package com.github.yufiriamazenta.craftorithm.listener;
 
-import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
+import com.github.yufiriamazenta.craftorithm.recipe.registry.RandomCookingRecipeRegistry;
+import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import crypticlib.listener.BukkitListener;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.FurnaceStartSmeltEvent;
-import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 @BukkitListener
 public enum RandomSmeltHandler implements Listener {
 
     INSTANCE;
 
-    private final Map<Block, YamlConfiguration> randomFurnaceBlockMap;
+    private final Map<Block, List<RandomCookingRecipeRegistry.RandomCookingResult>> randomFurnaceBlockMap;
     private final Random random;
 
     RandomSmeltHandler() {
@@ -33,53 +35,33 @@ public enum RandomSmeltHandler implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onFurnaceStartSmelt(FurnaceStartSmeltEvent event) {
         NamespacedKey recipeKey = event.getRecipe().getKey();
-        Map<String, RecipeGroup> randomCookingRecipeGroups = RecipeManager.INSTANCE.recipeMap().getOrDefault(RecipeType.RANDOM_COOKING, new HashMap<>());
-        boolean isRandomCooking = false;
-        for (RecipeGroup group : randomCookingRecipeGroups.values()) {
-            if (group.contains(recipeKey)) {
-                isRandomCooking = true;
-                break;
-            }
-        }
-        if (!isRandomCooking)
+        RecipeGroup recipeGroup = RecipeManager.INSTANCE.getRecipeGroup(recipeKey);
+        if (recipeGroup == null)
             return;
-        YamlConfiguration config = RecipeManager.INSTANCE.getRecipeConfig(event.getRecipe().getKey());
-        if (config == null)
+
+        RecipeRegistry recipeRegistry = recipeGroup.getRecipeRegistry(recipeKey);
+        if (recipeRegistry == null)
             return;
-        if (config.getString("type", "shaped").equals("random_cooking")) {
-            randomFurnaceBlockMap.put(event.getBlock(), config);
-        }
+
+        if (!recipeRegistry.recipeType().equals(RecipeType.RANDOM_COOKING))
+            return;
+
+        RandomCookingRecipeRegistry randomCookingRecipeRegistry = (RandomCookingRecipeRegistry) recipeRegistry;
+        randomFurnaceBlockMap.put(event.getBlock(), randomCookingRecipeRegistry.results());
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onFurnaceSmelt(FurnaceSmeltEvent event) {
         if (randomFurnaceBlockMap.containsKey(event.getBlock())) {
-            List<String> resultList = randomFurnaceBlockMap.get(event.getBlock()).getStringList("result");
-            List<Map.Entry<ItemStack, Integer>> weightList = getWeight(resultList);
-            int randomNum = random.nextInt(weightList.get(weightList.size() - 1).getValue());
-            for (Map.Entry<ItemStack, Integer> entry : weightList) {
-                if (randomNum < entry.getValue()) {
-                    event.setResult(entry.getKey());
+            List<RandomCookingRecipeRegistry.RandomCookingResult> results = randomFurnaceBlockMap.get(event.getBlock());
+            int randomNum = random.nextInt(results.get(results.size() - 1).weight());
+            for (RandomCookingRecipeRegistry.RandomCookingResult result : results) {
+                if (randomNum < result.weight()) {
+                    event.setResult(result.result());
                     break;
                 }
             }
-            randomFurnaceBlockMap.remove(event.getBlock());
         }
-    }
-
-    private List<Map.Entry<ItemStack, Integer>> getWeight(List<String> resultStr) {
-        Map<ItemStack, Integer> weightMap = new HashMap<>();
-        int sum = 0;
-        for (String result : resultStr) {
-            String item = result.substring(0, result.lastIndexOf(" "));
-            int weight = Integer.parseInt(result.substring(result.lastIndexOf(" ") + 1));
-            ItemStack itemStack = ItemManager.INSTANCE.matchItem(item);
-            sum += weight;
-            weightMap.put(itemStack, sum);
-        }
-        List<Map.Entry<ItemStack, Integer>> weightList = new ArrayList<>(weightMap.entrySet());
-        weightList.sort(Map.Entry.comparingByValue());
-        return weightList;
     }
 
 }

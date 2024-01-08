@@ -22,8 +22,8 @@ import java.util.Map;
 import java.util.Objects;
 
 public class SmithingRecipeCreator extends UnlockableRecipeCreator {
-    public SmithingRecipeCreator(@NotNull Player player, @NotNull String recipeName) {
-        super(player, RecipeType.SMITHING, recipeName);
+    public SmithingRecipeCreator(@NotNull Player player, @NotNull String groupName, @NotNull String recipeName) {
+        super(player, RecipeType.SMITHING, groupName, recipeName);
         setDisplay(
             new MenuDisplay(
                 title(),
@@ -100,7 +100,8 @@ public class SmithingRecipeCreator extends UnlockableRecipeCreator {
                                 recipeConfig.set("unlock", unlock());
                                 recipeConfig.saveConfig();
                                 recipeConfig.reloadConfig();
-                                regRecipeGroup(recipeConfig);
+                                //TODO 修改创建配方
+//                                getRecipeGroup(recipeConfig);
                                 event.getWhoClicked().closeInventory();
                                 sendSuccessMsg(event.getWhoClicked(), recipeName);
                             })

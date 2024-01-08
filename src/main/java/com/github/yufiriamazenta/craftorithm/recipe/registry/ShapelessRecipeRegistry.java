@@ -41,4 +41,10 @@ public class ShapelessRecipeRegistry extends UnlockableRecipeRegistry {
         RecipeManager.INSTANCE.regRecipe(group, shapelessRecipe, RecipeType.SHAPELESS);
         RecipeManager.INSTANCE.recipeUnlockMap().put(namespacedKey, unlock);
     }
+
+    @Override
+    public RecipeType recipeType() {
+        return RecipeType.SHAPELESS;
+    }
+
 }

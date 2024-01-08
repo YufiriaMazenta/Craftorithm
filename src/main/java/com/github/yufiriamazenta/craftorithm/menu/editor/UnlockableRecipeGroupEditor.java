@@ -17,7 +17,7 @@ public abstract class UnlockableRecipeGroupEditor extends RecipeGroupEditor {
 
     protected UnlockableRecipeGroupEditor(@NotNull Player player, @NotNull RecipeGroup recipeGroup, RecipeGroupListMenu parent) {
         super(player, recipeGroup, parent);
-        this.unlock = recipeGroup.unlock();
+//        this.unlock = recipeGroup.unlock();
     }
 
     protected Icon getUnlockIcon() {
@@ -27,15 +27,16 @@ public abstract class UnlockableRecipeGroupEditor extends RecipeGroupEditor {
                 .replace("<unlock>", String.valueOf(unlock)),
             event -> {
                 unlock = !unlock;
-                recipeGroup.setUnlock(unlock);
+//                recipeGroup.setUnlock(unlock);
                 recipeGroup.recipeGroupConfig().set("unlock", unlock);
                 recipeGroup.recipeGroupConfig().saveConfig();
                 updateUnlockIcon(event.getInventory().getItem(event.getSlot()));
             }
         );
-        if (recipeGroup.unlock()) {
-            ItemUtils.toggleItemGlowing(icon.display());
-        }
+        //TODO 重写
+//        if (recipeGroup.unlock()) {
+//            ItemUtils.toggleItemGlowing(icon.display());
+//        }
         return icon;
     }
 

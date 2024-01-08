@@ -29,7 +29,7 @@ public final class RemoveRecipeCommand extends AbstractSubCommand {
             return true;
         }
 
-        if (RecipeManager.INSTANCE.removeCraftorithmRecipe(args.get(0), true)) {
+        if (RecipeManager.INSTANCE.removeRecipeGroup(args.get(0), true)) {
             LangUtil.sendLang(sender, Languages.COMMAND_REMOVE_SUCCESS);
         }
         else
@@ -40,10 +40,7 @@ public final class RemoveRecipeCommand extends AbstractSubCommand {
     @Override
     public List<String> onTabComplete(CommandSender sender, List<String> args) {
         if (args.size() <= 1) {
-            List<String> tabList = new ArrayList<>();
-            for (Map<String, RecipeGroup> recipeGroupMap : RecipeManager.INSTANCE.recipeMap().values()) {
-                tabList.addAll(recipeGroupMap.keySet());
-            }
+            List<String> tabList = new ArrayList<>(RecipeManager.INSTANCE.getRecipeGroups());
             filterTabList(tabList, args.get(0));
             return tabList;
         }

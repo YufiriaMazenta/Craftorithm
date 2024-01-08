@@ -61,4 +61,9 @@ public class SmithingRecipeRegistry extends UnlockableRecipeRegistry {
         RecipeManager.INSTANCE.regRecipe(group, smithingRecipe, RecipeType.SMITHING);
         RecipeManager.INSTANCE.recipeUnlockMap().put(namespacedKey, unlock);
     }
+
+    @Override
+    public RecipeType recipeType() {
+        return RecipeType.SMITHING;
+    }
 }

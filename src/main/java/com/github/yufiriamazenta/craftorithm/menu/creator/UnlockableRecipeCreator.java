@@ -16,8 +16,8 @@ public abstract class UnlockableRecipeCreator extends RecipeCreator {
 
     private boolean unlock;
 
-    public UnlockableRecipeCreator(@NotNull Player player, @NotNull RecipeType recipeType, @NotNull String recipeName) {
-        super(player, recipeType, recipeName);
+    public UnlockableRecipeCreator(@NotNull Player player, @NotNull RecipeType recipeType, @NotNull String groupName, @NotNull String recipeName) {
+        super(player, recipeType, groupName, recipeName);
         unlock = PluginConfigs.DEFAULT_RECIPE_UNLOCK.value();
     }
 

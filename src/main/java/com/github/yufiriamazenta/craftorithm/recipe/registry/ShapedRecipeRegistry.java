@@ -66,5 +66,10 @@ public final class ShapedRecipeRegistry extends UnlockableRecipeRegistry {
         RecipeManager.INSTANCE.recipeUnlockMap().put(namespacedKey, unlock);
     }
 
+    @Override
+    public RecipeType recipeType() {
+        return RecipeType.SHAPED;
+    }
+
 
 }

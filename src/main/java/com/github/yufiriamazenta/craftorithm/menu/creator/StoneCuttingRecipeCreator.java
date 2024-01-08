@@ -19,8 +19,8 @@ import java.util.*;
 
 public class StoneCuttingRecipeCreator extends UnlockableRecipeCreator {
 
-    public StoneCuttingRecipeCreator(@NotNull Player player, @NotNull String recipeName) {
-        super(player, RecipeType.STONE_CUTTING, recipeName);
+    public StoneCuttingRecipeCreator(@NotNull Player player, @NotNull String groupName, @NotNull String recipeName) {
+        super(player, RecipeType.STONE_CUTTING, groupName, recipeName);
         setDisplay(
             new MenuDisplay(
                 title(),
@@ -69,7 +69,8 @@ public class StoneCuttingRecipeCreator extends UnlockableRecipeCreator {
                             recipeConfig.set("unlock", unlock());
                             recipeConfig.saveConfig();
                             recipeConfig.reloadConfig();
-                            regRecipeGroup(recipeConfig);
+                            //TODO 修改创建配方
+//                            getRecipeGroup(recipeConfig);
                             event.getWhoClicked().closeInventory();
                             sendSuccessMsg(event.getWhoClicked(), recipeName);
                         })

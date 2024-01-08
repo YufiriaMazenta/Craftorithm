@@ -4,7 +4,6 @@ import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
-import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
@@ -24,21 +23,19 @@ import java.io.File;
 
 public abstract class RecipeCreator extends StoredMenu {
 
-    private RecipeType recipeType;
-    private String recipeName;
-    private String title;
+    protected RecipeType recipeType;
+    protected String groupName;
+    protected String recipeName;
+    protected String title;
 
-    public RecipeCreator(
-        @NotNull Player player,
-        @NotNull RecipeType recipeType,
-        @NotNull String recipeName
-    ) {
+    public RecipeCreator(@NotNull Player player, @NotNull RecipeType recipeType, @NotNull String groupName, @NotNull String recipeName) {
         super(player);
         this.recipeName = recipeName;
         this.recipeType = recipeType;
         this.title = Languages.MENU_RECIPE_CREATOR_TITLE.value(player)
             .replace("<recipe_type>", RecipeManager.INSTANCE.getRecipeTypeName(recipeType).value(player))
             .replace("<recipe_name>", recipeName);
+        this.groupName = groupName;
     }
 
     protected void toggleIconGlowing(int slot, InventoryClickEvent event) {
@@ -66,8 +63,8 @@ public abstract class RecipeCreator extends StoredMenu {
         );
     }
 
-    protected ConfigWrapper createRecipeConfig(String recipeName) {
-        File recipeFile = new File(RecipeManager.INSTANCE.RECIPE_FILE_FOLDER, recipeName + ".yml");
+    protected ConfigWrapper createRecipeConfig(String groupName) {
+        File recipeFile = new File(RecipeManager.INSTANCE.RECIPE_FILE_FOLDER, groupName + ".yml");
         if (!recipeFile.exists()) {
             FileUtil.createNewFile(recipeFile);
         }
@@ -105,12 +102,11 @@ public abstract class RecipeCreator extends StoredMenu {
         return this;
     }
 
-    public void regRecipeGroup(ConfigWrapper recipeConfig) {
-        RecipeGroup recipeGroup = new RecipeGroup(recipeName, recipeType(), recipeConfig);
-        RecipeManager.INSTANCE.addRecipeGroup(recipeGroup);
-        for (RecipeRegistry recipeRegistry : RecipeFactory.newRecipeRegistry(recipeConfig.config(), recipeName)) {
-            recipeRegistry.register();
-        }
+    public RecipeGroup getRecipeGroup(String groupName) {
+        if (RecipeManager.INSTANCE.hasRecipeGroup(groupName))
+            return RecipeManager.INSTANCE.getRecipeGroup(groupName);
+
+        return new RecipeGroup(recipeName, createRecipeConfig(groupName), 0);
     }
 
 }

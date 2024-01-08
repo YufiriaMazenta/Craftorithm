@@ -33,8 +33,8 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
     private float exp;
     private boolean inConversation = false;
 
-    public CookingRecipeCreator(@NotNull Player player, @NotNull String recipeName) {
-        super(player, RecipeType.COOKING, recipeName);
+    public CookingRecipeCreator(@NotNull Player player, @NotNull String groupName, @NotNull String recipeName) {
+        super(player, RecipeType.COOKING, groupName, recipeName);
         this.cookingTime = 200;
         this.exp = 0;
         this.cookingToggleMap = new HashMap<>();
@@ -104,7 +104,8 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
                             recipeConfig.set("source", sourceList);
                             recipeConfig.saveConfig();
                             recipeConfig.reloadConfig();
-                            regRecipeGroup(recipeConfig);
+                            //TODO 修改创建配方
+//                            getRecipeGroup(recipeConfig);
                             event.getWhoClicked().closeInventory();
                             sendSuccessMsg(event.getWhoClicked(), recipeName);
                         })

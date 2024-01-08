@@ -8,7 +8,6 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.CrypticLib;
-import crypticlib.chat.MessageSender;
 import crypticlib.chat.TextProcessor;
 import crypticlib.config.ConfigWrapper;
 import crypticlib.conversation.Conversation;
@@ -29,7 +28,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -102,7 +100,7 @@ public abstract class RecipeGroupEditor extends MultipageMenu {
             Material.BARRIER,
             Languages.MENU_RECIPE_EDITOR_ICON_REMOVE_NAME.value(player),
             event -> {
-                RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeGroup().groupName(), true);
+                RecipeManager.INSTANCE.removeRecipeGroup(recipeGroup().groupName(), true);
                 player.closeInventory();
                 LangUtil.sendLang(
                     player,
@@ -150,7 +148,7 @@ public abstract class RecipeGroupEditor extends MultipageMenu {
     }
 
     protected void reloadRecipeGroup() {
-        RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeGroup().groupName(), false);
+        RecipeManager.INSTANCE.removeRecipeGroup(recipeGroup().groupName(), false);
         RecipeManager.INSTANCE.addRecipeGroup(recipeGroup);
         RecipeManager.INSTANCE.loadRecipeGroup(recipeGroup);
     }

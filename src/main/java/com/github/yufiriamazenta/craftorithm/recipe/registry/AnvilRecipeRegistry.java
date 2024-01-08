@@ -36,6 +36,11 @@ public class AnvilRecipeRegistry extends RecipeRegistry {
         RecipeManager.INSTANCE.regRecipe(group, anvilRecipe, RecipeType.ANVIL);
     }
 
+    @Override
+    public RecipeType recipeType() {
+        return RecipeType.ANVIL;
+    }
+
     public ItemStack base() {
         return base;
     }

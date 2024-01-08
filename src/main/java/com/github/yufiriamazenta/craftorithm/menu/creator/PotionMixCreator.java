@@ -22,8 +22,8 @@ import java.util.Objects;
 
 public class PotionMixCreator extends RecipeCreator {
 
-    public PotionMixCreator(@NotNull Player player, @NotNull String recipeName) {
-        super(player, RecipeType.POTION, recipeName);
+    public PotionMixCreator(@NotNull Player player, @NotNull String groupName, @NotNull String recipeName) {
+        super(player, RecipeType.POTION, groupName, recipeName);
         setDisplay(
             new MenuDisplay(
                 title(),
@@ -67,7 +67,8 @@ public class PotionMixCreator extends RecipeCreator {
                             recipeConfig.set("result", resultName);
                             recipeConfig.saveConfig();
                             recipeConfig.reloadConfig();
-                            regRecipeGroup(recipeConfig);
+                            //TODO 修改创建配方
+//                            getRecipeGroup(recipeConfig);
                             event.getWhoClicked().closeInventory();
                             sendSuccessMsg(player, recipeName);
                         })

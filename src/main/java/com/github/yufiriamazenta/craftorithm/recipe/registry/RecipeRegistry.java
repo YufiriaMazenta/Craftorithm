@@ -1,5 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.recipe.registry;
 
+import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -46,5 +47,7 @@ public abstract class RecipeRegistry {
     }
 
     public abstract void register();
+
+    public abstract RecipeType recipeType();
 
 }

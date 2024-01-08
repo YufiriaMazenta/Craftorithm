@@ -30,6 +30,11 @@ public class CookingRecipeRegistry extends UnlockableRecipeRegistry {
         RecipeManager.INSTANCE.recipeUnlockMap().put(namespacedKey, unlock);
     }
 
+    @Override
+    public RecipeType recipeType() {
+        return RecipeType.COOKING;
+    }
+
     protected CookingRecipe<?> generateCookingRecipe() {
         Objects.requireNonNull(namespacedKey, "Recipe key cannot be null");
         Objects.requireNonNull(result, "Recipe key cannot be null");

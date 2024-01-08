@@ -54,42 +54,38 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
             LangUtil.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
             return true;
         }
-        String recipeName;
-        if (args.size() < 2)
-            recipeName = UUID.randomUUID().toString();
-        else
-            recipeName = args.get(1);
-
-        Matcher matcher = recipeNamePattern.matcher(recipeName);
+        String groupName = args.size() < 2 ? "global" : args.get(1);
+        String recipeName = args.size() < 3 ? UUID.randomUUID().toString() : args.get(2);
+        Matcher matcher = recipeNamePattern.matcher(groupName);
         if (!matcher.matches()) {
             LangUtil.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_NAME);
             return true;
         }
-        if (RecipeManager.INSTANCE.hasCraftorithmRecipe(recipeName)) {
-            LangUtil.sendLang(sender, Languages.COMMAND_CREATE_NAME_USED);
-            return true;
-        }
+//        if (RecipeManager.INSTANCE.hasRecipeGroup(groupName)) {
+//            LangUtil.sendLang(sender, Languages.COMMAND_CREATE_NAME_USED);
+//            return true;
+//        }
         RecipeType recipeType = RecipeType.valueOf(recipeTypeStr.toUpperCase(Locale.ROOT));
         Player player = (Player) sender;
         switch (recipeType) {
             case SHAPED:
             case SHAPELESS:
-                new CraftingRecipeCreator(player, recipeType, recipeName).openMenu();
+                new CraftingRecipeCreator(player, recipeType, groupName, recipeName).openMenu();
                 break;
             case COOKING:
-                new CookingRecipeCreator(player, recipeName).openMenu();
+                new CookingRecipeCreator(player, groupName, recipeName).openMenu();
                 break;
             case SMITHING:
-                new SmithingRecipeCreator(player, recipeName).openMenu();
+                new SmithingRecipeCreator(player, groupName, recipeName).openMenu();
                 break;
             case STONE_CUTTING:
-                new StoneCuttingRecipeCreator(player, recipeName).openMenu();
+                new StoneCuttingRecipeCreator(player, groupName, recipeName).openMenu();
                 break;
             case POTION:
-                new PotionMixCreator(player, recipeName).openMenu();
+                new PotionMixCreator(player, groupName, recipeName).openMenu();
                 break;
             case ANVIL:
-                new AnvilRecipeCreator(player, recipeName).openMenu();
+                new AnvilRecipeCreator(player, groupName, recipeName).openMenu();
                 break;
             default:
                 LangUtil.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
@@ -103,6 +99,10 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
         if (args.size() <= 1) {
             List<String> tabList = new ArrayList<>(recipeTypeList);
             filterTabList(tabList, args.get(0));
+            return tabList;
+        } else if (args.size() == 2) {
+            List<String> tabList = new ArrayList<>(RecipeManager.INSTANCE.getRecipeGroups());
+            filterTabList(tabList, args.get(1));
             return tabList;
         }
         return Collections.singletonList("<recipe_name>");
