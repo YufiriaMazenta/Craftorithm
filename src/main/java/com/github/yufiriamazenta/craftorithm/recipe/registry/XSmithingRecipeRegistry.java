@@ -19,6 +19,21 @@ public class XSmithingRecipeRegistry extends SmithingRecipeRegistry {
         this.smithingType = SmithingType.TRANSFORM;
     }
 
+    @Override
+    public XSmithingRecipeRegistry setBase(RecipeChoice base) {
+        return (XSmithingRecipeRegistry) super.setBase(base);
+    }
+
+    @Override
+    public XSmithingRecipeRegistry setAddition(RecipeChoice addition) {
+        return (XSmithingRecipeRegistry) super.setAddition(addition);
+    }
+
+    @Override
+    public XSmithingRecipeRegistry setCopyNbt(boolean copyNbt) {
+        return (XSmithingRecipeRegistry) super.setCopyNbt(copyNbt);
+    }
+
     public RecipeChoice template() {
         return template;
     }
@@ -30,26 +45,27 @@ public class XSmithingRecipeRegistry extends SmithingRecipeRegistry {
 
     @Override
     public void register() {
-        Objects.requireNonNull(namespacedKey(), "Recipe key cannot be null");
-        Objects.requireNonNull(base(), "Recipe base cannot be null");
-        Objects.requireNonNull(addition(), "Recipe addition cannot be null");
+        Objects.requireNonNull(namespacedKey, "Recipe key cannot be null");
+        Objects.requireNonNull(base, "Recipe base cannot be null");
+        Objects.requireNonNull(addition, "Recipe addition cannot be null");
         Objects.requireNonNull(template, "Recipe template cannot be null");
 
         SmithingRecipe smithingRecipe;
         switch (smithingType) {
             default:
-                Objects.requireNonNull(result(), "Recipe result cannot be null");
-                smithingRecipe = new SmithingRecipe(namespacedKey(), result(), base(), addition());
+                Objects.requireNonNull(result, "Recipe result cannot be null");
+                smithingRecipe = new SmithingRecipe(namespacedKey, result, base, addition, copyNbt);
                 break;
             case TRIM:
-                smithingRecipe = new SmithingTrimRecipe(namespacedKey(), template, base(), addition());
+                smithingRecipe = new SmithingTrimRecipe(namespacedKey, template, base, addition, copyNbt);
                 break;
             case TRANSFORM:
                 Objects.requireNonNull(result(), "Recipe result cannot be null");
-                smithingRecipe = new SmithingTransformRecipe(namespacedKey(), result(), template, base(), addition());
+                smithingRecipe = new SmithingTransformRecipe(namespacedKey, result, template, base, addition, copyNbt);
                 break;
         }
         RecipeManager.INSTANCE.regRecipe(group(), smithingRecipe, RecipeType.SMITHING);
+        RecipeManager.INSTANCE.recipeUnlockMap().put(namespacedKey, unlock);
     }
 
     public SmithingType smithingType() {

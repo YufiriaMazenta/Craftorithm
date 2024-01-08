@@ -14,9 +14,9 @@ import java.util.Objects;
 
 public class AnvilRecipeRegistry extends RecipeRegistry {
 
-    private ItemStack base, addition;
-    private boolean copyNbt;
-    private int costLevel;
+    protected ItemStack base, addition;
+    protected boolean copyNbt;
+    protected int costLevel;
 
     public AnvilRecipeRegistry(@Nullable String group, @NotNull NamespacedKey namespacedKey, @NotNull ItemStack result) {
         super(group, namespacedKey, result);
@@ -28,12 +28,12 @@ public class AnvilRecipeRegistry extends RecipeRegistry {
     public void register() {
         Preconditions.checkArgument(!ItemUtil.isAir(base), "Recipe base cannot be null");
         Preconditions.checkArgument(!ItemUtil.isAir(addition), "Recipe base cannot be null");
-        Preconditions.checkArgument(!ItemUtil.isAir(result()), "Recipe base cannot be null");
-        Objects.requireNonNull(namespacedKey(), "Recipe key cannot be null");
-        AnvilRecipe anvilRecipe = new AnvilRecipe(namespacedKey(), result(), base, addition);
+        Preconditions.checkArgument(!ItemUtil.isAir(result), "Recipe base cannot be null");
+        Objects.requireNonNull(namespacedKey, "Recipe key cannot be null");
+        AnvilRecipe anvilRecipe = new AnvilRecipe(namespacedKey, result, base, addition);
         anvilRecipe.setCopyNbt(copyNbt);
         anvilRecipe.setCostLevel(costLevel);
-        RecipeManager.INSTANCE.regRecipe(group(), anvilRecipe, RecipeType.ANVIL);
+        RecipeManager.INSTANCE.regRecipe(group, anvilRecipe, RecipeType.ANVIL);
     }
 
     public ItemStack base() {

@@ -1,20 +1,77 @@
 type: shaped
 result: minecraft:bedrock
 sort_id: 1
-recipe1:
+shaped:
   type: shaped
   result: minecraft:bedrock
+  unlock: true
   source:
     shape:
-      - 'aaa'
-      - 'bbb'
-      - 'ccc'
-    ingredient_map:
+      - aaa
+      - bbb
+      - ccc
+    ingredients:
       a: minecraft:command_block
       b: minecraft:barrier
       c: minecraft:chain_command_block
-  unlock: true
-
-recipe2:
-  type:
-  其他键:
+shapeless:
+  type: shapeless
+  result: minecraft:bedrock
+  source:
+    ingredients:
+      - minecraft:command_block
+      - minecraft:command_block
+      - minecraft:command_block
+      - minecraft:command_block
+      - minecraft:command_block
+cooking:
+  type: cooking
+  result: minecraft:bedrock
+  source:
+    block: furnace
+    ingredient: minecraft:command_block
+    exp: 1.0
+    time: 100
+smithing:
+  type: smithing
+  result: minecraft:bedrock
+  source:
+    copy_nbt: true
+    template: minecraft:command_block
+    base: minecraft:command_block
+    addition: minecraft:command_block
+    type: transform
+stone_cutting:
+  type: stone_cutting
+  result:
+    - minecraft:bedrock
+    - minecraft:barrier
+  source:
+    ingredients:
+      - minecraft:command_block
+      - minecraft:chain_command_block
+random_cooking:
+  type: random_cooking
+  result:
+    - minecraft:bedrock 50
+    - minecraft:barrier 25
+    - minecraft:chain_command_block 25
+  source:
+    block: furnace
+    ingredient: minecraft:command_block
+    exp: 1.0
+    time: 100
+potion:
+  type: potion
+  result: minecraft:bedrock
+  source:
+    ingredient: minecraft:command_block
+    input: minecraft:chain_command_block
+anvil:
+  type: anvil
+  result: minecraft:bedrock
+  source:
+    base: minecraft:command_block
+    addition: minecraft:chain_command_block
+    copy_nbt: true
+    cost_level: 1

@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Objects;
 
-public class ShapelessRecipeRegistry extends RecipeRegistry {
+public class ShapelessRecipeRegistry extends UnlockableRecipeRegistry {
 
     private List<RecipeChoice> choiceList;
 
@@ -30,14 +30,15 @@ public class ShapelessRecipeRegistry extends RecipeRegistry {
 
     @Override
     public void register() {
-        Objects.requireNonNull(namespacedKey(), "Recipe key cannot be null");
-        Objects.requireNonNull(result(), "Recipe key cannot be null");
+        Objects.requireNonNull(namespacedKey, "Recipe key cannot be null");
+        Objects.requireNonNull(result, "Recipe key cannot be null");
         Objects.requireNonNull(choiceList, "Recipe ingredients cannot be null");
-        ShapelessRecipe shapelessRecipe = new ShapelessRecipe(namespacedKey(), result());
+        ShapelessRecipe shapelessRecipe = new ShapelessRecipe(namespacedKey, result);
         for (RecipeChoice choice : choiceList) {
             shapelessRecipe.addIngredient(choice);
         }
-        shapelessRecipe.setGroup(group());
-        RecipeManager.INSTANCE.regRecipe(group(), shapelessRecipe, RecipeType.SHAPELESS);
+        shapelessRecipe.setGroup(group);
+        RecipeManager.INSTANCE.regRecipe(group, shapelessRecipe, RecipeType.SHAPELESS);
+        RecipeManager.INSTANCE.recipeUnlockMap().put(namespacedKey, unlock);
     }
 }

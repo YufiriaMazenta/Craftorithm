@@ -1,41 +1,26 @@
 package com.github.yufiriamazenta.craftorithm.recipe;
 
-import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import crypticlib.config.ConfigWrapper;
 import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
-//TODO 重构RecipeGroup
 public class RecipeGroup {
 
-    private String groupName;
-    private List<NamespacedKey> groupRecipeKeys = new CopyOnWriteArrayList<>();
-    private Map<NamespacedKey, RecipeRegistry> groupRegistrys = new ConcurrentHashMap<>();
-    private final RecipeType recipeType;
-    private ConfigWrapper recipeGroupConfig;
-    private int sortId;
-    private boolean unlock;
+    protected String groupName;
+    protected Map<String, NamespacedKey> groupRecipeKeyMap = new ConcurrentHashMap<>();
+    protected Map<NamespacedKey, RecipeRegistry> groupRecipeRegistryMap = new ConcurrentHashMap<>();
+    protected ConfigWrapper recipeGroupConfig;
+    protected int sortId;
 
-    public RecipeGroup(@NotNull String groupName, @NotNull RecipeType recipeType, @NotNull ConfigWrapper recipeGroupConfig) {
-        this(groupName, new ArrayList<>(), recipeType, recipeGroupConfig);
-    }
-
-    public RecipeGroup(@NotNull String groupName, @NotNull List<NamespacedKey> groupRecipeKeys, @NotNull RecipeType recipeType, @NotNull ConfigWrapper recipeGroupConfig) {
+    public RecipeGroup(@NotNull String groupName, @NotNull ConfigWrapper recipeGroupConfig, int sortId) {
         this.groupName = groupName;
-        this.groupRecipeKeys.addAll(groupRecipeKeys);
-        this.recipeType = recipeType;
         this.recipeGroupConfig = recipeGroupConfig;
-        this.sortId = recipeGroupConfig.config().getInt("sort_id", 0);
-        this.unlock = recipeGroupConfig.config().getBoolean("unlock", PluginConfigs.DEFAULT_RECIPE_UNLOCK.value());
+        this.sortId = sortId;
     }
 
     public String groupName() {
@@ -47,49 +32,12 @@ public class RecipeGroup {
         return this;
     }
 
-    public List<NamespacedKey> groupRecipeKeys() {
-        return groupRecipeKeys;
-    }
-
-    public RecipeGroup setGroupRecipeKeys(List<NamespacedKey> groupRecipeKeys) {
-        this.groupRecipeKeys = groupRecipeKeys;
-        return this;
-    }
-
-    public boolean contains(NamespacedKey namespacedKey) {
-        return groupRecipeKeys.contains(namespacedKey);
-    }
-
-    public RecipeGroup addRecipeKey(NamespacedKey namespacedKey) {
-        if (groupRecipeKeys.contains(namespacedKey))
-            return this;
-        groupRecipeKeys.add(namespacedKey);
-        return this;
-    }
-
-    public boolean isEmpty() {
-        return groupRecipeKeys.isEmpty();
-    }
-
-    public RecipeType recipeType() {
-        return recipeType;
-    }
-
     public int sortId() {
         return sortId;
     }
 
     public RecipeGroup setSortId(int sortId) {
         this.sortId = sortId;
-        return this;
-    }
-
-    public boolean unlock() {
-        return unlock;
-    }
-
-    public RecipeGroup setUnlock(boolean unlock) {
-        this.unlock = unlock;
         return this;
     }
 
@@ -100,6 +48,56 @@ public class RecipeGroup {
     public RecipeGroup setRecipeGroupConfig(ConfigWrapper recipeGroupConfig) {
         this.recipeGroupConfig = recipeGroupConfig;
         return this;
+    }
+
+    public Map<String, NamespacedKey> groupRecipeKeyMap() {
+        return groupRecipeKeyMap;
+    }
+
+    public Map<NamespacedKey, RecipeRegistry> groupRecipeRegistryMap() {
+        return groupRecipeRegistryMap;
+    }
+
+    public RecipeGroup addRecipeRegistry(String recipeName, RecipeRegistry recipeRegistry) {
+        if (!recipeRegistry.group().equals(groupName))
+            throw new IllegalArgumentException(
+                "Cannot add recipe " + recipeName + " to group " + groupName + " because its group is " + recipeRegistry.group()
+            );
+        groupRecipeKeyMap.put(recipeName, recipeRegistry.namespacedKey());
+        groupRecipeRegistryMap.put(recipeRegistry.namespacedKey(), recipeRegistry);
+        return this;
+    }
+
+    public RecipeGroup removeRecipeRegistry(String recipeName) {
+        NamespacedKey recipeKey = groupRecipeKeyMap.get(recipeName);
+        if (recipeKey == null) {
+            return this;
+        }
+        groupRecipeRegistryMap.remove(recipeKey);
+        groupRecipeKeyMap.remove(recipeName);
+        return this;
+    }
+
+    public @Nullable RecipeRegistry getRecipeRegistry(@NotNull String recipeName) {
+        NamespacedKey recipeKey = groupRecipeKeyMap.get(recipeName);
+        if (recipeKey == null) {
+            return null;
+        }
+        return getRecipeRegistry(recipeKey);
+    }
+
+    public @Nullable RecipeRegistry getRecipeRegistry(@NotNull NamespacedKey recipeKey) {
+        return groupRecipeRegistryMap.get(recipeKey);
+    }
+
+    public void register() {
+        for (RecipeRegistry registry : groupRecipeRegistryMap.values()) {
+            registry.register();
+        }
+    }
+
+    public void unregister(boolean deleteFile) {
+        RecipeManager.INSTANCE.removeCraftorithmRecipe(groupName, deleteFile);
     }
 
 }

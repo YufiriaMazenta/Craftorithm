@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-public final class ShapedRecipeRegistry extends RecipeRegistry {
+public final class ShapedRecipeRegistry extends UnlockableRecipeRegistry {
 
     private String[] shape;
     private Map<Character, RecipeChoice> recipeChoiceMap;
@@ -42,11 +42,11 @@ public final class ShapedRecipeRegistry extends RecipeRegistry {
 
     @Override
     public void register() {
-        Objects.requireNonNull(namespacedKey(), "Recipe key cannot be null");
-        Objects.requireNonNull(result(), "Recipe key cannot be null");
+        Objects.requireNonNull(namespacedKey, "Recipe key cannot be null");
+        Objects.requireNonNull(result, "Recipe key cannot be null");
         Objects.requireNonNull(shape, "Recipe shape cannot be null");
         Objects.requireNonNull(recipeChoiceMap, "Recipe ingredients cannot be null");
-        ShapedRecipe shapedRecipe = new ShapedRecipe(namespacedKey(), result());
+        ShapedRecipe shapedRecipe = new ShapedRecipe(namespacedKey, result);
         shapedRecipe.shape(shape);
         Set<Character> shapeStrChars = new HashSet<>();
         for (String s : shape) {
@@ -60,9 +60,10 @@ public final class ShapedRecipeRegistry extends RecipeRegistry {
             shapedRecipe.setIngredient(ingredientKey, recipeChoiceMap.get(ingredientKey));
         }
 
-        shapedRecipe.setGroup(group());
+        shapedRecipe.setGroup(group);
 
-        RecipeManager.INSTANCE.regRecipe(group(), shapedRecipe, RecipeType.SHAPED);
+        RecipeManager.INSTANCE.regRecipe(group, shapedRecipe, RecipeType.SHAPED);
+        RecipeManager.INSTANCE.recipeUnlockMap().put(namespacedKey, unlock);
     }
 
 

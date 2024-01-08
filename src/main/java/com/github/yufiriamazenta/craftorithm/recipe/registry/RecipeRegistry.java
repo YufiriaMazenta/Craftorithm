@@ -7,9 +7,9 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class RecipeRegistry {
 
-    private NamespacedKey namespacedKey;
-    private ItemStack result;
-    private String group;
+    protected NamespacedKey namespacedKey;
+    protected ItemStack result;
+    protected String group;
 
     public RecipeRegistry(@Nullable String group, @NotNull NamespacedKey namespacedKey, @NotNull ItemStack result) {
         this.group = group;

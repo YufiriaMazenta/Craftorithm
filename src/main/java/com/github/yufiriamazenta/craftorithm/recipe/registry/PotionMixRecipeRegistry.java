@@ -39,12 +39,12 @@ public class PotionMixRecipeRegistry extends RecipeRegistry {
 
     @Override
     public void register() {
-        Objects.requireNonNull(namespacedKey(), "Recipe key cannot be null");
-        Objects.requireNonNull(result(), "Recipe result cannot be null");
+        Objects.requireNonNull(namespacedKey, "Recipe key cannot be null");
+        Objects.requireNonNull(result, "Recipe result cannot be null");
         Objects.requireNonNull(ingredient, "Recipe ingredient cannot be null");
         Objects.requireNonNull(input, "Recipe input cannot be null");
 
-        PotionMixRecipe potionMixRecipe = new PotionMixRecipe(new PotionMix(namespacedKey(), result(), input, ingredient));
-        RecipeManager.INSTANCE.regRecipe(group(), potionMixRecipe, RecipeType.POTION);
+        PotionMixRecipe potionMixRecipe = new PotionMixRecipe(new PotionMix(namespacedKey, result, input, ingredient));
+        RecipeManager.INSTANCE.regRecipe(group, potionMixRecipe, RecipeType.POTION);
     }
 }

@@ -30,10 +30,11 @@ import java.util.function.Consumer;
 public enum RecipeManager {
 
     INSTANCE;
-    public final File RECIPE_FILE_FOLDER = new File(Craftorithm.instance().getDataFolder().getPath(), "recipes");
+    public final File RECIPE_FILE_FOLDER = new File(Craftorithm.instance().getDataFolder().getPath(), "recipes_groups");
     private final ConfigWrapper removedRecipesConfigWrapper = new ConfigWrapper(Craftorithm.instance(), "removed_recipes.yml");
     public final String PLUGIN_RECIPE_NAMESPACE = "craftorithm";
-    private final Map<RecipeType, Map<String, RecipeGroup>> pluginRecipeMap;
+
+    private final Map<String, RecipeGroup> recipeGroupMap;
     private final Map<RecipeType, Consumer<Recipe>> recipeRegisterMap;
     private final Map<RecipeType, Consumer<List<NamespacedKey>>> recipeRemoverMap;
     private final Map<NamespacedKey, Boolean> recipeUnlockMap;
@@ -53,7 +54,7 @@ public enum RecipeManager {
     private boolean supportPotionMix;
 
     RecipeManager() {
-        pluginRecipeMap = new ConcurrentHashMap<>();
+        recipeGroupMap = new ConcurrentHashMap<>();
         recipeRegisterMap = new ConcurrentHashMap<>();
         recipeRemoverMap = new ConcurrentHashMap<>();
         recipeUnlockMap = new ConcurrentHashMap<>();
@@ -119,6 +120,7 @@ public enum RecipeManager {
     }
 
     private void loadRecipes() {
+
         for (Map.Entry<RecipeType, Map<String, RecipeGroup>> pluginRecipeMapEntry : pluginRecipeMap.entrySet()) {
             Map<String, RecipeGroup> recipeGroupMap = pluginRecipeMapEntry.getValue();
             recipeGroupMap.forEach((recipeGroupName, recipeGroup) -> loadRecipeGroup(recipeGroup));
@@ -143,20 +145,12 @@ public enum RecipeManager {
         }
     }
 
-    public void addRecipeGroup(RecipeGroup recipeGroup) {
-        RecipeType recipeType = recipeGroup.recipeType();
-        if (pluginRecipeMap.containsKey(recipeType)) {
-            Map<String, RecipeGroup> recipeGroupMap = pluginRecipeMap.get(recipeType);
-            recipeGroupMap.put(recipeGroup.groupName(), recipeGroup);
-        } else {
-            Map<String, RecipeGroup> recipeGroupMap = new ConcurrentHashMap<>();
-            recipeGroupMap.put(recipeGroup.groupName(), recipeGroup);
-            pluginRecipeMap.put(recipeType, recipeGroupMap);
-        }
+    public RecipeGroup addRecipeGroup(RecipeGroup recipeGroup) {
+        return recipeGroupMap.put(recipeGroup.groupName(), recipeGroup);
     }
 
     private void loadRecipeGroups() {
-        pluginRecipeMap.clear();
+        recipeGroupMap.clear();
         if (!RECIPE_FILE_FOLDER.exists()) {
             boolean mkdirResult = RECIPE_FILE_FOLDER.mkdir();
             if (!mkdirResult)
@@ -172,20 +166,21 @@ public enum RecipeManager {
             int lastDotIndex = recipeGroupName.lastIndexOf(".");
             recipeGroupName = recipeGroupName.substring(0, lastDotIndex);
             ConfigWrapper recipeGroupConfigWrapper = new ConfigWrapper(file);
-            RecipeType recipeType = RecipeType.valueOf(recipeGroupConfigWrapper.config().getString("type").toUpperCase());
-            RecipeGroup recipeGroup = new RecipeGroup(recipeGroupName, recipeType, recipeGroupConfigWrapper);
+            RecipeGroup recipeGroup = new RecipeGroupLoader(recipeGroupName, recipeGroupConfigWrapper).load();
             addRecipeGroup(recipeGroup);
         }
     }
 
+    /**
+     * 内部使用的注册方法，一般情况下请勿使用
+     */
+    @Deprecated
     public void regRecipe(String recipeGroupName, Recipe recipe, RecipeType recipeType) {
         if (!pluginRecipeMap.containsKey(recipeType))
             pluginRecipeMap.put(recipeType, new ConcurrentHashMap<>());
         Map<String, RecipeGroup> recipeGroupMap = pluginRecipeMap.get(recipeType);
         if (!recipeGroupMap.containsKey(recipeGroupName))
             throw new IllegalArgumentException("Can not find recipe group " + recipeGroupName + ", use addRecipeGroup() method to add recipe group.");
-        RecipeGroup recipeGroup = recipeGroupMap.get(recipeGroupName);
-        recipeGroup.addRecipeKey(getRecipeKey(recipe));
         recipeRegisterMap.getOrDefault(recipeType, recipe1 -> {
             throw new UnsupportedVersionException("Can not register " + recipeType.name().toLowerCase() + " recipe");
         }).accept(recipe);
@@ -482,30 +477,8 @@ public enum RecipeManager {
     private void saveDefConfigFile(List<File> allFiles) {
         if (!PluginConfigs.RELEASE_DEFAULT_RECIPES.value())
             return;
-        Craftorithm.instance().saveResource("recipes/example_shaped.yml", false);
-        Craftorithm.instance().saveResource("recipes/example_shapeless.yml", false);
-        allFiles.add(new File(RECIPE_FILE_FOLDER, "example_shaped.yml"));
-        allFiles.add(new File(RECIPE_FILE_FOLDER, "example_shapeless.yml"));
-        if (CrypticLib.minecraftVersion() >= 11400) {
-            Craftorithm.instance().saveResource("recipes/example_smithing.yml", false);
-            Craftorithm.instance().saveResource("recipes/example_stone_cutting.yml", false);
-            Craftorithm.instance().saveResource("recipes/example_cooking.yml", false);
-            allFiles.add(new File(RECIPE_FILE_FOLDER, "example_cooking.yml"));
-            allFiles.add(new File(RECIPE_FILE_FOLDER, "example_smithing.yml"));
-            allFiles.add(new File(RECIPE_FILE_FOLDER, "example_stone_cutting.yml"));
-        }
-        if (CrypticLib.minecraftVersion() >= 11700) {
-            Craftorithm.instance().saveResource("recipes/example_random_cooking.yml", false);
-            allFiles.add(new File(RECIPE_FILE_FOLDER, "example_random_cooking.yml"));
-        }
-        if (supportPotionMix()) {
-            Craftorithm.instance().saveResource("recipes/example_potion.yml", false);
-            allFiles.add(new File(RECIPE_FILE_FOLDER, "example_potion.yml"));
-        }
-        if (PluginConfigs.ENABLE_ANVIL_RECIPE.value()) {
-            Craftorithm.instance().saveResource("recipes/example_anvil.yml", false);
-            allFiles.add(new File(RECIPE_FILE_FOLDER, "example_anvil.yml"));
-        }
+        Craftorithm.instance().saveResource("recipe_groups/example.yml", false);
+        allFiles.add(new File(RECIPE_FILE_FOLDER, "example.yml"));
     }
 
 }
