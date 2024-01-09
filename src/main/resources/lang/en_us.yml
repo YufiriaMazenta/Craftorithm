@@ -43,8 +43,6 @@ command:
     success: '<prefix> &a<recipe_type> recipe <recipe_name> created successfully.'
   run_arcenciel:
     success: '<prefix> &aExecution successful, took <time> ms.'
-  list:
-    unsupported_version: '<prefix> &cThis feature is only available in version 1.16 and above.'
 menu:
   recipe_list:
     title: '&3&lRecipe List'
@@ -52,10 +50,10 @@ menu:
       frame: '&3&lRecipe List'
       previous: '&aPrevious Page'
       next: '&aNext Page'
-  new_recipe_list:
-    title: '&3&lCraftorithm New Recipe List'
+  recipe_group_list:
+    title: '&3&lRecipe Group List'
     icon:
-      frame: '&3&lNew recipe list'
+      frame: '&3&lRecipe Group List'
       previous: '&aPrevious Page'
       next: '&aNext Page'
       elements:

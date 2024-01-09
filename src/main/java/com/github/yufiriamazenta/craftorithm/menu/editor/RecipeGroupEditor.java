@@ -5,6 +5,7 @@ import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.menu.display.RecipeGroupListMenu;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
+import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.CrypticLib;
@@ -14,6 +15,8 @@ import crypticlib.conversation.Conversation;
 import crypticlib.conversation.NumberPrompt;
 import crypticlib.conversation.Prompt;
 import crypticlib.ui.display.Icon;
+import crypticlib.ui.display.MenuDisplay;
+import crypticlib.ui.display.MenuLayout;
 import crypticlib.ui.menu.Menu;
 import crypticlib.ui.menu.MultipageMenu;
 import crypticlib.util.ItemUtil;
@@ -28,10 +31,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class RecipeGroupEditor extends MultipageMenu {
+public class RecipeGroupEditor extends MultipageMenu {
 
     protected RecipeGroup recipeGroup;
     protected RecipeGroupListMenu parent;
@@ -40,13 +44,47 @@ public abstract class RecipeGroupEditor extends MultipageMenu {
     protected final Character ELEMENT_KEY = '%';
     protected boolean inConversation = false;
 
-    protected RecipeGroupEditor(@NotNull Player player, @NotNull RecipeGroup recipeGroup, RecipeGroupListMenu parent) {
+    public RecipeGroupEditor(@NotNull Player player, @NotNull RecipeGroup recipeGroup, RecipeGroupListMenu parent) {
         super(player);
         setElementKey(ELEMENT_KEY);
         Validate.notNull(recipeGroup);
         this.recipeGroup = recipeGroup;
         this.title = Languages.MENU_RECIPE_EDITOR_TITLE.value(player).replace("<recipe_name>", recipeGroup.groupName());
         this.parent = parent;
+        setDisplay(
+            new MenuDisplay(
+                title,
+                new MenuLayout(
+                    Arrays.asList(
+                        "####A###Z",
+                        "%%%%%%%%%",
+                        "%%%%%%%%%",
+                        "%%%%%%%%%",
+                        "%%%%%%%%%",
+                        "#X#####Y#"
+                    ),
+                    () -> {
+                        Map<Character, Icon> layoutMap = new HashMap<>();
+                        layoutMap.put('A', getSortIdEditIcon(4));
+                        layoutMap.put('#', getFrameIcon());
+                        layoutMap.put('X', getPreviousIcon());
+                        layoutMap.put('Y', getNextIcon());
+                        layoutMap.put('Z', getRemoveIcon());
+                        return layoutMap;
+                    }
+                )
+            )
+        );
+        loadElements();
+    }
+
+    private void loadElements() {
+        recipeGroup.groupRecipeKeyMap().forEach(
+            (recipeName, recipeKey) -> {
+                RecipeRegistry registry = recipeGroup.getRecipeRegistry(recipeKey);
+                //TODO 展示配方
+            }
+        );
     }
 
     public RecipeGroup recipeGroup() {
@@ -132,7 +170,7 @@ public abstract class RecipeGroupEditor extends MultipageMenu {
                     List<InventoryType> typeWhenNotOpenInv = Arrays.asList(InventoryType.CRAFTING, InventoryType.CREATIVE);
                     if (!typeWhenNotOpenInv.contains(type))
                         return;
-                    parent.refreshRecipes().resetIcons().refreshInventory().openMenu();
+                    parent.refreshRecipeResults().resetIcons().refreshInventory().openMenu();
                 }
             );
         }
@@ -151,6 +189,14 @@ public abstract class RecipeGroupEditor extends MultipageMenu {
         RecipeManager.INSTANCE.removeRecipeGroup(recipeGroup().groupName(), false);
         RecipeManager.INSTANCE.addRecipeGroup(recipeGroup);
         RecipeManager.INSTANCE.loadRecipeGroup(recipeGroup);
+    }
+
+    protected class RecipeEditIcon extends Icon {
+
+        public RecipeEditIcon(RecipeRegistry registry) {
+            super(new ItemStack(Material.STONE));
+            //TODO
+        }
     }
 
     protected class SortIdInputPrompt implements NumberPrompt {

@@ -1,7 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.recipe;
 
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
-import com.github.yufiriamazenta.craftorithm.recipe.registry.StoneCuttingRecipeRegistry;
 import crypticlib.config.ConfigWrapper;
 import crypticlib.util.FileUtil;
 import org.bukkit.NamespacedKey;
@@ -9,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -72,16 +72,8 @@ public class RecipeGroup {
             throw new IllegalArgumentException(
                 "Cannot add recipe " + recipeName + " to group " + groupName + " because its group is " + recipeRegistry.group()
             );
-        if (recipeRegistry.recipeType().equals(RecipeType.STONE_CUTTING)) {
-            StoneCuttingRecipeRegistry stoneCuttingRecipeRegistry = (StoneCuttingRecipeRegistry) recipeRegistry;
-            groupRecipeKeyMap.putAll(stoneCuttingRecipeRegistry.subRecipeKeyMap());
-            for (NamespacedKey key : stoneCuttingRecipeRegistry.subRecipeMap().keySet()) {
-                groupRecipeRegistryMap.put(key, recipeRegistry);
-            }
-        } else {
-            groupRecipeKeyMap.put(recipeName, recipeRegistry.namespacedKey());
-            groupRecipeRegistryMap.put(recipeRegistry.namespacedKey(), recipeRegistry);
-        }
+        groupRecipeKeyMap.put(recipeName, recipeRegistry.namespacedKey());
+        groupRecipeRegistryMap.put(recipeRegistry.namespacedKey(), recipeRegistry);
         return this;
     }
 
@@ -90,6 +82,8 @@ public class RecipeGroup {
         if (recipeKey == null) {
             return this;
         }
+        RecipeRegistry registry = groupRecipeRegistryMap.get(recipeKey);
+        RecipeManager.INSTANCE.recipeRemoverMap().get(registry.recipeType()).accept(Collections.singletonList(recipeKey));
         groupRecipeRegistryMap.remove(recipeKey);
         groupRecipeKeyMap.remove(recipeName);
         return this;

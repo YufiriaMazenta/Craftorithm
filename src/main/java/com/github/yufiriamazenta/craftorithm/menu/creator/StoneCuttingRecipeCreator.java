@@ -28,7 +28,7 @@ public class StoneCuttingRecipeCreator extends UnlockableRecipeCreator {
                 title(),
                 new MenuLayout(Arrays.asList(
                     "#########",
-                    "#       #",
+                    "#### ####",
                     "####A####",
                     "#       #",
                     "#########"
@@ -41,23 +41,18 @@ public class StoneCuttingRecipeCreator extends UnlockableRecipeCreator {
                         Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(player),
                         event -> {
                             StoredMenu creator = (StoredMenu) event.getClickedInventory().getHolder();
-                            List<String> sourceList = new ArrayList<>();
                             List<String> resultList = new ArrayList<>();
-                            for (int i = 10; i < 17; i++) {
-                                ItemStack source = Objects.requireNonNull(creator).storedItems().get(i);
-                                if (ItemUtil.isAir(source))
-                                    continue;
-                                sourceList.add(ItemUtils.matchItemNameOrCreate(source, true));
+                            ItemStack ingredient = Objects.requireNonNull(creator).storedItems().get(13);
+                            if (ItemUtil.isAir(ingredient)) {
+                                LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_SOURCE);
+                                return;
                             }
+                            String ingredientStr = ItemUtils.matchItemNameOrCreate(ingredient, true);
                             for (int i = 28; i < 35; i++) {
                                 ItemStack result = creator.storedItems().get(i);
                                 if (ItemUtil.isAir(result))
                                     continue;
                                 resultList.add(ItemUtils.matchItemNameOrCreate(result, false));
-                            }
-                            if (sourceList.isEmpty()) {
-                                LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_SOURCE);
-                                return;
                             }
                             if (resultList.isEmpty()) {
                                 LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_RESULT);
@@ -65,11 +60,14 @@ public class StoneCuttingRecipeCreator extends UnlockableRecipeCreator {
                             }
                             RecipeGroup recipeGroup = getRecipeGroup(groupName);
                             ConfigWrapper recipeConfig = recipeGroup.recipeGroupConfig();
-                            ConfigurationSection recipeCfgSection = recipeConfig.config().createSection(recipeName);
-                            recipeCfgSection.set("result", resultList);
-                            recipeCfgSection.set("type", "stone_cutting");
-                            recipeCfgSection.set("source.ingredients", sourceList);
-                            recipeCfgSection.set("unlock", unlock());
+                            for (int i = 0; i < resultList.size(); i++) {
+                                String recipeFullName = recipeName + "_" + i;
+                                ConfigurationSection recipeCfgSection = recipeConfig.config().createSection(recipeFullName);
+                                recipeCfgSection.set("result", resultList.get(i));
+                                recipeCfgSection.set("type", "stone_cutting");
+                                recipeCfgSection.set("source.ingredient", ingredientStr);
+                                recipeCfgSection.set("unlock", unlock());
+                            }
                             recipeConfig.saveConfig();
                             recipeConfig.reloadConfig();
                             recipeGroup.updateAndLoadRecipeGroup();

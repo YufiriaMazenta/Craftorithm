@@ -9,6 +9,7 @@ import org.bukkit.event.EventException;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.inventory.PrepareSmithingEvent;
 import org.bukkit.event.inventory.SmithItemEvent;
@@ -27,6 +28,7 @@ public enum ItemsAdderHandler implements Listener {
     private final List<RegisteredListener> prepareCraftIAListeners = new ArrayList<>();
     private final List<RegisteredListener> prepareSmithingIAListeners = new ArrayList<>();
     private final List<RegisteredListener> smithIAListeners = new ArrayList<>();
+    private final List<RegisteredListener> cookingIAListeners = new ArrayList<>();
     private final Plugin ITEMS_ADDER_PLUGIN;
     private final String ITEMS_ADDER_PLUGIN_NAME = "ItemsAdder";
     private final Field executorField = ReflectUtil.getDeclaredField(RegisteredListener.class, "executor");
@@ -56,14 +58,24 @@ public enum ItemsAdderHandler implements Listener {
                 prepareSmithingIAListeners.add(registeredListener);
             }
         }
-        smithIAListeners.clear();
         PrepareSmithingEvent.getHandlerList().unregister(ITEMS_ADDER_PLUGIN);
+
+        smithIAListeners.clear();
         for (RegisteredListener registeredListener : SmithItemEvent.getHandlerList().getRegisteredListeners()) {
             if (registeredListener.getPlugin().getName().equals(ITEMS_ADDER_PLUGIN_NAME)) {
                 smithIAListeners.add(registeredListener);
             }
         }
         SmithItemEvent.getHandlerList().unregister(ITEMS_ADDER_PLUGIN);
+
+        //注销IA烧炼监听器
+        cookingIAListeners.clear();
+        for (RegisteredListener registeredListener : FurnaceSmeltEvent.getHandlerList().getRegisteredListeners()) {
+            if (registeredListener.getPlugin().getName().equals(ITEMS_ADDER_PLUGIN_NAME)) {
+                cookingIAListeners.add(registeredListener);
+            }
+        }
+        FurnaceSmeltEvent.getHandlerList().unregister(ITEMS_ADDER_PLUGIN);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -133,6 +145,30 @@ public enum ItemsAdderHandler implements Listener {
         for (RegisteredListener smithIAListener : smithIAListeners) {
             try {
                 getRegisteredListenerExecutor(smithIAListener).execute(smithIAListener.getListener(), event);
+            } catch (EventException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void proxyIACooking(FurnaceSmeltEvent event) {
+        if (cookingIAListeners.isEmpty())
+            return;
+        Recipe recipe = event.getRecipe();
+        if (recipe == null) {
+            executeIACookingListener(event);
+        }
+        NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
+        if (recipeKey == null || !recipeKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
+            executeIACookingListener(event);
+        }
+    }
+
+    public void executeIACookingListener(FurnaceSmeltEvent event) {
+        for (RegisteredListener cookingIAListener : cookingIAListeners) {
+            try {
+                getRegisteredListenerExecutor(cookingIAListener).execute(cookingIAListener.getListener(), event);
             } catch (EventException e) {
                 throw new RuntimeException(e);
             }

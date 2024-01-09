@@ -46,13 +46,9 @@ smithing:
     type: transform
 stone_cutting:
   type: stone_cutting
-  result:
-    - minecraft:bedrock
-    - minecraft:barrier
+  result: minecraft:bedrock
   source:
-    ingredients:
-      - minecraft:command_block
-      - minecraft:chain_command_block
+    ingredient: minecraft:command_block
 random_cooking:
   type: random_cooking
   result:

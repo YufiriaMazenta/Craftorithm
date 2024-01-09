@@ -108,11 +108,6 @@ public class RecipeListMenu extends Menu {
             ItemStack display = recipe.getResult();
             slotMap.put(i, new Icon(display, (event -> new RecipeDisplayMenu(player, recipe, this).openMenu())));
         }
-        for (int i = 0; i < 45; i++) {
-            if (slotMap.containsKey(i))
-                continue;
-            slotMap.put(i, new Icon(new ItemStack(Material.AIR)));
-        }
     }
 
     @Override

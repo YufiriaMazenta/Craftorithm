@@ -13,18 +13,18 @@ import java.util.Objects;
 
 public class ShapelessRecipeRegistry extends UnlockableRecipeRegistry {
 
-    private List<RecipeChoice> choiceList;
+    private List<RecipeChoice> ingredientList;
 
     public ShapelessRecipeRegistry(@NotNull String group, @NotNull NamespacedKey namespacedKey, @NotNull ItemStack result) {
         super(group, namespacedKey, result);
     }
 
-    public List<RecipeChoice> choiceList() {
-        return choiceList;
+    public List<RecipeChoice> ingredientList() {
+        return ingredientList;
     }
 
-    public ShapelessRecipeRegistry setChoiceList(List<RecipeChoice> choiceList) {
-        this.choiceList = choiceList;
+    public ShapelessRecipeRegistry setIngredientList(List<RecipeChoice> choiceList) {
+        this.ingredientList = choiceList;
         return this;
     }
 
@@ -32,9 +32,9 @@ public class ShapelessRecipeRegistry extends UnlockableRecipeRegistry {
     public void register() {
         Objects.requireNonNull(namespacedKey, "Recipe key cannot be null");
         Objects.requireNonNull(result, "Recipe key cannot be null");
-        Objects.requireNonNull(choiceList, "Recipe ingredients cannot be null");
+        Objects.requireNonNull(ingredientList, "Recipe ingredients cannot be null");
         ShapelessRecipe shapelessRecipe = new ShapelessRecipe(namespacedKey, result);
-        for (RecipeChoice choice : choiceList) {
+        for (RecipeChoice choice : ingredientList) {
             shapelessRecipe.addIngredient(choice);
         }
         shapelessRecipe.setGroup(group);

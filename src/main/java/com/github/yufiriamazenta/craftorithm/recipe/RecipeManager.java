@@ -94,16 +94,8 @@ public enum RecipeManager {
     public void reloadRecipeManager() {
         resetRecipes();
         loadRecipeGroups();
-        regRecipes();
         reloadRemovedRecipes();
         loadServerRecipeCache();
-    }
-
-    private void regRecipes() {
-        for (Map.Entry<String, RecipeGroup> recipeGroupEntry : recipeGroupMap.entrySet()) {
-            RecipeGroup recipeGroup = recipeGroupEntry.getValue();
-            loadRecipeGroup(recipeGroup);
-        }
     }
 
     public void loadRecipeGroup(RecipeGroup recipeGroup) {
@@ -113,8 +105,7 @@ public enum RecipeManager {
             }
             recipeGroup.register();
         } catch (Throwable throwable) {
-            LangUtil.info(Languages.LOAD_RECIPE_LOAD_EXCEPTION, CollectionsUtil.newStringHashMap("<recipe_name>", recipeGroup.groupName()));
-            throwable.printStackTrace();
+            throw new RuntimeException(throwable);
         }
     }
 
@@ -139,8 +130,13 @@ public enum RecipeManager {
             int lastDotIndex = recipeGroupName.lastIndexOf(".");
             recipeGroupName = recipeGroupName.substring(0, lastDotIndex);
             ConfigWrapper recipeGroupConfigWrapper = new ConfigWrapper(file);
-            RecipeGroup recipeGroup = new RecipeGroupParser(recipeGroupName, recipeGroupConfigWrapper).parse();
-            addRecipeGroup(recipeGroup);
+            try {
+                RecipeGroup recipeGroup = new RecipeGroupParser(recipeGroupName, recipeGroupConfigWrapper).parse();
+                loadRecipeGroup(recipeGroup);
+            } catch (Throwable throwable) {
+                LangUtil.info(Languages.LOAD_RECIPE_LOAD_EXCEPTION, CollectionsUtil.newStringHashMap("<recipe_name>", recipeGroupName));
+                throwable.printStackTrace();
+            }
         }
     }
 
@@ -408,6 +404,14 @@ public enum RecipeManager {
             NamespacedKey key = getRecipeKey(recipe);
             serverRecipesCache.put(key, recipe);
         }
+    }
+
+    public Map<RecipeType, Consumer<Recipe>> recipeRegisterMap() {
+        return recipeRegisterMap;
+    }
+
+    public Map<RecipeType, Consumer<List<NamespacedKey>>> recipeRemoverMap() {
+        return recipeRemoverMap;
     }
 
     public Map<NamespacedKey, PotionMixRecipe> potionMixRecipeMap() {

@@ -112,7 +112,7 @@ public class RecipeGroupParser {
         String[] shape = new String[shapeList.size()];
         return new ShapedRecipeRegistry(loader.groupName, generateRecipeKey(loader, recipeName), result)
             .setShape(shapeList.toArray(shape))
-            .setRecipeChoiceMap(ingredientMap)
+            .setIngredientMap(ingredientMap)
             .setUnlock(matchUnlock(configSection));
     }
 
@@ -125,14 +125,14 @@ public class RecipeGroupParser {
             recipeChoiceList.add(recipeChoice);
         }
         return new ShapelessRecipeRegistry(loader.groupName, generateRecipeKey(loader, recipeName), result)
-            .setChoiceList(recipeChoiceList)
+            .setIngredientList(recipeChoiceList)
             .setUnlock(matchUnlock(configSection));
     }
 
     protected static RecipeRegistry loadCookingRegistry(RecipeGroupParser loader, String recipeName, ConfigurationSection configSection) {
         ItemStack result = matchResult(loader, configSection);
-        String choiceStr = Objects.requireNonNull(configSection.getString("source.ingredient"));
-        RecipeChoice ingredient = matchRecipeChoice(choiceStr);
+        String ingredientStr = Objects.requireNonNull(configSection.getString("source.ingredient"));
+        RecipeChoice ingredient = matchRecipeChoice(ingredientStr);
         String blockStr = configSection.getString("source.block", "furnace");
         float exp = (float) configSection.getDouble("source.exp", 0);
         int time = configSection.getInt("source.time", 100);
@@ -173,23 +173,11 @@ public class RecipeGroupParser {
     }
 
     protected static RecipeRegistry loadStonecuttingRegistry(RecipeGroupParser loader, String recipeName, ConfigurationSection configSection) {
-        List<ItemStack> results = new ArrayList<>();
-        if (!configSection.contains("result")) {
-            results.add(loader.globalResult);
-        } else if (configSection.isList("result")) {
-            for (String resultStr : configSection.getStringList("result")) {
-                results.add(ItemManager.INSTANCE.matchItem(resultStr));
-            }
-        } else {
-            results.add(ItemManager.INSTANCE.matchItem(Objects.requireNonNull(configSection.getString("result"))));
-        }
-        List<RecipeChoice> ingredients = new ArrayList<>();
-        if (configSection.isList("source.ingredients")) {
-            for (String ingredientStr : configSection.getStringList("source.ingredients")) {
-                ingredients.add(matchRecipeChoice(ingredientStr));
-            }
-        }
-        return new StoneCuttingRecipeRegistry(loader.groupName, generateRecipeKey(loader, recipeName), results, ingredients)
+        ItemStack result = matchResult(loader, configSection);
+        String ingredientStr = Objects.requireNonNull(configSection.getString("source.ingredient"));
+        RecipeChoice ingredient = matchRecipeChoice(ingredientStr);
+        return new StoneCuttingRecipeRegistry(loader.groupName, generateRecipeKey(loader, recipeName), result)
+            .setIngredient(ingredient)
             .setUnlock(matchUnlock(configSection));
     }
 

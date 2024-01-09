@@ -12,72 +12,35 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class StoneCuttingRecipeRegistry extends UnlockableRecipeRegistry {
 
-    private List<ItemStack> results;
-    private boolean registered = false;
-    private List<RecipeChoice> ingredientList = new CopyOnWriteArrayList<>();
-    private final Map<NamespacedKey, Recipe> subRecipes = new ConcurrentHashMap<>();
-    private final Map<String, NamespacedKey> subRecipeKeys = new ConcurrentHashMap<>();
+    protected RecipeChoice ingredient;
 
-    public StoneCuttingRecipeRegistry(@NotNull String group, @NotNull NamespacedKey namespacedKey, @NotNull List<ItemStack> results, List<RecipeChoice> ingredientList) {
-        super(group, namespacedKey, results.get(0));
-        this.results = results;
-        String keyStr = namespacedKey.getKey();
-        for (int i = 0; i < ingredientList.size(); i++) {
-            RecipeChoice ingredient = ingredientList.get(i);
-            for (int j = 0; j < results.size(); j++) {
-                ItemStack result = results.get(i);
-                String subKeyStr = keyStr + "_" + i + "_" + j;
-                NamespacedKey subKey = new NamespacedKey(Craftorithm.instance(), subKeyStr);
-                subRecipeKeys.put(subKeyStr, subKey);
-                StonecuttingRecipe stonecuttingRecipe = new StonecuttingRecipe(subKey, result, ingredient);
-                subRecipes.put(subKey, stonecuttingRecipe);
-                stonecuttingRecipe.setGroup(group);
-            }
-        }
+    public StoneCuttingRecipeRegistry(@NotNull String group, @NotNull NamespacedKey namespacedKey, @NotNull ItemStack result) {
+        super(group, namespacedKey, result);
     }
 
     @Override
     public void register() {
-        if (registered)
-            return;
-        subRecipes.forEach(
-            (key, recipe) -> {
-                RecipeManager.INSTANCE.regRecipe(group(), recipe, RecipeType.STONE_CUTTING);
-                RecipeManager.INSTANCE.recipeUnlockMap().put(key, unlock);
-            }
-        );
-        registered = true;
+        Objects.requireNonNull(namespacedKey, "Recipe key cannot be null");
+        Objects.requireNonNull(result, "Recipe result cannot be null");
+        Objects.requireNonNull(ingredient, "Recipe ingredient cannot be null");
+        Recipe stonecuttingRecipe = new StonecuttingRecipe(namespacedKey, result, ingredient);
+        RecipeManager.INSTANCE.regRecipe(group(), stonecuttingRecipe, RecipeType.STONE_CUTTING);
+        RecipeManager.INSTANCE.recipeUnlockMap().put(namespacedKey, unlock);
     }
 
-    public List<RecipeChoice> ingredientList() {
-        return ingredientList;
+    public RecipeChoice ingredient() {
+        return ingredient;
     }
 
-    public StoneCuttingRecipeRegistry setIngredientList(List<RecipeChoice> ingredientList) {
-        this.ingredientList = ingredientList;
+    public StoneCuttingRecipeRegistry setIngredient(RecipeChoice ingredient) {
+        this.ingredient = ingredient;
         return this;
-    }
-
-    public List<ItemStack> results() {
-        return results;
-    }
-
-    public StoneCuttingRecipeRegistry setResults(List<ItemStack> results) {
-        this.results = results;
-        return this;
-    }
-
-    public Map<NamespacedKey, Recipe> subRecipeMap() {
-        return subRecipes;
-    }
-
-    public Map<String, NamespacedKey> subRecipeKeyMap() {
-        return subRecipeKeys;
     }
 
     @Override

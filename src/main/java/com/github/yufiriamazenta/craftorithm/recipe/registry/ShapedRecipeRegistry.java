@@ -16,7 +16,7 @@ import java.util.Set;
 public final class ShapedRecipeRegistry extends UnlockableRecipeRegistry {
 
     private String[] shape;
-    private Map<Character, RecipeChoice> recipeChoiceMap;
+    private Map<Character, RecipeChoice> ingredientMap;
 
     public ShapedRecipeRegistry(@NotNull String group, @NotNull NamespacedKey namespacedKey, @NotNull ItemStack result) {
         super(group, namespacedKey, result);
@@ -31,12 +31,12 @@ public final class ShapedRecipeRegistry extends UnlockableRecipeRegistry {
         return this;
     }
 
-    public Map<Character, RecipeChoice> recipeChoiceMap() {
-        return recipeChoiceMap;
+    public Map<Character, RecipeChoice> ingredientMap() {
+        return ingredientMap;
     }
 
-    public ShapedRecipeRegistry setRecipeChoiceMap(Map<Character, RecipeChoice> recipeChoiceMap) {
-        this.recipeChoiceMap = recipeChoiceMap;
+    public ShapedRecipeRegistry setIngredientMap(Map<Character, RecipeChoice> recipeIngredientMap) {
+        this.ingredientMap = recipeIngredientMap;
         return this;
     }
 
@@ -45,7 +45,7 @@ public final class ShapedRecipeRegistry extends UnlockableRecipeRegistry {
         Objects.requireNonNull(namespacedKey, "Recipe key cannot be null");
         Objects.requireNonNull(result, "Recipe key cannot be null");
         Objects.requireNonNull(shape, "Recipe shape cannot be null");
-        Objects.requireNonNull(recipeChoiceMap, "Recipe ingredients cannot be null");
+        Objects.requireNonNull(ingredientMap, "Recipe ingredients cannot be null");
         ShapedRecipe shapedRecipe = new ShapedRecipe(namespacedKey, result);
         shapedRecipe.shape(shape);
         Set<Character> shapeStrChars = new HashSet<>();
@@ -54,10 +54,10 @@ public final class ShapedRecipeRegistry extends UnlockableRecipeRegistry {
                 shapeStrChars.add(c);
             }
         }
-        Set<Character> keySet = new HashSet<>(recipeChoiceMap.keySet());
+        Set<Character> keySet = new HashSet<>(ingredientMap.keySet());
         keySet.removeIf((character -> !shapeStrChars.contains(character)));
         for (Character ingredientKey : keySet) {
-            shapedRecipe.setIngredient(ingredientKey, recipeChoiceMap.get(ingredientKey));
+            shapedRecipe.setIngredient(ingredientKey, ingredientMap.get(ingredientKey));
         }
 
         shapedRecipe.setGroup(group);

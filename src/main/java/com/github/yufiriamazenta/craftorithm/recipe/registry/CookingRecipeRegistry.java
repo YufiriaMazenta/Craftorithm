@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public class CookingRecipeRegistry extends UnlockableRecipeRegistry {
 
-    protected RecipeChoice source;
+    protected RecipeChoice ingredient;
     protected int time;
     protected float exp;
     protected CookingBlock cookingBlock;
@@ -38,21 +38,21 @@ public class CookingRecipeRegistry extends UnlockableRecipeRegistry {
     protected CookingRecipe<?> generateCookingRecipe() {
         Objects.requireNonNull(namespacedKey, "Recipe key cannot be null");
         Objects.requireNonNull(result, "Recipe key cannot be null");
-        Objects.requireNonNull(source, "Recipe ingredient cannot be null");
+        Objects.requireNonNull(ingredient, "Recipe ingredient cannot be null");
         CookingRecipe<?> cookingRecipe;
         switch (cookingBlock) {
             case FURNACE:
             default:
-                cookingRecipe = new FurnaceRecipe(namespacedKey, result, source, exp, time);
+                cookingRecipe = new FurnaceRecipe(namespacedKey, result, ingredient, exp, time);
                 break;
             case SMOKER:
-                cookingRecipe = new SmokingRecipe(namespacedKey, result, source, exp, time);
+                cookingRecipe = new SmokingRecipe(namespacedKey, result, ingredient, exp, time);
                 break;
             case BLAST_FURNACE:
-                cookingRecipe = new BlastingRecipe(namespacedKey, result, source, exp, time);
+                cookingRecipe = new BlastingRecipe(namespacedKey, result, ingredient, exp, time);
                 break;
             case CAMPFIRE:
-                cookingRecipe = new CampfireRecipe(namespacedKey, result, source, exp, time);
+                cookingRecipe = new CampfireRecipe(namespacedKey, result, ingredient, exp, time);
                 break;
         }
         cookingRecipe.setGroup(group);
@@ -60,11 +60,11 @@ public class CookingRecipeRegistry extends UnlockableRecipeRegistry {
     }
 
     public RecipeChoice source() {
-        return source;
+        return ingredient;
     }
 
     public CookingRecipeRegistry setIngredient(RecipeChoice source) {
-        this.source = source;
+        this.ingredient = source;
         return this;
     }
 
