@@ -1,6 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.menu.creator;
 
 import com.github.yufiriamazenta.craftorithm.config.Languages;
+import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
@@ -11,6 +12,7 @@ import crypticlib.ui.display.MenuLayout;
 import crypticlib.ui.menu.StoredMenu;
 import crypticlib.util.ItemUtil;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -60,17 +62,18 @@ public class PotionMixCreator extends RecipeCreator {
                             String resultName = ItemUtils.matchItemNameOrCreate(result, false);
                             String inputName = ItemUtils.matchItemNameOrCreate(input, true);
                             String ingredientName = ItemUtils.matchItemNameOrCreate(ingredient, true);
-                            ConfigWrapper recipeConfig = createRecipeConfig(recipeName);
-                            recipeConfig.set("type", "potion");
-                            recipeConfig.set("source.input", inputName);
-                            recipeConfig.set("source.ingredient", ingredientName);
-                            recipeConfig.set("result", resultName);
+                            RecipeGroup recipeGroup = getRecipeGroup(groupName);
+                            ConfigWrapper recipeConfig = recipeGroup.recipeGroupConfig();
+                            ConfigurationSection recipeCfgSection = recipeConfig.config().createSection(recipeName);
+                            recipeCfgSection.set("type", "potion");
+                            recipeCfgSection.set("source.input", inputName);
+                            recipeCfgSection.set("source.ingredient", ingredientName);
+                            recipeCfgSection.set("result", resultName);
                             recipeConfig.saveConfig();
                             recipeConfig.reloadConfig();
-                            //TODO 修改创建配方
-//                            getRecipeGroup(recipeConfig);
+                            recipeGroup.updateAndLoadRecipeGroup();
                             event.getWhoClicked().closeInventory();
-                            sendSuccessMsg(player, recipeName);
+                            sendSuccessMsg();
                         })
                     );
                     return layoutMap;

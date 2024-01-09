@@ -3,10 +3,12 @@ package com.github.yufiriamazenta.craftorithm.recipe;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.StoneCuttingRecipeRegistry;
 import crypticlib.config.ConfigWrapper;
+import crypticlib.util.FileUtil;
 import org.bukkit.NamespacedKey;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -17,6 +19,12 @@ public class RecipeGroup {
     protected Map<NamespacedKey, RecipeRegistry> groupRecipeRegistryMap = new ConcurrentHashMap<>();
     protected ConfigWrapper recipeGroupConfig;
     protected int sortId;
+
+    public RecipeGroup(@NotNull String groupName) {
+        this.groupName = groupName;
+        this.recipeGroupConfig = createRecipeConfig();
+        this.sortId = 0;
+    }
 
     public RecipeGroup(@NotNull String groupName, @NotNull ConfigWrapper recipeGroupConfig, int sortId) {
         this.groupName = groupName;
@@ -117,15 +125,31 @@ public class RecipeGroup {
         RecipeManager.INSTANCE.removeRecipeGroup(groupName, deleteFile);
     }
 
-    public void updateRecipeGroup() {
-        RecipeGroup newGroup = new RecipeGroupLoader(groupName, recipeGroupConfig).load();
+    public void updateRecipeGroupData() {
+        RecipeGroup newGroup = new RecipeGroupParser(groupName, recipeGroupConfig).parse();
         this.groupRecipeKeyMap = newGroup.groupRecipeKeyMap;
         this.groupRecipeRegistryMap = newGroup.groupRecipeRegistryMap;
         this.sortId = newGroup.sortId;
+    }
+
+    public void loadRecipeGroup() {
         if (RecipeManager.INSTANCE.hasRecipeGroup(groupName)) {
             RecipeManager.INSTANCE.removeRecipeGroup(groupName, false);
         }
         RecipeManager.INSTANCE.loadRecipeGroup(this);
+    }
+
+    public void updateAndLoadRecipeGroup() {
+        updateRecipeGroupData();
+        loadRecipeGroup();
+    }
+
+    protected ConfigWrapper createRecipeConfig() {
+        File recipeFile = new File(RecipeManager.INSTANCE.RECIPE_FILE_FOLDER, groupName + ".yml");
+        if (!recipeFile.exists()) {
+            FileUtil.createNewFile(recipeFile);
+        }
+        return new ConfigWrapper(recipeFile);
     }
 
 }

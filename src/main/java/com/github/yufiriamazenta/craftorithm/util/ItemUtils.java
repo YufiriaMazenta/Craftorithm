@@ -84,7 +84,7 @@ public class ItemUtils {
             itemName = ItemManager.INSTANCE.matchItemName(item, ignoreAmount);
             if (itemName == null) {
                 String id = UUID.randomUUID().toString();
-                itemName = "items:" + CraftorithmItemProvider.INSTANCE.regCraftorithmItem("gui_items", id, item);
+                itemName = "items:" + CraftorithmItemProvider.INSTANCE.regCraftorithmItem("default_items", id, item);
             }
         } else {
             itemName = item.getType().getKey().toString();

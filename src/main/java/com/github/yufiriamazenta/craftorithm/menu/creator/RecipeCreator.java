@@ -50,25 +50,17 @@ public abstract class RecipeCreator extends StoredMenu {
         return new Icon(Material.BLACK_STAINED_GLASS_PANE, Languages.MENU_RECIPE_CREATOR_ICON_FRAME.value(player));
     }
 
-    protected void sendSuccessMsg(HumanEntity receiver, String recipeName) {
+    protected void sendSuccessMsg() {
         LangUtil.sendLang(
-            receiver,
+            player,
             Languages.COMMAND_CREATE_SUCCESS,
             CollectionsUtil.newStringHashMap(
                 "<recipe_type>",
-                RecipeManager.INSTANCE.getRecipeTypeName(recipeType).value((Player) receiver),
+                RecipeManager.INSTANCE.getRecipeTypeName(recipeType).value(player),
                 "<recipe_name>",
-                recipeName
+                groupName + "." + recipeName
             )
         );
-    }
-
-    protected ConfigWrapper createRecipeConfig(String groupName) {
-        File recipeFile = new File(RecipeManager.INSTANCE.RECIPE_FILE_FOLDER, groupName + ".yml");
-        if (!recipeFile.exists()) {
-            FileUtil.createNewFile(recipeFile);
-        }
-        return new ConfigWrapper(recipeFile);
     }
 
     protected Icon getResultFrameIcon() {
@@ -106,7 +98,7 @@ public abstract class RecipeCreator extends StoredMenu {
         if (RecipeManager.INSTANCE.hasRecipeGroup(groupName))
             return RecipeManager.INSTANCE.getRecipeGroup(groupName);
 
-        return new RecipeGroup(recipeName, createRecipeConfig(groupName), 0);
+        return new RecipeGroup(groupName);
     }
 
 }

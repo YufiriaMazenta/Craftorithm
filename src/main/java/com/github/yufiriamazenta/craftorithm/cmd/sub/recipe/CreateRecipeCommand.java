@@ -4,6 +4,8 @@ import com.github.yufiriamazenta.craftorithm.cmd.sub.AbstractSubCommand;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.menu.creator.*;
+import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
+import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroupParser;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
@@ -54,17 +56,32 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
             LangUtil.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
             return true;
         }
-        String groupName = args.size() < 2 ? "global" : args.get(1);
+        String groupName = args.size() < 2 ? "default" : args.get(1);
+        if (RecipeGroupParser.GLOBAL_KEYS.contains(groupName)) {
+            LangUtil.sendLang(sender, Languages.COMMAND_CREATE_NAME_USED);
+            return true;
+        }
+
         String recipeName = args.size() < 3 ? UUID.randomUUID().toString() : args.get(2);
         Matcher matcher = recipeNamePattern.matcher(groupName);
         if (!matcher.matches()) {
             LangUtil.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_NAME);
             return true;
         }
-//        if (RecipeManager.INSTANCE.hasRecipeGroup(groupName)) {
-//            LangUtil.sendLang(sender, Languages.COMMAND_CREATE_NAME_USED);
-//            return true;
-//        }
+        matcher = recipeNamePattern.matcher(recipeName);
+        if (!matcher.matches()) {
+            LangUtil.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_NAME);
+            return true;
+        }
+
+        RecipeGroup recipeGroup = RecipeManager.INSTANCE.getRecipeGroup(groupName);
+        if (recipeGroup != null) {
+            if (recipeGroup.groupRecipeKeyMap().containsKey(recipeName)) {
+                LangUtil.sendLang(sender, Languages.COMMAND_CREATE_NAME_USED);
+                return true;
+            }
+        }
+
         RecipeType recipeType = RecipeType.valueOf(recipeTypeStr.toUpperCase(Locale.ROOT));
         Player player = (Player) sender;
         switch (recipeType) {
@@ -102,6 +119,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
             return tabList;
         } else if (args.size() == 2) {
             List<String> tabList = new ArrayList<>(RecipeManager.INSTANCE.getRecipeGroups());
+            tabList.add("default");
             filterTabList(tabList, args.get(1));
             return tabList;
         }

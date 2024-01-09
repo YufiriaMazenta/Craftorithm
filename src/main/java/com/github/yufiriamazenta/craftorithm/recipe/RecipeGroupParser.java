@@ -18,11 +18,11 @@ import org.bukkit.inventory.RecipeChoice;
 import java.lang.reflect.Field;
 import java.util.*;
 
-public class RecipeGroupLoader {
+public class RecipeGroupParser {
 
     public static final String TYPE_KEY = "type", RESULT_KEY = "result", SORT_ID = "sort_id";
     public static final List<String> GLOBAL_KEYS = Arrays.asList(TYPE_KEY, RESULT_KEY, SORT_ID);
-    public static final Map<RecipeType, TernaryFunction<RecipeGroupLoader, String, ConfigurationSection, RecipeRegistry>> RECIPE_REGISTRY_LOAD_MAP = new HashMap<>();
+    public static final Map<RecipeType, TernaryFunction<RecipeGroupParser, String, ConfigurationSection, RecipeRegistry>> RECIPE_REGISTRY_PARSE_MAP = new HashMap<>();
     protected ConfigWrapper configWrapper;
     protected RecipeType globalType;
     protected ItemStack globalResult;
@@ -30,10 +30,10 @@ public class RecipeGroupLoader {
     protected String groupName;
     
     static {
-        loadDefRecipeLoadMap();
+        loadDefRecipeParseMap();
     }
 
-    public RecipeGroupLoader(String groupName, ConfigWrapper configWrapper) {
+    public RecipeGroupParser(String groupName, ConfigWrapper configWrapper) {
         this.configWrapper = configWrapper;
         this.groupName = groupName;
         String globalTypeStr = configWrapper.config().getString(TYPE_KEY);
@@ -49,7 +49,7 @@ public class RecipeGroupLoader {
         groupSortId = configWrapper.config().getInt(SORT_ID, 0);
     }
 
-    public RecipeGroup load() {
+    public RecipeGroup parse() {
         YamlConfiguration config = configWrapper.config();
         List<String> recipeKeys = new ArrayList<>(config.getKeys(false));
         recipeKeys.removeAll(GLOBAL_KEYS);
@@ -65,36 +65,36 @@ public class RecipeGroupLoader {
             else
                 recipeType = RecipeType.valueOf(recipeTypeStr.toUpperCase());
             //TODO 提醒使用者，此类型不可用
-            RecipeRegistry recipeRegistry = RECIPE_REGISTRY_LOAD_MAP.getOrDefault(recipeType, (a, b, c) -> null).apply(this, recipeName, recipeCfgSection);
+            RecipeRegistry recipeRegistry = RECIPE_REGISTRY_PARSE_MAP.getOrDefault(recipeType, (a, b, c) -> {throw new IllegalArgumentException(recipeTypeStr);}).apply(this, recipeName, recipeCfgSection);
             if (recipeRegistry != null)
                 recipeGroup.addRecipeRegistry(recipeName, recipeRegistry);
         }
         return recipeGroup;
     }
 
-    private static void loadDefRecipeLoadMap() {
-        if (!RECIPE_REGISTRY_LOAD_MAP.isEmpty())
+    private static void loadDefRecipeParseMap() {
+        if (!RECIPE_REGISTRY_PARSE_MAP.isEmpty())
             return;
-        RECIPE_REGISTRY_LOAD_MAP.put(RecipeType.SHAPED, RecipeGroupLoader::loadShapedRegistry);
-        RECIPE_REGISTRY_LOAD_MAP.put(RecipeType.SHAPELESS, RecipeGroupLoader::loadShapelessRegistry);
-        RECIPE_REGISTRY_LOAD_MAP.put(RecipeType.ANVIL, RecipeGroupLoader::loadAnvilRegistry);
+        RECIPE_REGISTRY_PARSE_MAP.put(RecipeType.SHAPED, RecipeGroupParser::loadShapedRegistry);
+        RECIPE_REGISTRY_PARSE_MAP.put(RecipeType.SHAPELESS, RecipeGroupParser::loadShapelessRegistry);
+        RECIPE_REGISTRY_PARSE_MAP.put(RecipeType.ANVIL, RecipeGroupParser::loadAnvilRegistry);
 
         if (CrypticLib.minecraftVersion() >= 11400) {
-            RECIPE_REGISTRY_LOAD_MAP.put(RecipeType.COOKING, RecipeGroupLoader::loadCookingRegistry);
-            RECIPE_REGISTRY_LOAD_MAP.put(RecipeType.SMITHING, RecipeGroupLoader::loadSmithingRegistry);
-            RECIPE_REGISTRY_LOAD_MAP.put(RecipeType.STONE_CUTTING, RecipeGroupLoader::loadStonecuttingRegistry);
+            RECIPE_REGISTRY_PARSE_MAP.put(RecipeType.COOKING, RecipeGroupParser::loadCookingRegistry);
+            RECIPE_REGISTRY_PARSE_MAP.put(RecipeType.SMITHING, RecipeGroupParser::loadSmithingRegistry);
+            RECIPE_REGISTRY_PARSE_MAP.put(RecipeType.STONE_CUTTING, RecipeGroupParser::loadStonecuttingRegistry);
         }
 
         if (CrypticLib.minecraftVersion() >= 11700) {
-            RECIPE_REGISTRY_LOAD_MAP.put(RecipeType.RANDOM_COOKING, RecipeGroupLoader::loadRandomCookingRegistry);
+            RECIPE_REGISTRY_PARSE_MAP.put(RecipeType.RANDOM_COOKING, RecipeGroupParser::loadRandomCookingRegistry);
         }
 
         if (RecipeManager.INSTANCE.supportPotionMix()) {
-            RECIPE_REGISTRY_LOAD_MAP.put(RecipeType.POTION, RecipeGroupLoader::loadPotionRegistry);
+            RECIPE_REGISTRY_PARSE_MAP.put(RecipeType.POTION, RecipeGroupParser::loadPotionRegistry);
         }
     }
 
-    protected static RecipeRegistry loadShapedRegistry(RecipeGroupLoader loader, String recipeName, ConfigurationSection configSection) {
+    protected static RecipeRegistry loadShapedRegistry(RecipeGroupParser loader, String recipeName, ConfigurationSection configSection) {
         ItemStack result = matchResult(loader, configSection);
         List<String> shapeList = configSection.getStringList("source.shape");
         Map<Character, RecipeChoice> ingredientMap = new HashMap<>();
@@ -116,7 +116,7 @@ public class RecipeGroupLoader {
             .setUnlock(matchUnlock(configSection));
     }
 
-    protected static RecipeRegistry loadShapelessRegistry(RecipeGroupLoader loader, String recipeName, ConfigurationSection configSection) {
+    protected static RecipeRegistry loadShapelessRegistry(RecipeGroupParser loader, String recipeName, ConfigurationSection configSection) {
         ItemStack result = matchResult(loader, configSection);
         List<String> ingredientList = configSection.getStringList("source.ingredients");
         List<RecipeChoice> recipeChoiceList = new ArrayList<>();
@@ -129,7 +129,7 @@ public class RecipeGroupLoader {
             .setUnlock(matchUnlock(configSection));
     }
 
-    protected static RecipeRegistry loadCookingRegistry(RecipeGroupLoader loader, String recipeName, ConfigurationSection configSection) {
+    protected static RecipeRegistry loadCookingRegistry(RecipeGroupParser loader, String recipeName, ConfigurationSection configSection) {
         ItemStack result = matchResult(loader, configSection);
         String choiceStr = Objects.requireNonNull(configSection.getString("source.ingredient"));
         RecipeChoice ingredient = matchRecipeChoice(choiceStr);
@@ -144,7 +144,7 @@ public class RecipeGroupLoader {
             .setUnlock(matchUnlock(configSection));
     }
 
-    protected static RecipeRegistry loadSmithingRegistry(RecipeGroupLoader loader, String recipeName, ConfigurationSection configSection) {
+    protected static RecipeRegistry loadSmithingRegistry(RecipeGroupParser loader, String recipeName, ConfigurationSection configSection) {
         ItemStack result = matchResult(loader, configSection);
         String baseStr = Objects.requireNonNull(configSection.getString("source.base"));
         RecipeChoice base = matchRecipeChoice(baseStr);
@@ -172,7 +172,7 @@ public class RecipeGroupLoader {
         }
     }
 
-    protected static RecipeRegistry loadStonecuttingRegistry(RecipeGroupLoader loader, String recipeName, ConfigurationSection configSection) {
+    protected static RecipeRegistry loadStonecuttingRegistry(RecipeGroupParser loader, String recipeName, ConfigurationSection configSection) {
         List<ItemStack> results = new ArrayList<>();
         if (!configSection.contains("result")) {
             results.add(loader.globalResult);
@@ -189,12 +189,11 @@ public class RecipeGroupLoader {
                 ingredients.add(matchRecipeChoice(ingredientStr));
             }
         }
-        return new StoneCuttingRecipeRegistry(loader.groupName, generateRecipeKey(loader, recipeName), results)
-            .setIngredientList(ingredients)
+        return new StoneCuttingRecipeRegistry(loader.groupName, generateRecipeKey(loader, recipeName), results, ingredients)
             .setUnlock(matchUnlock(configSection));
     }
 
-    protected static RecipeRegistry loadRandomCookingRegistry(RecipeGroupLoader loader, String recipeName, ConfigurationSection configSection) {
+    protected static RecipeRegistry loadRandomCookingRegistry(RecipeGroupParser loader, String recipeName, ConfigurationSection configSection) {
         List<String> resultStrList = configSection.getStringList("result");
         List<RandomCookingRecipeRegistry.RandomCookingResult> randomResults = getRandomResults(resultStrList);
         ItemStack result = randomResults.get(0).result();
@@ -212,7 +211,7 @@ public class RecipeGroupLoader {
             .setUnlock(matchUnlock(configSection));
     }
 
-    protected static RecipeRegistry loadPotionRegistry(RecipeGroupLoader loader, String recipeName, ConfigurationSection configSection) {
+    protected static RecipeRegistry loadPotionRegistry(RecipeGroupParser loader, String recipeName, ConfigurationSection configSection) {
         ItemStack result = matchResult(loader, configSection);
         RecipeChoice input = matchRecipeChoice(Objects.requireNonNull(configSection.getString("source.input")));
         RecipeChoice ingredient = matchRecipeChoice(Objects.requireNonNull(configSection.getString("source.ingredient")));
@@ -221,7 +220,7 @@ public class RecipeGroupLoader {
             .setIngredient(ingredient);
     }
 
-    protected static RecipeRegistry loadAnvilRegistry(RecipeGroupLoader loader, String recipeName, ConfigurationSection configSection) {
+    protected static RecipeRegistry loadAnvilRegistry(RecipeGroupParser loader, String recipeName, ConfigurationSection configSection) {
         if (PluginConfigs.ENABLE_ANVIL_RECIPE.value())
             return null;
         ItemStack result = matchResult(loader, configSection);
@@ -250,7 +249,7 @@ public class RecipeGroupLoader {
         return resultWeightList;
     }
 
-    public static NamespacedKey generateRecipeKey(RecipeGroupLoader loader, String recipeName) {
+    public static NamespacedKey generateRecipeKey(RecipeGroupParser loader, String recipeName) {
         return new NamespacedKey(Craftorithm.instance(), loader.groupName + "." + recipeName);
     }
 
@@ -258,7 +257,7 @@ public class RecipeGroupLoader {
         return configSection.contains("unlock") ? configSection.getBoolean("unlock") : PluginConfigs.DEFAULT_RECIPE_UNLOCK.value();
     }
 
-    public static ItemStack matchResult(RecipeGroupLoader loader, ConfigurationSection configSection) {
+    public static ItemStack matchResult(RecipeGroupParser loader, ConfigurationSection configSection) {
         ItemStack result;
         String resultStr = configSection.getString(RESULT_KEY);
         if (resultStr == null)

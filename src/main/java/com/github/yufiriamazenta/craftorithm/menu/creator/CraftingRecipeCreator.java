@@ -114,9 +114,9 @@ public class CraftingRecipeCreator extends UnlockableRecipeCreator {
                         recipeCfgSection.set("result", resultName);
                         recipeConfig.saveConfig();
                         recipeConfig.reloadConfig();
-                        recipeGroup.updateRecipeGroup();
+                        recipeGroup.updateAndLoadRecipeGroup();
                         event.getWhoClicked().closeInventory();
-                        sendSuccessMsg(event.getWhoClicked(), recipeName);
+                        sendSuccessMsg();
                     })
                 );
                 return layoutMap;

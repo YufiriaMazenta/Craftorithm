@@ -87,7 +87,8 @@ public enum CraftorithmItemProvider implements ItemProvider {
             key = key.replace("\\", "/");
             int lastDotIndex = key.lastIndexOf(".");
             key = key.substring(0, lastDotIndex);
-            itemConfigFileMap.put(key, new ConfigWrapper(file));
+            ConfigWrapper configWrapper = new ConfigWrapper(file);
+            itemConfigFileMap.put(key, configWrapper);
         }
     }
 
@@ -127,7 +128,8 @@ public enum CraftorithmItemProvider implements ItemProvider {
             itemConfigFile = itemConfigFileMap.get(namespace);
         }
         NbtItem nbtItem = ItemFactory.item(item);
-        itemConfigFile.set(itemName, nbtItem.toMap());
+        ConfigurationSection itemCfgSection = itemConfigFile.config().createSection(itemName);
+        nbtItem.toMap().forEach(itemCfgSection::set);
         itemConfigFile.saveConfig();
         String key = namespace + ":" + itemName;
         itemMap.put(key, item);

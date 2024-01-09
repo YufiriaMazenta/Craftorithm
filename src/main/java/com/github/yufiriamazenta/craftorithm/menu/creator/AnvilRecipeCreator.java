@@ -2,6 +2,7 @@ package com.github.yufiriamazenta.craftorithm.menu.creator;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
+import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
@@ -17,6 +18,7 @@ import crypticlib.ui.menu.StoredMenu;
 import crypticlib.util.ItemUtil;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -73,19 +75,20 @@ public class AnvilRecipeCreator extends RecipeCreator {
                             String resultName = ItemUtils.matchItemNameOrCreate(result, false);
                             String inputName = ItemUtils.matchItemNameOrCreate(base, false);
                             String ingredientName = ItemUtils.matchItemNameOrCreate(addition, false);
-                            ConfigWrapper recipeConfig = createRecipeConfig(recipeName);
-                            recipeConfig.set("source.copy_nbt", event.getInventory().getItem(40).getItemMeta().hasEnchants());
-                            recipeConfig.set("type", "anvil");
-                            recipeConfig.set("source.base", inputName);
-                            recipeConfig.set("source.addition", ingredientName);
-                            recipeConfig.set("source.cost_level", costLevel);
-                            recipeConfig.set("result", resultName);
+                            RecipeGroup recipeGroup = getRecipeGroup(groupName);
+                            ConfigWrapper recipeConfig = recipeGroup.recipeGroupConfig();
+                            ConfigurationSection recipeCfgSection = recipeConfig.config().createSection(recipeName);
+                            recipeCfgSection.set("source.copy_nbt", event.getInventory().getItem(40).getItemMeta().hasEnchants());
+                            recipeCfgSection.set("type", "anvil");
+                            recipeCfgSection.set("source.base", inputName);
+                            recipeCfgSection.set("source.addition", ingredientName);
+                            recipeCfgSection.set("source.cost_level", costLevel);
+                            recipeCfgSection.set("result", resultName);
                             recipeConfig.saveConfig();
                             recipeConfig.reloadConfig();
-                            //TODO 修改创建配方
-//                            getRecipeGroup(recipeConfig);
+                            recipeGroup.updateAndLoadRecipeGroup();
                             event.getWhoClicked().closeInventory();
-                            sendSuccessMsg(player, recipeName);
+                            sendSuccessMsg();
                         })
                     );
                     return layoutMap;

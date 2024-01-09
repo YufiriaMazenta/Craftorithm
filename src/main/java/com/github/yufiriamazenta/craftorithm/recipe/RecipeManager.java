@@ -139,7 +139,7 @@ public enum RecipeManager {
             int lastDotIndex = recipeGroupName.lastIndexOf(".");
             recipeGroupName = recipeGroupName.substring(0, lastDotIndex);
             ConfigWrapper recipeGroupConfigWrapper = new ConfigWrapper(file);
-            RecipeGroup recipeGroup = new RecipeGroupLoader(recipeGroupName, recipeGroupConfigWrapper).load();
+            RecipeGroup recipeGroup = new RecipeGroupParser(recipeGroupName, recipeGroupConfigWrapper).parse();
             addRecipeGroup(recipeGroup);
         }
     }

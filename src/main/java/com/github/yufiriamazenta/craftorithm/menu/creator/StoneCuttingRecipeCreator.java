@@ -1,6 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.menu.creator;
 
 import com.github.yufiriamazenta.craftorithm.config.Languages;
+import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
@@ -11,6 +12,7 @@ import crypticlib.ui.display.MenuLayout;
 import crypticlib.ui.menu.StoredMenu;
 import crypticlib.util.ItemUtil;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -61,18 +63,18 @@ public class StoneCuttingRecipeCreator extends UnlockableRecipeCreator {
                                 LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_RESULT);
                                 return;
                             }
-                            ConfigWrapper recipeConfig = createRecipeConfig(recipeName);
-                            recipeConfig.set("multiple", true);
-                            recipeConfig.set("result", resultList);
-                            recipeConfig.set("type", "stone_cutting");
-                            recipeConfig.set("source", sourceList);
-                            recipeConfig.set("unlock", unlock());
+                            RecipeGroup recipeGroup = getRecipeGroup(groupName);
+                            ConfigWrapper recipeConfig = recipeGroup.recipeGroupConfig();
+                            ConfigurationSection recipeCfgSection = recipeConfig.config().createSection(recipeName);
+                            recipeCfgSection.set("result", resultList);
+                            recipeCfgSection.set("type", "stone_cutting");
+                            recipeCfgSection.set("source.ingredients", sourceList);
+                            recipeCfgSection.set("unlock", unlock());
                             recipeConfig.saveConfig();
                             recipeConfig.reloadConfig();
-                            //TODO 修改创建配方
-//                            getRecipeGroup(recipeConfig);
+                            recipeGroup.updateAndLoadRecipeGroup();
                             event.getWhoClicked().closeInventory();
-                            sendSuccessMsg(event.getWhoClicked(), recipeName);
+                            sendSuccessMsg();
                         })
                     );
                     return layoutMap;

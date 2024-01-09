@@ -18,11 +18,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class StoneCuttingRecipeRegistry extends UnlockableRecipeRegistry {
 
     private List<ItemStack> results;
+    private boolean registered = false;
     private List<RecipeChoice> ingredientList = new CopyOnWriteArrayList<>();
     private final Map<NamespacedKey, Recipe> subRecipes = new ConcurrentHashMap<>();
     private final Map<String, NamespacedKey> subRecipeKeys = new ConcurrentHashMap<>();
 
-    public StoneCuttingRecipeRegistry(@NotNull String group, @NotNull NamespacedKey namespacedKey, @NotNull List<ItemStack> results) {
+    public StoneCuttingRecipeRegistry(@NotNull String group, @NotNull NamespacedKey namespacedKey, @NotNull List<ItemStack> results, List<RecipeChoice> ingredientList) {
         super(group, namespacedKey, results.get(0));
         this.results = results;
         String keyStr = namespacedKey.getKey();
@@ -30,7 +31,7 @@ public class StoneCuttingRecipeRegistry extends UnlockableRecipeRegistry {
             RecipeChoice ingredient = ingredientList.get(i);
             for (int j = 0; j < results.size(); j++) {
                 ItemStack result = results.get(i);
-                String subKeyStr = keyStr + "." + i + "." + j;
+                String subKeyStr = keyStr + "_" + i + "_" + j;
                 NamespacedKey subKey = new NamespacedKey(Craftorithm.instance(), subKeyStr);
                 subRecipeKeys.put(subKeyStr, subKey);
                 StonecuttingRecipe stonecuttingRecipe = new StonecuttingRecipe(subKey, result, ingredient);
@@ -42,12 +43,15 @@ public class StoneCuttingRecipeRegistry extends UnlockableRecipeRegistry {
 
     @Override
     public void register() {
+        if (registered)
+            return;
         subRecipes.forEach(
             (key, recipe) -> {
                 RecipeManager.INSTANCE.regRecipe(group(), recipe, RecipeType.STONE_CUTTING);
                 RecipeManager.INSTANCE.recipeUnlockMap().put(key, unlock);
             }
         );
+        registered = true;
     }
 
     public List<RecipeChoice> ingredientList() {

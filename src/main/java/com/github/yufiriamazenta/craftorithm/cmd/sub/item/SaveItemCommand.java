@@ -37,7 +37,7 @@ public final class SaveItemCommand extends AbstractSubCommand {
             return true;
         }
 
-        CraftorithmItemProvider.INSTANCE.regCraftorithmItem(args.get(0), args.get(1), item.clone());
+        CraftorithmItemProvider.INSTANCE.regCraftorithmItem(args.get(0), args.get(1), item);
         LangUtil.sendLang(sender, Languages.COMMAND_ITEM_SAVE_SUCCESS);
         return true;
     }

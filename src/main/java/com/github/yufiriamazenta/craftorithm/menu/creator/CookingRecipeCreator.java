@@ -2,6 +2,7 @@ package com.github.yufiriamazenta.craftorithm.menu.creator;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
+import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
@@ -17,6 +18,8 @@ import crypticlib.ui.menu.StoredMenu;
 import crypticlib.util.ItemUtil;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -83,31 +86,28 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
                             }
                             String sourceName = ItemUtils.matchItemNameOrCreate(source, true);
                             String resultName = ItemUtils.matchItemNameOrCreate(result, false);
-                            ConfigWrapper recipeConfig = createRecipeConfig(recipeName);
-                            recipeConfig.set("type", "cooking");
-                            recipeConfig.set("result", resultName);
-                            recipeConfig.set("multiple", true);
-                            List<Map<String, Object>> sourceList = new ArrayList<>();
+                            RecipeGroup recipeGroup = getRecipeGroup(groupName);
+                            ConfigWrapper recipeConfig = recipeGroup.recipeGroupConfig();
+                            YamlConfiguration config = recipeConfig.config();
                             cookingToggleMap.forEach(
                                 (type, enable) -> {
                                     if (!enable)
                                         return;
-                                    Map<String, Object> sourceMap = new HashMap<>();
-                                    sourceMap.put("block", type.name().toLowerCase());
-                                    sourceMap.put("item", sourceName);
-                                    sourceMap.put("time", cookingTime);
-                                    sourceMap.put("exp", exp);
-                                    sourceList.add(sourceMap);
+                                    ConfigurationSection recipeCfgSection = config.createSection(recipeName + "_" + type.name().toLowerCase());
+                                    recipeCfgSection.set("type", "cooking");
+                                    recipeCfgSection.set("result", resultName);
+                                    recipeCfgSection.set("source.block", type.name().toLowerCase());
+                                    recipeCfgSection.set("source.ingredient", sourceName);
+                                    recipeCfgSection.set("source.exp", exp);
+                                    recipeCfgSection.set("source.time", cookingTime);
+                                    recipeCfgSection.set("unlock", unlock());
                                 }
                             );
-                            recipeConfig.set("unlock", unlock());
-                            recipeConfig.set("source", sourceList);
                             recipeConfig.saveConfig();
                             recipeConfig.reloadConfig();
-                            //TODO 修改创建配方
-//                            getRecipeGroup(recipeConfig);
+                            recipeGroup.updateAndLoadRecipeGroup();
                             event.getWhoClicked().closeInventory();
-                            sendSuccessMsg(event.getWhoClicked(), recipeName);
+                            sendSuccessMsg();
                         })
                     );
                     return layoutMap;
