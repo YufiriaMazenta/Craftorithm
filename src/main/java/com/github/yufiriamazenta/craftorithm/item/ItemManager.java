@@ -114,9 +114,17 @@ public enum ItemManager {
      * @return 物品
      */
     public ItemStack matchVanillaItem(String itemKey, int amount) {
-        Material material = Material.matchMaterial(itemKey);
-        if (material == null)
+        String itemName;
+        String[] split = itemKey.split(":");
+        if (split.length < 2) {
+            itemName = itemKey;
+        } else {
+            itemName = split[1];
+        }
+        Material material = Material.matchMaterial(itemName);
+        if (material == null) {
             throw new IllegalArgumentException("Can not found item " + itemKey);
+        }
         return new ItemStack(material, amount);
     }
 
@@ -147,7 +155,7 @@ public enum ItemManager {
             return null;
         String itemName = matchItemName(item, true);
         if (itemName == null)
-            itemName = item.getType().key().toString();
+            itemName = item.getType().getKey().toString();
         return customCookingFuelMap.get(itemName);
     }
 
