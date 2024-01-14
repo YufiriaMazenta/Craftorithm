@@ -16,7 +16,7 @@ import org.bukkit.inventory.ItemStack;
 @BukkitListener
 public class FurnaceBurnHandler implements Listener {
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onClickFurnace(InventoryClickEvent event) {
         if (event.isCancelled())
             return;
@@ -82,7 +82,7 @@ public class FurnaceBurnHandler implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onFurnaceBurn(FurnaceBurnEvent event) {
         if (event.isCancelled())
             return;

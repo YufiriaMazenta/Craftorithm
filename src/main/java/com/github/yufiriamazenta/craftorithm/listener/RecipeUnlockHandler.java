@@ -6,6 +6,7 @@ import crypticlib.listener.BukkitListener;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
@@ -18,7 +19,7 @@ public enum RecipeUnlockHandler implements Listener {
 
     INSTANCE;
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         Map<NamespacedKey, Boolean> unlockMap = RecipeManager.INSTANCE.recipeUnlockMap();
