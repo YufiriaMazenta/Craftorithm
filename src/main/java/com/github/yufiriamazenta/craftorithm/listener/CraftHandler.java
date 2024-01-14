@@ -23,7 +23,7 @@ public enum CraftHandler implements Listener {
 
     INSTANCE;
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void dispatchConditions(PrepareItemCraftEvent event) {
         if (event.getRecipe() == null)
             return;
@@ -40,7 +40,7 @@ public enum CraftHandler implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void dispatchActions(CraftItemEvent event) {
         if (event.getInventory().getResult() == null) {
             event.getInventory().setResult(null);
@@ -60,7 +60,7 @@ public enum CraftHandler implements Listener {
         CraftorithmAPI.INSTANCE.arcencielDispatcher().dispatchArcencielFunc(player, actions);
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void checkCannotCraft(PrepareItemCraftEvent event) {
         ItemStack[] items = event.getInventory().getMatrix();
         boolean containsLore = ItemUtils.hasCannotCraftLore(items);

@@ -32,7 +32,7 @@ public enum RandomSmeltHandler implements Listener {
         randomFurnaceBlockMap = new HashMap<>();
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onFurnaceStartSmelt(FurnaceStartSmeltEvent event) {
         NamespacedKey recipeKey = event.getRecipe().getKey();
         RecipeGroup recipeGroup = RecipeManager.INSTANCE.getRecipeGroup(recipeKey);

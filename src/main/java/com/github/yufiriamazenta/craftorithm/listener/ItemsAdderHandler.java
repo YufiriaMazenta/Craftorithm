@@ -39,7 +39,7 @@ public enum ItemsAdderHandler implements Listener {
             throw new IllegalArgumentException("Can not find ItemsAdder plugin instance");
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onItemsAdderLoaded(ItemsAdderLoadDataEvent event) {
         RecipeManager.INSTANCE.reloadRecipeManager();
         //注销IA合成监听器
