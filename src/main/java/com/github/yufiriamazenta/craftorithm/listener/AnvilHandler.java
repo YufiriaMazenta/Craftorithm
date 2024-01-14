@@ -54,6 +54,7 @@ public enum AnvilHandler implements Listener {
             if (!conditionResult) {
                 event.getInventory().setRepairCost(0);
                 event.setResult(null);
+                event.getInventory().setItem(2, null);
                 return;
             }
         }
@@ -66,6 +67,7 @@ public enum AnvilHandler implements Listener {
         }
         event.getInventory().setRepairCost(anvilRecipe.costLevel());
         event.setResult(result);
+        event.getInventory().setItem(2, result);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -180,6 +182,7 @@ public enum AnvilHandler implements Listener {
         AnvilRecipe afterClickRecipe = RecipeManager.INSTANCE.matchAnvilRecipe(base, addition);
         if (afterClickRecipe == null) {
             anvilInventory.setItem(2, null);
+            anvilInventory.setRepairCost(0);
             return;
         }
         anvilInventory.setItem(2, afterClickRecipe.getResult());
