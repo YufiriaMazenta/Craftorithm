@@ -37,6 +37,7 @@ public enum SmithingHandler implements Listener {
         condition = "if " + condition;
         boolean result = (boolean) ArcencielDispatcher.INSTANCE.dispatchArcencielBlock(player, condition).obj();
         if (!result) {
+            event.setResult(null);
             event.getInventory().setResult(null);
         }
     }
@@ -62,8 +63,10 @@ public enum SmithingHandler implements Listener {
     public void checkCannotCraftLore(PrepareSmithingEvent event) {
         ItemStack[] items = event.getInventory().getContents();
         boolean containsLore = ItemUtils.hasCannotCraftLore(items);
-        if (containsLore)
+        if (containsLore) {
             event.getInventory().setResult(null);
+            event.setResult(null);
+        }
     }
 
 }
