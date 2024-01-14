@@ -23,7 +23,7 @@ public enum SmithingHandler implements Listener {
 
     INSTANCE;
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPrepareSmith(PrepareSmithingEvent event) {
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(event.getInventory().getRecipe());
         if (recipeKey == null)
@@ -41,7 +41,7 @@ public enum SmithingHandler implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onSmithItem(SmithItemEvent event) {
         HumanEntity entity = event.getWhoClicked();
         if (!(entity instanceof Player)) {
@@ -58,7 +58,7 @@ public enum SmithingHandler implements Listener {
         CraftorithmAPI.INSTANCE.arcencielDispatcher().dispatchArcencielFunc(player, actions);
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void checkCannotCraftLore(PrepareSmithingEvent event) {
         ItemStack[] items = event.getInventory().getContents();
         boolean containsLore = ItemUtils.hasCannotCraftLore(items);
