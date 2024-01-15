@@ -7,6 +7,7 @@ import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.google.common.base.Preconditions;
 import crypticlib.config.ConfigWrapper;
 import crypticlib.util.ItemUtil;
+import crypticlib.util.MaterialUtil;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
@@ -114,14 +115,7 @@ public enum ItemManager {
      * @return 物品
      */
     public ItemStack matchVanillaItem(String itemKey, int amount) {
-        String itemName;
-        String[] split = itemKey.split(":");
-        if (split.length < 2) {
-            itemName = itemKey;
-        } else {
-            itemName = split[1];
-        }
-        Material material = Material.matchMaterial(itemName);
+        Material material = MaterialUtil.matchMaterial(itemKey);
         if (material == null) {
             throw new IllegalArgumentException("Can not found item " + itemKey);
         }
@@ -155,7 +149,7 @@ public enum ItemManager {
             return null;
         String itemName = matchItemName(item, true);
         if (itemName == null)
-            itemName = item.getType().key().toString();
+            itemName = item.getType().getKey().toString();
         return customCookingFuelMap.get(itemName);
     }
 
