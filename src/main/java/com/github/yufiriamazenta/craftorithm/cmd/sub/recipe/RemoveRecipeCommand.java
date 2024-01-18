@@ -2,14 +2,12 @@ package com.github.yufiriamazenta.craftorithm.cmd.sub.recipe;
 
 import com.github.yufiriamazenta.craftorithm.cmd.sub.AbstractSubCommand;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 重构为只能删除本身插件的配方，取消其他插件配方移动到disable命令

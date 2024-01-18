@@ -17,12 +17,13 @@ import org.bukkit.inventory.RecipeChoice;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class RecipeGroupParser {
 
     public static final String TYPE_KEY = "type", RESULT_KEY = "result", SORT_ID = "sort_id";
     public static final List<String> GLOBAL_KEYS = Arrays.asList(TYPE_KEY, RESULT_KEY, SORT_ID);
-    public static final Map<RecipeType, TernaryFunction<RecipeGroupParser, String, ConfigurationSection, RecipeRegistry>> RECIPE_REGISTRY_PARSE_MAP = new HashMap<>();
+    public static final Map<RecipeType, TernaryFunction<RecipeGroupParser, String, ConfigurationSection, RecipeRegistry>> RECIPE_REGISTRY_PARSE_MAP = new ConcurrentHashMap<>();
     protected ConfigWrapper configWrapper;
     protected RecipeType globalType;
     protected ItemStack globalResult;
@@ -38,7 +39,7 @@ public class RecipeGroupParser {
         this.groupName = groupName;
         String globalTypeStr = configWrapper.config().getString(TYPE_KEY);
         if (globalTypeStr != null)
-            this.globalType = RecipeType.valueOf(globalTypeStr.toUpperCase());
+            this.globalType = RecipeType.getByName(globalTypeStr);
         else
             this.globalType = RecipeType.UNKNOWN;
         String globalResultStr = configWrapper.config().getString(RESULT_KEY);
@@ -63,7 +64,7 @@ public class RecipeGroupParser {
             if (recipeTypeStr == null)
                 recipeType = globalType;
             else
-                recipeType = RecipeType.valueOf(recipeTypeStr.toUpperCase());
+                recipeType = RecipeType.getByName(recipeTypeStr);
             //TODO 提醒使用者，此类型不可用
             RecipeRegistry recipeRegistry = RECIPE_REGISTRY_PARSE_MAP.getOrDefault(recipeType, (a, b, c) -> {throw new IllegalArgumentException(recipeTypeStr);}).apply(this, recipeName, recipeCfgSection);
             if (recipeRegistry != null)

@@ -22,6 +22,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static com.github.yufiriamazenta.craftorithm.recipe.RecipeType.*;
+
 public class RecipeDisplayMenu extends Menu {
 
     private final Recipe recipe;
@@ -35,62 +37,49 @@ public class RecipeDisplayMenu extends Menu {
         this.parentMenu = parentMenu;
         this.recipe = recipe;
         RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(this.recipe);
-        switch (recipeType) {
-            case SHAPED:
-                setShapedRecipeMenu();
-                inventoryType = InventoryType.WORKBENCH;
-                invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_SHAPED.value(player);
-                break;
-            case SHAPELESS:
-                setShapelessRecipeMenu();
-                inventoryType = InventoryType.WORKBENCH;
-                invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_SHAPELESS.value(player);
-                break;
-            case COOKING:
-            case RANDOM_COOKING:
-                setCookingRecipeMenu();
-                if (recipe instanceof FurnaceRecipe) {
-                    inventoryType = InventoryType.FURNACE;
-                    invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_FURNACE.value(player);
-                }
-                else if (recipe instanceof BlastingRecipe) {
-                    inventoryType = InventoryType.BLAST_FURNACE;
-                    invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_BLASTING.value(player);
-                }
-                else if (recipe instanceof SmokingRecipe) {
-                    inventoryType = InventoryType.SMOKER;
-                    invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_SMOKING.value(player);
-                }
-                else {
-                    inventoryType = InventoryType.FURNACE;
-                    invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_CAMPFIRE.value(player);
-                }
-                break;
-            case SMITHING:
-                setSmithingRecipeMenu();
-                inventoryType = InventoryType.SMITHING;
-                invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_SMITHING.value(player);
-                break;
-            case STONE_CUTTING:
-                setStoneCuttingRecipeMenu();
-                inventoryType = InventoryType.CHEST;
-                invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_STONE_CUTTING.value(player);
-                break;
-            case POTION:
-                setPotionMixRecipeMenu();
-                inventoryType = InventoryType.BREWING;
-                invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_POTION.value(player);
-                break;
-            case ANVIL:
-                setAnvilRecipeMenu();
-                inventoryType = InventoryType.ANVIL;
-                invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_ANVIL.value(player);
-                break;
-            default:
-                invTitle = "Unknown Type";
-                inventoryType = InventoryType.CHEST;
-                slotMap.put(15, new Icon(recipe.getResult()));
-                break;
+        if (recipeType.equals(SHAPED)) {
+            setShapedRecipeMenu();
+            inventoryType = InventoryType.WORKBENCH;
+            invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_SHAPED.value(player);
+        } else if (recipeType.equals(SHAPELESS)) {
+            setShapelessRecipeMenu();
+            inventoryType = InventoryType.WORKBENCH;
+            invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_SHAPELESS.value(player);
+        } else if (recipeType.equals(COOKING) || recipeType.equals(RANDOM_COOKING)) {
+            setCookingRecipeMenu();
+            if (recipe instanceof FurnaceRecipe) {
+                inventoryType = InventoryType.FURNACE;
+                invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_FURNACE.value(player);
+            } else if (recipe instanceof BlastingRecipe) {
+                inventoryType = InventoryType.BLAST_FURNACE;
+                invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_BLASTING.value(player);
+            } else if (recipe instanceof SmokingRecipe) {
+                inventoryType = InventoryType.SMOKER;
+                invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_SMOKING.value(player);
+            } else {
+                inventoryType = InventoryType.FURNACE;
+                invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_CAMPFIRE.value(player);
+            }
+        } else if (recipeType.equals(SMITHING)) {
+            setSmithingRecipeMenu();
+            inventoryType = InventoryType.SMITHING;
+            invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_SMITHING.value(player);
+        } else if (recipeType.equals(STONE_CUTTING)) {
+            setStoneCuttingRecipeMenu();
+            inventoryType = InventoryType.CHEST;
+            invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_STONE_CUTTING.value(player);
+        } else if (recipeType.equals(POTION)) {
+            setPotionMixRecipeMenu();
+            inventoryType = InventoryType.BREWING;
+            invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_POTION.value(player);
+        } else if (recipeType.equals(ANVIL)) {
+            setAnvilRecipeMenu();
+            inventoryType = InventoryType.ANVIL;
+            invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_ANVIL.value(player);
+        } else {
+            invTitle = "Unknown Type";
+            inventoryType = InventoryType.CHEST;
+            slotMap.put(15, new Icon(recipe.getResult()));
         }
     }
 

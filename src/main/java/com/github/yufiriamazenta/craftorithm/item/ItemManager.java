@@ -1,7 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.item;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
-import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.item.impl.CraftorithmItemProvider;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.google.common.base.Preconditions;
@@ -17,7 +16,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;

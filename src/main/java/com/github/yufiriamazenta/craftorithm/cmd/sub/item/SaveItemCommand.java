@@ -5,7 +5,6 @@ import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.item.impl.CraftorithmItemProvider;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.util.ItemUtil;
-import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

@@ -7,19 +7,14 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import crypticlib.config.ConfigWrapper;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.menu.StoredMenu;
-import crypticlib.util.FileUtil;
 import crypticlib.util.ItemUtil;
 import org.bukkit.Material;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-
-import java.io.File;
 
 public abstract class RecipeCreator extends StoredMenu {
 
@@ -33,8 +28,8 @@ public abstract class RecipeCreator extends StoredMenu {
         this.recipeName = recipeName;
         this.recipeType = recipeType;
         this.title = Languages.MENU_RECIPE_CREATOR_TITLE.value(player)
-            .replace("<recipe_type>", RecipeManager.INSTANCE.getRecipeTypeName(recipeType).value(player))
-            .replace("<recipe_name>", recipeName);
+            .replace("<recipe_type>", recipeType.typeName().value(player))
+            .replace("<recipe_name>", groupName + "." + recipeName);
         this.groupName = groupName;
     }
 
@@ -56,7 +51,7 @@ public abstract class RecipeCreator extends StoredMenu {
             Languages.COMMAND_CREATE_SUCCESS,
             CollectionsUtil.newStringHashMap(
                 "<recipe_type>",
-                RecipeManager.INSTANCE.getRecipeTypeName(recipeType).value(player),
+                recipeType.typeName().value(player),
                 "<recipe_name>",
                 groupName + "." + recipeName
             )

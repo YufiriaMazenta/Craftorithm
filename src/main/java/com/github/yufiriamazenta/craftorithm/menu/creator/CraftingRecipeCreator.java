@@ -20,12 +20,15 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
+import static com.github.yufiriamazenta.craftorithm.recipe.RecipeType.SHAPED;
+import static com.github.yufiriamazenta.craftorithm.recipe.RecipeType.SHAPELESS;
+
 public class CraftingRecipeCreator extends UnlockableRecipeCreator {
 
     public CraftingRecipeCreator(@NotNull Player player, RecipeType recipeType, @NotNull String groupName, @NotNull String recipeName) {
         super(player, recipeType, groupName, recipeName);
         Preconditions.checkArgument(
-            recipeType.equals(RecipeType.SHAPED) || recipeType.equals(RecipeType.SHAPELESS),
+            recipeType.equals(SHAPED) || recipeType.equals(SHAPELESS),
             "Crafting recipe only allow shaped and shapeless type"
         );
         setDisplay(new MenuDisplay(
@@ -78,37 +81,35 @@ public class CraftingRecipeCreator extends UnlockableRecipeCreator {
                         RecipeGroup recipeGroup = getRecipeGroup(groupName);
                         ConfigWrapper recipeConfig = recipeGroup.recipeGroupConfig();
                         ConfigurationSection recipeCfgSection = recipeConfig.config().createSection(recipeName);
-                        switch (recipeType()) {
-                            case SHAPED:
-                                List<String> shape = new ArrayList<>(Arrays.asList("abc", "def", "ghi"));
-                                Map<Character, String> itemNameMap = new HashMap<>();
-                                char[] tmp = "abcdefghi".toCharArray();
-                                for (int i = 0; i < sourceList.size(); i++) {
-                                    if (sourceList.get(i).isEmpty()) {
-                                        continue;
-                                    }
-                                    itemNameMap.put(tmp[i], sourceList.get(i));
+                        RecipeType type = recipeType();
+                        if (type.equals(SHAPED)) {
+                            List<String> shape = new ArrayList<>(Arrays.asList("abc", "def", "ghi"));
+                            Map<Character, String> itemNameMap = new HashMap<>();
+                            char[] tmp = "abcdefghi".toCharArray();
+                            for (int i = 0; i < sourceList.size(); i++) {
+                                if (sourceList.get(i).isEmpty()) {
+                                    continue;
                                 }
-                                //删除无映射的字符
-                                for (int i = 0; i < shape.size(); i++) {
-                                    String s = shape.get(i);
-                                    for (char c : s.toCharArray()) {
-                                        if (!itemNameMap.containsKey(c)) {
-                                            s = s.replace(c, ' ');
-                                        }
+                                itemNameMap.put(tmp[i], sourceList.get(i));
+                            }
+                            //删除无映射的字符
+                            for (int i = 0; i < shape.size(); i++) {
+                                String s = shape.get(i);
+                                for (char c : s.toCharArray()) {
+                                    if (!itemNameMap.containsKey(c)) {
+                                        s = s.replace(c, ' ');
                                     }
-                                    shape.set(i, s);
                                 }
-                                shape.removeIf(s -> s.trim().isEmpty());
-                                recipeCfgSection.set("type", "shaped");
-                                recipeCfgSection.set("source.shape", shape);
-                                recipeCfgSection.set("source.ingredients", itemNameMap);
-                                break;
-                            case SHAPELESS:
-                                sourceList.removeIf(String::isEmpty);
-                                recipeCfgSection.set("type", "shapeless");
-                                recipeCfgSection.set("source.ingredients", sourceList);
-                                break;
+                                shape.set(i, s);
+                            }
+                            shape.removeIf(s -> s.trim().isEmpty());
+                            recipeCfgSection.set("type", "shaped");
+                            recipeCfgSection.set("source.shape", shape);
+                            recipeCfgSection.set("source.ingredients", itemNameMap);
+                        } else if (type.equals(SHAPELESS)) {
+                            sourceList.removeIf(String::isEmpty);
+                            recipeCfgSection.set("type", "shapeless");
+                            recipeCfgSection.set("source.ingredients", sourceList);
                         }
                         recipeCfgSection.set("unlock", unlock());
                         recipeCfgSection.set("result", resultName);

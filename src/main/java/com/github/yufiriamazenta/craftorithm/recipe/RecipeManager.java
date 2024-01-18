@@ -10,7 +10,6 @@ import com.github.yufiriamazenta.craftorithm.recipe.custom.PotionMixRecipe;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.CrypticLib;
-import crypticlib.chat.entry.StringLangConfigEntry;
 import crypticlib.config.ConfigWrapper;
 import crypticlib.util.FileUtil;
 import org.bukkit.Bukkit;
@@ -26,12 +25,14 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
+import static com.github.yufiriamazenta.craftorithm.recipe.RecipeType.*;
+
 public enum RecipeManager {
 
     INSTANCE;
-    public final File RECIPE_FILE_FOLDER = new File(Craftorithm.instance().getDataFolder(), "recipe_groups");
+    public static final File RECIPE_FILE_FOLDER = new File(Craftorithm.instance().getDataFolder(), "recipe_groups");
+    public static final String PLUGIN_RECIPE_NAMESPACE = "craftorithm";
     private final ConfigWrapper removedRecipesConfigWrapper = new ConfigWrapper(Craftorithm.instance(), "removed_recipes.yml");
-    public final String PLUGIN_RECIPE_NAMESPACE = "craftorithm";
     private final Map<String, RecipeGroup> recipeGroupMap = new ConcurrentHashMap<>();
     private final Map<RecipeType, Consumer<Recipe>> recipeRegisterMap = new ConcurrentHashMap<>();
     private final Map<RecipeType, Consumer<List<NamespacedKey>>> recipeRemoverMap = new ConcurrentHashMap<>();
@@ -44,13 +45,13 @@ public enum RecipeManager {
 
     RecipeManager() {
         //设置各类型配方的注册方法
-        recipeRegisterMap.put(RecipeType.SHAPED, Bukkit::addRecipe);
-        recipeRemoverMap.put(RecipeType.SHAPED, this::removeRecipes);
-        recipeRegisterMap.put(RecipeType.SHAPELESS, Bukkit::addRecipe);
-        recipeRemoverMap.put(RecipeType.SHAPELESS, this::removeRecipes);
+        recipeRegisterMap.put(SHAPED, Bukkit::addRecipe);
+        recipeRemoverMap.put(SHAPED, this::removeRecipes);
+        recipeRegisterMap.put(SHAPELESS, Bukkit::addRecipe);
+        recipeRemoverMap.put(SHAPELESS, this::removeRecipes);
         if (CrypticLib.minecraftVersion() >= 11400) {
-            recipeRegisterMap.put(RecipeType.COOKING, Bukkit::addRecipe);
-            recipeRemoverMap.put(RecipeType.COOKING, this::removeRecipes);
+            recipeRegisterMap.put(COOKING, Bukkit::addRecipe);
+            recipeRemoverMap.put(COOKING, this::removeRecipes);
             recipeRegisterMap.put(RecipeType.STONE_CUTTING, Bukkit::addRecipe);
             recipeRemoverMap.put(RecipeType.STONE_CUTTING, this::removeRecipes);
             recipeRegisterMap.put(RecipeType.SMITHING, Bukkit::addRecipe);
@@ -148,7 +149,7 @@ public enum RecipeManager {
         if (!recipeGroupMap.containsKey(recipeGroupName))
             throw new IllegalArgumentException("Can not find recipe group " + recipeGroupName + ", use addRecipeGroup() method to add recipe group.");
         recipeRegisterMap.getOrDefault(recipeType, recipe1 -> {
-            throw new UnsupportedVersionException("Can not register " + recipeType.name().toLowerCase() + " recipe");
+            throw new UnsupportedVersionException("Can not register " + recipeType.typeId().toLowerCase() + " recipe");
         }).accept(recipe);
     }
 
@@ -341,11 +342,11 @@ public enum RecipeManager {
         if (recipe == null)
             return RecipeType.UNKNOWN;
         if (recipe instanceof ShapedRecipe)
-            return RecipeType.SHAPED;
+            return SHAPED;
         else if (recipe instanceof ShapelessRecipe)
-            return RecipeType.SHAPELESS;
+            return SHAPELESS;
         else if (recipe instanceof CookingRecipe)
-            return RecipeType.COOKING;
+            return COOKING;
         else if (recipe instanceof SmithingRecipe)
             return RecipeType.SMITHING;
         else if (recipe instanceof StonecuttingRecipe)
@@ -356,27 +357,6 @@ public enum RecipeManager {
             return RecipeType.ANVIL;
         else
             return RecipeType.UNKNOWN;
-    }
-
-    public StringLangConfigEntry getRecipeTypeName(RecipeType recipeType) {
-        switch (recipeType) {
-            case SHAPED:
-                return Languages.RECIPE_TYPE_NAME_SHAPED;
-            case SHAPELESS:
-                return Languages.RECIPE_TYPE_NAME_SHAPELESS;
-            case COOKING:
-                return Languages.RECIPE_TYPE_NAME_COOKING;
-            case SMITHING:
-                return Languages.RECIPE_TYPE_NAME_SMITHING;
-            case STONE_CUTTING:
-                return Languages.RECIPE_TYPE_NAME_STONE_CUTTING;
-            case POTION:
-                return Languages.RECIPE_TYPE_NAME_POTION;
-            case ANVIL:
-                return Languages.RECIPE_TYPE_NAME_ANVIL;
-            default:
-                return null;
-        }
     }
 
     public void resetRecipes() {

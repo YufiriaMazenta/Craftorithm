@@ -3,10 +3,6 @@ package com.github.yufiriamazenta.craftorithm.config;
 import crypticlib.config.ConfigHandler;
 import crypticlib.config.entry.BooleanConfigEntry;
 import crypticlib.config.entry.StringConfigEntry;
-import crypticlib.config.entry.StringListConfigEntry;
-
-import java.util.ArrayList;
-import java.util.Collections;
 
 @ConfigHandler(path = "config.yml")
 public class PluginConfigs {

@@ -1,6 +1,5 @@
 package com.github.yufiriamazenta.craftorithm.recipe.registry;
 
-import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import org.bukkit.NamespacedKey;
@@ -10,11 +9,7 @@ import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.StonecuttingRecipe;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class StoneCuttingRecipeRegistry extends UnlockableRecipeRegistry {
 

@@ -3,11 +3,11 @@ package com.github.yufiriamazenta.craftorithm.recipe.registry;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.*;
+import org.bukkit.inventory.CookingRecipe;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Objects;
 
 public class RandomCookingRecipeRegistry extends CookingRecipeRegistry {
 

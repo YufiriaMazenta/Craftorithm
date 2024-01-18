@@ -1,7 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.listener;
 
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
-import crypticlib.CrypticLib;
 import crypticlib.listener.BukkitListener;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
