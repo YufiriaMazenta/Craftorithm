@@ -239,7 +239,7 @@ public class RecipeGroupParser {
     }
 
     public static NamespacedKey generateRecipeKey(RecipeGroupParser loader, String recipeName) {
-        return new NamespacedKey(Craftorithm.instance(), loader.groupName + "." + recipeName);
+        return new NamespacedKey(Craftorithm.instance(), loader.groupName + "." + recipeName.toLowerCase());
     }
 
     public static boolean matchUnlock(ConfigurationSection configSection) {
