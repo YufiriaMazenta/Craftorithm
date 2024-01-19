@@ -36,7 +36,7 @@ public class RecipeGroupParser {
 
     public RecipeGroupParser(String groupName, ConfigWrapper configWrapper) {
         this.configWrapper = configWrapper;
-        this.groupName = groupName;
+        this.groupName = groupName.toLowerCase();
         String globalTypeStr = configWrapper.config().getString(TYPE_KEY);
         if (globalTypeStr != null)
             this.globalType = RecipeType.getByName(globalTypeStr);
