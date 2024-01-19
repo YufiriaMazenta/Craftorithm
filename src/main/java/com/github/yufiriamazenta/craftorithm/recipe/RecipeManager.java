@@ -170,7 +170,7 @@ public enum RecipeManager {
             String recipeGroupName = file.getPath().substring(RECIPE_FILE_FOLDER.getPath().length() + 1);
             recipeGroupName = recipeGroupName.replace("\\", "/");
             int lastDotIndex = recipeGroupName.lastIndexOf(".");
-            recipeGroupName = recipeGroupName.substring(0, lastDotIndex);
+            recipeGroupName = recipeGroupName.substring(0, lastDotIndex).toLowerCase();
             ConfigWrapper recipeGroupConfigWrapper = new ConfigWrapper(file);
             RecipeType recipeType = RecipeType.valueOf(recipeGroupConfigWrapper.config().getString("type").toUpperCase());
             RecipeGroup recipeGroup = new RecipeGroup(recipeGroupName, recipeType, recipeGroupConfigWrapper);
