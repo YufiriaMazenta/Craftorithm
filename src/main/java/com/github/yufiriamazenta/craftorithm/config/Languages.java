@@ -48,7 +48,7 @@ public class Languages {
     public static final StringLangConfigEntry MENU_NEW_RECIPE_LIST_ICON_FRAME = new StringLangConfigEntry("menu.new_recipe_list.icon.frame");
     public static final StringLangConfigEntry MENU_NEW_RECIPE_LIST_ICON_PREVIOUS = new StringLangConfigEntry("menu.new_recipe_list.icon.previous");
     public static final StringLangConfigEntry MENU_NEW_RECIPE_LIST_ICON_NEXT = new StringLangConfigEntry("menu.new_recipe_list.icon.next");
-    public static final StringListLangConfigEntry MENU_NEW_RECIPE_LIST_ICON_ELEMENTS_LORE = new StringListLangConfigEntry("menu.new_recipe_list.icon.elements");
+    public static final StringListLangConfigEntry MENU_NEW_RECIPE_LIST_ICON_ELEMENTS_LORE = new StringListLangConfigEntry("menu.new_recipe_list.icon.elements.lore");
     public static final StringLangConfigEntry MENU_RECIPE_DISPLAY_TITLE_SHAPED = new StringLangConfigEntry("menu.recipe_display.title.shaped");
     public static final StringLangConfigEntry MENU_RECIPE_DISPLAY_TITLE_SHAPELESS = new StringLangConfigEntry("menu.recipe_display.title.shapeless");
     public static final StringLangConfigEntry MENU_RECIPE_DISPLAY_TITLE_FURNACE = new StringLangConfigEntry("menu.recipe_display.title.furnace");
