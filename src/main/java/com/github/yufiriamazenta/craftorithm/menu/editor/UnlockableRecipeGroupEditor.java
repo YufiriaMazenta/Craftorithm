@@ -32,8 +32,10 @@ public abstract class UnlockableRecipeGroupEditor extends RecipeGroupEditor {
                 recipeGroup.setUnlock(unlock);
                 recipeGroup.recipeGroupConfig().set("unlock", unlock);
                 recipeGroup.recipeGroupConfig().saveConfig();
-                for (NamespacedKey recipeKey : recipeGroup.groupRecipeKeys()) {
-                    RecipeManager.INSTANCE.recipeUnlockMap().put(recipeKey, unlock);
+                if (RecipeManager.UNLOCKABLE_RECIPE_TYPE.contains(recipeGroup.recipeType())) {
+                    for (NamespacedKey recipeKey : recipeGroup.groupRecipeKeys()) {
+                        RecipeManager.INSTANCE.recipeUnlockMap().put(recipeKey, unlock);
+                    }
                 }
                 updateUnlockIcon(event.getInventory().getItem(event.getSlot()));
             }
