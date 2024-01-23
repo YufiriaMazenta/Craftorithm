@@ -41,7 +41,7 @@ public enum RecipeManager {
     private final Map<NamespacedKey, Recipe> serverRecipesCache;
     private final Map<NamespacedKey, PotionMixRecipe> potionMixRecipeMap;
     private final Map<NamespacedKey, AnvilRecipe> anvilRecipeMap;
-    private final List<RecipeType> UNLOCKABLE_RECIPE_TYPE =
+    public static final List<RecipeType> UNLOCKABLE_RECIPE_TYPE =
         Collections.unmodifiableList(Arrays.asList(
             RecipeType.SHAPED,
             RecipeType.SHAPELESS,
