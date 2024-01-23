@@ -3,10 +3,12 @@ package com.github.yufiriamazenta.craftorithm.menu.editor;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.menu.display.RecipeGroupListMenu;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
+import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import crypticlib.ui.display.Icon;
 import crypticlib.util.ItemUtil;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -30,6 +32,9 @@ public abstract class UnlockableRecipeGroupEditor extends RecipeGroupEditor {
                 recipeGroup.setUnlock(unlock);
                 recipeGroup.recipeGroupConfig().set("unlock", unlock);
                 recipeGroup.recipeGroupConfig().saveConfig();
+                for (NamespacedKey recipeKey : recipeGroup.groupRecipeKeys()) {
+                    RecipeManager.INSTANCE.recipeUnlockMap().put(recipeKey, unlock);
+                }
                 updateUnlockIcon(event.getInventory().getItem(event.getSlot()));
             }
         );
