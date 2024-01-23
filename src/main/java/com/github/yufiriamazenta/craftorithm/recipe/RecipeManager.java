@@ -3,7 +3,6 @@ package com.github.yufiriamazenta.craftorithm.recipe;
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
-import com.github.yufiriamazenta.craftorithm.exception.UnsupportedVersionException;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.CustomRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.PotionMixRecipe;
@@ -23,7 +22,6 @@ import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.function.Consumer;
 
 import static com.github.yufiriamazenta.craftorithm.recipe.RecipeType.*;
 
@@ -34,8 +32,6 @@ public enum RecipeManager {
     public static final String PLUGIN_RECIPE_NAMESPACE = "craftorithm";
     private final ConfigWrapper removedRecipesConfigWrapper = new ConfigWrapper(Craftorithm.instance(), "removed_recipes.yml");
     private final Map<String, RecipeGroup> recipeGroupMap = new ConcurrentHashMap<>();
-    private final Map<RecipeType, Consumer<Recipe>> recipeRegisterMap = new ConcurrentHashMap<>();
-    private final Map<RecipeType, Consumer<List<NamespacedKey>>> recipeRemoverMap = new ConcurrentHashMap<>();
     private final Map<NamespacedKey, Boolean> recipeUnlockMap = new ConcurrentHashMap<>();
     private final List<Recipe> removeRecipeRecycleBin = new CopyOnWriteArrayList<>();
     private final Map<NamespacedKey, Recipe> serverRecipesCache = new ConcurrentHashMap<>();
@@ -44,51 +40,11 @@ public enum RecipeManager {
     private boolean supportPotionMix;
 
     RecipeManager() {
-        //设置各类型配方的注册方法
-        recipeRegisterMap.put(SHAPED, Bukkit::addRecipe);
-        recipeRemoverMap.put(SHAPED, this::removeRecipes);
-        recipeRegisterMap.put(SHAPELESS, Bukkit::addRecipe);
-        recipeRemoverMap.put(SHAPELESS, this::removeRecipes);
-        if (CrypticLib.minecraftVersion() >= 11400) {
-            recipeRegisterMap.put(COOKING, Bukkit::addRecipe);
-            recipeRemoverMap.put(COOKING, this::removeRecipes);
-            recipeRegisterMap.put(RecipeType.STONE_CUTTING, Bukkit::addRecipe);
-            recipeRemoverMap.put(RecipeType.STONE_CUTTING, this::removeRecipes);
-            recipeRegisterMap.put(RecipeType.SMITHING, Bukkit::addRecipe);
-            recipeRemoverMap.put(RecipeType.SMITHING, this::removeRecipes);
-        }
-        if (CrypticLib.minecraftVersion() >= 11700) {
-            recipeRegisterMap.put(RecipeType.RANDOM_COOKING, Bukkit::addRecipe);
-            recipeRemoverMap.put(RecipeType.RANDOM_COOKING, this::removeRecipes);
-        }
-
-        if (PluginConfigs.ENABLE_ANVIL_RECIPE.value()) {
-            recipeRegisterMap.put(RecipeType.ANVIL, recipe -> {
-                anvilRecipeMap.put(getRecipeKey(recipe), (AnvilRecipe) recipe);
-            });
-            recipeRemoverMap.put(RecipeType.ANVIL, keys -> {
-                for (NamespacedKey key : keys) {
-                    anvilRecipeMap.remove(key);
-                }
-            });
-        }
-
         try {
             Class.forName("io.papermc.paper.potion.PotionMix");
             supportPotionMix = true;
         } catch (Exception e) {
             supportPotionMix = false;
-        }
-        if (supportPotionMix) {
-            recipeRegisterMap.put(RecipeType.POTION, recipe -> {
-                Bukkit.getPotionBrewer().addPotionMix(((PotionMixRecipe) recipe).potionMix());
-                potionMixRecipeMap.put(((PotionMixRecipe) recipe).key(), (PotionMixRecipe) recipe);
-            });
-            recipeRemoverMap.put(RecipeType.POTION, recipeList -> {
-                for (NamespacedKey recipeKey : recipeList) {
-                    Bukkit.getPotionBrewer().removePotionMix(recipeKey);
-                }
-            });
         }
     }
 
@@ -148,9 +104,7 @@ public enum RecipeManager {
     public void regRecipe(String recipeGroupName, Recipe recipe, RecipeType recipeType) {
         if (!recipeGroupMap.containsKey(recipeGroupName))
             throw new IllegalArgumentException("Can not find recipe group " + recipeGroupName + ", use addRecipeGroup() method to add recipe group.");
-        recipeRegisterMap.getOrDefault(recipeType, recipe1 -> {
-            throw new UnsupportedVersionException("Can not register " + recipeType.typeId().toLowerCase() + " recipe");
-        }).accept(recipe);
+        recipeType.register().accept(recipe);
     }
 
     public Map<String, RecipeGroup> recipeGroupMap() {
@@ -212,7 +166,7 @@ public enum RecipeManager {
             return false;
         recipeGroup.groupRecipeRegistryMap.forEach(
             (recipeKey, recipeRegistry) -> {
-                recipeRemoverMap.get(recipeRegistry.recipeType()).accept(Collections.singletonList(recipeKey));
+                recipeRegistry.recipeType().remover().accept(Collections.singletonList(recipeKey));
             }
         );
         ConfigWrapper recipeConfig = recipeGroupMap.get(recipeGroupName).recipeGroupConfig();
@@ -251,7 +205,7 @@ public enum RecipeManager {
      * @param recipeKeys 要删除的配方
      * @return 删除的配方数量
      */
-    private int removeRecipes(List<NamespacedKey> recipeKeys) {
+    public int removeRecipes(List<NamespacedKey> recipeKeys) {
         if (recipeKeys == null || recipeKeys.isEmpty())
             return 0;
         //删除表里缓存的一些数据
@@ -386,16 +340,12 @@ public enum RecipeManager {
         }
     }
 
-    public Map<RecipeType, Consumer<Recipe>> recipeRegisterMap() {
-        return recipeRegisterMap;
-    }
-
-    public Map<RecipeType, Consumer<List<NamespacedKey>>> recipeRemoverMap() {
-        return recipeRemoverMap;
-    }
-
     public Map<NamespacedKey, PotionMixRecipe> potionMixRecipeMap() {
         return potionMixRecipeMap;
+    }
+
+    public Map<NamespacedKey, AnvilRecipe> anvilRecipeMap() {
+        return anvilRecipeMap;
     }
 
     public List<String> getRecipeGroups() {

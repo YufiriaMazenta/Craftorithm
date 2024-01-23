@@ -83,7 +83,7 @@ public class RecipeGroup {
             return this;
         }
         RecipeRegistry registry = groupRecipeRegistryMap.get(recipeKey);
-        RecipeManager.INSTANCE.recipeRemoverMap().get(registry.recipeType()).accept(Collections.singletonList(recipeKey));
+        registry.recipeType().remover().accept(Collections.singletonList(recipeKey));
         groupRecipeRegistryMap.remove(recipeKey);
         groupRecipeKeyMap.remove(recipeName);
         return this;
