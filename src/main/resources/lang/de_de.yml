@@ -100,6 +100,7 @@ menu:
           - '&aBitte gib die Belohnung Erfahrung ein.'
         input_hint: '&3Klicke, um die Belohnung Erfahrung zu ändern. Gib "cancel" ein, um abzubrechen.'
       smithing_frame: '&aSchmiede Gegenstand'
+      smithing_copy_nbt_toggle: '&3Behalte Gegenstand-NBT: &a<enable>'
       potion_frame: '&aBrauen von Zutaten'
       anvil_frame: '&aSchmiede-Materialien'
       anvil_copy_nbt_toggle: '&3Behalte Gegenstand-NBT: &a<enable>'

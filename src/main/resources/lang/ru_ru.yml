@@ -100,6 +100,7 @@ menu:
           - '&3Нажмите, чтобы изменить награду опытом, введите "cancel" для отмены.'
         input_hint: '&aПожалуйста, введите количество опыта для награды.'
       smithing_frame: '&aИзготовление предметов'
+      smithing_copy_nbt_toggle: '&3Сохранить данные NBT предмета: &a<enable>'
       potion_frame: '&aСырье для зельеварения'
       anvil_frame: '&aМатериалы для ковки'
       anvil_copy_nbt_toggle: '&3Сохранить данные NBT предмета: &a<enable>'

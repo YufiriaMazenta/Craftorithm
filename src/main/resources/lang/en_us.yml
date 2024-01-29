@@ -100,6 +100,7 @@ menu:
           - '&3Click to modify experience reward.'
         input_hint: '&aPlease enter experience reward. Type "cancel" to cancel.'
       smithing_frame: '&aSmithing Ingredients'
+      smithing_copy_nbt_toggle: '&3Preserve item NBT: &a<enable>'
       potion_frame: '&aBrewing Ingredients'
       anvil_frame: '&aAnvil Ingredients'
       anvil_copy_nbt_toggle: '&3Preserve item NBT: &a<enable>'

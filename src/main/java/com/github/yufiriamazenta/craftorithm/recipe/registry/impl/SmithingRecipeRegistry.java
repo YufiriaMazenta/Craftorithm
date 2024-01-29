@@ -17,6 +17,7 @@ import java.util.Objects;
 public class SmithingRecipeRegistry extends RecipeRegistry {
 
     private RecipeChoice base, addition;
+    protected boolean copyNbt = true;
 
     public SmithingRecipeRegistry(@NotNull String recipeGroup, @NotNull NamespacedKey namespacedKey, ItemStack result) {
         super(recipeGroup, namespacedKey, result);
@@ -40,6 +41,15 @@ public class SmithingRecipeRegistry extends RecipeRegistry {
         return this;
     }
 
+    public boolean copyNbt() {
+        return copyNbt;
+    }
+
+    public SmithingRecipeRegistry setCopyNbt(boolean copyNbt) {
+        this.copyNbt = copyNbt;
+        return this;
+    }
+
     @Override
     public void register() {
         Objects.requireNonNull(namespacedKey(), "Recipe key cannot be null");
@@ -47,7 +57,7 @@ public class SmithingRecipeRegistry extends RecipeRegistry {
         Objects.requireNonNull(base, "Recipe base cannot be null");
         Objects.requireNonNull(addition, "Recipe addition cannot be null");
 
-        SmithingRecipe smithingRecipe = new SmithingRecipe(namespacedKey(), result(), base, addition);
+        SmithingRecipe smithingRecipe = new SmithingRecipe(namespacedKey(), result(), base, addition, copyNbt);
         RecipeManager.INSTANCE.regRecipe(group(), smithingRecipe, RecipeType.SMITHING);
     }
 }

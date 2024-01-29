@@ -100,6 +100,7 @@ menu:
           - '&3点击修改奖励经验'
         input_hint: '&a请输入奖励经验，输入“cancel”取消'
       smithing_frame: '&a锻造物品'
+      smithing_copy_nbt_toggle: '&3保留物品NBT：&a<enable>'
       potion_frame: '&a酿造原料'
       anvil_frame: '&a打造原料'
       anvil_copy_nbt_toggle: '&3保留物品NBT：&a<enable>'

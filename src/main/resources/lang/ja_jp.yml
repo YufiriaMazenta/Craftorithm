@@ -100,6 +100,7 @@ menu:
           - '&3クリックで経験値ドロップ量を変更する。キャンセルするにはcancelと入力してください。'
         input_hint: '&a経験値ドロップ量を入力してください'
       smithing_frame: '&a精錬アイテム'
+      smithing_copy_nbt_toggle: '&3アイテムNBTを保存する:<enable>'
       potion_frame: '&a醸造素材'
       anvil_frame: '&a鍛冶素材'
       anvil_copy_nbt_toggle: '&3アイテムNBTを保存する:<enable>'

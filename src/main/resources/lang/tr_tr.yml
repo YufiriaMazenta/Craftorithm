@@ -87,6 +87,7 @@ menu:
           - '&3Tecrübe Ödülünü Değiştirmek İçin Tıklayın.'
         input_hint: '&aLütfen gerekli seviyeyi girin, İptal etmek için "cancel" yazın.'
       smithing_frame: '&aDemir işlenmiş eşya'
+      smithing_copy_nbt_toggle: '&3Özel eşya veri NBT korunsun mu: &a<enable>'
       potion_frame: '&aİksir Tarifi'
       anvil_frame: '&aÖrs malzemeleri'
       anvil_copy_nbt_toggle: '&3Özel eşya veri NBT korunsun mu: &a<enable>'
