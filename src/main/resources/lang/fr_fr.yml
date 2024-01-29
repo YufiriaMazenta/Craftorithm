@@ -100,6 +100,7 @@ menu:
           - '&3Veuillez entrer la récompense d''expérience.'
         input_hint: '&3Cliquez pour modifier la récompense d''expérience. Entrez "cancel" pour annuler.'
       smithing_frame: '&aObjets de forge'
+      smithing_copy_nbt_toggle: '&3Conserver les données NBT de l''objet : &a<enable>'
       potion_frame: '&aIngrédients de brassage'
       anvil_frame: '&aIngrédients d''enclume'
       anvil_copy_nbt_toggle: '&3Conserver les données NBT de l''objet : &a<enable>'

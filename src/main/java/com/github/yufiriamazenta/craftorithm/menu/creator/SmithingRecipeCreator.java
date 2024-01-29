@@ -13,6 +13,7 @@ import crypticlib.ui.menu.StoredMenu;
 import crypticlib.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,6 +23,9 @@ import java.util.Map;
 import java.util.Objects;
 
 public class SmithingRecipeCreator extends UnlockableRecipeCreator {
+
+    private boolean copyNbt = true;
+
     public SmithingRecipeCreator(@NotNull Player player, @NotNull String recipeName) {
         super(player, RecipeType.SMITHING, recipeName);
         setDisplay(
@@ -35,7 +39,7 @@ public class SmithingRecipeCreator extends UnlockableRecipeCreator {
                                 "#***#%%%#",
                                 "# * A% %#",
                                 "#***#%%%#",
-                                "#########"
+                                "####B####"
                             );
                         } else {
                             return Arrays.asList(
@@ -43,7 +47,7 @@ public class SmithingRecipeCreator extends UnlockableRecipeCreator {
                                 "#***#%%%#",
                                 "#   A% %#",
                                 "#***#%%%#",
-                                "#########"
+                                "####B####"
                             );
                         }
                     },
@@ -56,6 +60,7 @@ public class SmithingRecipeCreator extends UnlockableRecipeCreator {
                         ));
                         layoutMap.put('%', getResultFrameIcon());
                         layoutMap.put('F', getUnlockIcon());
+                        layoutMap.put('B', getCopyNbtIcon());
                         layoutMap.put('A', new Icon(
                             Material.SMITHING_TABLE,
                             Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(player),
@@ -98,6 +103,7 @@ public class SmithingRecipeCreator extends UnlockableRecipeCreator {
                                     recipeConfig.set("source.template", templateName);
                                 }
                                 recipeConfig.set("unlock", unlock());
+                                recipeConfig.set("source.copy_nbt", copyNbt);
                                 recipeConfig.saveConfig();
                                 recipeConfig.reloadConfig();
                                 regRecipeGroup(recipeConfig);
@@ -110,4 +116,30 @@ public class SmithingRecipeCreator extends UnlockableRecipeCreator {
                 ))
         );
     }
+
+    protected Icon getCopyNbtIcon() {
+        Icon icon = new Icon(
+            Material.NAME_TAG,
+            Languages.MENU_RECIPE_CREATOR_ICON_SMITHING_COPY_NBT_TOGGLE
+                .value(player)
+                .replace("<enable>", String.valueOf(copyNbt)),
+            event -> toggleCopyNbt(event.getSlot(), event)
+        );
+        if (copyNbt)
+            ItemUtils.toggleItemGlowing(icon.display());
+        return icon;
+    }
+
+    protected void toggleCopyNbt(int slot, InventoryClickEvent event) {
+        super.toggleIconGlowing(slot, event);
+        copyNbt = !copyNbt;
+        ItemStack display = event.getCurrentItem();
+        ItemUtil.setDisplayName(
+            display,
+            Languages.MENU_RECIPE_CREATOR_ICON_SMITHING_COPY_NBT_TOGGLE
+                .value(player)
+                .replace("<enable>", String.valueOf(copyNbt))
+        );
+    }
+
 }

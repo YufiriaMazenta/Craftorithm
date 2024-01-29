@@ -66,6 +66,7 @@ public class Languages {
     public static final StringLangConfigEntry MENU_RECIPE_CREATOR_ICON_UNLOCK = new StringLangConfigEntry("menu.recipe_creator.icon.unlock");
     public static final StringLangConfigEntry MENU_RECIPE_CREATOR_ICON_COOKING_FRAME = new StringLangConfigEntry("menu.recipe_creator.icon.cooking_frame");
     public static final StringLangConfigEntry MENU_RECIPE_CREATOR_ICON_SMITHING_FRAME = new StringLangConfigEntry("menu.recipe_creator.icon.smithing_frame");
+    public static final StringLangConfigEntry MENU_RECIPE_CREATOR_ICON_SMITHING_COPY_NBT_TOGGLE = new StringLangConfigEntry("menu.recipe_creator.icon.smithing_copy_nbt_toggle");
     public static final StringLangConfigEntry MENU_RECIPE_CREATOR_ICON_POTION_FRAME = new StringLangConfigEntry("menu.recipe_creator.icon.potion_frame");
     public static final StringLangConfigEntry MENU_RECIPE_CREATOR_ICON_ANVIL_FRAME = new StringLangConfigEntry("menu.recipe_creator.icon.anvil_frame");
     public static final StringLangConfigEntry MENU_RECIPE_CREATOR_ICON_ANVIL_COPY_NBT_TOGGLE = new StringLangConfigEntry("menu.recipe_creator.icon.anvil_copy_nbt_toggle");

@@ -207,13 +207,14 @@ public class RecipeFactory {
         ItemStack result = getResultItem(config);
         RecipeChoice base = getRecipeChoice(config.getString("source.base", ""));
         RecipeChoice addition = getRecipeChoice(config.getString("source.addition", ""));
+        boolean copyNbt = config.getBoolean("source.copy_nbt", true);
         RecipeRegistry recipeRegistry;
         if (CrypticLib.minecraftVersion() >= 12000) {
             RecipeChoice template = getRecipeChoice(config.getString("source.template", ""));
             XSmithingRecipeRegistry.SmithingType type = XSmithingRecipeRegistry.SmithingType.valueOf(config.getString("source.type", "default").toUpperCase());
-            recipeRegistry = new XSmithingRecipeRegistry(key, namespacedKey, result).setSmithingType(type).setTemplate(template).setBase(base).setAddition(addition);
+            recipeRegistry = new XSmithingRecipeRegistry(key, namespacedKey, result).setSmithingType(type).setTemplate(template).setBase(base).setAddition(addition).setCopyNbt(copyNbt);
         } else {
-            recipeRegistry = new SmithingRecipeRegistry(key, namespacedKey, result).setBase(base).setAddition(addition);
+            recipeRegistry = new SmithingRecipeRegistry(key, namespacedKey, result).setBase(base).setAddition(addition).setCopyNbt(copyNbt);
         }
 
         return Collections.singletonList(recipeRegistry);
@@ -229,6 +230,7 @@ public class RecipeFactory {
             NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.instance(), fullKey);
             RecipeChoice base = getRecipeChoice((String) map.get("base"));
             RecipeChoice addition = getRecipeChoice((String) map.get("addition"));
+            boolean copyNbt = map.containsKey("copy_nbt") ? (Boolean) map.get("copy_nbt") : true;
             String typeStr = (String) map.get("type");
             if (typeStr == null) {
                 typeStr = "DEFAULT";
@@ -236,9 +238,9 @@ public class RecipeFactory {
             if (CrypticLib.minecraftVersion() >= 12000) {
                 RecipeChoice template = getRecipeChoice((String) map.get("template"));
                 XSmithingRecipeRegistry.SmithingType type = XSmithingRecipeRegistry.SmithingType.valueOf(typeStr.toUpperCase());
-                recipeRegistries.add(new XSmithingRecipeRegistry(key, namespacedKey, result).setSmithingType(type).setTemplate(template).setBase(base).setAddition(addition));
+                recipeRegistries.add(new XSmithingRecipeRegistry(key, namespacedKey, result).setSmithingType(type).setTemplate(template).setBase(base).setAddition(addition).setCopyNbt(copyNbt));
             } else {
-                recipeRegistries.add(new SmithingRecipeRegistry(key, namespacedKey, result).setBase(base).setAddition(addition));
+                recipeRegistries.add(new SmithingRecipeRegistry(key, namespacedKey, result).setBase(base).setAddition(addition).setCopyNbt(copyNbt));
             }
         }
         return recipeRegistries;

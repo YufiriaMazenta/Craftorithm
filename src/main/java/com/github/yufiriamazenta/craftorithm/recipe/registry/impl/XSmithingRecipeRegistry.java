@@ -39,14 +39,14 @@ public class XSmithingRecipeRegistry extends SmithingRecipeRegistry {
         switch (smithingType) {
             default:
                 Objects.requireNonNull(result(), "Recipe result cannot be null");
-                smithingRecipe = new SmithingRecipe(namespacedKey(), result(), base(), addition());
+                smithingRecipe = new SmithingRecipe(namespacedKey(), result(), base(), addition(), copyNbt);
                 break;
             case TRIM:
-                smithingRecipe = new SmithingTrimRecipe(namespacedKey(), template, base(), addition());
+                smithingRecipe = new SmithingTrimRecipe(namespacedKey(), template, base(), addition(), copyNbt);
                 break;
             case TRANSFORM:
                 Objects.requireNonNull(result(), "Recipe result cannot be null");
-                smithingRecipe = new SmithingTransformRecipe(namespacedKey(), result(), template, base(), addition());
+                smithingRecipe = new SmithingTransformRecipe(namespacedKey(), result(), template, base(), addition(), copyNbt);
                 break;
         }
         RecipeManager.INSTANCE.regRecipe(group(), smithingRecipe, RecipeType.SMITHING);
