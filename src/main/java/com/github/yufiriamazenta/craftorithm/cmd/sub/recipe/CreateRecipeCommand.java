@@ -26,7 +26,7 @@ import static com.github.yufiriamazenta.craftorithm.recipe.RecipeType.*;
 public final class CreateRecipeCommand extends AbstractSubCommand {
 
     public static final CreateRecipeCommand INSTANCE = new CreateRecipeCommand();
-    private final Pattern recipeNamePattern = Pattern.compile("^[a-z0-9._-]+$");
+    private final Pattern recipeNamePattern = Pattern.compile("^[a-z0-9/._-]+$");
     private static final Map<RecipeType, TernaryFunction<Player, String, String, Menu>> CREATOR_MAP = new ConcurrentHashMap<>();
     private static final List<String> RECIPE_TYPE_LIST = new CopyOnWriteArrayList<>();
 
