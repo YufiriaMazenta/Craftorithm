@@ -13,7 +13,7 @@ import java.util.List;
 public abstract class AbstractSubCommand extends SubcommandHandler {
 
     protected AbstractSubCommand(String command, String perm) {
-        super(new NodeInfo(command, new PermInfo(perm)));
+        super(new SubcommandInfo(command, new PermInfo(perm)));
     }
 
     protected AbstractSubCommand(String command) {
@@ -26,7 +26,7 @@ public abstract class AbstractSubCommand extends SubcommandHandler {
             sendNotEnoughCmdParamMsg(sender, 1);
             return true;
         }
-        SubcommandHandler subcommandHandler = nodes().get(args.get(0));
+        SubcommandHandler subcommandHandler = subcommands().get(args.get(0));
         if (subcommandHandler == null) {
             LangUtil.sendLang(sender, Languages.COMMAND_UNDEFINED_SUBCMD);
         } else {

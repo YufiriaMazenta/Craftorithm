@@ -38,7 +38,7 @@ public class PluginCommand extends CommandHandler {
 
     @Subcommand
     private SubcommandHandler reload = new SubcommandHandler(
-        new SubcommandHandler.NodeInfo("reload", new PermInfo("craftorithm.command.reload")),
+        new SubcommandHandler.SubcommandInfo("reload", new PermInfo("craftorithm.command.reload")),
         (sender, args) -> {
             try {
                 Craftorithm.instance().reloadConfig();
@@ -58,7 +58,7 @@ public class PluginCommand extends CommandHandler {
 
     @Subcommand
     private SubcommandHandler version = new SubcommandHandler(
-        new SubcommandHandler.NodeInfo("version",new PermInfo("craftorithm.command.version")),
+        new SubcommandHandler.SubcommandInfo("version",new PermInfo("craftorithm.command.version")),
         (sender, args) -> {
             LangUtil.sendLang(sender, Languages.COMMAND_VERSION);
             return true;
@@ -67,7 +67,7 @@ public class PluginCommand extends CommandHandler {
 
     @Subcommand
     private SubcommandHandler run = new SubcommandHandler(
-        new SubcommandHandler.NodeInfo("run", new PermInfo("craftorithm.command.run")),
+        new SubcommandHandler.SubcommandInfo("run", new PermInfo("craftorithm.command.run")),
         (sender, args) -> {
             if (!checkSenderIsPlayer(sender))
                 return true;
