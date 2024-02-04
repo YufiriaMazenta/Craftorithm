@@ -14,32 +14,31 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import crypticlib.command.CommandTreeInfo;
-import crypticlib.command.CommandTreeNode;
-import crypticlib.command.CommandTreeRoot;
-import crypticlib.command.annotation.CommandNode;
-import crypticlib.command.annotation.CommandTree;
+import crypticlib.command.CommandHandler;
+import crypticlib.command.CommandInfo;
+import crypticlib.command.SubcommandHandler;
+import crypticlib.command.annotation.Command;
+import crypticlib.command.annotation.Subcommand;
 import crypticlib.perm.PermInfo;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 
 import java.util.StringJoiner;
 
-@CommandTree
-public class PluginCommand extends CommandTreeRoot {
+@Command
+public class PluginCommand extends CommandHandler {
 
     PluginCommand() {
-        super(new CommandTreeInfo("craftorithm", new PermInfo("craftorithm.command"), new String[]{"craft", "cra"}));
+        super(new CommandInfo("craftorithm", new PermInfo("craftorithm.command"), new String[]{"craft", "cra"}));
         setExecutor((sender, args) -> {
             LangUtil.sendLang(sender, Languages.COMMAND_UNDEFINED_SUBCMD);
             return true;
         });
     }
 
-    @CommandNode
-    private CommandTreeNode reload = new CommandTreeNode(
-        new CommandTreeNode.NodeInfo("reload", new PermInfo("craftorithm.command.reload")),
+    @Subcommand
+    private SubcommandHandler reload = new SubcommandHandler(
+        new SubcommandHandler.NodeInfo("reload", new PermInfo("craftorithm.command.reload")),
         (sender, args) -> {
             try {
                 Craftorithm.instance().reloadConfig();
@@ -57,18 +56,18 @@ public class PluginCommand extends CommandTreeRoot {
         }
     );
 
-    @CommandNode
-    private CommandTreeNode version = new CommandTreeNode(
-        new CommandTreeNode.NodeInfo("version",new PermInfo("craftorithm.command.version")),
+    @Subcommand
+    private SubcommandHandler version = new SubcommandHandler(
+        new SubcommandHandler.NodeInfo("version",new PermInfo("craftorithm.command.version")),
         (sender, args) -> {
             LangUtil.sendLang(sender, Languages.COMMAND_VERSION);
             return true;
         }
     );
 
-    @CommandNode
-    private CommandTreeNode run = new CommandTreeNode(
-        new CommandTreeNode.NodeInfo("run", new PermInfo("craftorithm.command.run")),
+    @Subcommand
+    private SubcommandHandler run = new SubcommandHandler(
+        new SubcommandHandler.NodeInfo("run", new PermInfo("craftorithm.command.run")),
         (sender, args) -> {
             if (!checkSenderIsPlayer(sender))
                 return true;
@@ -88,16 +87,16 @@ public class PluginCommand extends CommandTreeRoot {
         }
     );
 
-    @CommandNode
-    private CommandTreeNode item = ItemCommand.INSTANCE;
-    @CommandNode
-    private CommandTreeNode disable = DisableRecipeCommand.INSTANCE;
-    @CommandNode
-    private CommandTreeNode removeRecipe = RemoveRecipeCommand.INSTANCE;
-    @CommandNode
-    private CommandTreeNode createRecipe = CreateRecipeCommand.INSTANCE;
-    @CommandNode
-    private CommandTreeNode recipeList = RecipeListCommand.INSTANCE;
+    @Subcommand
+    private SubcommandHandler item = ItemCommand.INSTANCE;
+    @Subcommand
+    private SubcommandHandler disable = DisableRecipeCommand.INSTANCE;
+    @Subcommand
+    private SubcommandHandler removeRecipe = RemoveRecipeCommand.INSTANCE;
+    @Subcommand
+    private SubcommandHandler createRecipe = CreateRecipeCommand.INSTANCE;
+    @Subcommand
+    private SubcommandHandler recipeList = RecipeListCommand.INSTANCE;
 
     public boolean checkSenderIsPlayer(CommandSender sender) {
         if (sender instanceof Player) {

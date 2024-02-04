@@ -3,14 +3,14 @@ package com.github.yufiriamazenta.craftorithm.cmd.sub;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import crypticlib.command.CommandTreeNode;
+import crypticlib.command.SubcommandHandler;
 import crypticlib.perm.PermInfo;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public abstract class AbstractSubCommand extends CommandTreeNode {
+public abstract class AbstractSubCommand extends SubcommandHandler {
 
     protected AbstractSubCommand(String command, String perm) {
         super(new NodeInfo(command, new PermInfo(perm)));
@@ -26,18 +26,18 @@ public abstract class AbstractSubCommand extends CommandTreeNode {
             sendNotEnoughCmdParamMsg(sender, 1);
             return true;
         }
-        CommandTreeNode node = nodes().get(args.get(0));
-        if (node == null) {
+        SubcommandHandler subcommandHandler = nodes().get(args.get(0));
+        if (subcommandHandler == null) {
             LangUtil.sendLang(sender, Languages.COMMAND_UNDEFINED_SUBCMD);
         } else {
-            String perm = node.permission().permission();
-            if (perm != null) {
-                if (!sender.hasPermission(perm)) {
+            PermInfo perm = subcommandHandler.permission();
+            if (perm != null && !perm.permission().isEmpty()) {
+                if (!sender.hasPermission(perm.permission())) {
                     LangUtil.sendLang(sender, Languages.COMMAND_NO_PERM);
                     return true;
                 }
             }
-            node.onCommand(sender, args.subList(1, args.size()));
+            subcommandHandler.onCommand(sender, args.subList(1, args.size()));
         }
         return true;
     }

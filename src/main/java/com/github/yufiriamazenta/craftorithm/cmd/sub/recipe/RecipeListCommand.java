@@ -4,8 +4,8 @@ import com.github.yufiriamazenta.craftorithm.cmd.sub.AbstractSubCommand;
 import com.github.yufiriamazenta.craftorithm.menu.display.RecipeGroupListMenu;
 import com.github.yufiriamazenta.craftorithm.menu.display.RecipeListMenu;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
-import crypticlib.command.CommandTreeNode;
-import crypticlib.command.annotation.CommandNode;
+import crypticlib.command.SubcommandHandler;
+import crypticlib.command.annotation.Subcommand;
 import crypticlib.perm.PermInfo;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -21,15 +21,15 @@ public final class RecipeListCommand extends AbstractSubCommand {
     public static final RecipeListCommand INSTANCE = new RecipeListCommand();
     private static final String CRAFTORITHM = "craftorithm", SERVER = "server";
 
-    @CommandNode
-    private CommandTreeNode server = subcommand(SERVER)
+    @Subcommand
+    private SubcommandHandler server = subcommand(SERVER)
         .setPermission(new PermInfo("craftorithm.command.list.server"))
         .setExecutor((sender, args) -> {
             new RecipeListMenu((Player) sender, RecipeManager.INSTANCE.serverRecipesCache().keySet()).openMenu();
             return true;
         });
-    @CommandNode
-    private CommandTreeNode craftorithm = subcommand(CRAFTORITHM)
+    @Subcommand
+    private SubcommandHandler craftorithm = subcommand(CRAFTORITHM)
         .setPermission(new PermInfo("craftorithm.command.list.craftorithm"))
         .setExecutor((sender, arg) -> {
             new RecipeGroupListMenu((Player) sender).openMenu();
