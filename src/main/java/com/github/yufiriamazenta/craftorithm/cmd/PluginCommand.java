@@ -23,6 +23,7 @@ import crypticlib.perm.PermInfo;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.StringJoiner;
 
 @Command
@@ -30,16 +31,14 @@ public class PluginCommand extends CommandHandler {
 
     PluginCommand() {
         super(new CommandInfo("craftorithm", new PermInfo("craftorithm.command"), new String[]{"craft", "cra"}));
-        setExecutor((sender, args) -> {
-            LangUtil.sendLang(sender, Languages.COMMAND_UNDEFINED_SUBCMD);
-            return true;
-        });
     }
 
     @Subcommand
     private SubcommandHandler reload = new SubcommandHandler(
-        new SubcommandHandler.SubcommandInfo("reload", new PermInfo("craftorithm.command.reload")),
-        (sender, args) -> {
+        new SubcommandHandler.SubcommandInfo("reload", new PermInfo("craftorithm.command.reload"))
+    ) {
+        @Override
+        public boolean execute(CommandSender sender, List<String> args) {
             try {
                 Craftorithm.instance().reloadConfig();
                 ItemUtils.reloadCannotCraftLore();
@@ -54,21 +53,25 @@ public class PluginCommand extends CommandHandler {
             }
             return true;
         }
-    );
+    };
 
     @Subcommand
     private SubcommandHandler version = new SubcommandHandler(
-        new SubcommandHandler.SubcommandInfo("version",new PermInfo("craftorithm.command.version")),
-        (sender, args) -> {
+        new SubcommandHandler.SubcommandInfo("version",new PermInfo("craftorithm.command.version"))
+    ) {
+        @Override
+        public boolean execute(CommandSender sender, List<String> args) {
             LangUtil.sendLang(sender, Languages.COMMAND_VERSION);
             return true;
         }
-    );
+    };
 
     @Subcommand
     private SubcommandHandler run = new SubcommandHandler(
-        new SubcommandHandler.SubcommandInfo("run", new PermInfo("craftorithm.command.run")),
-        (sender, args) -> {
+        new SubcommandHandler.SubcommandInfo("run", new PermInfo("craftorithm.command.run"))
+    ) {
+        @Override
+        public boolean execute(CommandSender sender, List<String> args) {
             if (!checkSenderIsPlayer(sender))
                 return true;
             if (args.isEmpty()) {
@@ -85,7 +88,7 @@ public class PluginCommand extends CommandHandler {
             LangUtil.sendLang(sender, Languages.COMMAND_RUN_ARCENCIEL_SUCCESS, CollectionsUtil.newStringHashMap("<time>", String.valueOf(execTime)));
             return true;
         }
-    );
+    };
 
     @Subcommand
     private SubcommandHandler item = ItemCommand.INSTANCE;
@@ -113,6 +116,12 @@ public class PluginCommand extends CommandHandler {
 
     public void sendNotEnoughCmdParamMsg(CommandSender sender, String paramStr) {
         LangUtil.sendLang(sender, Languages.COMMAND_NOT_ENOUGH_PARAM, CollectionsUtil.newStringHashMap("<number>", paramStr));
+    }
+
+    @Override
+    public boolean execute(CommandSender sender, List<String> args) {
+        LangUtil.sendLang(sender, Languages.COMMAND_UNDEFINED_SUBCMD);
+        return true;
     }
 
 }

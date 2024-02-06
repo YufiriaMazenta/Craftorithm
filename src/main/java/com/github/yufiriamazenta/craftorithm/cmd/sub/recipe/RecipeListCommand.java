@@ -22,19 +22,25 @@ public final class RecipeListCommand extends AbstractSubCommand {
     private static final String CRAFTORITHM = "craftorithm", SERVER = "server";
 
     @Subcommand
-    private SubcommandHandler server = subcommand(SERVER)
-        .setPermission(new PermInfo("craftorithm.command.list.server"))
-        .setExecutor((sender, args) -> {
+    private SubcommandHandler server = new SubcommandHandler(
+        SERVER, new PermInfo("craftorithm.command.list.server")
+    ) {
+        @Override
+        public boolean execute(CommandSender sender, List<String> args) {
             new RecipeListMenu((Player) sender, RecipeManager.INSTANCE.serverRecipesCache().keySet()).openMenu();
             return true;
-        });
+        }
+    };
     @Subcommand
-    private SubcommandHandler craftorithm = subcommand(CRAFTORITHM)
-        .setPermission(new PermInfo("craftorithm.command.list.craftorithm"))
-        .setExecutor((sender, arg) -> {
+    private SubcommandHandler craftorithm = new SubcommandHandler(
+        CRAFTORITHM, new PermInfo("craftorithm.command.list.craftorithm")
+    ) {
+        @Override
+        public boolean execute(CommandSender sender, List<String> args) {
             new RecipeGroupListMenu((Player) sender).openMenu();
             return true;
-        });
+        }
+    };
 
     private RecipeListCommand() {
         super("list", "craftorithm.command.list");
