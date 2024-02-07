@@ -11,7 +11,7 @@ public enum CraftorithmAPI {
     INSTANCE;
 
     public ItemStack getCraftorithmItem(String itemName) {
-        return CraftorithmItemProvider.INSTANCE.getItem(itemName);
+        return ItemManager.INSTANCE.defaultItemProvider.getItem(itemName);
     }
 
     public void regItemProvider(ItemProvider itemProvider) {

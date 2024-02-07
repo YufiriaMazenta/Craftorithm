@@ -26,6 +26,7 @@ public enum ItemManager {
 
     private final Map<String, ItemProvider> itemProviderMap;
     private final Map<String, Integer> customCookingFuelMap;
+    public final ItemProvider defaultItemProvider = CraftorithmItemProvider.INSTANCE;
     private final ConfigWrapper customFuelConfig = new ConfigWrapper(Craftorithm.instance(), "custom_fuels.yml");
     private final String BURN_TIME_KEY = "burn_time";
 
@@ -35,12 +36,7 @@ public enum ItemManager {
     }
 
     public void loadItemManager() {
-        regDefaultProviders();
         reloadCustomCookingFuel();
-    }
-
-    public void regDefaultProviders() {
-        regItemProvider(CraftorithmItemProvider.INSTANCE);
     }
 
     public void regItemProvider(ItemProvider itemProvider) {
@@ -73,7 +69,13 @@ public enum ItemManager {
         String namespace = itemKey.substring(0, index);
         String name = itemKey.substring(index + 1);
 
-        ItemProvider provider = itemProviderMap.get(namespace);
+        ItemProvider provider;
+        if (namespace.equalsIgnoreCase("items")) {
+            provider = defaultItemProvider;
+        } else {
+            provider = itemProviderMap.get(namespace);
+        }
+
         if (provider == null) {
             return matchVanillaItem(itemKey, amountScale);
         }
@@ -103,7 +105,7 @@ public enum ItemManager {
             }
         }
 
-        return null;
+        return defaultItemProvider.getItemName(item, ignoreAmount);
     }
 
     /**
