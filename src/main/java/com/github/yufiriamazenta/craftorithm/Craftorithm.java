@@ -34,7 +34,6 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
 
         PluginHookUtil.hookPlugins();
         LangUtil.info(Languages.LOAD_FINISH);
-        UpdateUtil.pullUpdateCheckRequest(Bukkit.getConsoleSender());
     }
 
     @Override
@@ -79,5 +78,6 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
             return;
         }
         Bukkit.getPluginManager().registerEvents(ItemsAdderHandler.INSTANCE, this);
+        UpdateUtil.pullUpdateCheckRequest(Bukkit.getConsoleSender());
     }
 }
