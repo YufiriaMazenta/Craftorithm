@@ -40,7 +40,8 @@ public class PluginCommand extends CommandHandler {
         @Override
         public boolean execute(CommandSender sender, List<String> args) {
             try {
-                Craftorithm.instance().reloadConfig();
+                Craftorithm.instance().reloadPlugin();
+                //TODO 更改reload
                 ItemUtils.reloadCannotCraftLore();
                 ArcencielDispatcher.INSTANCE.functionFile().reloadConfig();
                 CraftorithmItemProvider.INSTANCE.reloadItemProvider();
