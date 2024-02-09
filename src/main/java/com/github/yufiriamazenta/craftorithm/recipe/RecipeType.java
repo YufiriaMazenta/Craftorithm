@@ -5,7 +5,7 @@ import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.PotionMixRecipe;
 import crypticlib.CrypticLib;
-import crypticlib.chat.entry.StringLangConfigEntry;
+import crypticlib.lang.entry.StringLangEntry;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.Recipe;
@@ -114,11 +114,11 @@ public final class RecipeType {
     );
 
     private final String typeId;
-    private StringLangConfigEntry typeName;
+    private StringLangEntry typeName;
     private Consumer<Recipe> register;
     private Consumer<List<NamespacedKey>> remover;
 
-    private RecipeType(@NotNull String typeId, StringLangConfigEntry typeName, @NotNull Consumer<Recipe> register, @NotNull Consumer<List<NamespacedKey>> remover) {
+    private RecipeType(@NotNull String typeId, StringLangEntry typeName, @NotNull Consumer<Recipe> register, @NotNull Consumer<List<NamespacedKey>> remover) {
         this.typeId = typeId.toUpperCase();
         this.typeName = typeName;
         this.register = register;
@@ -130,11 +130,11 @@ public final class RecipeType {
         return typeId;
     }
 
-    public StringLangConfigEntry typeName() {
+    public StringLangEntry typeName() {
         return typeName;
     }
 
-    public RecipeType setTypeName(StringLangConfigEntry typeName) {
+    public RecipeType setTypeName(StringLangEntry typeName) {
         this.typeName = typeName;
         return this;
     }
