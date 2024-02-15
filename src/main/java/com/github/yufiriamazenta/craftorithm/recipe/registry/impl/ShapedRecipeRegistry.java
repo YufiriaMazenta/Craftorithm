@@ -62,7 +62,6 @@ public final class ShapedRecipeRegistry extends RecipeRegistry {
         }
 
         shapedRecipe.setGroup(group());
-
         RecipeManager.INSTANCE.regRecipe(group(), shapedRecipe, RecipeType.SHAPED);
     }
 

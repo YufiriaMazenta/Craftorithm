@@ -2,6 +2,7 @@ package com.github.yufiriamazenta.craftorithm.item.impl;
 
 import com.github.yufiriamazenta.craftorithm.item.ItemProvider;
 import io.th0rgal.oraxen.api.OraxenItems;
+import io.th0rgal.oraxen.items.ItemUpdater;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,6 +34,8 @@ public enum OraxenItemProvider implements ItemProvider {
         if (!OraxenItems.exists(itemName)) {
             return null;
         }
-        return OraxenItems.getItemById(itemName).build();
+        ItemStack built = OraxenItems.getItemById(itemName).build();
+        ItemUpdater.updateItem(built);
+        return built;
     }
 }
