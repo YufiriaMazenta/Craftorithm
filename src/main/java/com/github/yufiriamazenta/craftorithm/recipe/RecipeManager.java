@@ -14,6 +14,7 @@ import crypticlib.CrypticLib;
 import crypticlib.chat.entry.StringLangConfigEntry;
 import crypticlib.config.ConfigWrapper;
 import crypticlib.util.FileUtil;
+import io.th0rgal.oraxen.recipes.listeners.RecipesEventsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
@@ -63,9 +64,15 @@ public enum RecipeManager {
         serverRecipesCache = new ConcurrentHashMap<>();
 
         //设置各类型配方的注册方法
-        recipeRegisterMap.put(RecipeType.SHAPED, Bukkit::addRecipe);
+        recipeRegisterMap.put(RecipeType.SHAPED, (recipe) -> {
+            Bukkit.addRecipe(recipe);
+            RecipesEventsManager.get().whitelistRecipe(io.th0rgal.oraxen.recipes.CustomRecipe.fromRecipe(recipe));
+        });
         recipeRemoverMap.put(RecipeType.SHAPED, this::removeRecipes);
-        recipeRegisterMap.put(RecipeType.SHAPELESS, Bukkit::addRecipe);
+        recipeRegisterMap.put(RecipeType.SHAPELESS, (recipe) -> {
+            Bukkit.addRecipe(recipe);
+            RecipesEventsManager.get().whitelistRecipe(io.th0rgal.oraxen.recipes.CustomRecipe.fromRecipe(recipe));
+        });
         recipeRemoverMap.put(RecipeType.SHAPELESS, this::removeRecipes);
         if (CrypticLib.minecraftVersion() >= 11400) {
             recipeRegisterMap.put(RecipeType.COOKING, Bukkit::addRecipe);
