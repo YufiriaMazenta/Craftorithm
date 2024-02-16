@@ -262,7 +262,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
     class ExpInputPrompt implements NumberPrompt {
         @Override
         public @Nullable Prompt acceptValidatedInput(@NotNull Map<Object, Object> data, @NotNull Number number) {
-            exp = number.intValue();
+            exp = number.floatValue();
             updateExpIcon();
             openMenu();
             inConversation = false;

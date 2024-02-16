@@ -96,6 +96,8 @@ public class CraftingRecipeCreator extends UnlockableRecipeCreator {
                                     shape.set(i, s);
                                 }
                                 shape.removeIf(s -> s.trim().isEmpty());
+                                removeEmptyColumn(shape);
+
                                 recipeConfig.set("type", "shaped");
                                 recipeConfig.set("shape", shape);
                                 recipeConfig.set("source", itemNameMap);
@@ -117,6 +119,37 @@ public class CraftingRecipeCreator extends UnlockableRecipeCreator {
                 );
                 return layoutMap;
             })));
+    }
+
+    private void removeEmptyColumn(List<String> shape) {
+        boolean[] empty = new boolean[3];
+        for (int i = 0; i < 3; i++) {
+            int finalI = i;
+            empty[i] = shape.stream().allMatch(s -> s.charAt(finalI) == ' ');
+        }
+        if (empty[0]) {
+            if (empty[1]) {
+                if (!empty[2]) {
+                    shape.replaceAll(s -> s.substring(2));
+                }
+            } else {
+                if (empty[2]) {
+                    shape.replaceAll(s -> s.substring(1, 2));
+                } else {
+                    shape.replaceAll(s -> s.substring(1));
+                }
+            }
+        } else {
+            if (empty[1]) {
+                if (empty[2]) {
+                    shape.replaceAll(s -> s.substring(0, 1));
+                }
+            } else {
+                if (empty[2]) {
+                    shape.replaceAll(s -> s.substring(0, 2));
+                }
+            }
+        }
     }
 
 }

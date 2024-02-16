@@ -35,7 +35,6 @@ public enum OraxenItemProvider implements ItemProvider {
             return null;
         }
         ItemStack built = OraxenItems.getItemById(itemName).build();
-        ItemUpdater.updateItem(built);
-        return built;
+        return ItemUpdater.updateItem(built);
     }
 }

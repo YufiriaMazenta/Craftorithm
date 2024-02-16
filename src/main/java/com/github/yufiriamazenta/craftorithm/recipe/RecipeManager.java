@@ -64,15 +64,9 @@ public enum RecipeManager {
         serverRecipesCache = new ConcurrentHashMap<>();
 
         //设置各类型配方的注册方法
-        recipeRegisterMap.put(RecipeType.SHAPED, (recipe) -> {
-            Bukkit.addRecipe(recipe);
-            RecipesEventsManager.get().whitelistRecipe(io.th0rgal.oraxen.recipes.CustomRecipe.fromRecipe(recipe));
-        });
+        recipeRegisterMap.put(RecipeType.SHAPED, Bukkit::addRecipe);
         recipeRemoverMap.put(RecipeType.SHAPED, this::removeRecipes);
-        recipeRegisterMap.put(RecipeType.SHAPELESS, (recipe) -> {
-            Bukkit.addRecipe(recipe);
-            RecipesEventsManager.get().whitelistRecipe(io.th0rgal.oraxen.recipes.CustomRecipe.fromRecipe(recipe));
-        });
+        recipeRegisterMap.put(RecipeType.SHAPELESS, Bukkit::addRecipe);
         recipeRemoverMap.put(RecipeType.SHAPELESS, this::removeRecipes);
         if (CrypticLib.minecraftVersion() >= 11400) {
             recipeRegisterMap.put(RecipeType.COOKING, Bukkit::addRecipe);
