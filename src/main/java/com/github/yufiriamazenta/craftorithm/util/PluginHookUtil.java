@@ -1,8 +1,10 @@
 package com.github.yufiriamazenta.craftorithm.util;
 
+import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.item.impl.*;
+import com.github.yufiriamazenta.craftorithm.listener.OraxenHandler;
 import net.milkbowl.vault.economy.Economy;
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.bukkit.Bukkit;
@@ -77,6 +79,7 @@ public class PluginHookUtil {
         oraxenLoaded = Bukkit.getPluginManager().isPluginEnabled("Oraxen");
         if (oraxenLoaded) {
             ItemManager.INSTANCE.regItemProvider(OraxenItemProvider.INSTANCE);
+            Bukkit.getPluginManager().registerEvents(OraxenHandler.INSTANCE, Craftorithm.instance());
             LangUtil.info(Languages.LOAD_HOOK_PLUGIN_SUCCESS, CollectionsUtil.newStringHashMap("<plugin>", "Oraxen"));
         }
         else
