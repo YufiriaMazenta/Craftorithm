@@ -1,4 +1,13 @@
 version = "2.0.0-dev1"
+group = "com.github.yufiria.craftorithm"
+java.sourceCompatibility = JavaVersion.VERSION_1_8
+java.targetCompatibility = JavaVersion.VERSION_1_8
+var repositoryUrl = "http://repo.crypticlib.com:8081/repository/"
+repositoryUrl = if (rootProject.version.toString().endsWith("SNAPSHOT")) {
+    repositoryUrl.plus("maven-snapshots/")
+} else {
+    repositoryUrl.plus("maven-releases/")
+}
 
 plugins {
     `java-library`
@@ -20,18 +29,41 @@ dependencies {
     implementation(project(":plugin"))
 }
 
-group = "com.github.yufiria"
-java.sourceCompatibility = JavaVersion.VERSION_1_8
-java.targetCompatibility = JavaVersion.VERSION_1_8
+tasks {
+    build {
+        dependsOn(shadowJar)
+    }
+    compileJava {
+        options.encoding = "UTF-8"
+    }
+    shadowJar {
+        archiveFileName.set("Craftorithm-$version.jar")
+        relocate("crypticlib", "com.github.yufiria.craftorithm.crypticlib")
+    }
+}
 
 publishing {
-    publications.create<MavenPublication>("maven") {
-        from(components["java"])
+    publishing {
+        publications.create<MavenPublication>("maven") {
+            from(components["java"])
+            groupId = rootProject.group as String?
+        }
+        repositories {
+            maven {
+                url = uri(repositoryUrl)
+                isAllowInsecureProtocol = true
+                credentials {
+                    username = project.findProperty("maven_username").toString()
+                    password = project.findProperty("maven_password").toString()
+                }
+            }
+        }
     }
 }
 
 subprojects {
     apply(plugin = "java")
+    apply(plugin = "maven-publish")
 
     repositories {
         mavenLocal()
@@ -54,17 +86,23 @@ subprojects {
             options.encoding = "UTF-8"
         }
     }
-}
 
-tasks {
-    build {
-        dependsOn(shadowJar)
-    }
-    compileJava {
-        options.encoding = "UTF-8"
-    }
-    shadowJar {
-        archiveFileName.set("Craftorithm-$version.jar")
-        relocate("crypticlib", "com.github.yufiria.craftorithm.crypticlib")
+    publishing {
+        publishing {
+            publications.create<MavenPublication>("maven") {
+                from(components["java"])
+                groupId = rootProject.group as String?
+            }
+            repositories {
+                maven {
+                    url = uri(repositoryUrl)
+                    isAllowInsecureProtocol = true
+                    credentials {
+                        username = project.findProperty("maven_username").toString()
+                        password = project.findProperty("maven_password").toString()
+                    }
+                }
+            }
+        }
     }
 }
