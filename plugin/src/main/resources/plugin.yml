@@ -1,0 +1,15 @@
+name: Craftorithm
+version: '${version}'
+description: Craft recipes management system
+main: com.github.yufiria.craftorithm.Craftorithm
+api-version: 1.13
+load: POSTWORLD
+softdepend: [ Vault, LuckPerms, PlayerPoints, PlaceholderAPI, ItemsAdder, Oraxen, MythicMobs, NeigeItems, MMOItems ]
+authors: [ YufiriaMazenta ]
+folia-supported: true
+website: https://github.com/YufiriaMazenta/Craftorithm
+permissions:
+  craftorithm.command:
+    description: Plugin command main permissions
+  craftorithm.edit_recipe:
+    default: op
