@@ -1,7 +1,6 @@
 package com.github.yufiria.craftorithm.recipe;
 
 import org.bukkit.NamespacedKey;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,7 +21,7 @@ public class ShapedRecipe extends BaseRecipe<String[][]> {
         this.priority = priority;
     }
 
-    public String[][] ingredientIds() {
+    public String[][] ingredients() {
         return ingredients;
     }
 
@@ -38,7 +37,7 @@ public class ShapedRecipe extends BaseRecipe<String[][]> {
 
     @Override
     @NotNull
-    public ItemStack result(Player player) {
+    public ItemStack result() {
         return result;
     }
 

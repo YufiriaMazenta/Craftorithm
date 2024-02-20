@@ -10,7 +10,7 @@ public interface IRecipe<T> {
 
     @NotNull NamespacedKey key();
 
-    ItemStack result(Player player);
+    ItemStack result();
 
     boolean match(T matchObj);
 
