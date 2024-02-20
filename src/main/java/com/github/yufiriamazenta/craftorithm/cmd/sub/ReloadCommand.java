@@ -21,7 +21,7 @@ public final class ReloadCommand extends AbstractSubCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, List<String> args) {
+    public boolean execute(CommandSender sender, List<String> args) {
         try {
             reloadPlugin();
             LangUtil.sendLang(sender, Languages.COMMAND_RELOAD_SUCCESS);

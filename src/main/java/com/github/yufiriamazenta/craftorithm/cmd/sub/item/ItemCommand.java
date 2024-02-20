@@ -16,7 +16,7 @@ public final class ItemCommand extends AbstractSubCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, List<String> args) {
+    public boolean execute(CommandSender sender, List<String> args) {
         if (args.isEmpty()) {
             sendNotEnoughCmdParamMsg(sender, 2);
             return true;

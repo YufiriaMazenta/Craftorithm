@@ -15,7 +15,7 @@ public final class VersionCommand extends AbstractSubCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, List<String> args) {
+    public boolean execute(CommandSender sender, List<String> args) {
         LangUtil.sendLang(sender, Languages.COMMAND_VERSION);
         return true;
     }

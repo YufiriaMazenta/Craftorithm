@@ -11,10 +11,9 @@ import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.CrypticLib;
-import crypticlib.chat.entry.StringLangConfigEntry;
 import crypticlib.config.ConfigWrapper;
+import crypticlib.lang.entry.StringLangEntry;
 import crypticlib.util.FileUtil;
-import io.th0rgal.oraxen.recipes.listeners.RecipesEventsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
@@ -404,7 +403,7 @@ public enum RecipeManager {
             return RecipeType.UNKNOWN;
     }
 
-    public StringLangConfigEntry getRecipeTypeName(RecipeType recipeType) {
+    public StringLangEntry getRecipeTypeName(RecipeType recipeType) {
         switch (recipeType) {
             case SHAPED:
                 return Languages.RECIPE_TYPE_NAME_SHAPED;

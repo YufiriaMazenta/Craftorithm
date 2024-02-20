@@ -20,7 +20,7 @@ public final class DisableRecipeCommand extends AbstractSubCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, List<String> args) {
+    public boolean execute(CommandSender sender, List<String> args) {
         if (args.isEmpty()) {
             sendNotEnoughCmdParamMsg(sender, 1);
             return true;
@@ -40,7 +40,7 @@ public final class DisableRecipeCommand extends AbstractSubCommand {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, List<String> args) {
+    public List<String> tab(CommandSender sender, List<String> args) {
         if (args.size() <= 1) {
             List<String> tabList = new ArrayList<>();
             for (NamespacedKey key : RecipeManager.INSTANCE.serverRecipesCache().keySet()) {

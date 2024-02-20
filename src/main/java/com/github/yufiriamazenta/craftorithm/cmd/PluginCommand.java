@@ -4,16 +4,14 @@ import com.github.yufiriamazenta.craftorithm.cmd.sub.ReloadCommand;
 import com.github.yufiriamazenta.craftorithm.cmd.sub.RunArcencielCmd;
 import com.github.yufiriamazenta.craftorithm.cmd.sub.VersionCommand;
 import com.github.yufiriamazenta.craftorithm.cmd.sub.item.ItemCommand;
-import com.github.yufiriamazenta.craftorithm.cmd.sub.recipe.CreateRecipeCommand;
-import com.github.yufiriamazenta.craftorithm.cmd.sub.recipe.DisableRecipeCommand;
-import com.github.yufiriamazenta.craftorithm.cmd.sub.recipe.RecipeListCommand;
-import com.github.yufiriamazenta.craftorithm.cmd.sub.recipe.RemoveRecipeCommand;
+import com.github.yufiriamazenta.craftorithm.cmd.sub.recipe.*;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import crypticlib.command.BukkitCommand;
-import crypticlib.command.RootCmdExecutor;
-import crypticlib.command.SubcmdExecutor;
+import crypticlib.command.CommandHandler;
+import crypticlib.command.CommandInfo;
+import crypticlib.command.SubcommandHandler;
+import crypticlib.perm.PermInfo;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -21,14 +19,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 
-@BukkitCommand(
-        name = "craftorithm",
-        aliases = {"craft", "cra"},
-        permission = "craftorithm.command"
-)
-public class PluginCommand extends RootCmdExecutor {
+@crypticlib.command.annotation.Command
+public class PluginCommand extends CommandHandler {
 
     PluginCommand() {
+        super(new CommandInfo("craftorithm", new PermInfo("craftorithm.command"), new String[]{"craft", "cra"}));
         regDefaultSubCommands();
     }
 
@@ -39,11 +34,11 @@ public class PluginCommand extends RootCmdExecutor {
             LangUtil.sendLang(sender, Languages.COMMAND_NOT_ENOUGH_PARAM, CollectionsUtil.newStringHashMap("<number>", String.valueOf(1)));
             return true;
         }
-        SubcmdExecutor subCommand = subcommands().get(argList.get(0));
+        SubcommandHandler subCommand = subcommands().get(argList.get(0));
         if (subCommand != null) {
-            String perm = subCommand.permission();
+            PermInfo perm = subCommand.permission();
             if (perm != null) {
-                if (!sender.hasPermission(perm)) {
+                if (!sender.hasPermission(perm.permission())) {
                     LangUtil.sendLang(sender, Languages.COMMAND_NO_PERM);
                     return true;
                 }
@@ -64,7 +59,8 @@ public class PluginCommand extends RootCmdExecutor {
             .regSub(ItemCommand.INSTANCE)
             .regSub(RunArcencielCmd.INSTANCE)
             .regSub(CreateRecipeCommand.INSTANCE)
-            .regSub(RecipeListCommand.INSTANCE);
+            .regSub(RecipeListCommand.INSTANCE)
+            .regSub(DisplayRecipeCommand.INSTANCE);
     }
 
 }

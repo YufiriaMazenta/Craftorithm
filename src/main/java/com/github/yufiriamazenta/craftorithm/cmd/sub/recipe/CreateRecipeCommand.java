@@ -42,7 +42,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, List<String> args) {
+    public boolean execute(CommandSender sender, List<String> args) {
         if (!checkSenderIsPlayer(sender))
             return true;
         if (args.isEmpty()) {
@@ -99,7 +99,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, List<String> args) {
+    public List<String> tab(CommandSender sender, List<String> args) {
         if (args.size() <= 1) {
             List<String> tabList = new ArrayList<>(recipeTypeList);
             filterTabList(tabList, args.get(0));
