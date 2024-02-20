@@ -3,16 +3,21 @@ package com.github.yufiriamazenta.craftorithm.cmd.sub;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import crypticlib.command.SubcmdExecutor;
+import crypticlib.command.SubcommandHandler;
+import crypticlib.perm.PermInfo;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public abstract class AbstractSubCommand extends SubcmdExecutor {
+public abstract class AbstractSubCommand extends SubcommandHandler {
 
-    protected AbstractSubCommand(String command, String perm) {
-        super(command, perm);
+    protected AbstractSubCommand(String command, PermInfo permInfo) {
+        super(command, permInfo);
+    }
+
+    protected AbstractSubCommand(String command, String permission) {
+        this(command, new PermInfo(permission));
     }
 
     protected AbstractSubCommand(String command) {
@@ -20,18 +25,18 @@ public abstract class AbstractSubCommand extends SubcmdExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, List<String> args) {
+    public boolean execute(CommandSender sender, List<String> args) {
         if (args.isEmpty()) {
             sendNotEnoughCmdParamMsg(sender, 1);
             return true;
         }
-        SubcmdExecutor subCommand = subcommands().get(args.get(0));
+        SubcommandHandler subCommand = subcommands().get(args.get(0));
         if (subCommand == null) {
             LangUtil.sendLang(sender, Languages.COMMAND_UNDEFINED_SUBCMD);
         } else {
-            String perm = subCommand.permission();
+            PermInfo perm = subCommand.permission();
             if (perm != null) {
-                if (!sender.hasPermission(perm)) {
+                if (!sender.hasPermission(perm.permission())) {
                     LangUtil.sendLang(sender, Languages.COMMAND_NO_PERM);
                     return true;
                 }

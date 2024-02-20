@@ -23,7 +23,7 @@ public class AddFuelCommand extends AbstractSubCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, List<String> args) {
+    public boolean execute(CommandSender sender, List<String> args) {
         if (args.isEmpty()) {
             sendNotEnoughCmdParamMsg(sender, 1);
             return true;
@@ -47,7 +47,7 @@ public class AddFuelCommand extends AbstractSubCommand {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, List<String> args) {
+    public List<String> tab(CommandSender sender, List<String> args) {
         if (args.size() <= 1) {
             List<String> tabs = new ArrayList<>(Arrays.asList("50", "67", "100", "150", "200", "300", "800", "1200", "1600", "2400", "4001", "16000", "20000"));
             filterTabList(tabs, args.get(0));

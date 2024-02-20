@@ -23,7 +23,7 @@ public final class SaveItemCommand extends AbstractSubCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, List<String> args) {
+    public boolean execute(CommandSender sender, List<String> args) {
         if (args.size() < 2) {
             sendNotEnoughCmdParamMsg(sender, 2 - args.size());
             return true;
@@ -43,7 +43,7 @@ public final class SaveItemCommand extends AbstractSubCommand {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, List<String> args) {
+    public List<String> tab(CommandSender sender, List<String> args) {
         if (args.size() < 2) {
             List<String> tabList = new ArrayList<>(CraftorithmItemProvider.INSTANCE.itemConfigFileMap().keySet());
             filterTabList(tabList, args.get(0));
