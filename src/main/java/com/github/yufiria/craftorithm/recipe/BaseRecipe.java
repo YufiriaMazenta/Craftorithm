@@ -8,6 +8,7 @@ public abstract class BaseRecipe<T> implements IRecipe<T> {
 
     protected Integer priority;
     protected NamespacedKey recipeKey;
+    protected String result;
 
     public BaseRecipe(NamespacedKey recipeKey) {
         this.recipeKey = recipeKey;
@@ -27,5 +28,15 @@ public abstract class BaseRecipe<T> implements IRecipe<T> {
     @Override
     public void setPriority(@Nullable Integer priority) {
         this.priority = priority;
+    }
+
+    public BaseRecipe<T> setResult(String result) {
+        this.result = result;
+        return this;
+    }
+
+    @Override
+    public String result() {
+        return result;
     }
 }
