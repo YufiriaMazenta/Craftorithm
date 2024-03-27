@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class GiveItemCommand extends AbstractSubCommand {
@@ -49,7 +50,12 @@ public class GiveItemCommand extends AbstractSubCommand {
             return true;
         }
 
-        player.getInventory().addItem(itemStack);
+        HashMap<Integer, ItemStack> failedItems = player.getInventory().addItem(itemStack);
+        if (!failedItems.isEmpty()) {
+            for (ItemStack stack : failedItems.values()) {
+                player.getWorld().dropItem(player.getLocation(), stack);
+            }
+        }
         LangUtil.sendLang(sender, Languages.COMMAND_ITEM_GIVE_SUCCESS);
         return true;
     }
