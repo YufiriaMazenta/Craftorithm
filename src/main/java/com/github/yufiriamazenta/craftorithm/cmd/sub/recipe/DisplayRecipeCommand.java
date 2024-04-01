@@ -10,6 +10,7 @@ import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class DisplayRecipeCommand extends AbstractSubCommand {
@@ -48,6 +49,6 @@ public class DisplayRecipeCommand extends AbstractSubCommand {
             }
             return tabList;
         }
-        return super.onTabComplete(sender, args);
+        return Collections.singletonList("");
     }
 }
