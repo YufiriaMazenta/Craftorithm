@@ -206,7 +206,7 @@ public class CookingRecipeGroupEditor extends UnlockableRecipeGroupEditor {
             reloadRecipeGroup();
             cookingRecipeSourceList.get(sourceIndex).cookingTime = cookingTime;
             updateCookingIcon(cookingRecipeIcon, cookingRecipeSourceList.get(sourceIndex));
-            draw(openedInventory);
+            draw(inventoryCache);
             openMenu();
             inConversation = false;
             return null;
@@ -247,7 +247,7 @@ public class CookingRecipeGroupEditor extends UnlockableRecipeGroupEditor {
             reloadRecipeGroup();
             cookingRecipeSourceList.get(sourceIndex).exp = exp;
             updateCookingIcon(cookingRecipeIcon, cookingRecipeSourceList.get(sourceIndex));
-            draw(openedInventory);
+            draw(inventoryCache);
             openMenu();
             inConversation = false;
             return null;

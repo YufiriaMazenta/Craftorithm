@@ -67,8 +67,8 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
                     layoutMap.put('G', getCookingTimeIcon());
                     layoutMap.put('H', getExpIcon());
                     layoutMap.put('A', new Icon(
-                        Material.FURNACE,
-                        Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(player),
+                        Material.FURNACE, Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(player)
+                        ).setClickAction(
                         event -> {
                             StoredMenu creator = (StoredMenu) Objects.requireNonNull(event.getClickedInventory()).getHolder();
                             ItemStack source = Objects.requireNonNull(creator).storedItems().get(20);
@@ -107,7 +107,8 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
                             regRecipeGroup(recipeConfig);
                             event.getWhoClicked().closeInventory();
                             sendSuccessMsg(event.getWhoClicked(), recipeName);
-                        })
+                        }
+                        )
                     );
                     return layoutMap;
                 })
@@ -145,7 +146,8 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
         displayName = displayName.replace("<enable>", String.valueOf(enable));
         Icon icon = new Icon(
             material,
-            displayName,
+            displayName
+        ).setClickAction(
             event -> toggleCookingIcon(event.getSlot(), event)
         );
         if (enable) {
@@ -184,13 +186,14 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
             Material.CLOCK,
             Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_NAME.value(player)
                 .replace("<time>", String.valueOf(cookingTime)),
-            Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_LORE.value(player),
+            Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_LORE.value(player)
+        ).setClickAction(
             event -> {
                 Conversation timeInputConversation = new Conversation(
                     Craftorithm.instance(),
                     player,
                     new TimeInputPrompt(),
-                    data -> player.openInventory(openedInventory())
+                    data -> player.openInventory(inventoryCache)
                 );
                 inConversation = true;
                 timeInputConversation.start();
@@ -204,13 +207,14 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
             Material.EXPERIENCE_BOTTLE,
             Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_NAME.value(player)
                 .replace("<exp>", String.valueOf(exp)),
-            Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_LORE.value(player),
+            Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_LORE.value(player)
+        ).setClickAction(
             event -> {
                 Conversation conversation = new Conversation(
                     Craftorithm.instance(),
                     player,
                     new ExpInputPrompt(),
-                    data -> player.openInventory(openedInventory)
+                    data -> player.openInventory(inventoryCache)
                 );
                 inConversation = true;
                 conversation.start();
@@ -220,7 +224,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
     }
 
     protected void updateCookingTimeIcon() {
-        ItemStack cookingTimeIcon = this.openedInventory().getItem(3);
+        ItemStack cookingTimeIcon = this.inventoryCache.getItem(3);
         if (cookingTimeIcon == null)
             return;
         ItemUtil.setDisplayName(
@@ -232,7 +236,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
     }
 
     protected void updateExpIcon() {
-        ItemStack expIcon = this.openedInventory().getItem(5);
+        ItemStack expIcon = this.inventoryCache.getItem(5);
         if (expIcon == null)
             return;
         ItemUtil.setDisplayName(

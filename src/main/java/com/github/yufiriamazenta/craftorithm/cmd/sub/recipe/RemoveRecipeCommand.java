@@ -44,7 +44,6 @@ public final class RemoveRecipeCommand extends AbstractSubCommand {
             for (Map<String, RecipeGroup> recipeGroupMap : RecipeManager.INSTANCE.recipeMap().values()) {
                 tabList.addAll(recipeGroupMap.keySet());
             }
-            filterTabList(tabList, args.get(0));
             return tabList;
         }
         return super.onTabComplete(sender, args);

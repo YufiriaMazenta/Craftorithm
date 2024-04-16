@@ -41,8 +41,8 @@ public class CraftingRecipeCreator extends UnlockableRecipeCreator {
                 layoutMap.put('F', getUnlockIcon());
                 layoutMap.put('A', new Icon(
                     Material.CRAFTING_TABLE,
-                    Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(player),
-                    event -> {
+                    Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(player)
+                    ).setClickAction(event -> {
                         StoredMenu creator = (StoredMenu) Objects.requireNonNull(event.getClickedInventory()).getHolder();
                         Map<Integer, ItemStack> storedItems = Objects.requireNonNull(creator).storedItems();
                         ItemStack result = storedItems.get(24);

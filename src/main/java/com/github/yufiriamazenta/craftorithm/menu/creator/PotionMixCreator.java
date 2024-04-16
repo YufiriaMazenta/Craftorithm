@@ -43,7 +43,8 @@ public class PotionMixCreator extends RecipeCreator {
                     ));
                     layoutMap.put('A', new Icon(
                         Material.BREWING_STAND,
-                        Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(player),
+                        Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(player)
+                        ).setClickAction(
                         event -> {
                             StoredMenu creator = (StoredMenu) event.getClickedInventory().getHolder();
                             ItemStack result = Objects.requireNonNull(creator).storedItems().get(24);
@@ -70,7 +71,8 @@ public class PotionMixCreator extends RecipeCreator {
                             regRecipeGroup(recipeConfig);
                             event.getWhoClicked().closeInventory();
                             sendSuccessMsg(player, recipeName);
-                        })
+                        }
+                        )
                     );
                     return layoutMap;
                 })

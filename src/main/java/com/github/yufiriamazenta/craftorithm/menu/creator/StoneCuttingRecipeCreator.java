@@ -36,7 +36,8 @@ public class StoneCuttingRecipeCreator extends UnlockableRecipeCreator {
                     layoutMap.put('F', getUnlockIcon());
                     layoutMap.put('A', new Icon(
                         Material.STONECUTTER,
-                        Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(player),
+                        Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(player)
+                        ).setClickAction(
                         event -> {
                             StoredMenu creator = (StoredMenu) event.getClickedInventory().getHolder();
                             List<String> sourceList = new ArrayList<>();
@@ -72,7 +73,8 @@ public class StoneCuttingRecipeCreator extends UnlockableRecipeCreator {
                             regRecipeGroup(recipeConfig);
                             event.getWhoClicked().closeInventory();
                             sendSuccessMsg(event.getWhoClicked(), recipeName);
-                        })
+                        }
+                        )
                     );
                     return layoutMap;
                 })

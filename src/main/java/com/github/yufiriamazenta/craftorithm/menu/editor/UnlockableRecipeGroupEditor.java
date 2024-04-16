@@ -26,7 +26,8 @@ public abstract class UnlockableRecipeGroupEditor extends RecipeGroupEditor {
         Icon icon = new Icon(
             Material.KNOWLEDGE_BOOK,
             Languages.MENU_RECIPE_EDITOR_ICON_UNLOCK.value(player)
-                .replace("<unlock>", String.valueOf(unlock)),
+                .replace("<unlock>", String.valueOf(unlock))
+        ).setClickAction(
             event -> {
                 unlock = !unlock;
                 recipeGroup.setUnlock(unlock);

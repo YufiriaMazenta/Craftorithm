@@ -101,9 +101,7 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
     @Override
     public List<String> tab(CommandSender sender, List<String> args) {
         if (args.size() <= 1) {
-            List<String> tabList = new ArrayList<>(recipeTypeList);
-            filterTabList(tabList, args.get(0));
-            return tabList;
+            return new ArrayList<>(recipeTypeList);
         }
         return Collections.singletonList("<recipe_name>");
     }

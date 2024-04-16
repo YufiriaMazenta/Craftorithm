@@ -8,7 +8,6 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.CrypticLib;
-import crypticlib.chat.MessageSender;
 import crypticlib.chat.TextProcessor;
 import crypticlib.config.ConfigWrapper;
 import crypticlib.conversation.Conversation;
@@ -83,7 +82,8 @@ public abstract class RecipeGroupEditor extends MultipageMenu {
             Material.OAK_SIGN,
             Languages.MENU_RECIPE_EDITOR_ICON_SORT_ID_NAME.value(player)
                 .replace("<id>", RecipeManager.INSTANCE.getRecipeGroupSortId(recipeGroup.groupName()) + ""),
-            Languages.MENU_RECIPE_EDITOR_ICON_SORT_ID_LORE.value(player),
+            Languages.MENU_RECIPE_EDITOR_ICON_SORT_ID_LORE.value(player)
+        ).setClickAction(
             event -> {
                 new Conversation(
                     Craftorithm.instance(),
@@ -100,7 +100,8 @@ public abstract class RecipeGroupEditor extends MultipageMenu {
     protected Icon getRemoveIcon() {
         return new Icon(
             Material.BARRIER,
-            Languages.MENU_RECIPE_EDITOR_ICON_REMOVE_NAME.value(player),
+            Languages.MENU_RECIPE_EDITOR_ICON_REMOVE_NAME.value(player)
+        ).setClickAction(
             event -> {
                 RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeGroup().groupName(), true);
                 player.closeInventory();
@@ -197,11 +198,15 @@ public abstract class RecipeGroupEditor extends MultipageMenu {
     }
 
     public Icon getNextIcon() {
-        return new Icon(Material.PAPER, Languages.MENU_RECIPE_EDITOR_ICON_NEXT.value(player), event -> nextPage());
+        return new Icon(Material.PAPER, Languages.MENU_RECIPE_EDITOR_ICON_NEXT.value(player)).setClickAction(
+            event -> nextPage()
+        );
     }
 
     public Icon getPreviousIcon() {
-        return new Icon(Material.PAPER, Languages.MENU_RECIPE_EDITOR_ICON_PREVIOUS.value(player), event -> previousPage());
+        return new Icon(Material.PAPER, Languages.MENU_RECIPE_EDITOR_ICON_PREVIOUS.value(player)).setClickAction(
+            event -> previousPage()
+        );
     }
 
 }

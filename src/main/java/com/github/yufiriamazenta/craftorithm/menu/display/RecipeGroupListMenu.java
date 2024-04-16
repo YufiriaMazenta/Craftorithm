@@ -53,8 +53,8 @@ public class RecipeGroupListMenu extends Menu {
     @Override
     public Inventory getInventory() {
         resetIcons();
-        if (openedInventory == null) {
-            openedInventory = Bukkit.createInventory(
+        if (inventoryCache == null) {
+            inventoryCache = Bukkit.createInventory(
                 this,
                 54,
                 TextProcessor.color(Languages.MENU_NEW_RECIPE_LIST_TITLE.value(player))
@@ -62,7 +62,7 @@ public class RecipeGroupListMenu extends Menu {
         }
         refreshInventory();
 
-        return openedInventory;
+        return inventoryCache;
     }
 
     public void nextPage() {
@@ -115,14 +115,12 @@ public class RecipeGroupListMenu extends Menu {
         }
         slotMap.put(46, new Icon(
             Material.PAPER,
-            TextProcessor.color(Languages.MENU_NEW_RECIPE_LIST_ICON_PREVIOUS.value(player)),
-            event -> previousPage()
-        ));
+            TextProcessor.color(Languages.MENU_NEW_RECIPE_LIST_ICON_PREVIOUS.value(player))
+        ).setClickAction(event -> previousPage()));
         slotMap.put(52, new Icon(
             Material.PAPER,
-            TextProcessor.color(Languages.MENU_NEW_RECIPE_LIST_ICON_NEXT.value(player)),
-            event -> nextPage()
-        ));
+            TextProcessor.color(Languages.MENU_NEW_RECIPE_LIST_ICON_NEXT.value(player))
+        ).setClickAction(event -> nextPage()));
         int recipeSlot = page * 45;
         for (int invSlot = 0; invSlot < 45 && recipeSlot < recipeGroupResultList.size(); invSlot++, recipeSlot++) {
             slotMap.put(invSlot, wrapIcon(recipeSlot));
@@ -136,9 +134,9 @@ public class RecipeGroupListMenu extends Menu {
     }
 
     public RecipeGroupListMenu refreshInventory() {
-        openedInventory.clear();
+        inventoryCache.clear();
         for (Integer slot : slotMap.keySet()) {
-            openedInventory.setItem(slot, slotMap.get(slot).display());
+            inventoryCache.setItem(slot, slotMap.get(slot).display());
         }
         return this;
     }
@@ -147,44 +145,46 @@ public class RecipeGroupListMenu extends Menu {
     private Icon wrapIcon(int recipeSlot) {
         ItemStack display = recipeGroupResultList.get(recipeSlot).getValue();
         String recipeGroupName = recipeGroupResultList.get(recipeSlot).getKey();
-        Icon icon = new Icon(display, event -> {
-            switch (event.getClick()) {
-                case RIGHT:
-                case SHIFT_RIGHT:
-                    if (!player.hasPermission("craftorithm.edit_recipe")) {
-                        return;
-                    }
-                    RecipeGroup recipeGroup = RecipeManager.INSTANCE.getRecipeGroup(recipeGroupName);
-                    if (recipeGroup == null) {
-                        throw new IllegalArgumentException("Can not find recipe group " + recipeGroupName);
-                    }
-                    recipeGroupEditorMap.getOrDefault(recipeGroup.recipeType(), (player, group, parent) -> {
-                        throw new RuntimeException("Unknown recipe type editor");
-                    }).apply(player, recipeGroup, this).openMenu();
-                    break;
-                case LEFT:
-                case SHIFT_LEFT:
-                default:
-                    RecipeGroup recipeGroup1 = RecipeManager.INSTANCE.getRecipeGroup(recipeGroupName);
-                    if (recipeGroup1 == null) {
-                        throw new IllegalArgumentException("Can not find recipe group " + recipeGroupName);
-                    }
-                    if (recipeGroup1.groupRecipeKeys().size() < 2) {
-                        new RecipeDisplayMenu(
-                            player,
-                            RecipeManager.INSTANCE.getRecipe(recipeGroup1.groupRecipeKeys().get(0)),
-                            this
-                        ).openMenu();
-                    } else {
-                        new RecipeListMenu(
-                            player,
-                            recipeGroup1.groupRecipeKeys(),
-                            this
-                        ).openMenu();
-                    }
-                    break;
+        Icon icon = new Icon(display).setClickAction(
+            event -> {
+                switch (event.getClick()) {
+                    case RIGHT:
+                    case SHIFT_RIGHT:
+                        if (!player.hasPermission("craftorithm.edit_recipe")) {
+                            return;
+                        }
+                        RecipeGroup recipeGroup = RecipeManager.INSTANCE.getRecipeGroup(recipeGroupName);
+                        if (recipeGroup == null) {
+                            throw new IllegalArgumentException("Can not find recipe group " + recipeGroupName);
+                        }
+                        recipeGroupEditorMap.getOrDefault(recipeGroup.recipeType(), (player, group, parent) -> {
+                            throw new RuntimeException("Unknown recipe type editor");
+                        }).apply(player, recipeGroup, this).openMenu();
+                        break;
+                    case LEFT:
+                    case SHIFT_LEFT:
+                    default:
+                        RecipeGroup recipeGroup1 = RecipeManager.INSTANCE.getRecipeGroup(recipeGroupName);
+                        if (recipeGroup1 == null) {
+                            throw new IllegalArgumentException("Can not find recipe group " + recipeGroupName);
+                        }
+                        if (recipeGroup1.groupRecipeKeys().size() < 2) {
+                            new RecipeDisplayMenu(
+                                player,
+                                RecipeManager.INSTANCE.getRecipe(recipeGroup1.groupRecipeKeys().get(0)),
+                                this
+                            ).openMenu();
+                        } else {
+                            new RecipeListMenu(
+                                player,
+                                recipeGroup1.groupRecipeKeys(),
+                                this
+                            ).openMenu();
+                        }
+                        break;
+                }
             }
-        });
+        );
         ItemUtil.setLore(icon.display(), Languages.MENU_NEW_RECIPE_LIST_ICON_ELEMENTS_LORE.value(player));
         return icon;
     }

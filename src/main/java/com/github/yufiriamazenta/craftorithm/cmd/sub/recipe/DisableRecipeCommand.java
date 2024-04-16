@@ -48,7 +48,6 @@ public final class DisableRecipeCommand extends AbstractSubCommand {
                 if (str.contains(args.get(0)))
                     tabList.add(key.toString());
             }
-            filterTabList(tabList, args.get(0));
             return tabList;
         }
         return super.onTabComplete(sender, args);
