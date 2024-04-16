@@ -135,7 +135,7 @@ public class AnvilRecipeGroupEditor extends RecipeGroupEditor {
                        configWrapper.saveConfig();
                        reloadRecipeGroup();
                        refreshIconLore();
-                       draw(openedInventory);
+                       draw(inventoryCache);
                        break;
                }
             });
@@ -196,7 +196,7 @@ public class AnvilRecipeGroupEditor extends RecipeGroupEditor {
             anvilRecipeSourceList.get(sourceIndex).costLevel = costLevel;
             anvilSourceIcon.refreshIconLore();
             reloadRecipeGroup();
-            draw(openedInventory);
+            draw(inventoryCache);
             openMenu();
             inConversation = false;
             return null;

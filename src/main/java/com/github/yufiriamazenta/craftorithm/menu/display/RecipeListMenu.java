@@ -66,17 +66,17 @@ public class RecipeListMenu extends Menu {
 
     public void nextPage() {
         setPage(Math.min(page + 1, maxPage - 1)).resetIcons();
-        openedInventory.clear();
+        inventoryCache.clear();
         for (Integer slot : slotMap.keySet()) {
-            openedInventory.setItem(slot, slotMap.get(slot).display());
+            inventoryCache.setItem(slot, slotMap.get(slot).display());
         }
     }
 
     public void previousPage() {
         setPage(Math.max(page - 1, 0)).resetIcons();
-        openedInventory.clear();
+        inventoryCache.clear();
         for (Integer slot : slotMap.keySet()) {
-            openedInventory.setItem(slot, slotMap.get(slot).display());
+            inventoryCache.setItem(slot, slotMap.get(slot).display());
         }
     }
 
@@ -92,21 +92,19 @@ public class RecipeListMenu extends Menu {
         }
         slotMap.put(46, new Icon(
             Material.PAPER,
-            TextProcessor.color(Languages.MENU_RECIPE_LIST_ICON_PREVIOUS.value(player)),
-            event -> previousPage()
-        ));
+            TextProcessor.color(Languages.MENU_RECIPE_LIST_ICON_PREVIOUS.value(player))
+        ).setClickAction(event -> previousPage()));
         slotMap.put(52, new Icon(
             Material.PAPER,
-            TextProcessor.color(Languages.MENU_RECIPE_LIST_ICON_NEXT.value(player)),
-            event -> nextPage()
-        ));
+            TextProcessor.color(Languages.MENU_RECIPE_LIST_ICON_NEXT.value(player))
+        ).setClickAction(event -> nextPage()));
         int recipeSlot = page * 45;
         for (int i = 0; i < 45 && recipeSlot < recipeList.size(); i++, recipeSlot ++) {
             Recipe recipe = recipeList.get(recipeSlot);
             if (recipe == null)
                 continue;
             ItemStack display = recipe.getResult();
-            slotMap.put(i, new Icon(display, (event -> new RecipeDisplayMenu(player, recipe, this).openMenu())));
+            slotMap.put(i, new Icon(display).setClickAction(event -> new RecipeDisplayMenu(player, recipe, this).openMenu()));
         }
         for (int i = 0; i < 45; i++) {
             if (slotMap.containsKey(i))

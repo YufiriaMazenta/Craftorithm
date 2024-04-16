@@ -63,7 +63,8 @@ public class SmithingRecipeCreator extends UnlockableRecipeCreator {
                         layoutMap.put('B', getCopyNbtIcon());
                         layoutMap.put('A', new Icon(
                             Material.SMITHING_TABLE,
-                            Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(player),
+                            Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(player)
+                            ).setClickAction(
                             event -> {
                                 StoredMenu creator = (StoredMenu) Objects.requireNonNull(event.getClickedInventory()).getHolder();
                                 ItemStack result = Objects.requireNonNull(creator).storedItems().get(24);
@@ -109,7 +110,8 @@ public class SmithingRecipeCreator extends UnlockableRecipeCreator {
                                 regRecipeGroup(recipeConfig);
                                 event.getWhoClicked().closeInventory();
                                 sendSuccessMsg(event.getWhoClicked(), recipeName);
-                            })
+                            }
+                            )
                         );
                         return layoutMap;
                     }
@@ -122,9 +124,8 @@ public class SmithingRecipeCreator extends UnlockableRecipeCreator {
             Material.NAME_TAG,
             Languages.MENU_RECIPE_CREATOR_ICON_SMITHING_COPY_NBT_TOGGLE
                 .value(player)
-                .replace("<enable>", String.valueOf(copyNbt)),
-            event -> toggleCopyNbt(event.getSlot(), event)
-        );
+                .replace("<enable>", String.valueOf(copyNbt))
+        ).setClickAction(event -> toggleCopyNbt(event.getSlot(), event));
         if (copyNbt)
             ItemUtils.toggleItemGlowing(icon.display());
         return icon;

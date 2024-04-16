@@ -1,10 +1,13 @@
 package com.github.yufiriamazenta.craftorithm.cmd.sub.item;
 
+import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.cmd.sub.AbstractSubCommand;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.item.impl.CraftorithmItemProvider;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import crypticlib.CrypticLib;
+import crypticlib.platform.IPlatform;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -52,8 +55,17 @@ public class GiveItemCommand extends AbstractSubCommand {
 
         HashMap<Integer, ItemStack> failedItems = player.getInventory().addItem(itemStack);
         if (!failedItems.isEmpty()) {
-            for (ItemStack stack : failedItems.values()) {
-                player.getWorld().dropItem(player.getLocation(), stack);
+            if (!CrypticLib.platform().platform().equals(IPlatform.Platform.FOLIA)) {
+                for (ItemStack stack : failedItems.values()) {
+                    player.getWorld().dropItem(player.getLocation(), stack);
+                }
+            } else {
+                Runnable dropTask = () -> {
+                    for (ItemStack stack : failedItems.values()) {
+                        player.getWorld().dropItem(player.getLocation(), stack);
+                    }
+                };
+                CrypticLib.platform().scheduler().runTaskOnEntity(Craftorithm.instance(), player, dropTask, dropTask);
             }
         }
         LangUtil.sendLang(sender, Languages.COMMAND_ITEM_GIVE_SUCCESS);
@@ -63,9 +75,7 @@ public class GiveItemCommand extends AbstractSubCommand {
     @Override
     public List<String> tab(CommandSender sender, List<String> args) {
         if (args.size() < 2) {
-            List<String> tabList = new ArrayList<>(CraftorithmItemProvider.INSTANCE.itemMap().keySet());
-            filterTabList(tabList, args.get(0));
-            return tabList;
+            return new ArrayList<>(CraftorithmItemProvider.INSTANCE.itemMap().keySet());
         }
         else
             return getOnlinePlayerNameList();

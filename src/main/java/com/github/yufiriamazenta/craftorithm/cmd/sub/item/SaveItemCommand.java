@@ -45,9 +45,7 @@ public final class SaveItemCommand extends AbstractSubCommand {
     @Override
     public List<String> tab(CommandSender sender, List<String> args) {
         if (args.size() < 2) {
-            List<String> tabList = new ArrayList<>(CraftorithmItemProvider.INSTANCE.itemConfigFileMap().keySet());
-            filterTabList(tabList, args.get(0));
-            return tabList;
+            return new ArrayList<>(CraftorithmItemProvider.INSTANCE.itemConfigFileMap().keySet());
         } else {
             return Collections.singletonList("");
         }
