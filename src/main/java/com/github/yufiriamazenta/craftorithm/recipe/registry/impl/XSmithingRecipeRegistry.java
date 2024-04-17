@@ -2,6 +2,7 @@ package com.github.yufiriamazenta.craftorithm.recipe.registry.impl;
 
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
+import crypticlib.CrypticLib;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.*;
 import org.jetbrains.annotations.NotNull;
@@ -39,16 +40,26 @@ public class XSmithingRecipeRegistry extends SmithingRecipeRegistry {
         switch (smithingType) {
             default:
                 Objects.requireNonNull(result(), "Recipe result cannot be null");
-                smithingRecipe = new SmithingRecipe(namespacedKey(), result(), base(), addition(), copyNbt);
+                if (CrypticLib.isPaper())
+                    smithingRecipe = new SmithingRecipe(namespacedKey(), result(), base(), addition(), copyNbt);
+                else
+                    smithingRecipe = new SmithingRecipe(namespacedKey(), result(), base(), addition());
                 break;
             case TRIM:
-                smithingRecipe = new SmithingTrimRecipe(namespacedKey(), template, base(), addition(), copyNbt);
+                if (CrypticLib.isPaper())
+                    smithingRecipe = new SmithingTrimRecipe(namespacedKey(), template, base(), addition(), copyNbt);
+                else
+                    smithingRecipe = new SmithingTrimRecipe(namespacedKey(), template, base(), addition());
                 break;
             case TRANSFORM:
                 Objects.requireNonNull(result(), "Recipe result cannot be null");
-                smithingRecipe = new SmithingTransformRecipe(namespacedKey(), result(), template, base(), addition(), copyNbt);
+                if (CrypticLib.isPaper())
+                    smithingRecipe = new SmithingTransformRecipe(namespacedKey(), result(), template, base(), addition(), copyNbt);
+                else
+                    smithingRecipe = new SmithingTransformRecipe(namespacedKey(), result(), template, base(), addition());
                 break;
         }
+
         RecipeManager.INSTANCE.regRecipe(group(), smithingRecipe, RecipeType.SMITHING);
     }
 

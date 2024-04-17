@@ -11,6 +11,7 @@ import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.CrypticLib;
+import crypticlib.chat.MsgSender;
 import crypticlib.config.ConfigWrapper;
 import crypticlib.lang.entry.StringLangEntry;
 import crypticlib.util.FileUtil;
@@ -215,7 +216,13 @@ public enum RecipeManager {
         if (recipe instanceof CustomRecipe) {
             return ((CustomRecipe) recipe).key();
         }
-        return ((Keyed) recipe).getKey();
+        if (recipe instanceof Keyed) {
+            return ((Keyed) recipe).getKey();
+        }
+        else {
+            MsgSender.info("&e[WARN] Can not get key of recipe " + recipe);
+            return null;
+        }
     }
 
     private void reloadRemovedRecipes() {
@@ -450,7 +457,8 @@ public enum RecipeManager {
         while (recipeIterator.hasNext()) {
             Recipe recipe = recipeIterator.next();
             NamespacedKey key = getRecipeKey(recipe);
-            serverRecipesCache.put(key, recipe);
+            if (key != null)
+                serverRecipesCache.put(key, recipe);
         }
     }
 
