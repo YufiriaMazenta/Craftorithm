@@ -23,7 +23,7 @@ import java.util.List;
 public class PluginCommand extends CommandHandler {
 
     PluginCommand() {
-        super(new CommandInfo("craftorithm", new PermInfo("craftorithm.command"), new String[]{"craft", "cra"}));
+        super(new CommandInfo("craftorithm", new PermInfo("craftorithm.command"), new String[]{"craft", "cra", "crafto"}));
         regDefaultSubCommands();
     }
 
