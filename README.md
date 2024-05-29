@@ -58,8 +58,4 @@ Craftorithm is a recipe management plugin which can add recipes, remove/disable 
 
 #### [spigotmc](https://www.spigotmc.org/resources/craftorithm-customized-crafting-management-plugin-1-13-1-20-folia-supported.108429/)
 
-#### [mcbbs](https://www.mcbbs.net/thread-1313942-1-1.html)
-
 #### [Modrinth](https://modrinth.com/plugin/craftorithm)
-
-

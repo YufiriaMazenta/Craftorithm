@@ -2,6 +2,7 @@ package com.github.yufiriamazenta.craftorithm.listener;
 
 import com.github.yufiriamazenta.craftorithm.CraftorithmAPI;
 import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
+import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import crypticlib.listener.BukkitListener;
@@ -15,13 +16,33 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
 
 import java.util.List;
 
 @BukkitListener
-public enum CraftHandler implements Listener {
+public enum CraftingHandler implements Listener {
 
     INSTANCE;
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void refreshResult(PrepareItemCraftEvent event) {
+        if (event.getRecipe() == null)
+            return;
+        Recipe recipe = event.getRecipe();
+        NamespacedKey namespacedKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
+        if (!namespacedKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
+            return;
+        }
+        ItemStack item = event.getRecipe().getResult();
+        String id = ItemManager.INSTANCE.matchItemName(item, false);
+        if (id == null) {
+            return;
+        }
+        ItemStack refreshItem = ItemManager.INSTANCE.matchItem(id);
+        item.setItemMeta(refreshItem.getItemMeta());
+        event.getInventory().setResult(item);
+    }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void dispatchConditions(PrepareItemCraftEvent event) {

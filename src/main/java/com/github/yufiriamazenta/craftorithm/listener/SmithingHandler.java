@@ -2,6 +2,7 @@ package com.github.yufiriamazenta.craftorithm.listener;
 
 import com.github.yufiriamazenta.craftorithm.CraftorithmAPI;
 import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
+import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import crypticlib.listener.BukkitListener;
@@ -15,6 +16,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareSmithingEvent;
 import org.bukkit.event.inventory.SmithItemEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
 
 import java.util.List;
 
@@ -22,6 +24,29 @@ import java.util.List;
 public enum SmithingHandler implements Listener {
 
     INSTANCE;
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void refreshResult(PrepareSmithingEvent event) {
+        if (event.getResult() == null)
+            return;
+        Recipe recipe = event.getInventory().getRecipe();
+        if (recipe == null)
+            return;
+        NamespacedKey namespacedKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
+        if (!namespacedKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
+            return;
+        }
+
+        ItemStack item = event.getResult();
+        String id = ItemManager.INSTANCE.matchItemName(item, false);
+        if (id == null) {
+            return;
+        }
+        ItemStack refreshItem = ItemManager.INSTANCE.matchItem(id);
+        item.setItemMeta(refreshItem.getItemMeta());
+        event.setResult(item);
+        event.getInventory().setResult(item);
+    }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPrepareSmith(PrepareSmithingEvent event) {
