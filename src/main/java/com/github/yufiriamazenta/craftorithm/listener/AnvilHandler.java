@@ -3,6 +3,7 @@ package com.github.yufiriamazenta.craftorithm.listener;
 import com.github.yufiriamazenta.craftorithm.CraftorithmAPI;
 import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
+import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
@@ -66,6 +67,12 @@ public enum AnvilHandler implements Listener {
                 result.setItemMeta(base.getItemMeta());
         }
         event.getInventory().setRepairCost(anvilRecipe.costLevel());
+        //刷新物品
+        String resultId = ItemManager.INSTANCE.matchItemName(result, false);
+        if (resultId != null) {
+            ItemStack refreshItem = ItemManager.INSTANCE.matchItem(resultId);
+            result.setItemMeta(refreshItem.getItemMeta());
+        }
         event.setResult(result);
         event.getInventory().setItem(2, result);
     }

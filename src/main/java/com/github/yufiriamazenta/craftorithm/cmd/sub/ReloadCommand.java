@@ -5,6 +5,7 @@ import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.item.impl.CraftorithmItemProvider;
+import com.github.yufiriamazenta.craftorithm.listener.OtherPluginsListenerHandler;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
@@ -37,6 +38,7 @@ public final class ReloadCommand extends AbstractSubCommand {
         CraftorithmItemProvider.INSTANCE.reloadItemProvider();
         ItemManager.INSTANCE.reloadCustomCookingFuel();
         RecipeManager.INSTANCE.reloadRecipeManager();
+        OtherPluginsListenerHandler.INSTANCE.reloadOtherPluginsListener();
     }
 
     public static void reloadConfigs() {

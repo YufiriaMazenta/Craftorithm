@@ -14,7 +14,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 @BukkitListener
-public class FurnaceBurnHandler implements Listener {
+public class CustomFuelHandler implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onClickFurnace(InventoryClickEvent event) {
