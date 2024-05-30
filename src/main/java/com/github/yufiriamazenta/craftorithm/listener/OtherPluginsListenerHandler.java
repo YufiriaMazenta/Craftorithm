@@ -1,10 +1,10 @@
 package com.github.yufiriamazenta.craftorithm.listener;
 
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
-import crypticlib.listener.BukkitListener;
 import crypticlib.util.ReflectUtil;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.*;
+import org.bukkit.event.block.BlockCookEvent;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.plugin.EventExecutor;
@@ -16,63 +16,68 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@BukkitListener
 public enum OtherPluginsListenerHandler implements Listener {
 
     INSTANCE;
     private final Field executorField = ReflectUtil.getDeclaredField(RegisteredListener.class, "executor");
     private final Map<EventPriority, List<RegisteredListener>> prepareItemCraftEventListeners = new ConcurrentHashMap<>();
-    private final Map<EventPriority, List<RegisteredListener>> craftItemEventListeners = new ConcurrentHashMap<>();
+    //因为CraftItemEvent与SmithItemEvent的handler list与InventoryClickEvent共享,所以只能放在一起
+    private final Map<EventPriority, List<RegisteredListener>> inventoryClickEventListeners = new ConcurrentHashMap<>();
     private final Map<EventPriority, List<RegisteredListener>> prePareSmithingItemEventListeners = new ConcurrentHashMap<>();
-    private final Map<EventPriority, List<RegisteredListener>> smithingItemEventListeners = new ConcurrentHashMap<>();
     private final Map<EventPriority, List<RegisteredListener>> furnaceSmeltListeners = new ConcurrentHashMap<>();
+    private final Map<EventPriority, List<RegisteredListener>> blockCookListeners = new ConcurrentHashMap<>();
 
     public void reloadOtherPluginsListener() {
         loadProxyPrepareItemCraftEventListeners();
-        loadProxyCraftItemEventListeners();
+        loadProxyInventoryClickEventListeners();
         loadProxyPrepareSmithingItemEventListeners();
-        loadProxySmithingItemEventListeners();
         loadProxyFurnaceSmeltListeners();
+        loadBlockCookListeners();
+    }
+
+    private void loadBlockCookListeners() {
+        for (RegisteredListener registeredListener : BlockCookEvent.getHandlerList().getRegisteredListeners()) {
+            if (addListenerCache(registeredListener, blockCookListeners)) {
+                BlockCookEvent.getHandlerList().unregister(registeredListener);
+            }
+        }
     }
 
     private void loadProxyPrepareItemCraftEventListeners() {
         for (RegisteredListener registeredListener : PrepareItemCraftEvent.getHandlerList().getRegisteredListeners()) {
-            addListenerCache(registeredListener, prepareItemCraftEventListeners);
-            PrepareItemCraftEvent.getHandlerList().unregister(registeredListener);
+            if (addListenerCache(registeredListener, prepareItemCraftEventListeners)) {
+                PrepareItemCraftEvent.getHandlerList().unregister(registeredListener);
+            }
         }
     }
 
-    private void loadProxyCraftItemEventListeners() {
-        for (RegisteredListener registeredListener : CraftItemEvent.getHandlerList().getRegisteredListeners()) {
-            addListenerCache(registeredListener, craftItemEventListeners);
-            CraftItemEvent.getHandlerList().unregister(registeredListener);
+    private void loadProxyInventoryClickEventListeners() {
+        for (RegisteredListener registeredListener : InventoryClickEvent.getHandlerList().getRegisteredListeners()) {
+            if (addListenerCache(registeredListener, inventoryClickEventListeners)) {
+                InventoryClickEvent.getHandlerList().unregister(registeredListener);
+            }
         }
     }
 
     private void loadProxyPrepareSmithingItemEventListeners() {
         for (RegisteredListener registeredListener : PrepareSmithingEvent.getHandlerList().getRegisteredListeners()) {
-            addListenerCache(registeredListener, prePareSmithingItemEventListeners);
-            PrepareSmithingEvent.getHandlerList().unregister(registeredListener);
-        }
-    }
-
-    private void loadProxySmithingItemEventListeners() {
-        for (RegisteredListener registeredListener : SmithItemEvent.getHandlerList().getRegisteredListeners()) {
-            addListenerCache(registeredListener, smithingItemEventListeners);
-            SmithItemEvent.getHandlerList().unregister(registeredListener);
+            if (addListenerCache(registeredListener, prePareSmithingItemEventListeners)) {
+                PrepareSmithingEvent.getHandlerList().unregister(registeredListener);
+            }
         }
     }
 
     private void loadProxyFurnaceSmeltListeners() {
         for (RegisteredListener registeredListener : FurnaceSmeltEvent.getHandlerList().getRegisteredListeners()) {
-            addListenerCache(registeredListener, furnaceSmeltListeners);
-            FurnaceSmeltEvent.getHandlerList().unregister(registeredListener);
+            if (addListenerCache(registeredListener, furnaceSmeltListeners)) {
+                FurnaceSmeltEvent.getHandlerList().unregister(registeredListener);
+            }
         }
     }
 
-    private void addListenerCache(RegisteredListener registeredListener, Map<EventPriority, List<RegisteredListener>> listenerMap) {
+    private boolean addListenerCache(RegisteredListener registeredListener, Map<EventPriority, List<RegisteredListener>> listenerMap) {
         if (registeredListener.getPlugin().getName().equals("Craftorithm")) {
-            return;
+            return false;
         }
         EventPriority priority = registeredListener.getPriority();
         if (listenerMap.containsKey(priority)) {
@@ -85,6 +90,7 @@ public enum OtherPluginsListenerHandler implements Listener {
             listeners.add(registeredListener);
             listenerMap.put(priority, listeners);
         }
+        return true;
     }
 
     public EventExecutor getRegisteredListenerExecutor(RegisteredListener registeredListener) {
@@ -175,7 +181,7 @@ public enum OtherPluginsListenerHandler implements Listener {
     }
 
     private void proxyCraftItem(CraftItemEvent event, EventPriority eventPriority) {
-        List<RegisteredListener> registeredListeners = craftItemEventListeners.get(eventPriority);
+        List<RegisteredListener> registeredListeners = inventoryClickEventListeners.get(eventPriority);
         if (registeredListeners == null) {
             return;
         }
@@ -238,37 +244,37 @@ public enum OtherPluginsListenerHandler implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void proxyLowestSmithingItem(SmithItemEvent event) {
-        proxySmithingItem(event, EventPriority.LOWEST);
+    public void proxyLowestSmithItem(SmithItemEvent event) {
+        proxySmithItem(event, EventPriority.LOWEST);
     }
 
     @EventHandler(priority = EventPriority.LOW)
-    public void proxyLowSmithingItem(SmithItemEvent event) {
-        proxySmithingItem(event, EventPriority.LOW);
+    public void proxyLowSmithItem(SmithItemEvent event) {
+        proxySmithItem(event, EventPriority.LOW);
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
-    public void proxyNormalSmithingItem(SmithItemEvent event) {
-        proxySmithingItem(event, EventPriority.NORMAL);
+    public void proxyNormalSmithItem(SmithItemEvent event) {
+        proxySmithItem(event, EventPriority.NORMAL);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
-    public void proxyHighSmithingItem(SmithItemEvent event) {
-        proxySmithingItem(event, EventPriority.HIGH);
+    public void proxyHighSmithItem(SmithItemEvent event) {
+        proxySmithItem(event, EventPriority.HIGH);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void proxyHighestSmithingItem(SmithItemEvent event) {
-        proxySmithingItem(event, EventPriority.HIGHEST);
+    public void proxyHighestSmithItem(SmithItemEvent event) {
+        proxySmithItem(event, EventPriority.HIGHEST);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void proxyMonitorSmithingItem(SmithItemEvent event) {
-        proxySmithingItem(event, EventPriority.MONITOR);
+    public void proxyMonitorSmithItem(SmithItemEvent event) {
+        proxySmithItem(event, EventPriority.MONITOR);
     }
 
-    private void proxySmithingItem(SmithItemEvent event, EventPriority eventPriority) {
-        List<RegisteredListener> registeredListeners = smithingItemEventListeners.get(eventPriority);
+    private void proxySmithItem(SmithItemEvent event, EventPriority eventPriority) {
+        List<RegisteredListener> registeredListeners = inventoryClickEventListeners.get(eventPriority);
         if (registeredListeners == null) {
             return;
         }
@@ -331,6 +337,97 @@ public enum OtherPluginsListenerHandler implements Listener {
         if (recipeKey == null || !recipeKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
             executeListener(event, registeredListeners);
         }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void proxyLowestBlockCook(BlockCookEvent event) {
+        proxyBlockCook(event, EventPriority.LOWEST);
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void proxyLowBlockCook(BlockCookEvent event) {
+        proxyBlockCook(event, EventPriority.LOW);
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void proxyNormalBlockCook(BlockCookEvent event) {
+        proxyBlockCook(event, EventPriority.NORMAL);
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void proxyHighBlockCook(BlockCookEvent event) {
+        proxyBlockCook(event, EventPriority.HIGH);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void proxyHighestBlockCook(BlockCookEvent event) {
+        proxyBlockCook(event, EventPriority.HIGHEST);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void proxyMonitorBlockCook(BlockCookEvent event) {
+        proxyBlockCook(event, EventPriority.MONITOR);
+    }
+
+    private void proxyBlockCook(BlockCookEvent event, EventPriority eventPriority) {
+        List<RegisteredListener> registeredListeners = blockCookListeners.get(eventPriority);
+        if (registeredListeners == null) {
+            return;
+        }
+        if (registeredListeners.isEmpty()) {
+            return;
+        }
+        Recipe recipe = event.getRecipe();
+        if (recipe == null) {
+            executeListener(event, registeredListeners);
+        }
+        NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
+        if (recipeKey == null || !recipeKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
+            executeListener(event, registeredListeners);
+        }
+    }
+
+    //因为CraftItemEvent与SmithItemEvent的handler list与InventoryClickEvent共享,所以必须也代理此事件
+    //否则将会影响其他插件操作页面
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void proxyLowestInventoryClick(InventoryClickEvent event) {
+        proxyInventoryClick(event, EventPriority.LOWEST);
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void proxyLowInventoryClick(InventoryClickEvent event) {
+        proxyInventoryClick(event, EventPriority.LOW);
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void proxyNormalInventoryClick(InventoryClickEvent event) {
+        proxyInventoryClick(event, EventPriority.NORMAL);
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void proxyHighInventoryClick(InventoryClickEvent event) {
+        proxyInventoryClick(event, EventPriority.HIGH);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void proxyHighestInventoryClick(InventoryClickEvent event) {
+        proxyInventoryClick(event, EventPriority.HIGHEST);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void proxyMonitorInventoryClick(InventoryClickEvent event) {
+        proxyInventoryClick(event, EventPriority.MONITOR);
+    }
+
+    private void proxyInventoryClick(InventoryClickEvent event, EventPriority eventPriority) {
+        List<RegisteredListener> registeredListeners = inventoryClickEventListeners.get(eventPriority);
+        if (registeredListeners == null) {
+            return;
+        }
+        if (registeredListeners.isEmpty()) {
+            return;
+        }
+        executeListener(event, registeredListeners);
     }
 
     public void executeListener(Event event, List<RegisteredListener> registeredListeners) {
