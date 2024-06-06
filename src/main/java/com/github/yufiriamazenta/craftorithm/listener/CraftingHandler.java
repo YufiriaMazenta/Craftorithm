@@ -40,6 +40,9 @@ public enum CraftingHandler implements Listener {
             return;
         }
         ItemStack refreshItem = ItemManager.INSTANCE.matchItem(id);
+        if (item.isSimilar(refreshItem)) {
+            return;
+        }
         item.setItemMeta(refreshItem.getItemMeta());
         event.getInventory().setResult(item);
     }
