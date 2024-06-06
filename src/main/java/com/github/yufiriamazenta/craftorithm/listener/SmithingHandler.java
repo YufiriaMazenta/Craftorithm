@@ -43,6 +43,9 @@ public enum SmithingHandler implements Listener {
             return;
         }
         ItemStack refreshItem = ItemManager.INSTANCE.matchItem(id);
+        if (item.isSimilar(refreshItem)) {
+            return;
+        }
         item.setItemMeta(refreshItem.getItemMeta());
         event.setResult(item);
         event.getInventory().setResult(item);
