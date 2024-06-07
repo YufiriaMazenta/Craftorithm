@@ -6,13 +6,12 @@ import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.listener.ItemsAdderHandler;
-import com.github.yufiriamazenta.craftorithm.listener.OtherPluginsListenerHandler;
+import com.github.yufiriamazenta.craftorithm.listener.OtherPluginsListenerProxy;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import com.github.yufiriamazenta.craftorithm.util.PluginHookUtil;
 import com.github.yufiriamazenta.craftorithm.util.UpdateUtil;
 import crypticlib.BukkitPlugin;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -34,7 +33,7 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
         initArcenciel();
         loadBStat();
 
-        Bukkit.getPluginManager().registerEvents(OtherPluginsListenerHandler.INSTANCE, this);
+        Bukkit.getPluginManager().registerEvents(OtherPluginsListenerProxy.INSTANCE, this);
         PluginHookUtil.hookPlugins();
         LangUtil.info(Languages.LOAD_FINISH);
     }
@@ -78,7 +77,7 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
     public void onServerLoad(ServerLoadEvent event) {
         if (!PluginHookUtil.isItemsAdderLoaded()) {
             RecipeManager.INSTANCE.reloadRecipeManager();
-            OtherPluginsListenerHandler.INSTANCE.reloadOtherPluginsListener();
+            OtherPluginsListenerProxy.INSTANCE.reloadOtherPluginsListener();
             return;
         }
         Bukkit.getPluginManager().registerEvents(ItemsAdderHandler.INSTANCE, this);

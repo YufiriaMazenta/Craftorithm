@@ -1,6 +1,8 @@
 package com.github.yufiriamazenta.craftorithm.listener;
 
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
+import crypticlib.CrypticLib;
+import crypticlib.platform.IPlatform;
 import crypticlib.util.ReflectUtil;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.*;
@@ -16,14 +18,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public enum OtherPluginsListenerHandler implements Listener {
+public enum OtherPluginsListenerProxy implements Listener {
 
     INSTANCE;
     private final Field executorField = ReflectUtil.getDeclaredField(RegisteredListener.class, "executor");
     private final Map<EventPriority, List<RegisteredListener>> prepareItemCraftEventListeners = new ConcurrentHashMap<>();
     //因为CraftItemEvent与SmithItemEvent的handler list与InventoryClickEvent共享,所以只能放在一起
     private final Map<EventPriority, List<RegisteredListener>> inventoryClickEventListeners = new ConcurrentHashMap<>();
-    private final Map<EventPriority, List<RegisteredListener>> prePareSmithingItemEventListeners = new ConcurrentHashMap<>();
+    private final Map<EventPriority, List<RegisteredListener>> prepareSmithingItemEventListeners = new ConcurrentHashMap<>();
     private final Map<EventPriority, List<RegisteredListener>> furnaceSmeltListeners = new ConcurrentHashMap<>();
     private final Map<EventPriority, List<RegisteredListener>> blockCookListeners = new ConcurrentHashMap<>();
 
@@ -61,7 +63,7 @@ public enum OtherPluginsListenerHandler implements Listener {
 
     private void loadProxyPrepareSmithingItemEventListeners() {
         for (RegisteredListener registeredListener : PrepareSmithingEvent.getHandlerList().getRegisteredListeners()) {
-            if (addListenerCache(registeredListener, prePareSmithingItemEventListeners)) {
+            if (addListenerCache(registeredListener, prepareSmithingItemEventListeners)) {
                 PrepareSmithingEvent.getHandlerList().unregister(registeredListener);
             }
         }
@@ -226,7 +228,7 @@ public enum OtherPluginsListenerHandler implements Listener {
     }
 
     private void proxyPrepareSmithing(PrepareSmithingEvent event, EventPriority eventPriority) {
-        List<RegisteredListener> registeredListeners = prePareSmithingItemEventListeners.get(eventPriority);
+        List<RegisteredListener> registeredListeners = prepareSmithingItemEventListeners.get(eventPriority);
         if (registeredListeners == null) {
             return;
         }
@@ -242,6 +244,52 @@ public enum OtherPluginsListenerHandler implements Listener {
             executeListener(event, registeredListeners);
         }
     }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void proxyLowestPrepareAnvil(PrepareAnvilEvent event) {
+        proxyPrepareAnvil(event, EventPriority.LOWEST);
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void proxyLowPrepareAnvil(PrepareAnvilEvent event) {
+        proxyPrepareAnvil(event, EventPriority.LOW);
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void proxyNormalPrepareAnvil(PrepareAnvilEvent event) {
+        proxyPrepareAnvil(event, EventPriority.NORMAL);
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void proxyHighPrepareAnvil(PrepareAnvilEvent event) {
+        proxyPrepareAnvil(event, EventPriority.HIGH);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void proxyHighestPrepareAnvil(PrepareAnvilEvent event) {
+        proxyPrepareAnvil(event, EventPriority.HIGHEST);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void proxyMonitorPrepareAnvil(PrepareAnvilEvent event) {
+        proxyPrepareAnvil(event, EventPriority.MONITOR);
+    }
+
+    private void proxyPrepareAnvil(PrepareAnvilEvent event, EventPriority eventPriority) {
+        //因为只有paper及下游服务端才有这个问题,如果识别到是bukkit或者spigot,就不用处理
+        if (CrypticLib.platform().platform().equals(IPlatform.Platform.BUKKIT)) {
+            return;
+        }
+        List<RegisteredListener> registeredListeners = prepareSmithingItemEventListeners.get(eventPriority);
+        if (registeredListeners == null) {
+            return;
+        }
+        if (registeredListeners.isEmpty()) {
+            return;
+        }
+        executeListener(event, registeredListeners);
+    }
+
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void proxyLowestSmithItem(SmithItemEvent event) {
@@ -440,4 +488,23 @@ public enum OtherPluginsListenerHandler implements Listener {
         }
     }
 
+    public Map<EventPriority, List<RegisteredListener>> getPrepareItemCraftEventListeners() {
+        return prepareItemCraftEventListeners;
+    }
+
+    public Map<EventPriority, List<RegisteredListener>> getInventoryClickEventListeners() {
+        return inventoryClickEventListeners;
+    }
+
+    public Map<EventPriority, List<RegisteredListener>> getPrepareSmithingItemEventListeners() {
+        return prepareSmithingItemEventListeners;
+    }
+
+    public Map<EventPriority, List<RegisteredListener>> getFurnaceSmeltListeners() {
+        return furnaceSmeltListeners;
+    }
+
+    public Map<EventPriority, List<RegisteredListener>> getBlockCookListeners() {
+        return blockCookListeners;
+    }
 }
