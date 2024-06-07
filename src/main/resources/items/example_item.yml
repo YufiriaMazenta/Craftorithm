@@ -1,5 +1,0 @@
-example_item:
-  material: STONE_PICKAXE
-  amount: 10
-  nbt:
-    Damage: 78
