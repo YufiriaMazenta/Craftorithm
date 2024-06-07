@@ -6,10 +6,7 @@ import com.github.yufiriamazenta.craftorithm.item.ItemProvider;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.config.ConfigWrapper;
-import crypticlib.nms.item.ItemFactory;
-import crypticlib.nms.item.NbtItem;
 import crypticlib.util.FileUtil;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -97,22 +94,20 @@ public enum CraftorithmItemProvider implements ItemProvider {
             ConfigWrapper itemFile = itemConfigFileMap.get(namespace);
             Set<String> itemKeySet = itemFile.config().getKeys(false);
             for (String itemKey : itemKeySet) {
-                ConfigurationSection config = itemFile.config().getConfigurationSection(itemKey);
-                loadItem(namespace + ":" + itemKey, config);
+                try {
+                    ItemStack item = itemFile.config().getItemStack(itemKey);
+                    if (item == null) {
+                        throw new NullPointerException("Item " + itemKey + " is null");
+                    }
+                    itemMap.put(itemKey, item);
+                } catch (Exception e) {
+                    LangUtil.info(Languages.LOAD_ITEM_LOAD_EXCEPTION, CollectionsUtil.newStringHashMap("<item_name>", itemKey));
+                    e.printStackTrace();
+                }
             }
         }
     }
 
-    private void loadItem(String itemKey, ConfigurationSection config) {
-        try {
-            NbtItem item = ItemFactory.item(config);
-            ItemStack bukkitItem = item.saveNbtToItem();
-            itemMap.put(itemKey, bukkitItem);
-        } catch (Exception e) {
-            LangUtil.info(Languages.LOAD_ITEM_LOAD_EXCEPTION, CollectionsUtil.newStringHashMap("<item_name>", itemKey));
-            e.printStackTrace();
-        }
-    }
 
     public String regCraftorithmItem(String namespace, String itemName, ItemStack item) {
         ConfigWrapper itemConfigFile;
@@ -126,8 +121,7 @@ public enum CraftorithmItemProvider implements ItemProvider {
         } else {
             itemConfigFile = itemConfigFileMap.get(namespace);
         }
-        NbtItem nbtItem = ItemFactory.item(item);
-        itemConfigFile.set(itemName, nbtItem.toMap());
+        itemConfigFile.set(itemName, item);
         itemConfigFile.saveConfig();
         String key = namespace + ":" + itemName;
         itemMap.put(key, item);
