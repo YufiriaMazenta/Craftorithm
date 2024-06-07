@@ -13,7 +13,7 @@ public enum ItemsAdderHandler implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onItemsAdderLoaded(ItemsAdderLoadDataEvent event) {
         RecipeManager.INSTANCE.reloadRecipeManager();
-        OtherPluginsListenerHandler.INSTANCE.reloadOtherPluginsListener();
+        OtherPluginsListenerProxy.INSTANCE.reloadOtherPluginsListener();
     }
 
 }
