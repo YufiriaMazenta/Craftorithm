@@ -7,12 +7,13 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.recipe.CraftingBookCategory;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
 
-public class ShapelessRecipeRegistry extends RecipeRegistry {
+public final class ShapelessRecipeRegistry extends CraftingRecipeRegistry {
 
     private List<RecipeChoice> choiceList;
 
@@ -30,6 +31,11 @@ public class ShapelessRecipeRegistry extends RecipeRegistry {
     }
 
     @Override
+    public ShapedRecipeRegistry setCraftingBookCategory(CraftingBookCategory craftingBookCategory) {
+        return (ShapedRecipeRegistry) super.setCraftingBookCategory(craftingBookCategory);
+    }
+
+    @Override
     public void register() {
         Objects.requireNonNull(namespacedKey(), "Recipe key cannot be null");
         Objects.requireNonNull(result(), "Recipe key cannot be null");
@@ -38,6 +44,8 @@ public class ShapelessRecipeRegistry extends RecipeRegistry {
         for (RecipeChoice choice : choiceList) {
             shapelessRecipe.addIngredient(choice);
         }
+        if (craftingBookCategory != null)
+            shapelessRecipe.setCategory(craftingBookCategory);
         shapelessRecipe.setGroup(group());
         RecipeManager.INSTANCE.regRecipe(group(), shapelessRecipe, RecipeType.SHAPELESS);
     }

@@ -7,6 +7,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.recipe.CraftingBookCategory;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -14,7 +15,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-public final class ShapedRecipeRegistry extends RecipeRegistry {
+public final class ShapedRecipeRegistry extends CraftingRecipeRegistry {
 
     private String[] shape;
     private Map<Character, RecipeChoice> recipeChoiceMap;
@@ -42,6 +43,11 @@ public final class ShapedRecipeRegistry extends RecipeRegistry {
     }
 
     @Override
+    public ShapedRecipeRegistry setCraftingBookCategory(CraftingBookCategory craftingBookCategory) {
+        return (ShapedRecipeRegistry) super.setCraftingBookCategory(craftingBookCategory);
+    }
+
+    @Override
     public void register() {
         Objects.requireNonNull(namespacedKey(), "Recipe key cannot be null");
         Objects.requireNonNull(result(), "Recipe key cannot be null");
@@ -60,6 +66,9 @@ public final class ShapedRecipeRegistry extends RecipeRegistry {
         for (Character ingredientKey : keySet) {
             shapedRecipe.setIngredient(ingredientKey, recipeChoiceMap.get(ingredientKey));
         }
+
+        if (craftingBookCategory != null)
+            shapedRecipe.setCategory(craftingBookCategory);
 
         shapedRecipe.setGroup(group());
         RecipeManager.INSTANCE.regRecipe(group(), shapedRecipe, RecipeType.SHAPED);

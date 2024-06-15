@@ -14,3 +14,5 @@ source:
     item: command_block
 exp: 10
 time: 200
+#熔炉配方的配方书类型，有food，blocks和misc
+category: blocks

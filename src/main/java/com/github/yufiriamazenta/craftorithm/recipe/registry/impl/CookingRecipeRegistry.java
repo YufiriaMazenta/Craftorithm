@@ -6,7 +6,9 @@ import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.*;
+import org.bukkit.inventory.recipe.CookingBookCategory;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -16,7 +18,7 @@ public class CookingRecipeRegistry extends RecipeRegistry {
     private int time;
     private float exp;
     private CookingBlock cookingBlock;
-
+    private @Nullable CookingBookCategory cookingBookCategory;
 
     public CookingRecipeRegistry(@NotNull String group, @NotNull NamespacedKey namespacedKey, @NotNull ItemStack result) {
         super(group, namespacedKey, result);
@@ -46,6 +48,9 @@ public class CookingRecipeRegistry extends RecipeRegistry {
                 break;
         }
         cookingRecipe.setGroup(group());
+        if (cookingBookCategory != null) {
+            cookingRecipe.setCategory(cookingBookCategory);
+        }
         RecipeManager.INSTANCE.regRecipe(group(), cookingRecipe, RecipeType.COOKING);
     }
 
@@ -87,6 +92,15 @@ public class CookingRecipeRegistry extends RecipeRegistry {
 
     public CookingRecipeRegistry setCookingBlock(CookingBlock cookingBlock) {
         this.cookingBlock = cookingBlock;
+        return this;
+    }
+
+    public @Nullable CookingBookCategory getCookingBookCategory() {
+        return cookingBookCategory;
+    }
+
+    public CookingRecipeRegistry setCookingBookCategory(CookingBookCategory cookingBookCategory) {
+        this.cookingBookCategory = cookingBookCategory;
         return this;
     }
 

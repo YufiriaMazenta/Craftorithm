@@ -33,7 +33,7 @@ public class CraftingRecipeCreator extends UnlockableRecipeCreator {
                 "#   #***#",
                 "#   A* *#",
                 "#   #***#",
-                "#########"
+                "####Z####"
             ), () -> {
                 Map<Character, Icon> layoutMap = new HashMap<>();
                 layoutMap.put('#', getFrameIcon());

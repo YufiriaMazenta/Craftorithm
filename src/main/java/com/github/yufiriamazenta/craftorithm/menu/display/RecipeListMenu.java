@@ -46,10 +46,8 @@ public class RecipeListMenu extends Menu {
         recipeList.removeIf(recipe -> {
             if (recipe == null)
                 return true;
-            if (CrypticLib.minecraftVersion() >= 12000) {
-                if (recipe instanceof SmithingTrimRecipe)
-                    return true;
-            }
+            if (recipe instanceof SmithingTrimRecipe)
+                return true;
             return recipe.getResult().getType().equals(Material.AIR);
         });
         int recipeNum = recipeList.size();

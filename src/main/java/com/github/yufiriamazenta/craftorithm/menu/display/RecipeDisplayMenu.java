@@ -152,19 +152,13 @@ public class RecipeDisplayMenu extends Menu {
 
     private void setSmithingRecipeMenu() {
         SmithingRecipe smithingRecipe = (SmithingRecipe) recipe;
-        if (CrypticLib.minecraftVersion() >= 12000) {
-            slotMap.put(1, new Icon(smithingRecipe.getBase().getItemStack()));
-            slotMap.put(2, new Icon(smithingRecipe.getAddition().getItemStack()));
-            slotMap.put(3, new Icon(smithingRecipe.getResult()));
-            if (recipe instanceof SmithingTransformRecipe) {
-                slotMap.put(0, new Icon(((SmithingTransformRecipe) recipe).getTemplate().getItemStack()));
-            } else if (recipe instanceof SmithingTrimRecipe){
-                slotMap.put(0, new Icon(((SmithingTrimRecipe) recipe).getTemplate().getItemStack()));
-            }
-        } else {
-            slotMap.put(0, new Icon(smithingRecipe.getBase().getItemStack()));
-            slotMap.put(1, new Icon(smithingRecipe.getAddition().getItemStack()));
-            slotMap.put(2, new Icon(smithingRecipe.getResult()));
+        slotMap.put(1, new Icon(smithingRecipe.getBase().getItemStack()));
+        slotMap.put(2, new Icon(smithingRecipe.getAddition().getItemStack()));
+        slotMap.put(3, new Icon(smithingRecipe.getResult()));
+        if (recipe instanceof SmithingTransformRecipe) {
+            slotMap.put(0, new Icon(((SmithingTransformRecipe) recipe).getTemplate().getItemStack()));
+        } else if (recipe instanceof SmithingTrimRecipe){
+            slotMap.put(0, new Icon(((SmithingTrimRecipe) recipe).getTemplate().getItemStack()));
         }
     }
 

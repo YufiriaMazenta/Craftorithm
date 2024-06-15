@@ -22,6 +22,8 @@ source:
 unlock: true
 #配方的排序ID，影响在配方展示页面的排序顺序，从小到大排序，默认为0
 sort_id: 1
+#工作台配方的配方书类型，有building，redstone，equipment和misc
+category: building
 
 #可选的配置项：
 condition: 'if all perm craftorithm.perm.example && level >= 100 && papi %player_name% == Anisufia'
