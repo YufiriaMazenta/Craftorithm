@@ -1,10 +1,10 @@
 import java.text.SimpleDateFormat
-version = "1.9.6-beta1"
+version = "1.10.0-dev1"
 
 plugins {
     `java-library`
     `maven-publish`
-    id("com.github.johnrengelman.shadow").version("7.1.2")
+    id("com.github.johnrengelman.shadow").version("8.1.1")
 }
 
 repositories {
@@ -31,7 +31,7 @@ repositories {
 
 dependencies {
     compileOnly("org.jetbrains:annotations:24.0.1")
-    compileOnly("io.papermc.paper:paper-api:1.20.4")
+    compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
     compileOnly("pers.neige.neigeitems:NeigeItems:1.15.113")
     compileOnly("net.kyori:adventure-api:4.14.0")
     compileOnly("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT")
@@ -51,8 +51,8 @@ dependencies {
 
 group = "com.github.yufiriamazenta"
 var pluginVersion: String = version.toString() + "-" + SimpleDateFormat("yyyyMMdd").format(System.currentTimeMillis())
-java.sourceCompatibility = JavaVersion.VERSION_1_8
-java.targetCompatibility = JavaVersion.VERSION_1_8
+java.sourceCompatibility = JavaVersion.VERSION_17
+java.targetCompatibility = JavaVersion.VERSION_17
 
 publishing {
     publications.create<MavenPublication>("maven") {
@@ -75,6 +75,7 @@ tasks {
         dependsOn(shadowJar)
     }
     compileJava {
+        dependsOn(clean)
         options.encoding = "UTF-8"
     }
     shadowJar {

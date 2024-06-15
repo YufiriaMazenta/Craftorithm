@@ -17,7 +17,7 @@ import org.bukkit.inventory.ItemStack;
 public class CustomFuelHandler implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onClickFurnace(InventoryClickEvent event) {
+    public void putFuelOnClick(InventoryClickEvent event) {
         if (event.isCancelled())
             return;
         Inventory topInventory = event.getView().getTopInventory();
@@ -83,7 +83,7 @@ public class CustomFuelHandler implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onFurnaceBurn(FurnaceBurnEvent event) {
+    public void setFuelBurnTime(FurnaceBurnEvent event) {
         if (event.isCancelled())
             return;
         ItemStack fuel = event.getFuel();

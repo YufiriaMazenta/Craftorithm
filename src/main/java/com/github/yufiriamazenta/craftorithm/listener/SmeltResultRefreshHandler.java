@@ -32,7 +32,7 @@ public class SmeltResultRefreshHandler implements Listener {
     }
 
     @EventHandler
-    public void refreshBlockCookingResult(BlockCookEvent event) {
+    public void refreshBlockCookResult(BlockCookEvent event) {
         Recipe recipe = event.getRecipe();
         NamespacedKey namespacedKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
         if (!namespacedKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {

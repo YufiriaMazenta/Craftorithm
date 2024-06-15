@@ -28,11 +28,6 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
         List<String> unsupportedRecipeTypeList = new ArrayList<>();
         unsupportedRecipeTypeList.add("random_cooking");
         unsupportedRecipeTypeList.add("unknown");
-        if (CrypticLib.minecraftVersion() < 11400) {
-            unsupportedRecipeTypeList.add("stone_cutting");
-            unsupportedRecipeTypeList.add("smithing");
-            unsupportedRecipeTypeList.add("cooking");
-        }
         if (!RecipeManager.INSTANCE.supportPotionMix()) {
             unsupportedRecipeTypeList.add("potion");
         }

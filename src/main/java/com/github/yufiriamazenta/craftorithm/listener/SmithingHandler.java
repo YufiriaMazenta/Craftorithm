@@ -52,7 +52,7 @@ public enum SmithingHandler implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onPrepareSmith(PrepareSmithingEvent event) {
+    public void runConditions(PrepareSmithingEvent event) {
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(event.getInventory().getRecipe());
         if (recipeKey == null)
             return;
@@ -71,7 +71,7 @@ public enum SmithingHandler implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onSmithItem(SmithItemEvent event) {
+    public void runActions(SmithItemEvent event) {
         HumanEntity entity = event.getWhoClicked();
         if (!(entity instanceof Player)) {
             return;

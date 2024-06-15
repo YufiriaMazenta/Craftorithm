@@ -28,7 +28,7 @@ public enum AnvilHandler implements Listener {
     INSTANCE;
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onPrepareAnvil(PrepareAnvilEvent event) {
+    public void runConditions(PrepareAnvilEvent event) {
         if (!PluginConfigs.ENABLE_ANVIL_RECIPE.value())
             return;
         ItemStack base = event.getInventory().getItem(0);
@@ -78,7 +78,7 @@ public enum AnvilHandler implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onClickAnvil(InventoryClickEvent event) {
+    public void matchAnvilResult(InventoryClickEvent event) {
         if (!PluginConfigs.ENABLE_ANVIL_RECIPE.value())
             return;
 

@@ -48,7 +48,7 @@ public enum CraftingHandler implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void dispatchConditions(PrepareItemCraftEvent event) {
+    public void runConditions(PrepareItemCraftEvent event) {
         if (event.getRecipe() == null)
             return;
         YamlConfiguration config = RecipeManager.INSTANCE.getRecipeConfig(RecipeManager.INSTANCE.getRecipeKey(event.getRecipe()));
@@ -65,7 +65,7 @@ public enum CraftingHandler implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void dispatchActions(CraftItemEvent event) {
+    public void runActions(CraftItemEvent event) {
         if (event.getInventory().getResult() == null) {
             event.getInventory().setResult(null);
             event.setCancelled(true);
