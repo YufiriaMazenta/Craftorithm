@@ -31,8 +31,8 @@ public final class ShapelessRecipeRegistry extends CraftingRecipeRegistry {
     }
 
     @Override
-    public ShapedRecipeRegistry setCraftingBookCategory(CraftingBookCategory craftingBookCategory) {
-        return (ShapedRecipeRegistry) super.setCraftingBookCategory(craftingBookCategory);
+    public ShapelessRecipeRegistry setCraftingBookCategory(CraftingBookCategory craftingBookCategory) {
+        return (ShapelessRecipeRegistry) super.setCraftingBookCategory(craftingBookCategory);
     }
 
     @Override

@@ -1,7 +1,7 @@
 #配方的类型，一共有shaped(有序)、shapeless(无序)、cooking(烧炼)、smithing(锻造)、stone_cutting(切石机)、random_cooking(随机烧炼)
 type: 'shaped'
 #配方的结果，使用items:<file_name>:<item_name>格式可以调用插件保存的物品
-result: 'items:example_item:example_item'
+result: 'diamond_sword'
 #是否多种合成方式
 multiple: true
 #配方的形状
@@ -15,7 +15,7 @@ shape:
 source:
   a: 'bedrock'
   b: 'command_block'
-  c: 'items:example_item:example_item'
+  c: 'diamond'
   d: 'barrier'
   e: 'chain_command_block'
 #是否在配方书中为玩家解锁此配方，默认为config.yml中的all_recipe_unlocked配置项
