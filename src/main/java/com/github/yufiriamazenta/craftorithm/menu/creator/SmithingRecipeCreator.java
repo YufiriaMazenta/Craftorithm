@@ -35,7 +35,7 @@ public class SmithingRecipeCreator extends UnlockableRecipeCreator {
                     () -> Arrays.asList(
                         "####F####",
                         "#***#%%%#",
-                        "# * A% %#",
+                        "#   A% %#",
                         "#***#%%%#",
                         "####B####"
                     ),

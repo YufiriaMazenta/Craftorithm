@@ -10,6 +10,7 @@ import com.github.yufiriamazenta.craftorithm.recipe.custom.PotionMixRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import com.github.yufiriamazenta.craftorithm.util.RecipeUtil;
 import crypticlib.CrypticLib;
 import crypticlib.chat.MsgSender;
 import crypticlib.config.ConfigWrapper;
@@ -65,17 +66,17 @@ public enum RecipeManager {
         serverRecipesCache = new ConcurrentHashMap<>();
 
         //设置各类型配方的注册方法
-        recipeRegisterMap.put(RecipeType.SHAPED, Bukkit::addRecipe);
+        recipeRegisterMap.put(RecipeType.SHAPED, RecipeUtil::regRecipe);
         recipeRemoverMap.put(RecipeType.SHAPED, this::removeRecipes);
-        recipeRegisterMap.put(RecipeType.SHAPELESS, Bukkit::addRecipe);
+        recipeRegisterMap.put(RecipeType.SHAPELESS, RecipeUtil::regRecipe);
         recipeRemoverMap.put(RecipeType.SHAPELESS, this::removeRecipes);
-        recipeRegisterMap.put(RecipeType.COOKING, Bukkit::addRecipe);
+        recipeRegisterMap.put(RecipeType.COOKING, RecipeUtil::regRecipe);
         recipeRemoverMap.put(RecipeType.COOKING, this::removeRecipes);
-        recipeRegisterMap.put(RecipeType.STONE_CUTTING, Bukkit::addRecipe);
+        recipeRegisterMap.put(RecipeType.STONE_CUTTING, RecipeUtil::regRecipe);
         recipeRemoverMap.put(RecipeType.STONE_CUTTING, this::removeRecipes);
-        recipeRegisterMap.put(RecipeType.SMITHING, Bukkit::addRecipe);
+        recipeRegisterMap.put(RecipeType.SMITHING, RecipeUtil::regRecipe);
         recipeRemoverMap.put(RecipeType.SMITHING, this::removeRecipes);
-        recipeRegisterMap.put(RecipeType.RANDOM_COOKING, Bukkit::addRecipe);
+        recipeRegisterMap.put(RecipeType.RANDOM_COOKING, RecipeUtil::regRecipe);
         recipeRemoverMap.put(RecipeType.RANDOM_COOKING, this::removeRecipes);
 
         if (PluginConfigs.ENABLE_ANVIL_RECIPE.value()) {

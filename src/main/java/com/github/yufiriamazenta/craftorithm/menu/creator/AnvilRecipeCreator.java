@@ -48,7 +48,7 @@ public class AnvilRecipeCreator extends RecipeCreator {
                     "#***#%%%#",
                     "# * A% %#",
                     "#***#%%%#",
-                    "####B####"
+                    "#########"
                 ), () -> {
                     Map<Character, Icon> layoutMap = new HashMap<>();
                     layoutMap.put('#', getFrameIcon());
