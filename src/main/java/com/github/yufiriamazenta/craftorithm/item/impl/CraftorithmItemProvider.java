@@ -124,7 +124,6 @@ public enum CraftorithmItemProvider implements ItemProvider {
         itemConfigFile.set(itemName, item);
         itemConfigFile.saveConfig();
         String key = namespace + ":" + itemName;
-        System.out.println("reg: " + key);
         itemMap.put(key, item);
         return key;
     }
