@@ -50,6 +50,6 @@ public final class DisableRecipeCommand extends AbstractSubCommand {
             }
             return tabList;
         }
-        return super.onTabComplete(sender, args);
+        return List.of("");
     }
 }
