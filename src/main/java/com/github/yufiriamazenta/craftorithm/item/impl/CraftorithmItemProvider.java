@@ -99,7 +99,7 @@ public enum CraftorithmItemProvider implements ItemProvider {
                     if (item == null) {
                         throw new NullPointerException("Item " + itemKey + " is null");
                     }
-                    itemMap.put(itemKey, item);
+                    itemMap.put(namespace + ":" + itemKey, item);
                 } catch (Exception e) {
                     LangUtil.info(Languages.LOAD_ITEM_LOAD_EXCEPTION, CollectionsUtil.newStringHashMap("<item_name>", itemKey));
                     e.printStackTrace();
@@ -124,6 +124,7 @@ public enum CraftorithmItemProvider implements ItemProvider {
         itemConfigFile.set(itemName, item);
         itemConfigFile.saveConfig();
         String key = namespace + ":" + itemName;
+        System.out.println("reg: " + key);
         itemMap.put(key, item);
         return key;
     }
