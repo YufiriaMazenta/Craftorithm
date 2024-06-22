@@ -1,5 +1,5 @@
 import java.text.SimpleDateFormat
-version = "1.10.1"
+version = "1.10.2"
 
 plugins {
     `java-library`
@@ -45,7 +45,7 @@ dependencies {
     compileOnly("io.lumine:MythicLib-dist:1.6.2-SNAPSHOT")
     compileOnly("net.Indyuce:MMOItems-API:6.9.5-SNAPSHOT")
     compileOnly("com.willfp:EcoEnchants:12.5.1")
-    implementation("com.crypticlib:CrypticLib:0.18.0")
+    implementation("com.crypticlib:CrypticLib:0.18.3")
 //    implementation("de.tr7zw:item-nbt-api:2.12.4")
 }
 
