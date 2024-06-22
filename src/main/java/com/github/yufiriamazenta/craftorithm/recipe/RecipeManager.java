@@ -115,8 +115,8 @@ public enum RecipeManager {
         resetRecipes();
         loadRecipeGroups();
         loadRecipes();
-        reloadRemovedRecipes();
         loadServerRecipeCache();
+        reloadRemovedRecipes();
     }
 
     private void loadRecipes() {

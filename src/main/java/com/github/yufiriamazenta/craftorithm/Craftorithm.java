@@ -4,6 +4,7 @@ import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import com.github.yufiriamazenta.craftorithm.bstat.Metrics;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
+import com.github.yufiriamazenta.craftorithm.exception.UnsupportedVersionException;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.listener.ItemsAdderHandler;
 import com.github.yufiriamazenta.craftorithm.listener.OtherPluginsListenerProxy;
@@ -12,11 +13,13 @@ import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import com.github.yufiriamazenta.craftorithm.util.PluginHookUtil;
 import com.github.yufiriamazenta.craftorithm.util.UpdateUtil;
 import crypticlib.BukkitPlugin;
+import crypticlib.CrypticLib;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.server.ServerLoadEvent;
+import org.bukkit.plugin.InvalidPluginException;
 
 public final class Craftorithm extends BukkitPlugin implements Listener {
 
@@ -28,6 +31,9 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
 
     @Override
     public void enable() {
+        if (CrypticLib.minecraftVersion() >= 12005) {
+            throw new UnsupportedVersionException("For Minecraft 1.20.5 and above, please use the plugin for version 1.10.x and above");
+        }
         ItemManager.INSTANCE.loadItemManager();
         regListeners();
         initArcenciel();

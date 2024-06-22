@@ -483,7 +483,8 @@ public enum OtherPluginsListenerProxy implements Listener {
             try {
                 getRegisteredListenerExecutor(prepareCraftIAListener).execute(prepareCraftIAListener.getListener(), event);
             } catch (EventException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
+                break;
             }
         }
     }
