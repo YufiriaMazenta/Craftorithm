@@ -43,7 +43,8 @@ public class SmithingRecipeRegistry extends RecipeRegistry {
     }
 
     public boolean copyNbt() {
-        return copyNbt;
+        //因为1.20.6开始Paper对组件的处理与NBT不同，所以需要倒转此属性
+        return !copyNbt;
     }
 
     public SmithingRecipeRegistry setCopyNbt(boolean copyNbt) {
