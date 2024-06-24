@@ -35,7 +35,7 @@ public final class RecipeListCommand extends AbstractSubCommand {
                     new RecipeGroupListMenu((Player) sender).openMenu();
                     return true;
                 }
-            }.setPermission("craftorithm.command.list.craftorithm"));
+            }.setPermission("craftorithm.command.list"));
     }
 
     @Override
