@@ -200,17 +200,20 @@ public enum RecipeManager {
     }
 
     public NamespacedKey getRecipeKey(Recipe recipe) {
-        if (recipe == null)
-            return null;
-        if (recipe instanceof CustomRecipe) {
-            return ((CustomRecipe) recipe).key();
-        }
-        if (recipe instanceof Keyed) {
-            return ((Keyed) recipe).getKey();
-        }
-        else {
-            MsgSender.info("&e[WARN] Can not get key of recipe " + recipe);
-            return null;
+        switch (recipe) {
+            case null -> {
+                return null;
+            }
+            case CustomRecipe customRecipe -> {
+                return customRecipe.key();
+            }
+            case Keyed keyed -> {
+                return keyed.getKey();
+            }
+            default -> {
+                MsgSender.info("&e[WARN] Can not get key of recipe " + recipe);
+                return null;
+            }
         }
     }
 
