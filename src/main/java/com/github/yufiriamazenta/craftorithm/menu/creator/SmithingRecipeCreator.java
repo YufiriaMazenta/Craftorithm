@@ -24,7 +24,7 @@ import java.util.Objects;
 
 public class SmithingRecipeCreator extends UnlockableRecipeCreator {
 
-    private boolean copyNbt = true;
+    private boolean copyNbt = false;
 
     public SmithingRecipeCreator(@NotNull Player player, @NotNull String recipeName) {
         super(player, RecipeType.SMITHING, recipeName);
