@@ -366,8 +366,14 @@ public class RecipeFactory {
         ItemStack base = ItemManager.INSTANCE.matchItem(config.getString("source.base", ""));
         ItemStack addition = ItemManager.INSTANCE.matchItem(config.getString("source.addition", ""));
         int costLevel = config.getInt("source.cost_level", 0);
-        boolean copyNbt = config.getBoolean("source.copy_nbt", true);
-        RecipeRegistry recipeRegistry = new AnvilRecipeRegistry(key, namespacedKey, result).setBase(base).setAddition(addition).setCopyNbt(copyNbt).setCostLevel(costLevel);
+        boolean copyNbt = config.getBoolean("source.copy_nbt", false);
+        boolean copyEnchantments = config.getBoolean("source.copy_enchantments", true);
+        RecipeRegistry recipeRegistry = new AnvilRecipeRegistry(key, namespacedKey, result)
+            .setBase(base)
+            .setAddition(addition)
+            .setCopyNbt(copyNbt)
+            .setCopyEnchantments(copyEnchantments)
+            .setCostLevel(costLevel);
         return Collections.singletonList(recipeRegistry);
     }
 
@@ -382,8 +388,15 @@ public class RecipeFactory {
             ItemStack base = ItemManager.INSTANCE.matchItem((String) map.get("base"));
             ItemStack addition = ItemManager.INSTANCE.matchItem((String) map.get("addition"));
             int costLevel = map.containsKey("cost_level") ? (Integer) map.get("cost_level") : 0;
-            boolean copyNbt = map.containsKey("copy_nbt") ? (Boolean) map.get("copy_nbt") : true;
-            recipeRegistries.add(new AnvilRecipeRegistry(key, namespacedKey, result).setBase(base).setAddition(addition).setCopyNbt(copyNbt).setCostLevel(costLevel));
+            boolean copyNbt = map.containsKey("copy_nbt") ? (Boolean) map.get("copy_nbt") : false;
+            boolean copyEnchantments = map.containsKey("copy_enchantments") ? (Boolean) map.get("copy_enchantments") : true;
+            recipeRegistries.add(new AnvilRecipeRegistry(key, namespacedKey, result)
+                .setBase(base)
+                .setAddition(addition)
+                .setCopyNbt(copyNbt)
+                .setCopyEnchantments(copyEnchantments)
+                .setCostLevel(costLevel)
+            );
         }
         return recipeRegistries;
     }

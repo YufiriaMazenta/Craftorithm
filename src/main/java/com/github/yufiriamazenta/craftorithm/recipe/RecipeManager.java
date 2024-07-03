@@ -4,6 +4,7 @@ import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.exception.UnsupportedVersionException;
+import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.CustomRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.PotionMixRecipe;
@@ -354,13 +355,17 @@ public enum RecipeManager {
 
     @Nullable
     public AnvilRecipe matchAnvilRecipe(ItemStack base, ItemStack addition) {
+        String baseId = ItemManager.INSTANCE.matchItemName(base, true);
+        String additionId = ItemManager.INSTANCE.matchItemName(addition, true);
         for (Map.Entry<NamespacedKey, AnvilRecipe> anvilRecipeEntry : anvilRecipeMap.entrySet()) {
             AnvilRecipe anvilRecipe = anvilRecipeEntry.getValue();
-            if (!anvilRecipe.base().isSimilar(base))
+            String recipeBaseId = ItemManager.INSTANCE.matchItemName(base, true);
+            String recipeAdditionId = ItemManager.INSTANCE.matchItemName(addition, true);
+            if (!Objects.equals(baseId, recipeBaseId))
                 continue;
             if (base.getAmount() < anvilRecipe.base().getAmount())
                 continue;
-            if (!anvilRecipe.addition().isSimilar(addition))
+            if (!Objects.equals(additionId, recipeAdditionId))
                 continue;
             if (addition.getAmount() < anvilRecipe.addition().getAmount())
                 continue;
@@ -370,45 +375,29 @@ public enum RecipeManager {
     }
 
     public RecipeType getRecipeType(Recipe recipe) {
-        if (recipe == null)
-            return RecipeType.UNKNOWN;
-        if (recipe instanceof ShapedRecipe)
-            return RecipeType.SHAPED;
-        else if (recipe instanceof ShapelessRecipe)
-            return RecipeType.SHAPELESS;
-        else if (recipe instanceof CookingRecipe)
-            return RecipeType.COOKING;
-        else if (recipe instanceof SmithingRecipe)
-            return RecipeType.SMITHING;
-        else if (recipe instanceof StonecuttingRecipe)
-            return RecipeType.STONE_CUTTING;
-        else if (recipe instanceof PotionMixRecipe)
-            return RecipeType.POTION;
-        else if (recipe instanceof AnvilRecipe)
-            return RecipeType.ANVIL;
-        else
-            return RecipeType.UNKNOWN;
+        return switch (recipe) {
+            case ShapedRecipe shapedRecipe -> RecipeType.SHAPED;
+            case ShapelessRecipe shapelessRecipe -> RecipeType.SHAPELESS;
+            case CookingRecipe<?> cookingRecipe -> RecipeType.COOKING;
+            case SmithingRecipe smithingRecipe -> RecipeType.SMITHING;
+            case StonecuttingRecipe stonecuttingRecipe -> RecipeType.STONE_CUTTING;
+            case PotionMixRecipe potionMixRecipe -> RecipeType.POTION;
+            case AnvilRecipe anvilRecipe -> RecipeType.ANVIL;
+            case null, default -> RecipeType.UNKNOWN;
+        };
     }
 
     public StringLangEntry getRecipeTypeName(RecipeType recipeType) {
-        switch (recipeType) {
-            case SHAPED:
-                return Languages.RECIPE_TYPE_NAME_SHAPED;
-            case SHAPELESS:
-                return Languages.RECIPE_TYPE_NAME_SHAPELESS;
-            case COOKING:
-                return Languages.RECIPE_TYPE_NAME_COOKING;
-            case SMITHING:
-                return Languages.RECIPE_TYPE_NAME_SMITHING;
-            case STONE_CUTTING:
-                return Languages.RECIPE_TYPE_NAME_STONE_CUTTING;
-            case POTION:
-                return Languages.RECIPE_TYPE_NAME_POTION;
-            case ANVIL:
-                return Languages.RECIPE_TYPE_NAME_ANVIL;
-            default:
-                return null;
-        }
+        return switch (recipeType) {
+            case SHAPED -> Languages.RECIPE_TYPE_NAME_SHAPED;
+            case SHAPELESS -> Languages.RECIPE_TYPE_NAME_SHAPELESS;
+            case COOKING -> Languages.RECIPE_TYPE_NAME_COOKING;
+            case SMITHING -> Languages.RECIPE_TYPE_NAME_SMITHING;
+            case STONE_CUTTING -> Languages.RECIPE_TYPE_NAME_STONE_CUTTING;
+            case POTION -> Languages.RECIPE_TYPE_NAME_POTION;
+            case ANVIL -> Languages.RECIPE_TYPE_NAME_ANVIL;
+            default -> null;
+        };
     }
 
     public void resetRecipes() {
