@@ -5,4 +5,7 @@ source:
   - base: bedrock
     addition: command_block
     copy_nbt: true
+    copy_enchantments: true
+    copy_damage: true
+#    merge_enchants: true #TODO 或许可以出
     cost_level: 1

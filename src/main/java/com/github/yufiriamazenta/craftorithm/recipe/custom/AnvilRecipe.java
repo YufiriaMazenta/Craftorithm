@@ -12,7 +12,8 @@ public class AnvilRecipe implements CustomRecipe {
     private ItemStack base;
     private ItemStack addition;
     private int costLevel = 0;
-    private boolean copyNbt = true;
+    private boolean copyNbt = false;
+    private boolean copyEnchantments = true;
 
     public AnvilRecipe(NamespacedKey key, ItemStack result, ItemStack base, ItemStack addition) {
         this.key = key;
@@ -86,4 +87,12 @@ public class AnvilRecipe implements CustomRecipe {
         return this;
     }
 
+    public boolean copyEnchantments() {
+        return copyEnchantments;
+    }
+
+    public AnvilRecipe setCopyEnchantments(boolean copyEnchantments) {
+        this.copyEnchantments = copyEnchantments;
+        return this;
+    }
 }

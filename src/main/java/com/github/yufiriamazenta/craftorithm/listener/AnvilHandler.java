@@ -6,10 +6,12 @@ import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
+import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import crypticlib.listener.BukkitListener;
 import crypticlib.util.ItemUtil;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -18,9 +20,11 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @BukkitListener
 public enum AnvilHandler implements Listener {
@@ -65,6 +69,25 @@ public enum AnvilHandler implements Listener {
         if (anvilRecipe.copyNbt()) {
             if (base.hasItemMeta())
                 result.setItemMeta(base.getItemMeta());
+        }
+        if (anvilRecipe.copyEnchantments()) {
+            if (base.hasItemMeta()) {
+                Map<Enchantment, Integer> baseEnchantments = base.getItemMeta().getEnchants();
+                ItemMeta resultMeta = result.getItemMeta();
+                Map<Enchantment, Integer> resultEnchantments = new HashMap<>(resultMeta.getEnchants());
+                CollectionsUtil.putAllIf(resultEnchantments, baseEnchantments, (type, level) -> {
+                    if (resultEnchantments.containsKey(type)) {
+                        return level > resultEnchantments.get(type);
+                    } else {
+                        return true;
+                    }
+                });
+                resultMeta.removeEnchantments();
+                resultEnchantments.forEach((enchant, level) -> {
+                    resultMeta.addEnchant(enchant, level, true);
+                });
+                result.setItemMeta(resultMeta);
+            }
         }
         event.getInventory().setRepairCost(anvilRecipe.costLevel());
         //刷新物品
