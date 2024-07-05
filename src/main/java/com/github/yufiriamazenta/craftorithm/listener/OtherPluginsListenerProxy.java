@@ -84,7 +84,7 @@ public enum OtherPluginsListenerProxy implements Listener {
         EventPriority priority = registeredListener.getPriority();
         if (listenerMap.containsKey(priority)) {
             List<RegisteredListener> listeners = listenerMap.get(priority);
-            if (contains(listeners, registeredListener.getClass()))
+            if (contains(listeners, registeredListener))
                 listeners.remove(registeredListener);
             listeners.add(registeredListener);
         } else {
@@ -99,9 +99,9 @@ public enum OtherPluginsListenerProxy implements Listener {
         return ReflectUtil.getDeclaredFieldObj(executorField, registeredListener);
     }
 
-    private boolean contains(List<RegisteredListener> registeredListeners, Class<?> listenerClass) {
+    private boolean contains(List<RegisteredListener> registeredListeners, RegisteredListener listener) {
         for (RegisteredListener registeredListener : registeredListeners) {
-            if (registeredListener.getListener().getClass().equals(listenerClass)) {
+            if (registeredListener.getListener().getClass().equals(listener.getListener().getClass())) {
                 return true;
             }
         }
