@@ -66,7 +66,7 @@ public class RecipeGroupListMenu extends Menu {
     }
 
     public void nextPage() {
-        setPage(Math.min(page + 1, maxPage - 1)).resetIcons();
+        setPage(Math.min(page + 1, Math.max(0, maxPage - 1))).resetIcons();
         refreshInventory();
     }
 
