@@ -16,12 +16,13 @@ import java.util.Objects;
 public class AnvilRecipeRegistry extends RecipeRegistry {
 
     private ItemStack base, addition;
-    private boolean copyNbt;
+    private boolean copyNbt = false;
     private int costLevel;
+    private boolean copyEnchantments = true;
 
     public AnvilRecipeRegistry(@Nullable String group, @NotNull NamespacedKey namespacedKey, @NotNull ItemStack result) {
         super(group, namespacedKey, result);
-        this.copyNbt = true;
+        this.copyNbt = false;
         this.costLevel = 0;
     }
 
@@ -34,6 +35,7 @@ public class AnvilRecipeRegistry extends RecipeRegistry {
         AnvilRecipe anvilRecipe = new AnvilRecipe(namespacedKey(), result(), base, addition);
         anvilRecipe.setCopyNbt(copyNbt);
         anvilRecipe.setCostLevel(costLevel);
+        anvilRecipe.setCopyEnchantments(copyEnchantments);
         RecipeManager.INSTANCE.regRecipe(group(), anvilRecipe, RecipeType.ANVIL);
     }
 
@@ -72,4 +74,14 @@ public class AnvilRecipeRegistry extends RecipeRegistry {
         this.costLevel = costLevel;
         return this;
     }
+
+    public boolean copyEnchantments() {
+        return copyEnchantments;
+    }
+
+    public AnvilRecipeRegistry setCopyEnchantments(boolean copyEnchantments) {
+        this.copyEnchantments = copyEnchantments;
+        return this;
+    }
+
 }

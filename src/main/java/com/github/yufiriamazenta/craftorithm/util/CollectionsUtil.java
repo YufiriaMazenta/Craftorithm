@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
+import java.util.function.BiFunction;
 
 public class CollectionsUtil {
 
@@ -24,6 +25,22 @@ public class CollectionsUtil {
             blockJoiner.add(s);
         }
         return blockJoiner.toString();
+    }
+
+    /**
+     * 将一个map中所有符合条件的键值对插入另外一个map
+     * @param map 被插入的map
+     * @param otherMap 插入的map
+     * @param condition 筛选条件，两个参数都对应用于插入的map中的值
+     * @param <K> 用于插入的map的key
+     * @param <V> 用于插入的map的value
+     */
+    public static <K, V> void putAllIf(Map<K, V> map, Map<K, V> otherMap, BiFunction<K, V, Boolean> condition) {
+        otherMap.forEach((k, v) -> {
+            if (condition.apply(k, v)) {
+                map.put(k, v);
+            }
+        });
     }
 
 }

@@ -6,3 +6,4 @@ source:
     addition: command_block
     copy_nbt: true
     cost_level: 1
+    copy_enchantments: true

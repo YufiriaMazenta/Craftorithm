@@ -4,6 +4,7 @@ import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.exception.UnsupportedVersionException;
+import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.CustomRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.PotionMixRecipe;
@@ -374,13 +375,17 @@ public enum RecipeManager {
 
     @Nullable
     public AnvilRecipe matchAnvilRecipe(ItemStack base, ItemStack addition) {
+        String baseId = ItemManager.INSTANCE.matchItemName(base, true);
+        String additionId = ItemManager.INSTANCE.matchItemName(addition, true);
         for (Map.Entry<NamespacedKey, AnvilRecipe> anvilRecipeEntry : anvilRecipeMap.entrySet()) {
             AnvilRecipe anvilRecipe = anvilRecipeEntry.getValue();
-            if (!anvilRecipe.base().isSimilar(base))
+            String recipeBaseId = ItemManager.INSTANCE.matchItemName(base, true);
+            String recipeAdditionId = ItemManager.INSTANCE.matchItemName(addition, true);
+            if (!Objects.equals(baseId, recipeBaseId))
                 continue;
             if (base.getAmount() < anvilRecipe.base().getAmount())
                 continue;
-            if (!anvilRecipe.addition().isSimilar(addition))
+            if (!Objects.equals(additionId, recipeAdditionId))
                 continue;
             if (addition.getAmount() < anvilRecipe.addition().getAmount())
                 continue;
