@@ -65,7 +65,7 @@ public class RecipeListMenu extends Menu {
     }
 
     public void nextPage() {
-        setPage(Math.min(page + 1, maxPage - 1)).resetIcons();
+        setPage(Math.min(page + 1, Math.max(0, maxPage - 1))).resetIcons();
         inventoryCache.clear();
         for (Integer slot : slotMap.keySet()) {
             inventoryCache.setItem(slot, slotMap.get(slot).display());
