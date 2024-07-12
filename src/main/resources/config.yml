@@ -13,3 +13,5 @@ enable_anvil_recipe: true
 bstats: true
 #是否释放默认的配方模板文件
 release_default_recipes: true
+#是否在ItemsAdder重载时也重载Craftorithm
+reload_when_ia_reload: true
