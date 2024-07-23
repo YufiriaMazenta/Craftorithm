@@ -3,6 +3,8 @@ package com.github.yufiriamazenta.craftorithm.item.impl;
 import com.github.yufiriamazenta.craftorithm.item.ItemProvider;
 import io.th0rgal.oraxen.api.OraxenItems;
 import io.th0rgal.oraxen.items.ItemUpdater;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,4 +39,10 @@ public enum OraxenItemProvider implements ItemProvider {
         ItemStack built = OraxenItems.getItemById(itemName).build();
         return ItemUpdater.updateItem(built);
     }
+
+    @Override
+    public @Nullable ItemStack getItem(String itemName, OfflinePlayer player) {
+        return getItem(itemName);
+    }
+
 }

@@ -7,6 +7,7 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import crypticlib.listener.BukkitListener;
 import org.bukkit.NamespacedKey;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -42,7 +43,7 @@ public enum SmithingHandler implements Listener {
         if (id == null) {
             return;
         }
-        ItemStack refreshItem = ItemManager.INSTANCE.matchItem(id);
+        ItemStack refreshItem = ItemManager.INSTANCE.matchItem(id, (Player) event.getViewers().getFirst());
         if (item.isSimilar(refreshItem)) {
             return;
         }

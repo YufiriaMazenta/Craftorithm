@@ -10,6 +10,7 @@ import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import crypticlib.listener.BukkitListener;
 import crypticlib.util.ItemUtil;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -93,7 +94,7 @@ public enum AnvilHandler implements Listener {
         //刷新物品
         String resultId = ItemManager.INSTANCE.matchItemName(result, false);
         if (resultId != null) {
-            ItemStack refreshItem = ItemManager.INSTANCE.matchItem(resultId);
+            ItemStack refreshItem = ItemManager.INSTANCE.matchItem(resultId, (Player) event.getViewers().getFirst());
             result.setItemMeta(refreshItem.getItemMeta());
         }
         event.setResult(result);

@@ -4,6 +4,8 @@ import com.github.yufiriamazenta.craftorithm.item.ItemProvider;
 import crypticlib.util.ItemUtil;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.MMOItems;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,4 +48,10 @@ public enum MMOItemsItemProvider implements ItemProvider {
         String id = itemName.substring(index + 1);
         return MMOItems.plugin.getItem(type, id);
     }
+
+    @Override
+    public @Nullable ItemStack getItem(String itemName, OfflinePlayer player) {
+        return getItem(itemName);
+    }
+
 }
