@@ -10,8 +10,10 @@ import crypticlib.util.ItemUtil;
 import crypticlib.util.MaterialUtil;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -59,6 +61,15 @@ public enum ItemManager {
      * @return 获取到的物品，如果为空则为不存在此物品
      */
     public @NotNull ItemStack matchItem(String itemKey) {
+        return matchItem(itemKey, null);
+    }
+
+    /**
+     * 根据名字获取一个物品
+     * @param itemKey 包含命名空间的名字
+     * @return 获取到的物品，如果为空则为不存在此物品
+     */
+    public @NotNull ItemStack matchItem(String itemKey, @Nullable OfflinePlayer player) {
         ItemStack item;
         int lastSpaceIndex = itemKey.lastIndexOf(" ");
         int amountScale = 1;
@@ -80,12 +91,17 @@ public enum ItemManager {
             return matchVanillaItem(itemKey, amountScale);
         }
 
-        item = provider.getItem(name);
+        if (player != null)
+            item = provider.getItem(name, player);
+        else
+            item = provider.getItem(name);
         if (item == null)
             throw new IllegalArgumentException("Can not found item " + name + " from provider: " + namespace);
         item.setAmount(item.getAmount() * amountScale);
         return item;
     }
+
+
 
     /**
      * 获取一个物品的完整名字,包含命名空间和id

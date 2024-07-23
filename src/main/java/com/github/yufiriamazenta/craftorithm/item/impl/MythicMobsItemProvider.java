@@ -5,6 +5,8 @@ import io.lumine.mythic.bukkit.BukkitAdapter;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.items.ItemExecutor;
 import io.lumine.mythic.core.items.MythicItem;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -45,4 +47,10 @@ public enum MythicMobsItemProvider implements ItemProvider {
         int amount = mythicItem.getAmount();
         return BukkitAdapter.adapt(itemOptional.get().generateItemStack(amount));
     }
+
+    @Override
+    public @Nullable ItemStack getItem(String itemName, OfflinePlayer player) {
+        return getItem(itemName);
+    }
+
 }

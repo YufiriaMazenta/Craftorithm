@@ -7,6 +7,8 @@ import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.config.ConfigWrapper;
 import crypticlib.util.FileUtil;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -60,6 +62,11 @@ public enum CraftorithmItemProvider implements ItemProvider {
         if (item == null)
             return null;
         return item.clone();
+    }
+
+    @Override
+    public @Nullable ItemStack getItem(String itemName, OfflinePlayer player) {
+        return getItem(itemName);
     }
 
     public void reloadItemProvider() {
