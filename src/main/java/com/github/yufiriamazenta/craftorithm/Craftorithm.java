@@ -14,6 +14,9 @@ import com.github.yufiriamazenta.craftorithm.util.PluginHookUtil;
 import com.github.yufiriamazenta.craftorithm.util.UpdateUtil;
 import crypticlib.BukkitPlugin;
 import crypticlib.CrypticLib;
+import crypticlib.CrypticLibBukkit;
+import crypticlib.MinecraftVersion;
+import crypticlib.chat.BukkitMsgSender;
 import crypticlib.chat.MsgSender;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -31,9 +34,9 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
 
     @Override
     public void enable() {
-        if (CrypticLib.minecraftVersion() < 12005) {
-            MsgSender.info("&c[Craftorithm] Plugins can only be loaded in versions 1.20.5 and above");
-            throw new UnsupportedVersionException();
+        if (MinecraftVersion.current().before(MinecraftVersion.V1_19_4)) {
+            BukkitMsgSender.INSTANCE.info(Languages.UNSUPPORTED_VERSION.value());
+            throw new UnsupportedVersionException(Languages.UNSUPPORTED_VERSION.value());
         }
         ItemManager.INSTANCE.loadItemManager();
         regListeners();

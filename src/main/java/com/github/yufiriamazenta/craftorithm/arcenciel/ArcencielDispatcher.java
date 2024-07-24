@@ -7,6 +7,7 @@ import com.github.yufiriamazenta.craftorithm.arcenciel.obj.ArcencielSignal;
 import com.github.yufiriamazenta.craftorithm.arcenciel.obj.ReturnObj;
 import com.github.yufiriamazenta.craftorithm.arcenciel.token.*;
 import com.github.yufiriamazenta.craftorithm.util.PluginHookUtil;
+import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.config.ConfigWrapper;
 import org.bukkit.entity.Player;
 
@@ -15,7 +16,7 @@ import java.util.List;
 public enum ArcencielDispatcher implements IArcencielDispatcher {
 
     INSTANCE;
-    private ConfigWrapper functionFile;
+    private BukkitConfigWrapper functionFile;
 
     ArcencielDispatcher() {
         regDefScriptKeyword();
@@ -75,7 +76,7 @@ public enum ArcencielDispatcher implements IArcencielDispatcher {
 
     public void loadFuncFile() {
         if (functionFile == null)
-            functionFile = new ConfigWrapper(Craftorithm.instance(), "function.yml");
+            functionFile = new BukkitConfigWrapper(Craftorithm.instance(), "function.yml");
     }
 
 }

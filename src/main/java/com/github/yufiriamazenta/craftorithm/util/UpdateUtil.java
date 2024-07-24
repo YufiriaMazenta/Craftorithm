@@ -4,6 +4,7 @@ import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import crypticlib.CrypticLib;
+import crypticlib.CrypticLibBukkit;
 import org.bukkit.command.CommandSender;
 
 import java.io.BufferedReader;
@@ -17,7 +18,7 @@ public class UpdateUtil {
     public static void pullUpdateCheckRequest(CommandSender sender) {
         if (!PluginConfigs.CHECK_UPDATE.value())
             return;
-        CrypticLib.platform().scheduler().runTaskAsync(Craftorithm.instance(), () -> {
+        CrypticLibBukkit.scheduler().runTaskAsync(Craftorithm.instance(), () -> {
             try {
                 URL url = new URL("https://api.spigotmc.org/legacy/update.php?resource=108429/");
                 URLConnection conn = url.openConnection();
@@ -28,7 +29,7 @@ public class UpdateUtil {
                 String pluginVersion = Craftorithm.instance().getDescription().getVersion();
                 pluginVersion = pluginVersion.substring(0, pluginVersion.indexOf("-"));
                 if (checkVersion(latestVersion, pluginVersion)) {
-                    CrypticLib.platform().scheduler().runTask(Craftorithm.instance(), () -> {
+                    CrypticLibBukkit.scheduler().runTask(Craftorithm.instance(), () -> {
                         LangUtil.sendLang(sender, Languages.NEW_VERSION, CollectionsUtil.newStringHashMap("<new_version>", latestVersion));
                     });
                 }
@@ -56,8 +57,8 @@ public class UpdateUtil {
             return true;
         else if (subVer > newSubVer)
             return false;
-        int newLatestVer = Integer.parseInt(newVersionNum[2]);
-        int latestVer = Integer.parseInt(versionNum[2]);
+        int newLatestVer = Integer.parseInt(newVersionNum.length >= 3 ? newVersionNum[2] : "0");
+        int latestVer = Integer.parseInt(versionNum.length >= 3 ? versionNum[2] : "0");
         return newLatestVer > latestVer;
     }
 

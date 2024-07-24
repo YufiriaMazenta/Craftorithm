@@ -19,12 +19,12 @@ public final class RunArcencielCmd extends AbstractSubCommand {
     }
 
     @Override
-    public boolean execute(CommandSender sender, List<String> args) {
+    public void execute(CommandSender sender, List<String> args) {
         if (!checkSenderIsPlayer(sender))
-            return true;
+            return;
         if (args.isEmpty()) {
             sendNotEnoughCmdParamMsg(sender, 1);
-            return true;
+            return;
         }
         long startTime = System.currentTimeMillis();
         StringJoiner arcencielBlock = new StringJoiner(" ");
@@ -34,6 +34,5 @@ public final class RunArcencielCmd extends AbstractSubCommand {
         ArcencielDispatcher.INSTANCE.dispatchArcencielBlock((Player) sender, arcencielBlock.toString());
         long execTime = System.currentTimeMillis() - startTime;
         LangUtil.sendLang(sender, Languages.COMMAND_RUN_ARCENCIEL_SUCCESS, CollectionsUtil.newStringHashMap("<time>", String.valueOf(execTime)));
-        return true;
     }
 }

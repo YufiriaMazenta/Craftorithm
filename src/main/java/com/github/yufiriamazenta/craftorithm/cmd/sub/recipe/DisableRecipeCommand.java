@@ -20,15 +20,15 @@ public final class DisableRecipeCommand extends AbstractSubCommand {
     }
 
     @Override
-    public boolean execute(CommandSender sender, List<String> args) {
+    public void execute(CommandSender sender, List<String> args) {
         if (args.isEmpty()) {
             sendNotEnoughCmdParamMsg(sender, 1);
-            return true;
+            return;
         }
         NamespacedKey removeRecipeKey = NamespacedKey.fromString(args.get(0));
         if (!RecipeManager.INSTANCE.serverRecipesCache().containsKey(removeRecipeKey)) {
             LangUtil.sendLang(sender, Languages.COMMAND_DISABLE_NOT_EXIST);
-            return true;
+            return;
         }
         List<NamespacedKey> removeRecipeKeys = Collections.singletonList(removeRecipeKey);
         if (RecipeManager.INSTANCE.disableOtherPluginsRecipe(removeRecipeKeys, true)) {
@@ -36,7 +36,6 @@ public final class DisableRecipeCommand extends AbstractSubCommand {
         }
         else
             LangUtil.sendLang(sender, Languages.COMMAND_DISABLE_FAILED);
-        return true;
     }
 
     @Override

@@ -4,7 +4,7 @@ import com.github.yufiriamazenta.craftorithm.cmd.sub.AbstractSubCommand;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import crypticlib.util.ItemUtil;
+import crypticlib.util.ItemHelper;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -23,18 +23,18 @@ public class AddFuelCommand extends AbstractSubCommand {
     }
 
     @Override
-    public boolean execute(CommandSender sender, List<String> args) {
+    public void execute(CommandSender sender, List<String> args) {
         if (args.isEmpty()) {
             sendNotEnoughCmdParamMsg(sender, 1);
-            return true;
+            return;
         }
         if (!checkSenderIsPlayer(sender))
-            return true;
+            return;
 
         ItemStack item = ((Player) sender).getInventory().getItemInMainHand();
-        if (ItemUtil.isAir(item)) {
+        if (ItemHelper.isAir(item)) {
             LangUtil.sendLang(sender, Languages.COMMAND_ITEM_FUEL_ADD_FAILED_ADD_AIR);
-            return true;
+            return;
         }
 
         boolean result = ItemManager.INSTANCE.addCustomFuel(item, Integer.parseInt(args.get(0)));
@@ -43,7 +43,6 @@ public class AddFuelCommand extends AbstractSubCommand {
         } else {
             LangUtil.sendLang(sender, Languages.COMMAND_ITEM_FUEL_ADD_FAILED_EXIST);
         }
-        return true;
     }
 
     @Override

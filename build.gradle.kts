@@ -1,5 +1,5 @@
 import java.text.SimpleDateFormat
-version = "1.10.5-dev4"
+version = "1.10.5-dev5"
 
 plugins {
     `java-library`
@@ -31,7 +31,7 @@ repositories {
 
 dependencies {
     compileOnly("org.jetbrains:annotations:24.0.1")
-    compileOnly("io.papermc.paper:paper-api:1.20.6-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
     compileOnly("pers.neige.neigeitems:NeigeItems:1.15.113")
     compileOnly("net.kyori:adventure-api:4.14.0")
     compileOnly("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT")
@@ -45,14 +45,16 @@ dependencies {
     compileOnly("io.lumine:MythicLib-dist:1.6.2-SNAPSHOT")
     compileOnly("net.Indyuce:MMOItems-API:6.9.5-SNAPSHOT")
     compileOnly("com.willfp:EcoEnchants:12.5.1")
-    implementation("com.crypticlib:CrypticLib:0.18.3")
-//    implementation("de.tr7zw:item-nbt-api:2.12.4")
+    implementation("com.crypticlib:bukkit:${rootProject.findProperty("crypticlibVer")}")
+    implementation("com.crypticlib:bukkit-ui:${rootProject.findProperty("crypticlibVer")}")
+    implementation("com.crypticlib:bukkit-i18n:${rootProject.findProperty("crypticlibVer")}")
+    implementation("com.crypticlib:bukkit-conversation:${rootProject.findProperty("crypticlibVer")}")
 }
 
 group = "com.github.yufiriamazenta"
 var pluginVersion: String = version.toString() + "-" + SimpleDateFormat("yyyyMMdd").format(System.currentTimeMillis())
-java.sourceCompatibility = JavaVersion.VERSION_21
-java.targetCompatibility = JavaVersion.VERSION_21
+java.sourceCompatibility = JavaVersion.VERSION_17
+java.targetCompatibility = JavaVersion.VERSION_17
 
 publishing {
     publications.create<MavenPublication>("maven") {

@@ -6,8 +6,8 @@ import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.item.impl.CraftorithmItemProvider;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import crypticlib.CrypticLib;
-import crypticlib.platform.IPlatform;
+import crypticlib.CrypticLibBukkit;
+import crypticlib.platform.Platform;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -26,10 +26,10 @@ public class GiveItemCommand extends AbstractSubCommand {
     }
 
     @Override
-    public boolean execute(CommandSender sender, List<String> args) {
+    public void execute(CommandSender sender, List<String> args) {
         if (args.isEmpty()) {
             sendNotEnoughCmdParamMsg(sender, 1);
-            return true;
+            return;
         }
 
         Player player;
@@ -37,25 +37,25 @@ public class GiveItemCommand extends AbstractSubCommand {
             player = Bukkit.getPlayer(args.get(1));
             if (player == null) {
                 LangUtil.sendLang(sender, Languages.COMMAND_ITEM_GIVE_PLAYER_OFFLINE);
-                return true;
+                return;
             }
         } else {
             if (checkSenderIsPlayer(sender)) {
                 player = (Player) sender;
             } else {
-                return true;
+                return;
             }
         }
 
         ItemStack itemStack = CraftorithmItemProvider.INSTANCE.getItem(args.get(0));
         if (itemStack == null) {
             LangUtil.sendLang(sender, Languages.COMMAND_ITEM_GIVE_NOT_EXIST_ITEM, CollectionsUtil.newStringHashMap("<item_name>", args.get(0)));
-            return true;
+            return;
         }
 
         HashMap<Integer, ItemStack> failedItems = player.getInventory().addItem(itemStack);
         if (!failedItems.isEmpty()) {
-            if (!CrypticLib.platform().platform().equals(IPlatform.Platform.FOLIA)) {
+            if (!CrypticLibBukkit.platform().type().equals(Platform.PlatformType.FOLIA)) {
                 for (ItemStack stack : failedItems.values()) {
                     player.getWorld().dropItem(player.getLocation(), stack);
                 }
@@ -65,11 +65,11 @@ public class GiveItemCommand extends AbstractSubCommand {
                         player.getWorld().dropItem(player.getLocation(), stack);
                     }
                 };
-                CrypticLib.platform().scheduler().runTaskOnEntity(Craftorithm.instance(), player, dropTask, dropTask);
+                CrypticLibBukkit.scheduler().runTaskOnEntity(Craftorithm.instance(), player, dropTask, dropTask);
             }
         }
         LangUtil.sendLang(sender, Languages.COMMAND_ITEM_GIVE_SUCCESS);
-        return true;
+        return;
     }
 
     @Override

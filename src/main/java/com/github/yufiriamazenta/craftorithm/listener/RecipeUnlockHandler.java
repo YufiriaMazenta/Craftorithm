@@ -1,7 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.listener;
 
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
-import crypticlib.listener.BukkitListener;
+import crypticlib.listener.EventListener;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@BukkitListener
+@EventListener
 public enum RecipeUnlockHandler implements Listener {
 
     INSTANCE;

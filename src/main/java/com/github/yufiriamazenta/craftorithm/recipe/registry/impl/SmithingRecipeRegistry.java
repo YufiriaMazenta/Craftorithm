@@ -4,6 +4,7 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import crypticlib.CrypticLib;
+import crypticlib.CrypticLibBukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
@@ -60,7 +61,7 @@ public class SmithingRecipeRegistry extends RecipeRegistry {
         Objects.requireNonNull(addition, "Recipe addition cannot be null");
 
         SmithingRecipe smithingRecipe;
-        if (CrypticLib.isPaper())
+        if (CrypticLibBukkit.isPaper())
             smithingRecipe = new SmithingRecipe(namespacedKey(), result(), base, addition, copyNbt);
         else
             smithingRecipe = new SmithingRecipe(namespacedKey(), result(), base, addition);

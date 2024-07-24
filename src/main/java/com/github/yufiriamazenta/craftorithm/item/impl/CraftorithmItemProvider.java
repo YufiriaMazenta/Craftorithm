@@ -5,10 +5,10 @@ import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.item.ItemProvider;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.config.ConfigWrapper;
-import crypticlib.util.FileUtil;
+import crypticlib.util.FileHelper;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,7 +25,7 @@ public enum CraftorithmItemProvider implements ItemProvider {
     INSTANCE;
     public final File ITEM_FILE_FOLDER = new File(Craftorithm.instance().getDataFolder(), "items");
     private final Map<String, ItemStack> itemMap;
-    private final Map<String, ConfigWrapper> itemConfigFileMap;
+    private final Map<String, BukkitConfigWrapper> itemConfigFileMap;
 
     CraftorithmItemProvider() {
         itemConfigFileMap = new HashMap<>();
@@ -81,7 +81,7 @@ public enum CraftorithmItemProvider implements ItemProvider {
             if (!mkdirResult)
                 throw new RuntimeException("Create item folder failed");
         }
-        List<File> allFiles = FileUtil.allYamlFiles(ITEM_FILE_FOLDER);
+        List<File> allFiles = FileHelper.allYamlFiles(ITEM_FILE_FOLDER);
         if (allFiles.isEmpty()) {
             Craftorithm.instance().saveResource("items/example_item.yml", false);
             allFiles.add(new File(ITEM_FILE_FOLDER, "example_item.yml"));
@@ -91,14 +91,14 @@ public enum CraftorithmItemProvider implements ItemProvider {
             key = key.replace("\\", "/");
             int lastDotIndex = key.lastIndexOf(".");
             key = key.substring(0, lastDotIndex);
-            itemConfigFileMap.put(key, new ConfigWrapper(file));
+            itemConfigFileMap.put(key, new BukkitConfigWrapper(file));
         }
     }
 
     private void loadItems() {
         itemMap.clear();
         for (String namespace : itemConfigFileMap.keySet()) {
-            ConfigWrapper itemFile = itemConfigFileMap.get(namespace);
+            BukkitConfigWrapper itemFile = itemConfigFileMap.get(namespace);
             Set<String> itemKeySet = itemFile.config().getKeys(false);
             for (String itemKey : itemKeySet) {
                 try {
@@ -117,13 +117,13 @@ public enum CraftorithmItemProvider implements ItemProvider {
 
 
     public String regCraftorithmItem(String namespace, String itemName, ItemStack item) {
-        ConfigWrapper itemConfigFile;
+        BukkitConfigWrapper itemConfigFile;
         if (!itemConfigFileMap.containsKey(namespace)) {
             File itemFile = new File(ITEM_FILE_FOLDER, namespace + ".yml");
             if (!itemFile.exists()) {
-                FileUtil.createNewFile(itemFile);
+                FileHelper.createNewFile(itemFile);
             }
-            itemConfigFile = new ConfigWrapper(itemFile);
+            itemConfigFile = new BukkitConfigWrapper(itemFile);
             itemConfigFileMap.put(namespace, itemConfigFile);
         } else {
             itemConfigFile = itemConfigFileMap.get(namespace);
@@ -139,7 +139,7 @@ public enum CraftorithmItemProvider implements ItemProvider {
         return new HashMap<>(itemMap);
     }
 
-    public Map<String, ConfigWrapper> itemConfigFileMap() {
+    public Map<String, BukkitConfigWrapper> itemConfigFileMap() {
         return new HashMap<>(itemConfigFileMap);
     }
 

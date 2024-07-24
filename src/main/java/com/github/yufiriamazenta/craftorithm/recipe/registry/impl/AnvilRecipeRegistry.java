@@ -5,7 +5,7 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import com.google.common.base.Preconditions;
-import crypticlib.util.ItemUtil;
+import crypticlib.util.ItemHelper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -28,9 +28,9 @@ public class AnvilRecipeRegistry extends RecipeRegistry {
 
     @Override
     public void register() {
-        Preconditions.checkArgument(!ItemUtil.isAir(base), "Recipe base cannot be null");
-        Preconditions.checkArgument(!ItemUtil.isAir(addition), "Recipe base cannot be null");
-        Preconditions.checkArgument(!ItemUtil.isAir(result()), "Recipe base cannot be null");
+        Preconditions.checkArgument(!ItemHelper.isAir(base), "Recipe base cannot be null");
+        Preconditions.checkArgument(!ItemHelper.isAir(addition), "Recipe base cannot be null");
+        Preconditions.checkArgument(!ItemHelper.isAir(result()), "Recipe base cannot be null");
         Objects.requireNonNull(namespacedKey(), "Recipe key cannot be null");
         AnvilRecipe anvilRecipe = new AnvilRecipe(namespacedKey(), result(), base, addition);
         anvilRecipe.setCopyNbt(copyNbt);

@@ -4,8 +4,7 @@ import com.github.yufiriamazenta.craftorithm.cmd.sub.AbstractSubCommand;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.item.impl.CraftorithmItemProvider;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import crypticlib.util.ItemUtil;
-import org.bukkit.Material;
+import crypticlib.util.ItemHelper;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -23,23 +22,22 @@ public final class SaveItemCommand extends AbstractSubCommand {
     }
 
     @Override
-    public boolean execute(CommandSender sender, List<String> args) {
+    public void execute(CommandSender sender, List<String> args) {
         if (args.size() < 2) {
             sendNotEnoughCmdParamMsg(sender, 2 - args.size());
-            return true;
+            return;
         }
         if (!checkSenderIsPlayer(sender))
-            return true;
+            return;
 
         ItemStack item = ((Player) sender).getInventory().getItemInMainHand();
-        if (ItemUtil.isAir(item)) {
+        if (ItemHelper.isAir(item)) {
             LangUtil.sendLang(sender, Languages.COMMAND_ITEM_SAVE_FAILED_SAVE_AIR);
-            return true;
+            return;
         }
 
         CraftorithmItemProvider.INSTANCE.regCraftorithmItem(args.get(0), args.get(1), item.clone());
         LangUtil.sendLang(sender, Languages.COMMAND_ITEM_SAVE_SUCCESS);
-        return true;
     }
 
     @Override

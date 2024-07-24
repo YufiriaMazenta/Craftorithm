@@ -5,9 +5,8 @@ import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
-import crypticlib.listener.BukkitListener;
+import crypticlib.listener.EventListener;
 import org.bukkit.NamespacedKey;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -21,7 +20,7 @@ import org.bukkit.inventory.Recipe;
 
 import java.util.List;
 
-@BukkitListener
+@EventListener
 public enum SmithingHandler implements Listener {
 
     INSTANCE;
@@ -43,7 +42,7 @@ public enum SmithingHandler implements Listener {
         if (id == null) {
             return;
         }
-        ItemStack refreshItem = ItemManager.INSTANCE.matchItem(id, (Player) event.getViewers().getFirst());
+        ItemStack refreshItem = ItemManager.INSTANCE.matchItem(id, (Player) event.getViewers().get(0));
         if (item.isSimilar(refreshItem)) {
             return;
         }

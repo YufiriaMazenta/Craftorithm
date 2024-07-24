@@ -22,7 +22,7 @@ public final class ReloadCommand extends AbstractSubCommand {
     }
 
     @Override
-    public boolean execute(CommandSender sender, List<String> args) {
+    public void execute(CommandSender sender, List<String> args) {
         try {
             reloadPlugin();
             LangUtil.sendLang(sender, Languages.COMMAND_RELOAD_SUCCESS);
@@ -30,7 +30,6 @@ public final class ReloadCommand extends AbstractSubCommand {
             e.printStackTrace();
             LangUtil.sendLang(sender, Languages.COMMAND_RELOAD_EXCEPTION);
         }
-        return true;
     }
 
     public static void reloadPlugin() {

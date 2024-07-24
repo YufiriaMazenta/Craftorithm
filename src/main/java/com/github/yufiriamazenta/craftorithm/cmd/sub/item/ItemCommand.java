@@ -15,13 +15,4 @@ public final class ItemCommand extends AbstractSubCommand {
         regSub(SaveItemCommand.INSTANCE).regSub(GiveItemCommand.INSTANCE).regSub(FuelCommand.INSTANCE);
     }
 
-    @Override
-    public boolean execute(CommandSender sender, List<String> args) {
-        if (args.isEmpty()) {
-            sendNotEnoughCmdParamMsg(sender, 2);
-            return true;
-        }
-        return super.onCommand(sender, args);
-    }
-
 }

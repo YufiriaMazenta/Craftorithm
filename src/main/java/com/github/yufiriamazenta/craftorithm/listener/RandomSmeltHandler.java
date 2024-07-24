@@ -4,7 +4,7 @@ import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
-import crypticlib.listener.BukkitListener;
+import crypticlib.listener.EventListener;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -17,7 +17,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
-@BukkitListener
+@EventListener
 public enum RandomSmeltHandler implements Listener {
 
     INSTANCE;

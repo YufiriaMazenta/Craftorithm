@@ -1,14 +1,14 @@
 package com.github.yufiriamazenta.craftorithm.util;
 
-import crypticlib.CrypticLib;
-import crypticlib.platform.IPlatform;
+import crypticlib.CrypticLibBukkit;
+import crypticlib.platform.Platform;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Recipe;
 
 public class RecipeUtil {
 
     public static void regRecipe(Recipe recipe) {
-        if (CrypticLib.platform().platform().equals(IPlatform.Platform.BUKKIT)) {
+        if (CrypticLibBukkit.platform().type().equals(Platform.PlatformType.BUKKIT)) {
             //当不是Paper端时，使用Bukkit的注册方法
             Bukkit.addRecipe(recipe);
         } else {

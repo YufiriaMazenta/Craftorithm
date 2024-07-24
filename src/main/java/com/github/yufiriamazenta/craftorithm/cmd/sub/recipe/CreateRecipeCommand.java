@@ -3,11 +3,9 @@ package com.github.yufiriamazenta.craftorithm.cmd.sub.recipe;
 import com.github.yufiriamazenta.craftorithm.cmd.sub.AbstractSubCommand;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
-import com.github.yufiriamazenta.craftorithm.menu.creator.*;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import crypticlib.CrypticLib;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -37,17 +35,17 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
     }
 
     @Override
-    public boolean execute(CommandSender sender, List<String> args) {
+    public void execute(CommandSender sender, List<String> args) {
         if (!checkSenderIsPlayer(sender))
-            return true;
+            return;
         if (args.isEmpty()) {
             sendNotEnoughCmdParamMsg(sender, 2);
-            return true;
+            return;
         }
         String recipeTypeStr = args.get(0).toLowerCase(Locale.ROOT);
         if (!recipeTypeList.contains(recipeTypeStr)) {
             LangUtil.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
-            return true;
+            return;
         }
         String recipeName;
         if (args.size() < 2)
@@ -58,39 +56,39 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
         Matcher matcher = recipeNamePattern.matcher(recipeName);
         if (!matcher.matches()) {
             LangUtil.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_NAME);
-            return true;
+            return;
         }
         if (RecipeManager.INSTANCE.hasCraftorithmRecipe(recipeName)) {
             LangUtil.sendLang(sender, Languages.COMMAND_CREATE_NAME_USED);
-            return true;
+            return;
         }
         RecipeType recipeType = RecipeType.valueOf(recipeTypeStr.toUpperCase(Locale.ROOT));
         Player player = (Player) sender;
         switch (recipeType) {
-            case SHAPED:
-            case SHAPELESS:
-                new CraftingRecipeCreator(player, recipeType, recipeName).openMenu();
-                break;
-            case COOKING:
-                new CookingRecipeCreator(player, recipeName).openMenu();
-                break;
-            case SMITHING:
-                new SmithingRecipeCreator(player, recipeName).openMenu();
-                break;
-            case STONE_CUTTING:
-                new StoneCuttingRecipeCreator(player, recipeName).openMenu();
-                break;
-            case POTION:
-                new PotionMixCreator(player, recipeName).openMenu();
-                break;
-            case ANVIL:
-                new AnvilRecipeCreator(player, recipeName).openMenu();
-                break;
-            default:
-                LangUtil.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
-                break;
+            //TODO 重构
+//            case SHAPED:
+//            case SHAPELESS:
+//                new CraftingRecipeCreator(player, recipeType, recipeName).openMenu();
+//                break;
+//            case COOKING:
+//                new CookingRecipeCreator(player, recipeName).openMenu();
+//                break;
+//            case SMITHING:
+//                new SmithingRecipeCreator(player, recipeName).openMenu();
+//                break;
+//            case STONE_CUTTING:
+//                new StoneCuttingRecipeCreator(player, recipeName).openMenu();
+//                break;
+//            case POTION:
+//                new PotionMixCreator(player, recipeName).openMenu();
+//                break;
+//            case ANVIL:
+//                new AnvilRecipeCreator(player, recipeName).openMenu();
+//                break;
+//            default:
+//                LangUtil.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
+//                break;
         }
-        return true;
     }
 
     @Override

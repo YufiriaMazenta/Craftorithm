@@ -19,13 +19,13 @@ public class RemoveFuelCommand extends AbstractSubCommand {
     }
 
     @Override
-    public boolean execute(CommandSender sender, List<String> args) {
+    public void execute(CommandSender sender, List<String> args) {
         if (args.isEmpty()) {
             sendNotEnoughCmdParamMsg(sender, 1);
-            return true;
+            return;
         }
         if (!checkSenderIsPlayer(sender))
-            return true;
+            return;
 
         boolean result = ItemManager.INSTANCE.removeCustomFuel(args.get(0));
         if (result) {
@@ -33,7 +33,6 @@ public class RemoveFuelCommand extends AbstractSubCommand {
         } else {
             LangUtil.sendLang(sender, Languages.COMMAND_ITEM_FUEL_REMOVE_FAILED_NOT_EXIST);
         }
-        return true;
     }
 
     @Override

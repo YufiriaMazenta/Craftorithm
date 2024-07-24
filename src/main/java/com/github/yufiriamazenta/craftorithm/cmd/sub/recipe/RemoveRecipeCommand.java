@@ -23,10 +23,10 @@ public final class RemoveRecipeCommand extends AbstractSubCommand {
     }
 
     @Override
-    public boolean execute(CommandSender sender, List<String> args) {
+    public void execute(CommandSender sender, List<String> args) {
         if (args.isEmpty()) {
             sendNotEnoughCmdParamMsg(sender, 1);
-            return true;
+            return;
         }
 
         if (RecipeManager.INSTANCE.removeCraftorithmRecipe(args.get(0), true)) {
@@ -34,7 +34,6 @@ public final class RemoveRecipeCommand extends AbstractSubCommand {
         }
         else
             LangUtil.sendLang(sender, Languages.COMMAND_REMOVE_NOT_EXIST);
-        return true;
     }
 
     @Override

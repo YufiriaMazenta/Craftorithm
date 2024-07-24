@@ -1,9 +1,9 @@
 package com.github.yufiriamazenta.craftorithm.listener;
 
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
-import crypticlib.CrypticLib;
-import crypticlib.platform.IPlatform;
-import crypticlib.util.ReflectUtil;
+import crypticlib.CrypticLibBukkit;
+import crypticlib.platform.Platform;
+import crypticlib.util.ReflectionHelper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.*;
 import org.bukkit.event.block.BlockCookEvent;
@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public enum OtherPluginsListenerProxy implements Listener {
 
     INSTANCE;
-    private final Field executorField = ReflectUtil.getDeclaredField(RegisteredListener.class, "executor");
+    private final Field executorField = ReflectionHelper.getDeclaredField(RegisteredListener.class, "executor");
     private final Map<EventPriority, List<RegisteredListener>> prepareItemCraftEventListeners = new ConcurrentHashMap<>();
     //因为CraftItemEvent与SmithItemEvent的handler list与InventoryClickEvent共享,所以只能放在一起
     private final Map<EventPriority, List<RegisteredListener>> inventoryClickEventListeners = new ConcurrentHashMap<>();
@@ -96,7 +96,7 @@ public enum OtherPluginsListenerProxy implements Listener {
     }
 
     public EventExecutor getRegisteredListenerExecutor(RegisteredListener registeredListener) {
-        return ReflectUtil.getDeclaredFieldObj(executorField, registeredListener);
+        return ReflectionHelper.getDeclaredFieldObj(executorField, registeredListener);
     }
 
     private boolean contains(List<RegisteredListener> registeredListeners, RegisteredListener listener) {
@@ -277,7 +277,7 @@ public enum OtherPluginsListenerProxy implements Listener {
 
     private void proxyPrepareAnvil(PrepareAnvilEvent event, EventPriority eventPriority) {
         //因为只有paper及下游服务端才有这个问题,如果识别到是bukkit或者spigot,就不用处理
-        if (CrypticLib.platform().platform().equals(IPlatform.Platform.BUKKIT)) {
+        if (CrypticLibBukkit.platform().type().equals(Platform.PlatformType.BUKKIT)) {
             return;
         }
         List<RegisteredListener> registeredListeners = prepareSmithingItemEventListeners.get(eventPriority);
@@ -511,7 +511,7 @@ public enum OtherPluginsListenerProxy implements Listener {
 
     public void proxyPrepareGrindstone(PrepareGrindstoneEvent event, EventPriority priority) {
         //因为只有paper及下游服务端才有这个问题,如果识别到是bukkit或者spigot,就不用处理
-        if (CrypticLib.platform().platform().equals(IPlatform.Platform.BUKKIT)) {
+        if (CrypticLibBukkit.platform().type().equals(Platform.PlatformType.BUKKIT)) {
             return;
         }
         List<RegisteredListener> registeredListeners = prepareItemCraftEventListeners.get(priority);

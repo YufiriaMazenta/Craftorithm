@@ -1,7 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.cmd.sub.recipe;
 
 import com.github.yufiriamazenta.craftorithm.cmd.sub.AbstractSubCommand;
-import com.github.yufiriamazenta.craftorithm.menu.display.RecipeDisplayMenu;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
@@ -22,20 +21,20 @@ public class DisplayRecipeCommand extends AbstractSubCommand {
     }
 
     @Override
-    public boolean execute(CommandSender sender, List<String> args) {
+    public void execute(CommandSender sender, List<String> args) {
         if (!checkSenderIsPlayer(sender))
-            return true;
+            return;
         if (args.isEmpty()) {
             sendNotEnoughCmdParamMsg(sender, 1);
-            return true;
+            return;
         }
         NamespacedKey namespacedKey = NamespacedKey.fromString(args.get(0));
         Recipe recipe = RecipeManager.INSTANCE.getRecipe(namespacedKey);
         if (recipe == null) {
-            return true;
+            return;
         }
-        new RecipeDisplayMenu((Player) sender, recipe, null).openMenu();
-        return true;
+        //todo 页面重写
+//        new RecipeDisplayMenu((Player) sender, recipe, null).openMenu();
     }
 
     @Override

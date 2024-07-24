@@ -13,16 +13,19 @@ import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import com.github.yufiriamazenta.craftorithm.util.RecipeUtil;
 import crypticlib.CrypticLib;
-import crypticlib.chat.MsgSender;
+import crypticlib.CrypticLibBukkit;
+import crypticlib.chat.BukkitMsgSender;
+import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.config.ConfigWrapper;
 import crypticlib.lang.entry.StringLangEntry;
-import crypticlib.platform.IPlatform;
-import crypticlib.util.FileUtil;
+import crypticlib.platform.Platform;
+import crypticlib.util.FileHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.*;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -35,7 +38,7 @@ public enum RecipeManager {
 
     INSTANCE;
     public final File RECIPE_FILE_FOLDER = new File(Craftorithm.instance().getDataFolder().getPath(), "recipes");
-    private final ConfigWrapper removedRecipesConfigWrapper = new ConfigWrapper(Craftorithm.instance(), "removed_recipes.yml");
+    private final BukkitConfigWrapper removedRecipesConfigWrapper = new BukkitConfigWrapper(Craftorithm.instance(), "removed_recipes.yml");
     public final String PLUGIN_RECIPE_NAMESPACE = "craftorithm";
     private final Map<RecipeType, Map<String, RecipeGroup>> pluginRecipeMap;
     private final Map<RecipeType, Consumer<Recipe>> recipeRegisterMap;
@@ -91,7 +94,7 @@ public enum RecipeManager {
             });
         }
 
-        if (!CrypticLib.platform().platform().equals(IPlatform.Platform.BUKKIT)) {
+        if (!CrypticLibBukkit.platform().type().equals(Platform.PlatformType.BUKKIT)) {
             supportPotionMix = true;
             recipeRegisterMap.put(RecipeType.POTION, recipe -> {
                 Bukkit.getPotionBrewer().addPotionMix(((PotionMixRecipe) recipe).potionMix());
@@ -157,7 +160,7 @@ public enum RecipeManager {
             if (!mkdirResult)
                 return;
         }
-        List<File> allFiles = FileUtil.allYamlFiles(RECIPE_FILE_FOLDER);
+        List<File> allFiles = FileHelper.allYamlFiles(RECIPE_FILE_FOLDER);
         if (allFiles.isEmpty()) {
             saveDefConfigFile(allFiles);
         }
@@ -166,7 +169,7 @@ public enum RecipeManager {
             recipeGroupName = recipeGroupName.replace("\\", "/");
             int lastDotIndex = recipeGroupName.lastIndexOf(".");
             recipeGroupName = recipeGroupName.substring(0, lastDotIndex).toLowerCase();
-            ConfigWrapper recipeGroupConfigWrapper = new ConfigWrapper(file);
+            BukkitConfigWrapper recipeGroupConfigWrapper = new BukkitConfigWrapper(file);
             RecipeType recipeType = RecipeType.valueOf(recipeGroupConfigWrapper.config().getString("type").toUpperCase());
             RecipeGroup recipeGroup = new RecipeGroup(recipeGroupName, recipeType, recipeGroupConfigWrapper);
             addRecipeGroup(recipeGroup);
@@ -201,20 +204,13 @@ public enum RecipeManager {
     }
 
     public NamespacedKey getRecipeKey(Recipe recipe) {
-        switch (recipe) {
-            case null -> {
-                return null;
-            }
-            case CustomRecipe customRecipe -> {
-                return customRecipe.key();
-            }
-            case Keyed keyed -> {
-                return keyed.getKey();
-            }
-            default -> {
-                MsgSender.info("&e[WARN] Can not get key of recipe " + recipe);
-                return null;
-            }
+        if (recipe instanceof CustomRecipe customRecipe) {
+            return customRecipe.key();
+        } else if (recipe instanceof Keyed keyed) {
+            return keyed.getKey();
+        } else {
+            BukkitMsgSender.INSTANCE.info("&e[WARN] Can not get key of recipe " + recipe);
+            return null;
         }
     }
 
@@ -253,7 +249,7 @@ public enum RecipeManager {
                 if (recipeGroup == null)
                     return false;
                 recipeRemoverMap.get(recipeType).accept(recipeGroup.groupRecipeKeys());
-                ConfigWrapper recipeConfig = recipeGroupMap.get(recipeGroupName).recipeGroupConfig();
+                BukkitConfigWrapper recipeConfig = recipeGroupMap.get(recipeGroupName).recipeGroupConfig();
                 if (deleteFile) {
                     recipeConfig.configFile().delete();
                 }
@@ -335,8 +331,8 @@ public enum RecipeManager {
             for (String recipeGroupName : recipeGroupMap.keySet()) {
                 RecipeGroup recipeGroup = recipeGroupMap.get(recipeGroupName);
                 if (recipeGroup.contains(recipeKey)) {
-                    ConfigWrapper configWrapper = recipeGroup.recipeGroupConfig();
-                    return configWrapper == null ? null : configWrapper.config();
+                    BukkitConfigWrapper configWrapper = recipeGroup.recipeGroupConfig();
+                    return configWrapper.config();
                 }
             }
         }
@@ -374,17 +370,23 @@ public enum RecipeManager {
         return null;
     }
 
-    public RecipeType getRecipeType(Recipe recipe) {
-        return switch (recipe) {
-            case ShapedRecipe shapedRecipe -> RecipeType.SHAPED;
-            case ShapelessRecipe shapelessRecipe -> RecipeType.SHAPELESS;
-            case CookingRecipe<?> cookingRecipe -> RecipeType.COOKING;
-            case SmithingRecipe smithingRecipe -> RecipeType.SMITHING;
-            case StonecuttingRecipe stonecuttingRecipe -> RecipeType.STONE_CUTTING;
-            case PotionMixRecipe potionMixRecipe -> RecipeType.POTION;
-            case AnvilRecipe anvilRecipe -> RecipeType.ANVIL;
-            case null, default -> RecipeType.UNKNOWN;
-        };
+    public @NotNull RecipeType getRecipeType(Recipe recipe) {
+        if (recipe instanceof ShapedRecipe)
+            return RecipeType.SHAPED;
+        else if (recipe instanceof ShapelessRecipe)
+            return RecipeType.SHAPELESS;
+        else if (recipe instanceof CookingRecipe<?>)
+            return RecipeType.COOKING;
+        else if (recipe instanceof SmithingRecipe)
+            return RecipeType.SMITHING;
+        else if (recipe instanceof PotionMixRecipe)
+            return RecipeType.POTION;
+        else if (recipe instanceof StonecuttingRecipe)
+            return RecipeType.STONE_CUTTING;
+        else if (recipe instanceof AnvilRecipe)
+            return RecipeType.ANVIL;
+        else
+            return RecipeType.UNKNOWN;
     }
 
     public StringLangEntry getRecipeTypeName(RecipeType recipeType) {

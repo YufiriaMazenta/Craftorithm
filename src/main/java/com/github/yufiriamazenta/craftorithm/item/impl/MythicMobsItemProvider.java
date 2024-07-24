@@ -40,7 +40,7 @@ public enum MythicMobsItemProvider implements ItemProvider {
     public @Nullable ItemStack getItem(String itemName) {
         ItemExecutor executor = MythicBukkit.inst().getItemManager();
         Optional<MythicItem> itemOptional = executor.getItem(itemName);
-        if (!itemOptional.isPresent()) {
+        if (itemOptional.isEmpty()) {
             return null;
         }
         MythicItem mythicItem = itemOptional.get();

@@ -8,9 +8,8 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
-import crypticlib.listener.BukkitListener;
-import crypticlib.util.ItemUtil;
-import org.bukkit.OfflinePlayer;
+import crypticlib.listener.EventListener;
+import crypticlib.util.ItemHelper;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -27,7 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@BukkitListener
+@EventListener
 public enum AnvilHandler implements Listener {
 
     INSTANCE;
@@ -38,7 +37,7 @@ public enum AnvilHandler implements Listener {
             return;
         ItemStack base = event.getInventory().getItem(0);
         ItemStack addition = event.getInventory().getItem(1);
-        if (ItemUtil.isAir(base) || ItemUtil.isAir(addition))
+        if (ItemHelper.isAir(base) || ItemHelper.isAir(addition))
             return;
         boolean containsLore = ItemUtils.hasCannotCraftLore(base, addition);
         if (containsLore) {
@@ -94,7 +93,7 @@ public enum AnvilHandler implements Listener {
         //刷新物品
         String resultId = ItemManager.INSTANCE.matchItemName(result, false);
         if (resultId != null) {
-            ItemStack refreshItem = ItemManager.INSTANCE.matchItem(resultId, (Player) event.getViewers().getFirst());
+            ItemStack refreshItem = ItemManager.INSTANCE.matchItem(resultId, (Player) event.getViewers().get(0));
             result.setItemMeta(refreshItem.getItemMeta());
         }
         event.setResult(result);
@@ -114,7 +113,7 @@ public enum AnvilHandler implements Listener {
         ItemStack base = anvilInventory.getItem(0);
         ItemStack addition = anvilInventory.getItem(1);
         ItemStack result = anvilInventory.getItem(2);
-        if (ItemUtil.isAir(base) || ItemUtil.isAir(addition) || ItemUtil.isAir(result))
+        if (ItemHelper.isAir(base) || ItemHelper.isAir(addition) || ItemHelper.isAir(result))
             return;
         AnvilRecipe anvilRecipe = RecipeManager.INSTANCE.matchAnvilRecipe(base, addition);
         if (anvilRecipe == null)
@@ -139,7 +138,7 @@ public enum AnvilHandler implements Listener {
                     break;
                 }
                 ItemStack cursor = event.getCursor();
-                if (ItemUtil.isAir(cursor)) {
+                if (ItemHelper.isAir(cursor)) {
                     base.setAmount(baseNum - needBaseNum);
                     addition.setAmount(additionNum - needAdditionNum);
                     event.getView().setCursor(result);
