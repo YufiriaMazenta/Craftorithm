@@ -1,4 +1,4 @@
-type: 'shapeless'
+type: 'shapeless.yml'
 result: 'bedrock'
 multiple: true
 source:

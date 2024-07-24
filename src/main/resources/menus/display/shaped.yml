@@ -1,0 +1,16 @@
+title: 'lang:menu.recipe_display.shaped.title'
+layout:
+  - '~~~~~~~~~'
+  - '~AAA~~~~~'
+  - '~AAA~~R~~'
+  - '~AAA~~~~~'
+  - '~~~~~~~~~'
+icons:
+  ~:
+    material: paper
+    name: 'lang:menu.recipe_display.shaped.frame.name'
+  A:
+    icon-type: ingredient
+  R:
+    icon-type: result
+    

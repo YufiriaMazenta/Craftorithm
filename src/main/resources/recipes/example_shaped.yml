@@ -1,4 +1,4 @@
-#配方的类型，一共有shaped(有序)、shapeless(无序)、cooking(烧炼)、smithing(锻造)、stone_cutting(切石机)、random_cooking(随机烧炼)
+#配方的类型，一共有shaped(有序)、shapeless.yml(无序)、cooking(烧炼)、smithing(锻造)、stone_cutting(切石机)、random_cooking(随机烧炼)
 type: 'shaped'
 #配方的结果，使用items:<file_name>:<item_name>格式可以调用插件保存的物品
 result: 'diamond_sword'

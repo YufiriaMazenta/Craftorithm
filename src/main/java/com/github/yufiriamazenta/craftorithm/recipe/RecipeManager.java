@@ -389,19 +389,6 @@ public enum RecipeManager {
             return RecipeType.UNKNOWN;
     }
 
-    public StringLangEntry getRecipeTypeName(RecipeType recipeType) {
-        return switch (recipeType) {
-            case SHAPED -> Languages.RECIPE_TYPE_NAME_SHAPED;
-            case SHAPELESS -> Languages.RECIPE_TYPE_NAME_SHAPELESS;
-            case COOKING -> Languages.RECIPE_TYPE_NAME_COOKING;
-            case SMITHING -> Languages.RECIPE_TYPE_NAME_SMITHING;
-            case STONE_CUTTING -> Languages.RECIPE_TYPE_NAME_STONE_CUTTING;
-            case POTION -> Languages.RECIPE_TYPE_NAME_POTION;
-            case ANVIL -> Languages.RECIPE_TYPE_NAME_ANVIL;
-            default -> null;
-        };
-    }
-
     public void resetRecipes() {
         //删除Craftorithm的配方
         pluginRecipeMap.forEach((type, recipeGroupMaps) -> {
