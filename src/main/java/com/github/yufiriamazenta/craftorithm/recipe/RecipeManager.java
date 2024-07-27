@@ -11,7 +11,6 @@ import com.github.yufiriamazenta.craftorithm.recipe.custom.PotionMixRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import com.github.yufiriamazenta.craftorithm.util.RecipeUtil;
 import crypticlib.CrypticLib;
 import crypticlib.chat.MsgSender;
 import crypticlib.config.ConfigWrapper;
@@ -67,17 +66,17 @@ public enum RecipeManager {
         serverRecipesCache = new ConcurrentHashMap<>();
 
         //设置各类型配方的注册方法
-        recipeRegisterMap.put(RecipeType.SHAPED, RecipeUtil::regRecipe);
+        recipeRegisterMap.put(RecipeType.SHAPED, Bukkit::addRecipe);
         recipeRemoverMap.put(RecipeType.SHAPED, this::removeRecipes);
-        recipeRegisterMap.put(RecipeType.SHAPELESS, RecipeUtil::regRecipe);
+        recipeRegisterMap.put(RecipeType.SHAPELESS, Bukkit::addRecipe);
         recipeRemoverMap.put(RecipeType.SHAPELESS, this::removeRecipes);
-        recipeRegisterMap.put(RecipeType.COOKING, RecipeUtil::regRecipe);
+        recipeRegisterMap.put(RecipeType.COOKING, Bukkit::addRecipe);
         recipeRemoverMap.put(RecipeType.COOKING, this::removeRecipes);
-        recipeRegisterMap.put(RecipeType.STONE_CUTTING, RecipeUtil::regRecipe);
+        recipeRegisterMap.put(RecipeType.STONE_CUTTING, Bukkit::addRecipe);
         recipeRemoverMap.put(RecipeType.STONE_CUTTING, this::removeRecipes);
-        recipeRegisterMap.put(RecipeType.SMITHING, RecipeUtil::regRecipe);
+        recipeRegisterMap.put(RecipeType.SMITHING, Bukkit::addRecipe);
         recipeRemoverMap.put(RecipeType.SMITHING, this::removeRecipes);
-        recipeRegisterMap.put(RecipeType.RANDOM_COOKING, RecipeUtil::regRecipe);
+        recipeRegisterMap.put(RecipeType.RANDOM_COOKING, Bukkit::addRecipe);
         recipeRemoverMap.put(RecipeType.RANDOM_COOKING, this::removeRecipes);
 
         if (PluginConfigs.ENABLE_ANVIL_RECIPE.value()) {
@@ -117,6 +116,9 @@ public enum RecipeManager {
         for (Map.Entry<RecipeType, Map<String, RecipeGroup>> pluginRecipeMapEntry : pluginRecipeMap.entrySet()) {
             Map<String, RecipeGroup> recipeGroupMap = pluginRecipeMapEntry.getValue();
             recipeGroupMap.forEach((recipeGroupName, recipeGroup) -> loadRecipeGroup(recipeGroup));
+        }
+        if (CrypticLib.isPaper()) {
+            Bukkit.updateRecipes();
         }
     }
 
