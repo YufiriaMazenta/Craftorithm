@@ -9,11 +9,13 @@ import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import crypticlib.CrypticLib;
 import crypticlib.config.ConfigWrapper;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.menu.StoredMenu;
 import crypticlib.util.FileUtil;
 import crypticlib.util.ItemUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -111,6 +113,9 @@ public abstract class RecipeCreator extends StoredMenu {
         RecipeManager.INSTANCE.addRecipeGroup(recipeGroup);
         for (RecipeRegistry recipeRegistry : RecipeFactory.newRecipeRegistry(recipeConfig.config(), recipeName)) {
             recipeRegistry.register();
+        }
+        if (CrypticLib.isPaper()) {
+            Bukkit.updateRecipes();
         }
     }
 
