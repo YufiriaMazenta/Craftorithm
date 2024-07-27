@@ -43,7 +43,7 @@ public enum SmithingHandler implements Listener {
         if (id == null) {
             return;
         }
-        ItemStack refreshItem = ItemManager.INSTANCE.matchItem(id, (Player) event.getViewers().getFirst());
+        ItemStack refreshItem = ItemManager.INSTANCE.matchItem(id, (Player) event.getViewers().get(0));
         if (item.isSimilar(refreshItem)) {
             return;
         }

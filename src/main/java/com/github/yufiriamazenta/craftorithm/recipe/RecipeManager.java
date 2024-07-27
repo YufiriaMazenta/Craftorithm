@@ -201,20 +201,13 @@ public enum RecipeManager {
     }
 
     public NamespacedKey getRecipeKey(Recipe recipe) {
-        switch (recipe) {
-            case null -> {
-                return null;
-            }
-            case CustomRecipe customRecipe -> {
-                return customRecipe.key();
-            }
-            case Keyed keyed -> {
-                return keyed.getKey();
-            }
-            default -> {
-                MsgSender.info("&e[WARN] Can not get key of recipe " + recipe);
-                return null;
-            }
+        if (recipe instanceof CustomRecipe customRecipe) {
+            return customRecipe.key();
+        } else if (recipe instanceof Keyed keyed) {
+            return keyed.getKey();
+        } else {
+            MsgSender.info("&e[WARN] Can not get key of recipe " + recipe);
+            return null;
         }
     }
 
@@ -375,16 +368,22 @@ public enum RecipeManager {
     }
 
     public RecipeType getRecipeType(Recipe recipe) {
-        return switch (recipe) {
-            case ShapedRecipe shapedRecipe -> RecipeType.SHAPED;
-            case ShapelessRecipe shapelessRecipe -> RecipeType.SHAPELESS;
-            case CookingRecipe<?> cookingRecipe -> RecipeType.COOKING;
-            case SmithingRecipe smithingRecipe -> RecipeType.SMITHING;
-            case StonecuttingRecipe stonecuttingRecipe -> RecipeType.STONE_CUTTING;
-            case PotionMixRecipe potionMixRecipe -> RecipeType.POTION;
-            case AnvilRecipe anvilRecipe -> RecipeType.ANVIL;
-            case null, default -> RecipeType.UNKNOWN;
-        };
+        if (recipe instanceof ShapedRecipe)
+            return RecipeType.SHAPED;
+        else if (recipe instanceof ShapelessRecipe)
+            return RecipeType.SHAPELESS;
+        else if (recipe instanceof CookingRecipe<?>)
+            return RecipeType.COOKING;
+        else if (recipe instanceof SmithingRecipe)
+            return RecipeType.SMITHING;
+        else if (recipe instanceof PotionMixRecipe)
+            return RecipeType.POTION;
+        else if (recipe instanceof StonecuttingRecipe)
+            return RecipeType.STONE_CUTTING;
+        else if (recipe instanceof AnvilRecipe)
+            return RecipeType.ANVIL;
+        else
+            return RecipeType.UNKNOWN;
     }
 
     public StringLangEntry getRecipeTypeName(RecipeType recipeType) {
