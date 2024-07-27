@@ -83,7 +83,11 @@ public enum AnvilHandler implements Listener {
                         return true;
                     }
                 });
-                resultMeta.removeEnchantments();
+                resultMeta.getEnchants().forEach(
+                    (enchant, level) -> {
+                        resultMeta.removeEnchant(enchant);
+                    }
+                );
                 resultEnchantments.forEach((enchant, level) -> {
                     resultMeta.addEnchant(enchant, level, true);
                 });
@@ -94,7 +98,7 @@ public enum AnvilHandler implements Listener {
         //刷新物品
         String resultId = ItemManager.INSTANCE.matchItemName(result, false);
         if (resultId != null) {
-            ItemStack refreshItem = ItemManager.INSTANCE.matchItem(resultId, (Player) event.getViewers().getFirst());
+            ItemStack refreshItem = ItemManager.INSTANCE.matchItem(resultId, (Player) event.getViewers().get(0));
             result.setItemMeta(refreshItem.getItemMeta());
         }
         event.setResult(result);
