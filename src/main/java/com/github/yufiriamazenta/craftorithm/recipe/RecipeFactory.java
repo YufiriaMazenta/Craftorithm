@@ -6,7 +6,6 @@ import com.github.yufiriamazenta.craftorithm.exception.UnsupportedVersionExcepti
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.impl.*;
-import crypticlib.CrypticLib;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
@@ -258,11 +257,12 @@ public class RecipeFactory {
         ItemStack result = getResultItem(config);
         RecipeChoice base = getRecipeChoice(config.getString("source.base", ""));
         RecipeChoice addition = getRecipeChoice(config.getString("source.addition", ""));
-        boolean copyNbt = config.getBoolean("source.copy_nbt", true);
+        boolean copyNbt = config.getBoolean("source.copy_nbt", false);
+        boolean copyEnchantments = config.getBoolean("source.copy_enchantments", true);
         RecipeRegistry recipeRegistry;
         RecipeChoice template = getRecipeChoice(config.getString("source.template", ""));
-        XSmithingRecipeRegistry.SmithingType type = XSmithingRecipeRegistry.SmithingType.valueOf(config.getString("source.type", "default").toUpperCase());
-        recipeRegistry = new XSmithingRecipeRegistry(key, namespacedKey, result).setSmithingType(type).setTemplate(template).setBase(base).setAddition(addition).setCopyNbt(copyNbt);
+        SmithingRecipeRegistry.SmithingType type = SmithingRecipeRegistry.SmithingType.valueOf(config.getString("source.type", "default").toUpperCase());
+        recipeRegistry = new SmithingRecipeRegistry(key, namespacedKey, result).setSmithingType(type).setTemplate(template).setBase(base).setAddition(addition).setCopyNbt(copyNbt).setCopyEnchantments(copyEnchantments);
         return Collections.singletonList(recipeRegistry);
     }
 
@@ -276,14 +276,15 @@ public class RecipeFactory {
             NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.instance(), fullKey);
             RecipeChoice base = getRecipeChoice((String) map.get("base"));
             RecipeChoice addition = getRecipeChoice((String) map.get("addition"));
-            boolean copyNbt = map.containsKey("copy_nbt") ? (Boolean) map.get("copy_nbt") : true;
+            boolean copyNbt = map.containsKey("copy_nbt") ? (Boolean) map.get("copy_nbt") : false;
+            boolean copyEnchantments = map.containsKey("copy_enchantments") ? (Boolean) map.get("copy_enchantments") : true;
             String typeStr = (String) map.get("type");
             if (typeStr == null) {
                 typeStr = "DEFAULT";
             }
             RecipeChoice template = getRecipeChoice((String) map.get("template"));
-            XSmithingRecipeRegistry.SmithingType type = XSmithingRecipeRegistry.SmithingType.valueOf(typeStr.toUpperCase());
-            recipeRegistries.add(new XSmithingRecipeRegistry(key, namespacedKey, result).setSmithingType(type).setTemplate(template).setBase(base).setAddition(addition).setCopyNbt(copyNbt));
+            SmithingRecipeRegistry.SmithingType type = SmithingRecipeRegistry.SmithingType.valueOf(typeStr.toUpperCase());
+            recipeRegistries.add(new SmithingRecipeRegistry(key, namespacedKey, result).setSmithingType(type).setTemplate(template).setBase(base).setAddition(addition).setCopyNbt(copyNbt).setCopyEnchantments(copyEnchantments));
         }
         return recipeRegistries;
     }

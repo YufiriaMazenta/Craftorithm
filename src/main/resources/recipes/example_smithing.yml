@@ -6,3 +6,4 @@ source:
     addition: 'command_block'
     type: transform
     template: diamond
+    copy_enchantments: true

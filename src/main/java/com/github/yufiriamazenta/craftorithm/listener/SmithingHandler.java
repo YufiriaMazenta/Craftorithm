@@ -4,11 +4,13 @@ import com.github.yufiriamazenta.craftorithm.CraftorithmAPI;
 import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
+import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import crypticlib.listener.BukkitListener;
 import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,15 +20,18 @@ import org.bukkit.event.inventory.PrepareSmithingEvent;
 import org.bukkit.event.inventory.SmithItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @BukkitListener
 public enum SmithingHandler implements Listener {
 
     INSTANCE;
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void refreshResult(PrepareSmithingEvent event) {
         if (event.getResult() == null)
             return;
@@ -38,21 +43,45 @@ public enum SmithingHandler implements Listener {
             return;
         }
 
-        ItemStack item = event.getResult();
-        String id = ItemManager.INSTANCE.matchItemName(item, false);
-        if (id == null) {
-            return;
+        ItemStack result = event.getResult();
+        String id = ItemManager.INSTANCE.matchItemName(result, false);
+        if (id != null) {
+            ItemStack refreshItem = ItemManager.INSTANCE.matchItem(id, (Player) event.getViewers().get(0));
+            if (!result.isSimilar(refreshItem)) {
+                result.setItemMeta(refreshItem.getItemMeta());
+            }
         }
-        ItemStack refreshItem = ItemManager.INSTANCE.matchItem(id, (Player) event.getViewers().get(0));
-        if (item.isSimilar(refreshItem)) {
-            return;
+
+        boolean copyEnchantment = RecipeManager.INSTANCE.getSmithingCopyEnchantment(recipe);
+        if (copyEnchantment) {
+            ItemStack base = event.getInventory().getItem(1);
+            if (base.hasItemMeta()) {
+                Map<Enchantment, Integer> baseEnchantments = base.getItemMeta().getEnchants();
+                ItemMeta resultMeta = result.getItemMeta();
+                Map<Enchantment, Integer> resultEnchantments = new HashMap<>(resultMeta.getEnchants());
+                CollectionsUtil.putAllIf(resultEnchantments, baseEnchantments, (type, level) -> {
+                    if (resultEnchantments.containsKey(type)) {
+                        return level > resultEnchantments.get(type);
+                    } else {
+                        return true;
+                    }
+                });
+                resultMeta.getEnchants().forEach(
+                    (enchant, level) -> {
+                        resultMeta.removeEnchant(enchant);
+                    }
+                );
+                resultEnchantments.forEach((enchant, level) -> {
+                    resultMeta.addEnchant(enchant, level, true);
+                });
+                result.setItemMeta(resultMeta);
+            }
         }
-        item.setItemMeta(refreshItem.getItemMeta());
-        event.setResult(item);
-        event.getInventory().setResult(item);
+        event.setResult(result);
+        event.getInventory().setResult(result);
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void runConditions(PrepareSmithingEvent event) {
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(event.getInventory().getRecipe());
         if (recipeKey == null)

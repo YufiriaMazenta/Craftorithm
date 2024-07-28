@@ -5,23 +5,32 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import crypticlib.CrypticLib;
 import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.RecipeChoice;
-import org.bukkit.inventory.SmithingRecipe;
+import org.bukkit.inventory.*;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-/**
- * 1.20以下的锻造台配方注册器
- */
 public class SmithingRecipeRegistry extends RecipeRegistry {
 
+    private RecipeChoice template;
+    private SmithingType smithingType;
     private RecipeChoice base, addition;
-    protected boolean copyNbt = true;
+    protected boolean copyNbt = false;
+    protected boolean copyEnchantments = true;
 
-    public SmithingRecipeRegistry(@NotNull String recipeGroup, @NotNull NamespacedKey namespacedKey, ItemStack result) {
+    public SmithingRecipeRegistry(@NotNull String recipeGroup, @NotNull NamespacedKey namespacedKey, @Nullable ItemStack result) {
         super(recipeGroup, namespacedKey, result);
+        this.smithingType = SmithingType.TRANSFORM;
+    }
+
+    public RecipeChoice template() {
+        return template;
+    }
+
+    public SmithingRecipeRegistry setTemplate(RecipeChoice template) {
+        this.template = template;
+        return this;
     }
 
     public RecipeChoice base() {
@@ -44,7 +53,10 @@ public class SmithingRecipeRegistry extends RecipeRegistry {
 
     public boolean copyNbt() {
         //因为1.20.6开始Paper对组件的处理与NBT不同，所以需要倒转此属性
-        return !copyNbt;
+        if (CrypticLib.minecraftVersion() >= 12005)
+            return !copyNbt;
+        else
+            return copyNbt;
     }
 
     public SmithingRecipeRegistry setCopyNbt(boolean copyNbt) {
@@ -52,18 +64,50 @@ public class SmithingRecipeRegistry extends RecipeRegistry {
         return this;
     }
 
+    public boolean copyEnchantments() {
+        return copyEnchantments;
+    }
+
+    public SmithingRecipeRegistry setCopyEnchantments(boolean copyEnchantments) {
+        this.copyEnchantments = copyEnchantments;
+        return this;
+    }
+
     @Override
     public void register() {
         Objects.requireNonNull(namespacedKey(), "Recipe key cannot be null");
-        Objects.requireNonNull(result(), "Recipe result cannot be null");
-        Objects.requireNonNull(base, "Recipe base cannot be null");
-        Objects.requireNonNull(addition, "Recipe addition cannot be null");
+        Objects.requireNonNull(base(), "Recipe base cannot be null");
+        Objects.requireNonNull(addition(), "Recipe addition cannot be null");
+        Objects.requireNonNull(template, "Recipe template cannot be null");
 
         SmithingRecipe smithingRecipe;
-        if (CrypticLib.isPaper())
-            smithingRecipe = new SmithingRecipe(namespacedKey(), result(), base, addition, copyNbt);
-        else
-            smithingRecipe = new SmithingRecipe(namespacedKey(), result(), base, addition);
+        if (Objects.requireNonNull(smithingType) == SmithingType.TRIM) {
+            if (CrypticLib.isPaper())
+                smithingRecipe = new SmithingTrimRecipe(namespacedKey(), template, base(), addition(), copyNbt());
+            else
+                smithingRecipe = new SmithingTrimRecipe(namespacedKey(), template, base(), addition());
+        } else {
+            Objects.requireNonNull(result(), "Recipe result cannot be null");
+            if (CrypticLib.isPaper())
+                smithingRecipe = new SmithingTransformRecipe(namespacedKey(), result(), template, base(), addition(), copyNbt());
+            else
+                smithingRecipe = new SmithingTransformRecipe(namespacedKey(), result(), template, base(), addition());
+        }
+
         RecipeManager.INSTANCE.regRecipe(group(), smithingRecipe, RecipeType.SMITHING);
     }
+
+    public SmithingType smithingType() {
+        return smithingType;
+    }
+
+    public SmithingRecipeRegistry setSmithingType(SmithingType smithingType) {
+        this.smithingType = smithingType;
+        return this;
+    }
+
+    public enum SmithingType {
+        TRIM, TRANSFORM
+    }
+
 }
