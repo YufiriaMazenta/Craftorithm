@@ -9,10 +9,10 @@ import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.CustomRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.PotionMixRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
+import com.github.yufiriamazenta.craftorithm.recipe.registry.impl.SmithingRecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.CrypticLib;
-import crypticlib.chat.MsgSender;
 import crypticlib.config.ConfigWrapper;
 import crypticlib.lang.entry.StringLangEntry;
 import crypticlib.platform.IPlatform;
@@ -36,6 +36,7 @@ public enum RecipeManager {
     public final File RECIPE_FILE_FOLDER = new File(Craftorithm.instance().getDataFolder().getPath(), "recipes");
     private final ConfigWrapper removedRecipesConfigWrapper = new ConfigWrapper(Craftorithm.instance(), "removed_recipes.yml");
     public final String PLUGIN_RECIPE_NAMESPACE = "craftorithm";
+    private final Map<NamespacedKey, RecipeRegistry> recipeRegistryMap = new ConcurrentHashMap<>();
     private final Map<RecipeType, Map<String, RecipeGroup>> pluginRecipeMap;
     private final Map<RecipeType, Consumer<Recipe>> recipeRegisterMap;
     private final Map<RecipeType, Consumer<List<NamespacedKey>>> recipeRemoverMap;
@@ -45,14 +46,7 @@ public enum RecipeManager {
     private final Map<NamespacedKey, PotionMixRecipe> potionMixRecipeMap;
     private final Map<NamespacedKey, AnvilRecipe> anvilRecipeMap;
     public static final List<RecipeType> UNLOCKABLE_RECIPE_TYPE =
-        Collections.unmodifiableList(Arrays.asList(
-            RecipeType.SHAPED,
-            RecipeType.SHAPELESS,
-            RecipeType.COOKING,
-            RecipeType.SMITHING,
-            RecipeType.STONE_CUTTING,
-            RecipeType.RANDOM_COOKING
-        ));
+        List.of(RecipeType.SHAPED, RecipeType.SHAPELESS, RecipeType.COOKING, RecipeType.SMITHING, RecipeType.STONE_CUTTING, RecipeType.RANDOM_COOKING);
     private boolean supportPotionMix;
 
     RecipeManager() {
@@ -130,6 +124,7 @@ public enum RecipeManager {
             }
             for (RecipeRegistry recipeRegistry : RecipeFactory.newRecipeRegistry(config, recipeGroup.groupName())) {
                 recipeRegistry.register();
+                recipeRegistryMap.put(recipeRegistry.namespacedKey(), recipeRegistry);
                 if (UNLOCKABLE_RECIPE_TYPE.contains(recipeGroup.recipeType())) {
                     recipeUnlockMap.put(recipeRegistry.namespacedKey(), recipeGroup.unlock());
                 }
@@ -202,13 +197,13 @@ public enum RecipeManager {
         return Bukkit.getRecipe(namespacedKey);
     }
 
-    public NamespacedKey getRecipeKey(Recipe recipe) {
+    public @Nullable NamespacedKey getRecipeKey(Recipe recipe) {
         if (recipe instanceof CustomRecipe customRecipe) {
             return customRecipe.key();
         } else if (recipe instanceof Keyed keyed) {
             return keyed.getKey();
         } else {
-            MsgSender.info("&e[WARN] Can not get key of recipe " + recipe);
+//            MsgSender.info("&e[WARN] Can not get key of recipe " + recipe);
             return null;
         }
     }
@@ -399,6 +394,19 @@ public enum RecipeManager {
             case ANVIL -> Languages.RECIPE_TYPE_NAME_ANVIL;
             default -> null;
         };
+    }
+
+    public boolean getSmithingCopyEnchantment(Recipe recipe) {
+        if (!(recipe instanceof SmithingRecipe))
+            return false;
+        NamespacedKey namespacedKey = getRecipeKey(recipe);
+        if (namespacedKey == null)
+            return false;
+        RecipeRegistry recipeRegistry = recipeRegistryMap.get(namespacedKey);
+        if (!(recipeRegistry instanceof SmithingRecipeRegistry smithingRecipeRegistry)) {
+            return false;
+        }
+        return smithingRecipeRegistry.copyEnchantments();
     }
 
     public void resetRecipes() {

@@ -67,6 +67,11 @@ public enum AnvilHandler implements Listener {
 
         //正常合成流程
         ItemStack result = anvilRecipe.result();
+        String resultId = ItemManager.INSTANCE.matchItemName(result, false);
+        if (resultId != null) {
+            ItemStack refreshItem = ItemManager.INSTANCE.matchItem(resultId, (Player) event.getViewers().get(0));
+            result.setItemMeta(refreshItem.getItemMeta());
+        }
         if (anvilRecipe.copyNbt()) {
             if (base.hasItemMeta())
                 result.setItemMeta(base.getItemMeta());
@@ -96,11 +101,7 @@ public enum AnvilHandler implements Listener {
         }
         event.getInventory().setRepairCost(anvilRecipe.costLevel());
         //刷新物品
-        String resultId = ItemManager.INSTANCE.matchItemName(result, false);
-        if (resultId != null) {
-            ItemStack refreshItem = ItemManager.INSTANCE.matchItem(resultId, (Player) event.getViewers().get(0));
-            result.setItemMeta(refreshItem.getItemMeta());
-        }
+
         event.setResult(result);
         event.getInventory().setItem(2, result);
     }

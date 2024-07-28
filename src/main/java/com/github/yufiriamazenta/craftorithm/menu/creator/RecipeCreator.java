@@ -111,9 +111,7 @@ public abstract class RecipeCreator extends StoredMenu {
     public void regRecipeGroup(ConfigWrapper recipeConfig) {
         RecipeGroup recipeGroup = new RecipeGroup(recipeName, recipeType(), recipeConfig);
         RecipeManager.INSTANCE.addRecipeGroup(recipeGroup);
-        for (RecipeRegistry recipeRegistry : RecipeFactory.newRecipeRegistry(recipeConfig.config(), recipeName)) {
-            recipeRegistry.register();
-        }
+        RecipeManager.INSTANCE.loadRecipeGroup(recipeGroup);
         if (CrypticLib.isPaper()) {
             Bukkit.updateRecipes();
         }
