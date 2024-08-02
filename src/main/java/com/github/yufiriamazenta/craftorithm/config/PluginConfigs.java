@@ -19,5 +19,6 @@ public class PluginConfigs {
     public final static BooleanConfigEntry RELEASE_DEFAULT_RECIPES = new BooleanConfigEntry("release_default_recipes", false);
     public final static BooleanConfigEntry ENABLE_ANVIL_RECIPE = new BooleanConfigEntry("enable_anvil_recipe", true);
     public final static BooleanConfigEntry RELOAD_WHEN_IA_RELOAD = new BooleanConfigEntry("reload_when_ia_reload", true);
+    public final static BooleanConfigEntry DEBUG = new BooleanConfigEntry("debug", false);
 
 }

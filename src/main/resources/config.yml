@@ -15,3 +15,5 @@ bstats: true
 release_default_recipes: false
 #是否在ItemsAdder重载时也重载Craftorithm
 reload_when_ia_reload: true
+#是否开启调试
+debug: true

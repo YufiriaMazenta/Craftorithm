@@ -35,6 +35,7 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
             MsgSender.info("&c[Craftorithm] Unsupported Version");
             throw new UnsupportedVersionException();
         }
+        CrypticLib.setDebug(PluginConfigs.DEBUG.value());
         ItemManager.INSTANCE.loadItemManager();
         regListeners();
         initArcenciel();
