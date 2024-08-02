@@ -3,12 +3,14 @@ package com.github.yufiriamazenta.craftorithm.cmd.sub;
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
+import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.item.impl.CraftorithmItemProvider;
 import com.github.yufiriamazenta.craftorithm.listener.OtherPluginsListenerProxy;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import crypticlib.CrypticLib;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
@@ -35,6 +37,7 @@ public final class ReloadCommand extends AbstractSubCommand {
 
     public static void reloadPlugin() {
         reloadConfigs();
+        CrypticLib.setDebug(PluginConfigs.DEBUG.value());
         CraftorithmItemProvider.INSTANCE.reloadItemProvider();
         ItemManager.INSTANCE.reloadCustomCookingFuel();
         RecipeManager.INSTANCE.reloadRecipeManager();

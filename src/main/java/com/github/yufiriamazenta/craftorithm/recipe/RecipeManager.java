@@ -349,8 +349,8 @@ public enum RecipeManager {
         String additionId = ItemManager.INSTANCE.matchItemName(addition, true);
         for (Map.Entry<NamespacedKey, AnvilRecipe> anvilRecipeEntry : anvilRecipeMap.entrySet()) {
             AnvilRecipe anvilRecipe = anvilRecipeEntry.getValue();
-            String recipeBaseId = ItemManager.INSTANCE.matchItemName(base, true);
-            String recipeAdditionId = ItemManager.INSTANCE.matchItemName(addition, true);
+            String recipeBaseId = ItemManager.INSTANCE.matchItemName(anvilRecipe.base(), true);
+            String recipeAdditionId = ItemManager.INSTANCE.matchItemName(anvilRecipe.addition(), true);
             if (!Objects.equals(baseId, recipeBaseId))
                 continue;
             if (base.getAmount() < anvilRecipe.base().getAmount())

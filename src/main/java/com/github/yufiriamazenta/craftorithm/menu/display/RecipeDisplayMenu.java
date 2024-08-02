@@ -7,13 +7,16 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.PotionMixRecipe;
 import crypticlib.CrypticLib;
+import crypticlib.chat.MsgSender;
 import crypticlib.chat.TextProcessor;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.menu.Menu;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.*;
 import org.jetbrains.annotations.NotNull;
@@ -102,6 +105,17 @@ public class RecipeDisplayMenu extends Menu {
             inventory.setItem(slot, slotMap.get(slot).display());
         }
         return inventory;
+    }
+
+    @Override
+    public Icon onClick(int slot, InventoryClickEvent event) {
+        MsgSender.debug(event.getClick().name());
+        return super.onClick(slot, event);
+    }
+
+    @Override
+    public void onDrag(InventoryDragEvent event) {
+        event.setCancelled(true);
     }
 
     public void setShapedRecipeMenu() {
