@@ -13,6 +13,7 @@ import com.github.yufiriamazenta.craftorithm.recipe.registry.impl.SmithingRecipe
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import crypticlib.CrypticLib;
+import crypticlib.chat.MsgSender;
 import crypticlib.config.ConfigWrapper;
 import crypticlib.lang.entry.StringLangEntry;
 import crypticlib.platform.IPlatform;
@@ -346,19 +347,30 @@ public enum RecipeManager {
     @Nullable
     public AnvilRecipe matchAnvilRecipe(ItemStack base, ItemStack addition) {
         String baseId = ItemManager.INSTANCE.matchItemName(base, true);
+        baseId = baseId != null ? baseId : base.getType().getKey().toString();
         String additionId = ItemManager.INSTANCE.matchItemName(addition, true);
+        additionId = additionId != null ? additionId : addition.getType().getKey().toString();
+
+        MsgSender.debug("base: " + baseId + ", addition: " + additionId);
         for (Map.Entry<NamespacedKey, AnvilRecipe> anvilRecipeEntry : anvilRecipeMap.entrySet()) {
             AnvilRecipe anvilRecipe = anvilRecipeEntry.getValue();
             String recipeBaseId = ItemManager.INSTANCE.matchItemName(anvilRecipe.base(), true);
+            recipeBaseId = recipeBaseId != null ? recipeBaseId : anvilRecipe.base().getType().getKey().toString();
             String recipeAdditionId = ItemManager.INSTANCE.matchItemName(anvilRecipe.addition(), true);
+            recipeAdditionId = recipeAdditionId != null ? recipeAdditionId : anvilRecipe.addition().getType().getKey().toString();
+            MsgSender.debug("recipe base: " + recipeBaseId + ", recipe addition: " + recipeAdditionId);
             if (!Objects.equals(baseId, recipeBaseId))
                 continue;
+            MsgSender.debug("matched base id");
             if (base.getAmount() < anvilRecipe.base().getAmount())
                 continue;
+            MsgSender.debug("matched base amount");
             if (!Objects.equals(additionId, recipeAdditionId))
                 continue;
+            MsgSender.debug("matched addition id");
             if (addition.getAmount() < anvilRecipe.addition().getAmount())
                 continue;
+            MsgSender.debug("matched addition amount");
             return anvilRecipe;
         }
         return null;

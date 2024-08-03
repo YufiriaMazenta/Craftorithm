@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 public class SmithingRecipeCreator extends UnlockableRecipeCreator {
 
@@ -40,16 +41,16 @@ public class SmithingRecipeCreator extends UnlockableRecipeCreator {
                         "####B####"
                     ),
                     () -> {
-                        Map<Character, Icon> layoutMap = new HashMap<>();
-                        layoutMap.put('#', getFrameIcon());
-                        layoutMap.put('*', new Icon(
+                        Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
+                        layoutMap.put('#', this::getFrameIcon);
+                        layoutMap.put('*', () -> new Icon(
                             Material.CYAN_STAINED_GLASS_PANE,
                             Languages.MENU_RECIPE_CREATOR_ICON_SMITHING_FRAME.value(player)
                         ));
-                        layoutMap.put('%', getResultFrameIcon());
-                        layoutMap.put('F', getUnlockIcon());
-                        layoutMap.put('B', getCopyNbtIcon());
-                        layoutMap.put('A', new Icon(
+                        layoutMap.put('%', this::getResultFrameIcon);
+                        layoutMap.put('F', this::getUnlockIcon);
+                        layoutMap.put('B', this::getCopyNbtIcon);
+                        layoutMap.put('A', () -> new Icon(
                             Material.SMITHING_TABLE,
                             Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(player)
                             ).setClickAction(

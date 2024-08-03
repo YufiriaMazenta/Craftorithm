@@ -16,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 public class StoneCuttingRecipeCreator extends UnlockableRecipeCreator {
 
@@ -31,10 +32,10 @@ public class StoneCuttingRecipeCreator extends UnlockableRecipeCreator {
                     "#       #",
                     "#########"
                 ), () -> {
-                    Map<Character, Icon> layoutMap = new HashMap<>();
-                    layoutMap.put('#', getFrameIcon());
-                    layoutMap.put('F', getUnlockIcon());
-                    layoutMap.put('A', new Icon(
+                    Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
+                    layoutMap.put('#', this::getFrameIcon);
+                    layoutMap.put('F', this::getUnlockIcon);
+                    layoutMap.put('A', () -> new Icon(
                         Material.STONECUTTER,
                         Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(player)
                         ).setClickAction(

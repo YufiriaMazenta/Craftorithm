@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 public class CookingRecipeGroupEditor extends UnlockableRecipeGroupEditor {
 
@@ -40,13 +41,13 @@ public class CookingRecipeGroupEditor extends UnlockableRecipeGroupEditor {
                         "#########"
                     ),
                     () -> {
-                        Map<Character, Icon> layoutMap = new HashMap<>();
-                        layoutMap.put('A', getSortIdEditIcon(3));
-                        layoutMap.put('B', getUnlockIcon());
-                        layoutMap.put('#', getFrameIcon());
-                        layoutMap.put('X', getPreviousIcon());
-                        layoutMap.put('Y', getNextIcon());
-                        layoutMap.put('Z', getRemoveIcon());
+                        Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
+                        layoutMap.put('A', () -> getSortIdEditIcon(3));
+                        layoutMap.put('B', this::getUnlockIcon);
+                        layoutMap.put('#', this::getFrameIcon);
+                        layoutMap.put('X', this::getPreviousIcon);
+                        layoutMap.put('Y', this::getNextIcon);
+                        layoutMap.put('Z', this::getRemoveIcon);
                         return layoutMap;
                     }
                 )

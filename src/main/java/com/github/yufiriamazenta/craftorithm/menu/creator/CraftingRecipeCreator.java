@@ -17,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 public class CraftingRecipeCreator extends UnlockableRecipeCreator {
 
@@ -35,11 +36,11 @@ public class CraftingRecipeCreator extends UnlockableRecipeCreator {
                 "#   #***#",
                 "#########"
             ), () -> {
-                Map<Character, Icon> layoutMap = new HashMap<>();
-                layoutMap.put('#', getFrameIcon());
-                layoutMap.put('*', getResultFrameIcon());
-                layoutMap.put('F', getUnlockIcon());
-                layoutMap.put('A', new Icon(
+                Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
+                layoutMap.put('#', this::getFrameIcon);
+                layoutMap.put('*', this::getResultFrameIcon);
+                layoutMap.put('F', this::getUnlockIcon);
+                layoutMap.put('A', () -> new Icon(
                     Material.CRAFTING_TABLE,
                     Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(player)
                     ).setClickAction(event -> {

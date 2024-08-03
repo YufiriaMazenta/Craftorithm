@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 public class AnvilRecipeGroupEditor extends RecipeGroupEditor {
 
@@ -39,12 +40,12 @@ public class AnvilRecipeGroupEditor extends RecipeGroupEditor {
                         "#########"
                     ),
                     () -> {
-                        Map<Character, Icon> iconMap = new HashMap<>();
-                        iconMap.put('#', getFrameIcon());
-                        iconMap.put('A', getSortIdEditIcon(4));
-                        iconMap.put('X', getPreviousIcon());
-                        iconMap.put('Y', getNextIcon());
-                        iconMap.put('Z', getRemoveIcon());
+                        Map<Character, Supplier<Icon>> iconMap = new HashMap<>();
+                        iconMap.put('#', this::getFrameIcon);
+                        iconMap.put('A', () -> getSortIdEditIcon(4));
+                        iconMap.put('X', this::getPreviousIcon);
+                        iconMap.put('Y', this::getNextIcon);
+                        iconMap.put('Z', this::getRemoveIcon);
                         //TODO condition和action
                         return iconMap;
                     }
