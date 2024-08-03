@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class StoneCuttingRecipeGroupEditor extends UnlockableRecipeGroupEditor {
 
@@ -24,10 +25,10 @@ public class StoneCuttingRecipeGroupEditor extends UnlockableRecipeGroupEditor {
                         "ABCDEFGHI"
                     ),
                     () -> {
-                        Map<Character, Icon> iconMap = new HashMap<>();
-                        iconMap.put('A', getSortIdEditIcon(0));
-                        iconMap.put('B', getUnlockIcon());
-                        iconMap.put('I', getRemoveIcon());
+                        Map<Character, Supplier<Icon>> iconMap = new HashMap<>();
+                        iconMap.put('A', () -> getSortIdEditIcon(0));
+                        iconMap.put('B', this::getUnlockIcon);
+                        iconMap.put('I', this::getRemoveIcon);
                         return iconMap;
                     }
                 )

@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 public class PotionMixCreator extends RecipeCreator {
 
@@ -34,14 +35,14 @@ public class PotionMixCreator extends RecipeCreator {
                     "#***#%%%#",
                     "#########"
                 ), () -> {
-                    Map<Character, Icon> layoutMap = new HashMap<>();
-                    layoutMap.put('#', getFrameIcon());
-                    layoutMap.put('%', getResultFrameIcon());
-                    layoutMap.put('*', new Icon(
+                    Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
+                    layoutMap.put('#', this::getFrameIcon);
+                    layoutMap.put('%', this::getResultFrameIcon);
+                    layoutMap.put('*', () -> new Icon(
                         Material.CYAN_STAINED_GLASS_PANE,
                         Languages.MENU_RECIPE_CREATOR_ICON_POTION_FRAME.value(player)
                     ));
-                    layoutMap.put('A', new Icon(
+                    layoutMap.put('A', () -> new Icon(
                         Material.BREWING_STAND,
                         Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(player)
                         ).setClickAction(

@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 public class AnvilRecipeCreator extends RecipeCreator {
 
@@ -50,13 +51,13 @@ public class AnvilRecipeCreator extends RecipeCreator {
                     "#***#%%%#",
                     "#########"
                 ), () -> {
-                    Map<Character, Icon> layoutMap = new HashMap<>();
-                    layoutMap.put('#', getFrameIcon());
-                    layoutMap.put('%', getResultFrameIcon());
-                    layoutMap.put('*', new Icon(Material.CYAN_STAINED_GLASS_PANE, Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_FRAME.value(player)));
-                    layoutMap.put('B', getCopyNbtIcon());
-                    layoutMap.put('C', getCostLevelIcon());
-                    layoutMap.put('A', new Icon(Material.ANVIL, Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(player))
+                    Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
+                    layoutMap.put('#', this::getFrameIcon);
+                    layoutMap.put('%', this::getResultFrameIcon);
+                    layoutMap.put('*', () -> new Icon(Material.CYAN_STAINED_GLASS_PANE, Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_FRAME.value(player)));
+                    layoutMap.put('B', this::getCopyNbtIcon);
+                    layoutMap.put('C', this::getCostLevelIcon);
+                    layoutMap.put('A', () -> new Icon(Material.ANVIL, Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(player))
                         .setClickAction(
                             event -> {
                                 StoredMenu creator = (StoredMenu) event.getClickedInventory().getHolder();

@@ -7,6 +7,7 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import crypticlib.listener.BukkitListener;
+import crypticlib.util.InventoryUtil;
 import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -90,7 +91,8 @@ public enum SmithingHandler implements Listener {
         if (config == null)
             return;
 
-        Player player = (Player) event.getView().getPlayer();
+        Object inventoryView = InventoryUtil.getInventoryView(event);
+        Player player = (Player) InventoryUtil.getInventoryViewPlayer(inventoryView);
         String condition = config.getString("condition", "true");
         condition = "if " + condition;
         boolean result = (boolean) ArcencielDispatcher.INSTANCE.dispatchArcencielBlock(player, condition).obj();

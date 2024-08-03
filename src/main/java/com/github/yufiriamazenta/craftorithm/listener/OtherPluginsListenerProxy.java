@@ -525,7 +525,7 @@ public enum OtherPluginsListenerProxy implements Listener {
         for (RegisteredListener prepareCraftIAListener : registeredListeners) {
             try {
                 getRegisteredListenerExecutor(prepareCraftIAListener).execute(prepareCraftIAListener.getListener(), event);
-            } catch (EventException e) {
+            } catch (Throwable e) {
                 e.printStackTrace();
                 break;
             }

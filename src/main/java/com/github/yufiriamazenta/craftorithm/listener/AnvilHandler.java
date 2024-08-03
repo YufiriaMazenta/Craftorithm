@@ -9,8 +9,8 @@ import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import crypticlib.listener.BukkitListener;
+import crypticlib.util.InventoryUtil;
 import crypticlib.util.ItemUtil;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -53,7 +53,8 @@ public enum AnvilHandler implements Listener {
         //进行condition判断
         YamlConfiguration config = RecipeManager.INSTANCE.getRecipeConfig(anvilRecipe.key());
         if (config != null) {
-            Player player = (Player) event.getView().getPlayer();
+            Object inventoryView = InventoryUtil.getInventoryView(event);
+            Player player = (Player) InventoryUtil.getInventoryViewPlayer(inventoryView);
             String condition = config.getString("condition", "true");
             condition = "if " + condition;
             boolean conditionResult = (boolean) ArcencielDispatcher.INSTANCE.dispatchArcencielBlock(player, condition).obj();
@@ -147,7 +148,7 @@ public enum AnvilHandler implements Listener {
                 if (ItemUtil.isAir(cursor)) {
                     base.setAmount(baseNum - needBaseNum);
                     addition.setAmount(additionNum - needAdditionNum);
-                    event.getView().setCursor(result);
+                    event.setCursor(result);
                     player.setLevel(player.getLevel() - costLevel);
                 } else {
                     int resultCursor = cursor.getAmount() + result.getAmount();
@@ -155,7 +156,7 @@ public enum AnvilHandler implements Listener {
                         break;
                     base.setAmount(baseNum - needBaseNum);
                     addition.setAmount(additionNum - needAdditionNum);
-                    event.getView().getCursor().setAmount(resultCursor);
+                    event.getCursor().setAmount(resultCursor);
                     player.setLevel(player.getLevel() - costLevel);
                 }
                 craftResult = true;

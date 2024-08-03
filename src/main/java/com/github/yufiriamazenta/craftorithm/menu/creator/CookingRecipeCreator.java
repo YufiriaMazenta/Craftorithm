@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 public class CookingRecipeCreator extends UnlockableRecipeCreator {
 
@@ -52,21 +53,21 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
                     "#***#%%%#",
                     "##BC#DE##"
                 ), () -> {
-                    Map<Character, Icon> layoutMap = new HashMap<>();
-                    layoutMap.put('#', getFrameIcon());
-                    layoutMap.put('%', getResultFrameIcon());
-                    layoutMap.put('*', new Icon(
+                    Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
+                    layoutMap.put('#', this::getFrameIcon);
+                    layoutMap.put('%', this::getResultFrameIcon);
+                    layoutMap.put('*', () -> new Icon(
                         Material.CYAN_STAINED_GLASS_PANE,
                         Languages.MENU_RECIPE_CREATOR_ICON_COOKING_FRAME.value(player)
                     ));
-                    layoutMap.put('B', getCookingToggleIcon(Material.FURNACE));
-                    layoutMap.put('C', getCookingToggleIcon(Material.BLAST_FURNACE));
-                    layoutMap.put('D', getCookingToggleIcon(Material.SMOKER));
-                    layoutMap.put('E', getCookingToggleIcon(Material.CAMPFIRE));
-                    layoutMap.put('F', getUnlockIcon());
-                    layoutMap.put('G', getCookingTimeIcon());
-                    layoutMap.put('H', getExpIcon());
-                    layoutMap.put('A', new Icon(
+                    layoutMap.put('B', () -> getCookingToggleIcon(Material.FURNACE));
+                    layoutMap.put('C', () -> getCookingToggleIcon(Material.BLAST_FURNACE));
+                    layoutMap.put('D', () -> getCookingToggleIcon(Material.SMOKER));
+                    layoutMap.put('E', () -> getCookingToggleIcon(Material.CAMPFIRE));
+                    layoutMap.put('F', this::getUnlockIcon);
+                    layoutMap.put('G', this::getCookingTimeIcon);
+                    layoutMap.put('H', this::getExpIcon);
+                    layoutMap.put('A', () -> new Icon(
                         Material.FURNACE, Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(player)
                         ).setClickAction(
                         event -> {
