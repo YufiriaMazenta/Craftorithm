@@ -113,7 +113,9 @@ public enum RecipeManager {
             recipeGroupMap.forEach((recipeGroupName, recipeGroup) -> loadRecipeGroup(recipeGroup));
         }
         if (CrypticLib.isPaper()) {
-            Bukkit.updateRecipes();
+            if (CrypticLib.minecraftVersion() >= 12001) {
+                Bukkit.updateRecipes();
+            }
         }
     }
 
