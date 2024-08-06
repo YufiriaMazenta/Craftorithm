@@ -1,5 +1,5 @@
 import java.text.SimpleDateFormat
-version = "1.10.8"
+version = "1.10.9"
 
 plugins {
     `java-library`
@@ -31,7 +31,7 @@ repositories {
 
 dependencies {
     compileOnly("org.jetbrains:annotations:24.0.1")
-    compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
     compileOnly("pers.neige.neigeitems:NeigeItems:1.15.113")
     compileOnly("net.kyori:adventure-api:4.14.0")
     compileOnly("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT")
