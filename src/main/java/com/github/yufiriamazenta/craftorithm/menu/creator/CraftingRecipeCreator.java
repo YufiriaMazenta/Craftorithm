@@ -77,24 +77,29 @@ public class CraftingRecipeCreator extends UnlockableRecipeCreator {
                         ConfigWrapper recipeConfig = createRecipeConfig(recipeName);
                         switch (recipeType()) {
                             case SHAPED:
-                                List<String> shape = new ArrayList<>(Arrays.asList("abc", "def", "ghi"));
+                                Map<String, Character> itemRepeatMap = new HashMap<>();
+                                List<String> shape = new ArrayList<>();
                                 Map<Character, String> itemNameMap = new HashMap<>();
-                                char[] tmp = "abcdefghi".toCharArray();
-                                for (int i = 0; i < sourceList.size(); i++) {
-                                    if (sourceList.get(i).isEmpty()) {
+                                char[] tmp = "         ".toCharArray(); //9个空格
+                                char c = 'a';
+                                for(int i = 0; i < sourceList.size(); i++){
+                                    String sourceItem = sourceList.get(i);
+                                    if (sourceItem.isEmpty()) {
                                         continue;
                                     }
-                                    itemNameMap.put(tmp[i], sourceList.get(i));
-                                }
-                                //删除无映射的字符
-                                for (int i = 0; i < shape.size(); i++) {
-                                    String s = shape.get(i);
-                                    for (char c : s.toCharArray()) {
-                                        if (!itemNameMap.containsKey(c)) {
-                                            s = s.replace(c, ' ');
-                                        }
+                                    if (!itemRepeatMap.containsKey(sourceItem)){
+                                        itemRepeatMap.put(sourceList.get(i),c);
+                                        c++;
                                     }
-                                    shape.set(i, s);
+                                    tmp[i] = itemRepeatMap.get(sourceItem);
+                                }
+                                for (int i = 0; i < 9; i += 3) {
+                                    shape.add(new String(tmp,i,3));
+                                }
+                                c = 'a';
+                                for (String key : itemRepeatMap.keySet()){
+                                    itemNameMap.put(c,key);
+                                    c++;
                                 }
                                 shape.removeIf(s -> s.trim().isEmpty());
                                 removeEmptyColumn(shape);
