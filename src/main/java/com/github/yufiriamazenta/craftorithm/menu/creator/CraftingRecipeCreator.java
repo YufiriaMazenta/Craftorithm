@@ -77,7 +77,7 @@ public class CraftingRecipeCreator extends UnlockableRecipeCreator {
                         ConfigWrapper recipeConfig = createRecipeConfig(recipeName);
                         switch (recipeType()) {
                             case SHAPED:
-                                Map<String, Character> itemRepeatMap = new HashMap<>();
+                                Map<String, Character> itemRepeatMap = new LinkedHashMap<>();
                                 List<String> shape = new ArrayList<>();
                                 Map<Character, String> itemNameMap = new HashMap<>();
                                 char[] tmp = "         ".toCharArray(); //9个空格
@@ -88,7 +88,7 @@ public class CraftingRecipeCreator extends UnlockableRecipeCreator {
                                         continue;
                                     }
                                     if (!itemRepeatMap.containsKey(sourceItem)){
-                                        itemRepeatMap.put(sourceList.get(i),c);
+                                        itemRepeatMap.put(sourceItem,c);
                                         c++;
                                     }
                                     tmp[i] = itemRepeatMap.get(sourceItem);
@@ -96,11 +96,7 @@ public class CraftingRecipeCreator extends UnlockableRecipeCreator {
                                 for (int i = 0; i < 9; i += 3) {
                                     shape.add(new String(tmp,i,3));
                                 }
-                                c = 'a';
-                                for (String key : itemRepeatMap.keySet()){
-                                    itemNameMap.put(c,key);
-                                    c++;
-                                }
+                                itemRepeatMap.forEach((k,v)->itemNameMap.put(v,k));
                                 shape.removeIf(s -> s.trim().isEmpty());
                                 removeEmptyColumn(shape);
 
