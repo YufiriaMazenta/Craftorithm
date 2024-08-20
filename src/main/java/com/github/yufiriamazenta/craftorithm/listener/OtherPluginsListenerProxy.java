@@ -377,12 +377,16 @@ public enum OtherPluginsListenerProxy implements Listener {
         if (registeredListeners.isEmpty()) {
             return;
         }
-        Recipe recipe = event.getRecipe();
-        if (recipe == null) {
-            executeListener(event, registeredListeners);
-        }
-        NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
-        if (recipeKey == null || !recipeKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
+        if (CrypticLib.isPaper()) {
+            Recipe recipe = event.getRecipe();
+            if (recipe == null) {
+                executeListener(event, registeredListeners);
+            }
+            NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
+            if (recipeKey == null || !recipeKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
+                executeListener(event, registeredListeners);
+            }
+        } else {
             executeListener(event, registeredListeners);
         }
     }
@@ -425,12 +429,16 @@ public enum OtherPluginsListenerProxy implements Listener {
         if (registeredListeners.isEmpty()) {
             return;
         }
-        Recipe recipe = event.getRecipe();
-        if (recipe == null) {
-            executeListener(event, registeredListeners);
-        }
-        NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
-        if (recipeKey == null || !recipeKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
+        if (CrypticLib.isPaper()) {
+            Recipe recipe = event.getRecipe();
+            if (recipe == null) {
+                executeListener(event, registeredListeners);
+            }
+            NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
+            if (recipeKey == null || !recipeKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
+                executeListener(event, registeredListeners);
+            }
+        } else {
             executeListener(event, registeredListeners);
         }
     }
