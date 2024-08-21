@@ -79,7 +79,7 @@ public class CraftingRecipeCreator extends UnlockableRecipeCreator {
                             case SHAPED:
                                 Map<String, Character> itemRepeatMap = new LinkedHashMap<>();
                                 List<String> shape = new ArrayList<>();
-                                Map<Character, String> itemNameMap = new HashMap<>();
+                                Map<Character, String> itemNameMap = new LinkedHashMap<>();
                                 char[] tmp = "         ".toCharArray(); //9个空格
                                 char c = 'a';
                                 for(int i = 0; i < sourceList.size(); i++){
