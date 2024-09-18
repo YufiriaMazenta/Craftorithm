@@ -8,6 +8,7 @@ import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -46,7 +47,7 @@ public final class RemoveRecipeCommand extends AbstractSubCommand {
             }
             return tabList;
         }
-        return super.onTabComplete(sender, args);
+        return Collections.emptyList();
     }
 
 
