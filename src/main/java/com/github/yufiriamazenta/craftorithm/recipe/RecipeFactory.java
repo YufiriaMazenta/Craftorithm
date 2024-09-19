@@ -465,7 +465,8 @@ public class RecipeFactory {
                 }
                 return new RecipeChoice.MaterialChoice(materialTag);
             default:
-                ItemStack item = ItemManager.INSTANCE.matchItem(itemStr);
+                ItemStack item = ItemManager.INSTANCE.matchItem(itemStr).clone();
+                item.setAmount(1);
                 return new RecipeChoice.ExactChoice(item);
         }
     }
