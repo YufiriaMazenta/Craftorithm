@@ -1,0 +1,4 @@
+plugin-hook:
+  success: '&8[&3Craftorithm&8] Plugin <plugin> hooked'
+  failed: '&8[&3Craftorithm&8] Plugin <plugin> hook failed'
+new-version-found: '&8[&3Craftorithm&8] &aDetected a new version <new_version>!'

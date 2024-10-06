@@ -1,0 +1,3 @@
+plugin-hook:
+  success: '&8[&3Craftorithm&8] 插件<plugin>挂钩成功'
+  failed: '&8[&3Craftorithm&8] 插件<plugin>挂钩失败'

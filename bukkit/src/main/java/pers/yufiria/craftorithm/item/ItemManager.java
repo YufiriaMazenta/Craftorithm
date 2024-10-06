@@ -36,20 +36,10 @@ public enum ItemManager implements BukkitLifeCycleTask {
 
     INSTANCE;
 
-    private final Map<String, ItemProvider> itemProviderMap;
-    private final Map<NamespacedItemId, Integer> customCookingFuelMap;
+    private final Map<String, ItemProvider> itemProviderMap = new LinkedHashMap<>();
+    private final Map<NamespacedItemId, Integer> customCookingFuelMap = new ConcurrentHashMap<>();
     private final BukkitConfigWrapper customFuelConfig = new BukkitConfigWrapper(CraftorithmBukkit.instance(), "custom_fuels.yml");
     private final String BURN_TIME_KEY = "burn_time";
-
-    ItemManager() {
-        itemProviderMap = new LinkedHashMap<>();
-        customCookingFuelMap = new ConcurrentHashMap<>();
-    }
-
-    public void loadItemManager() {
-        regDefaultProviders();
-        reloadCustomCookingFuel();
-    }
 
     public void regDefaultProviders() {
         regItemProvider(CraftorithmItemProvider.INSTANCE);

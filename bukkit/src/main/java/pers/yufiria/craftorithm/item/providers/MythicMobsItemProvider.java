@@ -33,7 +33,7 @@ public enum MythicMobsItemProvider implements ItemProvider {
     public @Nullable ItemStack matchItem(String itemId) {
         ItemExecutor executor = MythicBukkit.inst().getItemManager();
         Optional<MythicItem> itemOptional = executor.getItem(itemId);
-        if (!itemOptional.isPresent()) {
+        if (itemOptional.isEmpty()) {
             return null;
         }
         MythicItem mythicItem = itemOptional.get();
