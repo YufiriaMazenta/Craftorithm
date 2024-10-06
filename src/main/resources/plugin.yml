@@ -4,7 +4,20 @@ description: Craft recipes management system
 main: com.github.yufiriamazenta.craftorithm.Craftorithm
 api-version: '1.19'
 load: POSTWORLD
-softdepend: [ Vault, LuckPerms, PlayerPoints, PlaceholderAPI, ItemsAdder, Oraxen, MythicMobs, NeigeItems, MMOItems, EcoEnchants ]
+softdepend:
+  - Vault
+  - LuckPerms
+  - PlayerPoints
+  - PlaceholderAPI
+  - ItemsAdder
+  - Oraxen
+  - MythicMobs
+  - NeigeItems
+  - MMOItems
+  - EcoEnchants
+  - EcoItems
+  - ExecutableItems
+  - SCore
 authors: [ YufiriaMazenta ]
 folia-supported: true
 website: https://github.com/YufiriaMazenta/Craftorithm
