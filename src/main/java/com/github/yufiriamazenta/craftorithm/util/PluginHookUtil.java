@@ -5,16 +5,20 @@ import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.item.impl.*;
 import com.github.yufiriamazenta.craftorithm.listener.OraxenHandler;
+import com.ssomar.score.SCore;
+import crypticlib.chat.MsgSender;
 import net.milkbowl.vault.economy.Economy;
+import org.apache.commons.codec.language.bm.Lang;
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 public class PluginHookUtil {
 
     private static Economy economy;
     private static PlayerPoints playerPoints;
-    private static boolean economyLoaded, pointsLoaded, itemsAdderLoaded, oraxenLoaded, mythicLoaded, neigeItemsLoaded, mmoitemsLoaded;
+    private static boolean economyLoaded, pointsLoaded, itemsAdderLoaded, oraxenLoaded, mythicLoaded, neigeItemsLoaded, mmoitemsLoaded, executableItemsLoaded, ecoitemsLoaded;
 
     public static void hookPlugins() {
         hookVault();
@@ -24,6 +28,8 @@ public class PluginHookUtil {
         hookOraxen();
         hookMMOItems();
         hookMythicMobs();
+        hookEcoItems();
+        hookExecutableItems();
     }
 
     private static void hookVault() {
@@ -116,6 +122,30 @@ public class PluginHookUtil {
             LangUtil.info(Languages.LOAD_HOOK_PLUGIN_NOT_EXIST, CollectionsUtil.newStringHashMap("<plugin>", "MMOItems"));
     }
 
+    private static void hookExecutableItems() {
+        Plugin executableItems = Bukkit.getPluginManager().getPlugin("ExecutableItems");
+        if (executableItems != null && executableItems.isEnabled()) {
+            ItemManager.INSTANCE.regItemProvider(ExecutableItemsItemProvider.INSTANCE);
+            LangUtil.info(Languages.LOAD_HOOK_PLUGIN_SUCCESS, CollectionsUtil.newStringHashMap("<plugin>", "ExecutableItems"));
+            executableItemsLoaded = true;
+        } else {
+            LangUtil.info(Languages.LOAD_HOOK_PLUGIN_NOT_EXIST, CollectionsUtil.newStringHashMap("<plugin>", "ExecutableItems"));
+            executableItemsLoaded = false;
+        }
+    }
+
+    private static void hookEcoItems() {
+        Plugin ecoItems = Bukkit.getPluginManager().getPlugin("EcoItems");
+        if (ecoItems != null && ecoItems.isEnabled()) {
+            ItemManager.INSTANCE.regItemProvider(EcoItemsItemProvider.INSTANCE);
+            LangUtil.info(Languages.LOAD_HOOK_PLUGIN_SUCCESS, CollectionsUtil.newStringHashMap("<plugin>", "EcoItems"));
+            ecoitemsLoaded = true;
+        } else {
+            LangUtil.info(Languages.LOAD_HOOK_PLUGIN_NOT_EXIST, CollectionsUtil.newStringHashMap("<plugin>", "EcoItems"));
+            ecoitemsLoaded = false;
+        }
+    }
+
     public static boolean isItemsAdderLoaded() {
         return itemsAdderLoaded;
     }
@@ -136,4 +166,7 @@ public class PluginHookUtil {
         return mmoitemsLoaded;
     }
 
+    public static boolean isExecutableItemsLoaded() {
+        return executableItemsLoaded;
+    }
 }

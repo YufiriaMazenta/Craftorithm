@@ -2,7 +2,6 @@ package com.github.yufiriamazenta.craftorithm.item.impl;
 
 import com.github.yufiriamazenta.craftorithm.item.ItemProvider;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

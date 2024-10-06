@@ -1,5 +1,5 @@
 import java.text.SimpleDateFormat
-version = "1.10.11-beta1"
+version = "1.10.11-beta2"
 
 plugins {
     `java-library`
@@ -9,11 +9,12 @@ plugins {
 
 repositories {
     mavenLocal()
-    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
-    maven("https://oss.sonatype.org/content/groups/public/")
     maven("http://repo.crypticlib.com:8081/repository/maven-public/") {
         isAllowInsecureProtocol = true
     }
+    maven("https://repo.auxilor.io/repository/maven-public/")
+    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+    maven("https://oss.sonatype.org/content/groups/public/")
     maven("https://jitpack.io")
     maven("https://repo.rosewooddev.io/repository/public/")
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
@@ -45,6 +46,10 @@ dependencies {
     compileOnly("io.lumine:MythicLib-dist:1.6.2-SNAPSHOT")
     compileOnly("net.Indyuce:MMOItems-API:6.9.5-SNAPSHOT")
     compileOnly("com.willfp:EcoEnchants:12.5.1")
+    compileOnly("com.willfp:EcoItems:5.59.0")
+    compileOnly("com.willfp:eco:6.74.2")
+    compileOnly("com.willfp:libreforge:4.71.6:all@jar")
+    compileOnly("com.ssomar:SCore:5.24.10.5")
     implementation("com.crypticlib:CrypticLib:0.18.10-viewfix5")
 //    implementation("de.tr7zw:item-nbt-api:2.12.4")
 }
