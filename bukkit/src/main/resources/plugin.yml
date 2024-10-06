@@ -1,0 +1,23 @@
+name: 'Craftorithm'
+version: '${version}'
+description: 'Craft recipes management system'
+main: 'pers.yufiria.craftorithm.CraftorithmBukkit'
+api-version: '1.19'
+load: 'POSTWORLD'
+softdepend:
+  - Vault
+  - LuckPerms
+  - PlayerPoints
+  - PlaceholderAPI
+  - ItemsAdder
+  - Oraxen
+  - MythicMobs
+  - NeigeItems
+  - MMOItems
+  - EcoEnchants
+  - EcoItems
+  - ExecutableItems
+  - SCore
+authors: [ YufiriaMazenta ]
+folia-supported: true
+website: 'https://github.com/YufiriaMazenta/Craftorithm'
