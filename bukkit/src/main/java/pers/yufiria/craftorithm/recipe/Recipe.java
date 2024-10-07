@@ -9,4 +9,6 @@ public interface Recipe {
 
     @NotNull RecipeResult result();
 
+    int priority();
+
 }
