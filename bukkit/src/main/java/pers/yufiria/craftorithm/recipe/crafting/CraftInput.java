@@ -1,13 +1,14 @@
 package pers.yufiria.craftorithm.recipe.crafting;
 
+import crypticlib.util.CollectionHelper;
 import crypticlib.util.ItemHelper;
+import crypticlib.util.MatrixHelper;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.item.StackedItemId;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
-import pers.yufiria.craftorithm.utils.ListUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,11 +69,11 @@ public class CraftInput {
                     line.add(new StackedItemId(itemId, item.getAmount()));
                 }
             }
-            if (!ListUtils.isAllNull(line)) {
+            if (!CollectionHelper.isAllNull(line)) {
                 ingredients.add(line);
             }
         }
-        return ListUtils.removeEmptyColumnAndLine(ingredients);
+        return MatrixHelper.removeEmptyColumnAndLine(ingredients);
     }
 
     public boolean isEmpty() {
