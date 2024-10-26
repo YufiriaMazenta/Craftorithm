@@ -36,14 +36,21 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
             throw new UnsupportedVersionException();
         }
         CrypticLib.setDebug(PluginConfigs.DEBUG.value());
+        PluginHookUtil.hookPlugins();
+
+        if (PluginHookUtil.isItemsAdderLoaded()) {
+            Bukkit.getPluginManager().registerEvents(ItemsAdderHandler.INSTANCE, this);
+        } else {
+            Bukkit.getPluginManager().registerEvents(this, this);
+        }
+
         ItemManager.INSTANCE.loadItemManager();
-        regListeners();
         initArcenciel();
         loadBStat();
 
         Bukkit.getPluginManager().registerEvents(OtherPluginsListenerProxy.INSTANCE, this);
-        PluginHookUtil.hookPlugins();
         LangUtil.info(Languages.LOAD_FINISH);
+        UpdateUtil.pullUpdateCheckRequest(Bukkit.getConsoleSender());
     }
 
     @Override
@@ -56,10 +63,6 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
             return;
         Metrics metrics = new Metrics(this, 17821);
         metrics.addCustomChart(new Metrics.SingleLineChart("recipes", () -> RecipeManager.INSTANCE.getRecipeGroups().size()));
-    }
-
-    private void regListeners() {
-        Bukkit.getPluginManager().registerEvents(this, this);
     }
 
     private void initArcenciel() {
@@ -83,12 +86,7 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
 
     @EventHandler
     public void onServerLoad(ServerLoadEvent event) {
-        if (!PluginHookUtil.isItemsAdderLoaded()) {
-            RecipeManager.INSTANCE.reloadRecipeManager();
-            OtherPluginsListenerProxy.INSTANCE.reloadOtherPluginsListener();
-            return;
-        }
-        Bukkit.getPluginManager().registerEvents(ItemsAdderHandler.INSTANCE, this);
-        UpdateUtil.pullUpdateCheckRequest(Bukkit.getConsoleSender());
+        RecipeManager.INSTANCE.reloadRecipeManager();
+        OtherPluginsListenerProxy.INSTANCE.reloadOtherPluginsListener();
     }
 }
