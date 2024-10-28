@@ -30,6 +30,11 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
     }
 
     @Override
+    public void load() {
+        super.load();
+    }
+
+    @Override
     public void enable() {
         if (CrypticLib.minecraftVersion() < 11904) {
             MsgSender.info("&c[Craftorithm] Unsupported Version");
@@ -38,10 +43,10 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
         CrypticLib.setDebug(PluginConfigs.DEBUG.value());
         PluginHookUtil.hookPlugins();
 
+        Bukkit.getPluginManager().registerEvents(this, this);
         if (PluginHookUtil.isItemsAdderLoaded()) {
+            MsgSender.debug("[Craftorithm] Registering ItemsAdder Handler");
             Bukkit.getPluginManager().registerEvents(ItemsAdderHandler.INSTANCE, this);
-        } else {
-            Bukkit.getPluginManager().registerEvents(this, this);
         }
 
         ItemManager.INSTANCE.loadItemManager();

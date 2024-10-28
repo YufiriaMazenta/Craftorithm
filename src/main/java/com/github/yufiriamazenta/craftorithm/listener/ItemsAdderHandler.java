@@ -11,15 +11,12 @@ public enum ItemsAdderHandler implements Listener {
 
     INSTANCE;
 
-    private boolean isEnable = true;
-
     @EventHandler(priority = EventPriority.MONITOR)
     public void onItemsAdderLoaded(ItemsAdderLoadDataEvent event) {
-        if (!PluginConfigs.RELOAD_WHEN_IA_RELOAD.value() && !isEnable)
+        if (!PluginConfigs.RELOAD_WHEN_IA_RELOAD.value())
             return;
         RecipeManager.INSTANCE.reloadRecipeManager();
         OtherPluginsListenerProxy.INSTANCE.reloadOtherPluginsListener();
-        isEnable = false;
     }
 
 }
