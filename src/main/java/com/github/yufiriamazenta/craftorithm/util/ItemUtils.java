@@ -4,11 +4,16 @@ import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.item.impl.CraftorithmItemProvider;
 import crypticlib.chat.BukkitTextProcessor;
+import crypticlib.lifecycle.AutoTask;
+import crypticlib.lifecycle.BukkitLifeCycleTask;
+import crypticlib.lifecycle.LifeCycle;
+import crypticlib.lifecycle.TaskRule;
 import crypticlib.util.ItemHelper;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.Plugin;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,15 +21,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-public class ItemUtils {
+@AutoTask(
+    rules = {
+        @TaskRule(lifeCycle = LifeCycle.ENABLE),
+        @TaskRule(lifeCycle = LifeCycle.RELOAD)
+    }
+)
+public class ItemUtils implements BukkitLifeCycleTask {
 
     private static String cannotCraftLore;
     private static Pattern cannotCraftLorePattern;
     private static boolean cannotCraftLoreIsRegex;
-
-    static {
-        reloadCannotCraftLore();
-    }
 
     public static void reloadCannotCraftLore() {
         cannotCraftLore = BukkitTextProcessor.color(PluginConfigs.LORE_CANNOT_CRAFT.value());
@@ -42,6 +49,8 @@ public class ItemUtils {
      * @return 是否包含所需字符串
      */
     public static boolean hasCannotCraftLore(ItemStack... items) {
+        if (cannotCraftLore == null)
+            return false;
         boolean containsLore = false;
 
         for (ItemStack item : items) {
@@ -105,6 +114,11 @@ public class ItemUtils {
             itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             item.setItemMeta(itemMeta);
         }
+    }
+
+    @Override
+    public void run(Plugin plugin, LifeCycle lifeCycle) {
+        reloadCannotCraftLore();
     }
 
 }
