@@ -22,7 +22,11 @@ public final class SaveItemCommand extends BukkitSubcommand {
 
     private SaveItemCommand() {
         super(
-            CommandInfo.builder("save").permission(new PermInfo("craftorithm.command.item.save")).build()
+            CommandInfo
+                .builder("save")
+                .permission(new PermInfo("craftorithm.command.item.save"))
+                .usage("&r/craftorithm item save <file_name> <item_id>")
+                .build()
         );
     }
 

@@ -22,7 +22,12 @@ public final class RemoveRecipeCommand extends BukkitSubcommand {
     public static final RemoveRecipeCommand INSTANCE = new RemoveRecipeCommand();
 
     private RemoveRecipeCommand() {
-        super(CommandInfo.builder("remove").permission(new PermInfo("craftorithm.recipe.remove")).build());
+        super(CommandInfo
+            .builder("remove")
+            .permission(new PermInfo("craftorithm.recipe.remove"))
+            .usage("&r/craftorithm remove <recipe_name>")
+            .build()
+        );
     }
 
     @Override
