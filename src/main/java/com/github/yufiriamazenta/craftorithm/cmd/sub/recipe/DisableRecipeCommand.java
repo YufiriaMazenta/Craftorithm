@@ -1,9 +1,11 @@
 package com.github.yufiriamazenta.craftorithm.cmd.sub.recipe;
 
-import com.github.yufiriamazenta.craftorithm.cmd.sub.AbstractSubCommand;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import crypticlib.command.BukkitSubcommand;
+import crypticlib.command.CommandInfo;
+import crypticlib.perm.PermInfo;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 
@@ -11,24 +13,24 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public final class DisableRecipeCommand extends AbstractSubCommand {
+public final class DisableRecipeCommand extends BukkitSubcommand {
 
     public static final DisableRecipeCommand INSTANCE = new DisableRecipeCommand();
 
     private DisableRecipeCommand() {
-        super("disable", "craftorithm.command.disable");
+        super(CommandInfo.builder("disable").permission(new PermInfo("craftorithm.command.disable")).build());
     }
 
     @Override
-    public boolean execute(CommandSender sender, List<String> args) {
+    public void execute(CommandSender sender, List<String> args) {
         if (args.isEmpty()) {
-            sendNotEnoughCmdParamMsg(sender, 1);
-            return true;
+            sendDescriptions(sender);
+            return;
         }
         NamespacedKey removeRecipeKey = NamespacedKey.fromString(args.get(0));
         if (!RecipeManager.INSTANCE.serverRecipesCache().containsKey(removeRecipeKey)) {
             LangUtil.sendLang(sender, Languages.COMMAND_DISABLE_NOT_EXIST);
-            return true;
+            return;
         }
         List<NamespacedKey> removeRecipeKeys = Collections.singletonList(removeRecipeKey);
         if (RecipeManager.INSTANCE.disableOtherPluginsRecipe(removeRecipeKeys, true)) {
@@ -36,7 +38,6 @@ public final class DisableRecipeCommand extends AbstractSubCommand {
         }
         else
             LangUtil.sendLang(sender, Languages.COMMAND_DISABLE_FAILED);
-        return true;
     }
 
     @Override

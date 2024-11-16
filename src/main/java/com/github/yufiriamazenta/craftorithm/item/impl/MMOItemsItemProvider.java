@@ -1,11 +1,10 @@
 package com.github.yufiriamazenta.craftorithm.item.impl;
 
 import com.github.yufiriamazenta.craftorithm.item.ItemProvider;
-import crypticlib.util.ItemUtil;
+import crypticlib.util.ItemHelper;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,7 +30,7 @@ public enum MMOItemsItemProvider implements ItemProvider {
             return itemKey;
         } else {
             ItemStack miItem = getItem(itemKey);
-            if (ItemUtil.isAir(miItem)) {
+            if (ItemHelper.isAir(miItem)) {
                 return null;
             }
             return itemKey + " " + (itemStack.getAmount() / miItem.getAmount());

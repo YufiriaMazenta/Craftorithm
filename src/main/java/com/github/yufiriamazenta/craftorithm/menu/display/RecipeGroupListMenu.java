@@ -1,15 +1,13 @@
 package com.github.yufiriamazenta.craftorithm.menu.display;
 
 import com.github.yufiriamazenta.craftorithm.config.Languages;
-import com.github.yufiriamazenta.craftorithm.menu.editor.*;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
-import crypticlib.chat.TextProcessor;
-import crypticlib.function.TernaryFunction;
+import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.ui.display.Icon;
+import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.menu.Menu;
-import crypticlib.util.ItemUtil;
+import crypticlib.util.ItemHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -18,35 +16,21 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.function.BiFunction;
 
 public class RecipeGroupListMenu extends Menu {
 
     private int page;
     private int maxPage;
     private List<Map.Entry<String, ItemStack>> recipeGroupResultList;
-    private final Map<RecipeType, TernaryFunction<Player, RecipeGroup, RecipeGroupListMenu, RecipeGroupEditor>> recipeGroupEditorMap;
 
     public RecipeGroupListMenu(Player player) {
         super(player);
         recipeGroupResultList = new CopyOnWriteArrayList<>();
         refreshRecipes();
-
-        recipeGroupEditorMap = new ConcurrentHashMap<>();
-        recipeGroupEditorMap.put(RecipeType.SHAPED, CraftingRecipeGroupEditor::new);
-        recipeGroupEditorMap.put(RecipeType.SHAPELESS, CraftingRecipeGroupEditor::new);
-        recipeGroupEditorMap.put(RecipeType.COOKING, CookingRecipeGroupEditor::new);
-        recipeGroupEditorMap.put(RecipeType.RANDOM_COOKING, CookingRecipeGroupEditor::new);
-        recipeGroupEditorMap.put(RecipeType.SMITHING, SmithingRecipeGroupEditor::new);
-        recipeGroupEditorMap.put(RecipeType.ANVIL, AnvilRecipeGroupEditor::new);
-        recipeGroupEditorMap.put(RecipeType.POTION, PotionMixGroupEditor::new);
-        recipeGroupEditorMap.put(RecipeType.STONE_CUTTING, StoneCuttingRecipeGroupEditor::new);
     }
 
     @NotNull
@@ -57,7 +41,7 @@ public class RecipeGroupListMenu extends Menu {
             inventoryCache = Bukkit.createInventory(
                 this,
                 54,
-                TextProcessor.color(Languages.MENU_NEW_RECIPE_LIST_TITLE.value(player))
+                BukkitTextProcessor.color(Languages.MENU_NEW_RECIPE_LIST_TITLE.value(player))
             );
         }
         refreshInventory();
@@ -107,19 +91,25 @@ public class RecipeGroupListMenu extends Menu {
         slotMap.clear();
         int []frameSlots = {45, 47, 48, 49, 50, 51, 53};
         Icon frameIcon = new Icon(
-            Material.BLACK_STAINED_GLASS_PANE,
-            TextProcessor.color(Languages.MENU_NEW_RECIPE_LIST_ICON_FRAME.value(player)
+            new IconDisplay(
+                Material.BLACK_STAINED_GLASS_PANE,
+                BukkitTextProcessor.color(Languages.MENU_NEW_RECIPE_LIST_ICON_FRAME.value(player)
+            )
         ));
         for (int frameSlot : frameSlots) {
             slotMap.put(frameSlot, frameIcon);
         }
         slotMap.put(46, new Icon(
-            Material.PAPER,
-            TextProcessor.color(Languages.MENU_NEW_RECIPE_LIST_ICON_PREVIOUS.value(player))
+            new IconDisplay(
+                Material.PAPER,
+                BukkitTextProcessor.color(Languages.MENU_NEW_RECIPE_LIST_ICON_PREVIOUS.value(player))
+            )
         ).setClickAction(event -> previousPage()));
         slotMap.put(52, new Icon(
-            Material.PAPER,
-            TextProcessor.color(Languages.MENU_NEW_RECIPE_LIST_ICON_NEXT.value(player))
+            new IconDisplay(
+                Material.PAPER,
+                BukkitTextProcessor.color(Languages.MENU_NEW_RECIPE_LIST_ICON_NEXT.value(player))
+            )
         ).setClickAction(event -> nextPage()));
         int recipeSlot = page * 45;
         for (int invSlot = 0; invSlot < 45 && recipeSlot < recipeGroupResultList.size(); invSlot++, recipeSlot++) {
@@ -150,16 +140,16 @@ public class RecipeGroupListMenu extends Menu {
                 switch (event.getClick()) {
                     case RIGHT:
                     case SHIFT_RIGHT:
-                        if (!player.hasPermission("craftorithm.edit_recipe")) {
-                            return;
-                        }
-                        RecipeGroup recipeGroup = RecipeManager.INSTANCE.getRecipeGroup(recipeGroupName);
-                        if (recipeGroup == null) {
-                            throw new IllegalArgumentException("Can not find recipe group " + recipeGroupName);
-                        }
-                        recipeGroupEditorMap.getOrDefault(recipeGroup.recipeType(), (player, group, parent) -> {
-                            throw new RuntimeException("Unknown recipe type editor");
-                        }).apply(player, recipeGroup, this).openMenu();
+//                        if (!player.hasPermission("craftorithm.edit_recipe")) {
+//                            return;
+//                        }
+//                        RecipeGroup recipeGroup = RecipeManager.INSTANCE.getRecipeGroup(recipeGroupName);
+//                        if (recipeGroup == null) {
+//                            throw new IllegalArgumentException("Can not find recipe group " + recipeGroupName);
+//                        }
+//                        recipeGroupEditorMap.getOrDefault(recipeGroup.recipeType(), (player, group, parent) -> {
+//                            throw new RuntimeException("Unknown recipe type editor");
+//                        }).apply(player, recipeGroup, this).openMenu();
                         break;
                     case LEFT:
                     case SHIFT_LEFT:
@@ -185,7 +175,7 @@ public class RecipeGroupListMenu extends Menu {
                 }
             }
         );
-        ItemUtil.setLore(icon.display(), Languages.MENU_NEW_RECIPE_LIST_ICON_ELEMENTS_LORE.value(player));
+        ItemHelper.setLore(icon.display(), Languages.MENU_NEW_RECIPE_LIST_ICON_ELEMENTS_LORE.value(player));
         return icon;
     }
 

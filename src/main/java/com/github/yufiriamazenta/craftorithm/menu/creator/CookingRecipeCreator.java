@@ -5,16 +5,17 @@ import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import crypticlib.chat.TextProcessor;
-import crypticlib.config.ConfigWrapper;
+import crypticlib.chat.BukkitTextProcessor;
+import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.conversation.Conversation;
 import crypticlib.conversation.NumberPrompt;
 import crypticlib.conversation.Prompt;
 import crypticlib.ui.display.Icon;
+import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.display.MenuLayout;
 import crypticlib.ui.menu.StoredMenu;
-import crypticlib.util.ItemUtil;
+import crypticlib.util.ItemHelper;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -56,10 +57,10 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
                     Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
                     layoutMap.put('#', this::getFrameIcon);
                     layoutMap.put('%', this::getResultFrameIcon);
-                    layoutMap.put('*', () -> new Icon(
+                    layoutMap.put('*', () -> new Icon(new IconDisplay(
                         Material.CYAN_STAINED_GLASS_PANE,
                         Languages.MENU_RECIPE_CREATOR_ICON_COOKING_FRAME.value(player)
-                    ));
+                    )));
                     layoutMap.put('B', () -> getCookingToggleIcon(Material.FURNACE));
                     layoutMap.put('C', () -> getCookingToggleIcon(Material.BLAST_FURNACE));
                     layoutMap.put('D', () -> getCookingToggleIcon(Material.SMOKER));
@@ -68,23 +69,23 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
                     layoutMap.put('G', this::getCookingTimeIcon);
                     layoutMap.put('H', this::getExpIcon);
                     layoutMap.put('A', () -> new Icon(
-                        Material.FURNACE, Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(player)
+                        new IconDisplay(Material.FURNACE, Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(player))
                         ).setClickAction(
                         event -> {
                             StoredMenu creator = (StoredMenu) Objects.requireNonNull(event.getClickedInventory()).getHolder();
                             ItemStack source = Objects.requireNonNull(creator).storedItems().get(20);
                             ItemStack result = creator.storedItems().get(24);
-                            if (ItemUtil.isAir(source)) {
+                            if (ItemHelper.isAir(source)) {
                                 LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_SOURCE);
                                 return;
                             }
-                            if (ItemUtil.isAir(result)) {
+                            if (ItemHelper.isAir(result)) {
                                 LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_RESULT);
                                 return;
                             }
                             String sourceName = ItemUtils.matchItemNameOrCreate(source, true);
                             String resultName = ItemUtils.matchItemNameOrCreate(result, false);
-                            ConfigWrapper recipeConfig = createRecipeConfig(recipeName);
+                            BukkitConfigWrapper recipeConfig = createRecipeConfig(recipeName);
                             recipeConfig.set("type", "cooking");
                             recipeConfig.set("result", resultName);
                             recipeConfig.set("multiple", true);
@@ -128,26 +129,18 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
 
     protected Icon getCookingToggleIcon(Material material) {
         boolean enable = cookingToggleMap.getOrDefault(material, false);
-        String displayName;
-        switch (material) {
-            case FURNACE:
-            default:
-                displayName = Languages.MENU_RECIPE_CREATOR_ICON_FURNACE_TOGGLE.value(player);
-                break;
-            case BLAST_FURNACE:
-                displayName = Languages.MENU_RECIPE_CREATOR_ICON_BLAST_FURNACE_TOGGLE.value(player);
-                break;
-            case SMOKER:
-                displayName = Languages.MENU_RECIPE_CREATOR_ICON_SMOKER_TOGGLE.value(player);
-                break;
-            case CAMPFIRE:
-                displayName = Languages.MENU_RECIPE_CREATOR_ICON_CAMPFIRE_TOGGLE.value(player);
-                break;
-        }
+        String displayName = switch (material) {
+            default -> Languages.MENU_RECIPE_CREATOR_ICON_FURNACE_TOGGLE.value(player);
+            case BLAST_FURNACE -> Languages.MENU_RECIPE_CREATOR_ICON_BLAST_FURNACE_TOGGLE.value(player);
+            case SMOKER -> Languages.MENU_RECIPE_CREATOR_ICON_SMOKER_TOGGLE.value(player);
+            case CAMPFIRE -> Languages.MENU_RECIPE_CREATOR_ICON_CAMPFIRE_TOGGLE.value(player);
+        };
         displayName = displayName.replace("<enable>", String.valueOf(enable));
         Icon icon = new Icon(
-            material,
-            displayName
+            new IconDisplay(
+                material,
+                displayName
+            )
         ).setClickAction(
             event -> toggleCookingIcon(event.getSlot(), event)
         );
@@ -160,34 +153,26 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
     protected void toggleCookingIcon(int slot, InventoryClickEvent event) {
         super.toggleIconGlowing(slot, event);
         ItemStack display = event.getCurrentItem();
-        String displayName;
-        switch (display.getType()) {
-            case FURNACE:
-            default:
-                displayName = Languages.MENU_RECIPE_CREATOR_ICON_FURNACE_TOGGLE.value(player);
-                break;
-            case BLAST_FURNACE:
-                displayName = Languages.MENU_RECIPE_CREATOR_ICON_BLAST_FURNACE_TOGGLE.value(player);
-                break;
-            case SMOKER:
-                displayName = Languages.MENU_RECIPE_CREATOR_ICON_SMOKER_TOGGLE.value(player);
-                break;
-            case CAMPFIRE:
-                displayName = Languages.MENU_RECIPE_CREATOR_ICON_CAMPFIRE_TOGGLE.value(player);
-                break;
-        }
+        String displayName = switch (display.getType()) {
+            default -> Languages.MENU_RECIPE_CREATOR_ICON_FURNACE_TOGGLE.value(player);
+            case BLAST_FURNACE -> Languages.MENU_RECIPE_CREATOR_ICON_BLAST_FURNACE_TOGGLE.value(player);
+            case SMOKER -> Languages.MENU_RECIPE_CREATOR_ICON_SMOKER_TOGGLE.value(player);
+            case CAMPFIRE -> Languages.MENU_RECIPE_CREATOR_ICON_CAMPFIRE_TOGGLE.value(player);
+        };
         boolean enable = !cookingToggleMap.getOrDefault(display.getType(), false);
         cookingToggleMap.put(display.getType(), enable);
 
-        ItemUtil.setDisplayName(display, displayName.replace("<enable>", String.valueOf(enable)));
+        ItemHelper.setDisplayName(display, displayName.replace("<enable>", String.valueOf(enable)));
     }
 
     protected Icon getCookingTimeIcon() {
         return new Icon(
-            Material.CLOCK,
-            Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_NAME.value(player)
-                .replace("<time>", String.valueOf(cookingTime)),
-            Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_LORE.value(player)
+            new IconDisplay(
+                Material.CLOCK,
+                Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_NAME.value(player)
+                    .replace("<time>", String.valueOf(cookingTime)),
+                Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_LORE.value(player)
+            )
         ).setClickAction(
             event -> {
                 Conversation timeInputConversation = new Conversation(
@@ -205,10 +190,12 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
 
     protected Icon getExpIcon() {
         return new Icon(
-            Material.EXPERIENCE_BOTTLE,
-            Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_NAME.value(player)
-                .replace("<exp>", String.valueOf(exp)),
-            Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_LORE.value(player)
+            new IconDisplay(
+                Material.EXPERIENCE_BOTTLE,
+                Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_NAME.value(player)
+                    .replace("<exp>", String.valueOf(exp)),
+                Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_LORE.value(player)
+            )
         ).setClickAction(
             event -> {
                 Conversation conversation = new Conversation(
@@ -228,7 +215,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
         ItemStack cookingTimeIcon = this.inventoryCache.getItem(3);
         if (cookingTimeIcon == null)
             return;
-        ItemUtil.setDisplayName(
+        ItemHelper.setDisplayName(
             cookingTimeIcon,
             Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_NAME
                 .value(player)
@@ -240,7 +227,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
         ItemStack expIcon = this.inventoryCache.getItem(5);
         if (expIcon == null)
             return;
-        ItemUtil.setDisplayName(
+        ItemHelper.setDisplayName(
             expIcon,
             Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_NAME.value(player)
                 .replace("<exp>", String.valueOf(exp)
@@ -260,7 +247,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
 
         @Override
         public @NotNull BaseComponent promptText(@NotNull Map<Object, Object> data) {
-            return TextProcessor.toComponent(TextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_INPUT_HINT.value(player)));
+            return BukkitTextProcessor.toComponent(BukkitTextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_TIME_INPUT_HINT.value(player)));
         }
     }
 
@@ -276,7 +263,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
 
         @Override
         public @NotNull BaseComponent promptText(@NotNull Map<Object, Object> data) {
-            return TextProcessor.toComponent(TextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_INPUT_HINT.value(player)));
+            return BukkitTextProcessor.toComponent(BukkitTextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_COOKING_EXP_INPUT_HINT.value(player)));
         }
     }
 

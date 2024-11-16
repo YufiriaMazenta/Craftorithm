@@ -3,11 +3,9 @@ package com.github.yufiriamazenta.craftorithm.util;
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.item.impl.CraftorithmItemProvider;
-import crypticlib.chat.TextProcessor;
-import crypticlib.util.ItemUtil;
-import org.bukkit.Bukkit;
+import crypticlib.chat.BukkitTextProcessor;
+import crypticlib.util.ItemHelper;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -29,7 +27,7 @@ public class ItemUtils {
     }
 
     public static void reloadCannotCraftLore() {
-        cannotCraftLore = TextProcessor.color(PluginConfigs.LORE_CANNOT_CRAFT.value());
+        cannotCraftLore = BukkitTextProcessor.color(PluginConfigs.LORE_CANNOT_CRAFT.value());
         try {
             cannotCraftLorePattern = Pattern.compile(cannotCraftLore);
             cannotCraftLoreIsRegex = true;
@@ -76,7 +74,7 @@ public class ItemUtils {
     }
 
     public static String matchItemNameOrCreate(ItemStack item, boolean ignoreAmount) {
-        if (ItemUtil.isAir(item)) {
+        if (ItemHelper.isAir(item)) {
             return null;
         }
         String itemName;

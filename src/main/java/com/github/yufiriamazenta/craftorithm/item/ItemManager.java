@@ -1,50 +1,54 @@
 package com.github.yufiriamazenta.craftorithm.item;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
-import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.item.impl.CraftorithmItemProvider;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.google.common.base.Preconditions;
+import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.config.ConfigWrapper;
-import crypticlib.util.ItemUtil;
-import crypticlib.util.MaterialUtil;
+import crypticlib.lifecycle.AutoTask;
+import crypticlib.lifecycle.BukkitLifeCycleTask;
+import crypticlib.lifecycle.LifeCycle;
+import crypticlib.lifecycle.TaskRule;
+import crypticlib.util.ItemHelper;
+import crypticlib.util.MaterialHelper;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public enum ItemManager {
+@AutoTask(
+    rules = {
+        @TaskRule(
+            lifeCycle = LifeCycle.ENABLE, priority = 1
+        ),
+        @TaskRule(
+            lifeCycle = LifeCycle.RELOAD, priority = 1
+        )
+    }
+)
+public enum ItemManager implements BukkitLifeCycleTask {
 
     INSTANCE;
 
     private final Map<String, ItemProvider> itemProviderMap;
     private final Map<String, Integer> customCookingFuelMap;
-    private final ConfigWrapper customFuelConfig = new ConfigWrapper(Craftorithm.instance(), "custom_fuels.yml");
+    private final BukkitConfigWrapper customFuelConfig = new BukkitConfigWrapper(Craftorithm.instance(), "custom_fuels.yml");
     private final String BURN_TIME_KEY = "burn_time";
 
     ItemManager() {
         itemProviderMap = new LinkedHashMap<>();
         customCookingFuelMap = new ConcurrentHashMap<>();
-    }
-
-    public void loadItemManager() {
-        regDefaultProviders();
-        reloadCustomCookingFuel();
-    }
-
-    public void regDefaultProviders() {
-        regItemProvider(CraftorithmItemProvider.INSTANCE);
     }
 
     public void regItemProvider(ItemProvider itemProvider) {
@@ -111,7 +115,7 @@ public enum ItemManager {
      */
     @Nullable
     public String matchItemName(ItemStack item, boolean ignoreAmount) {
-        if (ItemUtil.isAir(item))
+        if (ItemHelper.isAir(item))
             return null;
 
         for (Map.Entry<String, ItemProvider> itemProviderEntry : itemProviderMap.entrySet()) {
@@ -131,7 +135,7 @@ public enum ItemManager {
      * @return 物品
      */
     public ItemStack matchVanillaItem(String itemKey, int amount) {
-        Material material = MaterialUtil.matchMaterial(itemKey);
+        Material material = MaterialHelper.matchMaterial(itemKey);
         if (material == null) {
             throw new IllegalArgumentException("Can not found item " + itemKey);
         }
@@ -194,6 +198,13 @@ public enum ItemManager {
 
     public Map<String, Integer> customCookingFuelMap() {
         return customCookingFuelMap;
+    }
+
+    @Override
+    public void run(Plugin plugin, LifeCycle lifeCycle) {
+        if (lifeCycle.equals(LifeCycle.ENABLE))
+            regItemProvider(CraftorithmItemProvider.INSTANCE);
+        reloadCustomCookingFuel();
     }
 
 }

@@ -1,23 +1,23 @@
 package com.github.yufiriamazenta.craftorithm.listener;
 
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
-import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
-import crypticlib.listener.BukkitListener;
-import crypticlib.util.ItemUtil;
-import org.bukkit.entity.Player;
+import crypticlib.listener.EventListener;
+import crypticlib.util.ItemHelper;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.CrafterCraftEvent;
 import org.bukkit.inventory.ItemStack;
 
-@BukkitListener
-public class CrafterHandler implements Listener {
+@EventListener
+public enum CrafterHandler implements Listener {
+
+    INSTANCE;
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onCrafterCraft(CrafterCraftEvent event) {
         ItemStack result = event.getResult();
-        if (ItemUtil.isAir(result))
+        if (ItemHelper.isAir(result))
             return;
         String id = ItemManager.INSTANCE.matchItemName(result, false);
         if (id == null) {

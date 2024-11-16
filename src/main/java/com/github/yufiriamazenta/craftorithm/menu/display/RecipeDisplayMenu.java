@@ -6,9 +6,9 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.PotionMixRecipe;
-import crypticlib.CrypticLib;
-import crypticlib.chat.MsgSender;
-import crypticlib.chat.TextProcessor;
+import crypticlib.CrypticLibBukkit;
+import crypticlib.chat.BukkitMsgSender;
+import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.menu.Menu;
 import org.bukkit.Bukkit;
@@ -52,21 +52,23 @@ public class RecipeDisplayMenu extends Menu {
             case COOKING:
             case RANDOM_COOKING:
                 setCookingRecipeMenu();
-                if (recipe instanceof FurnaceRecipe) {
-                    inventoryType = InventoryType.FURNACE;
-                    invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_FURNACE.value(player);
-                }
-                else if (recipe instanceof BlastingRecipe) {
-                    inventoryType = InventoryType.BLAST_FURNACE;
-                    invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_BLASTING.value(player);
-                }
-                else if (recipe instanceof SmokingRecipe) {
-                    inventoryType = InventoryType.SMOKER;
-                    invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_SMOKING.value(player);
-                }
-                else {
-                    inventoryType = InventoryType.FURNACE;
-                    invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_CAMPFIRE.value(player);
+                switch (recipe) {
+                    case FurnaceRecipe furnaceRecipe -> {
+                        inventoryType = InventoryType.FURNACE;
+                        invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_FURNACE.value(player);
+                    }
+                    case BlastingRecipe blastingRecipe -> {
+                        inventoryType = InventoryType.BLAST_FURNACE;
+                        invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_BLASTING.value(player);
+                    }
+                    case SmokingRecipe smokingRecipe -> {
+                        inventoryType = InventoryType.SMOKER;
+                        invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_SMOKING.value(player);
+                    }
+                    case null, default -> {
+                        inventoryType = InventoryType.FURNACE;
+                        invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_CAMPFIRE.value(player);
+                    }
                 }
                 break;
             case SMITHING:
@@ -100,7 +102,7 @@ public class RecipeDisplayMenu extends Menu {
     @NotNull
     @Override
     public Inventory getInventory() {
-        Inventory inventory = Bukkit.createInventory(this, inventoryType, TextProcessor.color(invTitle));
+        Inventory inventory = Bukkit.createInventory(this, inventoryType, BukkitTextProcessor.color(invTitle));
         for (Integer slot : slotMap.keySet()) {
             inventory.setItem(slot, slotMap.get(slot).display());
         }
@@ -109,7 +111,7 @@ public class RecipeDisplayMenu extends Menu {
 
     @Override
     public Icon onClick(int slot, InventoryClickEvent event) {
-        MsgSender.debug(event.getClick().name());
+        BukkitMsgSender.INSTANCE.debug(event.getClick().name());
         return super.onClick(slot, event);
     }
 
@@ -207,7 +209,7 @@ public class RecipeDisplayMenu extends Menu {
     @Override
     public void onClose(InventoryCloseEvent event) {
         if (parentMenu != null) {
-            CrypticLib.platform().scheduler().runTask(
+            CrypticLibBukkit.scheduler().runTask(
                 Craftorithm.instance(),
                 () -> {
                     InventoryType type = event.getPlayer().getOpenInventory().getType();

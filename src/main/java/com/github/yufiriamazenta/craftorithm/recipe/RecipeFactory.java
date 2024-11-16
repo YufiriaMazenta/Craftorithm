@@ -256,7 +256,6 @@ public class RecipeFactory {
     public static List<RecipeRegistry> newSmithingRecipe(YamlConfiguration config, String key) {
         NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.instance(), key);
         ItemStack result = getResultItem(config);
-        MsgSender.debug(config.saveToString());
         RecipeChoice base = getRecipeChoice(config.getString("source.base", ""));
         RecipeChoice addition = getRecipeChoice(config.getString("source.addition", ""));
         boolean copyNbt = config.getBoolean("source.copy_nbt", false);

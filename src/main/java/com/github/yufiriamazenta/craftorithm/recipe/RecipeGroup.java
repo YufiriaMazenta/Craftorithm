@@ -1,7 +1,9 @@
 package com.github.yufiriamazenta.craftorithm.recipe;
 
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
+import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.config.ConfigWrapper;
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,15 +17,15 @@ public class RecipeGroup {
     private String groupName;
     private List<NamespacedKey> groupRecipeKeys = new CopyOnWriteArrayList<>();
     private final RecipeType recipeType;
-    private ConfigWrapper recipeGroupConfig;
+    private BukkitConfigWrapper recipeGroupConfig;
     private int sortId;
     private boolean unlock;
 
-    public RecipeGroup(@NotNull String groupName, @NotNull RecipeType recipeType, @NotNull ConfigWrapper recipeGroupConfig) {
+    public RecipeGroup(@NotNull String groupName, @NotNull RecipeType recipeType, @NotNull BukkitConfigWrapper recipeGroupConfig) {
         this(groupName, new ArrayList<>(), recipeType, recipeGroupConfig);
     }
 
-    public RecipeGroup(@NotNull String groupName, @NotNull List<NamespacedKey> groupRecipeKeys, @NotNull RecipeType recipeType, @NotNull ConfigWrapper recipeGroupConfig) {
+    public RecipeGroup(@NotNull String groupName, @NotNull List<NamespacedKey> groupRecipeKeys, @NotNull RecipeType recipeType, @NotNull BukkitConfigWrapper recipeGroupConfig) {
         this.groupName = groupName;
         this.groupRecipeKeys.addAll(groupRecipeKeys);
         this.recipeType = recipeType;
@@ -87,11 +89,11 @@ public class RecipeGroup {
         return this;
     }
 
-    public @NotNull ConfigWrapper recipeGroupConfig() {
+    public @NotNull BukkitConfigWrapper recipeGroupConfig() {
         return recipeGroupConfig;
     }
 
-    public RecipeGroup setRecipeGroupConfig(ConfigWrapper recipeGroupConfig) {
+    public RecipeGroup setRecipeGroupConfig(BukkitConfigWrapper recipeGroupConfig) {
         this.recipeGroupConfig = recipeGroupConfig;
         return this;
     }
