@@ -1,5 +1,6 @@
-package com.github.yufiriamazenta.craftorithm.listener;
+package com.github.yufiriamazenta.craftorithm.listener.hook;
 
+import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import io.th0rgal.oraxen.api.events.OraxenItemsLoadedEvent;
 import org.bukkit.event.EventHandler;
@@ -12,8 +13,9 @@ public enum OraxenHandler implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onOraxenLoaded(OraxenItemsLoadedEvent event) {
-        RecipeManager.INSTANCE.reloadRecipeManager();
-        OtherPluginsListenerProxy.INSTANCE.reloadOtherPluginsListener();
+        Craftorithm.instance().reloadPlugin();
+//        RecipeManager.INSTANCE.reloadRecipeManager();
+//        OtherPluginsListenerProxy.INSTANCE.reloadOtherPluginsListener();
     }
 
 }

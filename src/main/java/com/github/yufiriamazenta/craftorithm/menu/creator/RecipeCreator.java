@@ -1,20 +1,20 @@
 package com.github.yufiriamazenta.craftorithm.menu.creator;
 
 import com.github.yufiriamazenta.craftorithm.config.Languages;
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeFactory;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
-import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import crypticlib.CrypticLib;
-import crypticlib.config.ConfigWrapper;
+import crypticlib.CrypticLibBukkit;
+import crypticlib.MinecraftVersion;
+import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.ui.display.Icon;
+import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.menu.StoredMenu;
-import crypticlib.util.FileUtil;
-import crypticlib.util.ItemUtil;
+import crypticlib.util.FileHelper;
+import crypticlib.util.ItemHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
@@ -46,14 +46,14 @@ public abstract class RecipeCreator extends StoredMenu {
 
     protected void toggleIconGlowing(int slot, InventoryClickEvent event) {
         ItemStack display = event.getCurrentItem();
-        if (ItemUtil.isAir(display))
+        if (ItemHelper.isAir(display))
             return;
         ItemUtils.toggleItemGlowing(display);
         event.getClickedInventory().setItem(slot, display);
     }
 
     protected Icon getFrameIcon() {
-        return new Icon(Material.BLACK_STAINED_GLASS_PANE, Languages.MENU_RECIPE_CREATOR_ICON_FRAME.value(player));
+        return new Icon(new IconDisplay(Material.BLACK_STAINED_GLASS_PANE, Languages.MENU_RECIPE_CREATOR_ICON_FRAME.value(player)));
     }
 
     protected void sendSuccessMsg(HumanEntity receiver, String recipeName) {
@@ -69,16 +69,16 @@ public abstract class RecipeCreator extends StoredMenu {
         );
     }
 
-    protected ConfigWrapper createRecipeConfig(String recipeName) {
+    protected BukkitConfigWrapper createRecipeConfig(String recipeName) {
         File recipeFile = new File(RecipeManager.INSTANCE.RECIPE_FILE_FOLDER, recipeName + ".yml");
         if (!recipeFile.exists()) {
-            FileUtil.createNewFile(recipeFile);
+            FileHelper.createNewFile(recipeFile);
         }
-        return new ConfigWrapper(recipeFile);
+        return new BukkitConfigWrapper(recipeFile);
     }
 
     protected Icon getResultFrameIcon() {
-        return new Icon(Material.LIME_STAINED_GLASS_PANE, Languages.MENU_RECIPE_CREATOR_ICON_RESULT_FRAME.value(player));
+        return new Icon(new IconDisplay(Material.LIME_STAINED_GLASS_PANE, Languages.MENU_RECIPE_CREATOR_ICON_RESULT_FRAME.value(player)));
     }
 
     public RecipeType recipeType() {
@@ -108,12 +108,12 @@ public abstract class RecipeCreator extends StoredMenu {
         return this;
     }
 
-    public void regRecipeGroup(ConfigWrapper recipeConfig) {
+    public void regRecipeGroup(BukkitConfigWrapper recipeConfig) {
         RecipeGroup recipeGroup = new RecipeGroup(recipeName, recipeType(), recipeConfig);
         RecipeManager.INSTANCE.addRecipeGroup(recipeGroup);
         RecipeManager.INSTANCE.loadRecipeGroup(recipeGroup);
-        if (CrypticLib.isPaper()) {
-            if (CrypticLib.minecraftVersion() >= 12001) {
+        if (CrypticLibBukkit.platform().isPaper()) {
+            if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_20_1)) {
                 Bukkit.updateRecipes();
             }
         }

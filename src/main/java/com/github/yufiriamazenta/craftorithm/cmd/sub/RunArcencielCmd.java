@@ -3,28 +3,32 @@ package com.github.yufiriamazenta.craftorithm.cmd.sub;
 import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
+import com.github.yufiriamazenta.craftorithm.util.CommandUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import crypticlib.command.BukkitSubcommand;
+import crypticlib.command.CommandInfo;
+import crypticlib.perm.PermInfo;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.StringJoiner;
 
-public final class RunArcencielCmd extends AbstractSubCommand {
+public final class RunArcencielCmd extends BukkitSubcommand {
 
     public static final RunArcencielCmd INSTANCE = new RunArcencielCmd();
 
     private RunArcencielCmd() {
-        super("run", "craftorithm.command.run");
+        super(CommandInfo.builder("run").permission(new PermInfo("craftorithm.command.run")).build());
     }
 
     @Override
-    public boolean execute(CommandSender sender, List<String> args) {
-        if (!checkSenderIsPlayer(sender))
-            return true;
+    public void execute(CommandSender sender, List<String> args) {
+        if (!CommandUtils.checkSenderIsPlayer(sender))
+            return;
         if (args.isEmpty()) {
-            sendNotEnoughCmdParamMsg(sender, 1);
-            return true;
+            sendDescriptions(sender);
+            return;
         }
         long startTime = System.currentTimeMillis();
         StringJoiner arcencielBlock = new StringJoiner(" ");
@@ -34,6 +38,5 @@ public final class RunArcencielCmd extends AbstractSubCommand {
         ArcencielDispatcher.INSTANCE.dispatchArcencielBlock((Player) sender, arcencielBlock.toString());
         long execTime = System.currentTimeMillis() - startTime;
         LangUtil.sendLang(sender, Languages.COMMAND_RUN_ARCENCIEL_SUCCESS, CollectionsUtil.newStringHashMap("<time>", String.valueOf(execTime)));
-        return true;
     }
 }

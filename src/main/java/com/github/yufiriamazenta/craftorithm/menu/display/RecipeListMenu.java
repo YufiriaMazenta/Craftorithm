@@ -3,9 +3,10 @@ package com.github.yufiriamazenta.craftorithm.menu.display;
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
-import crypticlib.CrypticLib;
-import crypticlib.chat.TextProcessor;
+import crypticlib.CrypticLibBukkit;
+import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.ui.display.Icon;
+import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.menu.Menu;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -82,19 +83,25 @@ public class RecipeListMenu extends Menu {
         slotMap.clear();
         int []frame = {45, 47, 48, 49, 50, 51, 53};
         Icon frameIcon = new Icon(
-            Material.BLACK_STAINED_GLASS_PANE,
-            TextProcessor.color(Languages.MENU_RECIPE_LIST_ICON_FRAME.value(player))
+            new IconDisplay(
+                Material.BLACK_STAINED_GLASS_PANE,
+                BukkitTextProcessor.color(Languages.MENU_RECIPE_LIST_ICON_FRAME.value(player))
+            )
         );
         for (int i : frame) {
             slotMap.put(i, frameIcon);
         }
         slotMap.put(46, new Icon(
-            Material.PAPER,
-            TextProcessor.color(Languages.MENU_RECIPE_LIST_ICON_PREVIOUS.value(player))
+            new IconDisplay(
+                Material.PAPER,
+                BukkitTextProcessor.color(Languages.MENU_RECIPE_LIST_ICON_PREVIOUS.value(player))
+            )
         ).setClickAction(event -> previousPage()));
         slotMap.put(52, new Icon(
-            Material.PAPER,
-            TextProcessor.color(Languages.MENU_RECIPE_LIST_ICON_NEXT.value(player))
+            new IconDisplay(
+                Material.PAPER,
+                BukkitTextProcessor.color(Languages.MENU_RECIPE_LIST_ICON_NEXT.value(player))
+            )
         ).setClickAction(event -> nextPage()));
         int recipeSlot = page * 45;
         for (int i = 0; i < 45 && recipeSlot < recipeList.size(); i++, recipeSlot ++) {
@@ -114,7 +121,7 @@ public class RecipeListMenu extends Menu {
     @Override
     public void onClose(InventoryCloseEvent event) {
         if (parentMenu != null) {
-            CrypticLib.platform().scheduler().runTask(
+            CrypticLibBukkit.scheduler().runTask(
                 Craftorithm.instance(),
                 () -> {
                     InventoryType type = event.getPlayer().getOpenInventory().getType();
@@ -134,7 +141,7 @@ public class RecipeListMenu extends Menu {
         Inventory inventory = Bukkit.createInventory(
             this,
             54,
-            TextProcessor.color(Languages.MENU_RECIPE_LIST_TITLE.value(player))
+            BukkitTextProcessor.color(Languages.MENU_RECIPE_LIST_TITLE.value(player))
         );
         for (Integer slot : slotMap.keySet()) {
             inventory.setItem(slot, slotMap.get(slot).display());

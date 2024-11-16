@@ -1,8 +1,11 @@
 package com.github.yufiriamazenta.craftorithm.cmd.sub.recipe;
 
-import com.github.yufiriamazenta.craftorithm.cmd.sub.AbstractSubCommand;
 import com.github.yufiriamazenta.craftorithm.menu.display.RecipeDisplayMenu;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
+import com.github.yufiriamazenta.craftorithm.util.CommandUtils;
+import crypticlib.command.BukkitSubcommand;
+import crypticlib.command.CommandInfo;
+import crypticlib.perm.PermInfo;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -13,29 +16,30 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class DisplayRecipeCommand extends AbstractSubCommand {
+public class DisplayRecipeCommand extends BukkitSubcommand {
 
     public static final DisplayRecipeCommand INSTANCE = new DisplayRecipeCommand();
 
     protected DisplayRecipeCommand() {
-        super("display", "craftorithm.command.display");
+        super(
+            CommandInfo.builder("display").permission(new PermInfo("craftorithm.command.display")).build()
+        );
     }
 
     @Override
-    public boolean execute(CommandSender sender, List<String> args) {
-        if (!checkSenderIsPlayer(sender))
-            return true;
+    public void execute(CommandSender sender, List<String> args) {
+        if (!CommandUtils.checkSenderIsPlayer(sender))
+            return;
         if (args.isEmpty()) {
-            sendNotEnoughCmdParamMsg(sender, 1);
-            return true;
+            sendDescriptions(sender);
+            return;
         }
         NamespacedKey namespacedKey = NamespacedKey.fromString(args.get(0));
         Recipe recipe = RecipeManager.INSTANCE.getRecipe(namespacedKey);
         if (recipe == null) {
-            return true;
+            return;
         }
         new RecipeDisplayMenu((Player) sender, recipe, null).openMenu();
-        return true;
     }
 
     @Override

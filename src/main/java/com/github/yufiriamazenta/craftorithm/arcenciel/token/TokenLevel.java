@@ -1,7 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.arcenciel.token;
 
 import com.github.yufiriamazenta.craftorithm.arcenciel.obj.ReturnObj;
-import com.github.yufiriamazenta.craftorithm.util.ScriptValueUtil;
+import com.github.yufiriamazenta.craftorithm.util.ScriptValueComparator;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public class TokenLevel extends AbstractArcencielToken<Boolean> {
         if (args.size() < 2)
             result = player.getLevel() >= Integer.parseInt(args.get(0));
         else
-            result = ScriptValueUtil.compare(player.getLevel(), Integer.parseInt(args.get(1)), args.get(0));
+            result = ScriptValueComparator.compare(player.getLevel(), Integer.parseInt(args.get(1)), args.get(0));
         return new ReturnObj<>(result);
     }
 }

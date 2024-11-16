@@ -3,9 +3,9 @@ package com.github.yufiriamazenta.craftorithm.listener;
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
-import crypticlib.CrypticLib;
-import crypticlib.listener.BukkitListener;
-import crypticlib.platform.IPlatform;
+import crypticlib.CrypticLibBukkit;
+import crypticlib.listener.EventListener;
+import crypticlib.platform.Platform;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
@@ -22,7 +22,7 @@ import org.bukkit.inventory.Recipe;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@BukkitListener
+@EventListener
 public enum SmeltResultRefreshHandler implements Listener {
 
     INSTANCE;
@@ -31,7 +31,7 @@ public enum SmeltResultRefreshHandler implements Listener {
 
     @EventHandler
     public void putFurnaceSmeltRecipeCache(FurnaceStartSmeltEvent event) {
-        if (!CrypticLib.platform().platform().equals(IPlatform.Platform.BUKKIT)) {
+        if (!CrypticLibBukkit.platform().type().equals(Platform.PlatformType.BUKKIT)) {
             //因为Bukkit没有FurnaceSmeltEvent.getRecipe方法，如果是Paper及其下游就可以不用处理
             return;
         }
@@ -46,7 +46,7 @@ public enum SmeltResultRefreshHandler implements Listener {
     @EventHandler
     public void refreshSmeltResult(FurnaceSmeltEvent event) {
         Recipe recipe;
-        if (CrypticLib.platform().platform().equals(IPlatform.Platform.BUKKIT)) {
+        if (CrypticLibBukkit.platform().type().equals(Platform.PlatformType.BUKKIT)) {
             recipe = blockSmeltRecipeMap.get(event.getBlock());
             blockSmeltRecipeMap.remove(event.getBlock());
         } else {
@@ -68,7 +68,7 @@ public enum SmeltResultRefreshHandler implements Listener {
 
     @EventHandler
     public void putBlockCookRecipeCache(CampfireStartEvent event) {
-        if (!CrypticLib.platform().platform().equals(IPlatform.Platform.BUKKIT)) {
+        if (!CrypticLibBukkit.platform().type().equals(Platform.PlatformType.BUKKIT)) {
             //因为Bukkit没有CampfireStartEvent.getRecipe方法，如果是Paper及其下游就可以不用处理
             return;
         }
@@ -83,7 +83,7 @@ public enum SmeltResultRefreshHandler implements Listener {
     @EventHandler
     public void refreshBlockCookResult(BlockCookEvent event) {
         Recipe recipe;
-        if (CrypticLib.platform().platform().equals(IPlatform.Platform.BUKKIT)) {
+        if (CrypticLibBukkit.platform().type().equals(Platform.PlatformType.BUKKIT)) {
             recipe = blockSmeltRecipeMap.get(event.getBlock());
             blockSmeltRecipeMap.remove(event.getBlock());
         } else {
@@ -107,7 +107,7 @@ public enum SmeltResultRefreshHandler implements Listener {
         blockSmeltRecipeMap.put(block, recipe);
         int cookingTime = recipe.getCookingTime();
         //防止玩家对大量烧炼方块进行烧炼打断操作导致出现大量无用缓存，在烧炼配方预计完成时间的一秒后清除缓存
-        CrypticLib.platform().scheduler().runTaskLaterAsync(Craftorithm.instance(), () -> {
+        CrypticLibBukkit.scheduler().runTaskLaterAsync(Craftorithm.instance(), () -> {
             blockSmeltRecipeMap.remove(block);
         }, cookingTime + 20);
     }
