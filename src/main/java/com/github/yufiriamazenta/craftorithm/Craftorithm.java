@@ -1,27 +1,34 @@
 package com.github.yufiriamazenta.craftorithm;
 
-import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import com.github.yufiriamazenta.craftorithm.bstat.Metrics;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.exception.UnsupportedVersionException;
-import com.github.yufiriamazenta.craftorithm.item.ItemManager;
-import com.github.yufiriamazenta.craftorithm.listener.ItemsAdderHandler;
-import com.github.yufiriamazenta.craftorithm.listener.OtherPluginsListenerProxy;
+import com.github.yufiriamazenta.craftorithm.listener.hook.OtherPluginsListenerManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import com.github.yufiriamazenta.craftorithm.util.PluginHookUtil;
-import com.github.yufiriamazenta.craftorithm.util.UpdateUtil;
+import com.github.yufiriamazenta.craftorithm.util.UpdateChecker;
 import crypticlib.BukkitPlugin;
 import crypticlib.CrypticLib;
-import crypticlib.chat.MsgSender;
+import crypticlib.CrypticLibBukkit;
+import crypticlib.MinecraftVersion;
+import crypticlib.chat.BukkitMsgSender;
+import crypticlib.lifecycle.AutoTask;
+import crypticlib.lifecycle.BukkitLifeCycleTask;
+import crypticlib.lifecycle.LifeCycle;
+import crypticlib.lifecycle.TaskRule;
 import org.bukkit.Bukkit;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.server.ServerLoadEvent;
+import org.bukkit.plugin.Plugin;
 
-public final class Craftorithm extends BukkitPlugin implements Listener {
+@AutoTask(
+    rules = {
+        @TaskRule(
+            lifeCycle = LifeCycle.RELOAD
+        )
+    }
+)
+public final class Craftorithm extends BukkitPlugin implements Listener, BukkitLifeCycleTask {
 
     private static Craftorithm INSTANCE;
 
@@ -30,32 +37,20 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
     }
 
     @Override
-    public void load() {
-        super.load();
-    }
-
-    @Override
     public void enable() {
-        if (CrypticLib.minecraftVersion() < 11904) {
-            MsgSender.info("&c[Craftorithm] Unsupported Version");
+        if (MinecraftVersion.current().before(MinecraftVersion.V1_19_4)) {
+            BukkitMsgSender.INSTANCE.info("&c[Craftorithm] Unsupported Version");
             throw new UnsupportedVersionException();
         }
-        CrypticLib.setDebug(PluginConfigs.DEBUG.value());
-        PluginHookUtil.hookPlugins();
-
-        Bukkit.getPluginManager().registerEvents(this, this);
-        if (PluginHookUtil.isItemsAdderLoaded()) {
-            MsgSender.debug("[Craftorithm] Registering ItemsAdder Handler");
-            Bukkit.getPluginManager().registerEvents(ItemsAdderHandler.INSTANCE, this);
-        }
-
-        ItemManager.INSTANCE.loadItemManager();
-        initArcenciel();
+        CrypticLib.DEBUG = PluginConfigs.DEBUG.value();
         loadBStat();
 
-        Bukkit.getPluginManager().registerEvents(OtherPluginsListenerProxy.INSTANCE, this);
-        LangUtil.info(Languages.LOAD_FINISH);
-        UpdateUtil.pullUpdateCheckRequest(Bukkit.getConsoleSender());
+        UpdateChecker.pullUpdateCheckRequest(Bukkit.getConsoleSender());
+        CrypticLibBukkit.scheduler().runTask(this, () -> {
+            RecipeManager.INSTANCE.reloadRecipeManager();
+            OtherPluginsListenerManager.INSTANCE.convertOtherPluginsListeners();
+            LangUtil.info(Languages.LOAD_FINISH);
+        });
     }
 
     @Override
@@ -70,10 +65,6 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
         metrics.addCustomChart(new Metrics.SingleLineChart("recipes", () -> RecipeManager.INSTANCE.getRecipeGroups().size()));
     }
 
-    private void initArcenciel() {
-        ArcencielDispatcher.INSTANCE.loadFuncFile();
-    }
-
     public static Craftorithm instance() {
         return INSTANCE;
     }
@@ -82,16 +73,9 @@ public final class Craftorithm extends BukkitPlugin implements Listener {
         return CraftorithmAPI.INSTANCE;
     }
 
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        if (event.getPlayer().isOp()) {
-            UpdateUtil.pullUpdateCheckRequest(event.getPlayer());
-        }
+    @Override
+    public void run(Plugin plugin, LifeCycle lifeCycle) {
+        CrypticLib.DEBUG = PluginConfigs.DEBUG.value();
     }
 
-    @EventHandler
-    public void onServerLoad(ServerLoadEvent event) {
-        RecipeManager.INSTANCE.reloadRecipeManager();
-        OtherPluginsListenerProxy.INSTANCE.reloadOtherPluginsListener();
-    }
 }

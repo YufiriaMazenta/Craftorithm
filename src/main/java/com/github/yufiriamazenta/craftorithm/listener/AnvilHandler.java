@@ -8,9 +8,9 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
-import crypticlib.listener.BukkitListener;
-import crypticlib.util.InventoryUtil;
-import crypticlib.util.ItemUtil;
+import crypticlib.listener.EventListener;
+import crypticlib.util.InventoryViewHelper;
+import crypticlib.util.ItemHelper;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@BukkitListener
+@EventListener
 public enum AnvilHandler implements Listener {
 
     INSTANCE;
@@ -38,7 +38,7 @@ public enum AnvilHandler implements Listener {
             return;
         ItemStack base = event.getInventory().getItem(0);
         ItemStack addition = event.getInventory().getItem(1);
-        if (ItemUtil.isAir(base) || ItemUtil.isAir(addition))
+        if (ItemHelper.isAir(base) || ItemHelper.isAir(addition))
             return;
         boolean containsLore = ItemUtils.hasCannotCraftLore(base, addition);
         if (containsLore) {
@@ -53,8 +53,8 @@ public enum AnvilHandler implements Listener {
         //进行condition判断
         YamlConfiguration config = RecipeManager.INSTANCE.getRecipeConfig(anvilRecipe.key());
         if (config != null) {
-            Object inventoryView = InventoryUtil.getInventoryView(event);
-            Player player = (Player) InventoryUtil.getInventoryViewPlayer(inventoryView);
+            Object inventoryView = InventoryViewHelper.getInventoryView(event);
+            Player player = (Player) InventoryViewHelper.getPlayer(inventoryView);
             String condition = config.getString("condition", "true");
             condition = "if " + condition;
             boolean conditionResult = (boolean) ArcencielDispatcher.INSTANCE.dispatchArcencielBlock(player, condition).obj();
@@ -120,7 +120,7 @@ public enum AnvilHandler implements Listener {
         ItemStack base = anvilInventory.getItem(0);
         ItemStack addition = anvilInventory.getItem(1);
         ItemStack result = anvilInventory.getItem(2);
-        if (ItemUtil.isAir(base) || ItemUtil.isAir(addition) || ItemUtil.isAir(result))
+        if (ItemHelper.isAir(base) || ItemHelper.isAir(addition) || ItemHelper.isAir(result))
             return;
         AnvilRecipe anvilRecipe = RecipeManager.INSTANCE.matchAnvilRecipe(base, addition);
         if (anvilRecipe == null)
@@ -145,7 +145,7 @@ public enum AnvilHandler implements Listener {
                     break;
                 }
                 ItemStack cursor = event.getCursor();
-                if (ItemUtil.isAir(cursor)) {
+                if (ItemHelper.isAir(cursor)) {
                     base.setAmount(baseNum - needBaseNum);
                     addition.setAmount(additionNum - needAdditionNum);
                     event.setCursor(result);

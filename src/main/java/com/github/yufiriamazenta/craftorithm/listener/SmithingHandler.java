@@ -6,10 +6,9 @@ import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
-import crypticlib.listener.BukkitListener;
-import crypticlib.util.InventoryUtil;
+import crypticlib.listener.EventListener;
+import crypticlib.util.InventoryViewHelper;
 import org.bukkit.NamespacedKey;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
@@ -27,7 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@BukkitListener
+@EventListener
 public enum SmithingHandler implements Listener {
 
     INSTANCE;
@@ -91,8 +90,8 @@ public enum SmithingHandler implements Listener {
         if (config == null)
             return;
 
-        Object inventoryView = InventoryUtil.getInventoryView(event);
-        Player player = (Player) InventoryUtil.getInventoryViewPlayer(inventoryView);
+        Object inventoryView = InventoryViewHelper.getInventoryView(event);
+        Player player = (Player) InventoryViewHelper.getPlayer(inventoryView);
         String condition = config.getString("condition", "true");
         condition = "if " + condition;
         boolean result = (boolean) ArcencielDispatcher.INSTANCE.dispatchArcencielBlock(player, condition).obj();

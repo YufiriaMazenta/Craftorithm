@@ -1,13 +1,15 @@
 package com.github.yufiriamazenta.craftorithm.cmd.sub.recipe;
 
-import com.github.yufiriamazenta.craftorithm.cmd.sub.AbstractSubCommand;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.menu.creator.*;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
+import com.github.yufiriamazenta.craftorithm.util.CommandUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import crypticlib.CrypticLib;
+import crypticlib.command.BukkitSubcommand;
+import crypticlib.command.CommandInfo;
+import crypticlib.perm.PermInfo;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -16,14 +18,19 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public final class CreateRecipeCommand extends AbstractSubCommand {
+public final class CreateRecipeCommand extends BukkitSubcommand {
 
     public static final CreateRecipeCommand INSTANCE = new CreateRecipeCommand();
     private final List<String> recipeTypeList;
     private final Pattern recipeNamePattern = Pattern.compile("^[a-z0-9._-]+$");
 
     private CreateRecipeCommand() {
-        super("create", "craftorithm.command.create");
+        super(CommandInfo
+            .builder("create")
+            .permission(new PermInfo("craftorithm.command.create"))
+            .usage("&r/craftorithm create <recipe_type> [recipe_name]")
+            .build()
+        );
         recipeTypeList = Arrays.stream(RecipeType.values()).map(RecipeType::name).map(s -> s.toLowerCase(Locale.ROOT)).collect(Collectors.toList());
         List<String> unsupportedRecipeTypeList = new ArrayList<>();
         unsupportedRecipeTypeList.add("random_cooking");
@@ -37,17 +44,17 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
     }
 
     @Override
-    public boolean execute(CommandSender sender, List<String> args) {
-        if (!checkSenderIsPlayer(sender))
-            return true;
+    public void execute(CommandSender sender, List<String> args) {
+        if (!CommandUtils.checkSenderIsPlayer(sender))
+            return;
         if (args.isEmpty()) {
-            sendNotEnoughCmdParamMsg(sender, 2);
-            return true;
+            sendDescriptions(sender);
+            return;
         }
         String recipeTypeStr = args.get(0).toLowerCase(Locale.ROOT);
         if (!recipeTypeList.contains(recipeTypeStr)) {
             LangUtil.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
-            return true;
+            return;
         }
         String recipeName;
         if (args.size() < 2)
@@ -58,11 +65,11 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
         Matcher matcher = recipeNamePattern.matcher(recipeName);
         if (!matcher.matches()) {
             LangUtil.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_NAME);
-            return true;
+            return;
         }
         if (RecipeManager.INSTANCE.hasCraftorithmRecipe(recipeName)) {
             LangUtil.sendLang(sender, Languages.COMMAND_CREATE_NAME_USED);
-            return true;
+            return;
         }
         RecipeType recipeType = RecipeType.valueOf(recipeTypeStr.toUpperCase(Locale.ROOT));
         Player player = (Player) sender;
@@ -90,7 +97,6 @@ public final class CreateRecipeCommand extends AbstractSubCommand {
                 LangUtil.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
                 break;
         }
-        return true;
     }
 
     @Override

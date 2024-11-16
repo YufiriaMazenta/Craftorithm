@@ -5,16 +5,18 @@ import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import crypticlib.chat.TextProcessor;
+import crypticlib.chat.BukkitTextProcessor;
+import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.config.ConfigWrapper;
 import crypticlib.conversation.Conversation;
 import crypticlib.conversation.NumberPrompt;
 import crypticlib.conversation.Prompt;
 import crypticlib.ui.display.Icon;
+import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.display.MenuLayout;
 import crypticlib.ui.menu.StoredMenu;
-import crypticlib.util.ItemUtil;
+import crypticlib.util.ItemHelper;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -54,28 +56,28 @@ public class AnvilRecipeCreator extends RecipeCreator {
                     Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
                     layoutMap.put('#', this::getFrameIcon);
                     layoutMap.put('%', this::getResultFrameIcon);
-                    layoutMap.put('*', () -> new Icon(Material.CYAN_STAINED_GLASS_PANE, Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_FRAME.value(player)));
+                    layoutMap.put('*', () -> new Icon(new IconDisplay(Material.CYAN_STAINED_GLASS_PANE, Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_FRAME.value(player))));
                     layoutMap.put('B', this::getCopyNbtIcon);
                     layoutMap.put('C', this::getCostLevelIcon);
-                    layoutMap.put('A', () -> new Icon(Material.ANVIL, Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(player))
+                    layoutMap.put('A', () -> new Icon(new IconDisplay(Material.ANVIL, Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(player)))
                         .setClickAction(
                             event -> {
                                 StoredMenu creator = (StoredMenu) event.getClickedInventory().getHolder();
                                 ItemStack result = Objects.requireNonNull(creator).storedItems().get(24);
                                 ItemStack base = creator.storedItems().get(19);
                                 ItemStack addition = creator.storedItems().get(21);
-                                if (ItemUtil.isAir(result)) {
+                                if (ItemHelper.isAir(result)) {
                                     LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_RESULT);
                                     return;
                                 }
-                                if (ItemUtil.isAir(addition) || ItemUtil.isAir(base)) {
+                                if (ItemHelper.isAir(addition) || ItemHelper.isAir(base)) {
                                     LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_SOURCE);
                                     return;
                                 }
                                 String resultName = ItemUtils.matchItemNameOrCreate(result, false);
                                 String inputName = ItemUtils.matchItemNameOrCreate(base, false);
                                 String ingredientName = ItemUtils.matchItemNameOrCreate(addition, false);
-                                ConfigWrapper recipeConfig = createRecipeConfig(recipeName);
+                                BukkitConfigWrapper recipeConfig = createRecipeConfig(recipeName);
                                 recipeConfig.set("source.copy_nbt", event.getInventory().getItem(40).getItemMeta().hasEnchants());
                                 recipeConfig.set("type", "anvil");
                                 recipeConfig.set("source.base", inputName);
@@ -105,10 +107,12 @@ public class AnvilRecipeCreator extends RecipeCreator {
 
     protected Icon getCopyNbtIcon() {
         Icon icon = new Icon(
-            Material.NAME_TAG,
-            Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COPY_NBT_TOGGLE
-                .value(player)
-                .replace("<enable>", String.valueOf(copyNbt))
+            new IconDisplay(
+                Material.NAME_TAG,
+                Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COPY_NBT_TOGGLE
+                    .value(player)
+                    .replace("<enable>", String.valueOf(copyNbt))
+            )
         ).setClickAction(
             event -> toggleCopyNbt(event.getSlot(), event)
         );
@@ -121,7 +125,7 @@ public class AnvilRecipeCreator extends RecipeCreator {
         super.toggleIconGlowing(slot, event);
         copyNbt = !copyNbt;
         ItemStack display = event.getCurrentItem();
-        ItemUtil.setDisplayName(
+        ItemHelper.setDisplayName(
             display,
             Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COPY_NBT_TOGGLE
                 .value(player)
@@ -131,10 +135,12 @@ public class AnvilRecipeCreator extends RecipeCreator {
 
     protected Icon getCostLevelIcon() {
         return new Icon(
-            Material.EXPERIENCE_BOTTLE,
-            Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_NAME.value(player)
-                .replace("<level>", String.valueOf(costLevel)),
-            Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_LORE.value(player)
+            new IconDisplay(
+                Material.EXPERIENCE_BOTTLE,
+                Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_NAME.value(player)
+                    .replace("<level>", String.valueOf(costLevel)),
+                Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_LORE.value(player)
+            )
         ).setClickAction(
             event -> {
                 Conversation conversation = new Conversation(
@@ -154,7 +160,7 @@ public class AnvilRecipeCreator extends RecipeCreator {
         ItemStack costLevelIcon = this.inventoryCache.getItem(4);
         if (costLevelIcon == null)
             return;
-        ItemUtil.setDisplayName(
+        ItemHelper.setDisplayName(
             costLevelIcon,
             Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_NAME
                 .value(player)
@@ -175,7 +181,7 @@ public class AnvilRecipeCreator extends RecipeCreator {
 
         @Override
         public @NotNull BaseComponent promptText(@NotNull Map<Object, Object> data) {
-            return TextProcessor.toComponent(TextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_INPUT_HINT.value(player)));
+            return BukkitTextProcessor.toComponent(BukkitTextProcessor.color(Languages.MENU_RECIPE_CREATOR_ICON_ANVIL_COST_LEVEL_INPUT_HINT.value(player)));
         }
     }
 

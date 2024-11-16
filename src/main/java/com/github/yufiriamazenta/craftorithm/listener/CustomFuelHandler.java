@@ -1,9 +1,9 @@
 package com.github.yufiriamazenta.craftorithm.listener;
 
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
-import crypticlib.listener.BukkitListener;
-import crypticlib.util.InventoryUtil;
-import crypticlib.util.ItemUtil;
+import crypticlib.listener.EventListener;
+import crypticlib.util.InventoryViewHelper;
+import crypticlib.util.ItemHelper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -14,14 +14,14 @@ import org.bukkit.inventory.FurnaceInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-@BukkitListener
+@EventListener
 public class CustomFuelHandler implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void putFuelOnClick(InventoryClickEvent event) {
         if (event.isCancelled())
             return;
-        Inventory topInventory = InventoryUtil.getTopInventory(event);
+        Inventory topInventory = InventoryViewHelper.getTopInventory(event);
         if (!(topInventory instanceof FurnaceInventory furnaceInventory))
             return;
         Inventory clickInv = event.getClickedInventory();
@@ -36,7 +36,7 @@ public class CustomFuelHandler implements Listener {
                 if (slot != 1)
                     return;
                 ItemStack cursor = event.getCursor();
-                if (ItemUtil.isAir(cursor))
+                if (ItemHelper.isAir(cursor))
                     return;
                 if (cursor.getType().isFuel())
                     return;
@@ -61,9 +61,9 @@ public class CustomFuelHandler implements Listener {
                     return;
                 if (!ItemManager.INSTANCE.isCustomFuel(current))
                     return;
-                if (ItemUtil.isAir(current))
+                if (ItemHelper.isAir(current))
                     return;
-                if (!ItemUtil.isAir(furnaceInventory.getFuel())) {
+                if (!ItemHelper.isAir(furnaceInventory.getFuel())) {
                     ItemStack fuel = furnaceInventory.getFuel();
                     if (!current.isSimilar(fuel)) return;
                     int canPlaceAmount = fuel.getMaxStackSize() - fuel.getAmount();

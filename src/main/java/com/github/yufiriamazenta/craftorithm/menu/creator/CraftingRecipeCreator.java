@@ -5,12 +5,13 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtil;
 import com.google.common.base.Preconditions;
-import crypticlib.config.ConfigWrapper;
+import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.ui.display.Icon;
+import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.display.MenuLayout;
 import crypticlib.ui.menu.StoredMenu;
-import crypticlib.util.ItemUtil;
+import crypticlib.util.ItemHelper;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -41,13 +42,13 @@ public class CraftingRecipeCreator extends UnlockableRecipeCreator {
                 layoutMap.put('*', this::getResultFrameIcon);
                 layoutMap.put('F', this::getUnlockIcon);
                 layoutMap.put('A', () -> new Icon(
-                    Material.CRAFTING_TABLE,
-                    Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(player)
-                    ).setClickAction(event -> {
+                    new IconDisplay(Material.CRAFTING_TABLE,
+                        Languages.MENU_RECIPE_CREATOR_ICON_CONFIRM.value(player)
+                    )).setClickAction(event -> {
                         StoredMenu creator = (StoredMenu) Objects.requireNonNull(event.getClickedInventory()).getHolder();
                         Map<Integer, ItemStack> storedItems = Objects.requireNonNull(creator).storedItems();
                         ItemStack result = storedItems.get(24);
-                        if (ItemUtil.isAir(result)) {
+                        if (ItemHelper.isAir(result)) {
                             LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_RESULT);
                             return;
                         }
@@ -56,7 +57,7 @@ public class CraftingRecipeCreator extends UnlockableRecipeCreator {
                         List<String> sourceList = new ArrayList<>();
                         for (int slot : sourceSlots) {
                             ItemStack source = storedItems.get(slot);
-                            if (ItemUtil.isAir(source)) {
+                            if (ItemHelper.isAir(source)) {
                                 sourceList.add("");
                                 continue;
                             }
@@ -74,7 +75,7 @@ public class CraftingRecipeCreator extends UnlockableRecipeCreator {
                             LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_SOURCE);
                             return;
                         }
-                        ConfigWrapper recipeConfig = createRecipeConfig(recipeName);
+                        BukkitConfigWrapper recipeConfig = createRecipeConfig(recipeName);
                         switch (recipeType()) {
                             case SHAPED:
                                 Map<String, Character> itemRepeatMap = new LinkedHashMap<>();

@@ -1,6 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.bstat;
 
 import crypticlib.CrypticLib;
+import crypticlib.CrypticLibBukkit;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -78,7 +79,7 @@ public class Metrics {
                         enabled,
                         this::appendPlatformData,
                         this::appendServiceData,
-                        submitDataTask -> CrypticLib.platform().scheduler().runTask(plugin, submitDataTask),
+                        submitDataTask -> CrypticLibBukkit.scheduler().runTask(plugin, submitDataTask),
                         plugin::isEnabled,
                         (message, error) -> this.plugin.getLogger().log(Level.WARNING, message, error),
                         (message) -> this.plugin.getLogger().log(Level.INFO, message),
