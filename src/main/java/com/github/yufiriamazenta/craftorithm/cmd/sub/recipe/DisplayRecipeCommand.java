@@ -22,7 +22,11 @@ public class DisplayRecipeCommand extends BukkitSubcommand {
 
     protected DisplayRecipeCommand() {
         super(
-            CommandInfo.builder("display").permission(new PermInfo("craftorithm.command.display")).build()
+            CommandInfo
+                .builder("display")
+                .permission(new PermInfo("craftorithm.command.display"))
+                .usage("&r/craftorithm display <recipe_id>")
+                .build()
         );
     }
 

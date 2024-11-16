@@ -136,14 +136,19 @@ public enum RecipeManager implements BukkitLifeCycleTask {
             saveDefConfigFile(allFiles);
         }
         for (File file : allFiles) {
-            String recipeGroupName = file.getPath().substring(RECIPE_FILE_FOLDER.getPath().length() + 1);
-            recipeGroupName = recipeGroupName.replace("\\", "/");
-            int lastDotIndex = recipeGroupName.lastIndexOf(".");
-            recipeGroupName = recipeGroupName.substring(0, lastDotIndex).toLowerCase();
-            BukkitConfigWrapper recipeGroupConfigWrapper = new BukkitConfigWrapper(file);
-            RecipeType recipeType = RecipeType.valueOf(recipeGroupConfigWrapper.config().getString("type").toUpperCase());
-            RecipeGroup recipeGroup = new RecipeGroup(recipeGroupName, recipeType, recipeGroupConfigWrapper);
-            addRecipeGroup(recipeGroup);
+            try {
+                String recipeGroupName = file.getPath().substring(RECIPE_FILE_FOLDER.getPath().length() + 1);
+                recipeGroupName = recipeGroupName.replace("\\", "/");
+                int lastDotIndex = recipeGroupName.lastIndexOf(".");
+                recipeGroupName = recipeGroupName.substring(0, lastDotIndex).toLowerCase();
+                BukkitConfigWrapper recipeGroupConfigWrapper = new BukkitConfigWrapper(file);
+                String typeStr = recipeGroupConfigWrapper.config().getString("type");
+                RecipeType recipeType = RecipeType.valueOf(typeStr.toUpperCase());
+                RecipeGroup recipeGroup = new RecipeGroup(recipeGroupName, recipeType, recipeGroupConfigWrapper);
+                addRecipeGroup(recipeGroup);
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
         }
     }
 

@@ -74,7 +74,9 @@ public abstract class RecipeCreator extends StoredMenu {
         if (!recipeFile.exists()) {
             FileHelper.createNewFile(recipeFile);
         }
-        return new BukkitConfigWrapper(recipeFile);
+        BukkitConfigWrapper configWrapper = new BukkitConfigWrapper(recipeFile);
+        configWrapper.reloadConfig();
+        return configWrapper;
     }
 
     protected Icon getResultFrameIcon() {

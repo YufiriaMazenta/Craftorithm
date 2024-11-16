@@ -18,7 +18,12 @@ public final class DisableRecipeCommand extends BukkitSubcommand {
     public static final DisableRecipeCommand INSTANCE = new DisableRecipeCommand();
 
     private DisableRecipeCommand() {
-        super(CommandInfo.builder("disable").permission(new PermInfo("craftorithm.command.disable")).build());
+        super(CommandInfo
+            .builder("disable")
+            .permission(new PermInfo("craftorithm.command.disable"))
+            .usage("&r/craftorithm disable <recipe_id>")
+            .build()
+        );
     }
 
     @Override

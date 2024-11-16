@@ -26,7 +26,11 @@ public class GiveItemCommand extends BukkitSubcommand {
 
     private GiveItemCommand() {
         super(
-            CommandInfo.builder("give").permission(new PermInfo("craftorithm.command.item.give")).build()
+            CommandInfo
+                .builder("give")
+                .permission(new PermInfo("craftorithm.command.item.give"))
+                .usage("&r/craftorithm item give <item_id> [player_name]")
+                .build()
         );
     }
 

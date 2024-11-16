@@ -25,7 +25,12 @@ public final class CreateRecipeCommand extends BukkitSubcommand {
     private final Pattern recipeNamePattern = Pattern.compile("^[a-z0-9._-]+$");
 
     private CreateRecipeCommand() {
-        super(CommandInfo.builder("create").permission(new PermInfo("craftorithm.command.create")).build());
+        super(CommandInfo
+            .builder("create")
+            .permission(new PermInfo("craftorithm.command.create"))
+            .usage("&r/craftorithm create <recipe_type> [recipe_name]")
+            .build()
+        );
         recipeTypeList = Arrays.stream(RecipeType.values()).map(RecipeType::name).map(s -> s.toLowerCase(Locale.ROOT)).collect(Collectors.toList());
         List<String> unsupportedRecipeTypeList = new ArrayList<>();
         unsupportedRecipeTypeList.add("random_cooking");
