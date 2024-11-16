@@ -6,19 +6,30 @@ import com.github.yufiriamazenta.craftorithm.arcenciel.block.StringArcencielBloc
 import com.github.yufiriamazenta.craftorithm.arcenciel.obj.ArcencielSignal;
 import com.github.yufiriamazenta.craftorithm.arcenciel.obj.ReturnObj;
 import com.github.yufiriamazenta.craftorithm.arcenciel.token.*;
-import com.github.yufiriamazenta.craftorithm.util.PluginHookUtil;
-import crypticlib.config.ConfigWrapper;
+import com.github.yufiriamazenta.craftorithm.hook.impl.PlayerPointsHooker;
+import com.github.yufiriamazenta.craftorithm.hook.impl.VaultHooker;
+import crypticlib.config.BukkitConfigWrapper;
+import crypticlib.lifecycle.AutoTask;
+import crypticlib.lifecycle.BukkitLifeCycleTask;
+import crypticlib.lifecycle.LifeCycle;
+import crypticlib.lifecycle.TaskRule;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import java.util.List;
 
-public enum ArcencielDispatcher implements IArcencielDispatcher {
+@AutoTask(
+    rules = {
+        @TaskRule(lifeCycle = LifeCycle.ENABLE, priority = 1),
+        @TaskRule(lifeCycle = LifeCycle.RELOAD)
+    }
+)
+public enum ArcencielDispatcher implements IArcencielDispatcher, BukkitLifeCycleTask {
 
     INSTANCE;
-    private ConfigWrapper functionFile;
+    private BukkitConfigWrapper functionFile;
 
     ArcencielDispatcher() {
-        regDefScriptKeyword();
     }
 
     @Override
@@ -55,17 +66,17 @@ public enum ArcencielDispatcher implements IArcencielDispatcher {
         StringArcencielBlock.regScriptKeyword(TokenLevel.INSTANCE);
         StringArcencielBlock.regScriptKeyword(TokenTakeLevel.INSTANCE);
         StringArcencielBlock.regScriptKeyword(TokenPapi.INSTANCE);
-        if (PluginHookUtil.isEconomyLoaded()) {
+        if (VaultHooker.INSTANCE.isEconomyHooked()) {
             StringArcencielBlock.regScriptKeyword(TokenMoney.INSTANCE);
             StringArcencielBlock.regScriptKeyword(TokenTakeMoney.INSTANCE);
         }
-        if (PluginHookUtil.isPlayerPointsLoaded()) {
+        if (PlayerPointsHooker.INSTANCE.isPlayerPointsHooked()) {
             StringArcencielBlock.regScriptKeyword(TokenPoints.INSTANCE);
             StringArcencielBlock.regScriptKeyword(TokenTakePoints.INSTANCE);
         }
     }
 
-    public ConfigWrapper functionFile() {
+    public BukkitConfigWrapper functionFile() {
         return functionFile;
     }
 
@@ -73,9 +84,19 @@ public enum ArcencielDispatcher implements IArcencielDispatcher {
         return functionFile.config().getStringList(funcName);
     }
 
-    public void loadFuncFile() {
-        if (functionFile == null)
-            functionFile = new ConfigWrapper(Craftorithm.instance(), "function.yml");
+    @Override
+    public void run(Plugin plugin, LifeCycle lifeCycle) {
+        switch (lifeCycle) {
+            case ENABLE -> {
+                functionFile = new BukkitConfigWrapper(Craftorithm.instance(), "function.yml");
+                functionFile.reloadConfig();
+                regDefScriptKeyword();
+            }
+            case RELOAD -> {
+                functionFile.reloadConfig();
+            }
+        }
+
     }
 
 }

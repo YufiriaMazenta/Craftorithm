@@ -21,6 +21,7 @@ public class LangUtil {
         if (receiver == null) {
             return;
         }
+        formatMap = new HashMap<>(formatMap);
         String prefix;
         if (receiver instanceof Player)
             prefix = Languages.PREFIX.value((Player) receiver);
@@ -28,7 +29,7 @@ public class LangUtil {
             prefix = Languages.PREFIX.value();
         formatMap.put("<prefix>", prefix);
         formatMap.put("<version>", Craftorithm.instance().getDescription().getVersion());
-        MsgSender.sendMsg(receiver, message, formatMap);
+        message.send(receiver, formatMap);
     }
 
     public static void info(StringLangEntry message) {

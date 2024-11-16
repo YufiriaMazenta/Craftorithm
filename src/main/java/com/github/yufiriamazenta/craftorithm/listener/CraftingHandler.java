@@ -5,10 +5,9 @@ import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
-import crypticlib.listener.BukkitListener;
-import crypticlib.util.InventoryUtil;
+import crypticlib.listener.EventListener;
+import crypticlib.util.InventoryViewHelper;
 import org.bukkit.NamespacedKey;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -22,7 +21,7 @@ import org.bukkit.inventory.Recipe;
 
 import java.util.List;
 
-@BukkitListener
+@EventListener
 public enum CraftingHandler implements Listener {
 
     INSTANCE;
@@ -57,8 +56,8 @@ public enum CraftingHandler implements Listener {
         if (config == null)
             return;
 
-        Object inventoryView = InventoryUtil.getInventoryView(event);
-        Player player = (Player) InventoryUtil.getInventoryViewPlayer(inventoryView);
+        Object inventoryView = InventoryViewHelper.getInventoryView(event);
+        Player player = (Player) InventoryViewHelper.getPlayer(inventoryView);
         String condition = config.getString("condition", "true");
         condition = "if " + condition;
         boolean result = (boolean) ArcencielDispatcher.INSTANCE.dispatchArcencielBlock(player, condition).obj();
@@ -75,14 +74,13 @@ public enum CraftingHandler implements Listener {
             return;
         }
         HumanEntity entity = event.getWhoClicked();
-        if (!(entity instanceof Player)) {
+        if (!(entity instanceof Player player)) {
             return;
         }
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(event.getRecipe());
         YamlConfiguration config = RecipeManager.INSTANCE.getRecipeConfig(recipeKey);
         if (config == null)
             return;
-        Player player = (Player) entity;
         List<String> actions = config.getStringList("actions");
         CraftorithmAPI.INSTANCE.arcencielDispatcher().dispatchArcencielFunc(player, actions);
     }

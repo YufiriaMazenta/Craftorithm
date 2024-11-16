@@ -1,7 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.arcenciel.token;
 
 import com.github.yufiriamazenta.craftorithm.arcenciel.obj.ReturnObj;
-import com.github.yufiriamazenta.craftorithm.util.PluginHookUtil;
+import com.github.yufiriamazenta.craftorithm.hook.impl.VaultHooker;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Player;
 
@@ -17,7 +17,7 @@ public class TokenTakeMoney extends AbstractArcencielToken<Double> {
 
     @Override
     public ReturnObj<Double> exec(Player player, List<String> args) {
-        Economy economy = PluginHookUtil.getEconomy();
+        Economy economy = (Economy) VaultHooker.INSTANCE.economy();
         if (args.isEmpty())
             return new ReturnObj<>(economy.getBalance(player));
         double value = Double.parseDouble(args.get(0));

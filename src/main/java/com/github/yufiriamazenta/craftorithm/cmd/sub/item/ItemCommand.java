@@ -1,29 +1,30 @@
 package com.github.yufiriamazenta.craftorithm.cmd.sub.item;
 
-import com.github.yufiriamazenta.craftorithm.cmd.sub.AbstractSubCommand;
 import com.github.yufiriamazenta.craftorithm.cmd.sub.item.fuel.FuelCommand;
+import crypticlib.command.BukkitSubcommand;
+import crypticlib.command.CommandInfo;
+import crypticlib.command.annotation.Subcommand;
+import crypticlib.perm.PermInfo;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
 
-public final class ItemCommand extends AbstractSubCommand {
+public final class ItemCommand extends BukkitSubcommand {
 
     public static final ItemCommand INSTANCE = new ItemCommand();
 
     private ItemCommand() {
-        super("item", "craftorithm.command.item");
+        super(CommandInfo.builder("item").permission(new PermInfo("craftorithm.command.item")).build());
         regSub(SaveItemCommand.INSTANCE).regSub(GiveItemCommand.INSTANCE).regSub(FuelCommand.INSTANCE);
     }
 
+    @Subcommand
+    BukkitSubcommand save = SaveItemCommand.INSTANCE;
 
+    @Subcommand
+    BukkitSubcommand give = GiveItemCommand.INSTANCE;
 
-    @Override
-    public boolean execute(CommandSender sender, List<String> args) {
-        if (args.isEmpty()) {
-            sendNotEnoughCmdParamMsg(sender, 2);
-            return true;
-        }
-        return true;
-    }
+    @Subcommand
+    BukkitSubcommand fuel = FuelCommand.INSTANCE;
 
 }

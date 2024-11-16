@@ -4,6 +4,8 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import crypticlib.CrypticLib;
+import crypticlib.CrypticLibBukkit;
+import crypticlib.MinecraftVersion;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.*;
 import org.jetbrains.annotations.NotNull;
@@ -53,7 +55,7 @@ public class SmithingRecipeRegistry extends RecipeRegistry {
 
     public boolean copyNbt() {
         //因为1.20.6开始Paper对组件的处理与NBT不同，所以需要倒转此属性
-        if (CrypticLib.minecraftVersion() >= 12005)
+        if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_20_5))
             return !copyNbt;
         else
             return copyNbt;
@@ -82,13 +84,13 @@ public class SmithingRecipeRegistry extends RecipeRegistry {
 
         SmithingRecipe smithingRecipe;
         if (Objects.requireNonNull(smithingType) == SmithingType.TRIM) {
-            if (CrypticLib.isPaper())
+            if (CrypticLibBukkit.isPaper())
                 smithingRecipe = new SmithingTrimRecipe(namespacedKey(), template, base(), addition(), copyNbt());
             else
                 smithingRecipe = new SmithingTrimRecipe(namespacedKey(), template, base(), addition());
         } else {
             Objects.requireNonNull(result(), "Recipe result cannot be null");
-            if (CrypticLib.isPaper())
+            if (CrypticLibBukkit.isPaper())
                 smithingRecipe = new SmithingTransformRecipe(namespacedKey(), result(), template, base(), addition(), copyNbt());
             else
                 smithingRecipe = new SmithingTransformRecipe(namespacedKey(), result(), template, base(), addition());
