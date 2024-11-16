@@ -33,19 +33,4 @@ public final class ReloadCommand extends BukkitSubcommand {
         }
     }
 
-    public static void reloadPlugin() {
-//        reloadConfigs();
-//        CrypticLib.DEBUG = PluginConfigs.DEBUG.value();
-//        CraftorithmItemProvider.INSTANCE.reloadItemProvider();
-//        ItemManager.INSTANCE.reloadCustomCookingFuel();
-//        RecipeManager.INSTANCE.reloadRecipeManager();
-        OtherPluginsListenerManager.INSTANCE.convertOtherPluginsListeners();
-    }
-
-    public static void reloadConfigs() {
-//        Craftorithm.instance().reloadConfig();
-        ItemUtils.reloadCannotCraftLore();
-        ArcencielDispatcher.INSTANCE.functionFile().reloadConfig();
-    }
-
 }

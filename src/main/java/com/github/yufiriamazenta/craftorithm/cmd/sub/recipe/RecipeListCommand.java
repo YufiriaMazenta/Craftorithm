@@ -18,7 +18,7 @@ public final class RecipeListCommand extends BukkitSubcommand {
     public static final RecipeListCommand INSTANCE = new RecipeListCommand();
 
     private RecipeListCommand() {
-        super(CommandInfo.builder("craftorithm.command.list").permission(new PermInfo("craftorithm.command.list")).build());
+        super(CommandInfo.builder("list").permission(new PermInfo("craftorithm.command.list")).build());
     }
 
     @Subcommand
