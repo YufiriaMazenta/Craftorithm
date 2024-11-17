@@ -2,9 +2,9 @@ package com.github.yufiriamazenta.craftorithm.cmd.sub;
 
 import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
-import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
+import com.github.yufiriamazenta.craftorithm.util.CollectionsUtils;
 import com.github.yufiriamazenta.craftorithm.util.CommandUtils;
-import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import com.github.yufiriamazenta.craftorithm.util.LangUtils;
 import crypticlib.command.BukkitSubcommand;
 import crypticlib.command.CommandInfo;
 import crypticlib.perm.PermInfo;
@@ -37,6 +37,6 @@ public final class RunArcencielCmd extends BukkitSubcommand {
         }
         ArcencielDispatcher.INSTANCE.dispatchArcencielBlock((Player) sender, arcencielBlock.toString());
         long execTime = System.currentTimeMillis() - startTime;
-        LangUtil.sendLang(sender, Languages.COMMAND_RUN_ARCENCIEL_SUCCESS, CollectionsUtil.newStringHashMap("<time>", String.valueOf(execTime)));
+        LangUtils.sendLang(sender, Languages.COMMAND_RUN_ARCENCIEL_SUCCESS, CollectionsUtils.newStringHashMap("<time>", String.valueOf(execTime)));
     }
 }

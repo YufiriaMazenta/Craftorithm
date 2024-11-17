@@ -41,7 +41,7 @@ public class UpdateChecker implements Listener {
                 pluginVersion = pluginVersion.substring(0, pluginVersion.indexOf("-"));
                 if (checkVersion(latestVersion, pluginVersion)) {
                     CrypticLibBukkit.scheduler().runTask(Craftorithm.instance(), () -> {
-                        LangUtil.sendLang(sender, Languages.NEW_VERSION, CollectionsUtil.newStringHashMap("<new_version>", latestVersion));
+                        LangUtils.sendLang(sender, Languages.NEW_VERSION, CollectionsUtils.newStringHashMap("<new_version>", latestVersion));
                     });
                 }
                 is.close();

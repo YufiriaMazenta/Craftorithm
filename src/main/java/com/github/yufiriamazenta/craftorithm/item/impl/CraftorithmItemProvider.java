@@ -3,8 +3,8 @@ package com.github.yufiriamazenta.craftorithm.item.impl;
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.item.ItemProvider;
-import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
-import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import com.github.yufiriamazenta.craftorithm.util.CollectionsUtils;
+import com.github.yufiriamazenta.craftorithm.util.LangUtils;
 import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
@@ -111,7 +111,7 @@ public enum CraftorithmItemProvider implements ItemProvider, BukkitLifeCycleTask
                     }
                     itemMap.put(namespace + ":" + itemKey, item);
                 } catch (Exception e) {
-                    LangUtil.info(Languages.LOAD_ITEM_LOAD_EXCEPTION, CollectionsUtil.newStringHashMap("<item_name>", itemKey));
+                    LangUtils.info(Languages.LOAD_ITEM_LOAD_EXCEPTION, CollectionsUtils.newStringHashMap("<item_name>", itemKey));
                     e.printStackTrace();
                 }
             }

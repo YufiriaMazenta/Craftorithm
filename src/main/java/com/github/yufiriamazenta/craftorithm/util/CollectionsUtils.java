@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.StringJoiner;
 import java.util.function.BiFunction;
 
-public class CollectionsUtil {
+public class CollectionsUtils {
 
     public static Map<String, String> newStringHashMap(String... str) {
         Map<String, String> hashMap = new HashMap<>();

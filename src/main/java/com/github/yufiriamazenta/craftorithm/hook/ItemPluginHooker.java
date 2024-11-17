@@ -3,7 +3,7 @@ package com.github.yufiriamazenta.craftorithm.hook;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.item.ItemProvider;
-import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import com.github.yufiriamazenta.craftorithm.util.LangUtils;
 import crypticlib.lifecycle.LifeCycle;
 import org.bukkit.plugin.Plugin;
 
@@ -17,9 +17,9 @@ public interface ItemPluginHooker extends PluginHooker {
     default void run(Plugin plugin, LifeCycle lifeCycle) {
         if (hook()) {
             ItemManager.INSTANCE.regItemProvider(itemProvider());
-            LangUtil.info(Languages.LOAD_HOOK_PLUGIN_SUCCESS, Map.of("<plugin>", pluginName()));
+            LangUtils.info(Languages.LOAD_HOOK_PLUGIN_SUCCESS, Map.of("<plugin>", pluginName()));
         } else {
-            LangUtil.info(Languages.LOAD_HOOK_PLUGIN_NOT_EXIST, Map.of("<plugin>", pluginName()));
+            LangUtils.info(Languages.LOAD_HOOK_PLUGIN_NOT_EXIST, Map.of("<plugin>", pluginName()));
         }
     }
 }

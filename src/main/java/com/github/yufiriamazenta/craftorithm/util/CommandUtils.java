@@ -11,7 +11,7 @@ public class CommandUtils {
         if (sender instanceof Player) {
             return true;
         } else {
-            LangUtil.sendLang(sender, Languages.COMMAND_PLAYER_ONLY);
+            LangUtils.sendLang(sender, Languages.COMMAND_PLAYER_ONLY);
             return false;
         }
     }

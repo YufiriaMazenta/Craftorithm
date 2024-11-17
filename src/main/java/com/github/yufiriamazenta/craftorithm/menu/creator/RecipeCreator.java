@@ -4,9 +4,9 @@ import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
-import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
+import com.github.yufiriamazenta.craftorithm.util.CollectionsUtils;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
-import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import com.github.yufiriamazenta.craftorithm.util.LangUtils;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.MinecraftVersion;
 import crypticlib.config.BukkitConfigWrapper;
@@ -57,10 +57,10 @@ public abstract class RecipeCreator extends StoredMenu {
     }
 
     protected void sendSuccessMsg(HumanEntity receiver, String recipeName) {
-        LangUtil.sendLang(
+        LangUtils.sendLang(
             receiver,
             Languages.COMMAND_CREATE_SUCCESS,
-            CollectionsUtil.newStringHashMap(
+            CollectionsUtils.newStringHashMap(
                 "<recipe_type>",
                 RecipeManager.INSTANCE.getRecipeTypeName(recipeType).value((Player) receiver),
                 "<recipe_name>",

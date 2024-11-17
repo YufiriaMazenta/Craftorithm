@@ -5,8 +5,8 @@ import com.github.yufiriamazenta.craftorithm.arcenciel.obj.ArcencielSignal;
 import com.github.yufiriamazenta.craftorithm.arcenciel.obj.ReturnObj;
 import com.github.yufiriamazenta.craftorithm.arcenciel.token.IArcencielToken;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
-import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
-import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import com.github.yufiriamazenta.craftorithm.util.CollectionsUtils;
+import com.github.yufiriamazenta.craftorithm.util.LangUtils;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class StringArcencielBlock implements IArcencielBlock<String> {
         if (keyword == null) {
             List<String> func = ArcencielDispatcher.INSTANCE.getFunc(keywordStr);
             if (func.isEmpty()) {
-                LangUtil.sendLang(player, Languages.ARCENCIEL_UNKNOWN_TOKEN, CollectionsUtil.newStringHashMap("<token>", keywordStr));
+                LangUtils.sendLang(player, Languages.ARCENCIEL_UNKNOWN_TOKEN, CollectionsUtils.newStringHashMap("<token>", keywordStr));
                 return new ReturnObj<>(ArcencielSignal.CONTINUE);
             } else {
                 return ArcencielDispatcher.INSTANCE.dispatchArcencielFunc(player, func);

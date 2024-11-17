@@ -3,7 +3,7 @@ package com.github.yufiriamazenta.craftorithm.cmd.sub.item.fuel;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.util.CommandUtils;
-import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import com.github.yufiriamazenta.craftorithm.util.LangUtils;
 import crypticlib.command.BukkitSubcommand;
 import crypticlib.command.CommandInfo;
 import org.bukkit.command.CommandSender;
@@ -31,9 +31,9 @@ public class RemoveFuelCommand extends BukkitSubcommand {
 
         boolean result = ItemManager.INSTANCE.removeCustomFuel(args.get(0));
         if (result) {
-            LangUtil.sendLang(sender, Languages.COMMAND_ITEM_FUEL_REMOVE_SUCCESS);
+            LangUtils.sendLang(sender, Languages.COMMAND_ITEM_FUEL_REMOVE_SUCCESS);
         } else {
-            LangUtil.sendLang(sender, Languages.COMMAND_ITEM_FUEL_REMOVE_FAILED_NOT_EXIST);
+            LangUtils.sendLang(sender, Languages.COMMAND_ITEM_FUEL_REMOVE_FAILED_NOT_EXIST);
         }
     }
 

@@ -5,9 +5,6 @@ import crypticlib.command.BukkitSubcommand;
 import crypticlib.command.CommandInfo;
 import crypticlib.command.annotation.Subcommand;
 import crypticlib.perm.PermInfo;
-import org.bukkit.command.CommandSender;
-
-import java.util.List;
 
 public final class ItemCommand extends BukkitSubcommand {
 

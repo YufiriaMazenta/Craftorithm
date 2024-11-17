@@ -1,7 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.cmd.sub;
 
 import com.github.yufiriamazenta.craftorithm.config.Languages;
-import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import com.github.yufiriamazenta.craftorithm.util.LangUtils;
 import crypticlib.command.BukkitSubcommand;
 import crypticlib.command.CommandInfo;
 import crypticlib.perm.PermInfo;
@@ -19,6 +19,6 @@ public final class VersionCommand extends BukkitSubcommand {
 
     @Override
     public void execute(CommandSender sender, List<String> args) {
-        LangUtil.sendLang(sender, Languages.COMMAND_VERSION);
+        LangUtils.sendLang(sender, Languages.COMMAND_VERSION);
     }
 }

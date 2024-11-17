@@ -5,7 +5,6 @@ import com.github.yufiriamazenta.craftorithm.item.impl.CraftorithmItemProvider;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.google.common.base.Preconditions;
 import crypticlib.config.BukkitConfigWrapper;
-import crypticlib.config.ConfigWrapper;
 import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;

@@ -6,7 +6,7 @@ import com.github.yufiriamazenta.craftorithm.menu.creator.*;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.util.CommandUtils;
-import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import com.github.yufiriamazenta.craftorithm.util.LangUtils;
 import crypticlib.command.BukkitSubcommand;
 import crypticlib.command.CommandInfo;
 import crypticlib.perm.PermInfo;
@@ -53,7 +53,7 @@ public final class CreateRecipeCommand extends BukkitSubcommand {
         }
         String recipeTypeStr = args.get(0).toLowerCase(Locale.ROOT);
         if (!recipeTypeList.contains(recipeTypeStr)) {
-            LangUtil.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
+            LangUtils.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
             return;
         }
         String recipeName;
@@ -64,11 +64,11 @@ public final class CreateRecipeCommand extends BukkitSubcommand {
 
         Matcher matcher = recipeNamePattern.matcher(recipeName);
         if (!matcher.matches()) {
-            LangUtil.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_NAME);
+            LangUtils.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_NAME);
             return;
         }
         if (RecipeManager.INSTANCE.hasCraftorithmRecipe(recipeName)) {
-            LangUtil.sendLang(sender, Languages.COMMAND_CREATE_NAME_USED);
+            LangUtils.sendLang(sender, Languages.COMMAND_CREATE_NAME_USED);
             return;
         }
         RecipeType recipeType = RecipeType.valueOf(recipeTypeStr.toUpperCase(Locale.ROOT));
@@ -94,7 +94,7 @@ public final class CreateRecipeCommand extends BukkitSubcommand {
                 new AnvilRecipeCreator(player, recipeName).openMenu();
                 break;
             default:
-                LangUtil.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
+                LangUtils.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
                 break;
         }
     }

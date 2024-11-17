@@ -1,8 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.hook;
 
 import com.github.yufiriamazenta.craftorithm.config.Languages;
-import com.github.yufiriamazenta.craftorithm.util.LangUtil;
-import crypticlib.chat.BukkitMsgSender;
+import com.github.yufiriamazenta.craftorithm.util.LangUtils;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
 import org.bukkit.Bukkit;
@@ -23,9 +22,9 @@ public interface PluginHooker extends BukkitLifeCycleTask {
     @Override
     default void run(Plugin plugin, LifeCycle lifeCycle) {
         if (hook()) {
-            LangUtil.info(Languages.LOAD_HOOK_PLUGIN_SUCCESS, Map.of("<plugin>", pluginName()));
+            LangUtils.info(Languages.LOAD_HOOK_PLUGIN_SUCCESS, Map.of("<plugin>", pluginName()));
         } else {
-            LangUtil.info(Languages.LOAD_HOOK_PLUGIN_NOT_EXIST, Map.of("<plugin>", pluginName()));
+            LangUtils.info(Languages.LOAD_HOOK_PLUGIN_NOT_EXIST, Map.of("<plugin>", pluginName()));
         }
     }
 

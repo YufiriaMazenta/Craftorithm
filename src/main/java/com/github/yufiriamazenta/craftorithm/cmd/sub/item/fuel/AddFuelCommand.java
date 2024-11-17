@@ -3,7 +3,7 @@ package com.github.yufiriamazenta.craftorithm.cmd.sub.item.fuel;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.util.CommandUtils;
-import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import com.github.yufiriamazenta.craftorithm.util.LangUtils;
 import crypticlib.command.BukkitSubcommand;
 import crypticlib.command.CommandInfo;
 import crypticlib.util.ItemHelper;
@@ -35,15 +35,15 @@ public class AddFuelCommand extends BukkitSubcommand {
 
         ItemStack item = ((Player) sender).getInventory().getItemInMainHand();
         if (ItemHelper.isAir(item)) {
-            LangUtil.sendLang(sender, Languages.COMMAND_ITEM_FUEL_ADD_FAILED_ADD_AIR);
+            LangUtils.sendLang(sender, Languages.COMMAND_ITEM_FUEL_ADD_FAILED_ADD_AIR);
             return;
         }
 
         boolean result = ItemManager.INSTANCE.addCustomFuel(item, Integer.parseInt(args.get(0)));
         if (result) {
-            LangUtil.sendLang(sender, Languages.COMMAND_ITEM_FUEL_ADD_SUCCESS);
+            LangUtils.sendLang(sender, Languages.COMMAND_ITEM_FUEL_ADD_SUCCESS);
         } else {
-            LangUtil.sendLang(sender, Languages.COMMAND_ITEM_FUEL_ADD_FAILED_EXIST);
+            LangUtils.sendLang(sender, Languages.COMMAND_ITEM_FUEL_ADD_FAILED_EXIST);
         }
     }
 

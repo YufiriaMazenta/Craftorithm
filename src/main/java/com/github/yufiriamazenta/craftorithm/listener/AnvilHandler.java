@@ -6,7 +6,7 @@ import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
-import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
+import com.github.yufiriamazenta.craftorithm.util.CollectionsUtils;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import crypticlib.listener.EventListener;
 import crypticlib.util.InventoryViewHelper;
@@ -82,7 +82,7 @@ public enum AnvilHandler implements Listener {
                 Map<Enchantment, Integer> baseEnchantments = base.getItemMeta().getEnchants();
                 ItemMeta resultMeta = result.getItemMeta();
                 Map<Enchantment, Integer> resultEnchantments = new HashMap<>(resultMeta.getEnchants());
-                CollectionsUtil.putAllIf(resultEnchantments, baseEnchantments, (type, level) -> {
+                CollectionsUtils.putAllIf(resultEnchantments, baseEnchantments, (type, level) -> {
                     if (resultEnchantments.containsKey(type)) {
                         return level > resultEnchantments.get(type);
                     } else {
