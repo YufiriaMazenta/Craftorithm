@@ -2,7 +2,7 @@ package com.github.yufiriamazenta.craftorithm.arcenciel.token;
 
 import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;
 import com.github.yufiriamazenta.craftorithm.arcenciel.obj.ReturnObj;
-import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
+import com.github.yufiriamazenta.craftorithm.util.CollectionsUtils;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public class TokenIf extends AbstractArcencielToken<Boolean> {
             return new ReturnObj<>(IF, true);
         else if ("false".equalsIgnoreCase(args.get(0)))
             return new ReturnObj<>(IF, false);
-        ReturnObj<Object> returnObj = ArcencielDispatcher.INSTANCE.dispatchArcencielBlock(player, CollectionsUtil.list2ArcencielBlock(args));
+        ReturnObj<Object> returnObj = ArcencielDispatcher.INSTANCE.dispatchArcencielBlock(player, CollectionsUtils.list2ArcencielBlock(args));
         Object obj = returnObj.obj();
         if (obj instanceof Boolean)
             return new ReturnObj<>(IF, ((Boolean) obj));

@@ -6,7 +6,6 @@ import com.github.yufiriamazenta.craftorithm.exception.UnsupportedVersionExcepti
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.impl.*;
-import crypticlib.chat.MsgSender;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;

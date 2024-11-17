@@ -3,7 +3,6 @@ package com.github.yufiriamazenta.craftorithm.recipe.registry.impl;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
-import crypticlib.CrypticLib;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.MinecraftVersion;
 import org.bukkit.NamespacedKey;

@@ -10,8 +10,8 @@ import com.github.yufiriamazenta.craftorithm.recipe.custom.CustomRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.PotionMixRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.impl.SmithingRecipeRegistry;
-import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
-import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import com.github.yufiriamazenta.craftorithm.util.CollectionsUtils;
+import com.github.yufiriamazenta.craftorithm.util.LangUtils;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.MinecraftVersion;
 import crypticlib.chat.BukkitMsgSender;
@@ -107,7 +107,7 @@ public enum RecipeManager implements BukkitLifeCycleTask {
                 }
             }
         } catch (Throwable throwable) {
-            LangUtil.info(Languages.LOAD_RECIPE_LOAD_EXCEPTION, CollectionsUtil.newStringHashMap("<recipe_name>", recipeGroup.groupName()));
+            LangUtils.info(Languages.LOAD_RECIPE_LOAD_EXCEPTION, CollectionsUtils.newStringHashMap("<recipe_name>", recipeGroup.groupName()));
             throwable.printStackTrace();
         }
     }

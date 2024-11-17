@@ -3,7 +3,7 @@ package com.github.yufiriamazenta.craftorithm.menu.creator;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
-import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import com.github.yufiriamazenta.craftorithm.util.LangUtils;
 import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
@@ -62,7 +62,7 @@ public class SmithingRecipeCreator extends UnlockableRecipeCreator {
                                 StoredMenu creator = (StoredMenu) Objects.requireNonNull(event.getClickedInventory()).getHolder();
                                 ItemStack result = Objects.requireNonNull(creator).storedItems().get(24);
                                 if (ItemHelper.isAir(result)) {
-                                    LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_RESULT);
+                                    LangUtils.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_RESULT);
                                     return;
                                 }
                                 String resultName = ItemUtils.matchItemNameOrCreate(result, false);
@@ -73,11 +73,11 @@ public class SmithingRecipeCreator extends UnlockableRecipeCreator {
                                 addition = creator.storedItems().get(21);
                                 templateName = ItemUtils.matchItemNameOrCreate(template, true);
                                 if (ItemHelper.isAir(template)) {
-                                    LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_SOURCE);
+                                    LangUtils.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_SOURCE);
                                     return;
                                 }
                                 if (ItemHelper.isAir(base) || ItemHelper.isAir(addition)) {
-                                    LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_SOURCE);
+                                    LangUtils.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_SOURCE);
                                     return;
                                 }
                                 baseName = ItemUtils.matchItemNameOrCreate(base, true);

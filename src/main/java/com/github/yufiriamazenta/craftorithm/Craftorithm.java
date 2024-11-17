@@ -6,7 +6,7 @@ import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.exception.UnsupportedVersionException;
 import com.github.yufiriamazenta.craftorithm.listener.hook.OtherPluginsListenerManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
-import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import com.github.yufiriamazenta.craftorithm.util.LangUtils;
 import com.github.yufiriamazenta.craftorithm.util.UpdateChecker;
 import crypticlib.BukkitPlugin;
 import crypticlib.CrypticLib;
@@ -49,7 +49,7 @@ public final class Craftorithm extends BukkitPlugin implements Listener, BukkitL
         CrypticLibBukkit.scheduler().runTask(this, () -> {
             RecipeManager.INSTANCE.reloadRecipeManager();
             OtherPluginsListenerManager.INSTANCE.convertOtherPluginsListeners();
-            LangUtil.info(Languages.LOAD_FINISH);
+            LangUtils.info(Languages.LOAD_FINISH);
         });
     }
 

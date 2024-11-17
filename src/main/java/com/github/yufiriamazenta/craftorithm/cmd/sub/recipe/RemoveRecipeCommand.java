@@ -3,7 +3,7 @@ package com.github.yufiriamazenta.craftorithm.cmd.sub.recipe;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
-import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import com.github.yufiriamazenta.craftorithm.util.LangUtils;
 import crypticlib.command.BukkitSubcommand;
 import crypticlib.command.CommandInfo;
 import crypticlib.perm.PermInfo;
@@ -38,10 +38,10 @@ public final class RemoveRecipeCommand extends BukkitSubcommand {
         }
 
         if (RecipeManager.INSTANCE.removeCraftorithmRecipe(args.get(0), true)) {
-            LangUtil.sendLang(sender, Languages.COMMAND_REMOVE_SUCCESS);
+            LangUtils.sendLang(sender, Languages.COMMAND_REMOVE_SUCCESS);
         }
         else
-            LangUtil.sendLang(sender, Languages.COMMAND_REMOVE_NOT_EXIST);
+            LangUtils.sendLang(sender, Languages.COMMAND_REMOVE_NOT_EXIST);
     }
 
     @Override

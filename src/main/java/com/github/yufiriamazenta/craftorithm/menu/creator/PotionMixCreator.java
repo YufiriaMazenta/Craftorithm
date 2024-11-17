@@ -3,9 +3,8 @@ package com.github.yufiriamazenta.craftorithm.menu.creator;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
-import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import com.github.yufiriamazenta.craftorithm.util.LangUtils;
 import crypticlib.config.BukkitConfigWrapper;
-import crypticlib.config.ConfigWrapper;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.display.MenuDisplay;
@@ -57,11 +56,11 @@ public class PotionMixCreator extends RecipeCreator {
                             ItemStack input = creator.storedItems().get(19);
                             ItemStack ingredient = creator.storedItems().get(21);
                             if (ItemHelper.isAir(result)) {
-                                LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_RESULT);
+                                LangUtils.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_RESULT);
                                 return;
                             }
                             if (ItemHelper.isAir(ingredient) || ItemHelper.isAir(input)) {
-                                LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_SOURCE);
+                                LangUtils.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_SOURCE);
                                 return;
                             }
                             String resultName = ItemUtils.matchItemNameOrCreate(result, false);

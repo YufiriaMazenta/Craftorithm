@@ -3,7 +3,7 @@ package com.github.yufiriamazenta.craftorithm.menu.creator;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
-import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import com.github.yufiriamazenta.craftorithm.util.LangUtils;
 import com.google.common.base.Preconditions;
 import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.ui.display.Icon;
@@ -49,7 +49,7 @@ public class CraftingRecipeCreator extends UnlockableRecipeCreator {
                         Map<Integer, ItemStack> storedItems = Objects.requireNonNull(creator).storedItems();
                         ItemStack result = storedItems.get(24);
                         if (ItemHelper.isAir(result)) {
-                            LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_RESULT);
+                            LangUtils.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_RESULT);
                             return;
                         }
                         String resultName = ItemUtils.matchItemNameOrCreate(result, false);
@@ -72,7 +72,7 @@ public class CraftingRecipeCreator extends UnlockableRecipeCreator {
                             }
                         }
                         if (allEmpty) {
-                            LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_SOURCE);
+                            LangUtils.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_SOURCE);
                             return;
                         }
                         BukkitConfigWrapper recipeConfig = createRecipeConfig(recipeName);

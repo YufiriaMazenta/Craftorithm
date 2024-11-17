@@ -3,7 +3,7 @@ package com.github.yufiriamazenta.craftorithm.cmd.sub.item;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.item.impl.CraftorithmItemProvider;
 import com.github.yufiriamazenta.craftorithm.util.CommandUtils;
-import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import com.github.yufiriamazenta.craftorithm.util.LangUtils;
 import crypticlib.command.BukkitSubcommand;
 import crypticlib.command.CommandInfo;
 import crypticlib.perm.PermInfo;
@@ -41,12 +41,12 @@ public final class SaveItemCommand extends BukkitSubcommand {
 
         ItemStack item = ((Player) sender).getInventory().getItemInMainHand();
         if (ItemHelper.isAir(item)) {
-            LangUtil.sendLang(sender, Languages.COMMAND_ITEM_SAVE_FAILED_SAVE_AIR);
+            LangUtils.sendLang(sender, Languages.COMMAND_ITEM_SAVE_FAILED_SAVE_AIR);
             return;
         }
 
         CraftorithmItemProvider.INSTANCE.regCraftorithmItem(args.get(0), args.get(1), item.clone());
-        LangUtil.sendLang(sender, Languages.COMMAND_ITEM_SAVE_SUCCESS);
+        LangUtils.sendLang(sender, Languages.COMMAND_ITEM_SAVE_SUCCESS);
     }
 
     @Override

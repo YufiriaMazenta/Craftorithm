@@ -3,9 +3,9 @@ package com.github.yufiriamazenta.craftorithm.cmd.sub.item;
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.item.impl.CraftorithmItemProvider;
-import com.github.yufiriamazenta.craftorithm.util.CollectionsUtil;
+import com.github.yufiriamazenta.craftorithm.util.CollectionsUtils;
 import com.github.yufiriamazenta.craftorithm.util.CommandUtils;
-import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import com.github.yufiriamazenta.craftorithm.util.LangUtils;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.command.BukkitSubcommand;
 import crypticlib.command.CommandInfo;
@@ -45,7 +45,7 @@ public class GiveItemCommand extends BukkitSubcommand {
         if (args.size() >= 2) {
             player = Bukkit.getPlayer(args.get(1));
             if (player == null) {
-                LangUtil.sendLang(sender, Languages.COMMAND_ITEM_GIVE_PLAYER_OFFLINE);
+                LangUtils.sendLang(sender, Languages.COMMAND_ITEM_GIVE_PLAYER_OFFLINE);
                 return;
             }
         } else {
@@ -58,7 +58,7 @@ public class GiveItemCommand extends BukkitSubcommand {
 
         ItemStack itemStack = CraftorithmItemProvider.INSTANCE.getItem(args.get(0));
         if (itemStack == null) {
-            LangUtil.sendLang(sender, Languages.COMMAND_ITEM_GIVE_NOT_EXIST_ITEM, CollectionsUtil.newStringHashMap("<item_name>", args.get(0)));
+            LangUtils.sendLang(sender, Languages.COMMAND_ITEM_GIVE_NOT_EXIST_ITEM, CollectionsUtils.newStringHashMap("<item_name>", args.get(0)));
             return;
         }
 
@@ -77,7 +77,7 @@ public class GiveItemCommand extends BukkitSubcommand {
                 CrypticLibBukkit.scheduler().runTaskOnEntity(Craftorithm.instance(), player, dropTask, dropTask);
             }
         }
-        LangUtil.sendLang(sender, Languages.COMMAND_ITEM_GIVE_SUCCESS);
+        LangUtils.sendLang(sender, Languages.COMMAND_ITEM_GIVE_SUCCESS);
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.github.yufiriamazenta.craftorithm.cmd.sub.recipe;
 
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
-import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import com.github.yufiriamazenta.craftorithm.util.LangUtils;
 import crypticlib.command.BukkitSubcommand;
 import crypticlib.command.CommandInfo;
 import crypticlib.perm.PermInfo;
@@ -34,15 +34,15 @@ public final class DisableRecipeCommand extends BukkitSubcommand {
         }
         NamespacedKey removeRecipeKey = NamespacedKey.fromString(args.get(0));
         if (!RecipeManager.INSTANCE.serverRecipesCache().containsKey(removeRecipeKey)) {
-            LangUtil.sendLang(sender, Languages.COMMAND_DISABLE_NOT_EXIST);
+            LangUtils.sendLang(sender, Languages.COMMAND_DISABLE_NOT_EXIST);
             return;
         }
         List<NamespacedKey> removeRecipeKeys = Collections.singletonList(removeRecipeKey);
         if (RecipeManager.INSTANCE.disableOtherPluginsRecipe(removeRecipeKeys, true)) {
-            LangUtil.sendLang(sender, Languages.COMMAND_DISABLE_SUCCESS);
+            LangUtils.sendLang(sender, Languages.COMMAND_DISABLE_SUCCESS);
         }
         else
-            LangUtil.sendLang(sender, Languages.COMMAND_DISABLE_FAILED);
+            LangUtils.sendLang(sender, Languages.COMMAND_DISABLE_FAILED);
     }
 
     @Override

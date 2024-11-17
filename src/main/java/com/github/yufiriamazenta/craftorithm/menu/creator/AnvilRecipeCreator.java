@@ -4,10 +4,9 @@ import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
-import com.github.yufiriamazenta.craftorithm.util.LangUtil;
+import com.github.yufiriamazenta.craftorithm.util.LangUtils;
 import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.config.BukkitConfigWrapper;
-import crypticlib.config.ConfigWrapper;
 import crypticlib.conversation.Conversation;
 import crypticlib.conversation.NumberPrompt;
 import crypticlib.conversation.Prompt;
@@ -67,11 +66,11 @@ public class AnvilRecipeCreator extends RecipeCreator {
                                 ItemStack base = creator.storedItems().get(19);
                                 ItemStack addition = creator.storedItems().get(21);
                                 if (ItemHelper.isAir(result)) {
-                                    LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_RESULT);
+                                    LangUtils.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_RESULT);
                                     return;
                                 }
                                 if (ItemHelper.isAir(addition) || ItemHelper.isAir(base)) {
-                                    LangUtil.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_SOURCE);
+                                    LangUtils.sendLang(event.getWhoClicked(), Languages.COMMAND_CREATE_NULL_SOURCE);
                                     return;
                                 }
                                 String resultName = ItemUtils.matchItemNameOrCreate(result, false);
