@@ -29,9 +29,9 @@ public class RecipeFactory {
         recipeRegistryProviderMap = new HashMap<>();
         multipleRecipeRegistryProviderMap = new HashMap<>();
 
-        recipeRegistryProviderMap.put(RecipeType.SHAPED, RecipeFactory::newShapedRecipe);
+        recipeRegistryProviderMap.put(RecipeType.VANILLA_SHAPED, RecipeFactory::newShapedRecipe);
         recipeRegistryProviderMap.put(RecipeType.SHAPELESS, RecipeFactory::newShapelessRecipe);
-        multipleRecipeRegistryProviderMap.put(RecipeType.SHAPED, RecipeFactory::newMultipleShapedRecipe);
+        multipleRecipeRegistryProviderMap.put(RecipeType.VANILLA_SHAPED, RecipeFactory::newMultipleShapedRecipe);
         multipleRecipeRegistryProviderMap.put(RecipeType.SHAPELESS, RecipeFactory::newMultipleShapelessRecipe);
         recipeRegistryProviderMap.put(RecipeType.COOKING, RecipeFactory::newCookingRecipe);
         multipleRecipeRegistryProviderMap.put(RecipeType.COOKING, RecipeFactory::newMultipleCookingRecipe);
@@ -55,7 +55,7 @@ public class RecipeFactory {
 
     public static List<RecipeRegistry> newRecipeRegistry(YamlConfiguration config, String key) {
         key = key.toLowerCase(Locale.ROOT);
-        String recipeTypeStr = config.getString("type", "shaped");
+        String recipeTypeStr = config.getString("type", "shaped.yml");
         RecipeType recipeType = RecipeType.valueOf(recipeTypeStr.toUpperCase(Locale.ROOT));
         boolean multiple = config.getBoolean("multiple", false);
         if (multiple) {
@@ -419,7 +419,7 @@ public class RecipeFactory {
 
     private static ItemStack getResultItem(YamlConfiguration config) {
         String resultStr;
-        if (config.getString("type", "shaped").equals("random_cooking")) {
+        if (config.getString("type", "shaped.yml").equals("random_cooking")) {
             String tmpStr = config.getStringList("result").get(0);
             tmpStr = tmpStr.substring(0, tmpStr.lastIndexOf(" "));
             resultStr = tmpStr;

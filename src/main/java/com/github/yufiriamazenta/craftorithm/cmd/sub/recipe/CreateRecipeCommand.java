@@ -74,7 +74,7 @@ public final class CreateRecipeCommand extends BukkitSubcommand {
         RecipeType recipeType = RecipeType.valueOf(recipeTypeStr.toUpperCase(Locale.ROOT));
         Player player = (Player) sender;
         switch (recipeType) {
-            case SHAPED:
+            case VANILLA_SHAPED:
             case SHAPELESS:
                 new CraftingRecipeCreator(player, recipeType, recipeName).openMenu();
                 break;

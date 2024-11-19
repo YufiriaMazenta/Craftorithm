@@ -49,7 +49,7 @@ public class Languages {
     public static final StringLangEntry MENU_NEW_RECIPE_LIST_ICON_PREVIOUS = new StringLangEntry("menu.new_recipe_list.icon.previous");
     public static final StringLangEntry MENU_NEW_RECIPE_LIST_ICON_NEXT = new StringLangEntry("menu.new_recipe_list.icon.next");
     public static final StringListLangEntry MENU_NEW_RECIPE_LIST_ICON_ELEMENTS_LORE = new StringListLangEntry("menu.new_recipe_list.icon.elements.lore");
-    public static final StringLangEntry MENU_RECIPE_DISPLAY_TITLE_SHAPED = new StringLangEntry("menu.recipe_display.title.shaped");
+    public static final StringLangEntry MENU_RECIPE_DISPLAY_TITLE_SHAPED = new StringLangEntry("menu.recipe_display.title.shaped.yml");
     public static final StringLangEntry MENU_RECIPE_DISPLAY_TITLE_SHAPELESS = new StringLangEntry("menu.recipe_display.title.shapeless");
     public static final StringLangEntry MENU_RECIPE_DISPLAY_TITLE_FURNACE = new StringLangEntry("menu.recipe_display.title.furnace");
     public static final StringLangEntry MENU_RECIPE_DISPLAY_TITLE_BLASTING = new StringLangEntry("menu.recipe_display.title.blasting");
@@ -109,7 +109,7 @@ public class Languages {
     public static final StringLangEntry LOAD_ITEM_LOAD_EXCEPTION = new StringLangEntry("load.item_load_exception");
     public static final StringLangEntry LOAD_HOOK_PLUGIN_SUCCESS = new StringLangEntry("load.hook_plugin.success");
     public static final StringLangEntry LOAD_HOOK_PLUGIN_NOT_EXIST = new StringLangEntry("load.hook_plugin.not_exist");
-    public static final StringLangEntry RECIPE_TYPE_NAME_SHAPED = new StringLangEntry("recipe_type_name.shaped");
+    public static final StringLangEntry RECIPE_TYPE_NAME_SHAPED = new StringLangEntry("recipe_type_name.shaped.yml");
     public static final StringLangEntry RECIPE_TYPE_NAME_SHAPELESS = new StringLangEntry("recipe_type_name.shapeless");
     public static final StringLangEntry RECIPE_TYPE_NAME_COOKING = new StringLangEntry("recipe_type_name.cooking");
     public static final StringLangEntry RECIPE_TYPE_NAME_SMITHING = new StringLangEntry("recipe_type_name.smithing");
