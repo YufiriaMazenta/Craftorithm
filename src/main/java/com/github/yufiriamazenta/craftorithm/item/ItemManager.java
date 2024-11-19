@@ -21,9 +21,7 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @AutoTask(
@@ -42,8 +40,10 @@ public enum ItemManager implements BukkitLifeCycleTask {
 
     private final Map<String, ItemProvider> itemProviderMap;
     private final Map<String, Integer> customCookingFuelMap;
-    private final BukkitConfigWrapper customFuelConfig = new BukkitConfigWrapper(Craftorithm.instance(), "custom_fuels.yml");
+    private BukkitConfigWrapper customFuelConfig;
     private final String BURN_TIME_KEY = "burn_time";
+    private BukkitConfigWrapper itemPacksConfig;
+    private final Map<String, ItemPack> itemPacks = new ConcurrentHashMap<>();
 
     ItemManager() {
         itemProviderMap = new LinkedHashMap<>();
@@ -99,7 +99,7 @@ public enum ItemManager implements BukkitLifeCycleTask {
         else
             item = provider.getItem(name);
         if (item == null)
-            throw new IllegalArgumentException("Can not found item " + name + " from provider: " + namespace);
+            throw new ItemNotFoundException("Can not found item " + name + " from provider: " + namespace);
         item.setAmount(item.getAmount() * amountScale);
         return item;
     }
@@ -136,7 +136,7 @@ public enum ItemManager implements BukkitLifeCycleTask {
     public ItemStack matchVanillaItem(String itemKey, int amount) {
         Material material = MaterialHelper.matchMaterial(itemKey);
         if (material == null) {
-            throw new IllegalArgumentException("Can not found item " + itemKey);
+            throw new ItemNotFoundException("Can not found item " + itemKey);
         }
         return new ItemStack(material, amount);
     }
@@ -201,9 +201,31 @@ public enum ItemManager implements BukkitLifeCycleTask {
 
     @Override
     public void run(Plugin plugin, LifeCycle lifeCycle) {
-        if (lifeCycle.equals(LifeCycle.ENABLE))
+        if (lifeCycle.equals(LifeCycle.ENABLE)) {
+            customFuelConfig = new BukkitConfigWrapper(Craftorithm.instance(), "custom_fuels.yml");
+            itemPacksConfig = new BukkitConfigWrapper(Craftorithm.instance(), "item_packs.yml");
             regItemProvider(CraftorithmItemProvider.INSTANCE);
+        }
         reloadCustomCookingFuel();
+        reloadItemPacks();
+    }
+
+    private void reloadItemPacks() {
+        itemPacksConfig.reloadConfig();
+        itemPacks.clear();
+        YamlConfiguration config = itemPacksConfig.config();
+        for (String key : config.getKeys(false)) {
+            List<String> itemIds = config.getStringList(key);
+            if (itemIds.isEmpty()) {
+                continue;
+            }
+            ItemPack itemPack = new ItemPack(key, itemIds);
+            itemPacks.put(key, itemPack);
+        }
+    }
+
+    public @Nullable ItemPack getItemPack(String itemId) {
+        return itemPacks.get(itemId);
     }
 
 }

@@ -46,7 +46,7 @@ public enum RandomSmeltHandler implements Listener {
         YamlConfiguration config = RecipeManager.INSTANCE.getRecipeConfig(event.getRecipe().getKey());
         if (config == null)
             return;
-        if (config.getString("type", "shaped").equals("random_cooking")) {
+        if (config.getString("type", "shaped.yml").equals("random_cooking")) {
             randomFurnaceBlockMap.put(event.getBlock(), config);
         }
     }

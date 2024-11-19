@@ -70,7 +70,7 @@ public final class ShapedRecipeRegistry extends CraftingRecipeRegistry {
             shapedRecipe.setCategory(craftingBookCategory);
 
         shapedRecipe.setGroup(group());
-        RecipeManager.INSTANCE.regRecipe(group(), shapedRecipe, RecipeType.SHAPED);
+        RecipeManager.INSTANCE.regRecipe(group(), shapedRecipe, RecipeType.VANILLA_SHAPED);
     }
 
 

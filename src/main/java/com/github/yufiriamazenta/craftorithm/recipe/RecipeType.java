@@ -1,7 +1,8 @@
 package com.github.yufiriamazenta.craftorithm.recipe;
 
 public enum RecipeType {
-    SHAPED,
+
+    VANILLA_SHAPED,
     SHAPELESS,
     COOKING,
     SMITHING,

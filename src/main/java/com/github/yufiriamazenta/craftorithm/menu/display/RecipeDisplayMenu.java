@@ -39,7 +39,7 @@ public class RecipeDisplayMenu extends Menu {
         this.recipe = recipe;
         RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(this.recipe);
         switch (recipeType) {
-            case SHAPED:
+            case VANILLA_SHAPED:
                 setShapedRecipeMenu();
                 inventoryType = InventoryType.WORKBENCH;
                 invTitle = Languages.MENU_RECIPE_DISPLAY_TITLE_SHAPED.value(player);

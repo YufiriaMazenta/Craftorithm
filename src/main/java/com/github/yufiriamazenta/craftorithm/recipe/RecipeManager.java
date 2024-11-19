@@ -59,7 +59,7 @@ public enum RecipeManager implements BukkitLifeCycleTask {
     private final Map<NamespacedKey, PotionMixRecipe> potionMixRecipeMap;
     private final Map<NamespacedKey, AnvilRecipe> anvilRecipeMap;
     public static final List<RecipeType> UNLOCKABLE_RECIPE_TYPE =
-        List.of(RecipeType.SHAPED, RecipeType.SHAPELESS, RecipeType.COOKING, RecipeType.SMITHING, RecipeType.STONE_CUTTING, RecipeType.RANDOM_COOKING);
+        List.of(RecipeType.VANILLA_SHAPED, RecipeType.SHAPELESS, RecipeType.COOKING, RecipeType.SMITHING, RecipeType.STONE_CUTTING, RecipeType.RANDOM_COOKING);
     private boolean supportPotionMix;
 
     RecipeManager() {
@@ -359,7 +359,7 @@ public enum RecipeManager implements BukkitLifeCycleTask {
 
     public RecipeType getRecipeType(Recipe recipe) {
         return switch (recipe) {
-            case ShapedRecipe shapedRecipe -> RecipeType.SHAPED;
+            case ShapedRecipe shapedRecipe -> RecipeType.VANILLA_SHAPED;
             case ShapelessRecipe shapelessRecipe -> RecipeType.SHAPELESS;
             case CookingRecipe<?> cookingRecipe -> RecipeType.COOKING;
             case SmithingRecipe smithingRecipe -> RecipeType.SMITHING;
@@ -372,7 +372,7 @@ public enum RecipeManager implements BukkitLifeCycleTask {
 
     public StringLangEntry getRecipeTypeName(RecipeType recipeType) {
         return switch (recipeType) {
-            case SHAPED -> Languages.RECIPE_TYPE_NAME_SHAPED;
+            case VANILLA_SHAPED -> Languages.RECIPE_TYPE_NAME_SHAPED;
             case SHAPELESS -> Languages.RECIPE_TYPE_NAME_SHAPELESS;
             case COOKING -> Languages.RECIPE_TYPE_NAME_COOKING;
             case SMITHING -> Languages.RECIPE_TYPE_NAME_SMITHING;
@@ -455,24 +455,24 @@ public enum RecipeManager implements BukkitLifeCycleTask {
     private void saveDefConfigFile(List<File> allFiles) {
         if (!PluginConfigs.RELEASE_DEFAULT_RECIPES.value())
             return;
-        Craftorithm.instance().saveResource("recipes/example_shaped.yml", false);
-        Craftorithm.instance().saveResource("recipes/example_shapeless.yml", false);
+        Craftorithm.instance().saveResource("recipes/legacy/example_shaped.yml", false);
+        Craftorithm.instance().saveResource("recipes/legacy/example_shapeless.yml", false);
         allFiles.add(new File(RECIPE_FILE_FOLDER, "example_shaped.yml"));
         allFiles.add(new File(RECIPE_FILE_FOLDER, "example_shapeless.yml"));
-        Craftorithm.instance().saveResource("recipes/example_smithing.yml", false);
-        Craftorithm.instance().saveResource("recipes/example_stone_cutting.yml", false);
-        Craftorithm.instance().saveResource("recipes/example_cooking.yml", false);
+        Craftorithm.instance().saveResource("recipes/legacy/example_smithing.yml", false);
+        Craftorithm.instance().saveResource("recipes/legacy/example_stone_cutting.yml", false);
+        Craftorithm.instance().saveResource("recipes/legacy/example_cooking.yml", false);
         allFiles.add(new File(RECIPE_FILE_FOLDER, "example_cooking.yml"));
         allFiles.add(new File(RECIPE_FILE_FOLDER, "example_smithing.yml"));
         allFiles.add(new File(RECIPE_FILE_FOLDER, "example_stone_cutting.yml"));
-        Craftorithm.instance().saveResource("recipes/example_random_cooking.yml", false);
+        Craftorithm.instance().saveResource("recipes/legacy/example_random_cooking.yml", false);
         allFiles.add(new File(RECIPE_FILE_FOLDER, "example_random_cooking.yml"));
         if (supportPotionMix()) {
-            Craftorithm.instance().saveResource("recipes/example_potion.yml", false);
+            Craftorithm.instance().saveResource("recipes/legacy/example_potion.yml", false);
             allFiles.add(new File(RECIPE_FILE_FOLDER, "example_potion.yml"));
         }
         if (PluginConfigs.ENABLE_ANVIL_RECIPE.value()) {
-            Craftorithm.instance().saveResource("recipes/example_anvil.yml", false);
+            Craftorithm.instance().saveResource("recipes/legacy/example_anvil.yml", false);
             allFiles.add(new File(RECIPE_FILE_FOLDER, "example_anvil.yml"));
         }
     }
@@ -481,8 +481,8 @@ public enum RecipeManager implements BukkitLifeCycleTask {
     public void run(Plugin plugin, LifeCycle lifeCycle) {
         if (lifeCycle.equals(LifeCycle.ENABLE)) {
             //设置各类型配方的注册方法
-            recipeRegisterMap.put(RecipeType.SHAPED, Bukkit::addRecipe);
-            recipeRemoverMap.put(RecipeType.SHAPED, this::removeRecipes);
+            recipeRegisterMap.put(RecipeType.VANILLA_SHAPED, Bukkit::addRecipe);
+            recipeRemoverMap.put(RecipeType.VANILLA_SHAPED, this::removeRecipes);
             recipeRegisterMap.put(RecipeType.SHAPELESS, Bukkit::addRecipe);
             recipeRemoverMap.put(RecipeType.SHAPELESS, this::removeRecipes);
             recipeRegisterMap.put(RecipeType.COOKING, Bukkit::addRecipe);

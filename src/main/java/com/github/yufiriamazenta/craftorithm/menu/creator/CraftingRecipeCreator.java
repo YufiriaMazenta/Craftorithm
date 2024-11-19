@@ -25,8 +25,8 @@ public class CraftingRecipeCreator extends UnlockableRecipeCreator {
     public CraftingRecipeCreator(@NotNull Player player, RecipeType recipeType, @NotNull String recipeName) {
         super(player, recipeType, recipeName);
         Preconditions.checkArgument(
-            recipeType.equals(RecipeType.SHAPED) || recipeType.equals(RecipeType.SHAPELESS),
-            "Crafting recipe only allow shaped and shapeless type"
+            recipeType.equals(RecipeType.VANILLA_SHAPED) || recipeType.equals(RecipeType.SHAPELESS),
+            "Crafting recipe only allow shaped.yml and shapeless type"
         );
         setDisplay(new MenuDisplay(
             title(),
@@ -77,7 +77,7 @@ public class CraftingRecipeCreator extends UnlockableRecipeCreator {
                         }
                         BukkitConfigWrapper recipeConfig = createRecipeConfig(recipeName);
                         switch (recipeType()) {
-                            case SHAPED:
+                            case VANILLA_SHAPED:
                                 Map<String, Character> itemRepeatMap = new LinkedHashMap<>();
                                 List<String> shape = new ArrayList<>();
                                 Map<Character, String> itemNameMap = new LinkedHashMap<>();
@@ -101,7 +101,7 @@ public class CraftingRecipeCreator extends UnlockableRecipeCreator {
                                 shape.removeIf(s -> s.trim().isEmpty());
                                 removeEmptyColumn(shape);
 
-                                recipeConfig.set("type", "shaped");
+                                recipeConfig.set("type", "shaped.yml");
                                 recipeConfig.set("shape", shape);
                                 recipeConfig.set("source", itemNameMap);
                                 break;

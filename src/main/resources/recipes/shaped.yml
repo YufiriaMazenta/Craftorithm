@@ -1,0 +1,14 @@
+version: 2
+type: 'vanilla_shaped'
+result: 'minecraft:diamond_sword'
+group: 'example'
+shape:
+  - 'AAA'
+  - 'BBB'
+  - 'CCC'
+ingredients:
+  A: 'item_pack:hello_world'
+  B: 'minecraft:barrier'
+  C: 'minecraft:diamond'
+recipe_book_category: building
+
