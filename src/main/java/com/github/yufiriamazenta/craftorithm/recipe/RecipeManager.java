@@ -3,17 +3,11 @@ package com.github.yufiriamazenta.craftorithm.recipe;
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
-import com.github.yufiriamazenta.craftorithm.exception.UnsupportedVersionException;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.CustomRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.PotionMixRecipe;
-import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
-import com.github.yufiriamazenta.craftorithm.recipe.registry.impl.SmithingRecipeRegistry;
-import com.github.yufiriamazenta.craftorithm.util.CollectionsUtils;
-import com.github.yufiriamazenta.craftorithm.util.LangUtils;
 import crypticlib.CrypticLibBukkit;
-import crypticlib.MinecraftVersion;
 import crypticlib.chat.BukkitMsgSender;
 import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.lang.entry.StringLangEntry;
@@ -35,7 +29,6 @@ import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.function.Consumer;
 
 @AutoTask(
     rules = {
@@ -49,134 +42,60 @@ public enum RecipeManager implements BukkitLifeCycleTask {
     public final File RECIPE_FILE_FOLDER = new File(Craftorithm.instance().getDataFolder().getPath(), "recipes");
     private final BukkitConfigWrapper removedRecipesConfigWrapper = new BukkitConfigWrapper(Craftorithm.instance(), "removed_recipes.yml");
     public final String PLUGIN_RECIPE_NAMESPACE = "craftorithm";
-    private final Map<NamespacedKey, RecipeRegistry> recipeRegistryMap = new ConcurrentHashMap<>();
-    private final Map<RecipeType, Map<String, RecipeGroup>> pluginRecipeMap;
-    private final Map<RecipeType, Consumer<Recipe>> recipeRegisterMap;
-    private final Map<RecipeType, Consumer<List<NamespacedKey>>> recipeRemoverMap;
-    private final Map<NamespacedKey, Boolean> recipeUnlockMap;
+    private final Map<RecipeType, RecipeLoader<?>> recipeLoaderMap = new ConcurrentHashMap<>();
+
+    private RecipeRegistry recipeRegistry;
     private final List<Recipe> removeRecipeRecycleBin;
     private final Map<NamespacedKey, Recipe> serverRecipesCache;
-    private final Map<NamespacedKey, PotionMixRecipe> potionMixRecipeMap;
-    private final Map<NamespacedKey, AnvilRecipe> anvilRecipeMap;
     public static final List<RecipeType> UNLOCKABLE_RECIPE_TYPE =
         List.of(RecipeType.VANILLA_SHAPED, RecipeType.SHAPELESS, RecipeType.COOKING, RecipeType.SMITHING, RecipeType.STONE_CUTTING, RecipeType.RANDOM_COOKING);
     private boolean supportPotionMix;
 
     RecipeManager() {
-        pluginRecipeMap = new ConcurrentHashMap<>();
-        recipeRegisterMap = new ConcurrentHashMap<>();
-        recipeRemoverMap = new ConcurrentHashMap<>();
-        recipeUnlockMap = new ConcurrentHashMap<>();
-        potionMixRecipeMap = new ConcurrentHashMap<>();
-        anvilRecipeMap = new ConcurrentHashMap<>();
         removeRecipeRecycleBin = new CopyOnWriteArrayList<>();
         serverRecipesCache = new ConcurrentHashMap<>();
+        recipeRegistry = SimpleRecipeRegistry.INSTANCE;
     }
 
     public void reloadRecipeManager() {
         resetRecipes();
-        loadRecipeGroups();
-        loadRecipes();
+        loadRecipesFromConfig();
         loadServerRecipeCache();
         reloadRemovedRecipes();
     }
 
-    private void loadRecipes() {
-        for (Map.Entry<RecipeType, Map<String, RecipeGroup>> pluginRecipeMapEntry : pluginRecipeMap.entrySet()) {
-            Map<String, RecipeGroup> recipeGroupMap = pluginRecipeMapEntry.getValue();
-            recipeGroupMap.forEach((recipeGroupName, recipeGroup) -> loadRecipeGroup(recipeGroup));
-        }
-        if (CrypticLibBukkit.platform().isPaper()) {
-            if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_20_1)) {
-                Bukkit.updateRecipes();
-            }
-        }
-    }
-
-    public void loadRecipeGroup(RecipeGroup recipeGroup) {
-        try {
-            YamlConfiguration config = recipeGroup.recipeGroupConfig().config();
-            if (!hasCraftorithmRecipe(recipeGroup.groupName())) {
-                addRecipeGroup(recipeGroup);
-            }
-            for (RecipeRegistry recipeRegistry : RecipeFactory.newRecipeRegistry(config, recipeGroup.groupName())) {
-                recipeRegistry.register();
-                recipeRegistryMap.put(recipeRegistry.namespacedKey(), recipeRegistry);
-                if (UNLOCKABLE_RECIPE_TYPE.contains(recipeGroup.recipeType())) {
-                    recipeUnlockMap.put(recipeRegistry.namespacedKey(), recipeGroup.unlock());
-                }
-            }
-        } catch (Throwable throwable) {
-            LangUtils.info(Languages.LOAD_RECIPE_LOAD_EXCEPTION, CollectionsUtils.newStringHashMap("<recipe_name>", recipeGroup.groupName()));
-            throwable.printStackTrace();
-        }
-    }
-
-    public void addRecipeGroup(RecipeGroup recipeGroup) {
-        RecipeType recipeType = recipeGroup.recipeType();
-        if (pluginRecipeMap.containsKey(recipeType)) {
-            Map<String, RecipeGroup> recipeGroupMap = pluginRecipeMap.get(recipeType);
-            recipeGroupMap.put(recipeGroup.groupName(), recipeGroup);
-        } else {
-            Map<String, RecipeGroup> recipeGroupMap = new ConcurrentHashMap<>();
-            recipeGroupMap.put(recipeGroup.groupName(), recipeGroup);
-            pluginRecipeMap.put(recipeType, recipeGroupMap);
-        }
-    }
-
-    private void loadRecipeGroups() {
-        pluginRecipeMap.clear();
+    private void loadRecipesFromConfig() {
         if (!RECIPE_FILE_FOLDER.exists()) {
             boolean mkdirResult = RECIPE_FILE_FOLDER.mkdir();
             if (!mkdirResult)
                 return;
         }
         List<File> allFiles = FileHelper.allYamlFiles(RECIPE_FILE_FOLDER);
-        if (allFiles.isEmpty()) {
-            saveDefConfigFile(allFiles);
-        }
         for (File file : allFiles) {
             try {
-                String recipeGroupName = file.getPath().substring(RECIPE_FILE_FOLDER.getPath().length() + 1);
-                recipeGroupName = recipeGroupName.replace("\\", "/");
-                int lastDotIndex = recipeGroupName.lastIndexOf(".");
-                recipeGroupName = recipeGroupName.substring(0, lastDotIndex).toLowerCase();
-                BukkitConfigWrapper recipeGroupConfigWrapper = new BukkitConfigWrapper(file);
-                String typeStr = recipeGroupConfigWrapper.config().getString("type");
-                RecipeType recipeType = RecipeType.valueOf(typeStr.toUpperCase());
-                RecipeGroup recipeGroup = new RecipeGroup(recipeGroupName, recipeType, recipeGroupConfigWrapper);
-                addRecipeGroup(recipeGroup);
+                String recipeName = file.getPath().substring(RECIPE_FILE_FOLDER.getPath().length() + 1);
+                recipeName = recipeName.replace("\\", "/");
+                recipeName = recipeName.replace('-', '_');
+                int lastDotIndex = recipeName.lastIndexOf(".");
+                recipeName = recipeName.substring(0, lastDotIndex).toLowerCase();
+                BukkitConfigWrapper recipeConfigWrapper = new BukkitConfigWrapper(file);
+                YamlConfiguration recipeConfig = recipeConfigWrapper.config();
+                String typeStr = recipeConfig.getString("type");
+                RecipeType recipeType;
+                if (typeStr == null) {
+                    throw new RecipeLoadException("Unknown recipe type of " + recipeName);
+                }
+                recipeType = RecipeType.valueOf(typeStr.toUpperCase());
+                RecipeLoader<?> recipeLoader = recipeLoaderMap.get(recipeType);
+                if (recipeLoader == null) {
+                    throw new RecipeLoadException("Can not load recipe type " + recipeType);
+                }
+                Recipe recipe = recipeLoader.loadRecipe(recipeName, recipeConfig);
+                recipeRegistry.registerRecipe(recipe);
             } catch (Throwable throwable) {
                 throwable.printStackTrace();
             }
         }
-    }
-
-    public void regRecipe(String recipeGroupName, Recipe recipe, RecipeType recipeType) {
-        if (!pluginRecipeMap.containsKey(recipeType))
-            pluginRecipeMap.put(recipeType, new ConcurrentHashMap<>());
-        Map<String, RecipeGroup> recipeGroupMap = pluginRecipeMap.get(recipeType);
-        if (!recipeGroupMap.containsKey(recipeGroupName))
-            throw new IllegalArgumentException("Can not find recipe group " + recipeGroupName + ", use addRecipeGroup() method to add recipe group.");
-        RecipeGroup recipeGroup = recipeGroupMap.get(recipeGroupName);
-        recipeGroup.addRecipeKey(getRecipeKey(recipe));
-        recipeRegisterMap.getOrDefault(recipeType, recipe1 -> {
-            throw new UnsupportedVersionException("Can not register " + recipeType.name().toLowerCase() + " recipe");
-        }).accept(recipe);
-    }
-
-    public Map<RecipeType, Map<String, RecipeGroup>> recipeMap() {
-        return pluginRecipeMap;
-    }
-
-    public Recipe getRecipe(NamespacedKey namespacedKey) {
-        if (supportPotionMix) {
-            if (potionMixRecipeMap.containsKey(namespacedKey))
-                return potionMixRecipeMap.get(namespacedKey);
-        }
-        if (anvilRecipeMap.containsKey(namespacedKey))
-            return anvilRecipeMap.get(namespacedKey);
-        return Bukkit.getRecipe(namespacedKey);
     }
 
     public @Nullable NamespacedKey getRecipeKey(Recipe recipe) {
@@ -257,7 +176,6 @@ public enum RecipeManager implements BukkitLifeCycleTask {
             removeRecipeRecycleBin.add(recipe);
         }
     }
-
 
     /**
      * 删除配方的基础方法
@@ -397,23 +315,14 @@ public enum RecipeManager implements BukkitLifeCycleTask {
     }
 
     public void resetRecipes() {
-        //删除Craftorithm的配方
-        pluginRecipeMap.forEach((type, recipeGroupMaps) -> {
-            recipeGroupMaps.forEach((group, recipeKeys) -> {
-                removeCraftorithmRecipe(group, false);
-            });
-        });
-
-        potionMixRecipeMap.clear();
-        anvilRecipeMap.clear();
+        //删除Craftorithm注册的配方
+        recipeRegistry.resetRecipes();
 
         //先将已经删除的配方还原
         for (Recipe recipe : removeRecipeRecycleBin) {
             Bukkit.addRecipe(recipe);
         }
         removeRecipeRecycleBin.clear();
-        pluginRecipeMap.clear();
-        recipeUnlockMap.clear();
     }
 
     public void loadServerRecipeCache() {
@@ -452,70 +361,26 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         return supportPotionMix;
     }
 
-    private void saveDefConfigFile(List<File> allFiles) {
-        if (!PluginConfigs.RELEASE_DEFAULT_RECIPES.value())
-            return;
-        Craftorithm.instance().saveResource("recipes/legacy/example_shaped.yml", false);
-        Craftorithm.instance().saveResource("recipes/legacy/example_shapeless.yml", false);
-        allFiles.add(new File(RECIPE_FILE_FOLDER, "example_shaped.yml"));
-        allFiles.add(new File(RECIPE_FILE_FOLDER, "example_shapeless.yml"));
-        Craftorithm.instance().saveResource("recipes/legacy/example_smithing.yml", false);
-        Craftorithm.instance().saveResource("recipes/legacy/example_stone_cutting.yml", false);
-        Craftorithm.instance().saveResource("recipes/legacy/example_cooking.yml", false);
-        allFiles.add(new File(RECIPE_FILE_FOLDER, "example_cooking.yml"));
-        allFiles.add(new File(RECIPE_FILE_FOLDER, "example_smithing.yml"));
-        allFiles.add(new File(RECIPE_FILE_FOLDER, "example_stone_cutting.yml"));
-        Craftorithm.instance().saveResource("recipes/legacy/example_random_cooking.yml", false);
-        allFiles.add(new File(RECIPE_FILE_FOLDER, "example_random_cooking.yml"));
-        if (supportPotionMix()) {
-            Craftorithm.instance().saveResource("recipes/legacy/example_potion.yml", false);
-            allFiles.add(new File(RECIPE_FILE_FOLDER, "example_potion.yml"));
-        }
-        if (PluginConfigs.ENABLE_ANVIL_RECIPE.value()) {
-            Craftorithm.instance().saveResource("recipes/legacy/example_anvil.yml", false);
-            allFiles.add(new File(RECIPE_FILE_FOLDER, "example_anvil.yml"));
-        }
+    public RecipeRegistry recipeRegistry() {
+        return recipeRegistry;
+    }
+
+    public RecipeManager setRecipeRegistry(RecipeRegistry recipeRegistry) {
+        this.recipeRegistry = recipeRegistry;
+        return this;
     }
 
     @Override
     public void run(Plugin plugin, LifeCycle lifeCycle) {
         if (lifeCycle.equals(LifeCycle.ENABLE)) {
             //设置各类型配方的注册方法
-            recipeRegisterMap.put(RecipeType.VANILLA_SHAPED, Bukkit::addRecipe);
-            recipeRemoverMap.put(RecipeType.VANILLA_SHAPED, this::removeRecipes);
-            recipeRegisterMap.put(RecipeType.SHAPELESS, Bukkit::addRecipe);
-            recipeRemoverMap.put(RecipeType.SHAPELESS, this::removeRecipes);
-            recipeRegisterMap.put(RecipeType.COOKING, Bukkit::addRecipe);
-            recipeRemoverMap.put(RecipeType.COOKING, this::removeRecipes);
-            recipeRegisterMap.put(RecipeType.STONE_CUTTING, Bukkit::addRecipe);
-            recipeRemoverMap.put(RecipeType.STONE_CUTTING, this::removeRecipes);
-            recipeRegisterMap.put(RecipeType.SMITHING, Bukkit::addRecipe);
-            recipeRemoverMap.put(RecipeType.SMITHING, this::removeRecipes);
-            recipeRegisterMap.put(RecipeType.RANDOM_COOKING, Bukkit::addRecipe);
-            recipeRemoverMap.put(RecipeType.RANDOM_COOKING, this::removeRecipes);
-
             if (PluginConfigs.ENABLE_ANVIL_RECIPE.value()) {
-                recipeRegisterMap.put(RecipeType.ANVIL, recipe -> {
-                    anvilRecipeMap.put(getRecipeKey(recipe), (AnvilRecipe) recipe);
-                });
-                recipeRemoverMap.put(RecipeType.ANVIL, keys -> {
-                    for (NamespacedKey key : keys) {
-                        anvilRecipeMap.remove(key);
-                    }
-                });
+
             }
 
             if (!CrypticLibBukkit.platform().type().equals(Platform.PlatformType.BUKKIT)) {
                 supportPotionMix = true;
-                recipeRegisterMap.put(RecipeType.POTION, recipe -> {
-                    Bukkit.getPotionBrewer().addPotionMix(((PotionMixRecipe) recipe).potionMix());
-                    potionMixRecipeMap.put(((PotionMixRecipe) recipe).key(), (PotionMixRecipe) recipe);
-                });
-                recipeRemoverMap.put(RecipeType.POTION, recipeList -> {
-                    for (NamespacedKey recipeKey : recipeList) {
-                        Bukkit.getPotionBrewer().removePotionMix(recipeKey);
-                    }
-                });
+
             }
         } else {
             reloadRecipeManager();
