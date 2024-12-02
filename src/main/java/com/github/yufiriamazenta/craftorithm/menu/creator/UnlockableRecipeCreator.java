@@ -2,7 +2,7 @@ package com.github.yufiriamazenta.craftorithm.menu.creator;
 
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
+import com.github.yufiriamazenta.craftorithm.recipe.SimpleRecipeTypes;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
@@ -17,7 +17,7 @@ public abstract class UnlockableRecipeCreator extends RecipeCreator {
 
     private boolean unlock;
 
-    public UnlockableRecipeCreator(@NotNull Player player, @NotNull RecipeType recipeType, @NotNull String recipeName) {
+    public UnlockableRecipeCreator(@NotNull Player player, @NotNull SimpleRecipeTypes recipeType, @NotNull String recipeName) {
         super(player, recipeType, recipeName);
         unlock = PluginConfigs.DEFAULT_RECIPE_UNLOCK.value();
     }

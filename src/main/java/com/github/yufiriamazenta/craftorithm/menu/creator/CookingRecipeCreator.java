@@ -2,7 +2,7 @@ package com.github.yufiriamazenta.craftorithm.menu.creator;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
+import com.github.yufiriamazenta.craftorithm.recipe.SimpleRecipeTypes;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtils;
 import crypticlib.chat.BukkitTextProcessor;
@@ -36,7 +36,7 @@ public class CookingRecipeCreator extends UnlockableRecipeCreator {
     private boolean inConversation = false;
 
     public CookingRecipeCreator(@NotNull Player player, @NotNull String recipeName) {
-        super(player, RecipeType.COOKING, recipeName);
+        super(player, SimpleRecipeTypes.COOKING, recipeName);
         this.cookingTime = 200;
         this.exp = 0;
         this.cookingToggleMap = new HashMap<>();

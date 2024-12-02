@@ -1,7 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.menu.creator;
 
 import com.github.yufiriamazenta.craftorithm.config.Languages;
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
+import com.github.yufiriamazenta.craftorithm.recipe.SimpleRecipeTypes;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtils;
 import crypticlib.config.BukkitConfigWrapper;
@@ -22,7 +22,7 @@ import java.util.function.Supplier;
 public class StoneCuttingRecipeCreator extends UnlockableRecipeCreator {
 
     public StoneCuttingRecipeCreator(@NotNull Player player, @NotNull String recipeName) {
-        super(player, RecipeType.STONE_CUTTING, recipeName);
+        super(player, SimpleRecipeTypes.STONE_CUTTING, recipeName);
         setDisplay(
             new MenuDisplay(
                 title(),

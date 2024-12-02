@@ -1,98 +1,43 @@
 package com.github.yufiriamazenta.craftorithm.recipe;
 
-import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
-import crypticlib.config.BukkitConfigWrapper;
 import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.LinkedHashMap;
 
 public class RecipeGroup {
 
-    private String groupName;
-    private List<NamespacedKey> groupRecipeKeys = new CopyOnWriteArrayList<>();
-    private final RecipeType recipeType;
-    private BukkitConfigWrapper recipeGroupConfig;
-    private int sortId;
-    private boolean unlock;
+    private final String groupName;
+    private final LinkedHashMap<NamespacedKey, Recipe> groupRecipes = new LinkedHashMap<>();
 
-    public RecipeGroup(@NotNull String groupName, @NotNull RecipeType recipeType, @NotNull BukkitConfigWrapper recipeGroupConfig) {
-        this(groupName, new ArrayList<>(), recipeType, recipeGroupConfig);
-    }
-
-    public RecipeGroup(@NotNull String groupName, @NotNull List<NamespacedKey> groupRecipeKeys, @NotNull RecipeType recipeType, @NotNull BukkitConfigWrapper recipeGroupConfig) {
+    public RecipeGroup(@NotNull String groupName) {
         this.groupName = groupName;
-        this.groupRecipeKeys.addAll(groupRecipeKeys);
-        this.recipeType = recipeType;
-        this.recipeGroupConfig = recipeGroupConfig;
-        this.sortId = recipeGroupConfig.config().getInt("sort_id", 0);
-        this.unlock = recipeGroupConfig.config().getBoolean("unlock", PluginConfigs.DEFAULT_RECIPE_UNLOCK.value());
     }
 
     public String groupName() {
         return groupName;
     }
 
-    public RecipeGroup setGroupName(String groupName) {
-        this.groupName = groupName;
-        return this;
-    }
-
-    public List<NamespacedKey> groupRecipeKeys() {
-        return groupRecipeKeys;
-    }
-
-    public RecipeGroup setGroupRecipeKeys(List<NamespacedKey> groupRecipeKeys) {
-        this.groupRecipeKeys = groupRecipeKeys;
-        return this;
-    }
-
     public boolean contains(NamespacedKey namespacedKey) {
-        return groupRecipeKeys.contains(namespacedKey);
+        return groupRecipes.containsKey(namespacedKey);
     }
 
-    public RecipeGroup addRecipeKey(NamespacedKey namespacedKey) {
-        if (groupRecipeKeys.contains(namespacedKey))
-            return this;
-        groupRecipeKeys.add(namespacedKey);
-        return this;
+    public boolean contains(Recipe recipe) {
+        NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
+        return groupRecipes.containsKey(recipeKey);
     }
 
     public boolean isEmpty() {
-        return groupRecipeKeys.isEmpty();
+        return groupRecipes.isEmpty();
     }
 
-    public RecipeType recipeType() {
-        return recipeType;
+    public void addRecipe(@NotNull Recipe recipe) {
+        groupRecipes.put(RecipeManager.INSTANCE.getRecipeKey(recipe), recipe);
     }
 
-    public int sortId() {
-        return sortId;
-    }
-
-    public RecipeGroup setSortId(int sortId) {
-        this.sortId = sortId;
-        return this;
-    }
-
-    public boolean unlock() {
-        return unlock;
-    }
-
-    public RecipeGroup setUnlock(boolean unlock) {
-        this.unlock = unlock;
-        return this;
-    }
-
-    public @NotNull BukkitConfigWrapper recipeGroupConfig() {
-        return recipeGroupConfig;
-    }
-
-    public RecipeGroup setRecipeGroupConfig(BukkitConfigWrapper recipeGroupConfig) {
-        this.recipeGroupConfig = recipeGroupConfig;
-        return this;
+    public void removeRecipe(@NotNull Recipe recipe) {
+        groupRecipes.remove(RecipeManager.INSTANCE.getRecipeKey(recipe));
     }
 
 }

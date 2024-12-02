@@ -1,6 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.recipe.custom;
 
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
+import com.github.yufiriamazenta.craftorithm.recipe.SimpleRecipeTypes;
 import io.papermc.paper.potion.PotionMix;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -25,8 +25,8 @@ public class PotionMixRecipe implements CustomRecipe {
     }
 
     @Override
-    public RecipeType recipeType() {
-        return RecipeType.POTION;
+    public SimpleRecipeTypes recipeType() {
+        return SimpleRecipeTypes.POTION;
     }
 
     @Override

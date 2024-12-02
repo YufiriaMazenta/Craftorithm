@@ -1,16 +1,20 @@
 package com.github.yufiriamazenta.craftorithm.recipe;
 
-public enum RecipeType {
+import org.bukkit.inventory.Recipe;
+import org.jetbrains.annotations.NotNull;
 
-    VANILLA_SHAPED,
+/**
+ * 配方类型的接口,表示一种配方类型
+ * 应为枚举或实现equals和hashcode方法以保证其唯一性
+ */
+public interface RecipeType {
 
-    SHAPELESS,
-    COOKING,
-    SMITHING,
-    STONE_CUTTING,
-    RANDOM_COOKING,
-    UNKNOWN,
-    POTION,
-    ANVIL
+    @NotNull String typeId();
+
+    @NotNull RecipeLoader<?> recipeLoader();
+
+    @NotNull RecipeRegister recipeRegister();
+
+    boolean isThisType(Recipe recipe);
 
 }

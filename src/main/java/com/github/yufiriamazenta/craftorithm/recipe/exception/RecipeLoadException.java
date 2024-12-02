@@ -1,4 +1,4 @@
-package com.github.yufiriamazenta.craftorithm.recipe;
+package com.github.yufiriamazenta.craftorithm.recipe.exception;
 
 public class RecipeLoadException extends RuntimeException {
 

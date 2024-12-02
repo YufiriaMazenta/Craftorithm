@@ -1,16 +1,10 @@
 package com.github.yufiriamazenta.craftorithm.recipe;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
-import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
-import com.github.yufiriamazenta.craftorithm.item.ItemManager;
-import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
-import com.github.yufiriamazenta.craftorithm.recipe.custom.CustomRecipe;
-import com.github.yufiriamazenta.craftorithm.recipe.custom.PotionMixRecipe;
+import com.github.yufiriamazenta.craftorithm.recipe.exception.RecipeLoadException;
 import crypticlib.CrypticLibBukkit;
-import crypticlib.chat.BukkitMsgSender;
 import crypticlib.config.BukkitConfigWrapper;
-import crypticlib.lang.entry.StringLangEntry;
 import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
@@ -40,28 +34,89 @@ public enum RecipeManager implements BukkitLifeCycleTask {
 
     INSTANCE;
     public final File RECIPE_FILE_FOLDER = new File(Craftorithm.instance().getDataFolder().getPath(), "recipes");
-    private final BukkitConfigWrapper removedRecipesConfigWrapper = new BukkitConfigWrapper(Craftorithm.instance(), "removed_recipes.yml");
     public final String PLUGIN_RECIPE_NAMESPACE = "craftorithm";
-    private final Map<RecipeType, RecipeLoader<?>> recipeLoaderMap = new ConcurrentHashMap<>();
-
-    private RecipeRegistry recipeRegistry;
-    private final List<Recipe> removeRecipeRecycleBin;
+    private final BukkitConfigWrapper disabledRecipesConfigWrapper = new BukkitConfigWrapper(Craftorithm.instance(), "disabled_recipes.yml");
+    private final Map<String, RecipeType> recipeTypes = new ConcurrentHashMap<>();
+    private final Map<NamespacedKey, Recipe> craftorithmRecipes = new ConcurrentHashMap<>();
+    private final Map<NamespacedKey, BukkitConfigWrapper> recipeConfigWrapperMap = new ConcurrentHashMap<>();
+    private final List<Recipe> disabledRecipes;
     private final Map<NamespacedKey, Recipe> serverRecipesCache;
-    public static final List<RecipeType> UNLOCKABLE_RECIPE_TYPE =
-        List.of(RecipeType.VANILLA_SHAPED, RecipeType.SHAPELESS, RecipeType.COOKING, RecipeType.SMITHING, RecipeType.STONE_CUTTING, RecipeType.RANDOM_COOKING);
     private boolean supportPotionMix;
 
     RecipeManager() {
-        removeRecipeRecycleBin = new CopyOnWriteArrayList<>();
+        disabledRecipes = new CopyOnWriteArrayList<>();
         serverRecipesCache = new ConcurrentHashMap<>();
-        recipeRegistry = SimpleRecipeRegistry.INSTANCE;
     }
+
+    //配方类型相关
+
+    public boolean regRecipeType(RecipeType type) {
+        return regRecipeType(type, false);
+    }
+
+    public boolean regRecipeType(RecipeType type, boolean force) {
+        if (type == null) {
+            return false;
+        }
+        if (recipeTypes.containsKey(type.typeId())) {
+            if (force) {
+                recipeTypes.put(type.typeId(), type);
+                return true;
+            } else {
+                return false;
+            }
+        }
+        recipeTypes.put(type.typeId(), type);
+        return true;
+    }
+
+    private void regDefaultRecipeTypes() {
+        regRecipeType(SimpleRecipeTypes.VANILLA_SHAPED);
+        if (PluginConfigs.ENABLE_ANVIL_RECIPE.value()) {
+
+        }
+        if (!CrypticLibBukkit.platform().type().equals(Platform.PlatformType.BUKKIT)) {
+            supportPotionMix = true;
+        }
+    }
+
+    public RecipeType getRecipeType(Recipe recipe) {
+        for (RecipeType recipeType : recipeTypes.values()) {
+            if (recipeType.isThisType(recipe)) {
+                return recipeType;
+            }
+        }
+        return SimpleRecipeTypes.UNKNOWN;
+    }
+
+    //配方加载相关
 
     public void reloadRecipeManager() {
         resetRecipes();
         loadRecipesFromConfig();
         loadServerRecipeCache();
-        reloadRemovedRecipes();
+        reloadDisabledRecipes();
+    }
+
+
+    /**
+     * 重置配方
+     * 将会删除所有由本插件及使用本插件提供的API添加的配方
+     * 同时还原被删除的其他配方
+     */
+    public void resetRecipes() {
+        //删除所有由插件添加的配方
+        craftorithmRecipes.forEach((recipeKey, recipe) -> {
+            RecipeType recipeType = getRecipeType(recipe);
+            recipeType.recipeRegister().unregisterRecipe(recipeKey);
+        });
+
+        //还原被禁用的配方
+        for (Recipe recipe : disabledRecipes) {
+            RecipeType recipeType = getRecipeType(recipe);
+            recipeType.recipeRegister().registerRecipe(recipe);
+        }
+        disabledRecipes.clear();
     }
 
     private void loadRecipesFromConfig() {
@@ -85,54 +140,71 @@ public enum RecipeManager implements BukkitLifeCycleTask {
                 if (typeStr == null) {
                     throw new RecipeLoadException("Unknown recipe type of " + recipeName);
                 }
-                recipeType = RecipeType.valueOf(typeStr.toUpperCase());
-                RecipeLoader<?> recipeLoader = recipeLoaderMap.get(recipeType);
-                if (recipeLoader == null) {
-                    throw new RecipeLoadException("Can not load recipe type " + recipeType);
+                recipeType = recipeTypes.get(typeStr);
+                if (recipeType == null) {
+                    throw new RecipeLoadException("Unknown recipe type of " + recipeName);
                 }
+                RecipeLoader<?> recipeLoader = recipeType.recipeLoader();
                 Recipe recipe = recipeLoader.loadRecipe(recipeName, recipeConfig);
-                recipeRegistry.registerRecipe(recipe);
+                RecipeRegister recipeRegister = recipeType.recipeRegister();
+                boolean result = recipeRegister.registerRecipe(recipe);
+                if (result) {
+                    NamespacedKey recipeKey = getRecipeKey(recipe);
+                    craftorithmRecipes.put(recipeKey, recipe);
+                    recipeConfigWrapperMap.put(recipeKey, recipeConfigWrapper);
+                }
             } catch (Throwable throwable) {
                 throwable.printStackTrace();
             }
         }
     }
 
-    public @Nullable NamespacedKey getRecipeKey(Recipe recipe) {
-        if (recipe instanceof CustomRecipe customRecipe) {
-            return customRecipe.key();
-        } else if (recipe instanceof Keyed keyed) {
-            return keyed.getKey();
-        } else {
-//            MsgSender.info("&e[WARN] Can not get key of recipe " + recipe);
-            return null;
+    public void loadServerRecipeCache() {
+        Iterator<Recipe> recipeIterator = Bukkit.recipeIterator();
+        serverRecipesCache.clear();
+        while (recipeIterator.hasNext()) {
+            Recipe recipe = recipeIterator.next();
+            NamespacedKey key = getRecipeKey(recipe);
+            if (key != null)
+                serverRecipesCache.put(key, recipe);
         }
     }
 
-    private void reloadRemovedRecipes() {
-        removedRecipesConfigWrapper.reloadConfig();
-        List<String> removedRecipes = removedRecipesConfigWrapper.config().getStringList("recipes");
+    private void reloadDisabledRecipes() {
+        disabledRecipesConfigWrapper.reloadConfig();
+        List<String> disabledRecipes = disabledRecipesConfigWrapper.config().getStringList("recipes");
         if (PluginConfigs.REMOVE_ALL_VANILLA_RECIPE.value()) {
             serverRecipesCache.forEach((key, recipe) -> {
                 if (key.getNamespace().equals("minecraft")) {
-                    if (removedRecipes.contains(key.toString()))
+                    if (disabledRecipes.contains(key.toString()))
                         return;
-                    removedRecipes.add(key.toString());
+                    disabledRecipes.add(key.toString());
                 }
             });
         }
-        List<NamespacedKey> removedRecipeKeys = new ArrayList<>();
-        for (String recipeKey : removedRecipes) {
-            removedRecipeKeys.add(NamespacedKey.fromString(recipeKey));
+        for (String recipeKey : disabledRecipes) {
+            NamespacedKey key = NamespacedKey.fromString(recipeKey);
+            disableRecipe(key, false);
         }
-        disableOtherPluginsRecipe(removedRecipeKeys, false);
     }
 
-    public boolean disableOtherPluginsRecipe(List<NamespacedKey> recipeKeys, boolean save) {
+    //配方管理相关
+
+    public @Nullable NamespacedKey getRecipeKey(Recipe recipe) {
+        if (recipe == null) {
+            return null;
+        }
+        if (!(recipe instanceof Keyed)) {
+            return null;
+        }
+        return ((Keyed) recipe).getKey();
+    }
+
+    public boolean disableRecipe(NamespacedKey recipeKey, boolean save) {
         if (save)
-            addKeyToRemovedConfig(recipeKeys);
-        addRecipeToRemovedRecipeRecycleBin(recipeKeys);
-        return removeRecipes(recipeKeys) > 0;
+            saveDisabledRecipesData(recipeKey);
+        addRecipeToRemovedRecipeRecycleBin(recipeKey);
+        return removeRecipe(recipeKey);
     }
 
     public boolean removeCraftorithmRecipe(String recipeGroupName, boolean deleteFile) {
@@ -155,17 +227,20 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         return false;
     }
 
-    private void addKeyToRemovedConfig(List<NamespacedKey> keys) {
-        List<String> removedList = removedRecipesConfigWrapper.config().getStringList("recipes");
-        for (NamespacedKey key : keys) {
-            if (key.getNamespace().equals(NamespacedKey.MINECRAFT) && PluginConfigs.REMOVE_ALL_VANILLA_RECIPE.value())
-                continue;
-            String keyStr = key.toString();
-            if (!removedList.contains(keyStr))
-                removedList.add(keyStr);
-        }
-        removedRecipesConfigWrapper.set("recipes", removedList);
-        removedRecipesConfigWrapper.saveConfig();
+    /**
+     * 保存一个被禁用的配方
+     * @param recipeKey 被禁用的配方Key
+     */
+    private void saveDisabledRecipesData(NamespacedKey recipeKey) {
+        if (recipeKey.getNamespace().equals(NamespacedKey.MINECRAFT) && PluginConfigs.REMOVE_ALL_VANILLA_RECIPE.value())
+            return;
+        List<String> disabledRecipes = disabledRecipesConfigWrapper.config().getStringList("recipes");
+        String keyStr = recipeKey.toString();
+        if (!disabledRecipes.contains(keyStr))
+            disabledRecipes.add(keyStr);
+        disabledRecipes.add(recipeKey.toString());
+        disabledRecipesConfigWrapper.set("recipes", disabledRecipes);
+        disabledRecipesConfigWrapper.saveConfig();
     }
 
     private void addRecipeToRemovedRecipeRecycleBin(List<NamespacedKey> recipeKeys) {
@@ -173,42 +248,18 @@ public enum RecipeManager implements BukkitLifeCycleTask {
             Recipe recipe = getRecipe(recipeKey);
             if (recipe == null)
                 continue;
-            removeRecipeRecycleBin.add(recipe);
+            disabledRecipes.add(recipe);
         }
     }
 
-    /**
-     * 删除配方的基础方法
-     * @param recipeKeys 要删除的配方
-     * @return 删除的配方数量
-     */
-    private int removeRecipes(List<NamespacedKey> recipeKeys) {
-        if (recipeKeys == null || recipeKeys.isEmpty())
-            return 0;
-        //删除表里缓存的一些数据
-        for (NamespacedKey recipeKey : recipeKeys) {
-            recipeUnlockMap.remove(recipeKey);
-        }
-
-        //在服务器中缓存的数据
-        int removedRecipeNum = 0;
-        for (NamespacedKey recipeKey : recipeKeys) {
-            if (Bukkit.removeRecipe(recipeKey))
-                removedRecipeNum ++;
-        }
-        for (NamespacedKey recipeKey : recipeKeys) {
-            serverRecipesCache.remove(recipeKey);
-        }
-        return removedRecipeNum;
-    }
-
-    public boolean hasCraftorithmRecipe(String recipeName) {
+    public boolean isCraftorithmRecipe(String recipeName) {
+        //todo 意义不明方法,待删除
         return getRecipeGroups().contains(recipeName);
     }
 
     @Nullable
     public RecipeGroup getRecipeGroup(String groupName) {
-        for (Map.Entry<RecipeType, Map<String, RecipeGroup>> recipeTypeMapEntry : pluginRecipeMap.entrySet()) {
+        for (Map.Entry<SimpleRecipeTypes, Map<String, RecipeGroup>> recipeTypeMapEntry : pluginRecipeMap.entrySet()) {
             Map<String, RecipeGroup> recipeGroupMap = recipeTypeMapEntry.getValue();
             if (recipeGroupMap.containsKey(groupName)) {
                 return recipeGroupMap.get(groupName);
@@ -220,7 +271,8 @@ public enum RecipeManager implements BukkitLifeCycleTask {
     public YamlConfiguration getRecipeConfig(NamespacedKey recipeKey) {
         if (!recipeKey.getNamespace().equals(PLUGIN_RECIPE_NAMESPACE))
             return null;
-        for (Map.Entry<RecipeType, Map<String, RecipeGroup>> recipeTypeMapEntry : pluginRecipeMap.entrySet()) {
+
+        for (Map.Entry<SimpleRecipeTypes, Map<String, RecipeGroup>> recipeTypeMapEntry : pluginRecipeMap.entrySet()) {
             Map<String, RecipeGroup> recipeGroupMap = recipeTypeMapEntry.getValue();
             for (String recipeGroupName : recipeGroupMap.keySet()) {
                 RecipeGroup recipeGroup = recipeGroupMap.get(recipeGroupName);
@@ -233,111 +285,12 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         return null;
     }
 
-    public int getRecipeGroupSortId(String recipeGroupName) {
-        for (Map.Entry<RecipeType, Map<String, RecipeGroup>> pluginRecipeMapEntry : pluginRecipeMap.entrySet()) {
-            Map<String, RecipeGroup> recipeGroupMap = pluginRecipeMapEntry.getValue();
-            if (recipeGroupMap.containsKey(recipeGroupName)) {
-                return recipeGroupMap.get(recipeGroupName).sortId();
-            }
-        }
-        return 0;
+    public boolean removeRecipe(Recipe recipe) {
+
     }
 
-    @Nullable
-    public AnvilRecipe matchAnvilRecipe(ItemStack base, ItemStack addition) {
-        String baseId = ItemManager.INSTANCE.matchItemName(base, true);
-        baseId = baseId != null ? baseId : base.getType().getKey().toString();
-        String additionId = ItemManager.INSTANCE.matchItemName(addition, true);
-        additionId = additionId != null ? additionId : addition.getType().getKey().toString();
-
-        BukkitMsgSender.INSTANCE.debug("base: " + baseId + ", addition: " + additionId);
-        for (Map.Entry<NamespacedKey, AnvilRecipe> anvilRecipeEntry : anvilRecipeMap.entrySet()) {
-            AnvilRecipe anvilRecipe = anvilRecipeEntry.getValue();
-            String recipeBaseId = ItemManager.INSTANCE.matchItemName(anvilRecipe.base(), true);
-            recipeBaseId = recipeBaseId != null ? recipeBaseId : anvilRecipe.base().getType().getKey().toString();
-            String recipeAdditionId = ItemManager.INSTANCE.matchItemName(anvilRecipe.addition(), true);
-            recipeAdditionId = recipeAdditionId != null ? recipeAdditionId : anvilRecipe.addition().getType().getKey().toString();
-            BukkitMsgSender.INSTANCE.debug("recipe base: " + recipeBaseId + ", recipe addition: " + recipeAdditionId);
-            if (!Objects.equals(baseId, recipeBaseId))
-                continue;
-            BukkitMsgSender.INSTANCE.debug("matched base id");
-            if (base.getAmount() < anvilRecipe.base().getAmount())
-                continue;
-            BukkitMsgSender.INSTANCE.debug("matched base amount");
-            if (!Objects.equals(additionId, recipeAdditionId))
-                continue;
-            BukkitMsgSender.INSTANCE.debug("matched addition id");
-            if (addition.getAmount() < anvilRecipe.addition().getAmount())
-                continue;
-            BukkitMsgSender.INSTANCE.debug("matched addition amount");
-            return anvilRecipe;
-        }
-        return null;
-    }
-
-    public RecipeType getRecipeType(Recipe recipe) {
-        return switch (recipe) {
-            case ShapedRecipe shapedRecipe -> RecipeType.VANILLA_SHAPED;
-            case ShapelessRecipe shapelessRecipe -> RecipeType.SHAPELESS;
-            case CookingRecipe<?> cookingRecipe -> RecipeType.COOKING;
-            case SmithingRecipe smithingRecipe -> RecipeType.SMITHING;
-            case PotionMixRecipe potionMixRecipe -> RecipeType.POTION;
-            case StonecuttingRecipe stonecuttingRecipe -> RecipeType.STONE_CUTTING;
-            case AnvilRecipe anvilRecipe -> RecipeType.ANVIL;
-            case null, default -> RecipeType.UNKNOWN;
-        };
-    }
-
-    public StringLangEntry getRecipeTypeName(RecipeType recipeType) {
-        return switch (recipeType) {
-            case VANILLA_SHAPED -> Languages.RECIPE_TYPE_NAME_SHAPED;
-            case SHAPELESS -> Languages.RECIPE_TYPE_NAME_SHAPELESS;
-            case COOKING -> Languages.RECIPE_TYPE_NAME_COOKING;
-            case SMITHING -> Languages.RECIPE_TYPE_NAME_SMITHING;
-            case STONE_CUTTING -> Languages.RECIPE_TYPE_NAME_STONE_CUTTING;
-            case POTION -> Languages.RECIPE_TYPE_NAME_POTION;
-            case ANVIL -> Languages.RECIPE_TYPE_NAME_ANVIL;
-            default -> null;
-        };
-    }
-
-    public boolean getSmithingCopyEnchantment(Recipe recipe) {
-        if (!(recipe instanceof SmithingRecipe))
-            return false;
-        NamespacedKey namespacedKey = getRecipeKey(recipe);
-        if (namespacedKey == null)
-            return false;
-        RecipeRegistry recipeRegistry = recipeRegistryMap.get(namespacedKey);
-        if (!(recipeRegistry instanceof SmithingRecipeRegistry smithingRecipeRegistry)) {
-            return false;
-        }
-        return smithingRecipeRegistry.copyEnchantments();
-    }
-
-    public void resetRecipes() {
-        //删除Craftorithm注册的配方
-        recipeRegistry.resetRecipes();
-
-        //先将已经删除的配方还原
-        for (Recipe recipe : removeRecipeRecycleBin) {
-            Bukkit.addRecipe(recipe);
-        }
-        removeRecipeRecycleBin.clear();
-    }
-
-    public void loadServerRecipeCache() {
-        Iterator<Recipe> recipeIterator = Bukkit.recipeIterator();
-        serverRecipesCache.clear();
-        while (recipeIterator.hasNext()) {
-            Recipe recipe = recipeIterator.next();
-            NamespacedKey key = getRecipeKey(recipe);
-            if (key != null)
-                serverRecipesCache.put(key, recipe);
-        }
-    }
-
-    public Map<NamespacedKey, PotionMixRecipe> potionMixRecipeMap() {
-        return potionMixRecipeMap;
+    public boolean removeRecipe(NamespacedKey recipeKey) {
+        Recipe recipe =
     }
 
     public List<String> getRecipeGroups() {
@@ -349,10 +302,6 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         return recipes;
     }
 
-    public Map<NamespacedKey, Boolean> recipeUnlockMap() {
-        return recipeUnlockMap;
-    }
-
     public Map<NamespacedKey, Recipe> serverRecipesCache() {
         return serverRecipesCache;
     }
@@ -361,27 +310,11 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         return supportPotionMix;
     }
 
-    public RecipeRegistry recipeRegistry() {
-        return recipeRegistry;
-    }
-
-    public RecipeManager setRecipeRegistry(RecipeRegistry recipeRegistry) {
-        this.recipeRegistry = recipeRegistry;
-        return this;
-    }
-
     @Override
     public void run(Plugin plugin, LifeCycle lifeCycle) {
         if (lifeCycle.equals(LifeCycle.ENABLE)) {
             //设置各类型配方的注册方法
-            if (PluginConfigs.ENABLE_ANVIL_RECIPE.value()) {
-
-            }
-
-            if (!CrypticLibBukkit.platform().type().equals(Platform.PlatformType.BUKKIT)) {
-                supportPotionMix = true;
-
-            }
+            regDefaultRecipeTypes();
         } else {
             reloadRecipeManager();
         }

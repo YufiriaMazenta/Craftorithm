@@ -4,7 +4,7 @@ import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.menu.creator.*;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
+import com.github.yufiriamazenta.craftorithm.recipe.SimpleRecipeTypes;
 import com.github.yufiriamazenta.craftorithm.util.CommandUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtils;
 import crypticlib.command.BukkitSubcommand;
@@ -31,7 +31,7 @@ public final class CreateRecipeCommand extends BukkitSubcommand {
             .usage("&r/craftorithm create <recipe_type> [recipe_name]")
             .build()
         );
-        recipeTypeList = Arrays.stream(RecipeType.values()).map(RecipeType::name).map(s -> s.toLowerCase(Locale.ROOT)).collect(Collectors.toList());
+        recipeTypeList = Arrays.stream(SimpleRecipeTypes.values()).map(SimpleRecipeTypes::name).map(s -> s.toLowerCase(Locale.ROOT)).collect(Collectors.toList());
         List<String> unsupportedRecipeTypeList = new ArrayList<>();
         unsupportedRecipeTypeList.add("random_cooking");
         unsupportedRecipeTypeList.add("unknown");
@@ -67,11 +67,11 @@ public final class CreateRecipeCommand extends BukkitSubcommand {
             LangUtils.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_NAME);
             return;
         }
-        if (RecipeManager.INSTANCE.hasCraftorithmRecipe(recipeName)) {
+        if (RecipeManager.INSTANCE.isCraftorithmRecipe(recipeName)) {
             LangUtils.sendLang(sender, Languages.COMMAND_CREATE_NAME_USED);
             return;
         }
-        RecipeType recipeType = RecipeType.valueOf(recipeTypeStr.toUpperCase(Locale.ROOT));
+        SimpleRecipeTypes recipeType = SimpleRecipeTypes.valueOf(recipeTypeStr.toUpperCase(Locale.ROOT));
         Player player = (Player) sender;
         switch (recipeType) {
             case VANILLA_SHAPED:

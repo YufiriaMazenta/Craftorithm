@@ -38,7 +38,7 @@ public final class DisableRecipeCommand extends BukkitSubcommand {
             return;
         }
         List<NamespacedKey> removeRecipeKeys = Collections.singletonList(removeRecipeKey);
-        if (RecipeManager.INSTANCE.disableOtherPluginsRecipe(removeRecipeKeys, true)) {
+        if (RecipeManager.INSTANCE.disableRecipe(removeRecipeKeys, true)) {
             LangUtils.sendLang(sender, Languages.COMMAND_DISABLE_SUCCESS);
         }
         else

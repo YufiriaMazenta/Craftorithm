@@ -3,7 +3,7 @@ package com.github.yufiriamazenta.craftorithm.menu.display;
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
+import com.github.yufiriamazenta.craftorithm.recipe.SimpleRecipeTypes;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.AnvilRecipe;
 import com.github.yufiriamazenta.craftorithm.recipe.custom.PotionMixRecipe;
 import crypticlib.CrypticLibBukkit;
@@ -37,7 +37,7 @@ public class RecipeDisplayMenu extends Menu {
 
         this.parentMenu = parentMenu;
         this.recipe = recipe;
-        RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(this.recipe);
+        SimpleRecipeTypes recipeType = RecipeManager.INSTANCE.getRecipeType(this.recipe);
         switch (recipeType) {
             case VANILLA_SHAPED:
                 setShapedRecipeMenu();
