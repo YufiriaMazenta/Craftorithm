@@ -190,6 +190,17 @@ public enum RecipeManager implements BukkitLifeCycleTask {
 
     //配方管理相关
 
+    /**
+     * 根据给定NamespacedKey获取配方实例,会从插件配方和服务器配方中寻找
+     */
+    public @Nullable Recipe getRecipe(NamespacedKey namespacedKey) {
+        Recipe recipe = craftorithmRecipes.get(namespacedKey);
+        if (recipe == null) {
+            return serverRecipesCache.get(namespacedKey);
+        }
+        return recipe;
+    }
+
     public @Nullable NamespacedKey getRecipeKey(Recipe recipe) {
         if (recipe == null) {
             return null;
@@ -285,12 +296,10 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         return null;
     }
 
-    public boolean removeRecipe(Recipe recipe) {
-
-    }
-
     public boolean removeRecipe(NamespacedKey recipeKey) {
-        Recipe recipe =
+        Recipe recipe = getRecipe(recipeKey);
+        RecipeType recipeType = getRecipeType(recipe);
+        return recipeType.recipeRegister().unregisterRecipe(recipeKey);
     }
 
     public List<String> getRecipeGroups() {
