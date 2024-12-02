@@ -120,19 +120,19 @@ public enum CraftorithmItemProvider implements ItemProvider, BukkitLifeCycleTask
 
 
     public String regCraftorithmItem(String namespace, String itemName, ItemStack item) {
-        BukkitConfigWrapper itemConfigFile;
+        BukkitConfigWrapper itemConfigWrapper;
         if (!itemConfigFileMap.containsKey(namespace)) {
             File itemFile = new File(ITEM_FILE_FOLDER, namespace + ".yml");
             if (!itemFile.exists()) {
                 FileHelper.createNewFile(itemFile);
             }
-            itemConfigFile = new BukkitConfigWrapper(itemFile);
-            itemConfigFileMap.put(namespace, itemConfigFile);
+            itemConfigWrapper = new BukkitConfigWrapper(itemFile);
+            itemConfigFileMap.put(namespace, itemConfigWrapper);
         } else {
-            itemConfigFile = itemConfigFileMap.get(namespace);
+            itemConfigWrapper = itemConfigFileMap.get(namespace);
         }
-        itemConfigFile.set(itemName, item);
-        itemConfigFile.saveConfig();
+        itemConfigWrapper.set(itemName, item);
+        itemConfigWrapper.saveConfig();
         String key = namespace + ":" + itemName;
         itemMap.put(key, item);
         return key;
