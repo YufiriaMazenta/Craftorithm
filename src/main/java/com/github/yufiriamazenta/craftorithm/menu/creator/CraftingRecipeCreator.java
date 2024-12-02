@@ -1,7 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.menu.creator;
 
 import com.github.yufiriamazenta.craftorithm.config.Languages;
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
+import com.github.yufiriamazenta.craftorithm.recipe.SimpleRecipeTypes;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtils;
 import com.google.common.base.Preconditions;
@@ -22,10 +22,10 @@ import java.util.function.Supplier;
 
 public class CraftingRecipeCreator extends UnlockableRecipeCreator {
 
-    public CraftingRecipeCreator(@NotNull Player player, RecipeType recipeType, @NotNull String recipeName) {
+    public CraftingRecipeCreator(@NotNull Player player, SimpleRecipeTypes recipeType, @NotNull String recipeName) {
         super(player, recipeType, recipeName);
         Preconditions.checkArgument(
-            recipeType.equals(RecipeType.VANILLA_SHAPED) || recipeType.equals(RecipeType.SHAPELESS),
+            recipeType.equals(SimpleRecipeTypes.VANILLA_SHAPED) || recipeType.equals(SimpleRecipeTypes.SHAPELESS),
             "Crafting recipe only allow shaped.yml and shapeless type"
         );
         setDisplay(new MenuDisplay(

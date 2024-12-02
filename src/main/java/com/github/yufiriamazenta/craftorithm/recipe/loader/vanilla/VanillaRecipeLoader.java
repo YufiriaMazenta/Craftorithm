@@ -1,8 +1,8 @@
-package com.github.yufiriamazenta.craftorithm.recipe.vanilla;
+package com.github.yufiriamazenta.craftorithm.recipe.loader.vanilla;
 
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.item.ItemPack;
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeLoadException;
+import com.github.yufiriamazenta.craftorithm.recipe.exception.RecipeLoadException;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.inventory.ItemStack;

@@ -1,6 +1,6 @@
 package com.github.yufiriamazenta.craftorithm.recipe.custom;
 
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
+import com.github.yufiriamazenta.craftorithm.recipe.SimpleRecipeTypes;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -51,8 +51,8 @@ public class AnvilRecipe implements CustomRecipe {
     }
 
     @Override
-    public RecipeType recipeType() {
-        return RecipeType.ANVIL;
+    public @NotNull NamespacedKey getKey() {
+        return key;
     }
 
     @Override

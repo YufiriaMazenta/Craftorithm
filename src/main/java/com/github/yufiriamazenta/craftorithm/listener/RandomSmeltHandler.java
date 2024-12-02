@@ -3,7 +3,7 @@ package com.github.yufiriamazenta.craftorithm.listener;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
+import com.github.yufiriamazenta.craftorithm.recipe.SimpleRecipeTypes;
 import crypticlib.listener.EventListener;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
@@ -33,7 +33,7 @@ public enum RandomSmeltHandler implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onFurnaceStartSmelt(FurnaceStartSmeltEvent event) {
         NamespacedKey recipeKey = event.getRecipe().getKey();
-        Map<String, RecipeGroup> randomCookingRecipeGroups = RecipeManager.INSTANCE.recipeMap().getOrDefault(RecipeType.RANDOM_COOKING, new HashMap<>());
+        Map<String, RecipeGroup> randomCookingRecipeGroups = RecipeManager.INSTANCE.recipeMap().getOrDefault(SimpleRecipeTypes.RANDOM_COOKING, new HashMap<>());
         boolean isRandomCooking = false;
         for (RecipeGroup group : randomCookingRecipeGroups.values()) {
             if (group.contains(recipeKey)) {

@@ -2,7 +2,7 @@ package com.github.yufiriamazenta.craftorithm.menu.creator;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
+import com.github.yufiriamazenta.craftorithm.recipe.SimpleRecipeTypes;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtils;
 import crypticlib.chat.BukkitTextProcessor;
@@ -38,7 +38,7 @@ public class AnvilRecipeCreator extends RecipeCreator {
     private boolean inConversation;
 
     public AnvilRecipeCreator(@NotNull Player player, @NotNull String recipeName) {
-        super(player, RecipeType.ANVIL, recipeName);
+        super(player, SimpleRecipeTypes.ANVIL, recipeName);
         this.copyNbt = true;
         this.inConversation = false;
         this.costLevel = 0;

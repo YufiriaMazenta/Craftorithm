@@ -3,7 +3,7 @@ package com.github.yufiriamazenta.craftorithm.menu.creator;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
-import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
+import com.github.yufiriamazenta.craftorithm.recipe.SimpleRecipeTypes;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtils;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtils;
@@ -27,13 +27,13 @@ import java.io.File;
 
 public abstract class RecipeCreator extends StoredMenu {
 
-    private RecipeType recipeType;
+    private SimpleRecipeTypes recipeType;
     private String recipeName;
     private String title;
 
     public RecipeCreator(
         @NotNull Player player,
-        @NotNull RecipeType recipeType,
+        @NotNull SimpleRecipeTypes recipeType,
         @NotNull String recipeName
     ) {
         super(player);
@@ -83,11 +83,11 @@ public abstract class RecipeCreator extends StoredMenu {
         return new Icon(new IconDisplay(Material.LIME_STAINED_GLASS_PANE, Languages.MENU_RECIPE_CREATOR_ICON_RESULT_FRAME.value(player)));
     }
 
-    public RecipeType recipeType() {
+    public SimpleRecipeTypes recipeType() {
         return recipeType;
     }
 
-    public RecipeCreator setRecipeType(RecipeType recipeType) {
+    public RecipeCreator setRecipeType(SimpleRecipeTypes recipeType) {
         this.recipeType = recipeType;
         return this;
     }
