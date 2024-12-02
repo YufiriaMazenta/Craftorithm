@@ -1,20 +1,30 @@
 package com.github.yufiriamazenta.craftorithm.listener.hook;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
+import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
+import com.github.yufiriamazenta.craftorithm.util.EventUtils;
+import crypticlib.CrypticLibBukkit;
+import crypticlib.MinecraftVersion;
 import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.TaskRule;
 import crypticlib.listener.EventListener;
+import crypticlib.platform.Platform;
 import crypticlib.util.ReflectionHelper;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockCookEvent;
+import org.bukkit.event.block.CrafterCraftEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredListener;
 import org.bukkit.plugin.TimedRegisteredListener;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 @EventListener
 @AutoTask(
@@ -28,7 +38,7 @@ public enum OtherPluginsListenerManager implements Listener, BukkitLifeCycleTask
     private final Field executorField = ReflectionHelper.getDeclaredField(RegisteredListener.class, "executor");
 
     public void convertOtherPluginsListeners() {
-        for (HandlerList handlerList : HandlerList.getHandlerLists()) {
+        for (HandlerList handlerList : getCraftEventHandlerLists()) {
             for (RegisteredListener registeredListener : handlerList.getRegisteredListeners()) {
                 if (registeredListener.getPlugin().equals(Craftorithm.instance())) continue;
                 if (registeredListener instanceof RecipeCheckRegisteredListener || registeredListener instanceof RecipeCheckTimedRegisteredListener)
@@ -55,6 +65,26 @@ public enum OtherPluginsListenerManager implements Listener, BukkitLifeCycleTask
 
     public EventExecutor getRegisteredListenerExecutor(RegisteredListener registeredListener) {
         return ReflectionHelper.getDeclaredFieldObj(executorField, registeredListener);
+    }
+
+    private List<HandlerList> getCraftEventHandlerLists() {
+        List<HandlerList> handlersLists = new ArrayList<>();
+        handlersLists.add(CraftItemEvent.getHandlerList());
+        handlersLists.add(PrepareItemCraftEvent.getHandlerList());
+        handlersLists.add(PrepareSmithingEvent.getHandlerList());
+        handlersLists.add(SmithItemEvent.getHandlerList());
+        handlersLists.add(FurnaceSmeltEvent.getHandlerList());
+        handlersLists.add(BlockCookEvent.getHandlerList());
+        if (CrypticLibBukkit.isPaper() && PluginConfigs.ENABLE_ANVIL_RECIPE.value()) {
+            handlersLists.add(PrepareAnvilEvent.getHandlerList());
+        }
+        if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_17_1)) {
+            handlersLists.add(FurnaceStartSmeltEvent.getHandlerList());
+        }
+        if (EventUtils.hasCrafterCraftEvent) {
+            handlersLists.add(CrafterCraftEvent.getHandlerList());
+        }
+        return handlersLists;
     }
 
     @Override
