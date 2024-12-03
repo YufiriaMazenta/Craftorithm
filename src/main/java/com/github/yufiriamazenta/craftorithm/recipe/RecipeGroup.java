@@ -8,15 +8,15 @@ import java.util.LinkedHashMap;
 
 public class RecipeGroup {
 
-    private final String groupName;
+    private final String groupId;
     private final LinkedHashMap<NamespacedKey, Recipe> groupRecipes = new LinkedHashMap<>();
 
-    public RecipeGroup(@NotNull String groupName) {
-        this.groupName = groupName;
+    public RecipeGroup(@NotNull String groupId) {
+        this.groupId = groupId;
     }
 
-    public String groupName() {
-        return groupName;
+    public String groupId() {
+        return groupId;
     }
 
     public boolean contains(NamespacedKey namespacedKey) {
