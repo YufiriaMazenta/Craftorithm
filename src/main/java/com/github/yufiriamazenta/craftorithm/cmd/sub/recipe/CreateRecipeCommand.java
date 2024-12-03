@@ -1,28 +1,28 @@
 package com.github.yufiriamazenta.craftorithm.cmd.sub.recipe;
 
 import com.github.yufiriamazenta.craftorithm.config.Languages;
-import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
-import com.github.yufiriamazenta.craftorithm.menu.creator.*;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
-import com.github.yufiriamazenta.craftorithm.recipe.SimpleRecipeTypes;
+import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import com.github.yufiriamazenta.craftorithm.util.CommandUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtils;
 import crypticlib.command.BukkitSubcommand;
 import crypticlib.command.CommandInfo;
 import crypticlib.perm.PermInfo;
+import crypticlib.ui.menu.Menu;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public final class CreateRecipeCommand extends BukkitSubcommand {
 
     public static final CreateRecipeCommand INSTANCE = new CreateRecipeCommand();
-    private final List<String> recipeTypeList;
     private final Pattern recipeNamePattern = Pattern.compile("^[a-z0-9._-]+$");
+    private final Map<RecipeType, Function<Player, Menu>> recipeCreatorMap = new HashMap<>();
 
     private CreateRecipeCommand() {
         super(CommandInfo
@@ -31,16 +31,6 @@ public final class CreateRecipeCommand extends BukkitSubcommand {
             .usage("&r/craftorithm create <recipe_type> [recipe_name]")
             .build()
         );
-        recipeTypeList = Arrays.stream(SimpleRecipeTypes.values()).map(SimpleRecipeTypes::name).map(s -> s.toLowerCase(Locale.ROOT)).collect(Collectors.toList());
-        List<String> unsupportedRecipeTypeList = new ArrayList<>();
-        unsupportedRecipeTypeList.add("random_cooking");
-        unsupportedRecipeTypeList.add("unknown");
-        if (!RecipeManager.INSTANCE.supportPotionMix()) {
-            unsupportedRecipeTypeList.add("potion");
-        }
-        if (!PluginConfigs.ENABLE_ANVIL_RECIPE.value())
-            unsupportedRecipeTypeList.add("anvil");
-        recipeTypeList.removeAll(unsupportedRecipeTypeList);
     }
 
     @Override
@@ -51,11 +41,7 @@ public final class CreateRecipeCommand extends BukkitSubcommand {
             sendDescriptions(sender);
             return;
         }
-        String recipeTypeStr = args.get(0).toLowerCase(Locale.ROOT);
-        if (!recipeTypeList.contains(recipeTypeStr)) {
-            LangUtils.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
-            return;
-        }
+        String recipeTypeStr = args.get(0);
         String recipeName;
         if (args.size() < 2)
             recipeName = UUID.randomUUID().toString();
@@ -67,44 +53,34 @@ public final class CreateRecipeCommand extends BukkitSubcommand {
             LangUtils.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_NAME);
             return;
         }
-        if (RecipeManager.INSTANCE.isCraftorithmRecipe(recipeName)) {
+        if (RecipeManager.INSTANCE.containsRecipe(recipeName)) {
             LangUtils.sendLang(sender, Languages.COMMAND_CREATE_NAME_USED);
             return;
         }
-        SimpleRecipeTypes recipeType = SimpleRecipeTypes.valueOf(recipeTypeStr.toUpperCase(Locale.ROOT));
-        Player player = (Player) sender;
-        switch (recipeType) {
-            case VANILLA_SHAPED:
-            case SHAPELESS:
-                new CraftingRecipeCreator(player, recipeType, recipeName).openMenu();
-                break;
-            case COOKING:
-                new CookingRecipeCreator(player, recipeName).openMenu();
-                break;
-            case SMITHING:
-                new SmithingRecipeCreator(player, recipeName).openMenu();
-                break;
-            case STONE_CUTTING:
-                new StoneCuttingRecipeCreator(player, recipeName).openMenu();
-                break;
-            case POTION:
-                new PotionMixCreator(player, recipeName).openMenu();
-                break;
-            case ANVIL:
-                new AnvilRecipeCreator(player, recipeName).openMenu();
-                break;
-            default:
-                LangUtils.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
-                break;
+        RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipeTypeStr);
+        if (recipeType == null) {
+            LangUtils.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
+            return;
         }
+        Function<Player, Menu> creatorFunc = recipeCreatorMap.get(recipeType);
+        if (creatorFunc == null) {
+            LangUtils.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
+            return;
+        }
+        Player player = (Player) sender;
+        creatorFunc.apply(player).openMenu();
     }
 
     @Override
-    public List<String> tab(CommandSender sender, List<String> args) {
+    public List<String> tab(@NotNull CommandSender sender, List<String> args) {
         if (args.size() <= 1) {
-            return new ArrayList<>(recipeTypeList);
+            return recipeCreatorMap.keySet().stream().map(RecipeType::typeId).toList();
         }
         return Collections.singletonList("<recipe_name>");
+    }
+
+    public void addRecipeCreator(RecipeType recipeType, Function<Player, Menu> creatorFunc) {
+        recipeCreatorMap.put(recipeType, creatorFunc);
     }
 
 }
