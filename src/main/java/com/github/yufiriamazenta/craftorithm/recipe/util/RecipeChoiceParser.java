@@ -1,4 +1,4 @@
-package com.github.yufiriamazenta.craftorithm.recipe.loader.vanilla;
+package com.github.yufiriamazenta.craftorithm.recipe.util;
 
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
 import com.github.yufiriamazenta.craftorithm.item.ItemPack;
@@ -11,9 +11,9 @@ import org.bukkit.inventory.RecipeChoice;
 import java.lang.reflect.Field;
 import java.util.Locale;
 
-public interface VanillaRecipeLoader {
+public class RecipeChoiceParser {
 
-    default RecipeChoice parseChoice(String choiceStr) {
+    public static RecipeChoice parseChoice(String choiceStr) {
         if (!choiceStr.contains(":")) {
             Material material = Material.matchMaterial(choiceStr);
             if (material == null) {

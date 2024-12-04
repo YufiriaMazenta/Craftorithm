@@ -1,0 +1,8 @@
+version: 2
+result: 'minecraft:diamond_sword'
+type: 'vanilla_shapeless'
+group: 'example'
+ingredients:
+  - 'item_pack:hello_world'
+  - 'item_pack:hello_world'
+  - 'item_pack:hello_world'

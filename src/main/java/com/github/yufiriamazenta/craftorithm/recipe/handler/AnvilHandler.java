@@ -1,4 +1,4 @@
-package com.github.yufiriamazenta.craftorithm.listener;
+package com.github.yufiriamazenta.craftorithm.recipe.handler;
 
 import com.github.yufiriamazenta.craftorithm.CraftorithmAPI;
 import com.github.yufiriamazenta.craftorithm.arcenciel.ArcencielDispatcher;

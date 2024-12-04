@@ -73,7 +73,9 @@ public enum RecipeManager implements BukkitLifeCycleTask {
     }
 
     private void regDefaultRecipeTypes() {
+        regRecipeType(SimpleRecipeTypes.UNKNOWN);
         regRecipeType(SimpleRecipeTypes.VANILLA_SHAPED);
+        regRecipeType(SimpleRecipeTypes.VANILLA_SHAPELESS);
         if (PluginConfigs.ENABLE_ANVIL_RECIPE.value()) {
 
         }
@@ -261,7 +263,23 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         return recipeType.recipeRegister().unregisterRecipe(recipeKey);
     }
 
-    public boolean containsRecipe(String recipeKey) {}
+    public boolean removeCraftorithmRecipe(NamespacedKey recipeKey, boolean deleteFile) {
+        Recipe recipe = getRecipe(recipeKey);
+        RecipeType recipeType = getRecipeType(recipe);
+        boolean result = recipeType.recipeRegister().unregisterRecipe(recipeKey);
+        if (result) {
+            if (recipeConfigWrapperMap.containsKey(recipeKey) && deleteFile) {
+                BukkitConfigWrapper removed = recipeConfigWrapperMap.remove(recipeKey);
+                removed.configFile().delete();
+            }
+        }
+        return result   ;
+    }
+
+    public boolean containsRecipe(String recipeKeyStr) {
+        NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeKeyStr);
+        return containsRecipe(recipeKey);
+    }
 
     public boolean containsRecipe(NamespacedKey recipeKey) {
         return craftorithmRecipes.containsKey(recipeKey);
@@ -297,6 +315,10 @@ public enum RecipeManager implements BukkitLifeCycleTask {
 
     public boolean supportPotionMix() {
         return supportPotionMix;
+    }
+
+    public Map<NamespacedKey, Recipe> craftorithmRecipes() {
+        return craftorithmRecipes;
     }
 
     @Override
