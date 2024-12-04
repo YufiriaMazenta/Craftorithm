@@ -1,0 +1,3 @@
+type: vanilla_smelting_furnace
+result: 'minecraft:diamond_sword'
+ingredient: 'minecraft:bedrock'
