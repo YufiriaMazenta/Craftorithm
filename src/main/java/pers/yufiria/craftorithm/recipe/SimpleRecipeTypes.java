@@ -1,13 +1,17 @@
 package pers.yufiria.craftorithm.recipe;
 
-import pers.yufiria.craftorithm.recipe.loader.vanilla.*;
+import pers.yufiria.craftorithm.recipe.extra.anvil.AnvilRecipe;
+import pers.yufiria.craftorithm.recipe.extra.brewing.BrewingRecipe;
+import pers.yufiria.craftorithm.recipe.loader.*;
 import crypticlib.MinecraftVersion;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.yufiria.craftorithm.recipe.register.vanilla.BrewingRecipeRegister;
+import pers.yufiria.craftorithm.recipe.register.AnvilRecipeRegister;
+import pers.yufiria.craftorithm.recipe.register.BrewingRecipeRegister;
+import pers.yufiria.craftorithm.recipe.register.VanillaRecipeRegister;
 
 import java.util.function.Function;
 
@@ -28,6 +32,7 @@ public enum SimpleRecipeTypes implements RecipeType {
     VANILLA_SMITHING_TRIM("vanilla_smithing_trim", SmithingTrimRecipeLoader.INSTANCE, VanillaRecipeRegister.INSTANCE, recipe -> recipe instanceof SmithingTrimRecipe),
     VANILLA_STONECUTTING("vanilla_stonecutting", StonecuttingRecipeLoader.INSTANCE, VanillaRecipeRegister.INSTANCE, recipe -> recipe instanceof StonecuttingRecipe),
     VANILLA_BREWING("vanilla_brewing", BrewingRecipeLoader.INSTANCE, BrewingRecipeRegister.INSTANCE, recipe -> recipe instanceof BrewingRecipe),
+    ANVIL("anvil", AnvilRecipeLoader.INSTANCE, AnvilRecipeRegister.INSTANCE, recipe -> recipe instanceof AnvilRecipe),
     UNKNOWN("unknown", new RecipeLoader<>() {
         @Override
         public @Nullable Recipe loadRecipe(String recipeKey, ConfigurationSection recipeConfig) {

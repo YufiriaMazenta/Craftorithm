@@ -56,7 +56,7 @@ public class GiveItemCommand extends BukkitSubcommand {
             }
         }
 
-        ItemStack itemStack = CraftorithmItemProvider.INSTANCE.getItem(args.get(0));
+        ItemStack itemStack = CraftorithmItemProvider.INSTANCE.matchItem(args.get(0));
         if (itemStack == null) {
             LangUtils.sendLang(sender, Languages.COMMAND_ITEM_GIVE_NOT_EXIST_ITEM, CollectionsUtils.newStringHashMap("<item_name>", args.get(0)));
             return;

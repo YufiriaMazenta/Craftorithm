@@ -9,6 +9,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.yufiria.craftorithm.item.NamespacedItemId;
+import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 
 import java.util.Optional;
 
@@ -22,23 +24,33 @@ public enum MythicMobsItemProvider implements ItemProvider {
     }
 
     @Override
-    public @Nullable String getItemName(ItemStack itemStack, boolean ignoreAmount) {
+    public @Nullable NamespacedItemIdStack matchItemId(ItemStack itemStack, boolean ignoreAmount) {
         ItemExecutor itemExecutor = MythicBukkit.inst().getItemManager();
         if (!itemExecutor.isMythicItem(itemStack))
             return null;
         String mmItemName = itemExecutor.getMythicTypeFromItem(itemStack);
         if (ignoreAmount)
-            return mmItemName;
+            return new NamespacedItemIdStack(
+                new NamespacedItemId(
+                    namespace(),
+                    mmItemName
+                )
+            );
         else {
-            ItemStack mmItem = itemExecutor.getItemStack(mmItemName);
-            return mmItemName + " " + (itemStack.getAmount() / mmItem.getAmount());
+            return new NamespacedItemIdStack(
+                new NamespacedItemId(
+                    namespace(),
+                    mmItemName
+                ),
+                itemStack.getAmount()
+            );
         }
     }
 
     @Override
-    public @Nullable ItemStack getItem(String itemName) {
+    public @Nullable ItemStack matchItem(String itemId) {
         ItemExecutor executor = MythicBukkit.inst().getItemManager();
-        Optional<MythicItem> itemOptional = executor.getItem(itemName);
+        Optional<MythicItem> itemOptional = executor.getItem(itemId);
         if (!itemOptional.isPresent()) {
             return null;
         }
@@ -48,8 +60,8 @@ public enum MythicMobsItemProvider implements ItemProvider {
     }
 
     @Override
-    public @Nullable ItemStack getItem(String itemName, OfflinePlayer player) {
-        return getItem(itemName);
+    public @Nullable ItemStack matchItem(String itemId, OfflinePlayer player) {
+        return matchItem(itemId);
     }
 
 }

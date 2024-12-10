@@ -12,13 +12,13 @@ public class ItemPack {
 
     private final String packId;
     private final List<ItemStack> items;
-    private final List<String> itemIds;
+    private final List<NamespacedItemIdStack> itemIds;
 
-    public ItemPack(String packId, List<String> itemIds) {
+    public ItemPack(String packId, List<NamespacedItemIdStack> itemIds) {
         this.packId = packId;
         this.itemIds = itemIds;
         this.items = new ArrayList<>();
-        for (String itemId : itemIds) {
+        for (NamespacedItemIdStack itemId : itemIds) {
             try {
                 ItemStack item = ItemManager.INSTANCE.matchItem(itemId).clone();
                 items.add(item);
@@ -34,7 +34,7 @@ public class ItemPack {
         return Collections.unmodifiableList(items);
     }
 
-    public List<String> itemIds() {
+    public List<NamespacedItemIdStack> itemIds() {
         return Collections.unmodifiableList(itemIds);
     }
 

@@ -2,6 +2,7 @@ package pers.yufiria.craftorithm.listener;
 
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.item.ItemManager;
+import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.listener.EventListener;
@@ -57,7 +58,7 @@ public enum SmeltResultRefreshHandler implements Listener {
             return;
         }
         ItemStack result = event.getResult();
-        String id = ItemManager.INSTANCE.matchItemName(result, false);
+        NamespacedItemIdStack id = ItemManager.INSTANCE.matchItemId(result, true);
         if (id == null) {
             return;
         }
@@ -94,7 +95,7 @@ public enum SmeltResultRefreshHandler implements Listener {
             return;
         }
         ItemStack result = event.getResult();
-        String id = ItemManager.INSTANCE.matchItemName(result, false);
+        NamespacedItemIdStack id = ItemManager.INSTANCE.matchItemId(result, true);
         if (id == null) {
             return;
         }

@@ -8,8 +8,9 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.yufiria.craftorithm.item.NamespacedItemId;
+import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 
-import java.util.Objects;
 import java.util.Optional;
 
 public enum ExecutableItemsItemProvider implements ItemProvider {
@@ -22,16 +23,27 @@ public enum ExecutableItemsItemProvider implements ItemProvider {
     }
 
     @Override
-    public @Nullable String getItemName(ItemStack itemStack, boolean ignoreAmount) {
+    public @Nullable NamespacedItemIdStack matchItemId(ItemStack itemStack, boolean ignoreAmount) {
         ExecutableItemsManagerInterface executableItemsManager = ExecutableItemsAPI.getExecutableItemsManager();
         Optional<ExecutableItemInterface> executableItemOpt = executableItemsManager.getExecutableItem(itemStack);
         if (executableItemOpt.isPresent()) {
             ExecutableItemInterface executableItem = executableItemOpt.get();
             String id = executableItem.getId();
             if (ignoreAmount) {
-                return id;
+                return new NamespacedItemIdStack(
+                    new NamespacedItemId(
+                        namespace(),
+                        id
+                    )
+                );
             } else {
-                return id + " " + (itemStack.getAmount() / Objects.requireNonNull(getItem(id)).getAmount());
+                return new NamespacedItemIdStack(
+                    new NamespacedItemId(
+                        namespace(),
+                        id
+                    ),
+                    itemStack.getAmount()
+                );
             }
         } else {
             return null;
@@ -39,14 +51,14 @@ public enum ExecutableItemsItemProvider implements ItemProvider {
     }
 
     @Override
-    public @Nullable ItemStack getItem(String itemName) {
-        return getItem(itemName, null);
+    public @Nullable ItemStack matchItem(String itemId) {
+        return matchItem(itemId, null);
     }
 
     @Override
-    public @Nullable ItemStack getItem(String itemName, @Nullable OfflinePlayer player) {
+    public @Nullable ItemStack matchItem(String itemId, @Nullable OfflinePlayer player) {
         ExecutableItemsManagerInterface executableItemsManager = ExecutableItemsAPI.getExecutableItemsManager();
-        Optional<ExecutableItemInterface> executableItemOpt = executableItemsManager.getExecutableItem(itemName);
+        Optional<ExecutableItemInterface> executableItemOpt = executableItemsManager.getExecutableItem(itemId);
         if (executableItemOpt.isPresent()) {
             ExecutableItemInterface executableItem = executableItemOpt.get();
             return executableItem.buildItem(1, Optional.ofNullable(player == null ? null : player.getPlayer()));

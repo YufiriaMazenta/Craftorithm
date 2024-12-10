@@ -11,12 +11,12 @@ public interface ItemProvider {
     String namespace();
 
     @Nullable
-    String getItemName(ItemStack itemStack, boolean ignoreAmount);
+    NamespacedItemIdStack matchItemId(ItemStack itemStack, boolean ignoreAmount);
 
     @Nullable
-    ItemStack getItem(String itemName);
+    ItemStack matchItem(String itemId);
 
     @Nullable
-    ItemStack getItem(String itemName, @Nullable OfflinePlayer player);
+    ItemStack matchItem(String itemId, @Nullable OfflinePlayer player);
 
 }

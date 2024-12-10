@@ -1,7 +1,6 @@
 package pers.yufiria.craftorithm.cmd;
 
 import pers.yufiria.craftorithm.cmd.sub.ReloadCommand;
-import pers.yufiria.craftorithm.cmd.sub.RunArcencielCmd;
 import pers.yufiria.craftorithm.cmd.sub.VersionCommand;
 import pers.yufiria.craftorithm.cmd.sub.item.ItemCommand;
 import pers.yufiria.craftorithm.cmd.sub.recipe.*;
@@ -43,9 +42,6 @@ public class PluginCommand extends BukkitCommand {
 
     @Subcommand
     BukkitSubcommand item = ItemCommand.INSTANCE;
-
-    @Subcommand
-    BukkitSubcommand run = RunArcencielCmd.INSTANCE;
 
     @Subcommand
     BukkitSubcommand create = CreateRecipeCommand.INSTANCE;

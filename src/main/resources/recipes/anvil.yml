@@ -1,0 +1,8 @@
+version: 2
+type: anvil
+result: 'minecraft:diamond_sword 2'
+base: 'item_pack:hello_world 2'
+addition: 'item_pack:hello_world 2'
+copy_nbt: false
+copy_enchantments: true
+cost_level: 1

@@ -6,6 +6,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.yufiria.craftorithm.item.NamespacedItemId;
+import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 
 public enum ItemsAdderItemProvider implements ItemProvider {
 
@@ -17,21 +19,32 @@ public enum ItemsAdderItemProvider implements ItemProvider {
     }
 
     @Override
-    public @Nullable String getItemName(ItemStack itemStack, boolean ignoreAmount) {
+    public @Nullable NamespacedItemIdStack matchItemId(ItemStack itemStack, boolean ignoreAmount) {
         CustomStack customStack = CustomStack.byItemStack(itemStack);
         if (customStack == null)
             return null;
         String id = customStack.getNamespacedID();
         if (ignoreAmount) {
-            return id;
+            return new NamespacedItemIdStack(
+                new NamespacedItemId(
+                    namespace(),
+                    id
+                )
+            );
         } else {
-            return id + " " + (itemStack.getAmount() / getItem(id).getAmount());
+            return new NamespacedItemIdStack(
+                new NamespacedItemId(
+                    namespace(),
+                    id
+                ),
+                itemStack.getAmount()
+            );
         }
     }
 
     @Override
-    public @Nullable ItemStack getItem(String itemName) {
-        CustomStack customStack = CustomStack.getInstance(itemName);
+    public @Nullable ItemStack matchItem(String itemId) {
+        CustomStack customStack = CustomStack.getInstance(itemId);
         if (customStack == null) {
             return null;
         }
@@ -39,8 +52,8 @@ public enum ItemsAdderItemProvider implements ItemProvider {
     }
 
     @Override
-    public @Nullable ItemStack getItem(String itemName, OfflinePlayer player) {
-        return getItem(itemName);
+    public @Nullable ItemStack matchItem(String itemId, OfflinePlayer player) {
+        return matchItem(itemId);
     }
 
 }

@@ -1,8 +1,8 @@
 package pers.yufiria.craftorithm.listener;
 
 import pers.yufiria.craftorithm.CraftorithmAPI;
-import pers.yufiria.craftorithm.arcenciel.ArcencielDispatcher;
 import pers.yufiria.craftorithm.item.ItemManager;
+import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.util.ItemUtils;
 import crypticlib.listener.EventListener;
@@ -36,53 +36,16 @@ public enum CraftingHandler implements Listener {
             return;
         }
         ItemStack item = event.getRecipe().getResult();
-        String id = ItemManager.INSTANCE.matchItemName(item, false);
-        if (id == null) {
+        NamespacedItemIdStack itemId = ItemManager.INSTANCE.matchItemId(item, true);
+        if (itemId == null) {
             return;
         }
-        ItemStack refreshItem = ItemManager.INSTANCE.matchItem(id, (Player) event.getViewers().get(0));
+        ItemStack refreshItem = ItemManager.INSTANCE.matchItem(itemId, (Player) event.getViewers().get(0));
         if (item.isSimilar(refreshItem)) {
             return;
         }
         item.setItemMeta(refreshItem.getItemMeta());
         event.getInventory().setResult(item);
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void runConditions(PrepareItemCraftEvent event) {
-        if (event.getRecipe() == null)
-            return;
-        YamlConfiguration config = RecipeManager.INSTANCE.getRecipeConfig(RecipeManager.INSTANCE.getRecipeKey(event.getRecipe()));
-        if (config == null)
-            return;
-
-        Object inventoryView = InventoryViewHelper.getInventoryView(event);
-        Player player = (Player) InventoryViewHelper.getPlayer(inventoryView);
-        String condition = config.getString("condition", "true");
-        condition = "if " + condition;
-        boolean result = (boolean) ArcencielDispatcher.INSTANCE.dispatchArcencielBlock(player, condition).obj();
-        if (!result) {
-            event.getInventory().setResult(null);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void runActions(CraftItemEvent event) {
-        if (event.getInventory().getResult() == null) {
-            event.getInventory().setResult(null);
-            event.setCancelled(true);
-            return;
-        }
-        HumanEntity entity = event.getWhoClicked();
-        if (!(entity instanceof Player player)) {
-            return;
-        }
-        NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(event.getRecipe());
-        YamlConfiguration config = RecipeManager.INSTANCE.getRecipeConfig(recipeKey);
-        if (config == null)
-            return;
-        List<String> actions = config.getStringList("actions");
-        CraftorithmAPI.INSTANCE.arcencielDispatcher().dispatchArcencielFunc(player, actions);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
