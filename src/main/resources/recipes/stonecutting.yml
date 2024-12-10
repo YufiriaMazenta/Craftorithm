@@ -1,0 +1,5 @@
+version: 2
+type: vanilla_stonecutting
+result: 'minecraft:cobblestone'
+ingredient: 'item_pack:hello_world'
+group: 'example'

@@ -1,0 +1,5 @@
+version: 2
+type: vanilla_brewing
+result: 'minecraft:bedrock'
+input: 'minecraft:command_block'
+ingredient: 'minecraft:bedrock'

@@ -1,5 +1,5 @@
 import java.text.SimpleDateFormat
-version = "1.10.12"
+version = "1.11.0-alpha-1"
 
 plugins {
     `java-library`
@@ -88,7 +88,6 @@ tasks {
     }
     shadowJar {
         archiveFileName.set("Craftorithm-$version.jar")
-        relocate("crypticlib", "com.github.yufiriamazenta.craftorithm.crypticlib")
-        relocate("de.tr7zw.changeme.nbtapi", "com.github.yufiriamazenta.craftorithm.nbtapi")
+        relocate("crypticlib", "pers.yufiria.craftorithm.crypticlib")
     }
 }
