@@ -14,6 +14,9 @@ import java.util.Locale;
 public class RecipeChoiceParser {
 
     public static RecipeChoice parseChoice(String choiceStr) {
+        if (choiceStr == null || choiceStr.isEmpty()) {
+            throw new RecipeLoadException(choiceStr + " is not a valid ingredient ID.");
+        }
         if (!choiceStr.contains(":")) {
             Material material = Material.matchMaterial(choiceStr);
             if (material == null) {
