@@ -8,6 +8,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.CrafterCraftEvent;
 import org.bukkit.inventory.ItemStack;
+import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 
 @EventListener
 public enum CrafterHandler implements Listener {
@@ -19,7 +20,7 @@ public enum CrafterHandler implements Listener {
         ItemStack result = event.getResult();
         if (ItemHelper.isAir(result))
             return;
-        String id = ItemManager.INSTANCE.matchItemName(result, false);
+        NamespacedItemIdStack id = ItemManager.INSTANCE.matchItemId(result, true);
         if (id == null) {
             return;
         }

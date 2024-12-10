@@ -7,6 +7,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.yufiria.craftorithm.item.NamespacedItemId;
+import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 
 public enum OraxenItemProvider implements ItemProvider {
 
@@ -18,30 +20,40 @@ public enum OraxenItemProvider implements ItemProvider {
     }
 
     @Override
-    public @Nullable String getItemName(ItemStack itemStack, boolean ignoreAmount) {
+    public @Nullable NamespacedItemIdStack matchItemId(ItemStack itemStack, boolean ignoreAmount) {
         if (!OraxenItems.exists(itemStack))
             return null;
         String itemName = OraxenItems.getIdByItem(itemStack);
         if (ignoreAmount) {
-            return itemName;
+            return new NamespacedItemIdStack(
+                new NamespacedItemId(
+                    namespace(),
+                    itemName
+                )
+            );
         } else {
-            ItemStack oraxenItem = OraxenItems.getItemById(itemName).build();
-            return itemName + " " + (itemStack.getAmount() / oraxenItem.getAmount());
+            return new NamespacedItemIdStack(
+                new NamespacedItemId(
+                    namespace(),
+                    itemName
+                ),
+                itemStack.getAmount()
+            );
         }
     }
 
     @Override
-    public @Nullable ItemStack getItem(String itemName) {
-        if (!OraxenItems.exists(itemName)) {
+    public @Nullable ItemStack matchItem(String itemId) {
+        if (!OraxenItems.exists(itemId)) {
             return null;
         }
-        ItemStack built = OraxenItems.getItemById(itemName).build();
+        ItemStack built = OraxenItems.getItemById(itemId).build();
         return ItemUpdater.updateItem(built);
     }
 
     @Override
-    public @Nullable ItemStack getItem(String itemName, OfflinePlayer player) {
-        return getItem(itemName);
+    public @Nullable ItemStack matchItem(String itemId, OfflinePlayer player) {
+        return matchItem(itemId);
     }
 
 }

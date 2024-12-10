@@ -1,13 +1,14 @@
 package pers.yufiria.craftorithm.item.impl;
 
 import pers.yufiria.craftorithm.item.ItemProvider;
-import crypticlib.util.ItemHelper;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.yufiria.craftorithm.item.NamespacedItemId;
+import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 
 public enum MMOItemsItemProvider implements ItemProvider {
 
@@ -19,7 +20,7 @@ public enum MMOItemsItemProvider implements ItemProvider {
     }
 
     @Override
-    public @Nullable String getItemName(ItemStack itemStack, boolean ignoreAmount) {
+    public @Nullable NamespacedItemIdStack matchItemId(ItemStack itemStack, boolean ignoreAmount) {
         NBTItem nbtItem = NBTItem.get(itemStack);
         if (!nbtItem.hasType())
             return null;
@@ -27,30 +28,37 @@ public enum MMOItemsItemProvider implements ItemProvider {
         String id = nbtItem.getString("MMOITEMS_ITEM_ID");
         String itemKey = type + ":" + id;
         if (ignoreAmount) {
-            return itemKey;
+            return new NamespacedItemIdStack(
+                new NamespacedItemId(
+                    namespace(),
+                    itemKey
+                )
+            );
         } else {
-            ItemStack miItem = getItem(itemKey);
-            if (ItemHelper.isAir(miItem)) {
-                return null;
-            }
-            return itemKey + " " + (itemStack.getAmount() / miItem.getAmount());
+            return new NamespacedItemIdStack(
+                new NamespacedItemId(
+                    namespace(),
+                    itemKey
+                ),
+                itemStack.getAmount()
+            );
         }
 
     }
 
     @Override
-    public @Nullable ItemStack getItem(String itemName) {
-        if (!itemName.contains(":"))
+    public @Nullable ItemStack matchItem(String itemId) {
+        if (!itemId.contains(":"))
             return null;
-        int index = itemName.indexOf(":");
-        String type = itemName.substring(0, index);
-        String id = itemName.substring(index + 1);
+        int index = itemId.indexOf(":");
+        String type = itemId.substring(0, index);
+        String id = itemId.substring(index + 1);
         return MMOItems.plugin.getItem(type, id);
     }
 
     @Override
-    public @Nullable ItemStack getItem(String itemName, OfflinePlayer player) {
-        return getItem(itemName);
+    public @Nullable ItemStack matchItem(String itemId, OfflinePlayer player) {
+        return matchItem(itemId);
     }
 
 }

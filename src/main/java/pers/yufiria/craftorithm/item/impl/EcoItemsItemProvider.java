@@ -8,8 +8,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Objects;
+import pers.yufiria.craftorithm.item.NamespacedItemId;
+import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 
 public enum EcoItemsItemProvider implements ItemProvider {
 
@@ -21,22 +21,33 @@ public enum EcoItemsItemProvider implements ItemProvider {
     }
 
     @Override
-    public @Nullable String getItemName(ItemStack itemStack, boolean ignoreAmount) {
+    public @Nullable NamespacedItemIdStack matchItemId(ItemStack itemStack, boolean ignoreAmount) {
         EcoItem ecoItem = ItemUtilsKt.getEcoItem(itemStack);
         if (ecoItem == null) {
             return null;
         }
         String id = ecoItem.getID();
         if (ignoreAmount) {
-            return id;
+            return new NamespacedItemIdStack(
+                new NamespacedItemId(
+                    namespace(),
+                    id
+                )
+            );
         } else {
-            return id + " " + (itemStack.getAmount() / Objects.requireNonNull(getItem(id)).getAmount());
+            return new NamespacedItemIdStack(
+                new NamespacedItemId(
+                    namespace(),
+                    id
+                ),
+                itemStack.getAmount()
+            );
         }
     }
 
     @Override
-    public @Nullable ItemStack getItem(String itemName) {
-        EcoItem ecoItem = EcoItems.INSTANCE.getByID(itemName);
+    public @Nullable ItemStack matchItem(String itemId) {
+        EcoItem ecoItem = EcoItems.INSTANCE.getByID(itemId);
         if (ecoItem == null) {
             return null;
         }
@@ -44,7 +55,7 @@ public enum EcoItemsItemProvider implements ItemProvider {
     }
 
     @Override
-    public @Nullable ItemStack getItem(String itemName, @Nullable OfflinePlayer player) {
-        return getItem(itemName);
+    public @Nullable ItemStack matchItem(String itemId, @Nullable OfflinePlayer player) {
+        return matchItem(itemId);
     }
 }

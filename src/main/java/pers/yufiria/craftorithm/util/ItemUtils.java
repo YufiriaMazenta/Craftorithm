@@ -82,26 +82,6 @@ public class ItemUtils implements BukkitLifeCycleTask {
         return containsLore;
     }
 
-    public static String matchItemNameOrCreate(ItemStack item, boolean ignoreAmount) {
-        if (ItemHelper.isAir(item)) {
-            return null;
-        }
-        String itemName;
-        if (item.hasItemMeta()) {
-            itemName = ItemManager.INSTANCE.matchItemName(item, ignoreAmount);
-            if (itemName == null) {
-                String id = UUID.randomUUID().toString();
-                itemName = "items:" + CraftorithmItemProvider.INSTANCE.regCraftorithmItem("gui_items", id, item);
-            }
-        } else {
-            itemName = item.getType().getKey().toString();
-            if (!ignoreAmount && item.getAmount() > 1) {
-                itemName += (" " + item.getAmount());
-            }
-        }
-        return itemName;
-    }
-
     public static void toggleItemGlowing(ItemStack item) {
         if (item.containsEnchantment(Enchantment.MENDING)) {
             item.removeEnchantment(Enchantment.MENDING);

@@ -2,6 +2,7 @@ package pers.yufiria.craftorithm.cmd.sub.item.fuel;
 
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.item.ItemManager;
+import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
 import crypticlib.command.BukkitSubcommand;
@@ -29,7 +30,7 @@ public class RemoveFuelCommand extends BukkitSubcommand {
         if (!CommandUtils.checkSenderIsPlayer(sender))
             return;
 
-        boolean result = ItemManager.INSTANCE.removeCustomFuel(args.get(0));
+        boolean result = ItemManager.INSTANCE.removeCustomFuel(NamespacedItemId.fromString(args.get(0)));
         if (result) {
             LangUtils.sendLang(sender, Languages.COMMAND_ITEM_FUEL_REMOVE_SUCCESS);
         } else {
@@ -40,7 +41,7 @@ public class RemoveFuelCommand extends BukkitSubcommand {
     @Override
     public List<String> tab(CommandSender sender, List<String> args) {
         if (args.size() <= 1) {
-            return new ArrayList<>(ItemManager.INSTANCE.customCookingFuelMap().keySet());
+            return new ArrayList<>(ItemManager.INSTANCE.customCookingFuelMap().keySet().stream().map(NamespacedItemId::toString).toList());
         }
         return Collections.singletonList("");
     }

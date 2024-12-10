@@ -3,6 +3,8 @@ package pers.yufiria.craftorithm.item.impl;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.item.ItemProvider;
+import pers.yufiria.craftorithm.item.NamespacedItemId;
+import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.util.CollectionsUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
 import crypticlib.config.BukkitConfigWrapper;
@@ -48,33 +50,32 @@ public enum CraftorithmItemProvider implements ItemProvider, BukkitLifeCycleTask
     }
 
     @Override
-    public @Nullable String getItemName(ItemStack itemStack, boolean ignoreAmount) {
+    public @Nullable NamespacedItemIdStack matchItemId(ItemStack itemStack, boolean ignoreAmount) {
         for (Map.Entry<String, ItemStack> itemStackEntry : itemMap.entrySet()) {
             ItemStack item = itemStackEntry.getValue();
-            if (ignoreAmount) {
-                if (item.isSimilar(itemStack))
-                    return itemStackEntry.getKey();
-            } else {
-                if (item.equals(itemStack)) {
-                    return itemStackEntry.getKey();
+            if (item.isSimilar(itemStack)) {
+                NamespacedItemId namespacedItemId = new NamespacedItemId(namespace(), itemStackEntry.getKey());
+                if (ignoreAmount) {
+                    return new NamespacedItemIdStack(namespacedItemId);
+                } else {
+                    return new NamespacedItemIdStack(namespacedItemId, itemStack.getAmount());
                 }
             }
-
         }
         return null;
     }
 
     @Override
-    public @Nullable ItemStack getItem(String itemName) {
-        ItemStack item = itemMap.get(itemName);
+    public @Nullable ItemStack matchItem(String itemId) {
+        ItemStack item = itemMap.get(itemId);
         if (item == null)
             return null;
         return item.clone();
     }
 
     @Override
-    public @Nullable ItemStack getItem(String itemName, OfflinePlayer player) {
-        return getItem(itemName);
+    public @Nullable ItemStack matchItem(String itemId, OfflinePlayer player) {
+        return matchItem(itemId);
     }
 
     private void loadItemFiles() {
@@ -119,7 +120,7 @@ public enum CraftorithmItemProvider implements ItemProvider, BukkitLifeCycleTask
     }
 
 
-    public String regCraftorithmItem(String namespace, String itemName, ItemStack item) {
+    public NamespacedItemIdStack regCraftorithmItem(String namespace, String itemName, ItemStack item) {
         BukkitConfigWrapper itemConfigWrapper;
         if (!itemConfigFileMap.containsKey(namespace)) {
             File itemFile = new File(ITEM_FILE_FOLDER, namespace + ".yml");
@@ -135,7 +136,13 @@ public enum CraftorithmItemProvider implements ItemProvider, BukkitLifeCycleTask
         itemConfigWrapper.saveConfig();
         String key = namespace + ":" + itemName;
         itemMap.put(key, item);
-        return key;
+        return new NamespacedItemIdStack(
+            new NamespacedItemId(
+                namespace(),
+                key
+            ),
+            item.getAmount()
+        );
     }
 
     public Map<String, ItemStack> itemMap() {

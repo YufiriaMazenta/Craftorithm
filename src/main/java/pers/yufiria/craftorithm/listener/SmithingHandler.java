@@ -1,16 +1,14 @@
 package pers.yufiria.craftorithm.listener;
 
 import pers.yufiria.craftorithm.CraftorithmAPI;
-import pers.yufiria.craftorithm.arcenciel.ArcencielDispatcher;
 import pers.yufiria.craftorithm.item.ItemManager;
+import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
-import pers.yufiria.craftorithm.util.CollectionsUtils;
 import pers.yufiria.craftorithm.util.ItemUtils;
 import crypticlib.listener.EventListener;
 import crypticlib.util.InventoryViewHelper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,11 +18,8 @@ import org.bukkit.event.inventory.PrepareSmithingEvent;
 import org.bukkit.event.inventory.SmithItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @EventListener
 public enum SmithingHandler implements Listener {
@@ -44,15 +39,15 @@ public enum SmithingHandler implements Listener {
         }
 
         ItemStack result = event.getResult();
-        String id = ItemManager.INSTANCE.matchItemName(result, false);
-        if (id != null) {
-            ItemStack refreshItem = ItemManager.INSTANCE.matchItem(id, (Player) event.getViewers().get(0));
+        NamespacedItemIdStack resultId = ItemManager.INSTANCE.matchItemId(result, true);
+        if (resultId != null) {
+            ItemStack refreshItem = ItemManager.INSTANCE.matchItem(resultId, (Player) event.getViewers().get(0));
             if (!result.isSimilar(refreshItem)) {
                 result.setItemMeta(refreshItem.getItemMeta());
             }
         }
 
-        //todo
+        //todo 保留附魔的选项
 //        boolean copyEnchantment = RecipeManager.INSTANCE.getSmithingCopyEnchantment(recipe);
 //        if (copyEnchantment) {
 //            ItemStack base = event.getInventory().getItem(1);
@@ -80,42 +75,6 @@ public enum SmithingHandler implements Listener {
 //        }
         event.setResult(result);
         event.getInventory().setResult(result);
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void runConditions(PrepareSmithingEvent event) {
-        NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(event.getInventory().getRecipe());
-        if (recipeKey == null)
-            return;
-        YamlConfiguration config = RecipeManager.INSTANCE.getRecipeConfig(recipeKey);
-        if (config == null)
-            return;
-
-        Object inventoryView = InventoryViewHelper.getInventoryView(event);
-        Player player = (Player) InventoryViewHelper.getPlayer(inventoryView);
-        String condition = config.getString("condition", "true");
-        condition = "if " + condition;
-        boolean result = (boolean) ArcencielDispatcher.INSTANCE.dispatchArcencielBlock(player, condition).obj();
-        if (!result) {
-            event.setResult(null);
-            event.getInventory().setResult(null);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void runActions(SmithItemEvent event) {
-        HumanEntity entity = event.getWhoClicked();
-        if (!(entity instanceof Player player)) {
-            return;
-        }
-        NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(event.getInventory().getRecipe());
-        if (recipeKey == null)
-            return;
-        YamlConfiguration config = RecipeManager.INSTANCE.getRecipeConfig(recipeKey);
-        if (config == null)
-            return;
-        List<String> actions = config.getStringList("actions");
-        CraftorithmAPI.INSTANCE.arcencielDispatcher().dispatchArcencielFunc(player, actions);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
