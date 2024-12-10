@@ -1,9 +1,0 @@
-type: anvil
-result: bedrock
-multiple: true
-source:
-  - base: bedrock
-    addition: command_block
-    copy_nbt: true
-    copy_enchantments: true
-    cost_level: 1

@@ -1,9 +1,0 @@
-type: stone_cutting
-result:
-  - bedrock
-  - diamond
-  - iron_ingot
-multiple: true
-source:
-  - command_block
-  - bedrock

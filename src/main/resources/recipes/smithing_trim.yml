@@ -1,0 +1,6 @@
+version: 2
+type: vanilla_smithing_trim
+base: 'item_pack:hello_world'
+addition: 'item_pack:hello_world'
+template: 'item_pack:hello_world'
+copy_nbt: true

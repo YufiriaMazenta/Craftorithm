@@ -1,7 +1,7 @@
 name: Craftorithm
 version: '${version}'
 description: Craft recipes management system
-main: com.github.yufiriamazenta.craftorithm.Craftorithm
+main: pers.yufiria.craftorithm.Craftorithm
 api-version: '1.19'
 load: POSTWORLD
 softdepend:
