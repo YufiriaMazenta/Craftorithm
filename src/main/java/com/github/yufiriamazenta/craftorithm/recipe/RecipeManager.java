@@ -60,7 +60,7 @@ public enum RecipeManager implements BukkitLifeCycleTask {
     private final Map<NamespacedKey, AnvilRecipe> anvilRecipeMap;
     public static final List<RecipeType> UNLOCKABLE_RECIPE_TYPE =
         List.of(RecipeType.SHAPED, RecipeType.SHAPELESS, RecipeType.COOKING, RecipeType.SMITHING, RecipeType.STONE_CUTTING, RecipeType.RANDOM_COOKING);
-    private boolean supportPotionMix;
+    private Boolean supportPotionMix;
 
     RecipeManager() {
         pluginRecipeMap = new ConcurrentHashMap<>();
@@ -449,6 +449,9 @@ public enum RecipeManager implements BukkitLifeCycleTask {
     }
 
     public boolean supportPotionMix() {
+        if (supportPotionMix == null) {
+            supportPotionMix = CrypticLibBukkit.isPaper();
+        }
         return supportPotionMix;
     }
 
@@ -505,8 +508,7 @@ public enum RecipeManager implements BukkitLifeCycleTask {
                 });
             }
 
-            if (!CrypticLibBukkit.platform().type().equals(Platform.PlatformType.BUKKIT)) {
-                supportPotionMix = true;
+            if (supportPotionMix()) {
                 recipeRegisterMap.put(RecipeType.POTION, recipe -> {
                     Bukkit.getPotionBrewer().addPotionMix(((PotionMixRecipe) recipe).potionMix());
                     potionMixRecipeMap.put(((PotionMixRecipe) recipe).key(), (PotionMixRecipe) recipe);
