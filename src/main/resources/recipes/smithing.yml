@@ -1,0 +1,5 @@
+type: smithing
+result: 'minecraft:diamond_sword'
+base: 'item_pack:hello_world'
+addition: 'item_pack:hello_world'
+template: 'item_pack:hello_world'

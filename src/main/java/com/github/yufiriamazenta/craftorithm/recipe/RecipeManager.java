@@ -43,7 +43,7 @@ public enum RecipeManager implements BukkitLifeCycleTask {
     private final List<Recipe> disabledRecipesCache;
     private final Map<NamespacedKey, Recipe> serverRecipesCache;
     private final Map<String, RecipeGroup> recipeGroupMap = new ConcurrentHashMap<>();
-    private boolean supportPotionMix;
+    private Boolean supportPotionMix;
 
     RecipeManager() {
         disabledRecipesCache = new CopyOnWriteArrayList<>();
@@ -79,8 +79,8 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         if (PluginConfigs.ENABLE_ANVIL_RECIPE.value()) {
 
         }
-        if (!CrypticLibBukkit.platform().type().equals(Platform.PlatformType.BUKKIT)) {
-            supportPotionMix = true;
+        if (supportPotionMix()) {
+
         }
     }
 
@@ -314,6 +314,9 @@ public enum RecipeManager implements BukkitLifeCycleTask {
     }
 
     public boolean supportPotionMix() {
+        if (supportPotionMix == null) {
+            supportPotionMix = CrypticLibBukkit.isPaper();
+        }
         return supportPotionMix;
     }
 

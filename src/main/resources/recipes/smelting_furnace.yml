@@ -1,3 +1,7 @@
 type: vanilla_smelting_furnace
 result: 'minecraft:diamond_sword'
 ingredient: 'minecraft:bedrock'
+exp: 1
+time: 150
+recipe_book_category: food
+group: example

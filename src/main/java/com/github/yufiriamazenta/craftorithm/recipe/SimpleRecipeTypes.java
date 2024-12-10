@@ -2,11 +2,11 @@ package com.github.yufiriamazenta.craftorithm.recipe;
 
 import com.github.yufiriamazenta.craftorithm.recipe.loader.vanilla.ShapedRecipeLoader;
 import com.github.yufiriamazenta.craftorithm.recipe.loader.vanilla.ShapelessRecipeLoader;
+import com.github.yufiriamazenta.craftorithm.recipe.loader.vanilla.SmeltingRecipeLoader;
+import com.github.yufiriamazenta.craftorithm.recipe.loader.vanilla.SmithingRecipeLoader;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,7 +16,11 @@ public enum SimpleRecipeTypes implements RecipeType {
 
     VANILLA_SHAPED("vanilla_shaped", ShapedRecipeLoader.INSTANCE, VanillaRecipeRegister.INSTANCE, recipe -> recipe instanceof ShapedRecipe),
     VANILLA_SHAPELESS("vanilla_shapeless", ShapelessRecipeLoader.INSTANCE, VanillaRecipeRegister.INSTANCE, recipe -> recipe instanceof ShapelessRecipe),
-    VANILLA_SMELTING_FURNACE("vanilla_smelting_furnace"),
+    VANILLA_SMELTING_FURNACE("vanilla_smelting_furnace", SmeltingRecipeLoader.INSTANCE, VanillaRecipeRegister.INSTANCE, recipe -> recipe instanceof FurnaceRecipe),
+    VANILLA_SMELTING_BLAST("vanilla_smelting_blast", SmeltingRecipeLoader.INSTANCE, VanillaRecipeRegister.INSTANCE, recipe -> recipe instanceof BlastingRecipe),
+    VANILLA_SMELTING_SMOKER("vanilla_smelting_smoker", SmeltingRecipeLoader.INSTANCE, VanillaRecipeRegister.INSTANCE, recipe -> recipe instanceof SmokingRecipe),
+    VANILLA_SMELTING_CAMPFIRE("vanilla_smelting_campfire", SmeltingRecipeLoader.INSTANCE, VanillaRecipeRegister.INSTANCE, recipe -> recipe instanceof CampfireRecipe),
+    VANILLA_SMITHING("vanilla_smithing", SmithingRecipeLoader.INSTANCE, VanillaRecipeRegister.INSTANCE, recipe -> recipe instanceof SmithingRecipe),
 
     UNKNOWN("unknown", new RecipeLoader<>() {
         @Override
