@@ -54,10 +54,6 @@ recipe_type_name:
   vanilla_stonecutting: 切石配方
   vanilla_brewing: 酿造配方
   anvil: 铁砧配方
-#Arcenciel脚本的提示消息
-arcenciel:
-  not_enough_param: '<prefix> &c语句"<statement>"不完整'
-  unknown_token: '<prefix> &c未定义的关键词或函数<token>'
 #插件加载的反馈信息
 load:
   finish: '<prefix> &a插件加载完毕'
