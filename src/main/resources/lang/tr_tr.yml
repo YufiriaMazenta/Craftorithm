@@ -1,0 +1,60 @@
+prefix: '&8[&3Craftorithm&8]'
+unsupported_version: '<prefix> Desteklenmeyen sürüm.'
+new_version: '<prefix> &aYeni sürüm <new_version> algılandı, lütfen güncellemeyi unutmayın'
+#使用命令的一些反馈消息
+command:
+  no_perm: '<prefix> &cBu komutu kullanma izniniz yok.'
+  player_only: '<prefix> &cBu komutu sadece oyuncular çalıştırabilir'
+  item:
+    save:
+      success: '<prefix> &aEşya başarıyla kaydedildi.'
+      failed_save_air: '<prefix> &cEşya kaydedilemedi, neden: Var olmayan bir eşya kaydedilemez.'
+    give:
+      success: '<prefix> &aEşya başarıyla alındı'
+      not_exist_item: '<prefix> &c<item_name> adlı eşya bulunmuyor.'
+      player_offline: '<prefix> &cOyuncu çevrimdışı veya mevcut değil.'
+  reload:
+    success: '<prefix> &aEklenti başarıyla yeniden yüklendi!'
+    exception: '<prefix> &cEklenti yeniden yüklenirken bir hata oluştu, lütfen konsolu kontrol edin.'
+  remove:
+    success: '<prefix> &aTarif silindi.'
+    not_exist: '<prefix> &cTarif mevcut değil.'
+  disable:
+    success: '<prefix> &cTarif devre dışı bırakıldı.'
+    not_exist: '<prefix> &cTarif mevcut değil veya zaten devre dışı bırakıldı.'
+    failed: '<prefix> &cTarif devre dışı bırakılamadı, belki zaten devre dışı bırakılmış ya da mevcut değil.'
+  version: '<prefix> &aEklenti sürümü: <version>'
+  create:
+    unsupported_recipe_type: '<prefix> &cDesteklenmeyen tarif tipi.'
+    unsupported_recipe_name: '<prefix> &cDesteklenmeyen tarif adı, yalnızca küçük harfli İngilizce harfler, rakamlar, "_", "-" ve "." kullanılmasına izin verilir.'
+    name_used: '<prefix> &cTarif kimliği zaten kullanılmış.'
+    null_result: '<prefix> &cTarif sonucu boş bırakılamaz!'
+    null_source: '<prefix> &cTarif malzemeleri boş olamaz!'
+    success: '<prefix> &a<recipe_type> türü tarif <recipe_name> başarıyla oluşturuldu.'
+  run_arcenciel:
+    success: '<prefix> &aBaşarıyla çalıştırıldı, süre <time>ms.'
+  list:
+    unsupported_version: '<prefix> &cBu özellik sadece 1.16 sürümü ve sonrasında kullanılabilir.'
+recipe_type_name:
+  vanilla_shaped: Şekilde tarifi
+  vanilla_shapeless: Şekilsiz tarifi
+  vanilla_smelting_furnace: Ocak tarifi
+  vanilla_smelting_blast: Maden Eritme Ocağı tarifi
+  vanilla_smelting_smoker: Duman Fırını tarifi
+  vanilla_smelting_campfire: Kamp ateşi tarifi
+  vanilla_smithing: Demirci tarifi
+  vanilla_stonecutting: Taş Yontma Tarifi
+  vanilla_brewing: Mayalama tarifi
+  anvil: Örs tarifi
+#Arcenciel脚本的提示消息
+arcenciel:
+  not_enough_param: '<prefix> &c"<statement>" ifadesi eksik.'
+  unknown_token: '<prefix> &cTanımsız anahtar kelime veya fonksiyon <token>'
+#插件加载的反馈信息
+load:
+  finish: '<prefix> &aEklenti başarıyla yüklendi.'
+  recipe_load_exception: '<prefix> &c<recipe_name> tarifini yüklerken bir hata oluştu.'
+  item_load_exception: '<prefix> &c<item_name> eşyası yüklenirken bir hata oluştu.'
+  hook_plugin:
+    success: '<prefix> &a<plugin> bulundu, bağlandı.'
+    not_exist: '<prefix> &c<plugin> bulunamadı.'

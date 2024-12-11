@@ -1,0 +1,68 @@
+prefix: '&8[&3Craftorithm&8]'
+unsupported_version: '<prefix> サポートされていないバージョン'
+new_version: '<prefix> &a新しいバージョン <new_version> が検出されました。新しいバージョンにアップデートしてください。'
+#使用命令的一些反馈消息
+command:
+  no_perm: '<prefix> &cこのコマンドを使用する権限がありません。'
+  player_only: '<prefix> &cこのコマンドはプレイヤーのみが実行できます。'
+  item:
+    save:
+      success: '<prefix> &aアイテムが保存されました。'
+      failed_save_air: '<prefix> &cアイテムの保存に失敗しました。理由：存在しないアイテムを保存することはできません。'
+    give:
+      success: '<prefix> &aアイテムの取得に成功しました。'
+      not_exist_item: '<prefix> &c存在しないアイテム <item_name>'
+      player_offline: '<prefix> &cそのプレイヤーはオフラインであるか、存在しません。'
+    fuel:
+      add:
+        success: '<prefix> &aカスタム燃料を正常に追加しました.'
+        failed_add_air: '<prefix> &cカスタム燃料の追加に失敗しました。 理由: 存在しないアイテムを燃料として追加することはできません。'
+        failed_exist: '<prefix> &cカスタム燃料の追加に失敗しました。 理由: この燃料はすでに存在します。'
+      remove:
+        success: '<prefix> &aカスタム燃料を正常に削除しました。'
+        failed_not_exist: '<prefix> &cカスタム燃料の削除に失敗しました。 理由: この燃料は存在しません。'
+  reload:
+    success: '<prefix> &aプラグインのリロードが成功しました。'
+    exception: '<prefix> &cプラグインのリロード中にエラーが発生しました。コンソールを確認してください。'
+  remove:
+    success: '<prefix> &aレシピが削除されました。'
+    not_exist: '<prefix> &cそのレシピは存在しません。'
+  disable:
+    success: '<prefix> &cレシピの無効化に成功しました。'
+    not_exist: '<prefix> &cそのレシピは存在しないか、すでに無効化されています。'
+    failed: '<prefix> &cレシピの無効化に失敗しました。おそらくすでに無効化されているか、存在しない可能性があります。'
+  version: '<prefix> &aプラグインのバージョン: <version>'
+  create:
+    unsupported_recipe_type: '<prefix> &cサポートされていないレシピタイプ'
+    unsupported_recipe_name: '<prefix> &c対応していないレシピ名です。小文字の英字、数字、"_"、"-"、"."のみが使用できます。'
+    name_used: '<prefix> &cそのレシピIDはすでに使用されています。'
+    null_result: '<prefix> &cレシピの結果を空にすることはできません！'
+    null_source: '<prefix> &cレシピの材料を空にすることはできません！'
+    success: '<prefix> &a<recipe_type>のタイプのレシピ<recipe_name>が作成されました。'
+  run_arcenciel:
+    success: '<prefix> &a実行に成功しました。所要時間<time>ミリセカンド｡'
+  list:
+    unsupported_version: '<prefix> &cこの機能は1.16以降のバージョンでのみ利用可能です。'
+recipe_type_name:
+  vanilla_shaped: 定形レシピ
+  vanilla_shapeless: 不定形レシピ
+  vanilla_smelting_furnace: かまどレシピ
+  vanilla_smelting_blast: 溶鉱炉レシピ
+  vanilla_smelting_smoker: 燻製器レシピ
+  vanilla_smelting_campfire: 焚き火レシピ
+  vanilla_smithing: 鍛冶台レシピ
+  vanilla_stonecutting: 石切台レシピ
+  vanilla_brewing: 醸造台レシピ
+  anvil: 金床レシピ
+#Arcenciel脚本的提示消息
+arcenciel:
+  not_enough_param: '<prefix> &c文"<statement>"は不完全です'
+  unknown_token: '<prefix> &c未定義のキーワードや関数<token>'
+#插件加载的反馈信息
+load:
+  finish: '<prefix> &aプラグインの読み込みが完了しました'
+  recipe_load_exception: '<prefix> &c<recipe_name>のレシピの読み込み中にエラーが発生しました'
+  item_load_exception: '<prefix> &c<item_name>のアイテムの読み込み中にエラーが発生しました'
+  hook_plugin:
+    success: '<prefix> &a<plugin>が見つかり、フックされました'
+    not_exist: '<prefix> &c<plugin>が見つかりません'

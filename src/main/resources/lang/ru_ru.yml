@@ -1,0 +1,68 @@
+prefix: '&8[&3Craftorithm&8]'
+unsupported_version: '<prefix> неподдерживаемая версия.'
+new_version: '<prefix> &aОбнаружена новая версия <new_version>, пожалуйста, обновитесь.'
+#使用命令的一些反馈消息
+command:
+  no_perm: '<prefix> &cУ вас нет разрешения на выполнение этой команды.'
+  player_only: '<prefix> &cЭта команда доступна только игрокам.'
+  item:
+    save:
+      success: '<prefix> &aЭлемент успешно сохранен.'
+      failed_save_air: '<prefix> &cНе удалось сохранить предмет, так как он не существует. Причина: попытка сохранить несуществующий предмет.'
+    give:
+      success: '<prefix> &aПредмет успешно получен.'
+      not_exist_item: '<prefix> &cПредмет <item_name> не существует.'
+      player_offline: '<prefix> &cЭтот игрок офлайн или не существует.'
+    fuel:
+      add:
+        success: '<prefix> &aДобавить собственное топливо успешно.'
+        failed_add_air: '<prefix> &cНе удалось добавить собственное топливо. Причина: Невозможно добавить несуществующий предмет в качестве топлива.'
+        failed_exist: '<prefix> &cНе удалось добавить собственное топливо. Причина: Это топливо уже существует.'
+      remove:
+        success: '<prefix> &aУдаление пользовательского топлива успешно.'
+        failed_not_exist: '<prefix> &cНе удалось удалить пользовательское топливо. Причина: Этого топлива не существует.'
+  reload:
+    success: '<prefix> &aПерезагрузка плагина выполнена успешно.'
+    exception: '<prefix> &cВпроцессе перезагрузки плагина произошла ошибка. Пожалуйста, проверьте консоль.'
+  remove:
+    success: '<prefix> &aРецепт успешно удален.'
+    not_exist: '<prefix> &cРецепт не существует.'
+  disable:
+    success: '<prefix> &cРецепт успешно отключен.'
+    not_exist: '<prefix> &cРецепт не существует или уже отключен.'
+    failed: '<prefix> &cНе удалось отключить рецепт, возможно уже отключен или не существует.'
+  version: '<prefix> &aВерсия плагина: <version>'
+  create:
+    unsupported_recipe_type: '<prefix> &cНеподдерживаемый тип рецепта.'
+    unsupported_recipe_name: '<prefix> &cНеподдерживаемое имя рецепта, разрешены только строчные буквы, цифры, "_", "-" и ".".'
+    name_used: '<prefix> &cИдентификатор рецепта уже используется.'
+    null_result: '<prefix> &cРезультат рецепта не может быть пустым!'
+    null_source: '<prefix> &cИнгредиенты рецепта не могут быть пустыми!'
+    success: '<prefix> &aРецепт <recipe_name> типа <recipe_type> успешно создан.'
+  run_arcenciel:
+    success: '<prefix> &aУспешно завершено, время выполнения <time> мс.'
+  list:
+    unsupported_version: '<prefix> &cЭта функция доступна только в версии 1.16 и выше.'
+recipe_type_name:
+  vanilla_shaped: Упорядоченный рецепт
+  vanilla_shapeless: Неупорядоченный рецепт
+  vanilla_smelting_furnace: Плавильный рецепт
+  vanilla_smelting_blast: Коксовый рецепт
+  vanilla_smelting_smoker: Дымчатый рецепт
+  vanilla_smelting_campfire: Рецепт на костре
+  vanilla_smithing: Рецепт на наковальне
+  vanilla_stonecutting: Тесаковочный станок
+  vanilla_brewing: Рецепт на дистилляторе
+  anvil: Кузнечный рецепт
+#Arcenciel脚本的提示消息
+arcenciel:
+  not_enough_param: '<prefix> &cПредложение "<statement>" неполное'
+  unknown_token: '<prefix> &cНеизвестное ключевое слово или функция <token>'
+#插件加载的反馈信息
+load:
+  finish: '<prefix> &aПлагин успешно загружен.'
+  recipe_load_exception: '<prefix> &cОшибка при загрузке рецепта <recipe_name>'
+  item_load_exception: '<prefix> &cОшибка при загрузке предмета <item_name>'
+  hook_plugin:
+    success: '<prefix> &aОбнаружен <plugin>, подключен.'
+    not_exist: '<prefix> &cПлагин <plugin> не найден'

@@ -1,0 +1,68 @@
+prefix: '&8[&3Craftorithm&8]'
+unsupported_version: '<prefix> Nicht unterstützte Version'
+new_version: '<prefix> &aEs wurde eine neue Version <new_version> erkannt. Bitte aktualisieren Sie rechtzeitig auf die neue Version!'
+#使用命令的一些反馈消息
+command:
+  no_perm: '<prefix> &cSie haben keine Berechtigung, diesen Befehl zu verwenden.'
+  player_only: '<prefix> &cNur Spieler können diesen Befehl ausführen.'
+  item:
+    save:
+      success: '<prefix> &aGegenstand erfolgreich gespeichert.'
+      failed_save_air: '<prefix> &cGegenstand konnte nicht gespeichert werden. Grund: Gegenstand, der nicht existiert, kann nicht gespeichert werden.'
+    give:
+      success: '<prefix> &aGegenstand erfolgreich erhalten.'
+      not_exist_item: '<prefix> &cGegenstand <item_name> existiert nicht.'
+      player_offline: '<prefix> &cDer Spieler ist nicht online oder existiert nicht.'
+    fuel:
+      add:
+        success: '<prefix> &aBenutzerdefinierten Kraftstoff erfolgreich hinzufügen.'
+        failed_add_air: '<prefix> &cDas Hinzufügen des benutzerdefinierten Kraftstoffs ist fehlgeschlagen. Grund: Ein nicht vorhandener Artikel kann nicht als Treibstoff hinzugefügt werden.'
+        failed_exist: '<prefix> &cDas Hinzufügen des benutzerdefinierten Kraftstoffs ist fehlgeschlagen. Grund: Dieser Kraftstoff existiert bereits.'
+      remove:
+        success: '<prefix> &aBenutzerdefinierten Kraftstoff erfolgreich entfernen.'
+        failed_not_exist: '<prefix> &cDas Entfernen des benutzerdefinierten Kraftstoffs ist fehlgeschlagen. Grund: Dieser Kraftstoff existiert nicht.'
+  reload:
+    success: '<prefix> &aDas Plugin wurde erfolgreich neu geladen.'
+    exception: '<prefix> &cBeim Neuladen des Plugins ist ein Fehler aufgetreten. Bitte überprüfen Sie die Konsole.'
+  remove:
+    success: '<prefix> &aRezept erfolgreich gelöscht.'
+    not_exist: '<prefix> &cRezept existiert nicht.'
+  disable:
+    success: '<prefix> &cRezept erfolgreich deaktiviert.'
+    not_exist: '<prefix> &cDas Rezept existiert nicht oder wurde bereits deaktiviert.'
+    failed: '<prefix> &cFehler beim Deaktivieren des Rezepts. Möglicherweise wurde es bereits deaktiviert oder existiert nicht.'
+  version: '<prefix> &aPlugin Version: <version>'
+  create:
+    unsupported_recipe_type: '<prefix> &cNicht unterstützter Rezepttyp'
+    unsupported_recipe_name: '<prefix> &cNicht unterstützter Rezeptname, es sind nur Kleinbuchstaben, Zahlen, "_", "-", und "." zulässig.'
+    name_used: '<prefix> &cRezept-ID ist bereits vergeben.'
+    null_result: '<prefix> &cDas Rezeptergebnis darf nicht leer sein!'
+    null_source: '<prefix> &cDie Rezeptzutaten dürfen nicht leer sein!'
+    success: '<prefix> &a<recipe_type>-Rezept <recipe_name> erfolgreich erstellt.'
+  run_arcenciel:
+    success: '<prefix> &aErfolgreich ausgeführt, dauerte <time> ms.'
+  list:
+    unsupported_version: '<prefix> &cDiese Funktion ist nur in Version 1.16 und höher verfügbar.'
+recipe_type_name:
+  vanilla_shaped: Geformt-Rezept
+  vanilla_shapeless: Formlos-Rezept
+  vanilla_smelting_furnace: Ofen-Rezept
+  vanilla_smelting_blast: Schmelzofen-Rezept
+  vanilla_smelting_smoker: Räucherofen-Rezept
+  vanilla_smelting_campfire: Lagerfeuer-Rezept
+  vanilla_smithing: Schmiedetisch-Rezept
+  vanilla_stonecutting: Steinsäge-Rezept
+  vanilla_brewing: Braustand-Rezept
+  anvil: Amboss-Rezept
+#Arcenciel脚本的提示消息
+arcenciel:
+  not_enough_param: '<prefix> &cDie Anweisung "<statement>" ist unvollständig.'
+  unknown_token: '<prefix> &cUndefinierter Schlüsselbegriff oder Funktion <token>'
+#插件加载的反馈信息
+load:
+  finish: '<prefix> &aDas Plugin wurde erfolgreich geladen.'
+  recipe_load_exception: '<prefix> &cBeim Laden des Rezepts <recipe_name> ist ein Fehler aufgetreten.'
+  item_load_exception: '<prefix> &cBeim Laden des Gegenstands <item_name> ist ein Fehler aufgetreten.'
+  hook_plugin:
+    success: '<prefix> &aPlugin <plugin> wurde gefunden und erfolgreich eingehakt.'
+    not_exist: '<prefix> &cPlugin <plugin> nicht gefunden.'
