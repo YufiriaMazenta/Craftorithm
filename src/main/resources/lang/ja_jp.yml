@@ -54,10 +54,6 @@ recipe_type_name:
   vanilla_stonecutting: 石切台レシピ
   vanilla_brewing: 醸造台レシピ
   anvil: 金床レシピ
-#Arcenciel脚本的提示消息
-arcenciel:
-  not_enough_param: '<prefix> &c文"<statement>"は不完全です'
-  unknown_token: '<prefix> &c未定義のキーワードや関数<token>'
 #插件加载的反馈信息
 load:
   finish: '<prefix> &aプラグインの読み込みが完了しました'

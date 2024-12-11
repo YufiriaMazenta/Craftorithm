@@ -54,10 +54,6 @@ recipe_type_name:
   vanilla_stonecutting: Stonecutting Recipe
   vanilla_brewing: Brewing Recipe
   anvil: Anvil Recipe
-#Arcenciel脚本的提示消息
-arcenciel:
-  not_enough_param: '<prefix> &cStatement "<statement>" is incomplete.'
-  unknown_token: '<prefix> &cUndefined keyword or function: <token>'
 #插件加载的反馈信息
 load:
   finish: '<prefix> &aPlugin loaded successfully.'
