@@ -26,7 +26,6 @@ import pers.yufiria.craftorithm.util.PlayerUtils;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 @EventListener
@@ -38,7 +37,7 @@ public enum AnvilRecipeHandler implements Listener {
 
     public boolean registerAnvilRecipe(final AnvilRecipe anvilRecipe) {
         if (!PluginConfigs.ENABLE_ANVIL_RECIPE.value())
-            throw new RuntimeException("AnvilRecipe is not enabled");
+            throw new UnsupportedOperationException("AnvilRecipe is not enabled");
         if (anvilRecipes.containsKey(anvilRecipe.getKey())) {
             return false;
         }
@@ -48,18 +47,20 @@ public enum AnvilRecipeHandler implements Listener {
 
     public boolean unregisterAnvilRecipe(final NamespacedKey key) {
         if (!PluginConfigs.ENABLE_ANVIL_RECIPE.value())
-            throw new RuntimeException("AnvilRecipe is not enabled");
+            throw new UnsupportedOperationException("AnvilRecipe is not enabled");
         return anvilRecipes.remove(key) != null;
     }
 
     public AnvilRecipe getAnvilRecipe(final NamespacedKey key) {
         if (!PluginConfigs.ENABLE_ANVIL_RECIPE.value())
-            throw new RuntimeException("AnvilRecipe is not enabled");
+            throw new UnsupportedOperationException("AnvilRecipe is not enabled");
         return anvilRecipes.get(key);
     }
 
     @Nullable
     public AnvilRecipe matchAnvilRecipe(ItemStack base, ItemStack addition) {
+        if (!PluginConfigs.ENABLE_ANVIL_RECIPE.value())
+            throw new UnsupportedOperationException("AnvilRecipe is not enabled");
         for (Map.Entry<NamespacedKey, AnvilRecipe> anvilRecipeEntry : anvilRecipes.entrySet()) {
             AnvilRecipe anvilRecipe = anvilRecipeEntry.getValue();
             StackableItemIdChoice recipeBaseId = anvilRecipe.base();

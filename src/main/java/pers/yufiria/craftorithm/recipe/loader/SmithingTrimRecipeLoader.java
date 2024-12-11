@@ -32,6 +32,8 @@ public enum SmithingTrimRecipeLoader implements RecipeLoader<SmithingRecipe> {
                 copyNbt = !copyNbt;
             }
             return new SmithingTrimRecipe(key, template, base, addition, copyNbt);
+        } catch (RecipeLoadException e) {
+            throw e;
         } catch (Throwable throwable) {
             throw new RecipeLoadException(throwable);
         }

@@ -69,6 +69,8 @@ public enum SmeltingRecipeLoader implements RecipeLoader<CookingRecipe<?>> {
                 }
             }
             return recipe;
+        } catch (RecipeLoadException e) {
+            throw e;
         } catch (Throwable throwable) {
             throw new RecipeLoadException(throwable);
         }

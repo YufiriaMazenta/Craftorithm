@@ -1,4 +1,3 @@
-version: 2
 type: 'vanilla_shaped'
 result: 'minecraft:diamond_sword'
 group: 'example'

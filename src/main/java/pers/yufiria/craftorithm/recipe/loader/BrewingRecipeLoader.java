@@ -30,6 +30,8 @@ public enum BrewingRecipeLoader implements RecipeLoader<BrewingRecipe> {
             RecipeChoice ingredient = BukkitRecipeChoiceParser.parseChoice(ingredientId);
             PotionMix potionMix = new PotionMix(key, result, input, ingredient);
             return new BrewingRecipe(potionMix);
+        } catch (RecipeLoadException e) {
+            throw e;
         } catch (Throwable throwable) {
             throw new RecipeLoadException(throwable);
         }

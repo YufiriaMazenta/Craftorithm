@@ -40,6 +40,8 @@ public enum SmithingTransformRecipeLoader implements RecipeLoader<SmithingRecipe
                 recipe = new SmithingTransformRecipe(key, result, base, addition, template, copyNbt);
             }
             return recipe;
+        } catch (RecipeLoadException e) {
+            throw e;
         } catch (Throwable throwable) {
             throw new RecipeLoadException(throwable);
         }

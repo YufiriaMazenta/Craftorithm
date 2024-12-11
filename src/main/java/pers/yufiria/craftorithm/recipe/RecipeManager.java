@@ -174,6 +174,10 @@ public enum RecipeManager implements BukkitLifeCycleTask {
                         String groupId = recipeConfig.getString("group");
                         if (recipeGroupMap.containsKey(groupId)) {
                             recipeGroupMap.get(groupId).addRecipe(recipe);
+                        } else {
+                            RecipeGroup recipeGroup = new RecipeGroup(Objects.requireNonNull(groupId));
+                            recipeGroup.addRecipe(recipe);
+                            recipeGroupMap.put(groupId, recipeGroup);
                         }
                     }
                 } else {
