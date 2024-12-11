@@ -4,7 +4,7 @@ import crypticlib.lang.LangHandler;
 import crypticlib.lang.entry.StringLangEntry;
 import crypticlib.lang.entry.StringListLangEntry;
 
-@LangHandler(langFileFolder = "lang")
+@LangHandler(langFileFolder = "languages")
 public class Languages {
 
     public static final StringLangEntry PREFIX = new StringLangEntry("prefix");
@@ -102,8 +102,6 @@ public class Languages {
     public static final StringLangEntry MENU_RECIPE_EDITOR_ICON_ANVIL_ELEMENT_INPUT_HINT = new StringLangEntry("menu.recipe_editor.icon.anvil_element.input_hint");
     public static final StringLangEntry MENU_RECIPE_EDITOR_ICON_REMOVE_NAME = new StringLangEntry("menu.recipe_editor.icon.remove.name");
     public static final StringLangEntry MENU_RECIPE_EDITOR_ICON_REMOVE_MESSAGE = new StringLangEntry("menu.recipe_editor.icon.remove.message");
-    public static final StringLangEntry ARCENCIEL_NOT_ENOUGH_PARAM = new StringLangEntry("arcenciel.not_enough_param");
-    public static final StringLangEntry ARCENCIEL_UNKNOWN_TOKEN = new StringLangEntry("arcenciel.unknown_token");
     public static final StringLangEntry LOAD_FINISH = new StringLangEntry("load.finish");
     public static final StringLangEntry LOAD_RECIPE_LOAD_EXCEPTION = new StringLangEntry("load.recipe_load_exception");
     public static final StringLangEntry LOAD_ITEM_LOAD_EXCEPTION = new StringLangEntry("load.item_load_exception");

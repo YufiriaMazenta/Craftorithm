@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.item;
+package pers.yufiria.craftorithm.item.exception;
 
 public class ItemNotFoundException extends RuntimeException {
 

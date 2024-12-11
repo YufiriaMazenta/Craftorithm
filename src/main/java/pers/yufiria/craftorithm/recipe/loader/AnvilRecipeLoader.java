@@ -31,6 +31,8 @@ public enum AnvilRecipeLoader implements RecipeLoader<AnvilRecipe> {
             anvilRecipe.setCostLevel(costLevel);
             anvilRecipe.setCopyEnchantments(copyEnchantments);
             return anvilRecipe;
+        } catch (RecipeLoadException e) {
+            throw e;
         } catch (Throwable throwable) {
             throw new RecipeLoadException(throwable);
         }

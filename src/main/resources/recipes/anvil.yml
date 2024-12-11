@@ -1,4 +1,3 @@
-version: 2
 type: anvil
 result: 'minecraft:diamond_sword 2'
 base: 'item_pack:hello_world 2'

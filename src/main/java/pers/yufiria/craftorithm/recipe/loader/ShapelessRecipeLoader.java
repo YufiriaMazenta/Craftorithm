@@ -46,6 +46,8 @@ public enum ShapelessRecipeLoader implements RecipeLoader<ShapelessRecipe> {
                 }
             }
             return recipe;
+        } catch (RecipeLoadException e) {
+            throw e;
         } catch (Throwable e) {
             throw new RecipeLoadException(e);
         }

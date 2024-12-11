@@ -1,4 +1,3 @@
-version: 2
 type: vanilla_smithing_transform
 result: 'minecraft:diamond_sword'
 base: 'item_pack:hello_world'

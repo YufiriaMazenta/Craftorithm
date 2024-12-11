@@ -32,6 +32,8 @@ public enum StonecuttingRecipeLoader implements RecipeLoader<StonecuttingRecipe>
                 recipe.setGroup(Objects.requireNonNull(recipeConfig.getString("group")));
             }
             return recipe;
+        } catch (RecipeLoadException e) {
+            throw e;
         } catch (Throwable throwable) {
             throw new RecipeLoadException(throwable);
         }

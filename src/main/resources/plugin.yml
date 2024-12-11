@@ -21,8 +21,3 @@ softdepend:
 authors: [ YufiriaMazenta ]
 folia-supported: true
 website: https://github.com/YufiriaMazenta/Craftorithm
-permissions:
-  craftorithm.command:
-    description: Plugin command main permissions
-  craftorithm.edit_recipe:
-    default: op
