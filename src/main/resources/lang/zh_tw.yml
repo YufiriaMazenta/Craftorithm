@@ -1,0 +1,68 @@
+prefix: '&8[&3Craftorithm&8]'
+unsupported_version: '<prefix> 不支援的版本。'
+new_version: '<prefix> &a偵測到有新版本<new_version>，請及時更新到新版本！'
+#使用命令的一些反馈消息
+command:
+  no_perm: '<prefix> &c你沒有使用此指令的權限。'
+  player_only: '<prefix> &c只有玩家才能執行此指令。'
+  item:
+    save:
+      success: '<prefix> &a物品保存成功。'
+      failed_save_air: '<prefix> &c物品保存失敗，原因：無法保存不存在的物品。'
+    give:
+      success: '<prefix> &a物品獲取成功。'
+      not_exist_item: '<prefix> &c不存在物品 <item_name>。'
+      player_offline: '<prefix> &c該玩家不在線上或不存在。'
+    fuel:
+      add:
+        success: '<prefix> &a添加自定義燃料成功.'
+        failed_add_air: '<prefix> &c添加自定義燃料失敗，原因：不能將不存在的物品作為燃料。'
+        failed_exist: '<prefix> &c添加自定義燃料失敗。原因：此燃料已存在。'
+      remove:
+        success: '<prefix> &a刪除自定義燃料成功。'
+        failed_not_exist: '<prefix> &c刪除自定義燃料失敗。原因：此燃料不存在。'
+  reload:
+    success: '<prefix> &a插件重載成功。'
+    exception: '<prefix> &c插件重載過程中發生錯誤，請查看控制台。'
+  remove:
+    success: '<prefix> &a配方刪除成功。'
+    not_exist: '<prefix> &c配方不存在。'
+  disable:
+    success: '<prefix> &c禁用配方成功。'
+    not_exist: '<prefix> &c配方不存在或已經被禁用。'
+    failed: '<prefix> &c配方禁用失敗，可能已被禁用或不存在。'
+  version: '<prefix> &a插件版本：<version>。'
+  create:
+    unsupported_recipe_type: '<prefix> &c不支援的配方類型。'
+    unsupported_recipe_name: '<prefix> &c不支援的配方名稱，只能使用小写字母、数字、“-”、“_”和“.”。'
+    name_used: '<prefix> &c配方ID已經被使用。'
+    null_result: '<prefix> &c配方結果不允許為空！'
+    null_source: '<prefix> &c配方原料不允許為空！'
+    success: '<prefix> &a<recipe_type>類型配方<recipe_name>創建成功'
+  run_arcenciel:
+    success: '<prefix> &a運行成功，耗時<time>毫秒。'
+  list:
+    unsupported_version: '<prefix> &c此功能僅在1.16及以上版本可用。'
+recipe_type_name:
+  vanilla_shaped: 有序配方
+  vanilla_shapeless: 無序配方
+  vanilla_smelting_furnace: 熔爐配方
+  vanilla_smelting_blast: 高爐配方
+  vanilla_smelting_smoker: 煙燻爐配方
+  vanilla_smelting_campfire: 營火配方
+  vanilla_smithing: 鍛造配方
+  vanilla_stonecutting: 切石配方
+  vanilla_brewing: 釀造配方
+  anvil: 鐵砧配方
+#Arcenciel脚本的提示消息
+arcenciel:
+  not_enough_param: '<prefix> &c語句"<statement>"不完整'
+  unknown_token: '<prefix> &c未定義的關鍵字或函式<token>'
+#插件加载的反馈信息
+load:
+  finish: '<prefix> &a插件載入成功'
+  recipe_load_exception: '<prefix> &c載入配方<recipe_name>時發生錯誤。'
+  item_load_exception: '<prefix> &c載入物品<item_name>時發生錯誤。'
+  hook_plugin:
+    success: '<prefix> &a發現<plugin>，已連結。'
+    not_exist: '<prefix> &c未發現<plugin>。'
