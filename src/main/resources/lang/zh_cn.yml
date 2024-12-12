@@ -62,3 +62,8 @@ load:
   hook_plugin:
     success: '<prefix> &a发现<plugin>，已挂钩'
     not_exist: '<prefix> &c未发现<plugin>'
+menu:
+  recipe_creator: '创建器'
+  recipe_display:
+    anvil:
+      cost_level: '&3所需经验: &a<level>'

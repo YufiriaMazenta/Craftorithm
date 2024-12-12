@@ -14,6 +14,8 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,7 +24,7 @@ public final class CreateRecipeCommand extends BukkitSubcommand {
 
     public static final CreateRecipeCommand INSTANCE = new CreateRecipeCommand();
     private final Pattern recipeNamePattern = Pattern.compile("^[a-z0-9._-]+$");
-    private final Map<RecipeType, Function<Player, Menu>> recipeCreatorMap = new HashMap<>();
+    private final Map<RecipeType, BiConsumer<Player, String>> recipeCreatorMap = new HashMap<>();
 
     private CreateRecipeCommand() {
         super(CommandInfo
@@ -62,13 +64,13 @@ public final class CreateRecipeCommand extends BukkitSubcommand {
             LangUtils.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
             return;
         }
-        Function<Player, Menu> creatorFunc = recipeCreatorMap.get(recipeType);
-        if (creatorFunc == null) {
+        BiConsumer<Player, String> creatorConsumer = recipeCreatorMap.get(recipeType);
+        if (creatorConsumer == null) {
             LangUtils.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
             return;
         }
         Player player = (Player) sender;
-        creatorFunc.apply(player).openMenu();
+        creatorConsumer.accept(player, recipeName);
     }
 
     @Override
@@ -79,8 +81,12 @@ public final class CreateRecipeCommand extends BukkitSubcommand {
         return Collections.singletonList("<recipe_name>");
     }
 
-    public void addRecipeCreator(RecipeType recipeType, Function<Player, Menu> creatorFunc) {
+    public void addRecipeCreator(RecipeType recipeType, BiConsumer<Player, String> creatorFunc) {
         recipeCreatorMap.put(recipeType, creatorFunc);
+    }
+
+    public void removeRecipeCreator(RecipeType recipeType) {
+        recipeCreatorMap.remove(recipeType);
     }
 
 }

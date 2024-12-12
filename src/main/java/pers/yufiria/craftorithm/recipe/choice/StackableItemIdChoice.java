@@ -15,10 +15,12 @@ import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 public class StackableItemIdChoice implements RecipeChoice {
 
     private final List<NamespacedItemIdStack> itemIds;
+    private final Random rand = new Random();
 
     public StackableItemIdChoice(String choiceStr) {
         if (choiceStr == null || choiceStr.isEmpty()) {
@@ -85,7 +87,7 @@ public class StackableItemIdChoice implements RecipeChoice {
 
     @Override
     public @NotNull ItemStack getItemStack() {
-        return ItemManager.INSTANCE.matchItem(itemIds.get(0));
+        return ItemManager.INSTANCE.matchItem(itemIds.get(rand.nextInt(itemIds.size())));
     }
 
     @Override

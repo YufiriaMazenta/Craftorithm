@@ -43,6 +43,8 @@ command:
     success: '<prefix> &aExecution successful, took <time> ms.'
   list:
     unsupported_version: '<prefix> &cThis feature is only available in version 1.16 and above.'
+  display:
+    unsupported_recipe_type: '<prefix> &cThis type of recipe display is not currently supported'
 recipe_type_name:
   vanilla_shaped: Shaped Recipe
   vanilla_shapeless: Shapeless Recipe
@@ -62,3 +64,8 @@ load:
   hook_plugin:
     success: '<prefix> &aFound <plugin>, hooked successfully.'
     not_exist: '<prefix> &cPlugin <plugin> not found.'
+menu:
+  recipe_creator: 'Creator'
+  recipe_display:
+    anvil:
+      cost_level: '&3Required Level: &a<level>'

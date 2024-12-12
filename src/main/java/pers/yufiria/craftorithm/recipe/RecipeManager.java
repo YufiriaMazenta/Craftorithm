@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.recipe;
 
 import pers.yufiria.craftorithm.Craftorithm;
+import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 import crypticlib.CrypticLibBukkit;
@@ -20,6 +21,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.*;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
+import pers.yufiria.craftorithm.util.CollectionsUtils;
+import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.io.File;
 import java.util.*;
@@ -141,14 +144,14 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         }
         List<File> allFiles = FileHelper.allYamlFiles(RECIPE_FILE_FOLDER);
         for (File file : allFiles) {
+            String recipeName = file.getPath().substring(RECIPE_FILE_FOLDER.getPath().length() + 1);
+            recipeName = recipeName.replace("\\", "/");
+            recipeName = recipeName.replace('-', '_');
+            int lastDotIndex = recipeName.lastIndexOf(".");
+            recipeName = recipeName.substring(0, lastDotIndex).toLowerCase();
+            BukkitConfigWrapper recipeConfigWrapper = new BukkitConfigWrapper(file);
+            YamlConfiguration recipeConfig = recipeConfigWrapper.config();
             try {
-                String recipeName = file.getPath().substring(RECIPE_FILE_FOLDER.getPath().length() + 1);
-                recipeName = recipeName.replace("\\", "/");
-                recipeName = recipeName.replace('-', '_');
-                int lastDotIndex = recipeName.lastIndexOf(".");
-                recipeName = recipeName.substring(0, lastDotIndex).toLowerCase();
-                BukkitConfigWrapper recipeConfigWrapper = new BukkitConfigWrapper(file);
-                YamlConfiguration recipeConfig = recipeConfigWrapper.config();
                 String typeId = recipeConfig.getString("type");
                 RecipeType recipeType;
                 if (typeId == null) {
@@ -184,6 +187,7 @@ public enum RecipeManager implements BukkitLifeCycleTask {
                     BukkitMsgSender.INSTANCE.info("&eRegister recipe " + recipeName + " failed");
                 }
             } catch (Throwable throwable) {
+                LangUtils.info(Languages.LOAD_RECIPE_LOAD_EXCEPTION, CollectionsUtils.newStringHashMap("<recipe_name>", recipeName));
                 throwable.printStackTrace();
             }
         }

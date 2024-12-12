@@ -1,0 +1,17 @@
+title: <translate:lang:recipe_type_name.anvil>
+layout:
+  - '#########'
+  - '#A#B###C#'
+  - '#########'
+icons:
+  '#':
+    material: minecraft:green_stained_glass_pane
+    name: '&a<translate:lang:recipe_type_name.anvil>'
+    lore:
+      - <translate:lang:menu.recipe_display.anvil.cost_level>
+  A:
+    icon_type: anvil_base
+  B:
+    icon_type: anvil_addition
+  C:
+    icon_type: anvil_result
