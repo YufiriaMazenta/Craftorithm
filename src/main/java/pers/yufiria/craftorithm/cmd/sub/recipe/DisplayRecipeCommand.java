@@ -1,6 +1,18 @@
 package pers.yufiria.craftorithm.cmd.sub.recipe;
 
+import crypticlib.lifecycle.AutoTask;
+import crypticlib.lifecycle.BukkitLifeCycleTask;
+import crypticlib.lifecycle.LifeCycle;
+import crypticlib.lifecycle.TaskRule;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+import pers.yufiria.craftorithm.config.Languages;
+import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.recipe.RecipeType;
+import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
+import pers.yufiria.craftorithm.recipe.extra.anvil.AnvilRecipe;
+import pers.yufiria.craftorithm.ui.menu.display.anvil.AnvilDisplayMenuManager;
 import pers.yufiria.craftorithm.util.CommandUtils;
 import crypticlib.command.BukkitSubcommand;
 import crypticlib.command.CommandInfo;
@@ -9,14 +21,20 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.Nullable;
+import pers.yufiria.craftorithm.util.LangUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.function.BiConsumer;
 
-public class DisplayRecipeCommand extends BukkitSubcommand {
+@AutoTask(
+    rules = {
+        @TaskRule(lifeCycle = LifeCycle.ACTIVE)
+    }
+)
+public class DisplayRecipeCommand extends BukkitSubcommand implements BukkitLifeCycleTask {
 
     public static final DisplayRecipeCommand INSTANCE = new DisplayRecipeCommand();
+    private final Map<RecipeType, BiConsumer<Player, Recipe>> recipeDisplayMap = new HashMap<>();
 
     protected DisplayRecipeCommand() {
         super(
@@ -41,21 +59,36 @@ public class DisplayRecipeCommand extends BukkitSubcommand {
         if (recipe == null) {
             return;
         }
-        //TODO 展示
-//        new RecipeDisplayMenu((Player) sender, recipe, null).openMenu();
+        RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipe);
+        recipeDisplayMap.getOrDefault(recipeType, (player, recipe1) -> {
+            LangUtils.sendLang(sender, Languages.COMMAND_DISPLAY_UNSUPPORTED_RECIPE_TYPE);
+        }).accept((Player) sender, recipe);
     }
 
     @Override
     public @Nullable List<String> tab(CommandSender sender, List<String> args) {
         if (args.size() <= 1) {
-            List<String> tabList = new ArrayList<>();
-            for (NamespacedKey key : RecipeManager.INSTANCE.serverRecipesCache().keySet()) {
-                String str = key.toString();
-                if (str.contains(args.get(0)))
-                    tabList.add(key.toString());
-            }
-            return tabList;
+            Set<NamespacedKey> recipes = new LinkedHashSet<>(RecipeManager.INSTANCE.craftorithmRecipes().keySet());
+            recipes.addAll(RecipeManager.INSTANCE.craftorithmRecipes().keySet());
+            return recipes.stream().map(NamespacedKey::toString).toList();
         }
         return Collections.singletonList("");
+    }
+
+    public void addRecipeDisplay(RecipeType recipeType, BiConsumer<Player, Recipe> displayFunc) {
+        recipeDisplayMap.put(recipeType, displayFunc);
+    }
+
+    public void removeRecipeDisplay(RecipeType recipeType) {
+        recipeDisplayMap.remove(recipeType);
+    }
+
+    @Override
+    public void run(Plugin plugin, LifeCycle lifeCycle) {
+        if (PluginConfigs.ENABLE_ANVIL_RECIPE.value()) {
+            addRecipeDisplay(SimpleRecipeTypes.ANVIL, (player, recipe) -> {
+                AnvilDisplayMenuManager.INSTANCE.openMenu(player, (AnvilRecipe) recipe);
+            });
+        }
     }
 }

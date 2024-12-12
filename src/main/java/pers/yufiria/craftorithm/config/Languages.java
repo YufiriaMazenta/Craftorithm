@@ -33,6 +33,7 @@ public class Languages {
     public static final StringLangEntry COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE = new StringLangEntry("command.create.unsupported_recipe_type");
     public static final StringLangEntry COMMAND_CREATE_UNSUPPORTED_RECIPE_NAME = new StringLangEntry("command.create.unsupported_recipe_name");
     public static final StringLangEntry COMMAND_CREATE_NAME_USED = new StringLangEntry("command.create.name_used");
+    public static final StringLangEntry COMMAND_DISPLAY_UNSUPPORTED_RECIPE_TYPE = new StringLangEntry("command.display.unsupported_recipe_type");
     public static final StringLangEntry LOAD_FINISH = new StringLangEntry("load.finish");
     public static final StringLangEntry LOAD_RECIPE_LOAD_EXCEPTION = new StringLangEntry("load.recipe_load_exception");
     public static final StringLangEntry LOAD_ITEM_LOAD_EXCEPTION = new StringLangEntry("load.item_load_exception");
@@ -48,5 +49,7 @@ public class Languages {
     public static final StringLangEntry RECIPE_TYPE_NAME_VANILLA_STONECUTTING = new StringLangEntry("recipe_type_name.vanilla_stonecutting");
     public static final StringLangEntry RECIPE_TYPE_NAME_VANILLA_BREWING = new StringLangEntry("recipe_type_name.vanilla_brewing");
     public static final StringLangEntry RECIPE_TYPE_NAME_ANVIL = new StringLangEntry("recipe_type_name.anvil");
+    public static final StringLangEntry MENU_RECIPE_CREATOR = new StringLangEntry("menu.recipe_creator");
+    public static final StringLangEntry MENU_RECIPE_DISPLAY_ANVIL_COST_LEVEL = new StringLangEntry("menu.recipe_display.anvil.cost_level");
 
 }

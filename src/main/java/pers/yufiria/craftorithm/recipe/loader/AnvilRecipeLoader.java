@@ -3,6 +3,7 @@ package pers.yufiria.craftorithm.recipe.loader;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
+import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeLoader;
 import pers.yufiria.craftorithm.recipe.choice.StackableItemIdChoice;
@@ -16,7 +17,7 @@ public enum AnvilRecipeLoader implements RecipeLoader<AnvilRecipe> {
     @Override
     public @NotNull AnvilRecipe loadRecipe(String recipeKey, ConfigurationSection recipeConfig) {
         try {
-            NamespacedKey namespacedKey = new NamespacedKey(recipeKey, "anvil");
+            NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.instance(), recipeKey);
             String resultId = recipeConfig.getString("result");
             NamespacedItemIdStack result = NamespacedItemIdStack.fromString(resultId);
             String baseId = recipeConfig.getString("base");
