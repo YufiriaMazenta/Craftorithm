@@ -1,4 +1,4 @@
-title: <translate:lang:recipe_type_name.anvil>
+title: '<translate:lang:recipe_type_name.anvil>, <translate:lang:menu.recipe_display.anvil.cost_level>'
 layout:
   - '#########'
   - '#A#B###C#'
@@ -14,4 +14,4 @@ icons:
   B:
     icon_type: anvil_addition
   C:
-    icon_type: anvil_result
+    icon_type: result

@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.potion.PotionBrewer;
-import pers.yufiria.craftorithm.recipe.extra.brewing.BrewingRecipe;
+import pers.yufiria.craftorithm.recipe.extra.BrewingRecipe;
 import pers.yufiria.craftorithm.recipe.RecipeRegister;
 
 public enum BrewingRecipeRegister implements RecipeRegister {

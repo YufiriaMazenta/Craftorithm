@@ -8,7 +8,7 @@ import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeLoader;
 import pers.yufiria.craftorithm.recipe.choice.StackableItemIdChoice;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
-import pers.yufiria.craftorithm.recipe.extra.anvil.AnvilRecipe;
+import pers.yufiria.craftorithm.recipe.extra.AnvilRecipe;
 
 public enum AnvilRecipeLoader implements RecipeLoader<AnvilRecipe> {
 
