@@ -14,3 +14,5 @@ bstats: true
 reload_when_ia_reload: true
 #是否开启调试
 debug: false
+#单个tick最多注册几个配方
+max_reg_recipe_per_tick: 20

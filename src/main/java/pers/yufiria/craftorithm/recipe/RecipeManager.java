@@ -1,5 +1,8 @@
 package pers.yufiria.craftorithm.recipe;
 
+import crypticlib.scheduler.CrypticLibRunnable;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.PluginConfigs;
@@ -12,7 +15,6 @@ import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.TaskRule;
-import crypticlib.platform.Platform;
 import crypticlib.util.FileHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
@@ -38,6 +40,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public enum RecipeManager implements BukkitLifeCycleTask {
 
     INSTANCE;
+    private static final Logger log = LogManager.getLogger(RecipeManager.class);
     public final File RECIPE_FILE_FOLDER = new File(Craftorithm.instance().getDataFolder().getPath(), "recipes");
     public final String PLUGIN_RECIPE_NAMESPACE = "craftorithm";
     private final BukkitConfigWrapper disabledRecipesConfigWrapper = new BukkitConfigWrapper(Craftorithm.instance(), "disabled_recipes.yml");
@@ -142,55 +145,46 @@ public enum RecipeManager implements BukkitLifeCycleTask {
             if (!mkdirResult)
                 return;
         }
-        List<File> allFiles = FileHelper.allYamlFiles(RECIPE_FILE_FOLDER);
-        for (File file : allFiles) {
-            String recipeName = file.getPath().substring(RECIPE_FILE_FOLDER.getPath().length() + 1);
-            recipeName = recipeName.replace("\\", "/");
-            recipeName = recipeName.replace('-', '_');
-            int lastDotIndex = recipeName.lastIndexOf(".");
-            recipeName = recipeName.substring(0, lastDotIndex).toLowerCase();
-            BukkitConfigWrapper recipeConfigWrapper = new BukkitConfigWrapper(file);
-            YamlConfiguration recipeConfig = recipeConfigWrapper.config();
-            try {
-                String typeId = recipeConfig.getString("type");
-                RecipeType recipeType;
-                if (typeId == null) {
-                    throw new RecipeLoadException("Unknown recipe type of " + recipeName + ": " + null);
-                }
-                recipeType = recipeTypes.get(typeId);
-                if (recipeType == null) {
-                    throw new RecipeLoadException("Unknown recipe type of " + recipeName + ": " + typeId);
-                }
-                RecipeLoader<?> recipeLoader = recipeType.recipeLoader();
-                Recipe recipe = recipeLoader.loadRecipe(recipeName, recipeConfig);
-                if (recipe == null) {
-                    BukkitMsgSender.INSTANCE.info("&eLoad recipe " + recipeName + " failed");
-                    continue;
-                }
-                RecipeRegister recipeRegister = recipeType.recipeRegister();
-                boolean result = recipeRegister.registerRecipe(recipe);
-                if (result) {
-                    NamespacedKey recipeKey = getRecipeKey(recipe);
-                    craftorithmRecipes.put(recipeKey, recipe);
-                    recipeConfigWrapperMap.put(recipeKey, recipeConfigWrapper);
-                    if (recipeConfig.contains("group")) {
-                        String groupId = recipeConfig.getString("group");
-                        if (recipeGroupMap.containsKey(groupId)) {
-                            recipeGroupMap.get(groupId).addRecipe(recipe);
-                        } else {
-                            RecipeGroup recipeGroup = new RecipeGroup(Objects.requireNonNull(groupId));
-                            recipeGroup.addRecipe(recipe);
-                            recipeGroupMap.put(groupId, recipeGroup);
-                        }
-                    }
-                } else {
-                    BukkitMsgSender.INSTANCE.info("&eRegister recipe " + recipeName + " failed");
-                }
-            } catch (Throwable throwable) {
-                LangUtils.info(Languages.LOAD_RECIPE_LOAD_EXCEPTION, CollectionsUtils.newStringHashMap("<recipe_name>", recipeName));
-                throwable.printStackTrace();
-            }
+        new RecipeLoadTask(RECIPE_FILE_FOLDER).start();
+    }
+
+    public boolean loadRecipeFromConfig(String recipeName, BukkitConfigWrapper recipeConfigWrapper) {
+        YamlConfiguration recipeConfig = recipeConfigWrapper.config();
+        String typeId = recipeConfig.getString("type");
+        RecipeType recipeType;
+        if (typeId == null) {
+            throw new RecipeLoadException("Unknown recipe type of " + recipeName + ": " + null);
         }
+        recipeType = recipeTypes.get(typeId);
+        if (recipeType == null) {
+            throw new RecipeLoadException("Unknown recipe type of " + recipeName + ": " + typeId);
+        }
+        RecipeLoader<?> recipeLoader = recipeType.recipeLoader();
+        Recipe recipe = recipeLoader.loadRecipe(recipeName, recipeConfig);
+        if (recipe == null) {
+            BukkitMsgSender.INSTANCE.info("&eLoad recipe " + recipeName + " failed");
+            return false;
+        }
+        RecipeRegister recipeRegister = recipeType.recipeRegister();
+        boolean result = recipeRegister.registerRecipe(recipe);
+        if (result) {
+            NamespacedKey recipeKey = getRecipeKey(recipe);
+            craftorithmRecipes.put(recipeKey, recipe);
+            recipeConfigWrapperMap.put(recipeKey, recipeConfigWrapper);
+            if (recipeConfig.contains("group")) {
+                String groupId = recipeConfig.getString("group");
+                if (recipeGroupMap.containsKey(groupId)) {
+                    recipeGroupMap.get(groupId).addRecipe(recipe);
+                } else {
+                    RecipeGroup recipeGroup = new RecipeGroup(Objects.requireNonNull(groupId));
+                    recipeGroup.addRecipe(recipe);
+                    recipeGroupMap.put(groupId, recipeGroup);
+                }
+            }
+        } else {
+            BukkitMsgSender.INSTANCE.info("&eRegister recipe " + recipeName + " failed");
+        }
+        return result;
     }
 
     public void loadServerRecipeCache() {
@@ -352,4 +346,63 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         }
     }
 
+    public class RecipeLoadTask extends CrypticLibRunnable {
+
+        private List<File> recipeFiles;
+        private int useTick = 0;
+
+        public RecipeLoadTask(File folder) {
+            if (!folder.isDirectory()) {
+                throw new IllegalArgumentException(folder.getAbsolutePath() + " is not a directory");
+            }
+            this.recipeFiles = FileHelper.allYamlFiles(folder);
+        }
+
+        public void start() {
+            this.runTaskTimer(Craftorithm.instance(), 1L, 1L);
+        }
+
+        public void end() {
+            this.cancel();
+            BukkitMsgSender.INSTANCE.debug("Loaded " + craftorithmRecipes.size() + " recipes ,took " + useTick + " ticks");
+        }
+
+        @Override
+        public void run() {
+            int maxRegRecipePerTick = PluginConfigs.MAX_REG_RECIPE_PER_TICK.value();
+            if (recipeFiles.size() <= maxRegRecipePerTick) {
+                loadRecipes(recipeFiles);
+                end();
+            } else {
+                List<File> loadFiles = recipeFiles.subList(0, maxRegRecipePerTick);
+                recipeFiles = recipeFiles.subList(maxRegRecipePerTick, recipeFiles.size());
+                loadRecipes(loadFiles);
+            }
+        }
+
+        public void loadRecipes(List<File> files) {
+            long startTime = System.currentTimeMillis();
+            int recipeNum = 0;
+            for (File file : files) {
+                String recipeName = file.getPath().substring(RECIPE_FILE_FOLDER.getPath().length() + 1);
+                recipeName = recipeName.replace("\\", "/");
+                recipeName = recipeName.replace('-', '_');
+                int lastDotIndex = recipeName.lastIndexOf(".");
+                recipeName = recipeName.substring(0, lastDotIndex).toLowerCase();
+                BukkitConfigWrapper recipeConfigWrapper = new BukkitConfigWrapper(file);
+                try {
+                    boolean result = loadRecipeFromConfig(recipeName, recipeConfigWrapper);
+                    if (result) {
+                        recipeNum ++;
+                    }
+                } catch (Throwable throwable) {
+                    LangUtils.info(Languages.LOAD_RECIPE_LOAD_EXCEPTION, CollectionsUtils.newStringHashMap("<recipe_name>", recipeName));
+                    throwable.printStackTrace();
+                }
+            }
+            BukkitMsgSender.INSTANCE.debug("Tick " + useTick + ": Loaded " + recipeNum + " recipes, took " + (System.currentTimeMillis() - startTime) + "ms");
+            useTick ++;
+        }
+
+    }
 }
