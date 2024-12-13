@@ -1,0 +1,40 @@
+title: <translate:lang:recipe_type_name.vanilla_shaped>
+layout:
+  - '#########'
+  - '#ABC#####'
+  - '#DEF###R#'
+  - '#GHI#####'
+  - '#########'
+icons:
+  '#':
+    material: minecraft:green_stained_glass_pane
+    name: '&a<translate:lang:recipe_type_name.vanilla_shaped>'
+  A:
+    icon_type: vanilla_shaped_ingredient
+    ingredient_slot: 0
+  B:
+    icon_type: vanilla_shaped_ingredient
+    ingredient_slot: 1
+  C:
+    icon_type: vanilla_shaped_ingredient
+    ingredient_slot: 2
+  D:
+    icon_type: vanilla_shaped_ingredient
+    ingredient_slot: 3
+  E:
+    icon_type: vanilla_shaped_ingredient
+    ingredient_slot: 4
+  F:
+    icon_type: vanilla_shaped_ingredient
+    ingredient_slot: 5
+  G:
+    icon_type: vanilla_shaped_ingredient
+    ingredient_slot: 6
+  H:
+    icon_type: vanilla_shaped_ingredient
+    ingredient_slot: 7
+  I:
+    icon_type: vanilla_shaped_ingredient
+    ingredient_slot: 8
+  R:
+    icon_type: result

@@ -9,7 +9,7 @@ import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeLoader;
-import pers.yufiria.craftorithm.recipe.extra.brewing.BrewingRecipe;
+import pers.yufiria.craftorithm.recipe.extra.BrewingRecipe;
 import org.bukkit.configuration.ConfigurationSection;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 import pers.yufiria.craftorithm.recipe.util.BukkitRecipeChoiceParser;

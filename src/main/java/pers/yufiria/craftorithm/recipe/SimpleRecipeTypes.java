@@ -1,7 +1,7 @@
 package pers.yufiria.craftorithm.recipe;
 
-import pers.yufiria.craftorithm.recipe.extra.anvil.AnvilRecipe;
-import pers.yufiria.craftorithm.recipe.extra.brewing.BrewingRecipe;
+import pers.yufiria.craftorithm.recipe.extra.AnvilRecipe;
+import pers.yufiria.craftorithm.recipe.extra.BrewingRecipe;
 import pers.yufiria.craftorithm.recipe.loader.*;
 import crypticlib.MinecraftVersion;
 import org.bukkit.NamespacedKey;

@@ -12,8 +12,8 @@ import org.bukkit.event.block.CrafterCraftEvent;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
-import pers.yufiria.craftorithm.recipe.extra.anvil.AnvilRecipe;
-import pers.yufiria.craftorithm.recipe.extra.anvil.AnvilRecipeHandler;
+import pers.yufiria.craftorithm.recipe.extra.AnvilRecipe;
+import pers.yufiria.craftorithm.recipe.extra.AnvilRecipeHandler;
 
 public class EventUtils {
 
