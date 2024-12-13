@@ -242,8 +242,11 @@ public enum RecipeManager implements BukkitLifeCycleTask {
     public boolean disableRecipe(NamespacedKey recipeKey, boolean save) {
         if (save)
             saveDisabledRecipesData(recipeKey);
-        addDisabledRecipeCache(recipeKey);
-        return removeRecipe(recipeKey);
+        boolean result = removeRecipe(recipeKey);
+        if (result) {
+            addDisabledRecipeCache(recipeKey);
+        }
+        return result;
     }
 
     /**
@@ -257,7 +260,6 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         String keyStr = recipeKey.toString();
         if (!disabledRecipes.contains(keyStr))
             disabledRecipes.add(keyStr);
-        disabledRecipes.add(recipeKey.toString());
         disabledRecipesConfigWrapper.set("recipes", disabledRecipes);
         disabledRecipesConfigWrapper.saveConfig();
     }
