@@ -12,6 +12,8 @@ import org.bukkit.event.block.CrafterCraftEvent;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
+import pers.yufiria.craftorithm.recipe.extra.anvil.AnvilRecipe;
+import pers.yufiria.craftorithm.recipe.extra.anvil.AnvilRecipeHandler;
 
 public class EventUtils {
 
@@ -52,9 +54,8 @@ public class EventUtils {
                     return false;
 
                 //TODO
-//                AnvilRecipe anvilRecipe = RecipeManager.INSTANCE.matchAnvilRecipe(base, addition);
-//                return anvilRecipe != null;
-                return false;
+                AnvilRecipe anvilRecipe = AnvilRecipeHandler.INSTANCE.matchAnvilRecipe(base, addition);
+                return anvilRecipe != null;
             }
             case null -> {
                 return false;
