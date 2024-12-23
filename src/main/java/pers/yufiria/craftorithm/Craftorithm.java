@@ -1,5 +1,7 @@
 package pers.yufiria.craftorithm;
 
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.server.ServerLoadEvent;
 import pers.yufiria.craftorithm.bstat.Metrics;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.PluginConfigs;
@@ -46,16 +48,20 @@ public final class Craftorithm extends BukkitPlugin implements Listener, BukkitL
         loadBStat();
 
         UpdateChecker.pullUpdateCheckRequest(Bukkit.getConsoleSender());
-        CrypticLibBukkit.scheduler().runTask(this, () -> {
-            RecipeManager.INSTANCE.reloadRecipeManager();
-            OtherPluginsListenerManager.INSTANCE.convertOtherPluginsListeners();
-            LangUtils.info(Languages.LOAD_FINISH);
-        });
     }
 
     @Override
     public void disable() {
         RecipeManager.INSTANCE.resetRecipes();
+    }
+
+    @EventHandler
+    public void onServerLoad(ServerLoadEvent event) {
+        CrypticLibBukkit.scheduler().runTask(this, () -> {
+            RecipeManager.INSTANCE.reloadRecipeManager();
+            OtherPluginsListenerManager.INSTANCE.convertOtherPluginsListeners();
+            LangUtils.info(Languages.LOAD_FINISH);
+        });
     }
 
     private void loadBStat() {
