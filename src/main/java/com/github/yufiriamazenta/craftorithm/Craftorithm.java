@@ -17,8 +17,11 @@ import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.TaskRule;
+import crypticlib.listener.EventListener;
 import org.bukkit.Bukkit;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.server.ServerLoadEvent;
 import org.bukkit.plugin.Plugin;
 
 @AutoTask(
@@ -28,6 +31,7 @@ import org.bukkit.plugin.Plugin;
         )
     }
 )
+@EventListener
 public final class Craftorithm extends BukkitPlugin implements Listener, BukkitLifeCycleTask {
 
     private static Craftorithm INSTANCE;
@@ -46,16 +50,20 @@ public final class Craftorithm extends BukkitPlugin implements Listener, BukkitL
         loadBStat();
 
         UpdateChecker.pullUpdateCheckRequest(Bukkit.getConsoleSender());
-        CrypticLibBukkit.scheduler().runTask(this, () -> {
-            RecipeManager.INSTANCE.reloadRecipeManager();
-            OtherPluginsListenerManager.INSTANCE.convertOtherPluginsListeners();
-            LangUtils.info(Languages.LOAD_FINISH);
-        });
     }
 
     @Override
     public void disable() {
         RecipeManager.INSTANCE.resetRecipes();
+    }
+
+    @EventHandler
+    public void onServerLoad(ServerLoadEvent event) {
+        CrypticLibBukkit.scheduler().runTask(this, () -> {
+            RecipeManager.INSTANCE.reloadRecipeManager();
+            OtherPluginsListenerManager.INSTANCE.convertOtherPluginsListeners();
+            LangUtils.info(Languages.LOAD_FINISH);
+        });
     }
 
     private void loadBStat() {
