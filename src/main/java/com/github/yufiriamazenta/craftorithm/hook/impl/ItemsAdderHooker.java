@@ -12,7 +12,7 @@ import crypticlib.lifecycle.TaskRule;
 import org.bukkit.Bukkit;
 
 @AutoTask(
-    rules = @TaskRule(lifeCycle = LifeCycle.ENABLE)
+    rules = @TaskRule(lifeCycle = LifeCycle.ACTIVE)
 )
 public enum ItemsAdderHooker implements ItemPluginHooker {
 

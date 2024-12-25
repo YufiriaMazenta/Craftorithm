@@ -24,11 +24,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.server.ServerLoadEvent;
 import org.bukkit.plugin.Plugin;
 
+import java.util.Objects;
+
 @AutoTask(
     rules = {
-        @TaskRule(
-            lifeCycle = LifeCycle.RELOAD
-        )
+        @TaskRule(lifeCycle = LifeCycle.ACTIVE, priority = 1),
+        @TaskRule(lifeCycle = LifeCycle.RELOAD)
     }
 )
 @EventListener
@@ -59,11 +60,6 @@ public final class Craftorithm extends BukkitPlugin implements Listener, BukkitL
 
     @EventHandler
     public void onServerLoad(ServerLoadEvent event) {
-        CrypticLibBukkit.scheduler().runTask(this, () -> {
-            RecipeManager.INSTANCE.reloadRecipeManager();
-            OtherPluginsListenerManager.INSTANCE.convertOtherPluginsListeners();
-            LangUtils.info(Languages.LOAD_FINISH);
-        });
     }
 
     private void loadBStat() {
@@ -83,7 +79,15 @@ public final class Craftorithm extends BukkitPlugin implements Listener, BukkitL
 
     @Override
     public void run(Plugin plugin, LifeCycle lifeCycle) {
-        CrypticLib.DEBUG = PluginConfigs.DEBUG.value();
+        if (lifeCycle == LifeCycle.ACTIVE) {
+            CrypticLibBukkit.scheduler().runTask(this, () -> {
+                RecipeManager.INSTANCE.reloadRecipeManager();
+                OtherPluginsListenerManager.INSTANCE.convertOtherPluginsListeners();
+                LangUtils.info(Languages.LOAD_FINISH);
+            });
+        } else {
+            CrypticLib.DEBUG = PluginConfigs.DEBUG.value();
+        }
     }
 
 }
