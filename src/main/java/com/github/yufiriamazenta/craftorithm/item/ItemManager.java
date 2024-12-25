@@ -29,7 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @AutoTask(
     rules = {
         @TaskRule(
-            lifeCycle = LifeCycle.ENABLE, priority = 1
+            lifeCycle = LifeCycle.ACTIVE, priority = 1
         ),
         @TaskRule(
             lifeCycle = LifeCycle.RELOAD, priority = 1
@@ -201,7 +201,7 @@ public enum ItemManager implements BukkitLifeCycleTask {
 
     @Override
     public void run(Plugin plugin, LifeCycle lifeCycle) {
-        if (lifeCycle.equals(LifeCycle.ENABLE))
+        if (lifeCycle.equals(LifeCycle.ACTIVE))
             regItemProvider(CraftorithmItemProvider.INSTANCE);
         reloadCustomCookingFuel();
     }
