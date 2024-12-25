@@ -26,6 +26,6 @@ public enum MMOItemsHooker implements ItemPluginHooker {
 
     @Override
     public boolean hook() {
-        return false;
+        return hookByEnabled();
     }
 }
