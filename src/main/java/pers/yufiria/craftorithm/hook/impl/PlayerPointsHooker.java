@@ -8,7 +8,7 @@ import org.black_ixx.playerpoints.PlayerPoints;
 import org.jetbrains.annotations.Nullable;
 
 @AutoTask(
-    rules = @TaskRule(lifeCycle = LifeCycle.ENABLE)
+    rules = @TaskRule(lifeCycle = LifeCycle.ACTIVE)
 )
 public enum PlayerPointsHooker implements PluginHooker {
 

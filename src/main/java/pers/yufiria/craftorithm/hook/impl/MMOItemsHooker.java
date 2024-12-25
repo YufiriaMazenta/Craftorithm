@@ -8,7 +8,7 @@ import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.TaskRule;
 
 @AutoTask(
-    rules = @TaskRule(lifeCycle = LifeCycle.ENABLE)
+    rules = @TaskRule(lifeCycle = LifeCycle.ACTIVE)
 )
 public enum MMOItemsHooker implements ItemPluginHooker {
 

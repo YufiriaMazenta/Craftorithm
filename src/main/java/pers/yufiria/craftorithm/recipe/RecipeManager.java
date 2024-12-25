@@ -1,8 +1,6 @@
 package pers.yufiria.craftorithm.recipe;
 
 import crypticlib.scheduler.CrypticLibRunnable;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.PluginConfigs;
@@ -40,7 +38,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public enum RecipeManager implements BukkitLifeCycleTask {
 
     INSTANCE;
-    private static final Logger log = LogManager.getLogger(RecipeManager.class);
     public final File RECIPE_FILE_FOLDER = new File(Craftorithm.instance().getDataFolder().getPath(), "recipes");
     public final String PLUGIN_RECIPE_NAMESPACE = "craftorithm";
     private final BukkitConfigWrapper disabledRecipesConfigWrapper = new BukkitConfigWrapper(Craftorithm.instance(), "disabled_recipes.yml");

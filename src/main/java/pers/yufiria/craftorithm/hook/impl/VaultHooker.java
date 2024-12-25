@@ -10,7 +10,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.jetbrains.annotations.Nullable;
 
 @AutoTask(
-    rules = @TaskRule(lifeCycle = LifeCycle.ENABLE)
+    rules = @TaskRule(lifeCycle = LifeCycle.ACTIVE)
 )
 public enum VaultHooker implements PluginHooker {
 

@@ -25,9 +25,8 @@ import org.bukkit.plugin.Plugin;
 
 @AutoTask(
     rules = {
-        @TaskRule(
-            lifeCycle = LifeCycle.RELOAD
-        )
+        @TaskRule(lifeCycle = LifeCycle.ACTIVE, priority = 2),
+        @TaskRule(lifeCycle = LifeCycle.RELOAD)
     }
 )
 public final class Craftorithm extends BukkitPlugin implements Listener, BukkitLifeCycleTask {
@@ -81,7 +80,15 @@ public final class Craftorithm extends BukkitPlugin implements Listener, BukkitL
 
     @Override
     public void run(Plugin plugin, LifeCycle lifeCycle) {
-        CrypticLib.DEBUG = PluginConfigs.DEBUG.value();
+        if (lifeCycle == LifeCycle.ACTIVE) {
+            CrypticLibBukkit.scheduler().runTask(this, () -> {
+                RecipeManager.INSTANCE.reloadRecipeManager();
+                OtherPluginsListenerManager.INSTANCE.convertOtherPluginsListeners();
+                LangUtils.info(Languages.LOAD_FINISH);
+            });
+        } else {
+            CrypticLib.DEBUG = PluginConfigs.DEBUG.value();
+        }
     }
 
 }
