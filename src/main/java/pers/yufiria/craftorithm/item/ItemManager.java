@@ -44,10 +44,6 @@ public enum ItemManager implements BukkitLifeCycleTask {
     private BukkitConfigWrapper itemPacksConfig;
     private final Map<String, ItemPack> itemPacks = new ConcurrentHashMap<>();
 
-    public void regDefaultProviders() {
-        regItemProvider(CraftorithmItemProvider.INSTANCE);
-    }
-
     public void regItemProvider(ItemProvider itemProvider) {
         Preconditions.checkArgument(
             !itemProvider.namespace().equalsIgnoreCase(NamespacedKey.MINECRAFT),
