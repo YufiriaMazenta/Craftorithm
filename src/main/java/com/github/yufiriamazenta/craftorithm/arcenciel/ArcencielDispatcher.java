@@ -20,7 +20,7 @@ import java.util.List;
 
 @AutoTask(
     rules = {
-        @TaskRule(lifeCycle = LifeCycle.ENABLE, priority = 1),
+        @TaskRule(lifeCycle = LifeCycle.ACTIVE, priority = 1),
         @TaskRule(lifeCycle = LifeCycle.RELOAD)
     }
 )
@@ -87,7 +87,7 @@ public enum ArcencielDispatcher implements IArcencielDispatcher, BukkitLifeCycle
     @Override
     public void run(Plugin plugin, LifeCycle lifeCycle) {
         switch (lifeCycle) {
-            case ENABLE -> {
+            case ACTIVE -> {
                 functionFile = new BukkitConfigWrapper(Craftorithm.instance(), "function.yml");
                 functionFile.reloadConfig();
                 regDefScriptKeyword();
