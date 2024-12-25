@@ -31,7 +31,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @AutoTask(
     rules = {
-        @TaskRule(lifeCycle = LifeCycle.ENABLE, priority = 2),
+        @TaskRule(lifeCycle = LifeCycle.ENABLE),
         @TaskRule(lifeCycle = LifeCycle.RELOAD, priority = 2)
     }
 )
