@@ -39,7 +39,7 @@ import java.util.function.Consumer;
 
 @AutoTask(
     rules = {
-        @TaskRule(lifeCycle = LifeCycle.ENABLE, priority = 2),
+        @TaskRule(lifeCycle = LifeCycle.ACTIVE, priority = 1),
         @TaskRule(lifeCycle = LifeCycle.RELOAD, priority = 2)
     }
 )
@@ -482,7 +482,7 @@ public enum RecipeManager implements BukkitLifeCycleTask {
 
     @Override
     public void run(Plugin plugin, LifeCycle lifeCycle) {
-        if (lifeCycle.equals(LifeCycle.ENABLE)) {
+        if (lifeCycle.equals(LifeCycle.ACTIVE)) {
             //设置各类型配方的注册方法
             recipeRegisterMap.put(RecipeType.SHAPED, Bukkit::addRecipe);
             recipeRemoverMap.put(RecipeType.SHAPED, this::removeRecipes);

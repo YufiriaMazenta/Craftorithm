@@ -28,7 +28,7 @@ import java.util.Objects;
 
 @AutoTask(
     rules = {
-        @TaskRule(lifeCycle = LifeCycle.ACTIVE, priority = 1),
+        @TaskRule(lifeCycle = LifeCycle.ACTIVE, priority = 2),
         @TaskRule(lifeCycle = LifeCycle.RELOAD)
     }
 )
