@@ -7,7 +7,7 @@ import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.TaskRule;
 
-@AutoTask(rules = @TaskRule(lifeCycle = LifeCycle.ACTIVE))
+@AutoTask(rules = @TaskRule(lifeCycle = LifeCycle.ACTIVE, priority = -1))
 public enum NexoHooker implements ItemPluginHooker {
 
     INSTANCE;
