@@ -13,7 +13,7 @@ import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.menu.StoredMenu;
-import crypticlib.util.FileHelper;
+import crypticlib.util.IOHelper;
 import crypticlib.util.ItemHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -72,7 +72,7 @@ public abstract class RecipeCreator extends StoredMenu {
     protected BukkitConfigWrapper createRecipeConfig(String recipeName) {
         File recipeFile = new File(RecipeManager.INSTANCE.RECIPE_FILE_FOLDER, recipeName + ".yml");
         if (!recipeFile.exists()) {
-            FileHelper.createNewFile(recipeFile);
+            IOHelper.createNewFile(recipeFile);
         }
         BukkitConfigWrapper configWrapper = new BukkitConfigWrapper(recipeFile);
         configWrapper.reloadConfig();

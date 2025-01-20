@@ -54,7 +54,7 @@ public enum AnvilHandler implements Listener {
         YamlConfiguration config = RecipeManager.INSTANCE.getRecipeConfig(anvilRecipe.key());
         if (config != null) {
             Object inventoryView = InventoryViewHelper.getInventoryView(event);
-            Player player = (Player) InventoryViewHelper.getPlayer(inventoryView);
+            Player player = (Player) InventoryViewHelper.getViewingPlayer(inventoryView);
             String condition = config.getString("condition", "true");
             condition = "if " + condition;
             boolean conditionResult = (boolean) ArcencielDispatcher.INSTANCE.dispatchArcencielBlock(player, condition).obj();

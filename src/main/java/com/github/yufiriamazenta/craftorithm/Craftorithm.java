@@ -47,7 +47,7 @@ public final class Craftorithm extends BukkitPlugin implements Listener, BukkitL
             BukkitMsgSender.INSTANCE.info("&c[Craftorithm] Unsupported Version");
             throw new UnsupportedVersionException();
         }
-        CrypticLib.DEBUG = PluginConfigs.DEBUG.value();
+        CrypticLib.setDebug(PluginConfigs.DEBUG.value());
         loadBStat();
 
         UpdateChecker.pullUpdateCheckRequest(Bukkit.getConsoleSender());
@@ -80,13 +80,13 @@ public final class Craftorithm extends BukkitPlugin implements Listener, BukkitL
     @Override
     public void run(Plugin plugin, LifeCycle lifeCycle) {
         if (lifeCycle == LifeCycle.ACTIVE) {
-            CrypticLibBukkit.scheduler().runTask(this, () -> {
+            CrypticLibBukkit.scheduler().sync(() -> {
                 RecipeManager.INSTANCE.reloadRecipeManager();
                 OtherPluginsListenerManager.INSTANCE.convertOtherPluginsListeners();
                 LangUtils.info(Languages.LOAD_FINISH);
             });
         } else {
-            CrypticLib.DEBUG = PluginConfigs.DEBUG.value();
+            CrypticLib.setDebug(PluginConfigs.DEBUG.value());
         }
     }
 

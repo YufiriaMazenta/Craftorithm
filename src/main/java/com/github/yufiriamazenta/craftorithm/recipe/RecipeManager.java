@@ -21,8 +21,7 @@ import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.TaskRule;
-import crypticlib.platform.Platform;
-import crypticlib.util.FileHelper;
+import crypticlib.util.IOHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
@@ -131,7 +130,7 @@ public enum RecipeManager implements BukkitLifeCycleTask {
             if (!mkdirResult)
                 return;
         }
-        List<File> allFiles = FileHelper.allYamlFiles(RECIPE_FILE_FOLDER);
+        List<File> allFiles = IOHelper.allYamlFiles(RECIPE_FILE_FOLDER);
         if (allFiles.isEmpty()) {
             saveDefConfigFile(allFiles);
         }

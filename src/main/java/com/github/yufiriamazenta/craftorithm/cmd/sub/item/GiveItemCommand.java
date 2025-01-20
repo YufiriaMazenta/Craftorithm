@@ -74,7 +74,7 @@ public class GiveItemCommand extends BukkitSubcommand {
                         player.getWorld().dropItem(player.getLocation(), stack);
                     }
                 };
-                CrypticLibBukkit.scheduler().runTaskOnEntity(Craftorithm.instance(), player, dropTask, dropTask);
+                CrypticLibBukkit.scheduler().runOnEntity(player, dropTask, dropTask);
             }
         }
         LangUtils.sendLang(sender, Languages.COMMAND_ITEM_GIVE_SUCCESS);

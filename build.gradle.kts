@@ -1,5 +1,5 @@
 import java.text.SimpleDateFormat
-version = "1.10.17-beta2"
+version = "1.10.17-beta3"
 
 plugins {
     `java-library`
@@ -53,6 +53,7 @@ dependencies {
     compileOnly("com.willfp:libreforge:4.71.6:all@jar")
     compileOnly("com.ssomar:SCore:5.24.10.5")
     compileOnly("com.nexomc:nexo:0.7.0")
+    compileOnly(fileTree("libs"))
     implementation("com.crypticlib:bukkit:${rootProject.findProperty("crypticlibVer")}")
     implementation("com.crypticlib:bukkit-ui:${rootProject.findProperty("crypticlibVer")}")
     implementation("com.crypticlib:bukkit-conversation:${rootProject.findProperty("crypticlibVer")}")

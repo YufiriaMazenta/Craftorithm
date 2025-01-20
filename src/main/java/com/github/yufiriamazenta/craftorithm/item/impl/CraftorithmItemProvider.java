@@ -10,7 +10,7 @@ import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.TaskRule;
-import crypticlib.util.FileHelper;
+import crypticlib.util.IOHelper;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -84,7 +84,7 @@ public enum CraftorithmItemProvider implements ItemProvider, BukkitLifeCycleTask
             if (!mkdirResult)
                 throw new RuntimeException("Create item folder failed");
         }
-        List<File> allFiles = FileHelper.allYamlFiles(ITEM_FILE_FOLDER);
+        List<File> allFiles = IOHelper.allYamlFiles(ITEM_FILE_FOLDER);
         if (allFiles.isEmpty()) {
             Craftorithm.instance().saveResource("items/example_item.yml", false);
             allFiles.add(new File(ITEM_FILE_FOLDER, "example_item.yml"));
@@ -124,7 +124,7 @@ public enum CraftorithmItemProvider implements ItemProvider, BukkitLifeCycleTask
         if (!itemConfigFileMap.containsKey(namespace)) {
             File itemFile = new File(ITEM_FILE_FOLDER, namespace + ".yml");
             if (!itemFile.exists()) {
-                FileHelper.createNewFile(itemFile);
+                IOHelper.createNewFile(itemFile);
             }
             itemConfigFile = new BukkitConfigWrapper(itemFile);
             itemConfigFileMap.put(namespace, itemConfigFile);

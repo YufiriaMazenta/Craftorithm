@@ -18,6 +18,8 @@ softdepend:
   - EcoItems
   - ExecutableItems
   - SCore
+  - Nexo
+  - AzureFlow
 authors: [ YufiriaMazenta ]
 folia-supported: true
 website: https://github.com/YufiriaMazenta/Craftorithm

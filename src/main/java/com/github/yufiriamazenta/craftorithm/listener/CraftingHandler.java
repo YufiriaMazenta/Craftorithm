@@ -57,7 +57,7 @@ public enum CraftingHandler implements Listener {
             return;
 
         Object inventoryView = InventoryViewHelper.getInventoryView(event);
-        Player player = (Player) InventoryViewHelper.getPlayer(inventoryView);
+        Player player = (Player) InventoryViewHelper.getViewingPlayer(inventoryView);
         String condition = config.getString("condition", "true");
         condition = "if " + condition;
         boolean result = (boolean) ArcencielDispatcher.INSTANCE.dispatchArcencielBlock(player, condition).obj();

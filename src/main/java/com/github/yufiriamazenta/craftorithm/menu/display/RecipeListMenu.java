@@ -121,8 +121,7 @@ public class RecipeListMenu extends Menu {
     @Override
     public void onClose(InventoryCloseEvent event) {
         if (parentMenu != null) {
-            CrypticLibBukkit.scheduler().runTask(
-                Craftorithm.instance(),
+            CrypticLibBukkit.scheduler().sync(
                 () -> {
                     InventoryType type = event.getPlayer().getOpenInventory().getType();
                     List<InventoryType> typeWhenNotOpenInv = Arrays.asList(InventoryType.CRAFTING, InventoryType.CREATIVE);

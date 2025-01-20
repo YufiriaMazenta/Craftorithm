@@ -107,7 +107,7 @@ public enum SmeltResultRefreshHandler implements Listener {
         blockSmeltRecipeMap.put(block, recipe);
         int cookingTime = recipe.getCookingTime();
         //防止玩家对大量烧炼方块进行烧炼打断操作导致出现大量无用缓存，在烧炼配方预计完成时间的一秒后清除缓存
-        CrypticLibBukkit.scheduler().runTaskLaterAsync(Craftorithm.instance(), () -> {
+        CrypticLibBukkit.scheduler().asyncLater(() -> {
             blockSmeltRecipeMap.remove(block);
         }, cookingTime + 20);
     }
