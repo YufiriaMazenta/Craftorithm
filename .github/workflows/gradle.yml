@@ -32,7 +32,7 @@ jobs:
       uses: gradle/gradle-build-action@v2
       with:
         arguments: clean build
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: Craftorithm Artifacts
         path: build/libs/*.jar

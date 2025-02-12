@@ -38,7 +38,7 @@ public abstract class LockableIcon extends ActionIcon {
     public Icon onClick(InventoryClickEvent event) {
         if (locked) {
             if (lockedAction != null) {
-                lockedAction.run((Player) event.getWhoClicked(), Craftorithm.instance());
+                lockedAction.run((Player) event.getWhoClicked(), Craftorithm.instance(), null);
             }
             return null;
         }

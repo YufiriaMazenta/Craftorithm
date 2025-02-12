@@ -10,7 +10,7 @@ import crypticlib.CrypticLibBukkit;
 import crypticlib.command.BukkitSubcommand;
 import crypticlib.command.CommandInfo;
 import crypticlib.perm.PermInfo;
-import crypticlib.platform.Platform;
+import crypticlib.platform.IPlatform;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -64,7 +64,7 @@ public class GiveItemCommand extends BukkitSubcommand {
 
         HashMap<Integer, ItemStack> failedItems = player.getInventory().addItem(itemStack);
         if (!failedItems.isEmpty()) {
-            if (!CrypticLibBukkit.platform().type().equals(Platform.PlatformType.FOLIA)) {
+            if (!CrypticLibBukkit.platform().type().equals(IPlatform.PlatformType.FOLIA)) {
                 for (ItemStack stack : failedItems.values()) {
                     player.getWorld().dropItem(player.getLocation(), stack);
                 }
@@ -74,7 +74,7 @@ public class GiveItemCommand extends BukkitSubcommand {
                         player.getWorld().dropItem(player.getLocation(), stack);
                     }
                 };
-                CrypticLibBukkit.scheduler().runTaskOnEntity(Craftorithm.instance(), player, dropTask, dropTask);
+                CrypticLibBukkit.scheduler().runOnEntity(player, dropTask, dropTask);
             }
         }
         LangUtils.sendLang(sender, Languages.COMMAND_ITEM_GIVE_SUCCESS);

@@ -28,8 +28,9 @@ public class AnvilDisplayMenu extends Menu {
     @Override
     public String formattedTitle() {
         String originTitle = this.display.title();
+        Player player = this.player();
         String title = LangManager.INSTANCE.replaceLang(originTitle, player);
-        return BukkitTextProcessor.color(BukkitTextProcessor.placeholder(this.player, replaceCostLevel(title)));
+        return BukkitTextProcessor.color(BukkitTextProcessor.placeholder(player, replaceCostLevel(title)));
     }
 
     @Override
@@ -58,11 +59,12 @@ public class AnvilDisplayMenu extends Menu {
                     ItemStack display = icon.display();
                     ItemMeta meta = display.getItemMeta();
                     if (meta != null) {
+                        Player player = this.player();
                         if (meta.hasDisplayName()) {
                             meta.setDisplayName(
                                 BukkitTextProcessor.color(
                                     BukkitTextProcessor.placeholder(
-                                        this.player,
+                                        player,
                                         replaceCostLevel(meta.getDisplayName())
                                     )
                                 )
@@ -72,7 +74,7 @@ public class AnvilDisplayMenu extends Menu {
                         if (lore != null) {
                             lore.replaceAll(it -> BukkitTextProcessor.color(
                                 BukkitTextProcessor.placeholder(
-                                    this.player,
+                                    player,
                                     replaceCostLevel(it)
                                 )
                             ));

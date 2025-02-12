@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.recipe;
 
 import crypticlib.scheduler.CrypticLibRunnable;
+import crypticlib.util.IOHelper;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.PluginConfigs;
@@ -13,7 +14,6 @@ import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.TaskRule;
-import crypticlib.util.FileHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
@@ -64,15 +64,15 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         if (type == null) {
             return false;
         }
-        if (recipeTypes.containsKey(type.typeId())) {
+        if (recipeTypes.containsKey(type.typeKey())) {
             if (force) {
-                recipeTypes.put(type.typeId(), type);
+                recipeTypes.put(type.typeKey(), type);
                 return true;
             } else {
                 return false;
             }
         }
-        recipeTypes.put(type.typeId(), type);
+        recipeTypes.put(type.typeKey(), type);
         return true;
     }
 
@@ -354,11 +354,11 @@ public enum RecipeManager implements BukkitLifeCycleTask {
             if (!folder.isDirectory()) {
                 throw new IllegalArgumentException(folder.getAbsolutePath() + " is not a directory");
             }
-            this.recipeFiles = FileHelper.allYamlFiles(folder);
+            this.recipeFiles = IOHelper.allYamlFiles(folder);
         }
 
         public void start() {
-            this.runTaskTimer(Craftorithm.instance(), 1L, 1L);
+            this.syncTimer(1L, 1L);
         }
 
         public void end() {

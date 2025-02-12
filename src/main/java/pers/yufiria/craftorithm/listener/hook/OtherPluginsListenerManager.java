@@ -10,7 +10,7 @@ import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.TaskRule;
 import crypticlib.listener.EventListener;
-import crypticlib.platform.Platform;
+import crypticlib.platform.IPlatform;
 import crypticlib.util.ReflectionHelper;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;

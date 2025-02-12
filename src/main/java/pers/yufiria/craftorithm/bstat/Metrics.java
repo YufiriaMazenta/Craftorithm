@@ -78,7 +78,7 @@ public class Metrics {
                         enabled,
                         this::appendPlatformData,
                         this::appendServiceData,
-                        submitDataTask -> CrypticLibBukkit.scheduler().runTask(plugin, submitDataTask),
+                        submitDataTask -> CrypticLibBukkit.scheduler().sync(submitDataTask),
                         plugin::isEnabled,
                         (message, error) -> this.plugin.getLogger().log(Level.WARNING, message, error),
                         (message) -> this.plugin.getLogger().log(Level.INFO, message),

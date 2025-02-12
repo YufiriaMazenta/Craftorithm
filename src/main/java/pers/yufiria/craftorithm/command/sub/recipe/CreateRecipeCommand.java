@@ -73,7 +73,7 @@ public final class CreateRecipeCommand extends BukkitSubcommand {
     @Override
     public List<String> tab(@NotNull CommandSender sender, List<String> args) {
         if (args.size() <= 1) {
-            return recipeCreatorMap.keySet().stream().map(RecipeType::typeId).toList();
+            return recipeCreatorMap.keySet().stream().map(RecipeType::typeKey).toList();
         }
         return Collections.singletonList("<recipe_name>");
     }

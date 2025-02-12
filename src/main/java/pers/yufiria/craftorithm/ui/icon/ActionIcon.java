@@ -1,7 +1,6 @@
 package pers.yufiria.craftorithm.ui.icon;
 
 import crypticlib.action.Action;
-import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.lang.LangManager;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
@@ -32,15 +31,16 @@ public class ActionIcon extends Icon {
         ItemStack clone = super.display().clone();
         ItemMeta meta = clone.getItemMeta();
         if (meta != null) {
+            Player parsePlayer = parsePlayer();
             if (meta.hasDisplayName()) {
                 meta.setDisplayName(
-                    LangManager.INSTANCE.replaceLang(meta.getDisplayName(), parsePlayer())
+                    LangManager.INSTANCE.replaceLang(meta.getDisplayName(), parsePlayer)
                 );
             }
             if (meta.hasLore()) {
                 List<String> lore = meta.getLore();
                 if (lore != null) {
-                    lore.replaceAll(it -> LangManager.INSTANCE.replaceLang(it, parsePlayer()));
+                    lore.replaceAll(it -> LangManager.INSTANCE.replaceLang(it, parsePlayer));
                 }
                 meta.setLore(lore);
             }
@@ -53,7 +53,7 @@ public class ActionIcon extends Icon {
     @Override
     public Icon onClick(InventoryClickEvent event) {
         if (action != null) {
-            action.run(((Player) event.getWhoClicked()), Craftorithm.instance());
+            action.run(((Player) event.getWhoClicked()), Craftorithm.instance(), null);
         }
         return this;
     }

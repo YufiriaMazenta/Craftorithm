@@ -29,7 +29,7 @@ public class UpdateChecker implements Listener {
     public static void pullUpdateCheckRequest(CommandSender sender) {
         if (!PluginConfigs.CHECK_UPDATE.value())
             return;
-        CrypticLibBukkit.scheduler().runTaskAsync(Craftorithm.instance(), () -> {
+        CrypticLibBukkit.scheduler().async(() -> {
             try {
                 URL url = new URL("https://api.spigotmc.org/legacy/update.php?resource=108429/");
                 URLConnection conn = url.openConnection();
@@ -40,7 +40,7 @@ public class UpdateChecker implements Listener {
                 String pluginVersion = Craftorithm.instance().getDescription().getVersion();
                 pluginVersion = pluginVersion.substring(0, pluginVersion.indexOf("-"));
                 if (checkVersion(latestVersion, pluginVersion)) {
-                    CrypticLibBukkit.scheduler().runTask(Craftorithm.instance(), () -> {
+                    CrypticLibBukkit.scheduler().sync(() -> {
                         LangUtils.sendLang(sender, Languages.NEW_VERSION, CollectionsUtils.newStringHashMap("<new_version>", latestVersion));
                     });
                 }
