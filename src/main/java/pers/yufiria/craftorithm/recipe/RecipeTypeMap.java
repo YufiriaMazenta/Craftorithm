@@ -103,13 +103,11 @@ public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
             Object oldValue = table[typeId];
             Object newValue = (value == null) ? NULL_VALUE : value;
 
-            // 更新 size
-            if (oldValue == null && newValue != null) {
+            // 如果oldValue为null,说明原本没有值,更新 size
+            if (oldValue == null) {
                 size.incrementAndGet(); // 新增键
-            } else if (oldValue != null && newValue == null) {
-                size.decrementAndGet(); // 删除键（设为 null）
             }
-            // 其他情况 size 不变（如覆盖旧值）
+            // 其他情况 size都 不变（如覆盖旧值）
 
             table[typeId] = newValue;
             return (oldValue == NULL_VALUE) ? null : (V) oldValue;
