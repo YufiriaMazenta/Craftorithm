@@ -14,7 +14,9 @@ import java.util.concurrent.locks.ReentrantLock;
 public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
 
     private static final int MAX_ID = 256;
-    private final Object[] table = new Object[MAX_ID + 1]; // 存储值的数组（0 ~ 256）
+    private static final Object NULL_VALUE = new Object(); // 特殊标记，用于表示用户存储的 null
+
+    private final Object[] table = new Object[MAX_ID + 1]; // 存储实际值或 NULL_VALUE
     private final ReentrantLock[] locks = new ReentrantLock[MAX_ID + 1];
     private final AtomicInteger size = new AtomicInteger(0);
 
@@ -27,10 +29,11 @@ public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
     // 校验 typeId 范围
     private void validateId(int typeId) {
         if (typeId < 0 || typeId > MAX_ID) {
-            throw new IllegalArgumentException("typeId 必须为 [0, " + MAX_ID + "] 的整数");
+            throw new IllegalArgumentException("typeId must in [0, " + MAX_ID + "]");
         }
     }
 
+    // 核心方法实现
     @Override
     public int size() {
         return size.get();
@@ -50,7 +53,7 @@ public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
         ReentrantLock lock = locks[typeId];
         lock.lock();
         try {
-            return table[typeId] != null;
+            return table[typeId] != null; // 只要不为 null，键即存在
         } finally {
             lock.unlock();
         }
@@ -58,11 +61,12 @@ public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
 
     @Override
     public boolean containsValue(Object value) {
+        Object target = (value == null) ? NULL_VALUE : value;
         for (int i = 0; i <= MAX_ID; i++) {
             ReentrantLock lock = locks[i];
             lock.lock();
             try {
-                if (Objects.equals(table[i], value)) {
+                if (Objects.equals(table[i], target)) {
                     return true;
                 }
             } finally {
@@ -81,7 +85,8 @@ public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
         ReentrantLock lock = locks[typeId];
         lock.lock();
         try {
-            return (V) table[typeId];
+            Object value = table[typeId];
+            return (value == NULL_VALUE) ? null : (V) value;
         } finally {
             lock.unlock();
         }
@@ -95,14 +100,19 @@ public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
         ReentrantLock lock = locks[typeId];
         lock.lock();
         try {
-            V oldValue = (V) table[typeId];
-            table[typeId] = value;
-            if (oldValue == null && value != null) {
-                size.incrementAndGet();
-            } else if (oldValue != null && value == null) {
-                size.decrementAndGet();
+            Object oldValue = table[typeId];
+            Object newValue = (value == null) ? NULL_VALUE : value;
+
+            // 更新 size
+            if (oldValue == null && newValue != null) {
+                size.incrementAndGet(); // 新增键
+            } else if (oldValue != null && newValue == null) {
+                size.decrementAndGet(); // 删除键（设为 null）
             }
-            return oldValue;
+            // 其他情况 size 不变（如覆盖旧值）
+
+            table[typeId] = newValue;
+            return (oldValue == NULL_VALUE) ? null : (V) oldValue;
         } finally {
             lock.unlock();
         }
@@ -117,20 +127,20 @@ public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
         ReentrantLock lock = locks[typeId];
         lock.lock();
         try {
-            V oldValue = (V) table[typeId];
+            Object oldValue = table[typeId];
             if (oldValue != null) {
                 table[typeId] = null;
                 size.decrementAndGet();
             }
-            return oldValue;
+            return (oldValue == NULL_VALUE) ? null : (V) oldValue;
         } finally {
             lock.unlock();
         }
     }
 
     @Override
-    public void putAll(Map<? extends K, ? extends V> other) {
-        other.forEach(this::put);
+    public void putAll(Map<? extends K, ? extends V> m) {
+        m.forEach(this::put);
     }
 
     @Override
@@ -139,19 +149,20 @@ public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
             ReentrantLock lock = locks[i];
             lock.lock();
             try {
-                table[i] = null;
+                if (table[i] != null) {
+                    table[i] = null;
+                    size.decrementAndGet();
+                }
             } finally {
                 lock.unlock();
             }
         }
-        size.set(0);
     }
 
     // 视图集合实现
     @Override
     public Set<K> keySet() {
         return new AbstractSet<>() {
-
             @Override
             public Iterator<K> iterator() {
                 return new KeyIterator();
@@ -176,14 +187,12 @@ public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
             public void clear() {
                 RecipeTypeMap.this.clear();
             }
-
         };
     }
 
     @Override
     public Collection<V> values() {
         return new AbstractCollection<>() {
-
             @Override
             public Iterator<V> iterator() {
                 return new ValuesIterator();
@@ -203,14 +212,12 @@ public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
             public void clear() {
                 RecipeTypeMap.this.clear();
             }
-
         };
     }
 
     @Override
     public Set<Entry<K, V>> entrySet() {
         return new AbstractSet<>() {
-
             @Override
             public Iterator<Entry<K, V>> iterator() {
                 return new EntryIterator();
@@ -225,7 +232,8 @@ public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
             public boolean contains(Object o) {
                 if (!(o instanceof Entry)) return false;
                 Entry<?, ?> e = (Entry<?, ?>) o;
-                return Objects.equals(get(e.getKey()), e.getValue());
+                Object value = get(e.getKey());
+                return Objects.equals(value, e.getValue());
             }
 
             @Override
@@ -245,13 +253,11 @@ public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
             public void clear() {
                 RecipeTypeMap.this.clear();
             }
-
         };
     }
 
-    // 迭代器实现
+    // 迭代器基类
     private abstract class BaseIterator<T> implements Iterator<T> {
-
         protected int currentIndex = 0;
         protected T nextElement = null;
 
@@ -285,15 +291,13 @@ public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
             currentIndex++;
             return element;
         }
-
     }
 
+    // 键迭代器
     private class KeyIterator extends BaseIterator<K> {
-
         @Override
         @SuppressWarnings("unchecked")
         protected K prepareNext() {
-            // 根据 typeId 反推原始键（需要外部保证键的唯一性）
             return (K) new RecipeType() {
                 @Override
                 public @NotNull String typeKey() {
@@ -321,29 +325,28 @@ public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
                 }
             };
         }
-
     }
 
+    // 值迭代器
     private class ValuesIterator extends BaseIterator<V> {
-
         @Override
         @SuppressWarnings("unchecked")
         protected V prepareNext() {
-            return (V) table[currentIndex];
+            Object value = table[currentIndex];
+            return (value == NULL_VALUE) ? null : (V) value;
         }
-
     }
 
+    // 条目迭代器
     private class EntryIterator extends BaseIterator<Entry<K, V>> {
-
         @Override
         @SuppressWarnings("unchecked")
         protected Entry<K, V> prepareNext() {
             K key = new KeyIterator().prepareNext();
-            V value = (V) table[currentIndex];
-            return new AbstractMap.SimpleEntry<>(key, value);
+            Object value = table[currentIndex];
+            V actualValue = (value == NULL_VALUE) ? null : (V) value;
+            return new AbstractMap.SimpleEntry<>(key, actualValue);
         }
-
     }
 
 }
