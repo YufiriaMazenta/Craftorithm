@@ -115,7 +115,7 @@ public enum AnvilRecipeHandler implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void matchAnvilResult(InventoryClickEvent event) {
+    public void onClickAnvilResult(InventoryClickEvent event) {
         if (!PluginConfigs.ENABLE_ANVIL_RECIPE.value())
             return;
 
