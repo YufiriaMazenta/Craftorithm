@@ -43,6 +43,8 @@ public enum ItemManager implements BukkitLifeCycleTask {
     private final String BURN_TIME_KEY = "burn_time";
     private BukkitConfigWrapper itemPacksConfig;
     private final Map<String, ItemPack> itemPacks = new ConcurrentHashMap<>();
+    //存储不能用于合成的物品列表
+    private final Set<NamespacedItemId> cannotCraftItems = new HashSet<>();
 
     public void regItemProvider(ItemProvider itemProvider) {
         Preconditions.checkArgument(
@@ -218,6 +220,12 @@ public enum ItemManager implements BukkitLifeCycleTask {
         }
         reloadCustomCookingFuel();
         reloadItemPacks();
+        reloadCannotCraftItems();
+    }
+
+    private void reloadCannotCraftItems() {
+        //TODO 加载不能用于合成的物品列表
+        cannotCraftItems.clear();
     }
 
     private void reloadItemPacks() {
