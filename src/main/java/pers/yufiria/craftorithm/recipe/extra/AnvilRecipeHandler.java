@@ -5,7 +5,6 @@ import crypticlib.listener.EventListener;
 import crypticlib.util.ItemHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -23,7 +22,6 @@ import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.choice.StackableItemIdChoice;
 import pers.yufiria.craftorithm.recipe.keepNbt.KeepNbtManager;
 import pers.yufiria.craftorithm.recipe.keepNbt.KeepNbtRules;
-import pers.yufiria.craftorithm.util.CollectionsUtils;
 import pers.yufiria.craftorithm.util.PlayerUtils;
 
 import java.util.HashMap;
@@ -138,16 +136,24 @@ public enum AnvilRecipeHandler implements Listener {
         NamespacedItemIdStack additionId = ItemManager.INSTANCE.matchItemId(addition, true);
         additionId = additionId != null ? additionId : new NamespacedItemIdStack(NamespacedItemId.fromMaterial(addition.getType()), addition.getAmount());
         Player player = (Player) event.getWhoClicked();
-        if (anvilRecipe.copyNbt()) {
-            if (base.hasItemMeta())
-                result.setItemMeta(base.getItemMeta());
+
+        //处理NBT保留操作
+        Optional<KeepNbtRules> recipeKeepNbtRules = KeepNbtManager.INSTANCE.getRecipeKeepNbtRules(anvilRecipe.getKey());
+        if (recipeKeepNbtRules.isPresent()) {
+            ItemMeta resultMeta = result.getItemMeta();
+            ItemMeta baseMeta = Objects.requireNonNull(base).getItemMeta();
+            resultMeta = recipeKeepNbtRules.get().processItemMeta(resultMeta, baseMeta);
+            result.setItemMeta(resultMeta);
         }
+
         int baseNum = base.getAmount(), additionNum = addition.getAmount();
         int needBaseNum = anvilRecipe.base().getUseAmount(baseId.itemId()), needAdditionNum = anvilRecipe.addition().getUseAmount(additionId.itemId());
         int costLevel = anvilRecipe.costLevel();
         event.setCancelled(true);
         int canCraftNum = Math.min(baseNum / needBaseNum, additionNum / needAdditionNum);
         canCraftNum = Math.min(result.getMaxStackSize(), canCraftNum);
+        //判断是否合成成功,用于触发事件等操作
+
         boolean craftResult = false;
         switch (event.getClick()) {
             case LEFT:
