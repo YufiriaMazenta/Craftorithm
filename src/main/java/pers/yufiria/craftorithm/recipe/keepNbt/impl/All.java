@@ -1,8 +1,8 @@
-package pers.yufiria.craftorithm.recipe.nbt.impl;
+package pers.yufiria.craftorithm.recipe.keepNbt.impl;
 
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-import pers.yufiria.craftorithm.recipe.nbt.KeepNbtRule;
+import pers.yufiria.craftorithm.recipe.keepNbt.KeepNbtRule;
 
 public enum All implements KeepNbtRule {
 

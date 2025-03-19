@@ -15,8 +15,6 @@ public class AnvilRecipe implements CustomRecipe {
     private StackableItemIdChoice base;
     private StackableItemIdChoice addition;
     private int costLevel = 0;
-    private boolean copyNbt = false;
-    private boolean copyEnchantments = true;
 
     public AnvilRecipe(NamespacedKey key, NamespacedItemIdStack result, StackableItemIdChoice base, StackableItemIdChoice addition) {
         this.key = key;
@@ -73,24 +71,6 @@ public class AnvilRecipe implements CustomRecipe {
 
     public AnvilRecipe setCostLevel(int costLevel) {
         this.costLevel = costLevel;
-        return this;
-    }
-
-    public boolean copyNbt() {
-        return copyNbt;
-    }
-
-    public AnvilRecipe setCopyNbt(boolean copyNbt) {
-        this.copyNbt = copyNbt;
-        return this;
-    }
-
-    public boolean copyEnchantments() {
-        return copyEnchantments;
-    }
-
-    public AnvilRecipe setCopyEnchantments(boolean copyEnchantments) {
-        this.copyEnchantments = copyEnchantments;
         return this;
     }
 

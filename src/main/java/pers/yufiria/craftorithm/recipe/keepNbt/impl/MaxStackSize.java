@@ -1,23 +1,22 @@
-package pers.yufiria.craftorithm.recipe.nbt.impl;
+package pers.yufiria.craftorithm.recipe.keepNbt.impl;
 
-import com.google.errorprone.annotations.Keep;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-import pers.yufiria.craftorithm.recipe.nbt.KeepNbtRule;
+import pers.yufiria.craftorithm.recipe.keepNbt.KeepNbtRule;
 
-public enum Lore implements KeepNbtRule {
+public enum MaxStackSize implements KeepNbtRule {
 
     INSTANCE;
 
     @Override
     public String ruleName() {
-        return "lore";
+        return "max_stack_size";
     }
 
     @Override
     public @NotNull ItemMeta processItemMeta(@NotNull ItemMeta baseMeta, @NotNull ItemMeta resultMeta) {
-        if (baseMeta.hasLore()) {
-            resultMeta.setLore(baseMeta.getLore());
+        if (baseMeta.hasMaxStackSize()) {
+            resultMeta.setMaxStackSize(baseMeta.getMaxStackSize());
         }
         return resultMeta;
     }

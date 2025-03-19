@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.recipe.nbt;
+package pers.yufiria.craftorithm.recipe.keepNbt;
 
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +16,7 @@ public interface KeepNbtRule {
      * 应采用返回的结果进行下一步操作,否则将会导致一些问题
      * @param baseMeta 原材料的ItemMeta
      * @param resultMeta 结果的ItemMeta
-     * @return 处理完后的ItemMeta
+     * @return 处理完后配方结果的ItemMeta
      */
     @NotNull ItemMeta processItemMeta(@NotNull ItemMeta baseMeta, @NotNull ItemMeta resultMeta);
 

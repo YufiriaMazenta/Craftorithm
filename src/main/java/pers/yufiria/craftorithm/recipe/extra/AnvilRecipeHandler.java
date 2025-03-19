@@ -21,11 +21,15 @@ import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.choice.StackableItemIdChoice;
+import pers.yufiria.craftorithm.recipe.keepNbt.KeepNbtManager;
+import pers.yufiria.craftorithm.recipe.keepNbt.KeepNbtRules;
 import pers.yufiria.craftorithm.util.CollectionsUtils;
 import pers.yufiria.craftorithm.util.PlayerUtils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @EventListener
@@ -95,32 +99,14 @@ public enum AnvilRecipeHandler implements Listener {
             ItemStack refreshItem = ItemManager.INSTANCE.matchItem(resultId, (Player) event.getViewers().get(0));
             result.setItemMeta(refreshItem.getItemMeta());
         }
-        if (anvilRecipe.copyNbt()) {
-            if (base.hasItemMeta())
-                result.setItemMeta(base.getItemMeta());
-        }
-        if (anvilRecipe.copyEnchantments()) {
-            if (base.hasItemMeta()) {
-                Map<Enchantment, Integer> baseEnchantments = base.getItemMeta().getEnchants();
-                ItemMeta resultMeta = result.getItemMeta();
-                Map<Enchantment, Integer> resultEnchantments = new HashMap<>(resultMeta.getEnchants());
-                CollectionsUtils.putAllIf(resultEnchantments, baseEnchantments, (type, level) -> {
-                    if (resultEnchantments.containsKey(type)) {
-                        return level > resultEnchantments.get(type);
-                    } else {
-                        return true;
-                    }
-                });
-                resultMeta.getEnchants().forEach(
-                    (enchant, level) -> {
-                        resultMeta.removeEnchant(enchant);
-                    }
-                );
-                resultEnchantments.forEach((enchant, level) -> {
-                    resultMeta.addEnchant(enchant, level, true);
-                });
-                result.setItemMeta(resultMeta);
-            }
+
+        //处理NBT保留操作
+        Optional<KeepNbtRules> recipeKeepNbtRules = KeepNbtManager.INSTANCE.getRecipeKeepNbtRules(anvilRecipe.getKey());
+        if (recipeKeepNbtRules.isPresent()) {
+            ItemMeta resultMeta = result.getItemMeta();
+            ItemMeta baseMeta = Objects.requireNonNull(base).getItemMeta();
+            resultMeta = recipeKeepNbtRules.get().processItemMeta(resultMeta, baseMeta);
+            result.setItemMeta(resultMeta);
         }
         event.getInventory().setRepairCost(anvilRecipe.costLevel());
         //刷新物品

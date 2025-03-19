@@ -12,7 +12,7 @@ import pers.yufiria.craftorithm.recipe.extra.BrewingRecipe;
 import pers.yufiria.craftorithm.recipe.loader.*;
 import pers.yufiria.craftorithm.recipe.register.AnvilRecipeRegister;
 import pers.yufiria.craftorithm.recipe.register.BrewingRecipeRegister;
-import pers.yufiria.craftorithm.recipe.register.VanillaRecipeRegister;
+import pers.yufiria.craftorithm.recipe.register.BukkitRecipeRegister;
 
 import java.util.function.Function;
 
@@ -43,49 +43,49 @@ public enum SimpleRecipeTypes implements RecipeType {
     VANILLA_SHAPED(
         "vanilla_shaped",
         ShapedRecipeLoader.INSTANCE,
-        VanillaRecipeRegister.INSTANCE,
+        BukkitRecipeRegister.INSTANCE,
         recipe -> recipe instanceof ShapedRecipe,
         1
     ),
     VANILLA_SHAPELESS(
         "vanilla_shapeless",
         ShapelessRecipeLoader.INSTANCE,
-        VanillaRecipeRegister.INSTANCE,
+        BukkitRecipeRegister.INSTANCE,
         recipe -> recipe instanceof ShapelessRecipe,
         2
     ),
     VANILLA_SMELTING_FURNACE(
         "vanilla_smelting_furnace",
         SmeltingRecipeLoader.INSTANCE,
-        VanillaRecipeRegister.INSTANCE,
+        BukkitRecipeRegister.INSTANCE,
         recipe -> recipe instanceof FurnaceRecipe,
         3
     ),
     VANILLA_SMELTING_BLAST(
         "vanilla_smelting_blast",
         SmeltingRecipeLoader.INSTANCE,
-        VanillaRecipeRegister.INSTANCE,
+        BukkitRecipeRegister.INSTANCE,
         recipe -> recipe instanceof BlastingRecipe,
         4
     ),
     VANILLA_SMELTING_SMOKER(
         "vanilla_smelting_smoker",
         SmeltingRecipeLoader.INSTANCE,
-        VanillaRecipeRegister.INSTANCE,
+        BukkitRecipeRegister.INSTANCE,
         recipe -> recipe instanceof SmokingRecipe,
         5
     ),
     VANILLA_SMELTING_CAMPFIRE(
         "vanilla_smelting_campfire",
         SmeltingRecipeLoader.INSTANCE,
-        VanillaRecipeRegister.INSTANCE,
+        BukkitRecipeRegister.INSTANCE,
         recipe -> recipe instanceof CampfireRecipe,
         6
     ),
     VANILLA_SMITHING_TRANSFORM(
         "vanilla_smithing_transform",
         SmithingTransformRecipeLoader.INSTANCE,
-        VanillaRecipeRegister.INSTANCE,
+        BukkitRecipeRegister.INSTANCE,
         recipe -> {
             if (MinecraftVersion.current().before(MinecraftVersion.V1_20)) {
                 return recipe instanceof SmithingRecipe;
@@ -97,14 +97,14 @@ public enum SimpleRecipeTypes implements RecipeType {
     VANILLA_SMITHING_TRIM(
         "vanilla_smithing_trim",
         SmithingTrimRecipeLoader.INSTANCE,
-        VanillaRecipeRegister.INSTANCE,
+        BukkitRecipeRegister.INSTANCE,
         recipe -> recipe instanceof SmithingTrimRecipe,
         8
     ),
     VANILLA_STONECUTTING(
         "vanilla_stonecutting",
         StonecuttingRecipeLoader.INSTANCE,
-        VanillaRecipeRegister.INSTANCE,
+        BukkitRecipeRegister.INSTANCE,
         recipe -> recipe instanceof StonecuttingRecipe,
         9
     ),

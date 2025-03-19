@@ -3,8 +3,8 @@ package pers.yufiria.craftorithm.recipe.loader;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.recipe.RecipeLoader;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
+import pers.yufiria.craftorithm.recipe.keepNbt.KeepNbtManager;
 import pers.yufiria.craftorithm.recipe.util.BukkitRecipeChoiceParser;
-import crypticlib.MinecraftVersion;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.RecipeChoice;
@@ -26,12 +26,10 @@ public enum SmithingTrimRecipeLoader implements RecipeLoader<SmithingRecipe> {
             RecipeChoice addition = BukkitRecipeChoiceParser.parseChoice(additionId);
             String templateId = recipeConfig.getString("template");
             RecipeChoice template = BukkitRecipeChoiceParser.parseChoice(templateId);
-            boolean copyNbt = recipeConfig.getBoolean("copy_nbt", false);
-            //因为1.20.5开始,复制组件行为是使用结果的组件,而之前的行为是使用原材料的NBT,所以需要反转以逻辑相同
-            if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_20_5)) {
-                copyNbt = !copyNbt;
+            if (recipeConfig.isList("keep_nbt_rules")) {
+                KeepNbtManager.INSTANCE.addRecipeKeepNbtRules(key, recipeConfig.getStringList("keep_nbt_rules"));
             }
-            return new SmithingTrimRecipe(key, template, base, addition, copyNbt);
+            return new SmithingTrimRecipe(key, template, base, addition, true);
         } catch (RecipeLoadException e) {
             throw e;
         } catch (Throwable throwable) {

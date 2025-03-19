@@ -3,6 +3,7 @@ package pers.yufiria.craftorithm.command.sub.recipe;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
+import pers.yufiria.craftorithm.recipe.RecipeTypeMap;
 import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
 import crypticlib.command.BukkitSubcommand;
@@ -21,7 +22,7 @@ public final class CreateRecipeCommand extends BukkitSubcommand {
 
     public static final CreateRecipeCommand INSTANCE = new CreateRecipeCommand();
     private final Pattern recipeNamePattern = Pattern.compile("^[a-z0-9._-]+$");
-    private final Map<RecipeType, BiConsumer<Player, String>> recipeCreatorMap = new HashMap<>();
+    private final Map<RecipeType, BiConsumer<Player, String>> recipeCreatorMap = new RecipeTypeMap<>();
 
     private CreateRecipeCommand() {
         super(CommandInfo

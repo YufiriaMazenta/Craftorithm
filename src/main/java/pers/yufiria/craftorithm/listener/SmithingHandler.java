@@ -1,40 +1,42 @@
 package pers.yufiria.craftorithm.listener;
 
-import pers.yufiria.craftorithm.CraftorithmAPI;
+import org.bukkit.inventory.meta.ItemMeta;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.recipe.keepNbt.KeepNbtManager;
+import pers.yufiria.craftorithm.recipe.keepNbt.KeepNbtRules;
 import pers.yufiria.craftorithm.util.ItemUtils;
 import crypticlib.listener.EventListener;
-import crypticlib.util.InventoryViewHelper;
 import org.bukkit.NamespacedKey;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareSmithingEvent;
-import org.bukkit.event.inventory.SmithItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 
-import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @EventListener
 public enum SmithingHandler implements Listener {
 
     INSTANCE;
 
+    /**
+     * 预处理配方结果
+     */
     @EventHandler(priority = EventPriority.MONITOR)
-    public void refreshResult(PrepareSmithingEvent event) {
+    public void preprocessResult(PrepareSmithingEvent event) {
         if (event.getResult() == null)
             return;
         Recipe recipe = event.getInventory().getRecipe();
         if (recipe == null)
             return;
-        NamespacedKey namespacedKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
-        if (!namespacedKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
+        NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
+        if (!recipeKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
             return;
         }
 
@@ -47,38 +49,23 @@ public enum SmithingHandler implements Listener {
             }
         }
 
-        //todo 保留附魔的选项
-//        boolean copyEnchantment = RecipeManager.INSTANCE.getSmithingCopyEnchantment(recipe);
-//        if (copyEnchantment) {
-//            ItemStack base = event.getInventory().getItem(1);
-//            if (base.hasItemMeta()) {
-//                Map<Enchantment, Integer> baseEnchantments = base.getItemMeta().getEnchants();
-//                ItemMeta resultMeta = result.getItemMeta();
-//                Map<Enchantment, Integer> resultEnchantments = new HashMap<>(resultMeta.getEnchants());
-//                CollectionsUtils.putAllIf(resultEnchantments, baseEnchantments, (type, level) -> {
-//                    if (resultEnchantments.containsKey(type)) {
-//                        return level > resultEnchantments.get(type);
-//                    } else {
-//                        return true;
-//                    }
-//                });
-//                resultMeta.getEnchants().forEach(
-//                    (enchant, level) -> {
-//                        resultMeta.removeEnchant(enchant);
-//                    }
-//                );
-//                resultEnchantments.forEach((enchant, level) -> {
-//                    resultMeta.addEnchant(enchant, level, true);
-//                });
-//                result.setItemMeta(resultMeta);
-//            }
-//        }
+        //处理NBT保留操作
+        Optional<KeepNbtRules> recipeKeepNbtRules = KeepNbtManager.INSTANCE.getRecipeKeepNbtRules(recipeKey);
+        if (recipeKeepNbtRules.isPresent()) {
+            ItemMeta resultMeta = result.getItemMeta();
+            ItemStack base = event.getInventory().getItem(1);
+            ItemMeta baseMeta = Objects.requireNonNull(base).getItemMeta();
+            resultMeta = recipeKeepNbtRules.get().processItemMeta(resultMeta, baseMeta);
+            result.setItemMeta(resultMeta);
+        }
+
         event.setResult(result);
         event.getInventory().setResult(result);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void checkCannotCraftLore(PrepareSmithingEvent event) {
+        //TODO 修改此内容
         ItemStack[] items = event.getInventory().getContents();
         boolean containsLore = ItemUtils.hasCannotCraftLore(items);
         if (containsLore) {

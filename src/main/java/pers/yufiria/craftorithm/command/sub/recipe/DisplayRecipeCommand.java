@@ -11,6 +11,7 @@ import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
+import pers.yufiria.craftorithm.recipe.RecipeTypeMap;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.recipe.extra.AnvilRecipe;
 import pers.yufiria.craftorithm.ui.anvil.AnvilDisplayMenuManager;
@@ -36,7 +37,7 @@ import java.util.function.BiConsumer;
 public class DisplayRecipeCommand extends BukkitSubcommand implements BukkitLifeCycleTask {
 
     public static final DisplayRecipeCommand INSTANCE = new DisplayRecipeCommand();
-    private final Map<RecipeType, BiConsumer<Player, Recipe>> recipeDisplayMap = new HashMap<>();
+    private final Map<RecipeType, BiConsumer<Player, Recipe>> recipeDisplayMap = new RecipeTypeMap<>();
 
     protected DisplayRecipeCommand() {
         super(

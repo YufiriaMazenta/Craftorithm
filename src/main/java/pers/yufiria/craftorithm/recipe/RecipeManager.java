@@ -21,6 +21,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.*;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
+import pers.yufiria.craftorithm.recipe.keepNbt.KeepNbtManager;
 import pers.yufiria.craftorithm.util.CollectionsUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
 
@@ -44,15 +45,10 @@ public enum RecipeManager implements BukkitLifeCycleTask {
     private final Map<String, RecipeType> recipeTypes = new ConcurrentHashMap<>();
     private final Map<NamespacedKey, Recipe> craftorithmRecipes = new ConcurrentHashMap<>();
     private final Map<NamespacedKey, BukkitConfigWrapper> recipeConfigWrapperMap = new ConcurrentHashMap<>();
-    private final List<Recipe> disabledRecipesCache;
-    private final Map<NamespacedKey, Recipe> serverRecipesCache;
+    private final List<Recipe> disabledRecipesCache = new CopyOnWriteArrayList<>();
+    private final Map<NamespacedKey, Recipe> serverRecipesCache = new ConcurrentHashMap<>();
     private final Map<String, RecipeGroup> recipeGroupMap = new ConcurrentHashMap<>();
     private Boolean supportPotionMix;
-
-    RecipeManager() {
-        disabledRecipesCache = new CopyOnWriteArrayList<>();
-        serverRecipesCache = new ConcurrentHashMap<>();
-    }
 
     //配方类型相关
 
@@ -115,7 +111,6 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         reloadDisabledRecipes();
     }
 
-
     /**
      * 重置配方
      * 将会删除所有由本插件及使用本插件提供的API添加的配方
@@ -127,6 +122,9 @@ public enum RecipeManager implements BukkitLifeCycleTask {
             RecipeType recipeType = getRecipeType(recipe);
             recipeType.recipeRegister().unregisterRecipe(recipeKey);
         });
+
+        //删除所有配方的Nbt保留规则
+        KeepNbtManager.INSTANCE.resetRecipeKeepNbtRules();
 
         //还原被禁用的配方
         for (Recipe recipe : disabledRecipesCache) {
