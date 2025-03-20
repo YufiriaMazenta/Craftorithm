@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.command.sub.recipe;
+package pers.yufiria.craftorithm.command.recipe;
 
 import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
@@ -88,6 +88,10 @@ public class DisplayRecipeCommand extends BukkitSubcommand implements BukkitLife
 
     @Override
     public void run(Plugin plugin, LifeCycle lifeCycle) {
+        registerDefRecipeDisplay();
+    }
+
+    private void registerDefRecipeDisplay() {
         addRecipeDisplay(SimpleRecipeTypes.VANILLA_SHAPED, (player, recipe) -> {
             VanillaShapedDisplayMenuManager.INSTANCE.openMenu(player, (ShapedRecipe) recipe);
         });
@@ -97,4 +101,6 @@ public class DisplayRecipeCommand extends BukkitSubcommand implements BukkitLife
             });
         }
     }
+
+
 }

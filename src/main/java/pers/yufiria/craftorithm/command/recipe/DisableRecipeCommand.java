@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.command.sub.recipe;
+package pers.yufiria.craftorithm.command.recipe;
 
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.recipe.RecipeManager;

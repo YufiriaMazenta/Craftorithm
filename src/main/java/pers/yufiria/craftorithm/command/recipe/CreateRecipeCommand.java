@@ -1,6 +1,10 @@
-package pers.yufiria.craftorithm.command.sub.recipe;
+package pers.yufiria.craftorithm.command.recipe;
 
-import org.bukkit.inventory.Recipe;
+import crypticlib.lifecycle.AutoTask;
+import crypticlib.lifecycle.BukkitLifeCycleTask;
+import crypticlib.lifecycle.LifeCycle;
+import crypticlib.lifecycle.TaskRule;
+import org.bukkit.plugin.Plugin;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
@@ -19,7 +23,12 @@ import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public final class CreateRecipeCommand extends BukkitSubcommand {
+@AutoTask(
+    rules = {
+        @TaskRule(lifeCycle = LifeCycle.ACTIVE)
+    }
+)
+public final class CreateRecipeCommand extends BukkitSubcommand implements BukkitLifeCycleTask {
 
     public static final CreateRecipeCommand INSTANCE = new CreateRecipeCommand();
     private final Pattern recipeNamePattern = Pattern.compile("^[a-z0-9._-]+$");
@@ -80,12 +89,21 @@ public final class CreateRecipeCommand extends BukkitSubcommand {
         return Collections.singletonList("<recipe_name>");
     }
 
+    private void registerDefRecipeCreators() {
+        //TODO 配方创建器
+    }
+
     public void addRecipeCreator(RecipeType recipeType, BiConsumer<Player, String> creatorFunc) {
         recipeCreatorMap.put(recipeType, creatorFunc);
     }
 
     public void removeRecipeCreator(RecipeType recipeType) {
         recipeCreatorMap.remove(recipeType);
+    }
+
+    @Override
+    public void run(Plugin plugin, LifeCycle lifeCycle) {
+        registerDefRecipeCreators();
     }
 
 }

@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.recipe.util;
 
+import crypticlib.util.MaterialHelper;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.ItemPack;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
@@ -30,7 +31,7 @@ public class BukkitRecipeChoiceParser {
         namespace = namespace.toLowerCase();
         switch (namespace) {
             case "minecraft":
-                Material material = Material.matchMaterial(choiceStr);
+                Material material = MaterialHelper.matchMaterial(choiceStr);
                 if (material == null) {
                     throw new RecipeLoadException(choiceStr + " is not a valid material");
                 }

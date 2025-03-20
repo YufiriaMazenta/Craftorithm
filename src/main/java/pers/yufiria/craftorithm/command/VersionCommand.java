@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.command.sub;
+package pers.yufiria.craftorithm.command;
 
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.util.LangUtils;

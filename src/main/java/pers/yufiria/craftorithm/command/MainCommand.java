@@ -1,9 +1,7 @@
 package pers.yufiria.craftorithm.command;
 
-import pers.yufiria.craftorithm.command.sub.ReloadCommand;
-import pers.yufiria.craftorithm.command.sub.VersionCommand;
-import pers.yufiria.craftorithm.command.sub.item.ItemCommand;
-import pers.yufiria.craftorithm.command.sub.recipe.*;
+import pers.yufiria.craftorithm.command.item.ItemCommand;
+import pers.yufiria.craftorithm.command.recipe.*;
 import crypticlib.command.BukkitCommand;
 import crypticlib.command.BukkitSubcommand;
 import crypticlib.command.CommandInfo;
@@ -14,11 +12,11 @@ import crypticlib.perm.PermInfo;
 import java.util.Arrays;
 
 @Command
-public class PluginCommand extends BukkitCommand {
+public class MainCommand extends BukkitCommand {
 
-    public static final PluginCommand INSTANCE = new PluginCommand();
+    public static final MainCommand INSTANCE = new MainCommand();
 
-    PluginCommand() {
+    MainCommand() {
         super(
             CommandInfo
                 .builder("craftorithm")

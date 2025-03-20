@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.command.sub.recipe;
+package pers.yufiria.craftorithm.command.recipe;
 
 import pers.yufiria.craftorithm.util.CommandUtils;
 import crypticlib.command.BukkitSubcommand;

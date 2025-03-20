@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.recipe.choice;
 
 import crypticlib.util.ItemHelper;
+import crypticlib.util.MaterialHelper;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.inventory.ItemStack;
@@ -27,7 +28,13 @@ public class StackableItemIdChoice implements RecipeChoice {
             throw new RecipeLoadException(choiceStr + " is not a valid ingredient ID.");
         }
         if (!choiceStr.contains(":")) {
-            Material material = Material.matchMaterial(choiceStr);
+            Material material;
+            if (choiceStr.contains(" ")) {
+                //如果包含数量，需要去除数量
+                material = MaterialHelper.matchMaterial(choiceStr.substring(0, choiceStr.indexOf(" ")));
+            } else {
+                material = MaterialHelper.matchMaterial(choiceStr);
+            }
             if (material == null) {
                 throw new RecipeLoadException(choiceStr + " is not a valid material");
             }
@@ -39,7 +46,13 @@ public class StackableItemIdChoice implements RecipeChoice {
         namespace = namespace.toLowerCase();
         switch (namespace) {
             case "minecraft":
-                Material material = Material.matchMaterial(choiceStr);
+                Material material;
+                if (choiceStr.contains(" ")) {
+                    //如果包含数量，需要去除数量
+                    material = MaterialHelper.matchMaterial(choiceStr.substring(0, choiceStr.indexOf(" ")));
+                } else {
+                    material = MaterialHelper.matchMaterial(choiceStr);
+                }
                 if (material == null) {
                     throw new RecipeLoadException(choiceStr + " is not a valid material");
                 }

@@ -1,6 +1,6 @@
-package pers.yufiria.craftorithm.command.sub.item;
+package pers.yufiria.craftorithm.command.item;
 
-import pers.yufiria.craftorithm.command.sub.item.fuel.FuelCommand;
+import pers.yufiria.craftorithm.command.item.fuel.FuelCommand;
 import crypticlib.command.BukkitSubcommand;
 import crypticlib.command.CommandInfo;
 import crypticlib.command.annotation.Subcommand;

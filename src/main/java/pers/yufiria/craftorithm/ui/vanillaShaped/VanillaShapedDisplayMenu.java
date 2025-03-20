@@ -30,7 +30,6 @@ public class VanillaShapedDisplayMenu extends Menu {
 
     @Override
     public void preProcessIconWhenUpdateLayout(Integer slot, @NotNull Icon icon) {
-        //TODO 判断图标类型
         switch (icon) {
             case VanillaShapedIngredientIcon vanillaShapedIngredientIcon -> {
                 int ingredientSlot = vanillaShapedIngredientIcon.ingredientSlot();

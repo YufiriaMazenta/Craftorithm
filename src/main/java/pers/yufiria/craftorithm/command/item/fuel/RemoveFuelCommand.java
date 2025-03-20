@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.command.sub.item.fuel;
+package pers.yufiria.craftorithm.command.item.fuel;
 
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.item.ItemManager;

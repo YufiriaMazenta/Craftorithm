@@ -72,7 +72,7 @@ public class NamespacedItemIdStack {
             }
         } else {
             String itemIdStr = string.substring(0, lastSpaceIndex);
-            String amountStr = string.substring(lastSpaceIndex + 1);
+            String amountStr = string.substring(lastSpaceIndex + 1).trim();
             try {
                 int amount = Integer.parseInt(amountStr);
                 NamespacedItemId itemId = NamespacedItemId.fromString(itemIdStr);

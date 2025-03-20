@@ -3,15 +3,11 @@ package pers.yufiria.craftorithm;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.server.ServerLoadEvent;
 import pers.yufiria.craftorithm.bstat.Metrics;
-import pers.yufiria.craftorithm.command.sub.recipe.CreateRecipeCommand;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.exception.UnsupportedVersionException;
 import pers.yufiria.craftorithm.listener.hook.OtherPluginsListenerManager;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
-import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
-import pers.yufiria.craftorithm.ui.vanillaShaped.VanillaShapedDisplayMenu;
-import pers.yufiria.craftorithm.ui.vanillaShaped.VanillaShapedDisplayMenuManager;
 import pers.yufiria.craftorithm.util.LangUtils;
 import pers.yufiria.craftorithm.util.UpdateChecker;
 import crypticlib.BukkitPlugin;
@@ -48,12 +44,7 @@ public final class Craftorithm extends BukkitPlugin implements Listener, BukkitL
             throw new UnsupportedVersionException();
         }
         CrypticLib.setDebug(PluginConfigs.DEBUG.value());
-        registerRecipeCreators();
         UpdateChecker.pullUpdateCheckRequest(Bukkit.getConsoleSender());
-    }
-
-    private void registerRecipeCreators() {
-        //TODO 配方创建器
     }
 
     @Override
