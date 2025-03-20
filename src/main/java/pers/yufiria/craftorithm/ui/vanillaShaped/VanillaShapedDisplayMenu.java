@@ -21,7 +21,7 @@ public class VanillaShapedDisplayMenu extends Menu {
     }
 
     @Override
-    public String formattedTitle() {
+    public String parsedMenuTitle() {
         String originTitle = this.display.title();
         Player player = this.player();
         String title = LangManager.INSTANCE.replaceLang(originTitle, player);

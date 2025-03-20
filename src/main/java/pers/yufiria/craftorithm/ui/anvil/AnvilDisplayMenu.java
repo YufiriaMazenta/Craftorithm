@@ -26,7 +26,7 @@ public class AnvilDisplayMenu extends Menu {
     }
 
     @Override
-    public String formattedTitle() {
+    public String parsedMenuTitle() {
         String originTitle = this.display.title();
         Player player = this.player();
         String title = LangManager.INSTANCE.replaceLang(originTitle, player);
@@ -50,46 +50,8 @@ public class AnvilDisplayMenu extends Menu {
     }
 
     @Override
-    protected void draw(Inventory inventory) {
-        this.beforeDraw();
-        this.slotMap.forEach((slot, icon) -> {
-            if (icon != null) {
-                this.preProcessIconWhenDraw(slot, icon);
-                if (!(icon instanceof ItemDisplayIcon)) {
-                    ItemStack display = icon.display();
-                    ItemMeta meta = display.getItemMeta();
-                    if (meta != null) {
-                        Player player = this.player();
-                        if (meta.hasDisplayName()) {
-                            meta.setDisplayName(
-                                BukkitTextProcessor.color(
-                                    BukkitTextProcessor.placeholder(
-                                        player,
-                                        replaceCostLevel(meta.getDisplayName())
-                                    )
-                                )
-                            );
-                        }
-                        List<String> lore = meta.getLore();
-                        if (lore != null) {
-                            lore.replaceAll(it -> BukkitTextProcessor.color(
-                                BukkitTextProcessor.placeholder(
-                                    player,
-                                    replaceCostLevel(it)
-                                )
-                            ));
-                        }
-
-                        meta.setLore(lore);
-                        display.setItemMeta(meta);
-                        inventory.setItem(slot, display);
-                    }
-                } else {
-                    inventory.setItem(slot, icon.display());
-                }
-            }
-        });
-        this.onDrawCompleted();
+    public String parseIconText(String originText, Icon icon) {
+        return super.parseIconText(replaceCostLevel(originText), icon);
     }
 
     private String replaceCostLevel(String originText) {
