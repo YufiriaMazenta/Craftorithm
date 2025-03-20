@@ -86,7 +86,12 @@ public enum AnvilRecipeHandler implements Listener {
         ItemStack addition = event.getInventory().getItem(1);
         if (ItemHelper.isAir(base) || ItemHelper.isAir(addition))
             return;
-        //TODO 判断是否是不能参与合成的物品
+        //如果原材料包含不能用于合成的物品，结束流程
+        boolean cannotCraft = ItemManager.INSTANCE.containsCannotCraftItem(base, addition);
+        if (cannotCraft) {
+            return;
+        }
+
         AnvilRecipe anvilRecipe = matchAnvilRecipe(base, addition);
         if (anvilRecipe == null)
             return;
@@ -109,7 +114,6 @@ public enum AnvilRecipeHandler implements Listener {
             }
         );
         event.getInventory().setRepairCost(anvilRecipe.costLevel());
-        //刷新物品
 
         event.setResult(result);
         event.getInventory().setItem(2, result);
@@ -127,9 +131,16 @@ public enum AnvilRecipeHandler implements Listener {
             return;
         ItemStack base = anvilInventory.getItem(0);
         ItemStack addition = anvilInventory.getItem(1);
+        //如果原材料包含不能用于合成的物品，结束流程
+        boolean cannotCraft = ItemManager.INSTANCE.containsCannotCraftItem(base, addition);
+        if (cannotCraft) {
+            return;
+        }
+
         ItemStack result = anvilInventory.getItem(2);
         if (ItemHelper.isAir(base) || ItemHelper.isAir(addition) || ItemHelper.isAir(result))
             return;
+
         AnvilRecipe anvilRecipe = matchAnvilRecipe(base, addition);
         if (anvilRecipe == null)
             return;

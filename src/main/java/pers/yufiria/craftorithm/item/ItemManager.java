@@ -234,7 +234,7 @@ public enum ItemManager implements BukkitLifeCycleTask {
     }
 
     /**
-     * 物品堆中是否包含不能合成的物品
+     * 物品堆中是否包含不能用于合成的物品
      * @param items
      * @return
      */

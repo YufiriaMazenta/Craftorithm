@@ -4,8 +4,6 @@ config_version: 2
 check_update: true
 #是否移除所有的原版配方
 remove_all_vanilla_recipe: false
-#含有此Lore的物品不能参与工作台、铁砧、锻造台合成，可以使用正则表达式
-lore_cannot_craft: '.*不可用于合成.*'
 #是否启用插件铁砧配方
 enable_anvil_recipe: true
 #是否启用bstats插件使用数据统计
