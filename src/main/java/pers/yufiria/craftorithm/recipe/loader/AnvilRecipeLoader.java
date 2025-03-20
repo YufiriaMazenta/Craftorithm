@@ -9,7 +9,7 @@ import pers.yufiria.craftorithm.recipe.RecipeLoader;
 import pers.yufiria.craftorithm.recipe.choice.StackableItemIdChoice;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 import pers.yufiria.craftorithm.recipe.extra.AnvilRecipe;
-import pers.yufiria.craftorithm.recipe.keepNbt.KeepNbtManager;
+import pers.yufiria.craftorithm.recipe.keepNbt.CopyNbtManager;
 
 public enum AnvilRecipeLoader implements RecipeLoader<AnvilRecipe> {
 
@@ -26,8 +26,8 @@ public enum AnvilRecipeLoader implements RecipeLoader<AnvilRecipe> {
             String additionId = recipeConfig.getString("addition");
             StackableItemIdChoice addition = new StackableItemIdChoice(additionId);
             int costLevel = recipeConfig.getInt("cost_level", 0);
-            if (recipeConfig.isList("keep_nbt_rules")) {
-                KeepNbtManager.INSTANCE.addRecipeKeepNbtRules(namespacedKey, recipeConfig.getStringList("keep_nbt_rules"));
+            if (recipeConfig.isList("copy_nbt_rules")) {
+                CopyNbtManager.INSTANCE.addRecipeCopyNbtRules(namespacedKey, recipeConfig.getStringList("copy_nbt_rules"));
             }
             AnvilRecipe anvilRecipe = new AnvilRecipe(namespacedKey, result, base, addition);
             anvilRecipe.setCostLevel(costLevel);

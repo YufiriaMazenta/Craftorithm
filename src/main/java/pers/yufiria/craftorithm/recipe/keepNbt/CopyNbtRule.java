@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
  * 物品NBT的处理方式
  * 用于铁砧和锻造配方
  */
-public interface KeepNbtRule {
+public interface CopyNbtRule {
 
     String ruleName();
 

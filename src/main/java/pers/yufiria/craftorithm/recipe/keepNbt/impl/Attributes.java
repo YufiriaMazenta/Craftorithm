@@ -2,9 +2,9 @@ package pers.yufiria.craftorithm.recipe.keepNbt.impl;
 
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-import pers.yufiria.craftorithm.recipe.keepNbt.KeepNbtRule;
+import pers.yufiria.craftorithm.recipe.keepNbt.CopyNbtRule;
 
-public enum Attributes implements KeepNbtRule {
+public enum Attributes implements CopyNbtRule {
 
     INSTANCE;
 

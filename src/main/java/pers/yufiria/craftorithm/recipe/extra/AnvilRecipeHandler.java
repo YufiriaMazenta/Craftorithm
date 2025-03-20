@@ -20,8 +20,8 @@ import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.choice.StackableItemIdChoice;
-import pers.yufiria.craftorithm.recipe.keepNbt.KeepNbtManager;
-import pers.yufiria.craftorithm.recipe.keepNbt.KeepNbtRules;
+import pers.yufiria.craftorithm.recipe.keepNbt.CopyNbtManager;
+import pers.yufiria.craftorithm.recipe.keepNbt.CopyNbtRules;
 import pers.yufiria.craftorithm.util.PlayerUtils;
 
 import java.util.HashMap;
@@ -99,8 +99,8 @@ public enum AnvilRecipeHandler implements Listener {
         }
 
         //处理NBT保留操作
-        Optional<KeepNbtRules> recipeKeepNbtRules = KeepNbtManager.INSTANCE.getRecipeKeepNbtRules(anvilRecipe.getKey());
-        recipeKeepNbtRules.ifPresent(
+        Optional<CopyNbtRules> recipeCopyNbtRules = CopyNbtManager.INSTANCE.getRecipeCopyNbtRules(anvilRecipe.getKey());
+        recipeCopyNbtRules.ifPresent(
             rules -> {
                 ItemMeta resultMeta = result.getItemMeta();
                 ItemMeta baseMeta = Objects.requireNonNull(base).getItemMeta();
@@ -140,8 +140,8 @@ public enum AnvilRecipeHandler implements Listener {
         Player player = (Player) event.getWhoClicked();
 
         //处理NBT保留操作
-        Optional<KeepNbtRules> recipeKeepNbtRules = KeepNbtManager.INSTANCE.getRecipeKeepNbtRules(anvilRecipe.getKey());
-        recipeKeepNbtRules.ifPresent(
+        Optional<CopyNbtRules> recipeCopyNbtRules = CopyNbtManager.INSTANCE.getRecipeCopyNbtRules(anvilRecipe.getKey());
+        recipeCopyNbtRules.ifPresent(
             rules -> {
                 ItemMeta resultMeta = result.getItemMeta();
                 ItemMeta baseMeta = Objects.requireNonNull(base).getItemMeta();
