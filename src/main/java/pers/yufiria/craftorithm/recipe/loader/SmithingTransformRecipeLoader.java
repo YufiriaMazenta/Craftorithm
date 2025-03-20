@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.recipe.loader;
 
+import crypticlib.util.IOHelper;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
@@ -12,6 +13,8 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.*;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public enum SmithingTransformRecipeLoader implements RecipeLoader<SmithingRecipe> {
 
@@ -28,15 +31,16 @@ public enum SmithingTransformRecipeLoader implements RecipeLoader<SmithingRecipe
             String additionId = recipeConfig.getString("addition");
             RecipeChoice addition = BukkitRecipeChoiceParser.parseChoice(additionId);
             if (recipeConfig.isList("keep_nbt_rules")) {
-                KeepNbtManager.INSTANCE.addRecipeKeepNbtRules(key, recipeConfig.getStringList("keep_nbt_rules"));
+                List<String> keepNbtRules = recipeConfig.getStringList("keep_nbt_rules");
+                KeepNbtManager.INSTANCE.addRecipeKeepNbtRules(key, keepNbtRules);
             }
             SmithingRecipe recipe;
             if (MinecraftVersion.current().before(MinecraftVersion.V1_20)) {
-                recipe = new SmithingRecipe(key, result, base, addition, false);
+                recipe = new SmithingRecipe(key, result, base, addition);
             } else {
                 String templateId = recipeConfig.getString("template");
                 RecipeChoice template = BukkitRecipeChoiceParser.parseChoice(templateId);
-                recipe = new SmithingTransformRecipe(key, result, base, addition, template, false);
+                recipe = new SmithingTransformRecipe(key, result, base, addition, template);
             }
             return recipe;
         } catch (RecipeLoadException e) {

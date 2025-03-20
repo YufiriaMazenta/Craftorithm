@@ -1,5 +1,5 @@
 type: anvil
-result: 'minecraft:diamond_sword 2'
-base: 'item_pack:hello_world 2'
-addition: 'item_pack:hello_world 2'
+result: 'minecraft:diamond_sword'
+base: 'item_pack:hello_world'
+addition: 'item_pack:hello_world'
 cost_level: 1

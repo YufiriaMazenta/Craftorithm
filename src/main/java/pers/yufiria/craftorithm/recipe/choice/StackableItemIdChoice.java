@@ -59,7 +59,6 @@ public class StackableItemIdChoice implements RecipeChoice {
                 if (spaceIndex == -1) {
                     this.itemIds = materialTag.getValues().stream().map(it -> new NamespacedItemIdStack(NamespacedItemId.fromMaterial(it))).toList();
                 } else {
-                    String tagId = tagStr.substring(0, spaceIndex);
                     int amount = Integer.parseInt(tagStr.substring(spaceIndex + 1));
                     this.itemIds = materialTag.getValues().stream().map(it -> new NamespacedItemIdStack(NamespacedItemId.fromMaterial(it), amount)).toList();
                 }

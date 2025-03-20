@@ -1,5 +1,7 @@
 package pers.yufiria.craftorithm.listener;
 
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Crafter;
 import pers.yufiria.craftorithm.item.ItemManager;
 import crypticlib.listener.EventListener;
 import crypticlib.util.ItemHelper;
@@ -15,8 +17,18 @@ public enum CrafterHandler implements Listener {
 
     INSTANCE;
 
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void checkCanCraft(CrafterCraftEvent event) {
+        BlockState blockState = event.getBlock().getState();
+        if (!(blockState instanceof Crafter crafter))
+            return;
+        if (ItemManager.INSTANCE.containsCannotCraftItem(crafter.getInventory().getContents())) {
+            event.setCancelled(true);
+        }
+    }
+
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onCrafterCraft(CrafterCraftEvent event) {
+    public void refreshResult(CrafterCraftEvent event) {
         ItemStack result = event.getResult();
         if (ItemHelper.isAir(result))
             return;

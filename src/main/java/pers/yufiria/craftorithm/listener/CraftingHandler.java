@@ -1,25 +1,17 @@
 package pers.yufiria.craftorithm.listener;
 
-import pers.yufiria.craftorithm.CraftorithmAPI;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
-import pers.yufiria.craftorithm.util.ItemUtils;
 import crypticlib.listener.EventListener;
-import crypticlib.util.InventoryViewHelper;
 import org.bukkit.NamespacedKey;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
-
-import java.util.List;
 
 @EventListener
 public enum CraftingHandler implements Listener {
@@ -32,6 +24,9 @@ public enum CraftingHandler implements Listener {
             return;
         Recipe recipe = event.getRecipe();
         NamespacedKey namespacedKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
+        if (namespacedKey == null) {
+            throw new RuntimeException("Can not get recipe key");
+        }
         if (!namespacedKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
             return;
         }
@@ -51,8 +46,8 @@ public enum CraftingHandler implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void checkCannotCraft(PrepareItemCraftEvent event) {
         ItemStack[] items = event.getInventory().getMatrix();
-        boolean containsLore = ItemUtils.hasCannotCraftLore(items);
-        if (containsLore) {
+        boolean cannotCraft = ItemManager.INSTANCE.containsCannotCraftItem(items);
+        if (cannotCraft) {
             event.getInventory().setResult(null);
         }
     }

@@ -6,6 +6,7 @@ import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.TaskRule;
+import crypticlib.util.IOHelper;
 import crypticlib.util.ItemHelper;
 import crypticlib.util.MaterialHelper;
 import org.bukkit.Material;
@@ -18,6 +19,7 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
+import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.item.impl.CraftorithmItemProvider;
 
 import java.util.*;
@@ -224,8 +226,41 @@ public enum ItemManager implements BukkitLifeCycleTask {
     }
 
     private void reloadCannotCraftItems() {
-        //TODO 加载不能用于合成的物品列表
         cannotCraftItems.clear();
+        for (String items : PluginConfigs.CANNOT_CRAFT_ITEMS.value()) {
+            NamespacedItemId itemId = NamespacedItemId.fromString(items);
+            cannotCraftItems.add(itemId);
+        }
+    }
+
+    /**
+     * 物品堆中是否包含不能合成的物品
+     * @param items
+     * @return
+     */
+    public boolean containsCannotCraftItem(ItemStack... items) {
+        IOHelper.info("Can not craft items: " + cannotCraftItems);
+        if (cannotCraftItems.isEmpty())
+            return false;
+        boolean result = false;
+
+        for (ItemStack item : items) {
+            if (item == null)
+                continue;
+            NamespacedItemId itemId;
+            NamespacedItemIdStack itemIdStack = matchItemId(item, true);
+            if (itemIdStack == null) {
+                itemId = NamespacedItemId.fromMaterial(item.getType());
+            } else {
+                itemId = itemIdStack.itemId();
+            }
+            IOHelper.debug("check: " + itemId);
+            if (cannotCraftItems.contains(itemId)) {
+                result = true;
+                break;
+            }
+        }
+        return result;
     }
 
     private void reloadItemPacks() {

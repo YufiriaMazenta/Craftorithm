@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.command.sub.recipe;
 
+import org.bukkit.inventory.Recipe;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;

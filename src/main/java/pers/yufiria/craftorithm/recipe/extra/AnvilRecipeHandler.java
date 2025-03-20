@@ -100,12 +100,14 @@ public enum AnvilRecipeHandler implements Listener {
 
         //处理NBT保留操作
         Optional<KeepNbtRules> recipeKeepNbtRules = KeepNbtManager.INSTANCE.getRecipeKeepNbtRules(anvilRecipe.getKey());
-        if (recipeKeepNbtRules.isPresent()) {
-            ItemMeta resultMeta = result.getItemMeta();
-            ItemMeta baseMeta = Objects.requireNonNull(base).getItemMeta();
-            resultMeta = recipeKeepNbtRules.get().processItemMeta(resultMeta, baseMeta);
-            result.setItemMeta(resultMeta);
-        }
+        recipeKeepNbtRules.ifPresent(
+            rules -> {
+                ItemMeta resultMeta = result.getItemMeta();
+                ItemMeta baseMeta = Objects.requireNonNull(base).getItemMeta();
+                resultMeta = rules.processItemMeta(baseMeta, resultMeta);
+                result.setItemMeta(resultMeta);
+            }
+        );
         event.getInventory().setRepairCost(anvilRecipe.costLevel());
         //刷新物品
 
@@ -139,12 +141,14 @@ public enum AnvilRecipeHandler implements Listener {
 
         //处理NBT保留操作
         Optional<KeepNbtRules> recipeKeepNbtRules = KeepNbtManager.INSTANCE.getRecipeKeepNbtRules(anvilRecipe.getKey());
-        if (recipeKeepNbtRules.isPresent()) {
-            ItemMeta resultMeta = result.getItemMeta();
-            ItemMeta baseMeta = Objects.requireNonNull(base).getItemMeta();
-            resultMeta = recipeKeepNbtRules.get().processItemMeta(resultMeta, baseMeta);
-            result.setItemMeta(resultMeta);
-        }
+        recipeKeepNbtRules.ifPresent(
+            rules -> {
+                ItemMeta resultMeta = result.getItemMeta();
+                ItemMeta baseMeta = Objects.requireNonNull(base).getItemMeta();
+                resultMeta = rules.processItemMeta(baseMeta, resultMeta);
+                result.setItemMeta(resultMeta);
+            }
+        );
 
         int baseNum = base.getAmount(), additionNum = addition.getAmount();
         int needBaseNum = anvilRecipe.base().getUseAmount(baseId.itemId()), needAdditionNum = anvilRecipe.addition().getUseAmount(additionId.itemId());
