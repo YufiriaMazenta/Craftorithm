@@ -29,7 +29,7 @@ public class VanillaShapedDisplayMenu extends Menu {
     }
 
     @Override
-    public void preProcessIconWhenUpdateLayout(Integer slot, @NotNull Icon icon) {
+    public void preprocessIconWhenUpdateLayout(Integer slot, @NotNull Icon icon) {
         switch (icon) {
             case VanillaShapedIngredientIcon vanillaShapedIngredientIcon -> {
                 int ingredientSlot = vanillaShapedIngredientIcon.ingredientSlot();

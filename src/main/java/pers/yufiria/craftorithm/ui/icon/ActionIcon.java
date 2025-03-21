@@ -1,21 +1,23 @@
 package pers.yufiria.craftorithm.ui.icon;
 
 import crypticlib.action.Action;
+import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.lang.LangManager;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.Craftorithm;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ActionIcon extends Icon {
 
     protected final Action action;
+    //用于替换文本内一些内容的map
+    protected Map<String, String> textReplaceMap = new HashMap<>();
 
     public ActionIcon(@NotNull IconDisplay iconDisplay) {
         this(iconDisplay, null);
@@ -27,27 +29,15 @@ public class ActionIcon extends Icon {
     }
 
     @Override
-    public ItemStack display() {
-        ItemStack clone = super.display().clone();
-        ItemMeta meta = clone.getItemMeta();
-        if (meta != null) {
-            Player parsePlayer = parsePlayer();
-            if (meta.hasDisplayName()) {
-                meta.setDisplayName(
-                    LangManager.INSTANCE.replaceLang(meta.getDisplayName(), parsePlayer)
-                );
-            }
-            if (meta.hasLore()) {
-                List<String> lore = meta.getLore();
-                if (lore != null) {
-                    lore.replaceAll(it -> LangManager.INSTANCE.replaceLang(it, parsePlayer));
-                }
-                meta.setLore(lore);
-            }
-            clone.setItemMeta(meta);
+    public String parseIconText(String originText) {
+        Player iconParsePlayer = this.parsePlayer();
+        String text = LangManager.INSTANCE.replaceLang(originText, iconParsePlayer);
+        for (Map.Entry<String, String> entry : textReplaceMap.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            text = text.replace(key, value);
         }
-
-        return clone;
+        return BukkitTextProcessor.color(BukkitTextProcessor.placeholder(iconParsePlayer, text));
     }
 
     @Override
@@ -56,6 +46,14 @@ public class ActionIcon extends Icon {
             action.run(((Player) event.getWhoClicked()), Craftorithm.instance(), null);
         }
         return this;
+    }
+
+    public @NotNull Map<String, String> textReplaceMap() {
+        return textReplaceMap;
+    }
+
+    public void setTextReplaceMap(@NotNull Map<String, String> textReplaceMap) {
+        this.textReplaceMap = textReplaceMap;
     }
 
     public Action action() {

@@ -6,15 +6,12 @@ import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.menu.Menu;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.recipe.extra.AnvilRecipe;
-import pers.yufiria.craftorithm.ui.icon.ItemDisplayIcon;
+import pers.yufiria.craftorithm.ui.icon.ActionIcon;
 import pers.yufiria.craftorithm.ui.icon.RecipeResultIcon;
 
-import java.util.List;
+import java.util.Map;
 
 public class AnvilDisplayMenu extends Menu {
 
@@ -34,7 +31,10 @@ public class AnvilDisplayMenu extends Menu {
     }
 
     @Override
-    public void preProcessIconWhenUpdateLayout(Integer slot, @NotNull Icon icon) {
+    public void preprocessIconWhenUpdateLayout(Integer slot, @NotNull Icon icon) {
+        if (icon instanceof ActionIcon actionIcon) {
+            actionIcon.setTextReplaceMap(Map.of("<level>", anvilRecipe.costLevel() + ""));
+        }
         switch (icon) {
             case AnvilBaseIcon anvilBaseIcon -> {
                 anvilBaseIcon.setDisplayItem(anvilRecipe.base().getItemStack());
@@ -47,11 +47,6 @@ public class AnvilDisplayMenu extends Menu {
             }
             default -> {}
         }
-    }
-
-    @Override
-    public String parseIconText(String originText, Icon icon) {
-        return super.parseIconText(replaceCostLevel(originText), icon);
     }
 
     private String replaceCostLevel(String originText) {

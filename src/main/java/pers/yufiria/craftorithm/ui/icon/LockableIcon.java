@@ -25,12 +25,12 @@ public abstract class LockableIcon extends ActionIcon {
     public ItemStack display() {
         if (locked) {
             if (lockedDisplay != null) {
-                return lockedDisplay.display().clone();
+                return lockedDisplay.display();
             } else {
-                return super.display().clone();
+                return super.display();
             }
         } else {
-            return super.display().clone();
+            return super.display();
         }
     }
 
