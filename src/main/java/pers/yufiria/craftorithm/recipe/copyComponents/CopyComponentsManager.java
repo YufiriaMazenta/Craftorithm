@@ -1,7 +1,9 @@
 package pers.yufiria.craftorithm.recipe.copyComponents;
 
+import crypticlib.MinecraftVersion;
 import crypticlib.util.IOHelper;
 import org.bukkit.NamespacedKey;
+import org.bukkit.block.data.type.Fire;
 import pers.yufiria.craftorithm.recipe.copyComponents.impl.*;
 
 import java.util.*;
@@ -19,11 +21,27 @@ public enum CopyComponentsManager {
         registerCopyNbtRule(CustomModelData.INSTANCE);
         registerCopyNbtRule(DisplayName.INSTANCE);
         registerCopyNbtRule(Enchantments.INSTANCE);
-        registerCopyNbtRule(Food.INSTANCE);
         registerCopyNbtRule(ItemFlag.INSTANCE);
         registerCopyNbtRule(Lore.INSTANCE);
-        registerCopyNbtRule(MaxStackSize.INSTANCE);
-        registerCopyNbtRule(Rarity.INSTANCE);
+        registerCopyNbtRule(Unbreakable.INSTANCE);
+        registerCopyNbtRule(Trim.INSTANCE);
+
+        MinecraftVersion currentVersion = MinecraftVersion.CURRENT;
+        if (currentVersion.afterOrEquals(MinecraftVersion.V1_20_5)) {
+            registerCopyNbtRule(Food.INSTANCE);
+            registerCopyNbtRule(MaxStackSize.INSTANCE);
+            registerCopyNbtRule(Rarity.INSTANCE);
+            registerCopyNbtRule(FireResistance.INSTANCE);
+            registerCopyNbtRule(HideTooltip.INSTANCE);
+            registerCopyNbtRule(ItemName.INSTANCE);
+        }
+        if (currentVersion.afterOrEquals(MinecraftVersion.V1_21)) {
+            registerCopyNbtRule(Tool.INSTANCE);
+        }
+        if (currentVersion.afterOrEquals(MinecraftVersion.V1_21_4)) {
+            registerCopyNbtRule(ItemModel.INSTANCE);
+            registerCopyNbtRule(CustomModelDataComponent.INSTANCE);
+        }
     }
 
     public Optional<CopyComponentsRule> getCopyNbtRule(String name) {

@@ -3,5 +3,22 @@ result: 'minecraft:diamond_sword'
 base: 'item_pack:hello_world'
 addition: 'item_pack:hello_world'
 cost_level: 1
+#可以保留的组件
 copy_components_rules:
-  - all
+  - 'all'
+  - 'enchantments'
+  - 'attributes'
+  - 'display_name'
+  - 'custom_model_data'
+  - 'food'
+  - 'item_flag'
+  - 'lore'
+  - 'max_stack_size'
+  - 'rarity'
+  - 'tool'
+  - 'fire_resistance'
+  - 'hide_tooltip'
+  - 'unbreakable'
+  - 'trim'
+  - 'item_model'
+  - 'custom_model_data_component'
