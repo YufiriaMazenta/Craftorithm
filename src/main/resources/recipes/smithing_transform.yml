@@ -3,5 +3,5 @@ result: 'minecraft:diamond_sword'
 base: 'item_pack:hello_world'
 addition: 'item_pack:hello_world'
 template: 'item_pack:hello_world'
-copy_nbt_rules:
+copy_components_rules:
   - all

@@ -5,7 +5,7 @@ import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeLoader;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
-import pers.yufiria.craftorithm.recipe.keepNbt.CopyNbtManager;
+import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsManager;
 import pers.yufiria.craftorithm.recipe.util.BukkitRecipeChoiceParser;
 import crypticlib.MinecraftVersion;
 import org.bukkit.NamespacedKey;
@@ -29,9 +29,9 @@ public enum SmithingTransformRecipeLoader implements RecipeLoader<SmithingRecipe
             RecipeChoice base = BukkitRecipeChoiceParser.parseChoice(baseId);
             String additionId = recipeConfig.getString("addition");
             RecipeChoice addition = BukkitRecipeChoiceParser.parseChoice(additionId);
-            if (recipeConfig.isList("copy_nbt_rules")) {
-                List<String> keepNbtRules = recipeConfig.getStringList("copy_nbt_rules");
-                CopyNbtManager.INSTANCE.addRecipeCopyNbtRules(key, keepNbtRules);
+            if (recipeConfig.isList("copy_components_rules")) {
+                List<String> keepNbtRules = recipeConfig.getStringList("copy_components_rules");
+                CopyComponentsManager.INSTANCE.addRecipeCopyNbtRules(key, keepNbtRules);
             }
             SmithingRecipe recipe;
             if (MinecraftVersion.current().before(MinecraftVersion.V1_20)) {

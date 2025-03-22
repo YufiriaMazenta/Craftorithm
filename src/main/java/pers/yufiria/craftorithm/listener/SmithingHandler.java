@@ -5,8 +5,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
-import pers.yufiria.craftorithm.recipe.keepNbt.CopyNbtManager;
-import pers.yufiria.craftorithm.recipe.keepNbt.CopyNbtRules;
+import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsManager;
+import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsRules;
 import crypticlib.listener.EventListener;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -50,7 +50,7 @@ public enum SmithingHandler implements Listener {
         }
 
         //处理NBT保留操作
-        Optional<CopyNbtRules> recipeCopyNbtRules = CopyNbtManager.INSTANCE.getRecipeCopyNbtRules(recipeKey);
+        Optional<CopyComponentsRules> recipeCopyNbtRules = CopyComponentsManager.INSTANCE.getRecipeCopyNbtRules(recipeKey);
         recipeCopyNbtRules.ifPresentOrElse(
             rules -> {
                 ItemMeta resultMeta = result.getItemMeta();

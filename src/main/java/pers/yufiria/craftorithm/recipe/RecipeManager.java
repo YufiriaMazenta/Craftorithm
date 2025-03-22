@@ -21,7 +21,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.*;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
-import pers.yufiria.craftorithm.recipe.keepNbt.CopyNbtManager;
+import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsManager;
 import pers.yufiria.craftorithm.util.CollectionsUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
 
@@ -124,7 +124,7 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         });
 
         //重置所有配方的Nbt保留规则
-        CopyNbtManager.INSTANCE.resetRecipeCopyNbtRules();
+        CopyComponentsManager.INSTANCE.resetRecipeCopyNbtRules();
 
         //还原被禁用的配方
         for (Recipe recipe : disabledRecipesCache) {

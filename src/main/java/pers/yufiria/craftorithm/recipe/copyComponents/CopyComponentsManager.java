@@ -1,19 +1,19 @@
-package pers.yufiria.craftorithm.recipe.keepNbt;
+package pers.yufiria.craftorithm.recipe.copyComponents;
 
 import crypticlib.util.IOHelper;
 import org.bukkit.NamespacedKey;
-import pers.yufiria.craftorithm.recipe.keepNbt.impl.*;
+import pers.yufiria.craftorithm.recipe.copyComponents.impl.*;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public enum CopyNbtManager {
+public enum CopyComponentsManager {
 
     INSTANCE;
-    private final Map<String, CopyNbtRule> copyNbtRules = new ConcurrentHashMap<>();
-    private final Map<NamespacedKey, CopyNbtRules> recipeCopyNbtRules = new ConcurrentHashMap<>();
+    private final Map<String, CopyComponentsRule> copyNbtRules = new ConcurrentHashMap<>();
+    private final Map<NamespacedKey, CopyComponentsRules> recipeCopyNbtRules = new ConcurrentHashMap<>();
 
-    CopyNbtManager() {
+    CopyComponentsManager() {
         registerCopyNbtRule(All.INSTANCE);
         registerCopyNbtRule(Attributes.INSTANCE);
         registerCopyNbtRule(CustomModelData.INSTANCE);
@@ -26,20 +26,20 @@ public enum CopyNbtManager {
         registerCopyNbtRule(Rarity.INSTANCE);
     }
 
-    public Optional<CopyNbtRule> getCopyNbtRule(String name) {
+    public Optional<CopyComponentsRule> getCopyNbtRule(String name) {
         return Optional.ofNullable(copyNbtRules.get(name));
     }
 
-    public void registerCopyNbtRule(CopyNbtRule rule) {
+    public void registerCopyNbtRule(CopyComponentsRule rule) {
         copyNbtRules.put(rule.ruleName(), rule);
     }
 
-    public CopyNbtRule unregisterCopyNbtRule(String ruleName) {
+    public CopyComponentsRule unregisterCopyNbtRule(String ruleName) {
         return copyNbtRules.remove(ruleName);
     }
 
     public void addRecipeCopyNbtRules(NamespacedKey key, List<String> ruleNames) {
-        List<CopyNbtRule> rules = new ArrayList<>();
+        List<CopyComponentsRule> rules = new ArrayList<>();
         for (String ruleName : ruleNames) {
             getCopyNbtRule(ruleName).ifPresentOrElse(
                 rules::add,
@@ -47,14 +47,14 @@ public enum CopyNbtManager {
                     IOHelper.info("&eUnknown rule: " + ruleName);
                 });
         }
-        recipeCopyNbtRules.put(key, new CopyNbtRules(rules));
+        recipeCopyNbtRules.put(key, new CopyComponentsRules(rules));
     }
 
     public boolean removeRecipeCopyNbtRules(NamespacedKey key) {
         return recipeCopyNbtRules.remove(key) != null;
     }
 
-    public Optional<CopyNbtRules> getRecipeCopyNbtRules(NamespacedKey key) {
+    public Optional<CopyComponentsRules> getRecipeCopyNbtRules(NamespacedKey key) {
         if (!recipeCopyNbtRules.containsKey(key)) {
             return Optional.empty();
         }

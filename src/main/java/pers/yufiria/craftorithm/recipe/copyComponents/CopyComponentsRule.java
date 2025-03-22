@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.recipe.keepNbt;
+package pers.yufiria.craftorithm.recipe.copyComponents;
 
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
  * 物品NBT的处理方式
  * 用于铁砧和锻造配方
  */
-public interface CopyNbtRule {
+public interface CopyComponentsRule {
 
     String ruleName();
 

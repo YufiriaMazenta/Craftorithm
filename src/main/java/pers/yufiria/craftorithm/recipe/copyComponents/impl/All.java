@@ -1,10 +1,10 @@
-package pers.yufiria.craftorithm.recipe.keepNbt.impl;
+package pers.yufiria.craftorithm.recipe.copyComponents.impl;
 
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-import pers.yufiria.craftorithm.recipe.keepNbt.CopyNbtRule;
+import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsRule;
 
-public enum All implements CopyNbtRule {
+public enum All implements CopyComponentsRule {
 
     INSTANCE;
 
