@@ -21,4 +21,5 @@ copy_components_rules:
   - 'unbreakable'
   - 'trim'
   - 'item_model'
+  - 'item_name'
   - 'custom_model_data_component'
