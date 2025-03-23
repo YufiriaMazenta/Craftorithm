@@ -106,9 +106,10 @@ public enum RecipeManager implements BukkitLifeCycleTask {
 
     public void reloadRecipeManager() {
         resetRecipes();
-        loadRecipesFromConfig();
-        loadServerRecipeCache();
-        reloadDisabledRecipes();
+        loadRecipesFromConfig(() -> {
+            loadServerRecipeCache();
+            reloadDisabledRecipes();
+        });
     }
 
     /**
@@ -134,13 +135,13 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         disabledRecipesCache.clear();
     }
 
-    private void loadRecipesFromConfig() {
+    private void loadRecipesFromConfig(Runnable callback) {
         if (!RECIPE_FILE_FOLDER.exists()) {
             boolean mkdirResult = RECIPE_FILE_FOLDER.mkdir();
             if (!mkdirResult)
                 return;
         }
-        new RecipeLoadTask(RECIPE_FILE_FOLDER).start();
+        new RecipeLoadTask(RECIPE_FILE_FOLDER, callback).start();
     }
 
     public boolean loadRecipeFromConfig(String recipeName, BukkitConfigWrapper recipeConfigWrapper) {
@@ -347,8 +348,11 @@ public enum RecipeManager implements BukkitLifeCycleTask {
 
         private List<File> recipeFiles;
         private int useTick = 0;
+        //配方加载完毕后执行的代码
+        private final Runnable callback;
 
-        public RecipeLoadTask(File folder) {
+        public RecipeLoadTask(File folder, Runnable doneActions) {
+            this.callback = doneActions;
             if (!folder.isDirectory()) {
                 throw new IllegalArgumentException(folder.getAbsolutePath() + " is not a directory");
             }
@@ -362,6 +366,9 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         public void end() {
             this.cancel();
             BukkitMsgSender.INSTANCE.debug("Loaded " + craftorithmRecipes.size() + " recipes ,took " + useTick + " ticks");
+            if (callback != null) {
+                callback.run();
+            }
         }
 
         @Override

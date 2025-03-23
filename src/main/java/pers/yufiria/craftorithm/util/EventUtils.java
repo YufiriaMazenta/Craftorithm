@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.util;
 
+import org.bukkit.event.block.CampfireStartEvent;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import crypticlib.CrypticLibBukkit;
@@ -42,10 +43,6 @@ public class EventUtils {
             case FurnaceSmeltEvent furnaceSmeltEvent -> recipe = furnaceSmeltEvent.getRecipe();
             case BlockCookEvent blockCookEvent -> recipe = blockCookEvent.getRecipe();
             case PrepareAnvilEvent prepareAnvilEvent -> {
-                //因为只有paper及下游服务端才有这个问题,如果识别到是bukkit或者spigot,就不用处理
-                if (!CrypticLibBukkit.isPaper()) {
-                    return false;
-                }
                 if (!PluginConfigs.ENABLE_ANVIL_RECIPE.value())
                     return false;
                 ItemStack base = prepareAnvilEvent.getInventory().getItem(0);
@@ -53,7 +50,6 @@ public class EventUtils {
                 if (ItemHelper.isAir(base) || ItemHelper.isAir(addition))
                     return false;
 
-                //TODO
                 AnvilRecipe anvilRecipe = AnvilRecipeHandler.INSTANCE.matchAnvilRecipe(base, addition);
                 return anvilRecipe != null;
             }
@@ -64,6 +60,13 @@ public class EventUtils {
                 if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_17_1)) {
                     if (event instanceof FurnaceStartSmeltEvent furnaceStartSmeltEvent) {
                         recipe = furnaceStartSmeltEvent.getRecipe();
+                        break;
+                    }
+                }
+                if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_19_3)) {
+                    if (event instanceof CampfireStartEvent campfireStartEvent) {
+                        recipe = campfireStartEvent.getRecipe();
+                        break;
                     }
                 }
                 if (hasCrafterCraftEvent) {

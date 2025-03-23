@@ -29,7 +29,7 @@ import org.bukkit.plugin.Plugin;
         @TaskRule(lifeCycle = LifeCycle.RELOAD)
     }
 )
-public final class Craftorithm extends BukkitPlugin implements Listener, BukkitLifeCycleTask {
+public final class Craftorithm extends BukkitPlugin implements BukkitLifeCycleTask {
 
     private static Craftorithm INSTANCE;
 
@@ -50,16 +50,6 @@ public final class Craftorithm extends BukkitPlugin implements Listener, BukkitL
     @Override
     public void disable() {
         RecipeManager.INSTANCE.resetRecipes();
-    }
-
-    @EventHandler
-    public void onServerLoad(ServerLoadEvent event) {
-        CrypticLibBukkit.scheduler().sync(() -> {
-            RecipeManager.INSTANCE.reloadRecipeManager();
-            OtherPluginsListenerManager.INSTANCE.convertOtherPluginsListeners();
-            LangUtils.info(Languages.LOAD_FINISH);
-            loadBStat();
-        });
     }
 
     private void loadBStat() {
@@ -84,6 +74,7 @@ public final class Craftorithm extends BukkitPlugin implements Listener, BukkitL
                 RecipeManager.INSTANCE.reloadRecipeManager();
                 OtherPluginsListenerManager.INSTANCE.convertOtherPluginsListeners();
                 LangUtils.info(Languages.LOAD_FINISH);
+                loadBStat();
             });
         } else {
             CrypticLib.setDebug(PluginConfigs.DEBUG.value());
