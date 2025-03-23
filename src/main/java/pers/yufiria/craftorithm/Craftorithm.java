@@ -6,7 +6,7 @@ import pers.yufiria.craftorithm.bstat.Metrics;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.exception.UnsupportedVersionException;
-import pers.yufiria.craftorithm.listener.hook.OtherPluginsListenerManager;
+import pers.yufiria.craftorithm.hook.listener.OtherPluginsListenerManager;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.util.LangUtils;
 import pers.yufiria.craftorithm.util.UpdateChecker;

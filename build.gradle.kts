@@ -1,5 +1,5 @@
 import java.text.SimpleDateFormat
-version = "1.11.0-alpha-2"
+version = "1.11.0-alpha-3"
 
 plugins {
     `java-library`
@@ -25,6 +25,8 @@ repositories {
     maven("https://repo.auxilor.io/repository/maven-public/")
     //NBT-API
     maven("https://repo.codemc.io/repository/maven-public/")
+    //Nexo
+    maven("https://repo.nexomc.com/releases")
     mavenCentral()
 }
 
@@ -48,6 +50,8 @@ dependencies {
     compileOnly("com.willfp:eco:6.74.2")
     compileOnly("com.willfp:libreforge:4.71.6:all@jar")
     compileOnly("com.ssomar:SCore:5.24.10.5")
+    compileOnly("com.nexomc:nexo:0.7.0")
+    compileOnly(fileTree("libs"))
     implementation("com.crypticlib:bukkit:${rootProject.findProperty("crypticlibVer")}")
     implementation("com.crypticlib:bukkit-ui:${rootProject.findProperty("crypticlibVer")}")
     implementation("com.crypticlib:bukkit-conversation:${rootProject.findProperty("crypticlibVer")}")

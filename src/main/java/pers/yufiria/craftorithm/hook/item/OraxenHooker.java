@@ -1,15 +1,11 @@
-package pers.yufiria.craftorithm.hook.impl;
+package pers.yufiria.craftorithm.hook.item;
 
-import pers.yufiria.craftorithm.hook.ItemPluginHooker;
 import pers.yufiria.craftorithm.item.ItemProvider;
 import pers.yufiria.craftorithm.item.impl.OraxenItemProvider;
 import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.TaskRule;
 
-@AutoTask(
-    rules = @TaskRule(lifeCycle = LifeCycle.ACTIVE)
-)
 public enum OraxenHooker implements ItemPluginHooker {
 
     INSTANCE;
@@ -21,7 +17,7 @@ public enum OraxenHooker implements ItemPluginHooker {
 
     @Override
     public boolean hook() {
-        return hookByEnabled();
+        return isPluginEnabled();
     }
 
     @Override

@@ -1,16 +1,21 @@
-package pers.yufiria.craftorithm.hook.impl;
+package pers.yufiria.craftorithm.hook;
 
-import pers.yufiria.craftorithm.hook.PluginHooker;
 import crypticlib.lifecycle.AutoTask;
+import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.TaskRule;
 import org.black_ixx.playerpoints.PlayerPoints;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
+import pers.yufiria.craftorithm.config.Languages;
+import pers.yufiria.craftorithm.util.LangUtils;
+
+import java.util.Map;
 
 @AutoTask(
     rules = @TaskRule(lifeCycle = LifeCycle.ACTIVE)
 )
-public enum PlayerPointsHooker implements PluginHooker {
+public enum PlayerPointsHooker implements PluginHooker, BukkitLifeCycleTask {
 
     INSTANCE;
     private Object playerPoints;
@@ -23,7 +28,7 @@ public enum PlayerPointsHooker implements PluginHooker {
 
     @Override
     public boolean hook() {
-        this.playerPointsHooked = hookByEnabled();
+        this.playerPointsHooked = isPluginEnabled();
         if (playerPointsHooked) {
             playerPoints = PlayerPoints.getInstance();
         }
@@ -40,6 +45,13 @@ public enum PlayerPointsHooker implements PluginHooker {
      */
     public Boolean isPlayerPointsHooked() {
         return playerPointsHooked;
+    }
+
+    @Override
+    public void run(Plugin plugin, LifeCycle lifeCycle) {
+        if (hook()) {
+            LangUtils.info(Languages.LOAD_HOOK_PLUGIN_SUCCESS, Map.of("<plugin>", pluginName()));
+        }
     }
 
 }

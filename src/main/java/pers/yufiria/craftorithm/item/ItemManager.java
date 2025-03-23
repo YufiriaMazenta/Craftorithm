@@ -48,12 +48,32 @@ public enum ItemManager implements BukkitLifeCycleTask {
     //存储不能用于合成的物品列表
     private final Set<NamespacedItemId> cannotCraftItems = new HashSet<>();
 
+    /**
+     * 注册一个物品提供源
+     * @param itemProvider
+     */
     public void regItemProvider(ItemProvider itemProvider) {
         Preconditions.checkArgument(
             !itemProvider.namespace().equalsIgnoreCase(NamespacedKey.MINECRAFT),
             "Item provider cannot use namespace minecraft"
         );
         itemProviderMap.put(itemProvider.namespace(), itemProvider);
+    }
+
+    /**
+     * 删除一个物品提供源
+     * @param providerNamespace
+     * @return
+     */
+    public ItemProvider removeItemProvider(String providerNamespace) {
+        return itemProviderMap.remove(providerNamespace);
+    }
+
+    /**
+     * 重置物品提供源列表
+     */
+    public void resetItemProviders() {
+        itemProviderMap.clear();
     }
 
     /**
@@ -280,4 +300,5 @@ public enum ItemManager implements BukkitLifeCycleTask {
     public @Nullable ItemPack getItemPack(String itemId) {
         return itemPacks.get(itemId);
     }
+
 }

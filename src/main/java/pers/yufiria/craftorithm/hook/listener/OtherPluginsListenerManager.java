@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.listener.hook;
+package pers.yufiria.craftorithm.hook.listener;
 
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.config.PluginConfigs;
@@ -10,7 +10,6 @@ import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.TaskRule;
 import crypticlib.listener.EventListener;
-import crypticlib.platform.IPlatform;
 import crypticlib.util.ReflectionHelper;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;

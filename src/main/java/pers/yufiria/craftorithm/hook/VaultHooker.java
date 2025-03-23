@@ -1,18 +1,23 @@
-package pers.yufiria.craftorithm.hook.impl;
+package pers.yufiria.craftorithm.hook;
 
-import pers.yufiria.craftorithm.hook.PluginHooker;
 import crypticlib.lifecycle.AutoTask;
+import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.TaskRule;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.jetbrains.annotations.Nullable;
+import pers.yufiria.craftorithm.config.Languages;
+import pers.yufiria.craftorithm.util.LangUtils;
+
+import java.util.Map;
 
 @AutoTask(
     rules = @TaskRule(lifeCycle = LifeCycle.ACTIVE)
 )
-public enum VaultHooker implements PluginHooker {
+public enum VaultHooker implements PluginHooker, BukkitLifeCycleTask {
 
     INSTANCE;
 
@@ -55,6 +60,13 @@ public enum VaultHooker implements PluginHooker {
      */
     public boolean isEconomyHooked() {
         return economyHooked;
+    }
+
+    @Override
+    public void run(Plugin plugin, LifeCycle lifeCycle) {
+        if (hook()) {
+            LangUtils.info(Languages.LOAD_HOOK_PLUGIN_SUCCESS, Map.of("<plugin>", pluginName()));
+        }
     }
 
 }
