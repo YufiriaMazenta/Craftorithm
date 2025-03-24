@@ -1,0 +1,173 @@
+prefix: '&8[&3Craftorithm&8]' #DinoBossYT te tradujo el plugin a español <3 ahora dejame usarlo ta good
+unsupported_version: '<prefix> Versión no Soportada'
+new_version: '<prefix> &aDetectada una nueva versión <new_version>, ¡por favor actualiza a la versión más reciente lo antes posible!'
+#Mensajes de retroalimentación del uso de comandos
+command:
+  no_perm: '<prefix> &cNo tienes permiso para usar este comando.'
+  player_only: '<prefix> &cSolo los jugadores pueden ejecutar este comando.'
+  not_enough_param: '<prefix> &cEl comando necesita parámetros, se requieren <number> parámetros.'
+  undefined_subcmd: '<prefix> &cSubcomando no definido!'
+  item:
+    save:
+      success: '<prefix> &aElemento guardado con éxito.'
+      failed_save_air: '<prefix> &cError al guardar el elemento. Motivo: No se puede guardar un elemento inexistente.'
+    give:
+      success: '<prefix> &aElemento entregado con éxito'
+      not_exist_item: '<prefix> &cEl elemento <item_name> no existe.'
+      player_offline: '<prefix> &cEl jugador no está en línea o no tiene un perfil.'
+    fuel:
+      add:
+        success: '<prefix> &aCombustible personalizado añadido con éxito.'
+        failed_add_air: '<prefix> &cError al añadir combustible personalizado. Motivo: No se puede añadir un elemento inexistente como combustible.'
+        failed_exist: '<prefix> &cError al añadir combustible personalizado. Motivo: Este combustible ya existe.'
+      remove:
+        success: '<prefix> &aCombustible personalizado eliminado con éxito.'
+        failed_not_exist: '<prefix> &cError al eliminar combustible personalizado. Motivo: Este combustible no existe.'
+  reload:
+    success: '<prefix> &a¡Plugin recargado!'
+    exception: '<prefix> &cSe produjo un error durante la recarga del plugin, por favor revisa la consola.'
+  remove:
+    success: '<prefix> &aReceta eliminada con éxito.'
+    not_exist: '<prefix> &cLa receta no existe.'
+  disable:
+    success: '<prefix> &cReceta deshabilitada con éxito.'
+    not_exist: '<prefix> &cLa receta no existe o ya ha sido deshabilitada.'
+    failed: '<prefix> &cError al deshabilitar la receta, puede que ya esté deshabilitada o no exista.'
+  version: '<prefix> &aVersión del plugin: <version>'
+  create:
+    unsupported_recipe_type: '<prefix> &cTipo de receta no soportado.'
+    unsupported_recipe_name: '<prefix> &cNombre de receta no soportado, solo se permiten letras minúsculas, números, "_", "-" y ".".'
+    name_used: '<prefix> &cEl ID de la receta ya está en uso.'
+    null_result: '<prefix> &cEl resultado de la receta no puede estar vacío!'
+    null_source: '<prefix> &cLos ingredientes de la receta no pueden estar vacíos!'
+    success: '<prefix> &aReceta <recipe_type> <recipe_name> creada con éxito.'
+  run_arcenciel:
+    success: '<prefix> &aEjecución exitosa, tomó <time> ms.'
+  list:
+    unsupported_version: '<prefix> &cEsta función solo está disponible en la versión 1.16 o superior.'
+menu:
+  recipe_list:
+    title: '&3&lLista de Recetas'
+    icon:
+      frame: '&3&lLista de Recetas'
+      previous: '&aPágina Anterior'
+      next: '&aPágina Siguiente'
+  new_recipe_list:
+    title: '&3&lLista de Nuevas Recetas de Craftorithm'
+    icon:
+      frame: '&3&lLista de nuevas recetas'
+      previous: '&aPágina Anterior'
+      next: '&aPágina Siguiente'
+      elements:
+        lore:
+          - ''
+          - '&3Click izquierdo para ver'
+          - '&3Click derecho para editar'
+  recipe_display:
+    title:
+      shaped: Receta con Forma
+      shapeless: Receta sin Forma
+      furnace: Receta de Horno
+      blasting: Receta de Alto Horno
+      smoking: Receta de Ahumador
+      campfire: Receta de Hoguera
+      smithing: Receta de Herrería
+      stone_cutting: Receta de Cortapiedras
+      potion: Receta de Poción
+      anvil: Receta de Yunque
+  recipe_creator:
+    title: '&3Creando receta &a<recipe_type> &3: &a<recipe_name>'
+    icon:
+      frame: '&aCreando Receta'
+      result_frame: '&aResultado de la Receta'
+      confirm: '&3&lConfirmar Creación'
+      unlock: '&3Desbloquear Receta para Jugador: &a<unlock>'
+      cooking_frame: '&aIngredientes para Fundir'
+      furnace_toggle: '&3Habilitar Receta de Horno: &a<enable>'
+      blast_furnace_toggle: '&3Habilitar Receta de Alto Horno: &a<enable>'
+      smoker_toggle: '&3Habilitar Receta de Ahumador: &a<enable>'
+      campfire_toggle: '&3Habilitar Receta de Hoguera: &a<enable>'
+      cooking_time:
+        name: '&3Tiempo de Fundición: &a<time> tick'
+        lore:
+          - ''
+          - '&3Click para modificar el tiempo de fundición'
+        input_hint: '&aPor favor introduce el tiempo de fundición en ticks. Escribe "cancel" para cancelar.'
+      cooking_exp:
+        name: '&3Recompensa de Experiencia: &a<exp>'
+        lore:
+          - ''
+          - '&3Click para modificar la recompensa de experiencia.'
+        input_hint: '&aPor favor introduce la recompensa de experiencia. Escribe "cancel" para cancelar.'
+      smithing_frame: '&aIngredientes para Forjar'
+      smithing_copy_nbt_toggle: '&3Preservar NBT del Item: &a<enable>'
+      potion_frame: '&aIngredientes para Pociones'
+      anvil_frame: '&aIngredientes para Yunque'
+      anvil_copy_nbt_toggle: '&3Preservar NBT del Item: &a<enable>'
+      anvil_cost_level:
+        name: '&3Nivel Requerido: &a<level>'
+        lore:
+          - ''
+          - '&3Click para modificar el nivel requerido'
+        input_hint: '&aPor favor introduce el nivel requerido. Escribe "cancel" para cancelar.'
+recipe_editor:
+    title: '&3&lEditar Receta: &b&l<recipe_name>'
+    icon:
+      frame: ''
+      next: '&aSiguiente Página'
+      previous: '&aPágina Anterior'
+      slot_id:
+        name: '&3ID de Orden: &a<id>'
+        lore:
+          - ''
+          - '&3Click para modificar el ID de orden'
+        input_hint: '&aPor favor introduce el ID de orden. Escribe "cancel" para cancelar'
+      unlock: '&3Desbloquear Receta para Jugador: &a<unlock>'
+      cooking_element:
+        lore:
+          - ''
+          - '&3Ingrediente: &a<ingredient>'
+          - '&3Tiempo de Fundición: &a<time> tick'
+          - '&3Recompensa de Experiencia: &a<exp>'
+          - ''
+          - '&aClick izquierdo para modificar el tiempo de fundición'
+          - '&aClick derecho para modificar la recompensa de experiencia'
+        input_cooking_time_hint: '&aPor favor introduce el tiempo de fundición en ticks. Escribe "cancel" para cancelar.'
+        input_cooking_exp_hint: '&aPor favor introduce la recompensa de experiencia. Escribe "cancel" para cancelar.'
+        type_name:
+          furnace: '&3&lReceta de Horno'
+          blast_furnace: '&3&lReceta de Alto Horno'
+          smoker: '&3&lReceta de Ahumador'
+          campfire: '&3&lReceta de Hoguera'
+      anvil_element:
+        lore:
+          - ''
+          - '&3Nivel Requerido: &a<level>'
+          - '&3Preservar NBT del Item: &a<enable>'
+          - ''
+          - '&aClick izquierdo para modificar el nivel requerido'
+          - '&aClick derecho para activar/desactivar la preservación del NBT del ítem'
+        input_hint: '&aPor favor introduce el nivel requerido. Escribe "cancel" para cancelar'
+      remove:
+        name: '&c&lClick para eliminar este grupo de recetas'
+        message: '<prefix> &aReceta <recipe_name> eliminada con éxito.'
+recipe_type_name:
+  shaped: Con Forma
+  shapeless: Sin Forma
+  cooking: Fundición
+  smithing: Herrería
+  stone_cutting: Corte de Piedra
+  potion: Elaboración de Pociones
+  anvil: Yunque
+#Mensajes de retroalimentación del script Arcenciel
+arcenciel:
+  not_enough_param: '<prefix> &cLa declaración "<statement>" está incompleta.'
+  unknown_token: '<prefix> &cPalabra clave o función no definida: <token>'
+#Información de retroalimentación de la carga del plugin
+load:
+  finish: '<prefix> &aPlugin cargado con éxito.'
+  recipe_load_exception: '<prefix> &cSe produjo un error al cargar la receta <recipe_name>.'
+  item_load_exception: '<prefix> &cSe produjo un error al cargar el ítem <item_name>.'
+  hook_plugin:
+    success: '<prefix> &aEncontrado <plugin>, enganchado con éxito.'
+    not_exist: '<prefix> &cPlugin <plugin> no encontrado.'        
