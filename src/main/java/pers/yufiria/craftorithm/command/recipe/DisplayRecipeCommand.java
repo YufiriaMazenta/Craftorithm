@@ -4,6 +4,8 @@ import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.TaskRule;
+import crypticlib.util.IOHelper;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.Plugin;
@@ -51,11 +53,24 @@ public class DisplayRecipeCommand extends BukkitSubcommand implements BukkitLife
 
     @Override
     public void execute(CommandSender sender, List<String> args) {
-        if (!CommandUtils.checkSenderIsPlayer(sender))
-            return;
         if (args.isEmpty()) {
             sendDescriptions(sender);
             return;
+        }
+        Player target;
+        if (args.size() >= 2) {
+            String targetName = args.get(1);
+            Player player = Bukkit.getPlayer(targetName);
+            if (player == null) {
+                //TODO 提示消息
+                IOHelper.info("&cUnknown player: " + targetName);
+                return;
+            }
+            target = player;
+        } else {
+            if (!CommandUtils.checkSenderIsPlayer(sender))
+                return;
+            target = (Player) sender;
         }
         NamespacedKey namespacedKey = NamespacedKey.fromString(args.get(0));
         Recipe recipe = RecipeManager.INSTANCE.getRecipe(namespacedKey);
@@ -63,9 +78,9 @@ public class DisplayRecipeCommand extends BukkitSubcommand implements BukkitLife
             return;
         }
         RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipe);
-        recipeDisplayMap.getOrDefault(recipeType, (player, recipe1) -> {
+        recipeDisplayMap.getOrDefault(recipeType, (player, displayRecipe) -> {
             LangUtils.sendLang(sender, Languages.COMMAND_DISPLAY_UNSUPPORTED_RECIPE_TYPE);
-        }).accept((Player) sender, recipe);
+        }).accept(target, recipe);
     }
 
     @Override
