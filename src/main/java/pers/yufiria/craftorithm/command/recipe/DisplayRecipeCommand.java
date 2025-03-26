@@ -79,7 +79,7 @@ public class DisplayRecipeCommand extends BukkitSubcommand implements BukkitLife
         }
         RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipe);
         recipeDisplayMap.getOrDefault(recipeType, (player, displayRecipe) -> {
-            LangUtils.sendLang(sender, Languages.COMMAND_DISPLAY_UNSUPPORTED_RECIPE_TYPE);
+            LangUtils.sendLang(player, Languages.COMMAND_DISPLAY_UNSUPPORTED_RECIPE_TYPE);
         }).accept(target, recipe);
     }
 
