@@ -1,22 +1,23 @@
 package pers.yufiria.craftorithm.command.item.fuel;
 
+import crypticlib.command.CommandInfo;
+import crypticlib.command.CommandInvoker;
+import crypticlib.command.CommandNode;
+import crypticlib.util.ItemHelper;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
-import crypticlib.command.BukkitSubcommand;
-import crypticlib.command.CommandInfo;
-import crypticlib.util.ItemHelper;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class AddFuelCommand extends BukkitSubcommand {
+public class AddFuelCommand extends CommandNode {
 
     public static final AddFuelCommand INSTANCE = new AddFuelCommand();
 
@@ -25,30 +26,30 @@ public class AddFuelCommand extends BukkitSubcommand {
     }
 
     @Override
-    public void execute(CommandSender sender, List<String> args) {
+    public void execute(@NotNull CommandInvoker invoker, List<String> args) {
         if (args.isEmpty()) {
-            sendDescriptions(sender);
+            sendDescriptions(invoker);
             return;
         }
-        if (!CommandUtils.checkSenderIsPlayer(sender))
+        if (!CommandUtils.checkInvokerIsPlayer(invoker))
             return;
 
-        ItemStack item = ((Player) sender).getInventory().getItemInMainHand();
+        ItemStack item = ((Player) invoker.asPlayer().getPlatformPlayer()).getInventory().getItemInMainHand();
         if (ItemHelper.isAir(item)) {
-            LangUtils.sendLang(sender, Languages.COMMAND_ITEM_FUEL_ADD_FAILED_ADD_AIR);
+            LangUtils.sendLang(invoker, Languages.COMMAND_ITEM_FUEL_ADD_FAILED_ADD_AIR);
             return;
         }
 
         boolean result = ItemManager.INSTANCE.addCustomFuel(item, Integer.parseInt(args.get(0)));
         if (result) {
-            LangUtils.sendLang(sender, Languages.COMMAND_ITEM_FUEL_ADD_SUCCESS);
+            LangUtils.sendLang(invoker, Languages.COMMAND_ITEM_FUEL_ADD_SUCCESS);
         } else {
-            LangUtils.sendLang(sender, Languages.COMMAND_ITEM_FUEL_ADD_FAILED_EXIST);
+            LangUtils.sendLang(invoker, Languages.COMMAND_ITEM_FUEL_ADD_FAILED_EXIST);
         }
     }
 
     @Override
-    public List<String> tab(CommandSender sender, List<String> args) {
+    public List<String> tab(@NotNull CommandInvoker invoker, List<String> args) {
         if (args.size() <= 1) {
             return new ArrayList<>(Arrays.asList("50", "67", "100", "150", "200", "300", "800", "1200", "1600", "2400", "4001", "16000", "20000"));
         }

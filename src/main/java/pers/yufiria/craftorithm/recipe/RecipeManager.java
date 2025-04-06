@@ -1,11 +1,5 @@
 package pers.yufiria.craftorithm.recipe;
 
-import crypticlib.scheduler.CrypticLibRunnable;
-import crypticlib.util.IOHelper;
-import pers.yufiria.craftorithm.Craftorithm;
-import pers.yufiria.craftorithm.config.Languages;
-import pers.yufiria.craftorithm.config.PluginConfigs;
-import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.MinecraftVersion;
 import crypticlib.chat.BukkitMsgSender;
@@ -14,19 +8,28 @@ import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.TaskRule;
+import crypticlib.scheduler.CrypticLibRunnable;
+import crypticlib.util.IOHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.inventory.*;
+import org.bukkit.inventory.Recipe;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
+import pers.yufiria.craftorithm.Craftorithm;
+import pers.yufiria.craftorithm.config.Languages;
+import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsManager;
+import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 import pers.yufiria.craftorithm.util.CollectionsUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.io.File;
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -335,7 +338,7 @@ public enum RecipeManager implements BukkitLifeCycleTask {
     }
 
     @Override
-    public void run(Plugin plugin, LifeCycle lifeCycle) {
+    public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
         if (lifeCycle.equals(LifeCycle.ENABLE)) {
             //设置各类型配方的注册方法
             regDefaultRecipeTypes();

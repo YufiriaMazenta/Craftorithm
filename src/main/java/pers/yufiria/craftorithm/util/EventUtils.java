@@ -1,18 +1,17 @@
 package pers.yufiria.craftorithm.util;
 
-import org.bukkit.event.block.CampfireStartEvent;
-import pers.yufiria.craftorithm.config.PluginConfigs;
-import pers.yufiria.craftorithm.recipe.RecipeManager;
-import crypticlib.CrypticLibBukkit;
 import crypticlib.MinecraftVersion;
 import crypticlib.util.ItemHelper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockCookEvent;
+import org.bukkit.event.block.CampfireStartEvent;
 import org.bukkit.event.block.CrafterCraftEvent;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
+import pers.yufiria.craftorithm.config.PluginConfigs;
+import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.extra.AnvilRecipe;
 import pers.yufiria.craftorithm.recipe.extra.AnvilRecipeHandler;
 

@@ -234,7 +234,7 @@ public enum ItemManager implements BukkitLifeCycleTask {
         return customCookingFuelMap;
     }
     @Override
-    public void run(Plugin plugin, LifeCycle lifeCycle) {
+    public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
         if (lifeCycle.equals(LifeCycle.ACTIVE)) {
             customFuelConfig = new BukkitConfigWrapper(Craftorithm.instance(), "custom_fuels.yml");
             itemPacksConfig = new BukkitConfigWrapper(Craftorithm.instance(), "item_packs.yml");

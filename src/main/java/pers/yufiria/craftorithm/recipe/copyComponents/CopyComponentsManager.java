@@ -3,10 +3,12 @@ package pers.yufiria.craftorithm.recipe.copyComponents;
 import crypticlib.MinecraftVersion;
 import crypticlib.util.IOHelper;
 import org.bukkit.NamespacedKey;
-import org.bukkit.block.data.type.Fire;
 import pers.yufiria.craftorithm.recipe.copyComponents.impl.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 public enum CopyComponentsManager {

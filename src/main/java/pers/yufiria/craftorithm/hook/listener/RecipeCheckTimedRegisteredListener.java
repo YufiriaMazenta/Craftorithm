@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.hook.listener;
 
-import pers.yufiria.craftorithm.util.EventUtils;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventException;
 import org.bukkit.event.EventPriority;
@@ -9,6 +8,7 @@ import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.TimedRegisteredListener;
 import org.jetbrains.annotations.NotNull;
+import pers.yufiria.craftorithm.util.EventUtils;
 
 public class RecipeCheckTimedRegisteredListener extends TimedRegisteredListener {
 

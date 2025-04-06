@@ -1,18 +1,19 @@
 package pers.yufiria.craftorithm.command.recipe;
 
+import crypticlib.command.CommandInfo;
+import crypticlib.command.CommandInvoker;
+import crypticlib.command.CommandNode;
+import crypticlib.perm.PermInfo;
+import org.bukkit.NamespacedKey;
+import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.util.LangUtils;
-import crypticlib.command.BukkitSubcommand;
-import crypticlib.command.CommandInfo;
-import crypticlib.perm.PermInfo;
-import org.bukkit.NamespacedKey;
-import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public final class DisableRecipeCommand extends BukkitSubcommand {
+public final class DisableRecipeCommand extends CommandNode {
 
     public static final DisableRecipeCommand INSTANCE = new DisableRecipeCommand();
 
@@ -26,25 +27,25 @@ public final class DisableRecipeCommand extends BukkitSubcommand {
     }
 
     @Override
-    public void execute(CommandSender sender, List<String> args) {
+    public void execute(@NotNull CommandInvoker invoker, List<String> args) {
         if (args.isEmpty()) {
-            sendDescriptions(sender);
+            sendDescriptions(invoker);
             return;
         }
         NamespacedKey disableRecipeKey = NamespacedKey.fromString(args.get(0));
         if (!RecipeManager.INSTANCE.serverRecipesCache().containsKey(disableRecipeKey)) {
-            LangUtils.sendLang(sender, Languages.COMMAND_DISABLE_NOT_EXIST);
+            LangUtils.sendLang(invoker, Languages.COMMAND_DISABLE_NOT_EXIST);
             return;
         }
         if (RecipeManager.INSTANCE.disableRecipe(disableRecipeKey, true)) {
-            LangUtils.sendLang(sender, Languages.COMMAND_DISABLE_SUCCESS);
+            LangUtils.sendLang(invoker, Languages.COMMAND_DISABLE_SUCCESS);
         }
         else
-            LangUtils.sendLang(sender, Languages.COMMAND_DISABLE_FAILED);
+            LangUtils.sendLang(invoker, Languages.COMMAND_DISABLE_FAILED);
     }
 
     @Override
-    public List<String> tab(CommandSender sender, List<String> args) {
+    public List<String> tab(@NotNull CommandInvoker invoker, List<String> args) {
         if (args.size() <= 1) {
             List<String> tabList = new ArrayList<>();
             for (NamespacedKey key : RecipeManager.INSTANCE.serverRecipesCache().keySet()) {

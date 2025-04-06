@@ -1,15 +1,17 @@
 package pers.yufiria.craftorithm.command;
 
-import pers.yufiria.craftorithm.config.Languages;
-import pers.yufiria.craftorithm.util.LangUtils;
-import crypticlib.command.BukkitSubcommand;
 import crypticlib.command.CommandInfo;
+import crypticlib.command.CommandInvoker;
+import crypticlib.command.CommandNode;
 import crypticlib.perm.PermInfo;
-import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
+import pers.yufiria.craftorithm.config.Languages;
+import pers.yufiria.craftorithm.util.CommandUtils;
+import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.util.List;
 
-public final class VersionCommand extends BukkitSubcommand {
+public final class VersionCommand extends CommandNode {
 
     public static final VersionCommand INSTANCE = new VersionCommand();
 
@@ -18,7 +20,8 @@ public final class VersionCommand extends BukkitSubcommand {
     }
 
     @Override
-    public void execute(CommandSender sender, List<String> args) {
-        LangUtils.sendLang(sender, Languages.COMMAND_VERSION);
+    public void execute(@NotNull CommandInvoker invoker, List<String> args) {
+        LangUtils.sendLang(CommandUtils.invoker2Sender(invoker), Languages.COMMAND_VERSION);
     }
+
 }

@@ -1,14 +1,14 @@
 package pers.yufiria.craftorithm.util;
 
-import pers.yufiria.craftorithm.Craftorithm;
-import pers.yufiria.craftorithm.config.Languages;
-import pers.yufiria.craftorithm.config.PluginConfigs;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.listener.EventListener;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import pers.yufiria.craftorithm.Craftorithm;
+import pers.yufiria.craftorithm.config.Languages;
+import pers.yufiria.craftorithm.config.PluginConfigs;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

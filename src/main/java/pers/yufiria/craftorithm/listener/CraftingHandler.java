@@ -1,8 +1,5 @@
 package pers.yufiria.craftorithm.listener;
 
-import pers.yufiria.craftorithm.item.ItemManager;
-import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
-import pers.yufiria.craftorithm.recipe.RecipeManager;
 import crypticlib.listener.EventListener;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -12,6 +9,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
+import pers.yufiria.craftorithm.item.ItemManager;
+import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
+import pers.yufiria.craftorithm.recipe.RecipeManager;
 
 @EventListener
 public enum CraftingHandler implements Listener {

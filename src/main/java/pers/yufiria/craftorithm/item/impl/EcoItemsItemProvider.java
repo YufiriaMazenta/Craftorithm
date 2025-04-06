@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.item.impl;
 
-import pers.yufiria.craftorithm.item.ItemProvider;
 import com.willfp.ecoitems.items.EcoItem;
 import com.willfp.ecoitems.items.EcoItems;
 import com.willfp.ecoitems.items.ItemUtilsKt;
@@ -8,6 +7,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.yufiria.craftorithm.item.ItemProvider;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 

@@ -38,7 +38,7 @@ public enum VanillaShapedDisplayMenuManager implements MenuManager<ShapedRecipe>
     }
 
     @Override
-    public void run(Plugin plugin, LifeCycle lifeCycle) {
+    public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
         vanillaShapedDisplayMenuDisplay = loadMenuDisplay(VanillaShaped.TITLE.value(), VanillaShaped.LAYOUT.value(), VanillaShaped.ICONS.value());
     }
     

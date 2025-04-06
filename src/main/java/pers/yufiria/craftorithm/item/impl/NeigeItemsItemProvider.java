@@ -1,12 +1,12 @@
 package pers.yufiria.craftorithm.item.impl;
 
-import pers.yufiria.craftorithm.item.ItemProvider;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.neige.neigeitems.item.ItemInfo;
 import pers.neige.neigeitems.manager.ItemManager;
+import pers.yufiria.craftorithm.item.ItemProvider;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 

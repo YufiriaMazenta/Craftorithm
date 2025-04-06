@@ -1,14 +1,22 @@
 package pers.yufiria.craftorithm.command.recipe;
 
+import crypticlib.command.CommandInfo;
+import crypticlib.command.CommandInvoker;
+import crypticlib.command.CommandNode;
 import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.TaskRule;
+import crypticlib.perm.PermInfo;
 import crypticlib.util.IOHelper;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
@@ -19,13 +27,6 @@ import pers.yufiria.craftorithm.recipe.extra.AnvilRecipe;
 import pers.yufiria.craftorithm.ui.anvil.AnvilDisplayMenuManager;
 import pers.yufiria.craftorithm.ui.vanillaShaped.VanillaShapedDisplayMenuManager;
 import pers.yufiria.craftorithm.util.CommandUtils;
-import crypticlib.command.BukkitSubcommand;
-import crypticlib.command.CommandInfo;
-import crypticlib.perm.PermInfo;
-import org.bukkit.NamespacedKey;
-import org.bukkit.command.CommandSender;
-import org.bukkit.inventory.Recipe;
-import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.util.*;
@@ -36,7 +37,7 @@ import java.util.function.BiConsumer;
         @TaskRule(lifeCycle = LifeCycle.ACTIVE)
     }
 )
-public class DisplayRecipeCommand extends BukkitSubcommand implements BukkitLifeCycleTask {
+public class DisplayRecipeCommand extends CommandNode implements BukkitLifeCycleTask {
 
     public static final DisplayRecipeCommand INSTANCE = new DisplayRecipeCommand();
     private final Map<RecipeType, BiConsumer<Player, Recipe>> recipeDisplayMap = new RecipeTypeMap<>();
@@ -52,9 +53,9 @@ public class DisplayRecipeCommand extends BukkitSubcommand implements BukkitLife
     }
 
     @Override
-    public void execute(CommandSender sender, List<String> args) {
+    public void execute(@NotNull CommandInvoker invoker, List<String> args) {
         if (args.isEmpty()) {
-            sendDescriptions(sender);
+            sendDescriptions(invoker);
             return;
         }
         Player target;
@@ -68,9 +69,9 @@ public class DisplayRecipeCommand extends BukkitSubcommand implements BukkitLife
             }
             target = player;
         } else {
-            if (!CommandUtils.checkSenderIsPlayer(sender))
+            if (!CommandUtils.checkInvokerIsPlayer(invoker))
                 return;
-            target = (Player) sender;
+            target = (Player) invoker.asPlayer().getPlatformPlayer();
         }
         NamespacedKey namespacedKey = NamespacedKey.fromString(args.get(0));
         Recipe recipe = RecipeManager.INSTANCE.getRecipe(namespacedKey);
@@ -84,7 +85,7 @@ public class DisplayRecipeCommand extends BukkitSubcommand implements BukkitLife
     }
 
     @Override
-    public @Nullable List<String> tab(CommandSender sender, List<String> args) {
+    public @Nullable List<String> tab(@NotNull CommandInvoker invoker, List<String> args) {
         if (args.size() <= 1) {
             Set<NamespacedKey> recipes = new LinkedHashSet<>(RecipeManager.INSTANCE.craftorithmRecipes().keySet());
             recipes.addAll(RecipeManager.INSTANCE.craftorithmRecipes().keySet());
@@ -102,7 +103,7 @@ public class DisplayRecipeCommand extends BukkitSubcommand implements BukkitLife
     }
 
     @Override
-    public void run(Plugin plugin, LifeCycle lifeCycle) {
+    public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
         registerDefRecipeDisplay();
     }
 

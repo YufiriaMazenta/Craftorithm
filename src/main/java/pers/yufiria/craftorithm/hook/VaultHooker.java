@@ -63,7 +63,7 @@ public enum VaultHooker implements PluginHooker, BukkitLifeCycleTask {
     }
 
     @Override
-    public void run(Plugin plugin, LifeCycle lifeCycle) {
+    public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
         if (hook()) {
             LangUtils.info(Languages.LOAD_HOOK_PLUGIN_SUCCESS, Map.of("<plugin>", pluginName()));
         }

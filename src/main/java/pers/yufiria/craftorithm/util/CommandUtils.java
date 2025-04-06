@@ -1,19 +1,23 @@
 package pers.yufiria.craftorithm.util;
 
-import pers.yufiria.craftorithm.config.Languages;
+import crypticlib.command.CommandInvoker;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import pers.yufiria.craftorithm.config.Languages;
 
 public class CommandUtils {
 
 
-    public static boolean checkSenderIsPlayer(CommandSender sender) {
-        if (sender instanceof Player) {
+    public static boolean checkInvokerIsPlayer(CommandInvoker invoker) {
+        if (invoker.isPlayer()) {
             return true;
         } else {
-            LangUtils.sendLang(sender, Languages.COMMAND_PLAYER_ONLY);
+            LangUtils.sendLang(invoker2Sender(invoker), Languages.COMMAND_PLAYER_ONLY);
             return false;
         }
+    }
+
+    public static CommandSender invoker2Sender(CommandInvoker invoker) {
+        return (CommandSender) invoker.getPlatformInvoker();
     }
 
 }

@@ -2,7 +2,6 @@ package pers.yufiria.craftorithm.config;
 
 import crypticlib.lang.LangHandler;
 import crypticlib.lang.entry.StringLangEntry;
-import crypticlib.lang.entry.StringListLangEntry;
 
 @LangHandler(langFileFolder = "lang")
 public class Languages {

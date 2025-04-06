@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.listener;
 
-import pers.yufiria.craftorithm.item.ItemManager;
 import crypticlib.listener.EventListener;
 import crypticlib.util.InventoryViewHelper;
 import crypticlib.util.ItemHelper;
@@ -13,6 +12,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.FurnaceInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import pers.yufiria.craftorithm.item.ItemManager;
 
 @EventListener
 public class CustomFuelHandler implements Listener {

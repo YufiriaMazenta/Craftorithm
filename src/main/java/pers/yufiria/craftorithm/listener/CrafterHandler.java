@@ -1,15 +1,15 @@
 package pers.yufiria.craftorithm.listener;
 
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Crafter;
-import pers.yufiria.craftorithm.item.ItemManager;
 import crypticlib.listener.EventListener;
 import crypticlib.util.ItemHelper;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Crafter;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.CrafterCraftEvent;
 import org.bukkit.inventory.ItemStack;
+import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 
 @EventListener

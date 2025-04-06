@@ -1,12 +1,6 @@
 package pers.yufiria.craftorithm.listener;
 
 import crypticlib.MinecraftVersion;
-import org.bukkit.inventory.meta.ItemMeta;
-import pers.yufiria.craftorithm.item.ItemManager;
-import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
-import pers.yufiria.craftorithm.recipe.RecipeManager;
-import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsManager;
-import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsRules;
 import crypticlib.listener.EventListener;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -16,6 +10,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareSmithingEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.meta.ItemMeta;
+import pers.yufiria.craftorithm.item.ItemManager;
+import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
+import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsManager;
+import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsRules;
 
 import java.util.Objects;
 import java.util.Optional;

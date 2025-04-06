@@ -1,11 +1,11 @@
 package pers.yufiria.craftorithm.command.item.fuel;
 
-import crypticlib.command.BukkitSubcommand;
 import crypticlib.command.CommandInfo;
+import crypticlib.command.CommandNode;
 import crypticlib.command.annotation.Subcommand;
 import crypticlib.perm.PermInfo;
 
-public class FuelCommand extends BukkitSubcommand {
+public class FuelCommand extends CommandNode {
 
     public static final FuelCommand INSTANCE = new FuelCommand();
 
@@ -14,9 +14,9 @@ public class FuelCommand extends BukkitSubcommand {
     }
 
     @Subcommand
-    BukkitSubcommand add = AddFuelCommand.INSTANCE;
+    CommandNode add = AddFuelCommand.INSTANCE;
 
     @Subcommand
-    BukkitSubcommand remove = RemoveFuelCommand.INSTANCE;
+    CommandNode remove = RemoveFuelCommand.INSTANCE;
 
 }

@@ -1,5 +1,11 @@
 package pers.yufiria.craftorithm.recipe.loader;
 
+import crypticlib.MinecraftVersion;
+import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.*;
+import org.bukkit.inventory.recipe.CookingBookCategory;
+import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
@@ -9,12 +15,6 @@ import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 import pers.yufiria.craftorithm.recipe.util.BukkitRecipeChoiceParser;
-import crypticlib.MinecraftVersion;
-import org.bukkit.NamespacedKey;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.inventory.*;
-import org.bukkit.inventory.recipe.CookingBookCategory;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 

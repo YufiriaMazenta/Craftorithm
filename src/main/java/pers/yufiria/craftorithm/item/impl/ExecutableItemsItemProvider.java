@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.item.impl;
 
-import pers.yufiria.craftorithm.item.ItemProvider;
 import com.ssomar.score.api.executableitems.ExecutableItemsAPI;
 import com.ssomar.score.api.executableitems.config.ExecutableItemInterface;
 import com.ssomar.score.api.executableitems.config.ExecutableItemsManagerInterface;
@@ -8,6 +7,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.yufiria.craftorithm.item.ItemProvider;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 

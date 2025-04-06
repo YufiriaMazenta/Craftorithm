@@ -1,27 +1,26 @@
 package pers.yufiria.craftorithm.command.item;
 
-import pers.yufiria.craftorithm.command.item.fuel.FuelCommand;
-import crypticlib.command.BukkitSubcommand;
 import crypticlib.command.CommandInfo;
+import crypticlib.command.CommandNode;
 import crypticlib.command.annotation.Subcommand;
 import crypticlib.perm.PermInfo;
+import pers.yufiria.craftorithm.command.item.fuel.FuelCommand;
 
-public final class ItemCommand extends BukkitSubcommand {
+public final class ItemCommand extends CommandNode {
 
     public static final ItemCommand INSTANCE = new ItemCommand();
 
     private ItemCommand() {
         super(CommandInfo.builder("item").permission(new PermInfo("craftorithm.command.item")).build());
-        regSub(SaveItemCommand.INSTANCE).regSub(GiveItemCommand.INSTANCE).regSub(FuelCommand.INSTANCE);
     }
 
     @Subcommand
-    BukkitSubcommand save = SaveItemCommand.INSTANCE;
+    CommandNode save = SaveItemCommand.INSTANCE;
 
     @Subcommand
-    BukkitSubcommand give = GiveItemCommand.INSTANCE;
+    CommandNode give = GiveItemCommand.INSTANCE;
 
     @Subcommand
-    BukkitSubcommand fuel = FuelCommand.INSTANCE;
+    CommandNode fuel = FuelCommand.INSTANCE;
 
 }

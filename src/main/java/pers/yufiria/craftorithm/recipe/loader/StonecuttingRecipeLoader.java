@@ -1,17 +1,17 @@
 package pers.yufiria.craftorithm.recipe.loader;
 
-import pers.yufiria.craftorithm.Craftorithm;
-import pers.yufiria.craftorithm.item.ItemManager;
-import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
-import pers.yufiria.craftorithm.recipe.RecipeLoader;
-import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
-import pers.yufiria.craftorithm.recipe.util.BukkitRecipeChoiceParser;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.StonecuttingRecipe;
 import org.jetbrains.annotations.NotNull;
+import pers.yufiria.craftorithm.Craftorithm;
+import pers.yufiria.craftorithm.item.ItemManager;
+import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
+import pers.yufiria.craftorithm.recipe.RecipeLoader;
+import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
+import pers.yufiria.craftorithm.recipe.util.BukkitRecipeChoiceParser;
 
 import java.util.Objects;
 

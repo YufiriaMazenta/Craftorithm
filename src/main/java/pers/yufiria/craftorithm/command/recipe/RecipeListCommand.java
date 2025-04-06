@@ -1,15 +1,16 @@
 package pers.yufiria.craftorithm.command.recipe;
 
-import pers.yufiria.craftorithm.util.CommandUtils;
-import crypticlib.command.BukkitSubcommand;
 import crypticlib.command.CommandInfo;
+import crypticlib.command.CommandInvoker;
+import crypticlib.command.CommandNode;
 import crypticlib.command.annotation.Subcommand;
 import crypticlib.perm.PermInfo;
-import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
+import pers.yufiria.craftorithm.util.CommandUtils;
 
 import java.util.List;
 
-public final class RecipeListCommand extends BukkitSubcommand {
+public final class RecipeListCommand extends CommandNode {
 
     public static final RecipeListCommand INSTANCE = new RecipeListCommand();
 
@@ -18,10 +19,10 @@ public final class RecipeListCommand extends BukkitSubcommand {
     }
 
     @Subcommand
-    BukkitSubcommand server = new BukkitSubcommand("server", new PermInfo("craftorithm.command.list.server")) {
+    CommandNode server = new CommandNode("server", new PermInfo("craftorithm.command.list.server")) {
         @Override
-        public void execute(CommandSender sender, List<String> args) {
-            if (!CommandUtils.checkSenderIsPlayer(sender)) {
+        public void execute(@NotNull CommandInvoker invoker, List<String> args) {
+            if (!CommandUtils.checkInvokerIsPlayer(invoker)) {
                 return;
             }
             //TODO
@@ -30,10 +31,10 @@ public final class RecipeListCommand extends BukkitSubcommand {
     };
 
     @Subcommand
-    BukkitSubcommand craftorithm = new BukkitSubcommand("craftorithm", new PermInfo("craftorithm.command.list")) {
+    CommandNode craftorithm = new CommandNode("craftorithm", new PermInfo("craftorithm.command.list")) {
         @Override
-        public void execute(CommandSender sender, List<String> args) {
-            if (!CommandUtils.checkSenderIsPlayer(sender)) {
+        public void execute(@NotNull CommandInvoker invoker, List<String> args) {
+            if (!CommandUtils.checkInvokerIsPlayer(invoker)) {
                 return;
             }
             //todo
@@ -42,8 +43,8 @@ public final class RecipeListCommand extends BukkitSubcommand {
     };
 
     @Override
-    public void execute(CommandSender sender, List<String> args) {
-        craftorithm.execute(sender, args);
+    public void execute(@NotNull CommandInvoker invoker, List<String> args) {
+        craftorithm.execute(invoker, args);
     }
 
 }

@@ -1,8 +1,5 @@
 package pers.yufiria.craftorithm.hook.listener;
 
-import pers.yufiria.craftorithm.Craftorithm;
-import pers.yufiria.craftorithm.config.PluginConfigs;
-import pers.yufiria.craftorithm.util.EventUtils;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.MinecraftVersion;
 import crypticlib.lifecycle.AutoTask;
@@ -20,6 +17,9 @@ import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredListener;
 import org.bukkit.plugin.TimedRegisteredListener;
+import pers.yufiria.craftorithm.Craftorithm;
+import pers.yufiria.craftorithm.config.PluginConfigs;
+import pers.yufiria.craftorithm.util.EventUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -87,7 +87,7 @@ public enum OtherPluginsListenerManager implements Listener, BukkitLifeCycleTask
     }
 
     @Override
-    public void run(Plugin plugin, LifeCycle lifeCycle) {
+    public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
         convertOtherPluginsListeners();
     }
 

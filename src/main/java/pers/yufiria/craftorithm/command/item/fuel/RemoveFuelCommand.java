@@ -1,19 +1,20 @@
 package pers.yufiria.craftorithm.command.item.fuel;
 
+import crypticlib.command.CommandInfo;
+import crypticlib.command.CommandInvoker;
+import crypticlib.command.CommandNode;
+import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
-import crypticlib.command.BukkitSubcommand;
-import crypticlib.command.CommandInfo;
-import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class RemoveFuelCommand extends BukkitSubcommand {
+public class RemoveFuelCommand extends CommandNode {
 
     public static final RemoveFuelCommand INSTANCE = new RemoveFuelCommand();
 
@@ -22,24 +23,24 @@ public class RemoveFuelCommand extends BukkitSubcommand {
     }
 
     @Override
-    public void execute(CommandSender sender, List<String> args) {
+    public void execute(@NotNull CommandInvoker invoker, List<String> args) {
         if (args.isEmpty()) {
-            sendDescriptions(sender);
+            sendDescriptions(invoker);
             return;
         }
-        if (!CommandUtils.checkSenderIsPlayer(sender))
+        if (!CommandUtils.checkInvokerIsPlayer(invoker))
             return;
 
         boolean result = ItemManager.INSTANCE.removeCustomFuel(NamespacedItemId.fromString(args.get(0)));
         if (result) {
-            LangUtils.sendLang(sender, Languages.COMMAND_ITEM_FUEL_REMOVE_SUCCESS);
+            LangUtils.sendLang(invoker, Languages.COMMAND_ITEM_FUEL_REMOVE_SUCCESS);
         } else {
-            LangUtils.sendLang(sender, Languages.COMMAND_ITEM_FUEL_REMOVE_FAILED_NOT_EXIST);
+            LangUtils.sendLang(invoker, Languages.COMMAND_ITEM_FUEL_REMOVE_FAILED_NOT_EXIST);
         }
     }
 
     @Override
-    public List<String> tab(CommandSender sender, List<String> args) {
+    public List<String> tab(@NotNull CommandInvoker invoker, List<String> args) {
         if (args.size() <= 1) {
             return new ArrayList<>(ItemManager.INSTANCE.customCookingFuelMap().keySet().stream().map(NamespacedItemId::toString).toList());
         }

@@ -38,7 +38,7 @@ public enum AnvilDisplayMenuManager implements MenuManager<AnvilRecipe>, BukkitL
     }
 
     @Override
-    public void run(Plugin plugin, LifeCycle lifeCycle) {
+    public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
         anvilDisplayMenuDisplay = loadMenuDisplay(Anvil.TITLE.value(), Anvil.LAYOUT.value(), Anvil.ICONS.value());
     }
 

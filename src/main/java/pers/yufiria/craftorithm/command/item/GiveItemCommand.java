@@ -1,25 +1,25 @@
 package pers.yufiria.craftorithm.command.item;
 
+import crypticlib.CrypticLibBukkit;
+import crypticlib.command.CommandInfo;
+import crypticlib.command.CommandInvoker;
+import crypticlib.command.CommandNode;
+import crypticlib.perm.PermInfo;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.item.impl.CraftorithmItemProvider;
 import pers.yufiria.craftorithm.util.CollectionsUtils;
 import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
-import crypticlib.CrypticLibBukkit;
-import crypticlib.command.BukkitSubcommand;
-import crypticlib.command.CommandInfo;
-import crypticlib.perm.PermInfo;
-import crypticlib.platform.IPlatform;
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class GiveItemCommand extends BukkitSubcommand {
+public class GiveItemCommand extends CommandNode {
 
     public static final GiveItemCommand INSTANCE = new GiveItemCommand();
 
@@ -34,9 +34,9 @@ public class GiveItemCommand extends BukkitSubcommand {
     }
 
     @Override
-    public void execute(CommandSender sender, List<String> args) {
+    public void execute(@NotNull CommandInvoker invoker, List<String> args) {
         if (args.isEmpty()) {
-            sendDescriptions(sender);
+            sendDescriptions(invoker);
             return;
         }
 
@@ -44,12 +44,12 @@ public class GiveItemCommand extends BukkitSubcommand {
         if (args.size() >= 2) {
             player = Bukkit.getPlayer(args.get(1));
             if (player == null) {
-                LangUtils.sendLang(sender, Languages.COMMAND_ITEM_GIVE_PLAYER_OFFLINE);
+                LangUtils.sendLang(invoker, Languages.COMMAND_ITEM_GIVE_PLAYER_OFFLINE);
                 return;
             }
         } else {
-            if (CommandUtils.checkSenderIsPlayer(sender)) {
-                player = (Player) sender;
+            if (CommandUtils.checkInvokerIsPlayer(invoker)) {
+                player = (Player) invoker.asPlayer().getPlatformPlayer();
             } else {
                 return;
             }
@@ -57,13 +57,13 @@ public class GiveItemCommand extends BukkitSubcommand {
 
         ItemStack itemStack = CraftorithmItemProvider.INSTANCE.matchItem(args.get(0));
         if (itemStack == null) {
-            LangUtils.sendLang(sender, Languages.COMMAND_ITEM_GIVE_NOT_EXIST_ITEM, CollectionsUtils.newStringHashMap("<item_name>", args.get(0)));
+            LangUtils.sendLang(invoker, Languages.COMMAND_ITEM_GIVE_NOT_EXIST_ITEM, CollectionsUtils.newStringHashMap("<item_name>", args.get(0)));
             return;
         }
 
         HashMap<Integer, ItemStack> failedItems = player.getInventory().addItem(itemStack);
         if (!failedItems.isEmpty()) {
-            if (!CrypticLibBukkit.platform().type().equals(IPlatform.PlatformType.FOLIA)) {
+            if (!CrypticLibBukkit.isFolia()) {
                 for (ItemStack stack : failedItems.values()) {
                     player.getWorld().dropItem(player.getLocation(), stack);
                 }
@@ -76,11 +76,11 @@ public class GiveItemCommand extends BukkitSubcommand {
                 CrypticLibBukkit.scheduler().runOnEntity(player, dropTask, dropTask);
             }
         }
-        LangUtils.sendLang(sender, Languages.COMMAND_ITEM_GIVE_SUCCESS);
+        LangUtils.sendLang(invoker, Languages.COMMAND_ITEM_GIVE_SUCCESS);
     }
 
     @Override
-    public List<String> tab(CommandSender sender, List<String> args) {
+    public List<String> tab(@NotNull CommandInvoker invoker, List<String> args) {
         if (args.size() < 2) {
             return new ArrayList<>(CraftorithmItemProvider.INSTANCE.itemMap().keySet());
         }

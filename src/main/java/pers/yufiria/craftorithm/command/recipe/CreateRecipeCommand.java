@@ -1,24 +1,27 @@
 package pers.yufiria.craftorithm.command.recipe;
 
+import crypticlib.command.CommandInfo;
+import crypticlib.command.CommandInvoker;
+import crypticlib.command.CommandNode;
 import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.TaskRule;
+import crypticlib.perm.PermInfo;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.RecipeTypeMap;
 import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
-import crypticlib.command.BukkitSubcommand;
-import crypticlib.command.CommandInfo;
-import crypticlib.perm.PermInfo;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,7 +31,7 @@ import java.util.regex.Pattern;
         @TaskRule(lifeCycle = LifeCycle.ACTIVE)
     }
 )
-public final class CreateRecipeCommand extends BukkitSubcommand implements BukkitLifeCycleTask {
+public final class CreateRecipeCommand extends CommandNode implements BukkitLifeCycleTask {
 
     public static final CreateRecipeCommand INSTANCE = new CreateRecipeCommand();
     private final Pattern recipeNamePattern = Pattern.compile("^[a-z0-9._-]+$");
@@ -44,11 +47,11 @@ public final class CreateRecipeCommand extends BukkitSubcommand implements Bukki
     }
 
     @Override
-    public void execute(CommandSender sender, List<String> args) {
-        if (!CommandUtils.checkSenderIsPlayer(sender))
+    public void execute(@NotNull CommandInvoker invoker, List<String> args) {
+        if (!CommandUtils.checkInvokerIsPlayer(invoker))
             return;
         if (args.isEmpty()) {
-            sendDescriptions(sender);
+            sendDescriptions(invoker);
             return;
         }
         String recipeTypeStr = args.get(0);
@@ -60,29 +63,29 @@ public final class CreateRecipeCommand extends BukkitSubcommand implements Bukki
 
         Matcher matcher = recipeNamePattern.matcher(recipeName);
         if (!matcher.matches()) {
-            LangUtils.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_NAME);
+            LangUtils.sendLang(invoker, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_NAME);
             return;
         }
         if (RecipeManager.INSTANCE.containsRecipe(recipeName)) {
-            LangUtils.sendLang(sender, Languages.COMMAND_CREATE_NAME_USED);
+            LangUtils.sendLang(invoker, Languages.COMMAND_CREATE_NAME_USED);
             return;
         }
         RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipeTypeStr);
         if (recipeType == null) {
-            LangUtils.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
+            LangUtils.sendLang(invoker, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
             return;
         }
         BiConsumer<Player, String> creatorConsumer = recipeCreatorMap.get(recipeType);
         if (creatorConsumer == null) {
-            LangUtils.sendLang(sender, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
+            LangUtils.sendLang(invoker, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
             return;
         }
-        Player player = (Player) sender;
+        Player player = (Player) invoker.asPlayer().getPlatformPlayer();
         creatorConsumer.accept(player, recipeName);
     }
 
     @Override
-    public List<String> tab(@NotNull CommandSender sender, List<String> args) {
+    public List<String> tab(@NotNull CommandInvoker invoker, List<String> args) {
         if (args.size() <= 1) {
             return recipeCreatorMap.keySet().stream().map(RecipeType::typeKey).toList();
         }
@@ -102,7 +105,7 @@ public final class CreateRecipeCommand extends BukkitSubcommand implements Bukki
     }
 
     @Override
-    public void run(Plugin plugin, LifeCycle lifeCycle) {
+    public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
         registerDefRecipeCreators();
     }
 

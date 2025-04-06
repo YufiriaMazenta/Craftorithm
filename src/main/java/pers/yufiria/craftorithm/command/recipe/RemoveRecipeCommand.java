@@ -1,14 +1,15 @@
 package pers.yufiria.craftorithm.command.recipe;
 
+import crypticlib.command.CommandInfo;
+import crypticlib.command.CommandInvoker;
+import crypticlib.command.CommandNode;
+import crypticlib.perm.PermInfo;
+import org.bukkit.NamespacedKey;
+import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.util.LangUtils;
-import crypticlib.command.BukkitSubcommand;
-import crypticlib.command.CommandInfo;
-import crypticlib.perm.PermInfo;
-import org.bukkit.NamespacedKey;
-import org.bukkit.command.CommandSender;
 
 import java.util.Collections;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
 /**
  * 重构为只能删除本身插件的配方，取消其他插件配方移动到disable命令
  */
-public final class RemoveRecipeCommand extends BukkitSubcommand {
+public final class RemoveRecipeCommand extends CommandNode {
 
     public static final RemoveRecipeCommand INSTANCE = new RemoveRecipeCommand();
 
@@ -30,22 +31,22 @@ public final class RemoveRecipeCommand extends BukkitSubcommand {
     }
 
     @Override
-    public void execute(CommandSender sender, List<String> args) {
+    public void execute(@NotNull CommandInvoker invoker, List<String> args) {
         if (args.isEmpty()) {
-            sendDescriptions(sender);
+            sendDescriptions(invoker);
             return;
         }
 
         NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), args.get(0));
         if (RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeKey, true)) {
-            LangUtils.sendLang(sender, Languages.COMMAND_REMOVE_SUCCESS);
+            LangUtils.sendLang(invoker, Languages.COMMAND_REMOVE_SUCCESS);
         }
         else
-            LangUtils.sendLang(sender, Languages.COMMAND_REMOVE_NOT_EXIST);
+            LangUtils.sendLang(invoker, Languages.COMMAND_REMOVE_NOT_EXIST);
     }
 
     @Override
-    public List<String> tab(CommandSender sender, List<String> args) {
+    public List<String> tab(@NotNull CommandInvoker invoker, List<String> args) {
         if (args.size() <= 1) {
             return RecipeManager.INSTANCE.craftorithmRecipes().keySet().stream().map(NamespacedKey::getKey).toList();
         }

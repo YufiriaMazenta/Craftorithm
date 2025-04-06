@@ -39,7 +39,7 @@ public enum ItemPluginHookManager implements BukkitLifeCycleTask {
     }
 
     @Override
-    public void run(Plugin plugin, LifeCycle lifeCycle) {
+    public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
         ItemManager.INSTANCE.resetItemProviders();
         for (String hookPluginName : PluginConfigs.ITEM_PLUGIN_HOOK_PRIORITY.value()) {
             ItemPluginHooker itemPluginHooker = getItemPluginHooker(hookPluginName);

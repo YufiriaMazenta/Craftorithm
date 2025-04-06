@@ -1,12 +1,7 @@
 package pers.yufiria.craftorithm.listener;
 
-import pers.yufiria.craftorithm.Craftorithm;
-import pers.yufiria.craftorithm.item.ItemManager;
-import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
-import pers.yufiria.craftorithm.recipe.RecipeManager;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.listener.EventListener;
-import crypticlib.platform.IPlatform;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
@@ -19,6 +14,9 @@ import org.bukkit.inventory.CampfireRecipe;
 import org.bukkit.inventory.CookingRecipe;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
+import pers.yufiria.craftorithm.item.ItemManager;
+import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
+import pers.yufiria.craftorithm.recipe.RecipeManager;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -32,8 +30,8 @@ public enum SmeltResultRefreshHandler implements Listener {
 
     @EventHandler
     public void putFurnaceSmeltRecipeCache(FurnaceStartSmeltEvent event) {
-        if (!CrypticLibBukkit.platform().type().equals(IPlatform.PlatformType.BUKKIT)) {
-            //因为Bukkit没有FurnaceSmeltEvent.getRecipe方法，如果是Paper及其下游就可以不用处理
+        if (CrypticLibBukkit.isPaper()) {
+            //因为Spigot没有FurnaceSmeltEvent.getRecipe方法，如果是Paper及其下游就可以不用处理
             return;
         }
         CookingRecipe<?> recipe = event.getRecipe();
@@ -47,12 +45,12 @@ public enum SmeltResultRefreshHandler implements Listener {
     @EventHandler
     public void refreshSmeltResult(FurnaceSmeltEvent event) {
         Recipe recipe;
-        if (CrypticLibBukkit.platform().type().equals(IPlatform.PlatformType.BUKKIT)) {
-            recipe = blockSmeltRecipeMap.get(event.getBlock());
-            blockSmeltRecipeMap.remove(event.getBlock());
-        } else {
+        if (CrypticLibBukkit.isPaper()) {
             //Paper及其衍生端直接通过事件获取
             recipe = event.getRecipe();
+        } else {
+            recipe = blockSmeltRecipeMap.get(event.getBlock());
+            blockSmeltRecipeMap.remove(event.getBlock());
         }
         if (recipe == null) {
             return;
@@ -69,8 +67,8 @@ public enum SmeltResultRefreshHandler implements Listener {
 
     @EventHandler
     public void putBlockCookRecipeCache(CampfireStartEvent event) {
-        if (!CrypticLibBukkit.platform().type().equals(IPlatform.PlatformType.BUKKIT)) {
-            //因为Bukkit没有CampfireStartEvent.getRecipe方法，如果是Paper及其下游就可以不用处理
+        if (CrypticLibBukkit.isPaper()) {
+            //因为Spigot没有BlockCookEvent.getRecipe方法，如果是Paper及其下游就可以不用处理
             return;
         }
         CampfireRecipe recipe = event.getRecipe();
@@ -84,12 +82,12 @@ public enum SmeltResultRefreshHandler implements Listener {
     @EventHandler
     public void refreshBlockCookResult(BlockCookEvent event) {
         Recipe recipe;
-        if (CrypticLibBukkit.platform().type().equals(IPlatform.PlatformType.BUKKIT)) {
-            recipe = blockSmeltRecipeMap.get(event.getBlock());
-            blockSmeltRecipeMap.remove(event.getBlock());
-        } else {
+        if (CrypticLibBukkit.isPaper()) {
             //Paper及其衍生端直接通过事件获取
             recipe = event.getRecipe();
+        } else {
+            recipe = blockSmeltRecipeMap.get(event.getBlock());
+            blockSmeltRecipeMap.remove(event.getBlock());
         }
         if (recipe == null) {
             return;

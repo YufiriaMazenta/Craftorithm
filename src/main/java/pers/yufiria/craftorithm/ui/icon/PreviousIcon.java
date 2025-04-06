@@ -3,7 +3,6 @@ package pers.yufiria.craftorithm.ui.icon;
 import crypticlib.action.Action;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
-import crypticlib.ui.menu.Menu;
 import crypticlib.ui.menu.Multipage;
 import crypticlib.ui.util.MenuHelper;
 import org.bukkit.entity.Player;

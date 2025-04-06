@@ -1,10 +1,10 @@
 package pers.yufiria.craftorithm.hook.listener;
 
-import pers.yufiria.craftorithm.Craftorithm;
 import io.th0rgal.oraxen.api.events.OraxenItemsLoadedEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import pers.yufiria.craftorithm.Craftorithm;
 
 public enum OraxenHandler implements Listener {
 

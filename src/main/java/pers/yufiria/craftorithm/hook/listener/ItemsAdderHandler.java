@@ -1,11 +1,11 @@
 package pers.yufiria.craftorithm.hook.listener;
 
-import pers.yufiria.craftorithm.Craftorithm;
-import pers.yufiria.craftorithm.config.PluginConfigs;
 import dev.lone.itemsadder.api.Events.ItemsAdderLoadDataEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import pers.yufiria.craftorithm.Craftorithm;
+import pers.yufiria.craftorithm.config.PluginConfigs;
 
 public enum ItemsAdderHandler implements Listener {
 
