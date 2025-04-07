@@ -368,6 +368,10 @@ public enum RecipeManager implements BukkitLifeCycleTask {
 
         public void end() {
             this.cancel();
+            //1.20.1以上paper端环境下,加载完配方给玩家更新配方信息
+            if (CrypticLibBukkit.isPaper() && MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_20_1)) {
+                Bukkit.updateRecipes();
+            }
             BukkitMsgSender.INSTANCE.debug("Loaded " + craftorithmRecipes.size() + " recipes ,took " + useTick + " ticks");
             if (callback != null) {
                 callback.run();
