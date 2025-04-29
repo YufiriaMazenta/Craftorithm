@@ -12,6 +12,7 @@ import com.github.yufiriamazenta.craftorithm.recipe.registry.RecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.impl.SmithingRecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.util.CollectionsUtils;
 import com.github.yufiriamazenta.craftorithm.util.LangUtils;
+import com.github.yufiriamazenta.craftorithm.util.RecipeUtils;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.MinecraftVersion;
 import crypticlib.chat.BukkitMsgSender;
@@ -408,7 +409,7 @@ public enum RecipeManager implements BukkitLifeCycleTask {
 
         //先将已经删除的配方还原
         for (Recipe recipe : removeRecipeRecycleBin) {
-            Bukkit.addRecipe(recipe);
+            RecipeUtils.addBukkitRecipe(recipe);
         }
         removeRecipeRecycleBin.clear();
         pluginRecipeMap.clear();
@@ -483,17 +484,17 @@ public enum RecipeManager implements BukkitLifeCycleTask {
     public void run(Plugin plugin, LifeCycle lifeCycle) {
         if (lifeCycle.equals(LifeCycle.ENABLE)) {
             //设置各类型配方的注册方法
-            recipeRegisterMap.put(RecipeType.SHAPED, Bukkit::addRecipe);
+            recipeRegisterMap.put(RecipeType.SHAPED, RecipeUtils::addBukkitRecipe);
             recipeRemoverMap.put(RecipeType.SHAPED, this::removeRecipes);
-            recipeRegisterMap.put(RecipeType.SHAPELESS, Bukkit::addRecipe);
+            recipeRegisterMap.put(RecipeType.SHAPELESS, RecipeUtils::addBukkitRecipe);
             recipeRemoverMap.put(RecipeType.SHAPELESS, this::removeRecipes);
-            recipeRegisterMap.put(RecipeType.COOKING, Bukkit::addRecipe);
+            recipeRegisterMap.put(RecipeType.COOKING, RecipeUtils::addBukkitRecipe);
             recipeRemoverMap.put(RecipeType.COOKING, this::removeRecipes);
-            recipeRegisterMap.put(RecipeType.STONE_CUTTING, Bukkit::addRecipe);
+            recipeRegisterMap.put(RecipeType.STONE_CUTTING, RecipeUtils::addBukkitRecipe);
             recipeRemoverMap.put(RecipeType.STONE_CUTTING, this::removeRecipes);
-            recipeRegisterMap.put(RecipeType.SMITHING, Bukkit::addRecipe);
+            recipeRegisterMap.put(RecipeType.SMITHING, RecipeUtils::addBukkitRecipe);
             recipeRemoverMap.put(RecipeType.SMITHING, this::removeRecipes);
-            recipeRegisterMap.put(RecipeType.RANDOM_COOKING, Bukkit::addRecipe);
+            recipeRegisterMap.put(RecipeType.RANDOM_COOKING, RecipeUtils::addBukkitRecipe);
             recipeRemoverMap.put(RecipeType.RANDOM_COOKING, this::removeRecipes);
 
             if (PluginConfigs.ENABLE_ANVIL_RECIPE.value()) {

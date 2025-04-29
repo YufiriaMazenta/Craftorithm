@@ -8,6 +8,7 @@ import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.menu.Menu;
+import crypticlib.util.InventoryViewHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -123,7 +124,8 @@ public class RecipeListMenu extends Menu {
         if (parentMenu != null) {
             CrypticLibBukkit.scheduler().sync(
                 () -> {
-                    InventoryType type = event.getPlayer().getOpenInventory().getType();
+                    Object inventoryView = InventoryViewHelper.getInventoryView(event);
+                    InventoryType type = InventoryViewHelper.getInventoryType(inventoryView);
                     List<InventoryType> typeWhenNotOpenInv = Arrays.asList(InventoryType.CRAFTING, InventoryType.CREATIVE);
                     if (!typeWhenNotOpenInv.contains(type))
                         return;
