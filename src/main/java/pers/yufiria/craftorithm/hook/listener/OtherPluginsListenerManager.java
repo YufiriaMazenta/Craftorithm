@@ -6,10 +6,8 @@ import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.TaskRule;
-import crypticlib.listener.EventListener;
 import crypticlib.util.ReflectionHelper;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockCookEvent;
 import org.bukkit.event.block.CampfireStartEvent;
 import org.bukkit.event.block.CrafterCraftEvent;
@@ -26,13 +24,12 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-@EventListener
 @AutoTask(
     rules = {
         @TaskRule(lifeCycle = LifeCycle.RELOAD)
     }
 )
-public enum OtherPluginsListenerManager implements Listener, BukkitLifeCycleTask {
+public enum OtherPluginsListenerManager implements BukkitLifeCycleTask {
 
     INSTANCE;
     private final Field executorField = ReflectionHelper.getDeclaredField(RegisteredListener.class, "executor");
