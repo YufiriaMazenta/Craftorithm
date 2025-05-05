@@ -14,6 +14,7 @@ import crypticlib.util.ReflectionHelper;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockCookEvent;
+import org.bukkit.event.block.CampfireStartEvent;
 import org.bukkit.event.block.CrafterCraftEvent;
 import org.bukkit.event.inventory.*;
 import org.bukkit.plugin.EventExecutor;
@@ -74,6 +75,7 @@ public enum OtherPluginsListenerManager implements Listener, BukkitLifeCycleTask
         handlersLists.add(SmithItemEvent.getHandlerList());
         handlersLists.add(FurnaceSmeltEvent.getHandlerList());
         handlersLists.add(BlockCookEvent.getHandlerList());
+        handlersLists.add(CampfireStartEvent.getHandlerList());
         if (CrypticLibBukkit.isPaper() && PluginConfigs.ENABLE_ANVIL_RECIPE.value()) {
             handlersLists.add(PrepareAnvilEvent.getHandlerList());
         }

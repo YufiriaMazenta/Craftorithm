@@ -9,6 +9,7 @@ import crypticlib.util.ItemHelper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockCookEvent;
+import org.bukkit.event.block.CampfireStartEvent;
 import org.bukkit.event.block.CrafterCraftEvent;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.ItemStack;
@@ -40,6 +41,7 @@ public class EventUtils {
             case SmithItemEvent smithItemEvent -> recipe = smithItemEvent.getInventory().getRecipe();
             case FurnaceSmeltEvent furnaceSmeltEvent -> recipe = furnaceSmeltEvent.getRecipe();
             case BlockCookEvent blockCookEvent -> recipe = blockCookEvent.getRecipe();
+            case CampfireStartEvent campfireStartEvent -> recipe = campfireStartEvent.getRecipe();
             case PrepareAnvilEvent prepareAnvilEvent -> {
                 //因为只有paper及下游服务端才有这个问题,如果识别到是bukkit或者spigot,就不用处理
                 if (!CrypticLibBukkit.isPaper()) {
