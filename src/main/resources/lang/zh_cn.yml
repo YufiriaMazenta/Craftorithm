@@ -36,13 +36,7 @@ command:
     unsupported_recipe_type: '<prefix> &c不支持的配方类型'
     unsupported_recipe_name: '<prefix> &c不支持的配方名字，只允许使用小写英文字母、数字、"_"、"-"和"."。'
     name_used: '<prefix> &c配方ID已经被使用'
-    null_result: '<prefix> &c配方结果不允许为空！'
-    null_source: '<prefix> &c配方原料不允许为空！'
     success: '<prefix> &a<recipe_type>类型配方<recipe_name>创建成功'
-  run_arcenciel:
-    success: '<prefix> &a运行成功，耗时<time>ms'
-  list:
-    unsupported_version: '<prefix> &c此功能只在1.16及以上版本可用'
 recipe_type_name:
   vanilla_shaped: 有序配方
   vanilla_shapeless: 无序配方
@@ -55,15 +49,13 @@ recipe_type_name:
   vanilla_brewing: 酿造配方
   anvil: 铁砧配方
 #插件加载的反馈信息
-load:
-  finish: '<prefix> &a插件加载完毕'
-  recipe_load_exception: '<prefix> &c加载配方<recipe_name>时出现错误'
-  item_load_exception: '<prefix> &c加载物品<item_name>时出现错误'
-  hook_plugin:
-    success: '<prefix> &a发现<plugin>，已挂钩'
-    not_exist: '<prefix> &c未发现<plugin>'
+load_finish: '<prefix> &a插件加载完毕'
+recipe_load_exception: '<prefix> &c加载配方<recipe_name>时出现错误'
+item_load_exception: '<prefix> &c加载物品<item_name>时出现错误'
+hook_plugin_success: '<prefix> &a发现<plugin>，已挂钩'
 menu:
-  recipe_creator: '创建器'
-  recipe_display:
-    anvil:
-      cost_level: '&3所需经验: &a<level>'
+  recipe_creator:
+    name: '创建器'
+    null_result: '<prefix> &c配方结果不允许为空！'
+    null_source: '<prefix> &c配方原料不允许为空！'
+custom_lang: 测试

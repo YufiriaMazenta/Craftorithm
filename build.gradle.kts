@@ -36,7 +36,9 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
     compileOnly("pers.neige.neigeitems:NeigeItems:1.15.113")
     compileOnly("net.kyori:adventure-api:4.14.0")
-    compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
+    compileOnly("com.github.MilkBowl:VaultAPI:1.7") {
+        exclude("org.bukkit", "bukkit")
+    }
     compileOnly("org.black_ixx:playerpoints:3.2.5")
     compileOnly("net.luckperms:api:5.4")
     compileOnly("me.clip:placeholderapi:2.11.6")

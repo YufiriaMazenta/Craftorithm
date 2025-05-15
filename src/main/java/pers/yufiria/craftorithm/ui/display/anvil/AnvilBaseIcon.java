@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.ui.anvil;
+package pers.yufiria.craftorithm.ui.display.anvil;
 
 import pers.yufiria.craftorithm.ui.icon.ItemDisplayIcon;
 

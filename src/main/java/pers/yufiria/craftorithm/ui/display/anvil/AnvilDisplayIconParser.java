@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.ui.anvil;
+package pers.yufiria.craftorithm.ui.display.anvil;
 
 import crypticlib.ui.display.Icon;
 import org.bukkit.configuration.ConfigurationSection;

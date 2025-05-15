@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.ui.anvil;
+package pers.yufiria.craftorithm.ui.display.anvil;
 
 import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.lang.LangManager;

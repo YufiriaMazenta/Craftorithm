@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.ui.vanillaShaped;
+package pers.yufiria.craftorithm.ui.display.vanillaShaped;
 
 import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.lang.LangManager;

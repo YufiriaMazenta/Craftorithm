@@ -1,13 +1,13 @@
-package pers.yufiria.craftorithm.ui.vanillaShaped;
+package pers.yufiria.craftorithm.ui.display.vanillaShapeless;
 
 import org.bukkit.inventory.ItemStack;
 import pers.yufiria.craftorithm.ui.icon.ItemDisplayIcon;
 
-public class VanillaShapedIngredientIcon extends ItemDisplayIcon {
+public class VanillaShapelessIngredientIcon extends ItemDisplayIcon {
 
     private final Integer ingredientSlot;
 
-    public VanillaShapedIngredientIcon(int ingredientSlot) {
+    public VanillaShapelessIngredientIcon(int ingredientSlot) {
         this.ingredientSlot = ingredientSlot;
     }
 
@@ -21,4 +21,5 @@ public class VanillaShapedIngredientIcon extends ItemDisplayIcon {
         display.setAmount(1);
         return display;
     }
+
 }

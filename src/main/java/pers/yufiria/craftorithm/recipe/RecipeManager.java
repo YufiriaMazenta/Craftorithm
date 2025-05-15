@@ -407,7 +407,7 @@ public enum RecipeManager implements BukkitLifeCycleTask {
                         recipeNum ++;
                     }
                 } catch (Throwable throwable) {
-                    LangUtils.info(Languages.LOAD_RECIPE_LOAD_EXCEPTION, CollectionsUtils.newStringHashMap("<recipe_name>", recipeName));
+                    LangUtils.info(Languages.RECIPE_LOAD_EXCEPTION, CollectionsUtils.newStringHashMap("<recipe_name>", recipeName));
                     throwable.printStackTrace();
                 }
             }

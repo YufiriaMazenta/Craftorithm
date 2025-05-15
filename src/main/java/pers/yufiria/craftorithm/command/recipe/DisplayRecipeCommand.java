@@ -24,8 +24,8 @@ import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.RecipeTypeMap;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.recipe.extra.AnvilRecipe;
-import pers.yufiria.craftorithm.ui.anvil.AnvilDisplayMenuManager;
-import pers.yufiria.craftorithm.ui.vanillaShaped.VanillaShapedDisplayMenuManager;
+import pers.yufiria.craftorithm.ui.display.anvil.AnvilDisplayMenuManager;
+import pers.yufiria.craftorithm.ui.display.vanillaShaped.VanillaShapedDisplayMenuManager;
 import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
 

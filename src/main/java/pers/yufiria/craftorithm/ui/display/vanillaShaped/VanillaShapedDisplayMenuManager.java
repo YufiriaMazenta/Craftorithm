@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.ui.vanillaShaped;
+package pers.yufiria.craftorithm.ui.display.vanillaShaped;
 
 import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.BukkitLifeCycleTask;

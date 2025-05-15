@@ -33,11 +33,12 @@ public class Languages {
     public static final StringLangEntry COMMAND_CREATE_UNSUPPORTED_RECIPE_NAME = new StringLangEntry("command.create.unsupported_recipe_name");
     public static final StringLangEntry COMMAND_CREATE_NAME_USED = new StringLangEntry("command.create.name_used");
     public static final StringLangEntry COMMAND_DISPLAY_UNSUPPORTED_RECIPE_TYPE = new StringLangEntry("command.display.unsupported_recipe_type");
-    public static final StringLangEntry LOAD_FINISH = new StringLangEntry("load.finish");
-    public static final StringLangEntry LOAD_RECIPE_LOAD_EXCEPTION = new StringLangEntry("load.recipe_load_exception");
-    public static final StringLangEntry LOAD_ITEM_LOAD_EXCEPTION = new StringLangEntry("load.item_load_exception");
-    public static final StringLangEntry LOAD_HOOK_PLUGIN_SUCCESS = new StringLangEntry("load.hook_plugin.success");
-    public static final StringLangEntry LOAD_HOOK_PLUGIN_NOT_EXIST = new StringLangEntry("load.hook_plugin.not_exist");
+
+    public static final StringLangEntry LOAD_FINISH = new StringLangEntry("load_finish");
+    public static final StringLangEntry RECIPE_LOAD_EXCEPTION = new StringLangEntry("recipe_load_exception");
+    public static final StringLangEntry ITEM_LOAD_EXCEPTION = new StringLangEntry("item_load_exception");
+    public static final StringLangEntry LOAD_HOOK_PLUGIN_SUCCESS = new StringLangEntry("hook_plugin_success");
+
     public static final StringLangEntry RECIPE_TYPE_NAME_VANILLA_SHAPED = new StringLangEntry("recipe_type_name.vanilla_shaped");
     public static final StringLangEntry RECIPE_TYPE_NAME_VANILLA_SHAPELESS = new StringLangEntry("recipe_type_name.vanilla_shapeless");
     public static final StringLangEntry RECIPE_TYPE_NAME_VANILLA_SMELTING_FURNACE = new StringLangEntry("recipe_type_name.vanilla_smelting_furnace");
@@ -48,7 +49,7 @@ public class Languages {
     public static final StringLangEntry RECIPE_TYPE_NAME_VANILLA_STONECUTTING = new StringLangEntry("recipe_type_name.vanilla_stonecutting");
     public static final StringLangEntry RECIPE_TYPE_NAME_VANILLA_BREWING = new StringLangEntry("recipe_type_name.vanilla_brewing");
     public static final StringLangEntry RECIPE_TYPE_NAME_ANVIL = new StringLangEntry("recipe_type_name.anvil");
-    public static final StringLangEntry MENU_RECIPE_CREATOR = new StringLangEntry("menu.recipe_creator");
-    public static final StringLangEntry MENU_RECIPE_DISPLAY_ANVIL_COST_LEVEL = new StringLangEntry("menu.recipe_display.anvil.cost_level");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_NAME = new StringLangEntry("menu.recipe_creator_name");
+
 
 }

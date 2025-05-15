@@ -112,7 +112,7 @@ public enum CraftorithmItemProvider implements ItemProvider, BukkitLifeCycleTask
                     }
                     itemMap.put(namespace + ":" + itemKey, item);
                 } catch (Exception e) {
-                    LangUtils.info(Languages.LOAD_ITEM_LOAD_EXCEPTION, CollectionsUtils.newStringHashMap("<item_name>", itemKey));
+                    LangUtils.info(Languages.ITEM_LOAD_EXCEPTION, CollectionsUtils.newStringHashMap("<item_name>", itemKey));
                     e.printStackTrace();
                 }
             }
