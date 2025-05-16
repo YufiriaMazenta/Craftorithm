@@ -58,6 +58,11 @@ public enum CopyComponentsManager {
         return copyNbtRules.remove(ruleName);
     }
 
+    /**
+     * 添加对于某个配方的组件保留策略
+     * @param key 配方的key
+     * @param ruleNames 所需的组件保留策略
+     */
     public void addRecipeCopyNbtRules(NamespacedKey key, List<String> ruleNames) {
         List<CopyComponentsRule> rules = new ArrayList<>();
         for (String ruleName : ruleNames) {

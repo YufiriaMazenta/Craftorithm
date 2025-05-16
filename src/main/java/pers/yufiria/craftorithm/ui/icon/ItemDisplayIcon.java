@@ -1,10 +1,11 @@
 package pers.yufiria.craftorithm.ui.icon;
 
+import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-public abstract class ItemDisplayIcon extends ActionIcon {
+public abstract class ItemDisplayIcon extends Icon {
 
     private ItemStack displayItem;
 

@@ -5,10 +5,15 @@ import crypticlib.lang.LangManager;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.menu.Menu;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.ui.icon.RecipeResultIcon;
+
+import java.util.List;
 
 public class VanillaShapelessDisplayMenu extends Menu {
 
@@ -32,9 +37,16 @@ public class VanillaShapelessDisplayMenu extends Menu {
         switch (icon) {
             case VanillaShapelessIngredientIcon vanillaShapelessIngredientIcon -> {
                 int ingredientSlot = vanillaShapelessIngredientIcon.ingredientSlot();
-//
-//                if (recipeChoice == null) return;
-//                vanillaShapelessIngredientIcon.setDisplayItem(recipeChoice.getItemStack());
+                List<RecipeChoice> choiceList = recipe.getChoiceList();
+                if (ingredientSlot >= choiceList.size()) {
+                    return;
+                }
+                RecipeChoice recipeChoice = choiceList.get(ingredientSlot);
+                if (recipeChoice != null) {
+                    vanillaShapelessIngredientIcon.setDisplayItem(recipeChoice.getItemStack());
+                } else {
+                    vanillaShapelessIngredientIcon.setDisplayItem(new ItemStack(Material.AIR));
+                }
             }
             case RecipeResultIcon recipeResultIcon -> {
                 recipeResultIcon.setDisplayItem(recipe.getResult());

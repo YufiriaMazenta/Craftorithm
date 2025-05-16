@@ -49,7 +49,12 @@ public class Languages {
     public static final StringLangEntry RECIPE_TYPE_NAME_VANILLA_STONECUTTING = new StringLangEntry("recipe_type_name.vanilla_stonecutting");
     public static final StringLangEntry RECIPE_TYPE_NAME_VANILLA_BREWING = new StringLangEntry("recipe_type_name.vanilla_brewing");
     public static final StringLangEntry RECIPE_TYPE_NAME_ANVIL = new StringLangEntry("recipe_type_name.anvil");
-    public static final StringLangEntry MENU_RECIPE_CREATOR_NAME = new StringLangEntry("menu.recipe_creator_name");
 
+    public static final StringLangEntry MENU_RECIPE_CREATOR_NAME = new StringLangEntry("menu.recipe_creator.name");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_NULL_RESULT = new StringLangEntry("menu.recipe_creator.null_result");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_NULL_INGREDIENTS = new StringLangEntry("menu.recipe_creator.null_ingredients");
+    public static final StringLangEntry MENU_RECIPE_DISPLAY_ANVIL_COST_LEVEL = new StringLangEntry("menu.recipe_display.anvil.cost_level");
+    public static final StringLangEntry MENU_RECIPE_DISPLAY_VANILLA_SMELTING_TIME = new StringLangEntry("menu.recipe_display.vanilla_smelting.time");
+    public static final StringLangEntry MENU_RECIPE_DISPLAY_VANILLA_SMELTING_REWARD_EXP = new StringLangEntry("menu.recipe_display.vanilla_smelting.reward_exp");
 
 }

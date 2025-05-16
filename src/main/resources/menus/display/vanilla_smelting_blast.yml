@@ -1,0 +1,16 @@
+title: '<translate:lang:recipe_type_name.vanilla_smelting_blast>'
+layout:
+  - '#########'
+  - '##A###R##'
+  - '#########'
+icons:
+  '#':
+    material: minecraft:green_stained_glass_pane
+    name: '&a<translate:lang:recipe_type_name.vanilla_smelting_blast>'
+    lore:
+      - '<translate:lang:menu.recipe_display.vanilla_smelting.time>'
+      - '<translate:lang:menu.recipe_display.vanilla_smelting.reward_exp>'
+  A:
+    icon_type: vanilla_smelting_ingredient
+  R:
+    icon_type: result

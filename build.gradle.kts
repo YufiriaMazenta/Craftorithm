@@ -1,5 +1,4 @@
 import java.text.SimpleDateFormat
-version = "1.11.0-alpha-4"
 
 plugins {
     `java-library`
@@ -62,6 +61,7 @@ dependencies {
 //    implementation("de.tr7zw:item-nbt-api:2.12.4")
 }
 
+version = "${rootProject.findProperty("pluginVer")}"
 group = "com.github.yufiriamazenta"
 var pluginVersion: String = version.toString() + "-" + SimpleDateFormat("yyyyMMdd").format(System.currentTimeMillis())
 java.sourceCompatibility = JavaVersion.VERSION_21
