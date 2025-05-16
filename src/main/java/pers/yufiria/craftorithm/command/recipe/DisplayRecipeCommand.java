@@ -12,10 +12,7 @@ import crypticlib.util.IOHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.CookingRecipe;
-import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.*;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,6 +28,7 @@ import pers.yufiria.craftorithm.ui.display.vanillaShaped.VanillaShapedDisplayMen
 import pers.yufiria.craftorithm.ui.display.vanillaShapeless.VanillaShapelessDisplayIconParser;
 import pers.yufiria.craftorithm.ui.display.vanillaShapeless.VanillaShapelessDisplayMenuManager;
 import pers.yufiria.craftorithm.ui.display.vanillaSmelting.VanillaSmeltingDisplayMenuManager;
+import pers.yufiria.craftorithm.ui.display.vanillaSmithing.VanillaSmithingDisplayMenuManager;
 import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
 
@@ -126,6 +124,11 @@ public class DisplayRecipeCommand extends CommandNode implements BukkitLifeCycle
         addRecipeDisplay(SimpleRecipeTypes.VANILLA_SMELTING_BLAST, smeltingFunc);
         addRecipeDisplay(SimpleRecipeTypes.VANILLA_SMELTING_SMOKER, smeltingFunc);
         addRecipeDisplay(SimpleRecipeTypes.VANILLA_SMELTING_CAMPFIRE, smeltingFunc);
+
+        BiConsumer<Player, Recipe> smithingFunc = (player, recipe) -> {
+            VanillaSmithingDisplayMenuManager.INSTANCE.openMenu(player, (SmithingRecipe) recipe);
+        };
+        addRecipeDisplay(SimpleRecipeTypes.VANILLA_SMITHING_TRANSFORM, smithingFunc);
         if (PluginConfigs.ENABLE_ANVIL_RECIPE.value()) {
             addRecipeDisplay(SimpleRecipeTypes.ANVIL, (player, recipe) -> {
                 AnvilDisplayMenuManager.INSTANCE.openMenu(player, (AnvilRecipe) recipe);

@@ -67,7 +67,7 @@ public interface IconParser {
         Material material = MaterialHelper.matchMaterial(config.getString("material", "minecraft:stone"));
         String name = config.getString("name");
         List<String> lore = config.getStringList("lore");
-        Integer customModelData = config.getInt("custom-model-data");
+        Integer customModelData = config.getInt("custom_model_data");
         return new IconDisplay(Objects.requireNonNull(material), name, lore, customModelData);
     }
 

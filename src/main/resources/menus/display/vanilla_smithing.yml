@@ -1,0 +1,17 @@
+title: '<translate:lang:recipe_type_name.vanilla_smithing>'
+layout:
+  - '#########'
+  - '#A#B#C#R#'
+  - '#########'
+icons:
+  '#':
+    material: minecraft:green_stained_glass_pane
+    name: '&a<translate:lang:recipe_type_name.vanilla_smithing>'
+  A:
+    icon_type: vanilla_smithing_template
+  B:
+    icon_type: vanilla_smithing_base
+  C:
+    icon_type: vanilla_smithing_addition
+  R:
+    icon_type: result

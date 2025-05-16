@@ -22,7 +22,6 @@ public class VanillaSmeltingDisplayMenu extends Menu {
         this.recipe = recipe;
     }
 
-
     @Override
     public String parsedMenuTitle() {
         String originTitle = this.display.title();

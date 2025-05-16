@@ -1,0 +1,42 @@
+package pers.yufiria.craftorithm.ui.display.vanillaSmithing;
+
+import crypticlib.lifecycle.AutoTask;
+import crypticlib.lifecycle.BukkitLifeCycleTask;
+import crypticlib.lifecycle.LifeCycle;
+import crypticlib.lifecycle.TaskRule;
+import crypticlib.ui.display.MenuDisplay;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.SmithingRecipe;
+import org.bukkit.plugin.Plugin;
+import pers.yufiria.craftorithm.config.menu.display.VanillaSmithing;
+import pers.yufiria.craftorithm.ui.MenuManager;
+import pers.yufiria.craftorithm.ui.icon.IconParser;
+
+@AutoTask(rules = {
+    @TaskRule(lifeCycle = LifeCycle.ENABLE),
+    @TaskRule(lifeCycle = LifeCycle.RELOAD)
+})
+public enum VanillaSmithingDisplayMenuManager implements MenuManager<SmithingRecipe>, BukkitLifeCycleTask {
+
+    INSTANCE;
+    private MenuDisplay vanillaSmithingDisplay;
+
+    @Override
+    public IconParser iconParser() {
+        return VanillaSmithingDisplayIconParser.INSTANCE;
+    }
+
+    @Override
+    public void openMenu(Player player, SmithingRecipe recipe) {
+        if (this.vanillaSmithingDisplay == null) {
+            this.vanillaSmithingDisplay = loadMenuDisplay(VanillaSmithing.TITLE.value(), VanillaSmithing.LAYOUT.value(), VanillaSmithing.ICONS.value());
+        }
+        new VanillaSmithingDisplayMenu(player, vanillaSmithingDisplay, recipe).openMenu();
+    }
+
+    @Override
+    public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
+        this.vanillaSmithingDisplay = loadMenuDisplay(VanillaSmithing.TITLE.value(), VanillaSmithing.LAYOUT.value(), VanillaSmithing.ICONS.value());
+    }
+
+}

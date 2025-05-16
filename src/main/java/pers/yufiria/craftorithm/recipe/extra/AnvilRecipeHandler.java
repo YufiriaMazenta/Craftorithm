@@ -124,7 +124,6 @@ public enum AnvilRecipeHandler implements Listener {
     public void onClickAnvilResult(InventoryClickEvent event) {
         if (!PluginConfigs.ENABLE_ANVIL_RECIPE.value())
             return;
-
         if (!(event.getInventory() instanceof AnvilInventory anvilInventory))
             return;
         if (event.getSlot() != 2)
