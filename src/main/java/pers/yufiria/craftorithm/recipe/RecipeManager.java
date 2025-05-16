@@ -270,16 +270,21 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         disabledRecipesCache.add(recipe);
     }
 
+    /**
+     * 删除一个配方,并通知玩家
+     */
     public boolean removeRecipe(NamespacedKey recipeKey) {
         Recipe recipe = getRecipe(recipeKey);
         RecipeType recipeType = getRecipeType(recipe);
-        return recipeType.recipeRegister().unregisterRecipe(recipeKey);
+        boolean result = recipeType.recipeRegister().unregisterRecipe(recipeKey);
+        if (result && CrypticLibBukkit.isPaper() && MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_20_1)) {
+            Bukkit.updateRecipes();
+        }
+        return result;
     }
 
     public boolean removeCraftorithmRecipe(NamespacedKey recipeKey, boolean deleteFile) {
-        Recipe recipe = getRecipe(recipeKey);
-        RecipeType recipeType = getRecipeType(recipe);
-        boolean result = recipeType.recipeRegister().unregisterRecipe(recipeKey);
+        boolean result = removeRecipe(recipeKey);
         if (result) {
             if (recipeConfigWrapperMap.containsKey(recipeKey) && deleteFile) {
                 BukkitConfigWrapper removed = recipeConfigWrapperMap.remove(recipeKey);

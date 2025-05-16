@@ -11,7 +11,7 @@ import java.util.List;
 public class VanillaSmithing {
 
     public static final StringConfig TITLE = new StringConfig("title", "<translate:lang:recipe_type_name.vanilla_smithing>");
-    public static final StringListConfig LAYOUT = new StringListConfig("layout", List.of("#########", "#A#B#C#R#", "#########"));
+    public static final StringListConfig LAYOUT = new StringListConfig("layout", List.of("#########", "#ABC###R#", "#########"));
     public static final ConfigSectionConfig ICONS = new ConfigSectionConfig("icons");
 
 }

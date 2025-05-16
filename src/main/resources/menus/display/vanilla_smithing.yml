@@ -1,7 +1,7 @@
 title: '<translate:lang:recipe_type_name.vanilla_smithing>'
 layout:
   - '#########'
-  - '#A#B#C#R#'
+  - '#ABC###R#'
   - '#########'
 icons:
   '#':

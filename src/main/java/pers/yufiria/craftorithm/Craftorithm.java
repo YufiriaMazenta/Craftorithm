@@ -9,6 +9,7 @@ import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.TaskRule;
+import crypticlib.util.IOHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import pers.yufiria.craftorithm.bstat.Metrics;
@@ -36,11 +37,12 @@ public final class Craftorithm extends BukkitPlugin implements BukkitLifeCycleTa
 
     @Override
     public void enable() {
+        CrypticLib.setDebug(PluginConfigs.DEBUG.value());
+        IOHelper.info("&7Server Type: " + CrypticLibBukkit.serverAdapter().type() + ", Version: " + MinecraftVersion.current().version());
         if (MinecraftVersion.current().before(MinecraftVersion.V1_19_4)) {
             BukkitMsgSender.INSTANCE.info("&cUnsupported Version");
             throw new UnsupportedVersionException();
         }
-        CrypticLib.setDebug(PluginConfigs.DEBUG.value());
         UpdateChecker.pullUpdateCheckRequest(Bukkit.getConsoleSender());
     }
 
