@@ -38,7 +38,7 @@ public final class RemoveRecipeCommand extends CommandNode {
         }
 
         NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), args.get(0));
-        if (RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeKey, true)) {
+        if (RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeKey, true, true)) {
             LangUtils.sendLang(invoker, Languages.COMMAND_REMOVE_SUCCESS);
         }
         else

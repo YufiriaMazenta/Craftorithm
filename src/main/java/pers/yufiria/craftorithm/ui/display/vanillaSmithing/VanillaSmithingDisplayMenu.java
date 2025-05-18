@@ -11,28 +11,17 @@ import org.bukkit.inventory.SmithingRecipe;
 import org.bukkit.inventory.SmithingTransformRecipe;
 import org.bukkit.inventory.SmithingTrimRecipe;
 import org.jetbrains.annotations.NotNull;
+import pers.yufiria.craftorithm.ui.display.RecipeDisplayMenu;
 import pers.yufiria.craftorithm.ui.icon.RecipeResultIcon;
 
-public class VanillaSmithingDisplayMenu extends Menu {
-
-    private final SmithingRecipe recipe;
+public class VanillaSmithingDisplayMenu extends RecipeDisplayMenu<SmithingRecipe> {
 
     public VanillaSmithingDisplayMenu(@NotNull Player player, @NotNull MenuDisplay display, SmithingRecipe recipe) {
-        super(player, display);
-        this.recipe = recipe;
-    }
-
-    @Override
-    public String parsedMenuTitle() {
-        String originTitle = this.display.title();
-        Player player = this.player();
-        String title = LangManager.INSTANCE.replaceLang(originTitle, player);
-        return BukkitTextProcessor.color(BukkitTextProcessor.placeholder(player, title));
+        super(player, display, recipe);
     }
 
     @Override
     public void preprocessIconWhenUpdateLayout(Integer slot, @NotNull Icon icon) {
-
         switch (icon) {
             case VanillaSmithingTemplateIcon templateIcon -> {
                 if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_20)) {

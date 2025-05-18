@@ -1,4 +1,4 @@
-title: '<translate:lang:recipe_type_name.vanilla_smelting_smoker>'
+title: <translate:lang:recipe_type_name.vanilla_smelting_smoker><recipe_key>
 layout:
   - '#########'
   - '##A###R##'

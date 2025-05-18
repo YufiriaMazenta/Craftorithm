@@ -1,4 +1,4 @@
-title: '<translate:lang:recipe_type_name.vanilla_smithing>'
+title: <translate:lang:recipe_type_name.vanilla_smithing><recipe_key>
 layout:
   - '#########'
   - '#ABC###R#'

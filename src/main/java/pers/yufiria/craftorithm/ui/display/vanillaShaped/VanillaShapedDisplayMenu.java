@@ -9,23 +9,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.jetbrains.annotations.NotNull;
+import pers.yufiria.craftorithm.ui.display.RecipeDisplayMenu;
 import pers.yufiria.craftorithm.ui.icon.RecipeResultIcon;
 
-public class VanillaShapedDisplayMenu extends Menu {
-
-    private final ShapedRecipe shapedRecipe;
+public class VanillaShapedDisplayMenu extends RecipeDisplayMenu<ShapedRecipe> {
 
     public VanillaShapedDisplayMenu(@NotNull Player player, @NotNull MenuDisplay display, ShapedRecipe shapedRecipe) {
-        super(player, display);
-        this.shapedRecipe = shapedRecipe;
-    }
-
-    @Override
-    public String parsedMenuTitle() {
-        String originTitle = this.display.title();
-        Player player = this.player();
-        String title = LangManager.INSTANCE.replaceLang(originTitle, player);
-        return BukkitTextProcessor.color(BukkitTextProcessor.placeholder(player, title));
+        super(player, display, shapedRecipe);
     }
 
     @Override
@@ -35,17 +25,17 @@ public class VanillaShapedDisplayMenu extends Menu {
                 int ingredientSlot = vanillaShapedIngredientIcon.ingredientSlot();
                 int row = ingredientSlot / 3;
                 int column = ingredientSlot % 3;
-                @NotNull String[] shape = shapedRecipe.getShape();
+                @NotNull String[] shape = recipe.getShape();
                 if (row >= shape.length) return;
                 String line = shape[row];
                 if (column >= line.length()) return;
                 char c = line.charAt(column);
-                RecipeChoice recipeChoice = shapedRecipe.getChoiceMap().get(c);
+                RecipeChoice recipeChoice = recipe.getChoiceMap().get(c);
                 if (recipeChoice == null) return;
                 vanillaShapedIngredientIcon.setDisplayItem(recipeChoice.getItemStack());
             }
             case RecipeResultIcon recipeResultIcon -> {
-                recipeResultIcon.setDisplayItem(shapedRecipe.getResult());
+                recipeResultIcon.setDisplayItem(recipe.getResult());
             }
             default -> {}
         }

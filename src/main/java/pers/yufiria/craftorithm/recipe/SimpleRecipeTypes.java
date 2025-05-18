@@ -98,7 +98,12 @@ public enum SimpleRecipeTypes implements RecipeType {
         "vanilla_smithing_trim",
         SmithingTrimRecipeLoader.INSTANCE,
         BukkitRecipeRegister.INSTANCE,
-        recipe -> recipe instanceof SmithingTrimRecipe,
+        recipe -> {
+            if (MinecraftVersion.current().before(MinecraftVersion.V1_20)) {
+                return false;
+            }
+            return recipe instanceof SmithingTrimRecipe;
+        },
         8
     ),
     VANILLA_STONECUTTING(

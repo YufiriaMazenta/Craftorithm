@@ -1,4 +1,4 @@
-title: <translate:lang:recipe_type_name.vanilla_shapeless>
+title: <translate:lang:recipe_type_name.vanilla_shapeless>:<recipe_key>
 layout:
   - '#########'
   - '#ABC#####'

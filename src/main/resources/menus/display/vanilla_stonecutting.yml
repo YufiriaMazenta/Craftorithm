@@ -1,0 +1,13 @@
+title: <translate:lang:recipe_type_name.vanilla_stonecutting><recipe_key>
+layout:
+  - '#########'
+  - '##A###R##'
+  - '#########'
+icons:
+  '#':
+    material: minecraft:green_stained_glass_pane
+    name: '&a<translate:lang:recipe_type_name.vanilla_stonecutting>'
+  A:
+    icon_type: vanilla_smelting_ingredient
+  R:
+    icon_type: result

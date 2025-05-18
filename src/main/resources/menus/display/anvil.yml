@@ -1,4 +1,4 @@
-title: '<translate:lang:recipe_type_name.anvil>, <translate:lang:menu.recipe_display.anvil.cost_level>'
+title: <translate:lang:recipe_type_name.anvil>:<recipe_key>
 layout:
   - '#########'
   - '#A#B###C#'

@@ -10,7 +10,7 @@ import java.util.List;
 @ConfigHandler(path = "menus/display/vanilla_smelting_furnace.yml")
 public class VanillaSmeltingFurnace {
 
-    public static final StringConfig TITLE = new StringConfig("title", "<translate:lang:recipe_type_name.vanilla_smelting_furnace>");
+    public static final StringConfig TITLE = new StringConfig("title", "<translate:lang:recipe_type_name.vanilla_smelting_furnace>:<recipe_key>");
     public static final StringListConfig LAYOUT = new StringListConfig("layout", List.of("#########", "##A###R##", "#########"));
     public static final ConfigSectionConfig ICONS = new ConfigSectionConfig("icons");
 

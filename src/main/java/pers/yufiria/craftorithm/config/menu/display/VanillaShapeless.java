@@ -11,7 +11,7 @@ import java.util.List;
 @ConfigHandler(path = "menus/display/vanilla_shapeless.yml")
 public class VanillaShapeless {
 
-    public static final StringConfig TITLE = new StringConfig("title", "<translate:lang:recipe_type_name.vanilla_shapeless>");
+    public static final StringConfig TITLE = new StringConfig("title", "<translate:lang:recipe_type_name.vanilla_shapeless>:<recipe_key>");
     public static final StringListConfig LAYOUT = new StringListConfig("layout", List.of("#########", "#ABC#####", "#DEF###R#", "#GHI#####", "#########"));
     public static final ConfigSectionConfig ICONS = new ConfigSectionConfig("icons");
 

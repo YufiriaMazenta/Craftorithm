@@ -1,4 +1,4 @@
-title: '<translate:lang:recipe_type_name.vanilla_smelting_campfire>'
+title: <translate:lang:recipe_type_name.vanilla_smelting_campfire><recipe_key>
 layout:
   - '#########'
   - '##A###R##'

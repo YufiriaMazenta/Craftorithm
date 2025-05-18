@@ -18,19 +18,24 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.PluginConfigs;
+import pers.yufiria.craftorithm.config.menu.display.VanillaStonecutting;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.RecipeTypeMap;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.recipe.extra.AnvilRecipe;
+import pers.yufiria.craftorithm.recipe.extra.BrewingRecipe;
 import pers.yufiria.craftorithm.ui.display.anvil.AnvilDisplayMenuManager;
+import pers.yufiria.craftorithm.ui.display.vanillaBrewing.VanillaBrewingDisplayMenuManager;
 import pers.yufiria.craftorithm.ui.display.vanillaShaped.VanillaShapedDisplayMenuManager;
 import pers.yufiria.craftorithm.ui.display.vanillaShapeless.VanillaShapelessDisplayIconParser;
 import pers.yufiria.craftorithm.ui.display.vanillaShapeless.VanillaShapelessDisplayMenuManager;
 import pers.yufiria.craftorithm.ui.display.vanillaSmelting.VanillaSmeltingDisplayMenuManager;
 import pers.yufiria.craftorithm.ui.display.vanillaSmithing.VanillaSmithingDisplayMenuManager;
+import pers.yufiria.craftorithm.ui.display.vanillaStonecutting.VanillaStonecuttingDisplayMenuManager;
 import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
+import pers.yufiria.craftorithm.util.ServerUtils;
 
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -124,11 +129,19 @@ public class DisplayRecipeCommand extends CommandNode implements BukkitLifeCycle
         addRecipeDisplay(SimpleRecipeTypes.VANILLA_SMELTING_BLAST, smeltingFunc);
         addRecipeDisplay(SimpleRecipeTypes.VANILLA_SMELTING_SMOKER, smeltingFunc);
         addRecipeDisplay(SimpleRecipeTypes.VANILLA_SMELTING_CAMPFIRE, smeltingFunc);
-
         BiConsumer<Player, Recipe> smithingFunc = (player, recipe) -> {
             VanillaSmithingDisplayMenuManager.INSTANCE.openMenu(player, (SmithingRecipe) recipe);
         };
         addRecipeDisplay(SimpleRecipeTypes.VANILLA_SMITHING_TRANSFORM, smithingFunc);
+        addRecipeDisplay(SimpleRecipeTypes.VANILLA_STONECUTTING, (player, recipe) -> {
+            VanillaStonecuttingDisplayMenuManager.INSTANCE.openMenu(player, (StonecuttingRecipe) recipe);
+        });
+        IOHelper.info("Support potion mix: " + ServerUtils.supportPotionMix());
+        if (ServerUtils.supportPotionMix()) {
+            addRecipeDisplay(SimpleRecipeTypes.VANILLA_BREWING, (player, recipe) -> {
+                VanillaBrewingDisplayMenuManager.INSTANCE.openMenu(player, (BrewingRecipe) recipe);
+            });
+        }
         if (PluginConfigs.ENABLE_ANVIL_RECIPE.value()) {
             addRecipeDisplay(SimpleRecipeTypes.ANVIL, (player, recipe) -> {
                 AnvilDisplayMenuManager.INSTANCE.openMenu(player, (AnvilRecipe) recipe);

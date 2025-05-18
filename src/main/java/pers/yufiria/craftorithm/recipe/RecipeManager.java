@@ -24,6 +24,7 @@ import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsManager;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 import pers.yufiria.craftorithm.util.CollectionsUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
+import pers.yufiria.craftorithm.util.ServerUtils;
 
 import java.io.File;
 import java.util.Iterator;
@@ -211,7 +212,7 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         }
         for (String recipeKey : disabledRecipes) {
             NamespacedKey key = NamespacedKey.fromString(recipeKey);
-            disableRecipe(key, false);
+            disableRecipe(key, false, false);
         }
     }
 
@@ -238,10 +239,10 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         return ((Keyed) recipe).getKey();
     }
 
-    public boolean disableRecipe(NamespacedKey recipeKey, boolean save) {
+    public boolean disableRecipe(NamespacedKey recipeKey, boolean save, boolean updateRecipes) {
         if (save)
             saveDisabledRecipesData(recipeKey);
-        boolean result = removeRecipe(recipeKey);
+        boolean result = removeRecipe(recipeKey, updateRecipes);
         if (result) {
             addDisabledRecipeCache(recipeKey);
         }
@@ -273,18 +274,18 @@ public enum RecipeManager implements BukkitLifeCycleTask {
     /**
      * 删除一个配方,并通知玩家
      */
-    public boolean removeRecipe(NamespacedKey recipeKey) {
+    public boolean removeRecipe(NamespacedKey recipeKey, boolean updateRecipes) {
         Recipe recipe = getRecipe(recipeKey);
         RecipeType recipeType = getRecipeType(recipe);
         boolean result = recipeType.recipeRegister().unregisterRecipe(recipeKey);
-        if (result && CrypticLibBukkit.isPaper() && MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_20_1)) {
+        if (result && ServerUtils.after1_20Paper() && updateRecipes) {
             Bukkit.updateRecipes();
         }
         return result;
     }
 
-    public boolean removeCraftorithmRecipe(NamespacedKey recipeKey, boolean deleteFile) {
-        boolean result = removeRecipe(recipeKey);
+    public boolean removeCraftorithmRecipe(NamespacedKey recipeKey, boolean deleteFile, boolean updateRecipes) {
+        boolean result = removeRecipe(recipeKey, updateRecipes);
         if (result) {
             if (recipeConfigWrapperMap.containsKey(recipeKey) && deleteFile) {
                 BukkitConfigWrapper removed = recipeConfigWrapperMap.remove(recipeKey);
@@ -355,6 +356,7 @@ public enum RecipeManager implements BukkitLifeCycleTask {
     public class RecipeLoadTask extends CrypticLibRunnable {
 
         private List<File> recipeFiles;
+        private final File folder;
         private int useTick = 0;
         //配方加载完毕后执行的代码
         private final Runnable callback;
@@ -364,6 +366,7 @@ public enum RecipeManager implements BukkitLifeCycleTask {
             if (!folder.isDirectory()) {
                 throw new IllegalArgumentException(folder.getAbsolutePath() + " is not a directory");
             }
+            this.folder = folder;
             this.recipeFiles = IOHelper.allYamlFiles(folder);
         }
 
@@ -400,7 +403,7 @@ public enum RecipeManager implements BukkitLifeCycleTask {
             long startTime = System.currentTimeMillis();
             int recipeNum = 0;
             for (File file : files) {
-                String recipeName = file.getPath().substring(RECIPE_FILE_FOLDER.getPath().length() + 1);
+                String recipeName = file.getPath().substring(folder.getPath().length() + 1);
                 recipeName = recipeName.replace("\\", "/");
                 recipeName = recipeName.replace('-', '_');
                 int lastDotIndex = recipeName.lastIndexOf(".");

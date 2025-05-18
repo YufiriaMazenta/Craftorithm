@@ -11,25 +11,15 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.jetbrains.annotations.NotNull;
+import pers.yufiria.craftorithm.ui.display.RecipeDisplayMenu;
 import pers.yufiria.craftorithm.ui.icon.RecipeResultIcon;
 
 import java.util.List;
 
-public class VanillaShapelessDisplayMenu extends Menu {
-
-    private final ShapelessRecipe recipe;
+public class VanillaShapelessDisplayMenu extends RecipeDisplayMenu<ShapelessRecipe> {
 
     public VanillaShapelessDisplayMenu(@NotNull Player player, @NotNull MenuDisplay display, ShapelessRecipe recipe) {
-        super(player, display);
-        this.recipe = recipe;
-    }
-
-    @Override
-    public String parsedMenuTitle() {
-        String originTitle = this.display.title();
-        Player player = this.player();
-        String title = LangManager.INSTANCE.replaceLang(originTitle, player);
-        return BukkitTextProcessor.color(BukkitTextProcessor.placeholder(player, title));
+        super(player, display, recipe);
     }
 
     @Override

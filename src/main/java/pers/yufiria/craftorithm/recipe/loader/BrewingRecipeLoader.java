@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.recipe.loader;
 
+import crypticlib.util.IOHelper;
 import io.papermc.paper.potion.PotionMix;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
@@ -13,6 +14,7 @@ import pers.yufiria.craftorithm.recipe.RecipeLoader;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 import pers.yufiria.craftorithm.recipe.extra.BrewingRecipe;
 import pers.yufiria.craftorithm.recipe.util.BukkitRecipeChoiceParser;
+import pers.yufiria.craftorithm.util.ServerUtils;
 
 public enum BrewingRecipeLoader implements RecipeLoader<BrewingRecipe> {
 
@@ -20,6 +22,9 @@ public enum BrewingRecipeLoader implements RecipeLoader<BrewingRecipe> {
 
     @Override
     public @NotNull BrewingRecipe loadRecipe(String recipeKey, ConfigurationSection recipeConfig) {
+        if (!ServerUtils.supportPotionMix()) {
+            throw new RecipeLoadException("&cThe server does not support brewing recipes");
+        }
         try {
             String resultId = recipeConfig.getString("result");
             ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId));

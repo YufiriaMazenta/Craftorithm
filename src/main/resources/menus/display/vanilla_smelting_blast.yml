@@ -1,4 +1,4 @@
-title: '<translate:lang:recipe_type_name.vanilla_smelting_blast>'
+title: <translate:lang:recipe_type_name.vanilla_smelting_blast><recipe_key>
 layout:
   - '#########'
   - '##A###R##'

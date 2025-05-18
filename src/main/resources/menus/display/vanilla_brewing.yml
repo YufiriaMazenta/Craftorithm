@@ -1,0 +1,17 @@
+title: <translate:lang:recipe_type_name.vanilla_brewing>:<recipe_key>
+layout:
+  - '#########'
+  - '##A######'
+  - '######C##'
+  - '##B######'
+  - '#########'
+icons:
+  '#':
+    material: minecraft:green_stained_glass_pane
+    name: '&a<translate:lang:recipe_type_name.vanilla_brewing>'
+  A:
+    icon_type: vanilla_brewing_ingredient
+  B:
+    icon_type: vanilla_brewing_input
+  C:
+    icon_type: result

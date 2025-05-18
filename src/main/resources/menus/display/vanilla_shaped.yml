@@ -1,4 +1,4 @@
-title: <translate:lang:recipe_type_name.vanilla_shaped>
+title: <translate:lang:recipe_type_name.vanilla_shaped><recipe_key>
 layout:
   - '#########'
   - '#ABC#####'
