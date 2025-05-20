@@ -98,6 +98,8 @@ public class DisplayRecipeCommand extends CommandNode implements BukkitLifeCycle
             Set<NamespacedKey> recipes = new LinkedHashSet<>(RecipeManager.INSTANCE.craftorithmRecipes().keySet());
             recipes.addAll(RecipeManager.INSTANCE.craftorithmRecipes().keySet());
             return recipes.stream().map(NamespacedKey::toString).toList();
+        } else if (args.size() == 2) {
+            return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
         }
         return Collections.singletonList("");
     }
