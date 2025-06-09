@@ -8,7 +8,7 @@ import crypticlib.config.node.impl.bukkit.StringListConfig;
 import java.util.List;
 
 
-@ConfigHandler(path = "menus/display/vanilla_shapeless.yml")
+@ConfigHandler(path = "menus/internal/display/vanilla_shapeless.yml")
 public class VanillaShapeless {
 
     public static final StringConfig TITLE = new StringConfig("title", "<translate:lang:recipe_type_name.vanilla_shapeless>:<recipe_key>");

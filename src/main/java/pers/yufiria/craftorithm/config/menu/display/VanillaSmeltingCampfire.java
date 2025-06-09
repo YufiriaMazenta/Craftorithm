@@ -7,7 +7,7 @@ import crypticlib.config.node.impl.bukkit.StringListConfig;
 
 import java.util.List;
 
-@ConfigHandler(path = "menus/display/vanilla_smelting_campfire.yml")
+@ConfigHandler(path = "menus/internal/display/vanilla_smelting_campfire.yml")
 public class VanillaSmeltingCampfire {
 
     public static final StringConfig TITLE = new StringConfig("title", "<translate:lang:recipe_type_name.vanilla_smelting_campfire>:<recipe_key>");

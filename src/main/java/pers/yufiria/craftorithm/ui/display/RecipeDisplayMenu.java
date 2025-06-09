@@ -8,10 +8,13 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.ui.BackableMenu;
 
-public class RecipeDisplayMenu<T extends Recipe> extends Menu {
+public class RecipeDisplayMenu<T extends Recipe> extends Menu implements BackableMenu {
 
+    protected Menu parentMenu;
     protected final T recipe;
 
     public RecipeDisplayMenu(@NotNull Player player, @NotNull MenuDisplay display, T recipe) {
@@ -28,4 +31,15 @@ public class RecipeDisplayMenu<T extends Recipe> extends Menu {
         title = LangManager.INSTANCE.replaceLang(title, player);
         return BukkitTextProcessor.color(BukkitTextProcessor.placeholder(player, title));
     }
+
+    @Override
+    public Menu parentMenu() {
+        return parentMenu;
+    }
+
+    @Override
+    public void setParentMenu(@Nullable Menu parentMenu) {
+        this.parentMenu = parentMenu;
+    }
+
 }

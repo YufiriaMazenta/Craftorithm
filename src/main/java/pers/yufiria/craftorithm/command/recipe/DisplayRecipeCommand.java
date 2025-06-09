@@ -8,6 +8,7 @@ import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.TaskRule;
 import crypticlib.perm.PermInfo;
+import crypticlib.ui.menu.Menu;
 import crypticlib.util.IOHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -25,6 +26,7 @@ import pers.yufiria.craftorithm.recipe.RecipeTypeMap;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.recipe.extra.AnvilRecipe;
 import pers.yufiria.craftorithm.recipe.extra.BrewingRecipe;
+import pers.yufiria.craftorithm.ui.display.RecipeDisplayManager;
 import pers.yufiria.craftorithm.ui.display.anvil.AnvilDisplayMenuManager;
 import pers.yufiria.craftorithm.ui.display.vanillaBrewing.VanillaBrewingDisplayMenuManager;
 import pers.yufiria.craftorithm.ui.display.vanillaShaped.VanillaShapedDisplayMenuManager;
@@ -39,16 +41,11 @@ import pers.yufiria.craftorithm.util.ServerUtils;
 
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 
-@AutoTask(
-    rules = {
-        @TaskRule(lifeCycle = LifeCycle.ACTIVE)
-    }
-)
-public class DisplayRecipeCommand extends CommandNode implements BukkitLifeCycleTask {
+public class DisplayRecipeCommand extends CommandNode {
 
     public static final DisplayRecipeCommand INSTANCE = new DisplayRecipeCommand();
-    private final Map<RecipeType, BiConsumer<Player, Recipe>> recipeDisplayMap = new RecipeTypeMap<>();
 
     protected DisplayRecipeCommand() {
         super(
@@ -71,14 +68,14 @@ public class DisplayRecipeCommand extends CommandNode implements BukkitLifeCycle
             String targetName = args.get(1);
             Player player = Bukkit.getPlayer(targetName);
             if (player == null) {
-                //TODO 提示消息
-                IOHelper.info("&cUnknown player: " + targetName);
+                LangUtils.sendLang(invoker, Languages.COMMAND_UNKNOWN_PLAYER, Map.of("<player_name>", targetName));
                 return;
             }
             target = player;
         } else {
-            if (!CommandUtils.checkInvokerIsPlayer(invoker))
+            if (!CommandUtils.checkInvokerIsPlayer(invoker)) {
                 return;
+            }
             target = (Player) invoker.asPlayer().getPlatformPlayer();
         }
         NamespacedKey namespacedKey = NamespacedKey.fromString(args.get(0));
@@ -87,9 +84,12 @@ public class DisplayRecipeCommand extends CommandNode implements BukkitLifeCycle
             return;
         }
         RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipe);
-        recipeDisplayMap.getOrDefault(recipeType, (player, displayRecipe) -> {
-            LangUtils.sendLang(player, Languages.COMMAND_DISPLAY_UNSUPPORTED_RECIPE_TYPE);
-        }).accept(target, recipe);
+        Optional<BiFunction<Player, Recipe, Menu>> recipeDisplayOpt = RecipeDisplayManager.INSTANCE.getRecipeDisplay(recipeType);
+        recipeDisplayOpt.ifPresentOrElse(displayFunc -> {
+            displayFunc.apply(target, recipe);
+        }, () -> {
+            LangUtils.sendLang(target, Languages.COMMAND_DISPLAY_UNSUPPORTED_RECIPE_TYPE);
+        });
     }
 
     @Override
@@ -104,52 +104,6 @@ public class DisplayRecipeCommand extends CommandNode implements BukkitLifeCycle
         return Collections.singletonList("");
     }
 
-    public void addRecipeDisplay(RecipeType recipeType, BiConsumer<Player, Recipe> displayFunc) {
-        recipeDisplayMap.put(recipeType, displayFunc);
-    }
-
-    public void removeRecipeDisplay(RecipeType recipeType) {
-        recipeDisplayMap.remove(recipeType);
-    }
-
-    @Override
-    public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
-        registerDefRecipeDisplay();
-    }
-
-    private void registerDefRecipeDisplay() {
-        addRecipeDisplay(SimpleRecipeTypes.VANILLA_SHAPED, (player, recipe) -> {
-            VanillaShapedDisplayMenuManager.INSTANCE.openMenu(player, (ShapedRecipe) recipe);
-        });
-        addRecipeDisplay(SimpleRecipeTypes.VANILLA_SHAPELESS, (player, recipe) -> {
-            VanillaShapelessDisplayMenuManager.INSTANCE.openMenu(player, (ShapelessRecipe) recipe);
-        });
-        BiConsumer<Player, Recipe> smeltingFunc = (player, recipe) -> {
-            VanillaSmeltingDisplayMenuManager.INSTANCE.openMenu(player, (CookingRecipe<?>) recipe);
-        };
-        addRecipeDisplay(SimpleRecipeTypes.VANILLA_SMELTING_FURNACE, smeltingFunc);
-        addRecipeDisplay(SimpleRecipeTypes.VANILLA_SMELTING_BLAST, smeltingFunc);
-        addRecipeDisplay(SimpleRecipeTypes.VANILLA_SMELTING_SMOKER, smeltingFunc);
-        addRecipeDisplay(SimpleRecipeTypes.VANILLA_SMELTING_CAMPFIRE, smeltingFunc);
-        BiConsumer<Player, Recipe> smithingFunc = (player, recipe) -> {
-            VanillaSmithingDisplayMenuManager.INSTANCE.openMenu(player, (SmithingRecipe) recipe);
-        };
-        addRecipeDisplay(SimpleRecipeTypes.VANILLA_SMITHING_TRANSFORM, smithingFunc);
-        addRecipeDisplay(SimpleRecipeTypes.VANILLA_STONECUTTING, (player, recipe) -> {
-            VanillaStonecuttingDisplayMenuManager.INSTANCE.openMenu(player, (StonecuttingRecipe) recipe);
-        });
-        IOHelper.info("Support potion mix: " + ServerUtils.supportPotionMix());
-        if (ServerUtils.supportPotionMix()) {
-            addRecipeDisplay(SimpleRecipeTypes.VANILLA_BREWING, (player, recipe) -> {
-                VanillaBrewingDisplayMenuManager.INSTANCE.openMenu(player, (BrewingRecipe) recipe);
-            });
-        }
-        if (PluginConfigs.ENABLE_ANVIL_RECIPE.value()) {
-            addRecipeDisplay(SimpleRecipeTypes.ANVIL, (player, recipe) -> {
-                AnvilDisplayMenuManager.INSTANCE.openMenu(player, (AnvilRecipe) recipe);
-            });
-        }
-    }
 
 
 }

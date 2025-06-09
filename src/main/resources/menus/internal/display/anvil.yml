@@ -1,0 +1,23 @@
+title: <translate:lang:recipe_type_name.anvil>, <translate:lang:menu.recipe_display.anvil.cost_level>
+layout:
+- '########X'
+- '#A#B###C#'
+- '#########'
+icons:
+  '#':
+    material: minecraft:green_stained_glass_pane
+    name: '&a<translate:lang:recipe_type_name.anvil>'
+    lore:
+    - <translate:lang:menu.recipe_display.anvil.cost_level>
+  A:
+    icon_type: anvil_base
+  B:
+    icon_type: anvil_addition
+  C:
+    icon_type: result
+  X:
+    material: minecraft:red_stained_glass_pane
+    name: '&c点击返回上一页'
+    actions:
+    - back
+    - tell 1

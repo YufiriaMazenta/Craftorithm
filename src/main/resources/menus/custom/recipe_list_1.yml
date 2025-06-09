@@ -1,0 +1,38 @@
+title: '&a配方列表'
+layout:
+  - '#########'
+  - 'ABCDEFGHI'
+  - '#########'
+open_actions:
+  - 'tell hello world!'
+close_actions:
+  - 'tell bye bye world!'
+permission: 'craftorithm.ui.recipe_list_1'
+icons:
+  '#':
+    material: 'minecraft:green_stained_glass_pane'
+    name: '&a配方列表页面'
+    lore:
+      - '&7在此处查看所有配方!'
+    custom_model_data: 1
+  A:
+    icon_type: recipe_display
+    recipe_id: 'craftorithm:anvil'
+  B:
+    icon_type: recipe_display
+    recipe_id: 'craftorithm:brewing'
+  C:
+    icon_type: recipe_display
+    recipe_id: 'craftorithm:shaped'
+  D:
+    icon_type: recipe_display
+    recipe_id: 'craftorithm:shapless'
+  E:
+    icon_type: recipe_display
+    recipe_id: 'craftorithm:smelting_furnace'
+  F:
+    icon_type: recipe_display
+    recipe_id: 'craftorithm:smithing_transform'
+  G:
+    icon_type: recipe_display
+    recipe_id: 'craftorithm:stonecutting'

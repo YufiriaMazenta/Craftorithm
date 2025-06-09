@@ -1,10 +1,10 @@
-title: <translate:lang:recipe_type_name.vanilla_shaped><recipe_key>
+title: <translate:lang:custom_lang>
 layout:
-  - '#########'
-  - '#ABC#####'
-  - '#DEF###R#'
-  - '#GHI#####'
-  - '#########'
+- '########X'
+- '#ABC#####'
+- '#DEF###R#'
+- '#GHI#####'
+- '#########'
 icons:
   '#':
     material: minecraft:green_stained_glass_pane
@@ -38,3 +38,9 @@ icons:
     ingredient_slot: 8
   R:
     icon_type: result
+  X:
+    material: minecraft:red_stained_glass_pane
+    name: '&c点击返回上一页'
+    actions:
+    - back
+    - tell 1

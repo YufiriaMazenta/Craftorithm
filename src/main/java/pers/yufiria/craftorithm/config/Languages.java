@@ -11,6 +11,7 @@ public class Languages {
     public static final StringLangEntry NEW_VERSION = new StringLangEntry("new_version");
     public static final StringLangEntry COMMAND_NO_PERM = new StringLangEntry("command.no_perm");
     public static final StringLangEntry COMMAND_PLAYER_ONLY = new StringLangEntry("command.player_only");
+    public static final StringLangEntry COMMAND_UNKNOWN_PLAYER = new StringLangEntry("command.unknown_player");
     public static final StringLangEntry COMMAND_ITEM_SAVE_SUCCESS = new StringLangEntry("command.item.save.success");
     public static final StringLangEntry COMMAND_ITEM_SAVE_FAILED_SAVE_AIR = new StringLangEntry("command.item.save.failed_save_air");
     public static final StringLangEntry COMMAND_ITEM_GIVE_SUCCESS = new StringLangEntry("command.item.give.success");
@@ -33,6 +34,7 @@ public class Languages {
     public static final StringLangEntry COMMAND_CREATE_UNSUPPORTED_RECIPE_NAME = new StringLangEntry("command.create.unsupported_recipe_name");
     public static final StringLangEntry COMMAND_CREATE_NAME_USED = new StringLangEntry("command.create.name_used");
     public static final StringLangEntry COMMAND_DISPLAY_UNSUPPORTED_RECIPE_TYPE = new StringLangEntry("command.display.unsupported_recipe_type");
+    public static final StringLangEntry COMMAND_OPENMENU_UNKNOWN_MENU = new StringLangEntry("command.openmenu.unknown_menu");
 
     public static final StringLangEntry LOAD_FINISH = new StringLangEntry("load_finish");
     public static final StringLangEntry RECIPE_LOAD_EXCEPTION = new StringLangEntry("recipe_load_exception");

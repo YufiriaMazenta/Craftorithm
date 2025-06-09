@@ -5,6 +5,7 @@ import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.TaskRule;
 import crypticlib.ui.display.MenuDisplay;
+import crypticlib.ui.menu.Menu;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.CookingRecipe;
 import org.bukkit.plugin.Plugin;
@@ -16,7 +17,7 @@ import pers.yufiria.craftorithm.config.menu.display.VanillaSmeltingSmoker;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
-import pers.yufiria.craftorithm.ui.MenuManager;
+import pers.yufiria.craftorithm.ui.RecipeDisplayMenuManager;
 import pers.yufiria.craftorithm.ui.icon.IconParser;
 import pers.yufiria.craftorithm.util.LangUtils;
 
@@ -29,7 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
         @TaskRule(lifeCycle = LifeCycle.RELOAD),
     }
 )
-public enum VanillaSmeltingDisplayMenuManager implements MenuManager<CookingRecipe<?>>, BukkitLifeCycleTask {
+public enum VanillaSmeltingDisplayMenuManager implements RecipeDisplayMenuManager<CookingRecipe<?>>, BukkitLifeCycleTask {
 
     INSTANCE;
     private final Map<RecipeType, MenuDisplay> displays = new ConcurrentHashMap<>();
@@ -40,14 +41,16 @@ public enum VanillaSmeltingDisplayMenuManager implements MenuManager<CookingReci
     }
 
     @Override
-    public void openMenu(Player player, CookingRecipe<?> recipe) {
+    public Menu openMenu(Player player, CookingRecipe<?> recipe) {
         RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipe);
         MenuDisplay menuDisplay = displays.get(recipeType);
         if (menuDisplay == null) {
             LangUtils.sendLang(player, Languages.COMMAND_DISPLAY_UNSUPPORTED_RECIPE_TYPE);
-            return;
+            return null;
         }
-        new VanillaSmeltingDisplayMenu(player, menuDisplay, recipe).openMenu();
+        VanillaSmeltingDisplayMenu vanillaSmeltingDisplayMenu = new VanillaSmeltingDisplayMenu(player, menuDisplay, recipe);
+        vanillaSmeltingDisplayMenu.openMenu();
+        return vanillaSmeltingDisplayMenu;
     }
 
     @Override

@@ -17,5 +17,4 @@ public enum CraftorithmAPI {
         ItemManager.INSTANCE.regItemProvider(itemProvider);
     }
 
-
 }

@@ -1,8 +1,8 @@
-title: <translate:lang:recipe_type_name.vanilla_smithing><recipe_key>
+title: <translate:lang:recipe_type_name.vanilla_smithing>
 layout:
-  - '#########'
-  - '#ABC###R#'
-  - '#########'
+- '########X'
+- '#ABC###R#'
+- '#########'
 icons:
   '#':
     material: minecraft:green_stained_glass_pane
@@ -15,3 +15,9 @@ icons:
     icon_type: vanilla_smithing_addition
   R:
     icon_type: result
+  X:
+    material: minecraft:red_stained_glass_pane
+    name: '&c点击返回上一页'
+    actions:
+    - back
+    - tell 1

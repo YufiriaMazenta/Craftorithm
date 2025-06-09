@@ -5,20 +5,19 @@ import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.TaskRule;
 import crypticlib.ui.display.MenuDisplay;
+import crypticlib.ui.menu.Menu;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.StonecuttingRecipe;
 import org.bukkit.plugin.Plugin;
 import pers.yufiria.craftorithm.config.menu.display.VanillaStonecutting;
-import pers.yufiria.craftorithm.ui.MenuManager;
-import pers.yufiria.craftorithm.ui.display.vanillaStonecutting.VanillaStonecuttingDisplayIconParser;
-import pers.yufiria.craftorithm.ui.display.vanillaStonecutting.VanillaStonecuttingDisplayMenu;
+import pers.yufiria.craftorithm.ui.RecipeDisplayMenuManager;
 import pers.yufiria.craftorithm.ui.icon.IconParser;
 
 @AutoTask(rules = {
     @TaskRule(lifeCycle = LifeCycle.ENABLE),
     @TaskRule(lifeCycle = LifeCycle.RELOAD)
 })
-public enum VanillaStonecuttingDisplayMenuManager implements MenuManager<StonecuttingRecipe>, BukkitLifeCycleTask {
+public enum VanillaStonecuttingDisplayMenuManager implements RecipeDisplayMenuManager<StonecuttingRecipe>, BukkitLifeCycleTask {
 
     INSTANCE;
     private MenuDisplay vanillaStonecuttingDisplay;
@@ -29,11 +28,13 @@ public enum VanillaStonecuttingDisplayMenuManager implements MenuManager<Stonecu
     }
 
     @Override
-    public void openMenu(Player player, StonecuttingRecipe recipe) {
+    public Menu openMenu(Player player, StonecuttingRecipe recipe) {
         if (this.vanillaStonecuttingDisplay == null) {
             this.vanillaStonecuttingDisplay = loadMenuDisplay(VanillaStonecutting.TITLE.value(), VanillaStonecutting.LAYOUT.value(), VanillaStonecutting.ICONS.value());
         }
-        new VanillaStonecuttingDisplayMenu(player, vanillaStonecuttingDisplay, recipe).openMenu();
+        VanillaStonecuttingDisplayMenu vanillaStonecuttingDisplayMenu = new VanillaStonecuttingDisplayMenu(player, vanillaStonecuttingDisplay, recipe);
+        vanillaStonecuttingDisplayMenu.openMenu();
+        return vanillaStonecuttingDisplayMenu;
     }
 
     @Override

@@ -5,11 +5,12 @@ import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.TaskRule;
 import crypticlib.ui.display.MenuDisplay;
+import crypticlib.ui.menu.Menu;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import pers.yufiria.craftorithm.config.menu.display.Anvil;
 import pers.yufiria.craftorithm.recipe.extra.AnvilRecipe;
-import pers.yufiria.craftorithm.ui.MenuManager;
+import pers.yufiria.craftorithm.ui.RecipeDisplayMenuManager;
 import pers.yufiria.craftorithm.ui.icon.IconParser;
 
 @AutoTask(
@@ -18,7 +19,7 @@ import pers.yufiria.craftorithm.ui.icon.IconParser;
         @TaskRule(lifeCycle = LifeCycle.RELOAD),
     }
 )
-public enum AnvilDisplayMenuManager implements MenuManager<AnvilRecipe>, BukkitLifeCycleTask {
+public enum AnvilDisplayMenuManager implements RecipeDisplayMenuManager<AnvilRecipe>, BukkitLifeCycleTask {
 
     INSTANCE;
 
@@ -30,11 +31,13 @@ public enum AnvilDisplayMenuManager implements MenuManager<AnvilRecipe>, BukkitL
     }
 
     @Override
-    public void openMenu(Player player, AnvilRecipe recipe) {
+    public Menu openMenu(Player player, AnvilRecipe recipe) {
         if (anvilDisplayMenuDisplay == null) {
             anvilDisplayMenuDisplay = loadMenuDisplay(Anvil.TITLE.value(), Anvil.LAYOUT.value(), Anvil.ICONS.value());
         }
-        new AnvilDisplayMenu(player, anvilDisplayMenuDisplay, recipe).openMenu();
+        AnvilDisplayMenu anvilDisplayMenu = new AnvilDisplayMenu(player, anvilDisplayMenuDisplay, recipe);
+        anvilDisplayMenu.openMenu();
+        return anvilDisplayMenu;
     }
 
     @Override

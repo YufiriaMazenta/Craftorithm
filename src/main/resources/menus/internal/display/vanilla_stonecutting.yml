@@ -1,0 +1,19 @@
+title: <translate:lang:recipe_type_name.vanilla_stonecutting>
+layout:
+- '########X'
+- '##A###R##'
+- '#########'
+icons:
+  '#':
+    material: minecraft:green_stained_glass_pane
+    name: '&a<translate:lang:recipe_type_name.vanilla_stonecutting>'
+  A:
+    icon_type: vanilla_smelting_ingredient
+  R:
+    icon_type: result
+  X:
+    material: minecraft:red_stained_glass_pane
+    name: '&c点击返回上一页'
+    actions:
+    - back
+    - tell 1

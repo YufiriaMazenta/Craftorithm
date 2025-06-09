@@ -8,6 +8,7 @@ import crypticlib.command.annotation.Command;
 import crypticlib.command.annotation.Subcommand;
 import crypticlib.perm.PermInfo;
 import pers.yufiria.craftorithm.command.item.ItemCommand;
+import pers.yufiria.craftorithm.command.menu.OpenMenuCommand;
 import pers.yufiria.craftorithm.command.recipe.*;
 
 import java.util.Arrays;
@@ -46,9 +47,9 @@ public class MainCommand extends CommandTree {
     CommandNode create = CreateRecipeCommand.INSTANCE;
 
     @Subcommand
-    CommandNode list = RecipeListCommand.INSTANCE;
+    CommandNode display = DisplayRecipeCommand.INSTANCE;
 
     @Subcommand
-    CommandNode display = DisplayRecipeCommand.INSTANCE;
+    CommandNode openMenu = OpenMenuCommand.INSTANCE;
 
 }
