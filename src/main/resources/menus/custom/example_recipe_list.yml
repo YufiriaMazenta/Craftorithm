@@ -18,21 +18,56 @@ icons:
   A:
     icon_type: recipe_display
     recipe_id: 'craftorithm:anvil'
+    view_click: left
+    edit_click: shift_right
+    extra_lore:
+      - '&r'
+      - '&7点击查看配方'
   B:
     icon_type: recipe_display
     recipe_id: 'craftorithm:brewing'
+    view_click: left
+    edit_click: shift_right
+    extra_lore:
+      - '&r'
+      - '&7点击查看配方'
   C:
     icon_type: recipe_display
     recipe_id: 'craftorithm:shaped'
+    view_click: left
+    edit_click: shift_right
+    extra_lore:
+      - '&r'
+      - '&7点击查看配方'
   D:
     icon_type: recipe_display
     recipe_id: 'craftorithm:shapless'
+    view_click: left
+    edit_click: shift_right
+    extra_lore:
+      - '&r'
+      - '&7点击查看配方'
   E:
     icon_type: recipe_display
     recipe_id: 'craftorithm:smelting_furnace'
+    view_click: left
+    edit_click: shift_right
+    extra_lore:
+      - '&r'
+      - '&7点击查看配方'
   F:
     icon_type: recipe_display
     recipe_id: 'craftorithm:smithing_transform'
+    view_click: left
+    edit_click: shift_right
+    extra_lore:
+      - '&r'
+      - '&7点击查看配方'
   G:
     icon_type: recipe_display
     recipe_id: 'craftorithm:stonecutting'
+    view_click: left
+    edit_click: shift_right
+    extra_lore:
+      - '&r'
+      - '&7点击查看配方'

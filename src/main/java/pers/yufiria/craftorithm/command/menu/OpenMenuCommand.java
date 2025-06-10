@@ -43,6 +43,7 @@ public class OpenMenuCommand extends CommandNode {
         Optional<Function<Player, Menu>> menuOpenerOpt = CustomMenuManager.INSTANCE.getMenuOpenerOpt(menuName);
         if (menuOpenerOpt.isEmpty()) {
             LangUtils.sendLang(invoker, Languages.COMMAND_OPENMENU_UNKNOWN_MENU, Map.of("<menu_name>", menuName));
+            return;
         }
         Function<Player, Menu> menuOpener = menuOpenerOpt.get();
         Player target;

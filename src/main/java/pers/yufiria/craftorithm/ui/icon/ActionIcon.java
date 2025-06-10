@@ -6,26 +6,28 @@ import crypticlib.lang.LangManager;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.Craftorithm;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ActionIcon extends Icon {
 
-    protected final Action action;
+    protected final Map<ClickType, Action> actions;
     //用于替换文本内一些内容的map
     protected Map<String, String> textReplaceMap = new HashMap<>();
 
     public ActionIcon(@NotNull IconDisplay iconDisplay) {
-        this(iconDisplay, null);
+        this(iconDisplay, new HashMap<>());
     }
 
-    public ActionIcon(@NotNull IconDisplay iconDisplay, Action action) {
+    public ActionIcon(@NotNull IconDisplay iconDisplay, @NotNull Map<ClickType, Action> actions) {
         super(iconDisplay);
-        this.action = action;
+        this.actions = actions != null ? new ConcurrentHashMap<>(actions) : new ConcurrentHashMap<>();
     }
 
     @Override
@@ -42,9 +44,7 @@ public class ActionIcon extends Icon {
 
     @Override
     public Icon onClick(InventoryClickEvent event) {
-        if (action != null) {
-            action.run(((Player) event.getWhoClicked()), Craftorithm.instance(), null);
-        }
+        runActions(event, this.actions);
         return this;
     }
 
@@ -56,8 +56,12 @@ public class ActionIcon extends Icon {
         this.textReplaceMap = textReplaceMap;
     }
 
-    public Action action() {
-        return action;
+    public void runActions(@NotNull InventoryClickEvent event, @NotNull Map<ClickType, Action> actionsMap) {
+        ClickType click = event.getClick();
+        Action action = actionsMap.get(click);
+        if (action != null) {
+            action.run(((Player) event.getWhoClicked()), Craftorithm.instance(), null);
+        }
     }
 
 }

@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
+import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.ui.BackableMenu;
 import pers.yufiria.craftorithm.ui.icon.IconParser;
 
@@ -86,6 +87,10 @@ public enum CustomMenuManager implements BukkitLifeCycleTask {
         //重载所有自定义页面
         menuOpeners.clear();
         List<File> files = IOHelper.allYamlFiles(customMenuFolder);
+        if (files.isEmpty()) {
+            Craftorithm.instance().saveResource("menus/custom/example_recipe_list.yml", false);
+            files.add(new File(customMenuFolder, "example_recipe_list.yml"));
+        }
         for (File menuFile : files) {
             String filename = IOHelper.getRelativeFileName(customMenuFolder, menuFile);
             String menuName = filename.substring(0, filename.lastIndexOf('.'));

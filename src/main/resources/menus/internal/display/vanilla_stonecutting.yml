@@ -15,5 +15,6 @@ icons:
     material: minecraft:red_stained_glass_pane
     name: '&c点击返回上一页'
     actions:
-    - back
-    - tell 1
+      left:
+        - back
+
