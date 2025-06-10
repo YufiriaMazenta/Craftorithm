@@ -10,6 +10,7 @@ import crypticlib.perm.PermInfo;
 import pers.yufiria.craftorithm.command.item.ItemCommand;
 import pers.yufiria.craftorithm.command.menu.OpenMenuCommand;
 import pers.yufiria.craftorithm.command.recipe.*;
+import pers.yufiria.craftorithm.config.PluginConfigs;
 
 import java.util.Arrays;
 
@@ -23,7 +24,7 @@ public class MainCommand extends CommandTree {
             CommandInfo
                 .builder("craftorithm")
                 .permission(new PermInfo("craftorithm.command"))
-                .aliases(Arrays.asList("craft", "cra", "crafto"))
+                .aliases(PluginConfigs.MAIN_COMMAND_ALIASES.value())
                 .build()
         );
     }

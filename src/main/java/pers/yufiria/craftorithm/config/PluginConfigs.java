@@ -38,4 +38,9 @@ public class PluginConfigs {
         )
     );
 
+    public final static StringListConfig MAIN_COMMAND_ALIASES = new StringListConfig(
+        "main_command_aliases",
+        List.of("cra", "craft", "crafto")
+    );
+
 }
