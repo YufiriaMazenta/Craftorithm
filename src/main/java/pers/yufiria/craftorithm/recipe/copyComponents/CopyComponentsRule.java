@@ -2,6 +2,7 @@ package pers.yufiria.craftorithm.recipe.copyComponents;
 
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import pers.yufiria.craftorithm.recipe.copyComponents.impl.Unbreakable;
 
 /**
  * 物品NBT的处理方式

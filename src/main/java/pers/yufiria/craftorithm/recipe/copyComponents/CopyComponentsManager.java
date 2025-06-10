@@ -10,63 +10,75 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 public enum CopyComponentsManager {
 
     INSTANCE;
-    private final Map<String, CopyComponentsRule> copyNbtRules = new ConcurrentHashMap<>();
+    private final Map<String, Function<String, CopyComponentsRule>> copyNbtRuleCreatorMap = new ConcurrentHashMap<>();
     private final Map<NamespacedKey, CopyComponentsRules> recipeCopyNbtRules = new ConcurrentHashMap<>();
 
     CopyComponentsManager() {
-        registerCopyNbtRule(All.INSTANCE);
-        registerCopyNbtRule(Attributes.INSTANCE);
-        registerCopyNbtRule(CustomModelData.INSTANCE);
-        registerCopyNbtRule(DisplayName.INSTANCE);
-        registerCopyNbtRule(Enchantments.INSTANCE);
-        registerCopyNbtRule(ItemFlag.INSTANCE);
-        registerCopyNbtRule(Lore.INSTANCE);
-        registerCopyNbtRule(Unbreakable.INSTANCE);
-        registerCopyNbtRule(Trim.INSTANCE);
+        registerCopyNbtRuleCreator(All.INSTANCE.ruleName(), arg -> All.INSTANCE);
+        registerCopyNbtRuleCreator(Attributes.INSTANCE.ruleName(), arg -> Attributes.INSTANCE);
+        registerCopyNbtRuleCreator(CustomModelData.INSTANCE.ruleName(), arg -> CustomModelData.INSTANCE);
+        registerCopyNbtRuleCreator(DisplayName.INSTANCE.ruleName(), arg -> DisplayName.INSTANCE);
+        registerCopyNbtRuleCreator(Enchantments.INSTANCE.ruleName(), arg -> Enchantments.INSTANCE);
+        registerCopyNbtRuleCreator(ItemFlag.INSTANCE.ruleName(), arg -> ItemFlag.INSTANCE);
+        registerCopyNbtRuleCreator(Lore.INSTANCE.ruleName(), arg -> Lore.INSTANCE);
+        registerCopyNbtRuleCreator(Unbreakable.INSTANCE.ruleName(), arg -> Unbreakable.INSTANCE);
+        registerCopyNbtRuleCreator(Trim.INSTANCE.ruleName(), arg -> Trim.INSTANCE);
+        registerCopyNbtRuleCreator(CustomPersistentData.RULE_NAME, CustomPersistentData::new);
 
         MinecraftVersion currentVersion = MinecraftVersion.CURRENT;
         if (currentVersion.afterOrEquals(MinecraftVersion.V1_20_5)) {
-            registerCopyNbtRule(Food.INSTANCE);
-            registerCopyNbtRule(MaxStackSize.INSTANCE);
-            registerCopyNbtRule(Rarity.INSTANCE);
-            registerCopyNbtRule(FireResistance.INSTANCE);
-            registerCopyNbtRule(HideTooltip.INSTANCE);
-            registerCopyNbtRule(ItemName.INSTANCE);
+            registerCopyNbtRuleCreator(Food.INSTANCE.ruleName(), arg -> Food.INSTANCE);
+            registerCopyNbtRuleCreator(MaxStackSize.INSTANCE.ruleName(), arg -> MaxStackSize.INSTANCE);
+            registerCopyNbtRuleCreator(Rarity.INSTANCE.ruleName(), arg -> Rarity.INSTANCE);
+            registerCopyNbtRuleCreator(FireResistance.INSTANCE.ruleName(), arg -> FireResistance.INSTANCE);
+            registerCopyNbtRuleCreator(HideTooltip.INSTANCE.ruleName(), arg -> HideTooltip.INSTANCE);
+            registerCopyNbtRuleCreator(ItemName.INSTANCE.ruleName(), arg -> ItemName.INSTANCE);
         }
         if (currentVersion.afterOrEquals(MinecraftVersion.V1_21)) {
-            registerCopyNbtRule(Tool.INSTANCE);
+            registerCopyNbtRuleCreator(Tool.INSTANCE.ruleName(), arg -> Tool.INSTANCE);
         }
         if (currentVersion.afterOrEquals(MinecraftVersion.V1_21_4)) {
-            registerCopyNbtRule(ItemModel.INSTANCE);
-            registerCopyNbtRule(CustomModelDataComponent.INSTANCE);
+            registerCopyNbtRuleCreator(ItemModel.INSTANCE.ruleName(), arg -> ItemModel.INSTANCE);
+            registerCopyNbtRuleCreator(CustomModelDataComponent.INSTANCE.ruleName(), arg -> CustomModelDataComponent.INSTANCE);
         }
     }
 
-    public Optional<CopyComponentsRule> getCopyNbtRule(String name) {
-        return Optional.ofNullable(copyNbtRules.get(name));
+    public Optional<CopyComponentsRule> compileRule(String ruleStr) {
+        String ruleName, arg;
+        int spaceIndex = ruleStr.indexOf(' ');
+        if (spaceIndex == -1) {
+            ruleName = ruleStr;
+            arg = null;
+        } else {
+            ruleName = ruleStr.substring(0, spaceIndex);
+            arg = ruleStr.substring(spaceIndex + 1);
+        }
+        Function<String, CopyComponentsRule> ruleCreator = copyNbtRuleCreatorMap.get(ruleName);
+        return Optional.ofNullable(ruleCreator.apply(arg));
     }
 
-    public void registerCopyNbtRule(CopyComponentsRule rule) {
-        copyNbtRules.put(rule.ruleName(), rule);
+    public void registerCopyNbtRuleCreator(String ruleName,  Function<String, CopyComponentsRule> ruleCreator) {
+        copyNbtRuleCreatorMap.put(ruleName, ruleCreator);
     }
 
-    public CopyComponentsRule unregisterCopyNbtRule(String ruleName) {
-        return copyNbtRules.remove(ruleName);
+    public Function<String, CopyComponentsRule> unregisterCopyNbtRule(String ruleName) {
+        return copyNbtRuleCreatorMap.remove(ruleName);
     }
 
     /**
      * 添加对于某个配方的组件保留策略
      * @param key 配方的key
-     * @param ruleNames 所需的组件保留策略
+     * @param ruleStrList 所需的组件保留策略
      */
-    public void addRecipeCopyNbtRules(NamespacedKey key, List<String> ruleNames) {
+    public void addRecipeCopyNbtRules(NamespacedKey key, List<String> ruleStrList) {
         List<CopyComponentsRule> rules = new ArrayList<>();
-        for (String ruleName : ruleNames) {
-            getCopyNbtRule(ruleName).ifPresentOrElse(
+        for (String ruleName : ruleStrList) {
+            compileRule(ruleName).ifPresentOrElse(
                 rules::add,
                 () -> {
                     IOHelper.info("&eUnknown rule: " + ruleName);

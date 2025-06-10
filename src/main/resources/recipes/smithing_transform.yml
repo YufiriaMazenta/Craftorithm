@@ -4,4 +4,5 @@ base: 'item_pack:hello_world'
 addition: 'item_pack:hello_world'
 template: 'item_pack:hello_world'
 copy_components_rules:
-  - all
+  - display_name
+  - custom_persistent_data {type:tag_container,key:"oraxen:data"}
