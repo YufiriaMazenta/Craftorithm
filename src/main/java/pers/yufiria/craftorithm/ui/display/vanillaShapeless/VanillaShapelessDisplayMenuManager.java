@@ -9,7 +9,7 @@ import crypticlib.ui.menu.Menu;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.plugin.Plugin;
-import pers.yufiria.craftorithm.config.menu.display.VanillaShapeless;
+import pers.yufiria.craftorithm.config.menu.display.VanillaShapelessDisplay;
 import pers.yufiria.craftorithm.ui.RecipeDisplayMenuManager;
 import pers.yufiria.craftorithm.ui.icon.IconParser;
 
@@ -33,7 +33,7 @@ public enum VanillaShapelessDisplayMenuManager implements RecipeDisplayMenuManag
     @Override
     public Menu openMenu(Player player, ShapelessRecipe recipe) {
         if (vanillaShapelessDisplayMenuDisplay == null) {
-            vanillaShapelessDisplayMenuDisplay = loadMenuDisplay(VanillaShapeless.TITLE.value(), VanillaShapeless.LAYOUT.value(), VanillaShapeless.ICONS.value());
+            vanillaShapelessDisplayMenuDisplay = loadMenuDisplay(VanillaShapelessDisplay.TITLE.value(), VanillaShapelessDisplay.LAYOUT.value(), VanillaShapelessDisplay.ICONS.value());
         }
         VanillaShapelessDisplayMenu vanillaShapelessDisplayMenu = new VanillaShapelessDisplayMenu(player, vanillaShapelessDisplayMenuDisplay, recipe);
         vanillaShapelessDisplayMenu.openMenu();
@@ -42,7 +42,7 @@ public enum VanillaShapelessDisplayMenuManager implements RecipeDisplayMenuManag
 
     @Override
     public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
-        vanillaShapelessDisplayMenuDisplay = loadMenuDisplay(VanillaShapeless.TITLE.value(), VanillaShapeless.LAYOUT.value(), VanillaShapeless.ICONS.value());
+        vanillaShapelessDisplayMenuDisplay = loadMenuDisplay(VanillaShapelessDisplay.TITLE.value(), VanillaShapelessDisplay.LAYOUT.value(), VanillaShapelessDisplay.ICONS.value());
     }
     
 }

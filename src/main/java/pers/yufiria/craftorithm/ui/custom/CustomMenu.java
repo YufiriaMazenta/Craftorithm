@@ -9,8 +9,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.ui.BackableMenu;
+import pers.yufiria.craftorithm.ui.TranslatableMenu;
 
-public class CustomMenu extends Menu implements BackableMenu {
+public class CustomMenu extends TranslatableMenu implements BackableMenu {
 
     private Menu parentMenu;
     private final CustomMenuInfo menuInfo;

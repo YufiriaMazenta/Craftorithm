@@ -9,7 +9,7 @@ import crypticlib.ui.menu.Menu;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.StonecuttingRecipe;
 import org.bukkit.plugin.Plugin;
-import pers.yufiria.craftorithm.config.menu.display.VanillaStonecutting;
+import pers.yufiria.craftorithm.config.menu.display.VanillaStonecuttingDisplay;
 import pers.yufiria.craftorithm.ui.RecipeDisplayMenuManager;
 import pers.yufiria.craftorithm.ui.icon.IconParser;
 
@@ -30,7 +30,7 @@ public enum VanillaStonecuttingDisplayMenuManager implements RecipeDisplayMenuMa
     @Override
     public Menu openMenu(Player player, StonecuttingRecipe recipe) {
         if (this.vanillaStonecuttingDisplay == null) {
-            this.vanillaStonecuttingDisplay = loadMenuDisplay(VanillaStonecutting.TITLE.value(), VanillaStonecutting.LAYOUT.value(), VanillaStonecutting.ICONS.value());
+            this.vanillaStonecuttingDisplay = loadMenuDisplay(VanillaStonecuttingDisplay.TITLE.value(), VanillaStonecuttingDisplay.LAYOUT.value(), VanillaStonecuttingDisplay.ICONS.value());
         }
         VanillaStonecuttingDisplayMenu vanillaStonecuttingDisplayMenu = new VanillaStonecuttingDisplayMenu(player, vanillaStonecuttingDisplay, recipe);
         vanillaStonecuttingDisplayMenu.openMenu();
@@ -39,7 +39,7 @@ public enum VanillaStonecuttingDisplayMenuManager implements RecipeDisplayMenuMa
 
     @Override
     public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
-        this.vanillaStonecuttingDisplay = loadMenuDisplay(VanillaStonecutting.TITLE.value(), VanillaStonecutting.LAYOUT.value(), VanillaStonecutting.ICONS.value());
+        this.vanillaStonecuttingDisplay = loadMenuDisplay(VanillaStonecuttingDisplay.TITLE.value(), VanillaStonecuttingDisplay.LAYOUT.value(), VanillaStonecuttingDisplay.ICONS.value());
     }
 
 }

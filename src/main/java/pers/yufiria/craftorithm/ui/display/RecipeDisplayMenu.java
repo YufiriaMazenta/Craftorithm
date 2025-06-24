@@ -11,8 +11,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.ui.BackableMenu;
+import pers.yufiria.craftorithm.ui.TranslatableMenu;
 
-public class RecipeDisplayMenu<T extends Recipe> extends Menu implements BackableMenu {
+public class RecipeDisplayMenu<T extends Recipe> extends TranslatableMenu implements BackableMenu {
 
     protected Menu parentMenu;
     protected final T recipe;
@@ -24,12 +25,10 @@ public class RecipeDisplayMenu<T extends Recipe> extends Menu implements Backabl
 
     @Override
     public String parsedMenuTitle() {
-        String title = this.display.title();
+        String title = super.parsedMenuTitle();
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
         title = title.replace("<recipe_key>", recipeKey != null ? recipeKey.getKey() : "<recipe_key>");
-        Player player = this.player();
-        title = LangManager.INSTANCE.replaceLang(title, player);
-        return BukkitTextProcessor.color(BukkitTextProcessor.placeholder(player, title));
+        return title;
     }
 
     @Override

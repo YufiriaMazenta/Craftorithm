@@ -8,7 +8,7 @@ import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.menu.Menu;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import pers.yufiria.craftorithm.config.menu.display.VanillaBrewing;
+import pers.yufiria.craftorithm.config.menu.display.VanillaBrewingDisplay;
 import pers.yufiria.craftorithm.recipe.extra.BrewingRecipe;
 import pers.yufiria.craftorithm.ui.RecipeDisplayMenuManager;
 import pers.yufiria.craftorithm.ui.icon.IconParser;
@@ -26,7 +26,7 @@ public enum VanillaBrewingDisplayMenuManager implements RecipeDisplayMenuManager
 
     @Override
     public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
-        this.vanillaBrewingDisplay = loadMenuDisplay(VanillaBrewing.TITLE.value(), VanillaBrewing.LAYOUT.value(), VanillaBrewing.ICONS.value());
+        this.vanillaBrewingDisplay = loadMenuDisplay(VanillaBrewingDisplay.TITLE.value(), VanillaBrewingDisplay.LAYOUT.value(), VanillaBrewingDisplay.ICONS.value());
     }
 
     @Override
@@ -37,7 +37,7 @@ public enum VanillaBrewingDisplayMenuManager implements RecipeDisplayMenuManager
     @Override
     public Menu openMenu(Player player, BrewingRecipe recipe) {
         if (vanillaBrewingDisplay == null) {
-            this.vanillaBrewingDisplay = loadMenuDisplay(VanillaBrewing.TITLE.value(), VanillaBrewing.LAYOUT.value(), VanillaBrewing.ICONS.value());
+            this.vanillaBrewingDisplay = loadMenuDisplay(VanillaBrewingDisplay.TITLE.value(), VanillaBrewingDisplay.LAYOUT.value(), VanillaBrewingDisplay.ICONS.value());
         }
         VanillaBrewingDisplayMenu vanillaBrewingDisplayMenu = new VanillaBrewingDisplayMenu(player, vanillaBrewingDisplay, recipe);
         vanillaBrewingDisplayMenu.openMenu();

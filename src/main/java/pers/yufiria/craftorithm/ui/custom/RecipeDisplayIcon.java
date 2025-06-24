@@ -60,12 +60,12 @@ public class RecipeDisplayIcon extends ActionIcon {
             if (lore != null) {
                 List<String> finalLore = lore;
                 extraLore.forEach(it -> {
-                    finalLore.add(BukkitTextProcessor.color(it));
+                    finalLore.add(parseIconText(it));
                 });
                 lore.addAll(finalLore);
             } else {
                 lore = new ArrayList<>(extraLore);
-                lore.replaceAll(BukkitTextProcessor::color);
+                lore.replaceAll(this::parseIconText);
             }
             itemMeta.setLore(lore);
             displayItem.setItemMeta(itemMeta);

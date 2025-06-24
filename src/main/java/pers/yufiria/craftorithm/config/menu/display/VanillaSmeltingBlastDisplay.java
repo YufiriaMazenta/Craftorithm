@@ -7,10 +7,10 @@ import crypticlib.config.node.impl.bukkit.StringListConfig;
 
 import java.util.List;
 
-@ConfigHandler(path = "menus/internal/display/vanilla_smelting_furnace.yml")
-public class VanillaSmeltingFurnace {
+@ConfigHandler(path = "menus/internal/display/vanilla_smelting_blast.yml")
+public class VanillaSmeltingBlastDisplay {
 
-    public static final StringConfig TITLE = new StringConfig("title", "<translate:lang:recipe_type_name.vanilla_smelting_furnace>:<recipe_key>");
+    public static final StringConfig TITLE = new StringConfig("title", "<translate:lang:recipe_type_name.vanilla_smelting_blast>:<recipe_key>");
     public static final StringListConfig LAYOUT = new StringListConfig("layout", List.of("#########", "##A###R##", "#########"));
     public static final ConfigSectionConfig ICONS = new ConfigSectionConfig("icons");
 

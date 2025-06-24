@@ -10,10 +10,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.CookingRecipe;
 import org.bukkit.plugin.Plugin;
 import pers.yufiria.craftorithm.config.Languages;
-import pers.yufiria.craftorithm.config.menu.display.VanillaSmeltingBlast;
-import pers.yufiria.craftorithm.config.menu.display.VanillaSmeltingCampfire;
-import pers.yufiria.craftorithm.config.menu.display.VanillaSmeltingFurnace;
-import pers.yufiria.craftorithm.config.menu.display.VanillaSmeltingSmoker;
+import pers.yufiria.craftorithm.config.menu.display.VanillaSmeltingBlastDisplay;
+import pers.yufiria.craftorithm.config.menu.display.VanillaSmeltingCampfireDisplay;
+import pers.yufiria.craftorithm.config.menu.display.VanillaSmeltingFurnaceDisplay;
+import pers.yufiria.craftorithm.config.menu.display.VanillaSmeltingSmokerDisplay;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
@@ -55,10 +55,10 @@ public enum VanillaSmeltingDisplayMenuManager implements RecipeDisplayMenuManage
 
     @Override
     public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
-        MenuDisplay furnaceDisplay = loadMenuDisplay(VanillaSmeltingFurnace.TITLE.value(), VanillaSmeltingFurnace.LAYOUT.value(), VanillaSmeltingFurnace.ICONS.value());
-        MenuDisplay blastDisplay = loadMenuDisplay(VanillaSmeltingBlast.TITLE.value(), VanillaSmeltingBlast.LAYOUT.value(), VanillaSmeltingBlast.ICONS.value());
-        MenuDisplay campfireDisplay = loadMenuDisplay(VanillaSmeltingCampfire.TITLE.value(), VanillaSmeltingCampfire.LAYOUT.value(), VanillaSmeltingCampfire.ICONS.value());
-        MenuDisplay smokerDisplay = loadMenuDisplay(VanillaSmeltingSmoker.TITLE.value(), VanillaSmeltingSmoker.LAYOUT.value(), VanillaSmeltingSmoker.ICONS.value());
+        MenuDisplay furnaceDisplay = loadMenuDisplay(VanillaSmeltingFurnaceDisplay.TITLE.value(), VanillaSmeltingFurnaceDisplay.LAYOUT.value(), VanillaSmeltingFurnaceDisplay.ICONS.value());
+        MenuDisplay blastDisplay = loadMenuDisplay(VanillaSmeltingBlastDisplay.TITLE.value(), VanillaSmeltingBlastDisplay.LAYOUT.value(), VanillaSmeltingBlastDisplay.ICONS.value());
+        MenuDisplay campfireDisplay = loadMenuDisplay(VanillaSmeltingCampfireDisplay.TITLE.value(), VanillaSmeltingCampfireDisplay.LAYOUT.value(), VanillaSmeltingCampfireDisplay.ICONS.value());
+        MenuDisplay smokerDisplay = loadMenuDisplay(VanillaSmeltingSmokerDisplay.TITLE.value(), VanillaSmeltingSmokerDisplay.LAYOUT.value(), VanillaSmeltingSmokerDisplay.ICONS.value());
         displays.put(SimpleRecipeTypes.VANILLA_SMELTING_FURNACE, furnaceDisplay);
         displays.put(SimpleRecipeTypes.VANILLA_SMELTING_BLAST, blastDisplay);
         displays.put(SimpleRecipeTypes.VANILLA_SMELTING_CAMPFIRE, campfireDisplay);

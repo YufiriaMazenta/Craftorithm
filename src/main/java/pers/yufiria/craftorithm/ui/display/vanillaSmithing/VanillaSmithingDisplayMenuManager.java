@@ -9,7 +9,7 @@ import crypticlib.ui.menu.Menu;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.SmithingRecipe;
 import org.bukkit.plugin.Plugin;
-import pers.yufiria.craftorithm.config.menu.display.VanillaSmithing;
+import pers.yufiria.craftorithm.config.menu.display.VanillaSmithingDisplay;
 import pers.yufiria.craftorithm.ui.RecipeDisplayMenuManager;
 import pers.yufiria.craftorithm.ui.icon.IconParser;
 
@@ -30,7 +30,7 @@ public enum VanillaSmithingDisplayMenuManager implements RecipeDisplayMenuManage
     @Override
     public Menu openMenu(Player player, SmithingRecipe recipe) {
         if (this.vanillaSmithingDisplay == null) {
-            this.vanillaSmithingDisplay = loadMenuDisplay(VanillaSmithing.TITLE.value(), VanillaSmithing.LAYOUT.value(), VanillaSmithing.ICONS.value());
+            this.vanillaSmithingDisplay = loadMenuDisplay(VanillaSmithingDisplay.TITLE.value(), VanillaSmithingDisplay.LAYOUT.value(), VanillaSmithingDisplay.ICONS.value());
         }
         VanillaSmithingDisplayMenu vanillaSmithingDisplayMenu = new VanillaSmithingDisplayMenu(player, vanillaSmithingDisplay, recipe);
         vanillaSmithingDisplayMenu.openMenu();
@@ -39,7 +39,7 @@ public enum VanillaSmithingDisplayMenuManager implements RecipeDisplayMenuManage
 
     @Override
     public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
-        this.vanillaSmithingDisplay = loadMenuDisplay(VanillaSmithing.TITLE.value(), VanillaSmithing.LAYOUT.value(), VanillaSmithing.ICONS.value());
+        this.vanillaSmithingDisplay = loadMenuDisplay(VanillaSmithingDisplay.TITLE.value(), VanillaSmithingDisplay.LAYOUT.value(), VanillaSmithingDisplay.ICONS.value());
     }
 
 }

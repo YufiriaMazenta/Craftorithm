@@ -8,7 +8,7 @@ import crypticlib.config.node.impl.bukkit.StringListConfig;
 import java.util.List;
 
 @ConfigHandler(path = "menus/internal/display/vanilla_brewing.yml")
-public class VanillaBrewing {
+public class VanillaBrewingDisplay {
 
     public static final StringConfig TITLE = new StringConfig("title", "<translate:lang:recipe_type_name.vanilla_brewing>:<recipe_key>");
     public static final StringListConfig LAYOUT = new StringListConfig("layout", List.of("#########", "##A######", "######C##", "##B######", "#########"));

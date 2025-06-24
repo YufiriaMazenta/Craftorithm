@@ -8,7 +8,7 @@ import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.menu.Menu;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import pers.yufiria.craftorithm.config.menu.display.Anvil;
+import pers.yufiria.craftorithm.config.menu.display.AnvilDisplay;
 import pers.yufiria.craftorithm.recipe.extra.AnvilRecipe;
 import pers.yufiria.craftorithm.ui.RecipeDisplayMenuManager;
 import pers.yufiria.craftorithm.ui.icon.IconParser;
@@ -33,7 +33,7 @@ public enum AnvilDisplayMenuManager implements RecipeDisplayMenuManager<AnvilRec
     @Override
     public Menu openMenu(Player player, AnvilRecipe recipe) {
         if (anvilDisplayMenuDisplay == null) {
-            anvilDisplayMenuDisplay = loadMenuDisplay(Anvil.TITLE.value(), Anvil.LAYOUT.value(), Anvil.ICONS.value());
+            anvilDisplayMenuDisplay = loadMenuDisplay(AnvilDisplay.TITLE.value(), AnvilDisplay.LAYOUT.value(), AnvilDisplay.ICONS.value());
         }
         AnvilDisplayMenu anvilDisplayMenu = new AnvilDisplayMenu(player, anvilDisplayMenuDisplay, recipe);
         anvilDisplayMenu.openMenu();
@@ -42,7 +42,7 @@ public enum AnvilDisplayMenuManager implements RecipeDisplayMenuManager<AnvilRec
 
     @Override
     public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
-        anvilDisplayMenuDisplay = loadMenuDisplay(Anvil.TITLE.value(), Anvil.LAYOUT.value(), Anvil.ICONS.value());
+        anvilDisplayMenuDisplay = loadMenuDisplay(AnvilDisplay.TITLE.value(), AnvilDisplay.LAYOUT.value(), AnvilDisplay.ICONS.value());
     }
 
 }
