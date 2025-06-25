@@ -27,6 +27,8 @@ repositories {
     maven("https://repo.codemc.io/repository/maven-public/")
     //Nexo
     maven("https://repo.nexomc.com/releases")
+    //CraftEngine
+    maven("https://repo.momirealms.net/releases/")
     mavenCentral()
 }
 
@@ -53,6 +55,8 @@ dependencies {
     compileOnly("com.willfp:libreforge:4.71.6:all@jar")
     compileOnly("com.ssomar:SCore:5.24.10.5")
     compileOnly("com.nexomc:nexo:0.7.0")
+    compileOnly("net.momirealms:craft-engine-core:0.0.57")
+    compileOnly("net.momirealms:craft-engine-bukkit:0.0.57")
     compileOnly(fileTree("libs"))
     implementation("com.crypticlib:bukkit:${rootProject.findProperty("crypticlibVer")}")
     implementation("com.crypticlib:bukkit-ui:${rootProject.findProperty("crypticlibVer")}")

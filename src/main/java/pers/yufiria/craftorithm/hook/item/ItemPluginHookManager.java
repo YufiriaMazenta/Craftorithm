@@ -36,6 +36,7 @@ public enum ItemPluginHookManager implements BukkitLifeCycleTask {
         addItemPluginHooker(NeigeItemsHooker.INSTANCE);
         addItemPluginHooker(NexoHooker.INSTANCE);
         addItemPluginHooker(OraxenHooker.INSTANCE);
+        addItemPluginHooker(CraftEngineHooker.INSTANCE);
     }
 
     @Override
