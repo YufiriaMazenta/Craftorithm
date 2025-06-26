@@ -23,7 +23,7 @@ public class EventUtils {
         hasCrafterCraftEvent = getHasCrafterCraftEvent();
     }
 
-    private static Boolean getHasCrafterCraftEvent() {
+    private static boolean getHasCrafterCraftEvent() {
         try {
             Class.forName("org.bukkit.event.block.CrafterCraftEvent");
             return true;
