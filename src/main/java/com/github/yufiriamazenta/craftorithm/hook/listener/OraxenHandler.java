@@ -1,4 +1,4 @@
-package com.github.yufiriamazenta.craftorithm.listener.hook;
+package com.github.yufiriamazenta.craftorithm.hook.listener;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import io.th0rgal.oraxen.api.events.OraxenItemsLoadedEvent;

@@ -1,7 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.arcenciel.token;
 
 import com.github.yufiriamazenta.craftorithm.arcenciel.obj.ReturnObj;
-import com.github.yufiriamazenta.craftorithm.hook.impl.VaultHooker;
+import com.github.yufiriamazenta.craftorithm.hook.VaultHooker;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Player;
 

@@ -6,8 +6,8 @@ import com.github.yufiriamazenta.craftorithm.arcenciel.block.StringArcencielBloc
 import com.github.yufiriamazenta.craftorithm.arcenciel.obj.ArcencielSignal;
 import com.github.yufiriamazenta.craftorithm.arcenciel.obj.ReturnObj;
 import com.github.yufiriamazenta.craftorithm.arcenciel.token.*;
-import com.github.yufiriamazenta.craftorithm.hook.impl.PlayerPointsHooker;
-import com.github.yufiriamazenta.craftorithm.hook.impl.VaultHooker;
+import com.github.yufiriamazenta.craftorithm.hook.PlayerPointsHooker;
+import com.github.yufiriamazenta.craftorithm.hook.VaultHooker;
 import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.BukkitLifeCycleTask;

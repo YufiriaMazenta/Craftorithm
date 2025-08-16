@@ -206,4 +206,11 @@ public enum ItemManager implements BukkitLifeCycleTask {
         reloadCustomCookingFuel();
     }
 
+    /**
+     * 重置物品提供源列表
+     */
+    public void resetItemProviders() {
+        itemProviderMap.clear();
+    }
+
 }

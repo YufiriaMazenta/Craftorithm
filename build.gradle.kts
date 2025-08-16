@@ -1,5 +1,5 @@
 import java.text.SimpleDateFormat
-version = "1.10.19"
+version = "1.10.20"
 
 plugins {
     `java-library`
@@ -13,6 +13,8 @@ repositories {
     maven("https://repo.auxilor.io/repository/maven-public/")
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     maven("https://oss.sonatype.org/content/groups/public/")
+    //Oraxen
+    maven("https://repo.oraxen.com/releases")
     maven("https://jitpack.io")
     maven("https://repo.rosewooddev.io/repository/public/")
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
@@ -27,6 +29,8 @@ repositories {
     maven("https://repo.codemc.io/repository/maven-public/")
     //Nexo
     maven("https://repo.nexomc.com/releases")
+    //CraftEngine
+    maven("https://repo.momirealms.net/releases/")
     mavenCentral()
 }
 
@@ -41,8 +45,8 @@ dependencies {
     compileOnly("net.luckperms:api:5.4")
     compileOnly("me.clip:placeholderapi:2.11.6")
     compileOnly("com.github.LoneDev6:API-ItemsAdder:3.6.3-beta-14")
-    compileOnly("com.github.oraxen:oraxen:1.160.0")
-    compileOnly("io.lumine:Mythic-Dist:5.3.5")
+    compileOnly("io.th0rgal:oraxen:1.191.0")
+    compileOnly("io.lumine:Mythic-Dist:5.9.1")
     compileOnly("io.lumine:MythicLib-dist:1.6.2-SNAPSHOT")
     compileOnly("net.Indyuce:MMOItems-API:6.9.5-SNAPSHOT")
     compileOnly("com.willfp:EcoEnchants:12.5.1")
@@ -51,6 +55,8 @@ dependencies {
     compileOnly("com.willfp:libreforge:4.71.6:all@jar")
     compileOnly("com.ssomar:SCore:5.24.10.5")
     compileOnly("com.nexomc:nexo:0.7.0")
+    compileOnly("net.momirealms:craft-engine-core:0.0.57")
+    compileOnly("net.momirealms:craft-engine-bukkit:0.0.57")
     compileOnly(fileTree("libs"))
     implementation("com.crypticlib:bukkit:${rootProject.findProperty("crypticlibVer")}")
     implementation("com.crypticlib:bukkit-ui:${rootProject.findProperty("crypticlibVer")}")

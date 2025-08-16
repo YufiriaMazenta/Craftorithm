@@ -1,4 +1,4 @@
-package com.github.yufiriamazenta.craftorithm.listener.hook;
+package com.github.yufiriamazenta.craftorithm.hook.listener;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
@@ -6,7 +6,6 @@ import dev.lone.itemsadder.api.Events.ItemsAdderLoadDataEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-
 public enum ItemsAdderHandler implements Listener {
 
     INSTANCE;

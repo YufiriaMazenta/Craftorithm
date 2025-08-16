@@ -4,7 +4,7 @@ import com.github.yufiriamazenta.craftorithm.bstat.Metrics;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.exception.UnsupportedVersionException;
-import com.github.yufiriamazenta.craftorithm.listener.hook.OtherPluginsListenerManager;
+import com.github.yufiriamazenta.craftorithm.hook.listener.OtherPluginsListenerManager;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.LangUtils;
 import com.github.yufiriamazenta.craftorithm.util.UpdateChecker;
