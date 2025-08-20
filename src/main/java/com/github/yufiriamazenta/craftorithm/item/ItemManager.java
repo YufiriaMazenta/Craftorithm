@@ -201,8 +201,6 @@ public enum ItemManager implements BukkitLifeCycleTask {
 
     @Override
     public void run(Plugin plugin, LifeCycle lifeCycle) {
-        if (lifeCycle.equals(LifeCycle.ACTIVE))
-            regItemProvider(CraftorithmItemProvider.INSTANCE);
         reloadCustomCookingFuel();
     }
 

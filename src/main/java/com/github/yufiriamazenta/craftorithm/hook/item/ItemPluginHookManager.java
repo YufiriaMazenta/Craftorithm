@@ -3,6 +3,7 @@ package com.github.yufiriamazenta.craftorithm.hook.item;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
 import com.github.yufiriamazenta.craftorithm.config.PluginConfigs;
 import com.github.yufiriamazenta.craftorithm.item.ItemManager;
+import com.github.yufiriamazenta.craftorithm.item.impl.CraftorithmItemProvider;
 import com.github.yufiriamazenta.craftorithm.util.LangUtils;
 import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
@@ -53,6 +54,7 @@ public enum ItemPluginHookManager implements BukkitLifeCycleTask {
                 LangUtils.info(Languages.LOAD_HOOK_PLUGIN_SUCCESS, Map.of("<plugin>", hookPluginName));
             }
         }
+        ItemManager.INSTANCE.regItemProvider(CraftorithmItemProvider.INSTANCE);
     }
 
     public void addItemPluginHooker(ItemPluginHooker hooker) {
