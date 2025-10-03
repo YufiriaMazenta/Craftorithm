@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 public enum ItemsAdderHooker implements ItemPluginHooker {
 
     INSTANCE;
+    private boolean registeredListener = false;
 
     @Override
     public String pluginName() {
@@ -19,9 +20,10 @@ public enum ItemsAdderHooker implements ItemPluginHooker {
     @Override
     public boolean hook() {
         boolean hooked = isPluginEnabled();
-        if (hooked) {
+        if (hooked && !registeredListener) {
             BukkitMsgSender.INSTANCE.debug("[Craftorithm] Registering ItemsAdder Handler");
             Bukkit.getPluginManager().registerEvents(ItemsAdderHandler.INSTANCE, Craftorithm.instance());
+            registeredListener = true;
         }
         return hooked;
     }
