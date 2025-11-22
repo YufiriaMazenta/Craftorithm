@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.hook.listener;
 
-import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventException;
 import org.bukkit.event.EventPriority;

@@ -1,8 +1,8 @@
 package pers.yufiria.craftorithm.hook;
 
-import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
+import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -14,7 +14,7 @@ import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.util.Map;
 
-@AutoTask(
+@LifeCycleTaskSettings(
     rules = @TaskRule(lifeCycle = LifeCycle.ACTIVE)
 )
 public enum VaultHooker implements PluginHooker, BukkitLifeCycleTask {

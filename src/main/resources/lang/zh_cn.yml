@@ -62,6 +62,8 @@ menu:
     name: '创建器'
     null_result: '<prefix> &c配方结果不允许为空！'
     null_ingredients: '<prefix> &c配方原料不允许为空！'
+    result_frame_icon_name: '&a此处放置配方结果'
+    confirm_icon_name: '&6&l确认创建配方'
   recipe_display:
     anvil:
       cost_level: '&3所需经验: &a<level>'

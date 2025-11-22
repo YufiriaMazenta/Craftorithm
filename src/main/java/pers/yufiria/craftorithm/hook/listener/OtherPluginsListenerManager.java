@@ -2,9 +2,9 @@ package pers.yufiria.craftorithm.hook.listener;
 
 import crypticlib.CrypticLibBukkit;
 import crypticlib.MinecraftVersion;
-import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
+import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
 import crypticlib.util.ReflectionHelper;
 import org.bukkit.event.HandlerList;
@@ -24,7 +24,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-@AutoTask(
+@LifeCycleTaskSettings(
     rules = {
         @TaskRule(lifeCycle = LifeCycle.RELOAD)
     }

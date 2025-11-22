@@ -1,14 +1,15 @@
 package pers.yufiria.craftorithm.hook.item;
 
-import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
+import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
 import crypticlib.util.IOHelper;
 import org.bukkit.plugin.Plugin;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.item.ItemManager;
+import pers.yufiria.craftorithm.item.impl.CraftorithmItemProvider;
 import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.util.Map;
@@ -17,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 进行物品插件挂钩的类
  */
-@AutoTask(rules = {
+@LifeCycleTaskSettings(rules = {
     @TaskRule(lifeCycle = LifeCycle.ACTIVE),
     @TaskRule(lifeCycle = LifeCycle.RELOAD)
 })
@@ -53,6 +54,7 @@ public enum ItemPluginHookManager implements BukkitLifeCycleTask {
                 LangUtils.info(Languages.LOAD_HOOK_PLUGIN_SUCCESS, Map.of("<plugin>", hookPluginName));
             }
         }
+        ItemManager.INSTANCE.regItemProvider(CraftorithmItemProvider.INSTANCE);
     }
 
     public void addItemPluginHooker(ItemPluginHooker hooker) {

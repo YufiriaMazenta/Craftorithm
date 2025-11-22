@@ -2,7 +2,6 @@ package pers.yufiria.craftorithm.ui.icon;
 
 import crypticlib.action.Action;
 import crypticlib.action.ActionCompiler;
-import crypticlib.action.impl.EmptyAction;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.util.MaterialHelper;
@@ -10,14 +9,11 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.ClickType;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import javax.crypto.KEM;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 public interface IconParser {

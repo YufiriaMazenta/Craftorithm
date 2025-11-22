@@ -2,9 +2,9 @@ package pers.yufiria.craftorithm.item;
 
 import com.google.common.base.Preconditions;
 import crypticlib.config.BukkitConfigWrapper;
-import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
+import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
 import crypticlib.util.IOHelper;
 import crypticlib.util.ItemHelper;
@@ -25,7 +25,7 @@ import pers.yufiria.craftorithm.item.impl.CraftorithmItemProvider;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-@AutoTask(
+@LifeCycleTaskSettings(
     rules = {
         @TaskRule(
             lifeCycle = LifeCycle.ACTIVE, priority = 1

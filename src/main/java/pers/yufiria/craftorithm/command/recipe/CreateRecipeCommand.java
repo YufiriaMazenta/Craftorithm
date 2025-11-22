@@ -3,9 +3,9 @@ package pers.yufiria.craftorithm.command.recipe;
 import crypticlib.command.CommandInfo;
 import crypticlib.command.CommandInvoker;
 import crypticlib.command.CommandNode;
-import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
+import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
 import crypticlib.perm.PermInfo;
 import org.bukkit.entity.Player;
@@ -26,7 +26,7 @@ import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@AutoTask(
+@LifeCycleTaskSettings(
     rules = {
         @TaskRule(lifeCycle = LifeCycle.ACTIVE)
     }

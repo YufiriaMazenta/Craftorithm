@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+/**
+ * 配方展示UI的加载器接口
+ */
 public interface RecipeDisplayLoader {
 
     IconParser iconParser();

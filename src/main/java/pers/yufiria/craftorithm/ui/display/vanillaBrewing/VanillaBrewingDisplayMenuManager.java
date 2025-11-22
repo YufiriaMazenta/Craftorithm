@@ -1,8 +1,8 @@
 package pers.yufiria.craftorithm.ui.display.vanillaBrewing;
 
-import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
+import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
 import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.menu.Menu;
@@ -13,7 +13,7 @@ import pers.yufiria.craftorithm.recipe.extra.BrewingRecipe;
 import pers.yufiria.craftorithm.ui.RecipeDisplayMenuManager;
 import pers.yufiria.craftorithm.ui.icon.IconParser;
 
-@AutoTask(
+@LifeCycleTaskSettings(
     rules = {
         @TaskRule(lifeCycle = LifeCycle.ENABLE),
         @TaskRule(lifeCycle = LifeCycle.RELOAD)

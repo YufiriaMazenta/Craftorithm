@@ -1,8 +1,8 @@
 package pers.yufiria.craftorithm.hook;
 
-import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
+import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.bukkit.plugin.Plugin;
@@ -12,7 +12,7 @@ import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.util.Map;
 
-@AutoTask(
+@LifeCycleTaskSettings(
     rules = @TaskRule(lifeCycle = LifeCycle.ACTIVE)
 )
 public enum PlayerPointsHooker implements PluginHooker, BukkitLifeCycleTask {

@@ -1,10 +1,7 @@
 package pers.yufiria.craftorithm.ui.display.vanillaSmelting;
 
-import crypticlib.chat.BukkitTextProcessor;
-import crypticlib.lang.LangManager;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.MenuDisplay;
-import crypticlib.ui.menu.Menu;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.CookingRecipe;
 import org.jetbrains.annotations.NotNull;

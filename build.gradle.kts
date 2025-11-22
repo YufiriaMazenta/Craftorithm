@@ -16,6 +16,8 @@ repositories {
     maven("https://repo.rosewooddev.io/repository/public/")
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     maven("https://repo.maven.apache.org/maven2/")
+    //Oraxen
+    maven("https://repo.oraxen.com/releases")
     //MythicDist
     maven("https://mvn.lumine.io/repository/maven-public/")
     maven("https://r.irepo.space/maven/")
@@ -45,7 +47,7 @@ dependencies {
     compileOnly("net.luckperms:api:5.4")
     compileOnly("me.clip:placeholderapi:2.11.6")
     compileOnly("com.github.LoneDev6:API-ItemsAdder:3.6.3-beta-14")
-    compileOnly("com.github.oraxen:oraxen:1.160.0")
+    compileOnly("io.th0rgal:oraxen:1.191.0")
     compileOnly("io.lumine:Mythic-Dist:5.3.5")
     compileOnly("io.lumine:MythicLib-dist:1.6.2-SNAPSHOT")
     compileOnly("net.Indyuce:MMOItems-API:6.9.5-SNAPSHOT")

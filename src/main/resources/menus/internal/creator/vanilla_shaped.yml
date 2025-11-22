@@ -1,1 +1,10 @@
 title: '<translate:lang:recipe_type_name.vanilla_shaped><translate:lang:menu.recipe_creator.name>'
+frame_icon:
+  material: minecraft:green_stained_glass_pane
+  name: '&a<translate:lang:recipe_type_name.vanilla_shaped>'
+result_frame_icon:
+  material: minecraft:lime_stained_glass_pane
+  name: '&a<translate:lang:menu.recipe_creator.result_frame_icon_name>'
+confirm_icon:
+  material: minecraft:crafting_table
+  name: '&a<translate:lang:menu.recipe_creator.confirm_icon_name>'

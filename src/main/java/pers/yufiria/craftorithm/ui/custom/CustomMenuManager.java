@@ -1,9 +1,9 @@
 package pers.yufiria.craftorithm.ui.custom;
 
 import crypticlib.config.BukkitConfigWrapper;
-import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
+import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
 import crypticlib.ui.menu.Menu;
 import crypticlib.ui.util.MenuHelper;
@@ -14,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.ui.BackableMenu;
-import pers.yufiria.craftorithm.ui.icon.IconParser;
 
 import java.io.File;
 import java.util.Collections;
@@ -25,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-@AutoTask(rules = {
+@LifeCycleTaskSettings(rules = {
     @TaskRule(lifeCycle = LifeCycle.ENABLE),
     @TaskRule(lifeCycle = LifeCycle.RELOAD)
 })
@@ -97,7 +96,11 @@ public enum CustomMenuManager implements BukkitLifeCycleTask {
             try {
                 BukkitConfigWrapper configWrapper = new BukkitConfigWrapper(menuFile);
                 CustomMenuInfo menuInfo = new CustomMenuInfo(configWrapper.config());
-                menuOpeners.put(menuName, player -> new CustomMenu(player, menuInfo).openMenu());
+                menuOpeners.put(menuName, player -> {
+                    CustomMenu customMenu = new CustomMenu(player, menuInfo);
+                    customMenu.openMenu();
+                    return customMenu;
+                });
                 IOHelper.info("Loaded menu: " + menuName);
             } catch (Throwable throwable) {
                 IOHelper.info("&cLoad menu " + menuName + " failed");

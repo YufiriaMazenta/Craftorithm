@@ -1,8 +1,8 @@
 package pers.yufiria.craftorithm.ui.display;
 
-import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
+import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
 import crypticlib.ui.menu.Menu;
 import crypticlib.util.IOHelper;
@@ -26,10 +26,9 @@ import pers.yufiria.craftorithm.util.ServerUtils;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
-@AutoTask(
+@LifeCycleTaskSettings(
     rules = {
         @TaskRule(lifeCycle = LifeCycle.ACTIVE)
     }

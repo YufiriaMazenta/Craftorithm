@@ -6,9 +6,9 @@ import crypticlib.CrypticLibBukkit;
 import crypticlib.MinecraftVersion;
 import crypticlib.action.ActionCompiler;
 import crypticlib.chat.BukkitMsgSender;
-import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
+import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
 import crypticlib.util.IOHelper;
 import org.bukkit.Bukkit;
@@ -25,10 +25,9 @@ import pers.yufiria.craftorithm.ui.action.OpenMenu;
 import pers.yufiria.craftorithm.util.LangUtils;
 import pers.yufiria.craftorithm.util.UpdateChecker;
 
-@AutoTask(
+@LifeCycleTaskSettings(
     rules = {
         @TaskRule(lifeCycle = LifeCycle.ACTIVE, priority = 2),
-        @TaskRule(lifeCycle = LifeCycle.RELOAD)
     }
 )
 public final class Craftorithm extends BukkitPlugin implements BukkitLifeCycleTask {
@@ -40,8 +39,8 @@ public final class Craftorithm extends BukkitPlugin implements BukkitLifeCycleTa
     }
 
     @Override
-    public void enable() {
-        CrypticLib.setDebug(PluginConfigs.DEBUG.value());
+    public void whenEnable() {
+        CrypticLib.debug = PluginConfigs.DEBUG.value();
         IOHelper.info("&7Server Type: " + CrypticLibBukkit.serverAdapter().type() + ", Version: " + MinecraftVersion.current().version());
         if (MinecraftVersion.current().before(MinecraftVersion.V1_19_4)) {
             BukkitMsgSender.INSTANCE.info("&cUnsupported Version");
@@ -54,7 +53,12 @@ public final class Craftorithm extends BukkitPlugin implements BukkitLifeCycleTa
     }
 
     @Override
-    public void disable() {
+    public void whenReload() {
+        CrypticLib.debug = PluginConfigs.DEBUG.value();
+    }
+
+    @Override
+    public void whenDisable() {
         RecipeManager.INSTANCE.resetRecipes();
     }
 
@@ -75,16 +79,12 @@ public final class Craftorithm extends BukkitPlugin implements BukkitLifeCycleTa
 
     @Override
     public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
-        if (lifeCycle == LifeCycle.ACTIVE) {
-            CrypticLibBukkit.scheduler().sync(() -> {
-                RecipeManager.INSTANCE.reloadRecipeManager();
-                OtherPluginsListenerManager.INSTANCE.convertOtherPluginsListeners();
-                LangUtils.info(Languages.LOAD_FINISH);
-                loadBStat();
-            });
-        } else {
-            CrypticLib.setDebug(PluginConfigs.DEBUG.value());
-        }
+        CrypticLibBukkit.scheduler().sync(() -> {
+            RecipeManager.INSTANCE.reloadRecipeManager();
+            OtherPluginsListenerManager.INSTANCE.convertOtherPluginsListeners();
+            LangUtils.info(Languages.LOAD_FINISH);
+            loadBStat();
+        });
     }
 
 }

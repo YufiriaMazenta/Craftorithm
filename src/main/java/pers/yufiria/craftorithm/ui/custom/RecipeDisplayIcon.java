@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.ui.custom;
 
-import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.menu.Menu;

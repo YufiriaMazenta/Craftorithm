@@ -1,8 +1,8 @@
 package pers.yufiria.craftorithm.ui.display.vanillaSmelting;
 
-import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
+import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
 import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.menu.Menu;
@@ -24,7 +24,7 @@ import pers.yufiria.craftorithm.util.LangUtils;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@AutoTask(
+@LifeCycleTaskSettings(
     rules = {
         @TaskRule(lifeCycle = LifeCycle.ENABLE),
         @TaskRule(lifeCycle = LifeCycle.RELOAD),

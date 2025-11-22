@@ -2,7 +2,6 @@ package pers.yufiria.craftorithm.ui.display.vanillaSmelting;
 
 import crypticlib.ui.display.Icon;
 import org.bukkit.configuration.ConfigurationSection;
-import pers.yufiria.craftorithm.ui.display.vanillaShapeless.VanillaShapelessIngredientIcon;
 import pers.yufiria.craftorithm.ui.icon.IconParser;
 import pers.yufiria.craftorithm.ui.icon.RecipeResultIcon;
 

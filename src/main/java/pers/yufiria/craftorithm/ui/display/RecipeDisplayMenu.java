@@ -1,7 +1,5 @@
 package pers.yufiria.craftorithm.ui.display;
 
-import crypticlib.chat.BukkitTextProcessor;
-import crypticlib.lang.LangManager;
 import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.menu.Menu;
 import org.bukkit.NamespacedKey;

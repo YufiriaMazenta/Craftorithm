@@ -55,6 +55,9 @@ public class Languages {
     public static final StringLangEntry MENU_RECIPE_CREATOR_NAME = new StringLangEntry("menu.recipe_creator.name");
     public static final StringLangEntry MENU_RECIPE_CREATOR_NULL_RESULT = new StringLangEntry("menu.recipe_creator.null_result");
     public static final StringLangEntry MENU_RECIPE_CREATOR_NULL_INGREDIENTS = new StringLangEntry("menu.recipe_creator.null_ingredients");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_RESULT_FRAME_ICON_NAME = new StringLangEntry("menu.recipe_creator.result_frame_icon_name");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_CONFIRM_ICON_NAME = new StringLangEntry("menu.recipe_creator.confirm_icon_name");
+
     public static final StringLangEntry MENU_RECIPE_DISPLAY_ANVIL_COST_LEVEL = new StringLangEntry("menu.recipe_display.anvil.cost_level");
     public static final StringLangEntry MENU_RECIPE_DISPLAY_VANILLA_SMELTING_TIME = new StringLangEntry("menu.recipe_display.vanilla_smelting.time");
     public static final StringLangEntry MENU_RECIPE_DISPLAY_VANILLA_SMELTING_REWARD_EXP = new StringLangEntry("menu.recipe_display.vanilla_smelting.reward_exp");

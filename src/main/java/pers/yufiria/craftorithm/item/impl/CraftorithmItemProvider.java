@@ -1,9 +1,9 @@
 package pers.yufiria.craftorithm.item.impl;
 
 import crypticlib.config.BukkitConfigWrapper;
-import crypticlib.lifecycle.AutoTask;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
+import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
 import crypticlib.util.IOHelper;
 import org.bukkit.OfflinePlayer;
@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-@AutoTask(
+@LifeCycleTaskSettings(
     rules = {
         @TaskRule(lifeCycle = LifeCycle.ENABLE),
         @TaskRule(lifeCycle = LifeCycle.RELOAD)

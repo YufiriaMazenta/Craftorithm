@@ -9,10 +9,11 @@ import crypticlib.command.annotation.Subcommand;
 import crypticlib.perm.PermInfo;
 import pers.yufiria.craftorithm.command.item.ItemCommand;
 import pers.yufiria.craftorithm.command.menu.OpenMenuCommand;
-import pers.yufiria.craftorithm.command.recipe.*;
+import pers.yufiria.craftorithm.command.recipe.CreateRecipeCommand;
+import pers.yufiria.craftorithm.command.recipe.DisableRecipeCommand;
+import pers.yufiria.craftorithm.command.recipe.DisplayRecipeCommand;
+import pers.yufiria.craftorithm.command.recipe.RemoveRecipeCommand;
 import pers.yufiria.craftorithm.config.PluginConfigs;
-
-import java.util.Arrays;
 
 @Command(platforms = {PlatformSide.BUKKIT})
 public class MainCommand extends CommandTree {
