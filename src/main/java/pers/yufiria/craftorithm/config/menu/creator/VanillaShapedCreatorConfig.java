@@ -13,4 +13,9 @@ public class VanillaShapedCreatorConfig {
     public static final ConfigSectionConfig RESULT_FRAME_ICON = new ConfigSectionConfig("result_frame_icon");
     public static final ConfigSectionConfig CONFIRM_ICON = new ConfigSectionConfig("confirm_icon");
 
+    public static final ConfigSectionConfig CATEGORY_ICON_MISC = new ConfigSectionConfig("category_icon.misc");
+    public static final ConfigSectionConfig CATEGORY_ICON_BUILDING = new ConfigSectionConfig("category_icon.building");
+    public static final ConfigSectionConfig CATEGORY_ICON_REDSTONE = new ConfigSectionConfig("category_icon.redstone");
+    public static final ConfigSectionConfig CATEGORY_ICON_EQUIPMENT = new ConfigSectionConfig("category_icon.equipment");
+
 }

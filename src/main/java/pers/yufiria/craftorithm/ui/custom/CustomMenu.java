@@ -21,11 +21,14 @@ public class CustomMenu extends TranslatableMenu implements BackableMenu {
         this.menuInfo = menuInfo;
     }
 
+
+
     @Override
     public void onOpen(InventoryOpenEvent event) {
         Player player = player();
-        if (menuInfo.permission() != null) {
-            if (player != null && !player.hasPermission(menuInfo.permission())) {
+        String menuPerm = menuInfo.permission();
+        if (menuPerm != null) {
+            if (player != null && !player.hasPermission(menuPerm)) {
                 event.setCancelled(true);
                 return;
             }

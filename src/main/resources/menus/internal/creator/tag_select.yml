@@ -1,0 +1,10 @@
+title: '<translate:lang:menu.tag_select.name>'
+previous_icon:
+  material: 'minecraft:stone'
+  name: "&r上一页"
+next_icon:
+  material: 'minecraft:stone'
+  name: '&r下一页'
+frame_icon:
+  material: minecraft:green_stained_glass_pane
+  name: '&a<translate:lang:recipe_type_name.vanilla_shaped>'

@@ -14,16 +14,13 @@ import pers.yufiria.craftorithm.util.ItemUtils;
 public abstract class RecipeCreator extends StoredMenu {
 
     protected String recipeName;
-    protected String title;
 
     public RecipeCreator(
-        @NotNull String title,
         @NotNull Player player,
         @NotNull String recipeName
     ) {
         super(player);
         this.recipeName = recipeName;
-        this.title = title;
     }
 
     protected void toggleIconGlowing(int slot, InventoryClickEvent event) {

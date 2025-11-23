@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.ui.creator;
+package pers.yufiria.craftorithm.ui.creator.vanillaShaped;
 
 import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.ui.display.Icon;
@@ -10,6 +10,7 @@ import crypticlib.util.ItemHelper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.recipe.CraftingBookCategory;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.menu.creator.VanillaShapedCreatorConfig;
@@ -17,6 +18,8 @@ import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
+import pers.yufiria.craftorithm.ui.creator.CreatorIconParser;
+import pers.yufiria.craftorithm.ui.creator.RecipeCreator;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
 import pers.yufiria.craftorithm.util.LangUtils;
 
@@ -26,20 +29,21 @@ import java.util.function.Supplier;
 public final class VanillaShapedCreator extends RecipeCreator {
 
     public VanillaShapedCreator(@NotNull Player player, @NotNull String recipeName) {
-        super(VanillaShapedCreatorConfig.TITLE.value(), player, recipeName);
+        super(player, recipeName);
         this.display = new MenuDisplay(
             VanillaShapedCreatorConfig.TITLE.value(),
             new MenuLayout(Arrays.asList(
                 "#########",
-                "#   #***#",
-                "#   A* *#",
-                "#   #***#",
-                "#########"
+                "#123#***#",
+                "#456A* *#",
+                "#789#***#",
+                "####C####"
             ), () -> {
                 Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
                 layoutMap.put('*', this::getResultFrameIcon);
                 layoutMap.put('A', this::getConfirmIcon);
+                layoutMap.put('C', RecipeBookCategoryIcon::new);
                 return layoutMap;
             })
         );
@@ -145,12 +149,18 @@ public final class VanillaShapedCreator extends RecipeCreator {
                 shape.removeIf(s -> s.trim().isEmpty());
                 removeEmptyColumn(shape);
                 //TODO Recipe book category
+                CraftingBookCategory category = ((RecipeBookCategoryIcon) Objects
+                    .requireNonNull(VanillaShapedCreator.this.getIcon(40))
+                ).category();
+
+                recipeConfig.set("recipe_book_category", category.name().toLowerCase());
                 recipeConfig.set("type", SimpleRecipeTypes.VANILLA_SHAPED.typeKey());
                 recipeConfig.set("shape", shape);
                 recipeConfig.set("ingredients", ingredientIdMap);//不知道会不会自动toString,如果不会的话还需要处理
                 recipeConfig.set("result", Objects.requireNonNull(resultId).toString());
                 recipeConfig.saveConfig();
                 recipeConfig.reloadConfig();
+                //TODO 加载配方
                 event.getWhoClicked().closeInventory();
                 //TODO 消息
                 return this;

@@ -8,3 +8,16 @@ result_frame_icon:
 confirm_icon:
   material: minecraft:crafting_table
   name: '&a<translate:lang:menu.recipe_creator.confirm_icon_name>'
+category_icon:
+  misc:
+    material: minecraft:apple
+    name: '&a物品'
+  building:
+    material: minecraft:bricks
+    name: '&a建筑方块'
+  redstone:
+    material: minecraft:redstone
+    name: '&a红石物品'
+  equipment:
+    material: minecraft:iron_axe
+    name: '&a工具'

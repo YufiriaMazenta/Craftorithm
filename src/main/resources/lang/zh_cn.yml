@@ -64,6 +64,9 @@ menu:
     null_ingredients: '<prefix> &c配方原料不允许为空！'
     result_frame_icon_name: '&a此处放置配方结果'
     confirm_icon_name: '&6&l确认创建配方'
+  tag_select:
+    name: 'Tag选择页面'
+    frame_icon_name: '&c选择你要使用的tag!'
   recipe_display:
     anvil:
       cost_level: '&3所需经验: &a<level>'

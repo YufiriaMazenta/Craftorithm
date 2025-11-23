@@ -28,38 +28,6 @@ public interface IconParser {
                 Map<ClickType, Action> actions = parseActions(config.getConfigurationSection("actions"));
                 return () -> new ActionIcon(iconDisplay, actions);
             }
-            case "next" -> {
-                IconDisplay iconDisplay = parseIconDisplay(config);
-                Map<ClickType, Action> actions = parseActions(config.getConfigurationSection("actions"));
-
-                IconDisplay lockedDisplay;
-                Map<ClickType, Action> lockedActions;
-                if (config.contains("locked")) {
-                    ConfigurationSection lockedConfig = Objects.requireNonNull(config.getConfigurationSection("locked"));
-                    lockedDisplay = parseIconDisplay(lockedConfig);
-                    lockedActions = parseActions(lockedConfig.getConfigurationSection("actions"));
-                } else {
-                    lockedActions = new HashMap<>();
-                    lockedDisplay = null;
-                }
-                return () -> new NextIcon(iconDisplay, actions, lockedDisplay, lockedActions);
-            }
-            case "previous" -> {
-                IconDisplay iconDisplay = parseIconDisplay(config);
-                Map<ClickType, Action> actions = parseActions(config.getConfigurationSection("actions"));
-
-                IconDisplay lockedDisplay;
-                Map<ClickType, Action> lockedActions;
-                if (config.contains("locked")) {
-                    ConfigurationSection lockedConfig = Objects.requireNonNull(config.getConfigurationSection("locked"));
-                    lockedDisplay = parseIconDisplay(lockedConfig);
-                    lockedActions = parseActions(lockedConfig.getConfigurationSection("actions"));
-                } else {
-                    lockedActions = new HashMap<>();
-                    lockedDisplay = null;
-                }
-                return () -> new PreviousIcon(iconDisplay, actions, lockedDisplay, lockedActions);
-            }
         }
     }
 
