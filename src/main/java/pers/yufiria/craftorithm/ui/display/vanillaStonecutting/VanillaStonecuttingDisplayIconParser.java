@@ -3,7 +3,7 @@ package pers.yufiria.craftorithm.ui.display.vanillaStonecutting;
 import crypticlib.ui.display.Icon;
 import org.bukkit.configuration.ConfigurationSection;
 import pers.yufiria.craftorithm.ui.icon.IconParser;
-import pers.yufiria.craftorithm.ui.icon.RecipeResultIcon;
+import pers.yufiria.craftorithm.ui.display.RecipeResultIcon;
 
 import java.util.function.Supplier;
 

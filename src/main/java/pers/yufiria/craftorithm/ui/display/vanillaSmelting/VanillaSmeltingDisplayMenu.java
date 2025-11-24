@@ -7,7 +7,7 @@ import org.bukkit.inventory.CookingRecipe;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayMenu;
 import pers.yufiria.craftorithm.ui.icon.ActionIcon;
-import pers.yufiria.craftorithm.ui.icon.RecipeResultIcon;
+import pers.yufiria.craftorithm.ui.display.RecipeResultIcon;
 
 import java.util.Map;
 
