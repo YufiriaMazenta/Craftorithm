@@ -37,5 +37,31 @@ public class PluginConfigs {
             "不包含在此列表里的物品插件将不会尝试挂钩,除非该插件主动挂钩"
         )
     );
+    public final static StringListConfig NOT_CONVERT_LISTENER_CLASSES = new StringListConfig(
+        "not_convert_listener_classes",
+        List.of(
+            "a4.papers.chatfilter.chatfilter.events.AnvilListener",
+            "com.ghostchu.quickshop.shade.tne.menu.paper.listener.PaperInventoryClickListener",
+            "com.earth2me.essentials.EssentialsPlayerListener",
+            "net.coreprotect.listener.player.InventoryChangeListener",
+            "net.coreprotect.listener.player.CraftItemListener",
+            "com.extendedclip.deluxemenus.listener.PlayerListener",
+            "com.dre.brewery.listeners.InventoryListener",
+            "com.xyrisdev.svalues.shaded.library.menu.MenuManager$InventoryListener",
+            "me.arcaniax.hdb.listener.InventoryListener",
+            "net.momirealms.craftengine.bukkit.item.listener.ItemEventListener",
+            "net.momirealms.customfishing.bukkit.hook.BukkitHookManager",
+            "net.momirealms.customfishing.bukkit.market.BukkitMarketManager",
+            "dev.jsinco.recipes.listeners.Events",
+            "fr.moribus.imageonmap.image.MapInitEvent",
+            "com.badbones69.crazycrates.paper.listeners.crates.types.WarCrateListener",
+            "com.ryderbelserion.fusion.paper.api.builders.gui.listeners.GuiListener",
+            "club.kid7.bannermaker.pluginutilities.gui.CustomGUIInventoryListener",
+            "xyz.marroq.smcsmithing.furnace.FurnaceManager",
+            "com.execsuroot.smccore.item.enhancement.ItemEnhancementUI",
+            "com.execsuroot.smccore.item.ItemHandler",
+            "com.execsuroot.smccore.player.inventory.PlayerInventoryHandler"
+        )
+    );
 
 }
