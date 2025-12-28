@@ -52,18 +52,32 @@ public enum OtherPluginsListenerManager implements BukkitLifeCycleTask {
 
                 handlerList.unregister(registeredListener);
 
-                boolean handled = false;
-
                 try {
                     if (registeredListener instanceof TimedRegisteredListener) {
-                        handlerList.register(new RecipeCheckTimedRegisteredListener(registeredListener.getListener(), getRegisteredListenerExecutor(registeredListener), registeredListener.getPriority(), registeredListener.getPlugin(), registeredListener.isIgnoringCancelled()));
-                        handled = true;
+                        handlerList.register(new RecipeCheckTimedRegisteredListener(
+                            registeredListener.getListener(),
+                            getRegisteredListenerExecutor(registeredListener),
+                            registeredListener.getPriority(),
+                            registeredListener.getPlugin(),
+                            registeredListener.isIgnoringCancelled()
+                        ));
+                    } else {
+                        handlerList.register(new RecipeCheckRegisteredListener(
+                            registeredListener.getListener(),
+                            getRegisteredListenerExecutor(registeredListener),
+                            registeredListener.getPriority(),
+                            registeredListener.getPlugin(),
+                            registeredListener.isIgnoringCancelled()
+                        ));
                     }
-                } catch (Exception ignore) {
-                }
-
-                if (!handled) {
-                    handlerList.register(new RecipeCheckRegisteredListener(registeredListener.getListener(), getRegisteredListenerExecutor(registeredListener), registeredListener.getPriority(), registeredListener.getPlugin(), registeredListener.isIgnoringCancelled()));
+                } catch (Throwable ignore) {
+                    handlerList.register(new RecipeCheckRegisteredListener(
+                        registeredListener.getListener(),
+                        getRegisteredListenerExecutor(registeredListener),
+                        registeredListener.getPriority(),
+                        registeredListener.getPlugin(),
+                        registeredListener.isIgnoringCancelled()
+                    ));
                 }
 
                 IOHelper.info("Converted listener: " + listenerClassName);
