@@ -42,5 +42,27 @@ public class PluginConfigs {
         "main_command_aliases",
         List.of("cra", "craft", "crafto")
     );
+    public final static StringListConfig NOT_CONVERT_LISTENER_CLASSES = new StringListConfig(
+        "not_convert_listener_classes",
+        List.of(
+            "a4.papers.chatfilter.chatfilter.events.AnvilListener",
+            "com.ghostchu.quickshop.shade.tne.menu.paper.listener.PaperInventoryClickListener",
+            "com.earth2me.essentials.EssentialsPlayerListener",
+            "net.coreprotect.listener.player.InventoryChangeListener",
+            "net.coreprotect.listener.player.CraftItemListener",
+            "com.extendedclip.deluxemenus.listener.PlayerListener",
+            "com.dre.brewery.listeners.InventoryListener",
+            "com.xyrisdev.svalues.shaded.library.menu.MenuManager$InventoryListener",
+            "me.arcaniax.hdb.listener.InventoryListener",
+            "net.momirealms.craftengine.bukkit.item.listener.ItemEventListener",
+            "net.momirealms.customfishing.bukkit.hook.BukkitHookManager",
+            "net.momirealms.customfishing.bukkit.market.BukkitMarketManager",
+            "dev.jsinco.recipes.listeners.Events",
+            "fr.moribus.imageonmap.image.MapInitEvent",
+            "com.badbones69.crazycrates.paper.listeners.crates.types.WarCrateListener",
+            "com.ryderbelserion.fusion.paper.api.builders.gui.listeners.GuiListener",
+            "club.kid7.bannermaker.pluginutilities.gui.CustomGUIInventoryListener",
+        )
+    );
 
 }

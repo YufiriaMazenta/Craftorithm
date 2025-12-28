@@ -6,8 +6,10 @@ import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
+import crypticlib.util.IOHelper;
 import crypticlib.util.ReflectionHelper;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockCookEvent;
 import org.bukkit.event.block.CampfireStartEvent;
 import org.bukkit.event.block.CrafterCraftEvent;
@@ -41,6 +43,13 @@ public enum OtherPluginsListenerManager implements BukkitLifeCycleTask {
                 if (registeredListener instanceof RecipeCheckRegisteredListener || registeredListener instanceof RecipeCheckTimedRegisteredListener)
                     continue;
 
+                Listener listener = registeredListener.getListener();
+                String listenerClassName = listener.getClass().getName();
+                if (PluginConfigs.NOT_CONVERT_LISTENER_CLASSES.value().contains(listenerClassName)) {
+                    //如果该监听器被配置为不转化,则直接跳过
+                    continue;
+                }
+
                 handlerList.unregister(registeredListener);
 
                 boolean handled = false;
@@ -56,6 +65,8 @@ public enum OtherPluginsListenerManager implements BukkitLifeCycleTask {
                 if (!handled) {
                     handlerList.register(new RecipeCheckRegisteredListener(registeredListener.getListener(), getRegisteredListenerExecutor(registeredListener), registeredListener.getPriority(), registeredListener.getPlugin(), registeredListener.isIgnoringCancelled()));
                 }
+
+                IOHelper.info("Converted listener: " + listenerClassName);
             }
         }
     }
