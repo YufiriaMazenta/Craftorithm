@@ -102,6 +102,23 @@ public class ItemUtils implements BukkitLifeCycleTask {
         return itemName;
     }
 
+    public static String matchItemNameOrVanilla(ItemStack item, boolean ignoreAmount) {
+        if (ItemHelper.isAir(item)) {
+            return null;
+        }
+        String itemName;
+        if (item.hasItemMeta()) {
+            itemName = ItemManager.INSTANCE.matchItemName(item, ignoreAmount);
+            return itemName;
+        } else {
+            itemName = item.getType().getKey().toString();
+            if (!ignoreAmount && item.getAmount() > 1) {
+                itemName += (" " + item.getAmount());
+            }
+        }
+        return itemName;
+    }
+
     public static void toggleItemGlowing(ItemStack item) {
         if (item.containsEnchantment(Enchantment.MENDING)) {
             item.removeEnchantment(Enchantment.MENDING);

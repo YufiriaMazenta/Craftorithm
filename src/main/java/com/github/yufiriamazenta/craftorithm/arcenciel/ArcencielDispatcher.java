@@ -65,6 +65,7 @@ public enum ArcencielDispatcher implements IArcencielDispatcher, BukkitLifeCycle
         StringArcencielBlock.regScriptKeyword(TokenAny.INSTANCE);
         StringArcencielBlock.regScriptKeyword(TokenLevel.INSTANCE);
         StringArcencielBlock.regScriptKeyword(TokenTakeLevel.INSTANCE);
+        StringArcencielBlock.regScriptKeyword(TokenGiveExp.INSTANCE);
         StringArcencielBlock.regScriptKeyword(TokenPapi.INSTANCE);
         if (VaultHooker.INSTANCE.isEconomyHooked()) {
             StringArcencielBlock.regScriptKeyword(TokenMoney.INSTANCE);

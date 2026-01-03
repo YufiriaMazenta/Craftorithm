@@ -37,6 +37,7 @@ public class PluginConfigs {
             "不包含在此列表里的物品插件将不会尝试挂钩,除非该插件主动挂钩"
         )
     );
+    public final static BooleanConfig ENABLE_STONECUTTER_ACTIONS = new BooleanConfig("enable_stonecutter_actions", true);
     public final static StringListConfig NOT_CONVERT_LISTENER_CLASSES = new StringListConfig(
         "not_convert_listener_classes",
         List.of(
