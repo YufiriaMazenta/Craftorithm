@@ -1,6 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.arcenciel.token;
 
 import com.github.yufiriamazenta.craftorithm.arcenciel.obj.ReturnObj;
+import crypticlib.CrypticLibBukkit;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -21,7 +22,11 @@ public class TokenGiveExp extends AbstractArcencielToken<Integer> {
         if (args.isEmpty())
             return new ReturnObj<>(player.getLevel());
         int value = Integer.parseInt(args.get(0));
-        player.giveExp(Math.max(0, value));
+        if (CrypticLibBukkit.platform().isPaper()) {
+            player.giveExp(Math.max(0, value), true);
+        } else {
+            player.giveExp(Math.max(0, value));
+        }
         return new ReturnObj<>(player.getLevel());
     }
 }
