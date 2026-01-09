@@ -7,7 +7,6 @@ import com.github.yufiriamazenta.craftorithm.menu.display.RecipeGroupListMenu;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.config.BukkitConfigWrapper;
-import crypticlib.config.ConfigWrapper;
 import crypticlib.conversation.Conversation;
 import crypticlib.conversation.NumberPrompt;
 import crypticlib.conversation.Prompt;
@@ -37,14 +36,17 @@ public class AnvilRecipeGroupEditor extends RecipeGroupEditor {
                 new MenuLayout(
                     Arrays.asList(
                         "####A###Z",
-                        "         ",
+                        "X%%%%%%%Y",
                         "#########"
                     ),
                     () -> {
                         Map<Character, Supplier<Icon>> iconMap = new HashMap<>();
                         iconMap.put('#', this::getFrameIcon);
                         iconMap.put('A', () -> getSortIdEditIcon(4));
+                        iconMap.put('X', this::getPreviousIcon);
+                        iconMap.put('Y', this::getNextIcon);
                         iconMap.put('Z', this::getRemoveIcon);
+                        //TODO condition和action
                         return iconMap;
                     }
                 )
@@ -82,6 +84,7 @@ public class AnvilRecipeGroupEditor extends RecipeGroupEditor {
             Icon icon = new AnvilSourceIcon(i, source);
             elements.add(icon);
         }
+        setElements(elements);
     }
 
 

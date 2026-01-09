@@ -7,14 +7,15 @@ import com.github.yufiriamazenta.craftorithm.menu.display.RecipeGroupListMenu;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.registry.impl.CookingRecipeRegistry;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
-import crypticlib.chat.TextProcessor;
+import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.conversation.Conversation;
 import crypticlib.conversation.NumberPrompt;
 import crypticlib.conversation.Prompt;
 import crypticlib.ui.display.Icon;
+import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.display.MenuLayout;
-import crypticlib.util.ItemUtil;
+import crypticlib.util.ItemHelper;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -23,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 public class CookingRecipeGroupEditor extends UnlockableRecipeGroupEditor {
 
@@ -40,13 +42,13 @@ public class CookingRecipeGroupEditor extends UnlockableRecipeGroupEditor {
                         "#########"
                     ),
                     () -> {
-                        Map<Character, Icon> layoutMap = new HashMap<>();
-                        layoutMap.put('A', getSortIdEditIcon(3));
-                        layoutMap.put('B', getUnlockIcon());
-                        layoutMap.put('#', getFrameIcon());
-                        layoutMap.put('X', getPreviousIcon());
-                        layoutMap.put('Y', getNextIcon());
-                        layoutMap.put('Z', getRemoveIcon());
+                        Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
+                        layoutMap.put('A', () -> this.getSortIdEditIcon(3));
+                        layoutMap.put('B', this::getUnlockIcon);
+                        layoutMap.put('#', this::getFrameIcon);
+                        layoutMap.put('X', this::getPreviousIcon);
+                        layoutMap.put('Y', this::getNextIcon);
+                        layoutMap.put('Z', this::getRemoveIcon);
                         return layoutMap;
                     }
                 )
@@ -107,13 +109,15 @@ public class CookingRecipeGroupEditor extends UnlockableRecipeGroupEditor {
             .replace("<exp>", cookingRecipeSource.exp + "")
             .replace("<ingredient>", Objects.requireNonNull(ingredientName))
         );
-        ItemUtil.setLore(cookingSourceIcon.display(), lore);
+        ItemHelper.setLore(cookingSourceIcon.display(), lore);
     }
 
     public class CookingSourceIcon extends Icon {
 
         public CookingSourceIcon(int sourceIndex, CookingRecipeSource cookingRecipeSource) {
-            super(cookingRecipeSource.cookingBlock.blockMaterial());
+            super(new IconDisplay(
+                cookingRecipeSource.cookingBlock.blockMaterial()
+            ));
             updateCookingIcon(this, cookingRecipeSource);
             switch (cookingRecipeSource.cookingBlock) {
                 case FURNACE:
@@ -214,7 +218,7 @@ public class CookingRecipeGroupEditor extends UnlockableRecipeGroupEditor {
 
         @Override
         public @NotNull BaseComponent promptText(@NotNull Map<Object, Object> data) {
-            return TextProcessor.toComponent(TextProcessor.color(Languages.MENU_RECIPE_EDITOR_ICON_COOKING_ELEMENT_INPUT_COOKING_TIME_HINT.value(player)));
+            return BukkitTextProcessor.toComponent(BukkitTextProcessor.color(Languages.MENU_RECIPE_EDITOR_ICON_COOKING_ELEMENT_INPUT_COOKING_TIME_HINT.value(player)));
         }
 
     }
@@ -255,7 +259,7 @@ public class CookingRecipeGroupEditor extends UnlockableRecipeGroupEditor {
 
         @Override
         public @NotNull BaseComponent promptText(@NotNull Map<Object, Object> data) {
-            return TextProcessor.toComponent(TextProcessor.color(Languages.MENU_RECIPE_EDITOR_ICON_COOKING_ELEMENT_INPUT_COOKING_EXP_HINT.value(player)));
+            return BukkitTextProcessor.toComponent(BukkitTextProcessor.color(Languages.MENU_RECIPE_EDITOR_ICON_COOKING_ELEMENT_INPUT_COOKING_EXP_HINT.value(player)));
         }
     }
 

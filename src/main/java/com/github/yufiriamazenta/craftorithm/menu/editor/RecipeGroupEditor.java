@@ -2,6 +2,7 @@ package com.github.yufiriamazenta.craftorithm.menu.editor;
 
 import com.github.yufiriamazenta.craftorithm.Craftorithm;
 import com.github.yufiriamazenta.craftorithm.config.Languages;
+import com.github.yufiriamazenta.craftorithm.menu.MultipageMenu;
 import com.github.yufiriamazenta.craftorithm.menu.display.RecipeGroupListMenu;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
@@ -31,7 +32,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public abstract class RecipeGroupEditor extends Menu {
+public abstract class RecipeGroupEditor extends MultipageMenu {
 
     protected RecipeGroup recipeGroup;
     protected RecipeGroupListMenu parent;
@@ -42,6 +43,7 @@ public abstract class RecipeGroupEditor extends Menu {
 
     protected RecipeGroupEditor(@NotNull Player player, @NotNull RecipeGroup recipeGroup, RecipeGroupListMenu parent) {
         super(player);
+        setElementKey(ELEMENT_KEY);
         Validate.notNull(recipeGroup);
         this.recipeGroup = recipeGroup;
         this.title = Languages.MENU_RECIPE_EDITOR_TITLE.value(player).replace("<recipe_name>", recipeGroup.groupName());
@@ -198,6 +200,22 @@ public abstract class RecipeGroupEditor extends Menu {
         return new Icon(new IconDisplay(
             Material.BLACK_STAINED_GLASS_PANE, Languages.MENU_RECIPE_EDITOR_ICON_FRAME.value(player)
         ));
+    }
+
+    public Icon getNextIcon() {
+        return new Icon(new IconDisplay(
+            Material.PAPER, Languages.MENU_RECIPE_EDITOR_ICON_NEXT.value(player)
+        )).setClickAction(
+            event -> nextPage()
+        );
+    }
+
+    public Icon getPreviousIcon() {
+        return new Icon(new IconDisplay(
+            Material.PAPER, Languages.MENU_RECIPE_EDITOR_ICON_PREVIOUS.value(player)
+        )).setClickAction(
+            event -> previousPage()
+        );
     }
 
 }

@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class PotionMixGroupEditor extends RecipeGroupEditor {
 
@@ -24,9 +25,9 @@ public class PotionMixGroupEditor extends RecipeGroupEditor {
                         "ABCDEFGHI"
                     ),
                     () -> {
-                        Map<Character, Icon> iconMap = new HashMap<>();
-                        iconMap.put('A', getSortIdEditIcon(0));
-                        iconMap.put('I', getRemoveIcon());
+                        Map<Character, Supplier<Icon>> iconMap = new HashMap<>();
+                        iconMap.put('A', () -> getSortIdEditIcon(0));
+                        iconMap.put('I', this::getRemoveIcon);
                         return iconMap;
                     }
                 )

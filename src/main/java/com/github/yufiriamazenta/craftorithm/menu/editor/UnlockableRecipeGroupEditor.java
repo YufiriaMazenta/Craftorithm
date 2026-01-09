@@ -6,7 +6,8 @@ import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
 import com.github.yufiriamazenta.craftorithm.util.ItemUtils;
 import crypticlib.ui.display.Icon;
-import crypticlib.util.ItemUtil;
+import crypticlib.ui.display.IconDisplay;
+import crypticlib.util.ItemHelper;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -24,9 +25,11 @@ public abstract class UnlockableRecipeGroupEditor extends RecipeGroupEditor {
 
     protected Icon getUnlockIcon() {
         Icon icon = new Icon(
-            Material.KNOWLEDGE_BOOK,
-            Languages.MENU_RECIPE_EDITOR_ICON_UNLOCK.value(player)
-                .replace("<unlock>", String.valueOf(unlock))
+            new IconDisplay(
+                Material.KNOWLEDGE_BOOK,
+                Languages.MENU_RECIPE_EDITOR_ICON_UNLOCK.value(player)
+                    .replace("<unlock>", String.valueOf(unlock))
+            )
         ).setClickAction(
             event -> {
                 unlock = !unlock;
@@ -48,9 +51,9 @@ public abstract class UnlockableRecipeGroupEditor extends RecipeGroupEditor {
     }
 
     protected void updateUnlockIcon(ItemStack unlockIconDisplay) {
-        if (ItemUtil.isAir(unlockIconDisplay)) return;
+        if (ItemHelper.isAir(unlockIconDisplay)) return;
         ItemUtils.toggleItemGlowing(unlockIconDisplay);
-        ItemUtil.setDisplayName(
+        ItemHelper.setDisplayName(
             unlockIconDisplay,
             Languages.MENU_RECIPE_EDITOR_ICON_UNLOCK.value(player)
                 .replace("<unlock>", String.valueOf(unlock))

@@ -1,13 +1,16 @@
 package com.github.yufiriamazenta.craftorithm.menu.display;
 
 import com.github.yufiriamazenta.craftorithm.config.Languages;
+import com.github.yufiriamazenta.craftorithm.menu.editor.*;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeGroup;
 import com.github.yufiriamazenta.craftorithm.recipe.RecipeManager;
+import com.github.yufiriamazenta.craftorithm.recipe.RecipeType;
 import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.menu.Menu;
 import crypticlib.util.ItemHelper;
+import crypticlib.util.TernaryFunction;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -19,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class RecipeGroupListMenu extends Menu {
@@ -26,11 +30,22 @@ public class RecipeGroupListMenu extends Menu {
     private int page;
     private int maxPage;
     private List<Map.Entry<String, ItemStack>> recipeGroupResultList;
+    private final Map<RecipeType, TernaryFunction<Player, RecipeGroup, RecipeGroupListMenu, RecipeGroupEditor>> recipeGroupEditorMap;
 
     public RecipeGroupListMenu(Player player) {
         super(player);
         recipeGroupResultList = new CopyOnWriteArrayList<>();
         refreshRecipes();
+
+        recipeGroupEditorMap = new ConcurrentHashMap<>();
+        recipeGroupEditorMap.put(RecipeType.SHAPED, CraftingRecipeGroupEditor::new);
+        recipeGroupEditorMap.put(RecipeType.SHAPELESS, CraftingRecipeGroupEditor::new);
+        recipeGroupEditorMap.put(RecipeType.COOKING, CookingRecipeGroupEditor::new);
+        recipeGroupEditorMap.put(RecipeType.RANDOM_COOKING, CookingRecipeGroupEditor::new);
+        recipeGroupEditorMap.put(RecipeType.SMITHING, SmithingRecipeGroupEditor::new);
+        recipeGroupEditorMap.put(RecipeType.ANVIL, AnvilRecipeGroupEditor::new);
+        recipeGroupEditorMap.put(RecipeType.POTION, PotionMixGroupEditor::new);
+        recipeGroupEditorMap.put(RecipeType.STONE_CUTTING, StoneCuttingRecipeGroupEditor::new);
     }
 
     @NotNull
@@ -140,16 +155,16 @@ public class RecipeGroupListMenu extends Menu {
                 switch (event.getClick()) {
                     case RIGHT:
                     case SHIFT_RIGHT:
-//                        if (!player.hasPermission("craftorithm.edit_recipe")) {
-//                            return;
-//                        }
-//                        RecipeGroup recipeGroup = RecipeManager.INSTANCE.getRecipeGroup(recipeGroupName);
-//                        if (recipeGroup == null) {
-//                            throw new IllegalArgumentException("Can not find recipe group " + recipeGroupName);
-//                        }
-//                        recipeGroupEditorMap.getOrDefault(recipeGroup.recipeType(), (player, group, parent) -> {
-//                            throw new RuntimeException("Unknown recipe type editor");
-//                        }).apply(player, recipeGroup, this).openMenu();
+                        if (!player.hasPermission("craftorithm.edit_recipe")) {
+                            return;
+                        }
+                        RecipeGroup recipeGroup = RecipeManager.INSTANCE.getRecipeGroup(recipeGroupName);
+                        if (recipeGroup == null) {
+                            throw new IllegalArgumentException("Can not find recipe group " + recipeGroupName);
+                        }
+                        recipeGroupEditorMap.getOrDefault(recipeGroup.recipeType(), (player, group, parent) -> {
+                            throw new RuntimeException("Unknown recipe type editor");
+                        }).apply(player, recipeGroup, this).openMenu();
                         break;
                     case LEFT:
                     case SHIFT_LEFT:
