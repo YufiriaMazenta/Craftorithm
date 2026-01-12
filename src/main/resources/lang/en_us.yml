@@ -26,6 +26,8 @@ command:
   reload:
     success: '<prefix> &aPlugin reload!'
     exception: '<prefix> &cError occurred during plugin reload, please check the console.'
+    recipes_confirm: '<prefix> &eConfirm reloading recipes? If there are many recipes or many players online, it may cause server overload!'
+    recipes: '<prefix> &aRecipes reloaded!'
   remove:
     success: '<prefix> &aRecipe removed successfully.'
     not_exist: '<prefix> &cRecipe does not exist.'

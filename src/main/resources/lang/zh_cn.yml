@@ -26,6 +26,8 @@ command:
   reload:
     success: '<prefix> &a插件重载成功'
     exception: '<prefix> &c插件重载过程中发生错误，请查看控制台'
+    recipes_confirm: '<prefix> &e确认要重载配方吗，如果配方较多或服务器在线人数较多，可能会造成服务器过载！'
+    recipes: '<prefix> &a配方重载完毕'
   remove:
     success: '<prefix> &a配方删除成功'
     not_exist: '<prefix> &c配方不存在'

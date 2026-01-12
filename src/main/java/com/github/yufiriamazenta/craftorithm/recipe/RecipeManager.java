@@ -520,7 +520,8 @@ public enum RecipeManager implements BukkitLifeCycleTask {
                 });
             }
         } else {
-            reloadRecipeManager();
+            //不再在RELOAD阶段对配方进行重载
+//            reloadRecipeManager();
         }
     }
 
