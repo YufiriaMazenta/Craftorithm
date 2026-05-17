@@ -45,8 +45,7 @@ public enum CraftEngineItemProvider implements ItemProvider {
 
     @Override
     public @Nullable ItemStack matchItem(String itemId) {
-        Key craftEngineItemId = Key.from(itemId);
-        BukkitItemDefinition craftEngineItem = CraftEngineItems.byId(craftEngineItemId);
+        BukkitItemDefinition craftEngineItem = CraftEngineItems.byId(itemId);
         if (craftEngineItem == null) {
             return null;
         }
@@ -55,20 +54,15 @@ public enum CraftEngineItemProvider implements ItemProvider {
 
     @Override
     public @Nullable ItemStack matchItem(String itemId, @Nullable OfflinePlayer player) {
-        Key craftEngineItemId = Key.from(itemId);
-        BukkitItemDefinition craftEngineItem = CraftEngineItems.byId(craftEngineItemId);
+        BukkitItemDefinition craftEngineItem = CraftEngineItems.byId(itemId);
         if (craftEngineItem == null) {
             return null;
         }
-        if (player == null) {
+        if (player instanceof Player bukkitPlayer) {
+            return craftEngineItem.buildBukkitItem(bukkitPlayer);
+        } else {
             return craftEngineItem.buildBukkitItem();
         }
-
-        Player bukkitPlayer = player.getPlayer();
-        if (bukkitPlayer == null) {
-            return craftEngineItem.buildBukkitItem();
-        }
-        return craftEngineItem.buildBukkitItem(bukkitPlayer);
     }
 
 }
