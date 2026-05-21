@@ -8,7 +8,10 @@ plugins {
 
 repositories {
     mavenLocal()
-    maven("https://repo.crypticlib.com:8081/repository/maven-public/")
+    //CrypticLib
+    maven("http://110.42.10.241:8082/repository/maven-public/") {
+        isAllowInsecureProtocol = true
+    }
     maven("https://repo.auxilor.io/repository/maven-public/")
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     maven("https://oss.sonatype.org/content/groups/public/")

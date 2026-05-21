@@ -61,7 +61,7 @@ public class PluginConfigs {
             "fr.moribus.imageonmap.image.MapInitEvent",
             "com.badbones69.crazycrates.paper.listeners.crates.types.WarCrateListener",
             "com.ryderbelserion.fusion.paper.api.builders.gui.listeners.GuiListener",
-            "club.kid7.bannermaker.pluginutilities.gui.CustomGUIInventoryListener",
+            "club.kid7.bannermaker.pluginutilities.gui.CustomGUIInventoryListener"
         )
     );
 
