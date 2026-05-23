@@ -209,6 +209,42 @@ public enum RecipeManager implements BukkitLifeCycleTask {
                     disabledRecipes.add(key.toString());
                 }
             });
+        } else {
+            boolean disableFurnace = PluginConfigs.DISABLE_FURNACE_RECIPES.value();
+            boolean disableCampfire = PluginConfigs.DISABLE_CAMPFIRE_RECIPES.value();
+            boolean disableSmoker = PluginConfigs.DISABLE_SMOKER_RECIPES.value();
+            boolean disableBlastFurnace = PluginConfigs.DISABLE_BLAST_FURNACE_RECIPES.value();
+            boolean disableCrafting = PluginConfigs.DISABLE_CRAFTING_RECIPES.value();
+            boolean disableStonecutting = PluginConfigs.DISABLE_STONECUTTING_RECIPES.value();
+            boolean disableSmithing = PluginConfigs.DISABLE_SMITHING_RECIPES.value();
+
+            serverRecipesCache.forEach((key, recipe) -> {
+                if (key.getNamespace().equals("minecraft")) {
+                    if (disabledRecipes.contains(key.toString()))
+                        return;
+
+                    boolean shouldDisable = false;
+                    if (disableFurnace && recipe instanceof org.bukkit.inventory.FurnaceRecipe) {
+                        shouldDisable = true;
+                    } else if (disableCampfire && recipe instanceof org.bukkit.inventory.CampfireRecipe) {
+                        shouldDisable = true;
+                    } else if (disableSmoker && recipe instanceof org.bukkit.inventory.SmokingRecipe) {
+                        shouldDisable = true;
+                    } else if (disableBlastFurnace && recipe instanceof org.bukkit.inventory.BlastingRecipe) {
+                        shouldDisable = true;
+                    } else if (disableCrafting && (recipe instanceof org.bukkit.inventory.ShapedRecipe || recipe instanceof org.bukkit.inventory.ShapelessRecipe || recipe instanceof org.bukkit.inventory.ComplexRecipe)) {
+                        shouldDisable = true;
+                    } else if (disableStonecutting && recipe instanceof org.bukkit.inventory.StonecuttingRecipe) {
+                        shouldDisable = true;
+                    } else if (disableSmithing && recipe instanceof org.bukkit.inventory.SmithingRecipe) {
+                        shouldDisable = true;
+                    }
+
+                    if (shouldDisable) {
+                        disabledRecipes.add(key.toString());
+                    }
+                }
+            });
         }
         for (String recipeKey : disabledRecipes) {
             NamespacedKey key = NamespacedKey.fromString(recipeKey);
@@ -256,6 +292,19 @@ public enum RecipeManager implements BukkitLifeCycleTask {
     private void saveDisabledRecipesData(NamespacedKey recipeKey) {
         if (recipeKey.getNamespace().equals(NamespacedKey.MINECRAFT) && PluginConfigs.REMOVE_ALL_VANILLA_RECIPE.value())
             return;
+
+        // Skip saving if disabled by specific config and not generally REMOVE_ALL_VANILLA_RECIPE
+        Recipe recipe = serverRecipesCache.get(recipeKey);
+        if (recipe != null && recipeKey.getNamespace().equals(NamespacedKey.MINECRAFT)) {
+            if (PluginConfigs.DISABLE_FURNACE_RECIPES.value() && recipe instanceof org.bukkit.inventory.FurnaceRecipe) return;
+            if (PluginConfigs.DISABLE_CAMPFIRE_RECIPES.value() && recipe instanceof org.bukkit.inventory.CampfireRecipe) return;
+            if (PluginConfigs.DISABLE_SMOKER_RECIPES.value() && recipe instanceof org.bukkit.inventory.SmokingRecipe) return;
+            if (PluginConfigs.DISABLE_BLAST_FURNACE_RECIPES.value() && recipe instanceof org.bukkit.inventory.BlastingRecipe) return;
+            if (PluginConfigs.DISABLE_CRAFTING_RECIPES.value() && (recipe instanceof org.bukkit.inventory.ShapedRecipe || recipe instanceof org.bukkit.inventory.ShapelessRecipe || recipe instanceof org.bukkit.inventory.ComplexRecipe)) return;
+            if (PluginConfigs.DISABLE_STONECUTTING_RECIPES.value() && recipe instanceof org.bukkit.inventory.StonecuttingRecipe) return;
+            if (PluginConfigs.DISABLE_SMITHING_RECIPES.value() && recipe instanceof org.bukkit.inventory.SmithingRecipe) return;
+        }
+
         List<String> disabledRecipes = disabledRecipesConfigWrapper.config().getStringList("recipes");
         String keyStr = recipeKey.toString();
         if (!disabledRecipes.contains(keyStr))

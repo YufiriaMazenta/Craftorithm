@@ -4,6 +4,13 @@ config_version: 2
 check_update: true
 #是否移除所有的原版配方
 remove_all_vanilla_recipe: false
+disable_furnace_recipes: false
+disable_campfire_recipes: false
+disable_smoker_recipes: false
+disable_blast_furnace_recipes: false
+disable_crafting_recipes: false
+disable_stonecutting_recipes: false
+disable_smithing_recipes: false
 #是否启用插件铁砧配方
 enable_anvil_recipe: true
 #是否启用bstats插件使用数据统计

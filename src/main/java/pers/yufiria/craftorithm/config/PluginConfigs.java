@@ -13,6 +13,13 @@ public class PluginConfigs {
 
     public final static BooleanConfig CHECK_UPDATE = new BooleanConfig("check_update", true);
     public final static BooleanConfig REMOVE_ALL_VANILLA_RECIPE = new BooleanConfig("remove_all_vanilla_recipe", false);
+    public final static BooleanConfig DISABLE_FURNACE_RECIPES = new BooleanConfig("disable_furnace_recipes", false);
+    public final static BooleanConfig DISABLE_CAMPFIRE_RECIPES = new BooleanConfig("disable_campfire_recipes", false);
+    public final static BooleanConfig DISABLE_SMOKER_RECIPES = new BooleanConfig("disable_smoker_recipes", false);
+    public final static BooleanConfig DISABLE_BLAST_FURNACE_RECIPES = new BooleanConfig("disable_blast_furnace_recipes", false);
+    public final static BooleanConfig DISABLE_CRAFTING_RECIPES = new BooleanConfig("disable_crafting_recipes", false);
+    public final static BooleanConfig DISABLE_STONECUTTING_RECIPES = new BooleanConfig("disable_stonecutting_recipes", false);
+    public final static BooleanConfig DISABLE_SMITHING_RECIPES = new BooleanConfig("disable_smithing_recipes", false);
     public final static BooleanConfig BSTATS = new BooleanConfig("bstats", true);
     public final static BooleanConfig ENABLE_ANVIL_RECIPE = new BooleanConfig("enable_anvil_recipe", true);
     public final static BooleanConfig RELOAD_WHEN_IA_RELOAD = new BooleanConfig("reload_when_ia_reload", true);
