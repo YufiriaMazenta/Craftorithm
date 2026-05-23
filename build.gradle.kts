@@ -1,5 +1,5 @@
 import java.text.SimpleDateFormat
-version = "1.10.25"
+version = "1.10.26-beta-1"
 
 plugins {
     `java-library`
@@ -9,7 +9,10 @@ plugins {
 
 repositories {
     mavenLocal()
-    maven("https://repo.crypticlib.com:8081/repository/maven-public/")
+    //CrypticLib
+    maven("http://110.42.10.241:8082/repository/maven-public/") {
+        isAllowInsecureProtocol = true
+    }
     maven("https://repo.auxilor.io/repository/maven-public/")
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     maven("https://oss.sonatype.org/content/groups/public/")
@@ -55,8 +58,8 @@ dependencies {
     compileOnly("com.willfp:libreforge:4.71.6:all@jar")
     compileOnly("com.ssomar:SCore:5.24.10.5")
     compileOnly("com.nexomc:nexo:0.7.0")
-    compileOnly("net.momirealms:craft-engine-core:0.0.57")
-    compileOnly("net.momirealms:craft-engine-bukkit:0.0.57")
+    compileOnly("net.momirealms:craft-engine-core:26.5")
+    compileOnly("net.momirealms:craft-engine-bukkit:26.5")
     compileOnly(fileTree("libs"))
     implementation("com.crypticlib:bukkit:${rootProject.findProperty("crypticlibVer")}")
     implementation("com.crypticlib:bukkit-ui:${rootProject.findProperty("crypticlibVer")}")

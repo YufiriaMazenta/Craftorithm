@@ -1,9 +1,7 @@
 package com.github.yufiriamazenta.craftorithm.item.impl;
 
-import net.momirealms.craftengine.bukkit.api.BukkitAdaptors;
 import net.momirealms.craftengine.bukkit.api.CraftEngineItems;
-import net.momirealms.craftengine.bukkit.plugin.user.BukkitServerPlayer;
-import net.momirealms.craftengine.core.item.CustomItem;
+import net.momirealms.craftengine.bukkit.item.BukkitItemDefinition;
 import net.momirealms.craftengine.core.util.Key;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -40,28 +38,24 @@ public enum CraftEngineItemProvider implements ItemProvider {
 
     @Override
     public ItemStack getItem(String itemName) {
-        Key craftEngineItemId = Key.from(itemName);
-        CustomItem<ItemStack> craftEngineItem = CraftEngineItems.byId(craftEngineItemId);
+        BukkitItemDefinition craftEngineItem = CraftEngineItems.byId(itemName);
         if (craftEngineItem == null) {
             return null;
         }
-        return craftEngineItem.buildItemStack();
+        return craftEngineItem.buildBukkitItem();
     }
 
     @Override
     public ItemStack getItem(String itemName, OfflinePlayer player) {
-        Key craftEngineItemId = Key.from(itemName);
-        CustomItem<ItemStack> craftEngineItem = CraftEngineItems.byId(craftEngineItemId);
+        BukkitItemDefinition craftEngineItem = CraftEngineItems.byId(itemName);
         if (craftEngineItem == null) {
             return null;
         }
-        if (player == null) {
-            return craftEngineItem.buildItemStack();
+        if (player instanceof Player bukkitPlayer) {
+            return craftEngineItem.buildBukkitItem(bukkitPlayer);
+        } else {
+            return craftEngineItem.buildBukkitItem();
         }
-
-        Player bukkitPlayer = player.getPlayer();
-        BukkitServerPlayer craftEnginePlayer = BukkitAdaptors.adapt(bukkitPlayer);
-        return craftEngineItem.buildItemStack(craftEnginePlayer);
     }
 
 }
