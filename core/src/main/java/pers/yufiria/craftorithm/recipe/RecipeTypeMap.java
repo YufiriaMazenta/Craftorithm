@@ -14,9 +14,12 @@ import java.util.concurrent.locks.ReentrantLock;
 public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
 
     private static final int MAX_ID = 256;
-    private static final Object NULL_VALUE = new Object(); // 特殊标记，用于表示用户存储的 null
+    private static final Object NULL_VALUE = new Object();
 
-    private final Object[] table = new Object[MAX_ID + 1]; // 存储实际值或 NULL_VALUE
+    // 存储键对象 (类型为 K)
+    private final Object[] keys = new Object[MAX_ID + 1];
+    // 存储值对象 (实际值或 NULL_VALUE)
+    private final Object[] table = new Object[MAX_ID + 1];
     private final ReentrantLock[] locks = new ReentrantLock[MAX_ID + 1];
     private final AtomicInteger size = new AtomicInteger(0);
 
@@ -26,14 +29,12 @@ public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
         }
     }
 
-    // 校验 typeId 范围
     private void validateId(int typeId) {
         if (typeId < 0 || typeId > MAX_ID) {
             throw new IllegalArgumentException("typeId must in [0, " + MAX_ID + "]");
         }
     }
 
-    // 核心方法实现
     @Override
     public int size() {
         return size.get();
@@ -49,11 +50,10 @@ public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
         if (!(key instanceof RecipeType)) return false;
         int typeId = ((RecipeType) key).typeId();
         if (typeId < 0 || typeId > MAX_ID) return false;
-
         ReentrantLock lock = locks[typeId];
         lock.lock();
         try {
-            return table[typeId] != null; // 只要不为 null，键即存在
+            return keys[typeId] != null;
         } finally {
             lock.unlock();
         }
@@ -77,11 +77,11 @@ public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public V get(Object key) {
         if (!(key instanceof RecipeType)) return null;
         int typeId = ((RecipeType) key).typeId();
         if (typeId < 0 || typeId > MAX_ID) return null;
-
         ReentrantLock lock = locks[typeId];
         lock.lock();
         try {
@@ -93,22 +93,19 @@ public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public V put(K key, V value) {
         int typeId = key.typeId();
         validateId(typeId);
-
         ReentrantLock lock = locks[typeId];
         lock.lock();
         try {
             Object oldValue = table[typeId];
             Object newValue = (value == null) ? NULL_VALUE : value;
-
-            // 如果oldValue为null,说明原本没有值,更新 size
-            if (oldValue == null) {
-                size.incrementAndGet(); // 新增键
+            if (keys[typeId] == null) {          // 原本不存在该键
+                size.incrementAndGet();
             }
-            // 其他情况 size都 不变（如覆盖旧值）
-
+            keys[typeId] = key;                  // 存储原始键对象
             table[typeId] = newValue;
             return (oldValue == NULL_VALUE) ? null : (V) oldValue;
         } finally {
@@ -117,16 +114,17 @@ public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public V remove(Object key) {
         if (!(key instanceof RecipeType)) return null;
         int typeId = ((RecipeType) key).typeId();
         if (typeId < 0 || typeId > MAX_ID) return null;
-
         ReentrantLock lock = locks[typeId];
         lock.lock();
         try {
             Object oldValue = table[typeId];
-            if (oldValue != null) {
+            if (keys[typeId] != null) {
+                keys[typeId] = null;
                 table[typeId] = null;
                 size.decrementAndGet();
             }
@@ -147,7 +145,8 @@ public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
             ReentrantLock lock = locks[i];
             lock.lock();
             try {
-                if (table[i] != null) {
+                if (keys[i] != null) {
+                    keys[i] = null;
                     table[i] = null;
                     size.decrementAndGet();
                 }
@@ -157,7 +156,8 @@ public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
         }
     }
 
-    // 视图集合实现
+    // ==================== 视图集合 ====================
+
     @Override
     public Set<K> keySet() {
         return new AbstractSet<>() {
@@ -254,97 +254,132 @@ public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
         };
     }
 
-    // 迭代器基类
-    private abstract class BaseIterator<T> implements Iterator<T> {
-        protected int currentIndex = 0;
-        protected T nextElement = null;
+    // ==================== 迭代器实现 ====================
+
+    /** 键迭代器：基于 keys 数组，返回原始键对象 */
+    private class KeyIterator implements Iterator<K> {
+        private int cursor = 0;      // 下一个要检查的位置
+        private int nextIndex = -1;  // 找到的下一个有效索引
 
         @Override
         public boolean hasNext() {
-            while (currentIndex <= MAX_ID) {
-                ReentrantLock lock = locks[currentIndex];
+            if (nextIndex != -1) return true;
+            for (int i = cursor; i <= MAX_ID; i++) {
+                ReentrantLock lock = locks[i];
                 lock.lock();
                 try {
-                    if (table[currentIndex] != null) {
-                        nextElement = prepareNext();
+                    if (keys[i] != null) {
+                        nextIndex = i;
+                        cursor = i + 1;
                         return true;
                     }
                 } finally {
                     lock.unlock();
                 }
-                currentIndex++;
             }
             return false;
         }
 
-        protected abstract T prepareNext();
+        @Override
+        @SuppressWarnings("unchecked")
+        public K next() {
+            if (!hasNext()) throw new NoSuchElementException();
+            K result = (K) keys[nextIndex];
+            nextIndex = -1;
+            return result;
+        }
 
         @Override
-        public T next() {
-            if (nextElement == null && !hasNext()) {
-                throw new NoSuchElementException();
+        public void remove() {
+            if (nextIndex == -1) throw new IllegalStateException();
+            RecipeTypeMap.this.remove(keys[nextIndex]);
+            nextIndex = -1;
+        }
+    }
+
+    /** 值迭代器：基于 table 数组，正确处理 NULL_VALUE */
+    private class ValuesIterator implements Iterator<V> {
+        private int cursor = 0;
+        private int nextIndex = -1;
+
+        @Override
+        public boolean hasNext() {
+            if (nextIndex != -1) return true;
+            for (int i = cursor; i <= MAX_ID; i++) {
+                ReentrantLock lock = locks[i];
+                lock.lock();
+                try {
+                    if (table[i] != null) {
+                        nextIndex = i;
+                        cursor = i + 1;
+                        return true;
+                    }
+                } finally {
+                    lock.unlock();
+                }
             }
-            T element = nextElement;
-            nextElement = null;
-            currentIndex++;
-            return element;
+            return false;
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public V next() {
+            if (!hasNext()) throw new NoSuchElementException();
+            Object value = table[nextIndex];
+            V result = (value == NULL_VALUE) ? null : (V) value;
+            nextIndex = -1;
+            return result;
+        }
+
+        @Override
+        public void remove() {
+            if (nextIndex == -1) throw new IllegalStateException();
+            RecipeTypeMap.this.remove(keys[nextIndex]); // 通过键删除
+            nextIndex = -1;
         }
     }
 
-    // 键迭代器
-    private class KeyIterator extends BaseIterator<K> {
+    /** 条目迭代器：基于 keys 和 table，返回原始键和对应值 */
+    private class EntryIterator implements Iterator<Entry<K, V>> {
+        private int cursor = 0;
+        private int nextIndex = -1;
+
         @Override
-        @SuppressWarnings("unchecked")
-        protected K prepareNext() {
-            return (K) new RecipeType() {
-                @Override
-                public @NotNull String typeKey() {
-                    return "dynamic_key_" + currentIndex;
+        public boolean hasNext() {
+            if (nextIndex != -1) return true;
+            for (int i = cursor; i <= MAX_ID; i++) {
+                ReentrantLock lock = locks[i];
+                lock.lock();
+                try {
+                    if (keys[i] != null) {   // 键存在即视为有效条目
+                        nextIndex = i;
+                        cursor = i + 1;
+                        return true;
+                    }
+                } finally {
+                    lock.unlock();
                 }
-
-                @Override
-                public @Range(from = 0, to = 256) int typeId() {
-                    return currentIndex;
-                }
-
-                @Override
-                public @NotNull RecipeLoader<?> recipeLoader() {
-                    throw new UnsupportedOperationException();
-                }
-
-                @Override
-                public @NotNull RecipeRegister recipeRegister() {
-                    throw new UnsupportedOperationException();
-                }
-
-                @Override
-                public boolean isThisType(Recipe recipe) {
-                    throw new UnsupportedOperationException();
-                }
-            };
+            }
+            return false;
         }
-    }
 
-    // 值迭代器
-    private class ValuesIterator extends BaseIterator<V> {
         @Override
         @SuppressWarnings("unchecked")
-        protected V prepareNext() {
-            Object value = table[currentIndex];
-            return (value == NULL_VALUE) ? null : (V) value;
-        }
-    }
-
-    // 条目迭代器
-    private class EntryIterator extends BaseIterator<Entry<K, V>> {
-        @Override
-        @SuppressWarnings("unchecked")
-        protected Entry<K, V> prepareNext() {
-            K key = new KeyIterator().prepareNext();
-            Object value = table[currentIndex];
+        public Entry<K, V> next() {
+            if (!hasNext()) throw new NoSuchElementException();
+            K key = (K) keys[nextIndex];
+            Object value = table[nextIndex];
             V actualValue = (value == NULL_VALUE) ? null : (V) value;
-            return new AbstractMap.SimpleEntry<>(key, actualValue);
+            Entry<K, V> entry = new AbstractMap.SimpleImmutableEntry<>(key, actualValue);
+            nextIndex = -1;
+            return entry;
+        }
+
+        @Override
+        public void remove() {
+            if (nextIndex == -1) throw new IllegalStateException();
+            RecipeTypeMap.this.remove(keys[nextIndex]);
+            nextIndex = -1;
         }
     }
-
 }

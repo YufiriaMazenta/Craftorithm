@@ -1,6 +1,8 @@
 package pers.yufiria.craftorithm.ui.creator;
 
+import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.config.BukkitConfigWrapper;
+import crypticlib.lang.LangManager;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.menu.StoredMenu;
 import crypticlib.util.ItemHelper;
@@ -48,6 +50,15 @@ public abstract class RecipeCreator extends StoredMenu {
     public RecipeCreator setRecipeName(String recipeName) {
         this.recipeName = recipeName;
         return this;
+    }
+
+    //实现标题的翻译功能
+    @Override
+    public String parsedMenuTitle() {
+        String title = this.display.title();
+        Player player = this.player();
+        title = LangManager.INSTANCE.replaceLang(title, player);
+        return BukkitTextProcessor.color(BukkitTextProcessor.placeholder(player, title));
     }
 
 }

@@ -8,6 +8,7 @@ import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
 import crypticlib.perm.PermInfo;
+import crypticlib.util.IOHelper;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +16,8 @@ import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.RecipeTypeMap;
+import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
+import pers.yufiria.craftorithm.ui.creator.vanillaShaped.VanillaShapedCreator;
 import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
 
@@ -55,6 +58,7 @@ public final class CreateRecipeCommand extends CommandNode implements BukkitLife
             return;
         }
         String recipeTypeStr = args.get(0);
+        IOHelper.info(recipeTypeStr);
         String recipeName;
         if (args.size() < 2)
             recipeName = UUID.randomUUID().toString();
@@ -72,11 +76,13 @@ public final class CreateRecipeCommand extends CommandNode implements BukkitLife
         }
         RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipeTypeStr);
         if (recipeType == null) {
+            IOHelper.info("1");
             LangUtils.sendLang(invoker, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
             return;
         }
         BiConsumer<Player, String> creatorConsumer = recipeCreatorMap.get(recipeType);
         if (creatorConsumer == null) {
+            IOHelper.info("2");
             LangUtils.sendLang(invoker, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
             return;
         }
@@ -93,7 +99,9 @@ public final class CreateRecipeCommand extends CommandNode implements BukkitLife
     }
 
     private void registerDefRecipeCreators() {
-        //TODO 配方创建器
+        addRecipeCreator(SimpleRecipeTypes.VANILLA_SHAPED, (player, recipeName) -> {
+            new VanillaShapedCreator(player, recipeName).openMenu();
+        });
     }
 
     public void addRecipeCreator(RecipeType recipeType, BiConsumer<Player, String> creatorFunc) {

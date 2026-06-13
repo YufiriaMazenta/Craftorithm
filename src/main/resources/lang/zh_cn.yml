@@ -37,6 +37,7 @@ command:
     unsupported_recipe_type: '<prefix> &c不支持的配方类型'
     unsupported_recipe_name: '<prefix> &c不支持的配方名字，只允许使用小写英文字母、数字、"_"、"-"和"."。'
     name_used: '<prefix> &c配方ID已经被使用'
+    success: '<prefix> <recipe_type> 配方 <recipe_name> 创建成功'
   display:
     unsupported_recipe_type: '<prefix> &c不支持的配方类型'
   openmenu:

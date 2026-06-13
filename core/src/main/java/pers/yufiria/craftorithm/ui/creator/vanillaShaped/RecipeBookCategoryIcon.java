@@ -32,16 +32,24 @@ public class RecipeBookCategoryIcon extends TranslatableIcon {
     public ItemStack display() {
         switch (category) {
             case MISC -> {
-                return CreatorIconParser.INSTANCE.parseIconDisplay(VanillaShapedCreatorConfig.CATEGORY_ICON_MISC.value()).toItemStack();
+                return CreatorIconParser.INSTANCE.parseIconDisplay(
+                    VanillaShapedCreatorConfig.CATEGORY_ICON_MISC.value()
+                ).toItemStack();
             }
             case BUILDING -> {
-                return CreatorIconParser.INSTANCE.parseIconDisplay(VanillaShapedCreatorConfig.CATEGORY_ICON_BUILDING.value()).toItemStack();
+                return CreatorIconParser.INSTANCE.parseIconDisplay(
+                    VanillaShapedCreatorConfig.CATEGORY_ICON_BUILDING.value()
+                ).toItemStack();
             }
             case REDSTONE -> {
-                return CreatorIconParser.INSTANCE.parseIconDisplay(VanillaShapedCreatorConfig.CATEGORY_ICON_REDSTONE.value()).toItemStack();
+                return CreatorIconParser.INSTANCE.parseIconDisplay(
+                    VanillaShapedCreatorConfig.CATEGORY_ICON_REDSTONE.value()
+                ).toItemStack();
             }
             case EQUIPMENT -> {
-                return CreatorIconParser.INSTANCE.parseIconDisplay(VanillaShapedCreatorConfig.CATEGORY_ICON_EQUIPMENT.value()).toItemStack();
+                return CreatorIconParser.INSTANCE.parseIconDisplay(
+                    VanillaShapedCreatorConfig.CATEGORY_ICON_EQUIPMENT.value()
+                ).toItemStack();
             }
             default -> {
                 return new ItemStack(Material.AIR);
@@ -51,8 +59,11 @@ public class RecipeBookCategoryIcon extends TranslatableIcon {
 
     @Override
     public Icon onClick(InventoryClickEvent event) {
-        int index = CATEGORIES.indexOf(category) % 4;
-        category = CATEGORIES.get(index);
+        // 循环切换分类: MISC -> BUILDING -> REDSTONE -> EQUIPMENT -> MISC -> ...
+        int currentIndex = CATEGORIES.indexOf(category);
+        int nextIndex = (currentIndex + 1) % CATEGORIES.size();
+        category = CATEGORIES.get(nextIndex);
+        // 刷新菜单中此图标
         ((Menu) Objects.requireNonNull(event.getInventory().getHolder())).updateIcons('C');
         return this;
     }
