@@ -1,1 +1,14 @@
 rootProject.name = "Craftorithm"
+include("core")
+include(
+    "hook:azureflow",
+    "hook:craftengine",
+    "hook:ecoitems",
+    "hook:executableitems",
+    "hook:itemsadder",
+    "hook:mmoitems",
+    "hook:mythicmobs",
+    "hook:neigeitems",
+    "hook:nexo",
+    "hook:oraxen"
+)

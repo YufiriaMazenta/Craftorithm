@@ -12,63 +12,22 @@ repositories {
     maven("http://110.42.10.241:8082/repository/maven-public/") {
         isAllowInsecureProtocol = true
     }
-    maven("https://repo.auxilor.io/repository/maven-public/")
-    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
-    maven("https://oss.sonatype.org/content/groups/public/")
-    maven("https://jitpack.io")
-    maven("https://repo.rosewooddev.io/repository/public/")
-    maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
-    maven("https://repo.maven.apache.org/maven2/")
-    //Oraxen
-    maven("https://repo.oraxen.com/releases")
-    //MythicDist
-    maven("https://mvn.lumine.io/repository/maven-public/")
-    maven("https://r.irepo.space/maven/")
-    maven("https://repo.papermc.io/repository/maven-public/")
-    maven("https://nexus.phoenixdevt.fr/repository/maven-public/")
-    //EcoEnchants
-    maven("https://repo.auxilor.io/repository/maven-public/")
-    //NBT-API
-    maven("https://repo.codemc.io/repository/maven-public/")
-    //Nexo
-    maven("https://repo.nexomc.com/releases")
-    //CraftEngine
-    maven("https://repo.momirealms.net/releases/")
     mavenCentral()
 }
 
 dependencies {
-    compileOnly("org.jetbrains:annotations:24.0.1")
-//    compileOnly("org.spigotmc:spigot-api:1.21.4-R0.1-SNAPSHOT")
-    compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
-    compileOnly("pers.neige.neigeitems:NeigeItems:1.15.113")
-    compileOnly("net.kyori:adventure-api:4.14.0")
-    compileOnly("com.github.MilkBowl:VaultAPI:1.7") {
-        exclude("org.bukkit", "bukkit")
-    }
-    compileOnly("org.black_ixx:playerpoints:3.2.5")
-    compileOnly("net.luckperms:api:5.4")
-    compileOnly("me.clip:placeholderapi:2.11.6")
-    compileOnly("com.github.LoneDev6:API-ItemsAdder:3.6.3-beta-14")
-    compileOnly("io.th0rgal:oraxen:1.191.0")
-    compileOnly("io.lumine:Mythic-Dist:5.3.5")
-    compileOnly("io.lumine:MythicLib-dist:1.6.2-SNAPSHOT")
-    compileOnly("net.Indyuce:MMOItems-API:6.9.5-SNAPSHOT")
-    compileOnly("com.willfp:EcoEnchants:12.5.1")
-    compileOnly("com.willfp:EcoItems:5.59.0")
-    compileOnly("com.willfp:eco:6.74.2")
-    compileOnly("com.willfp:libreforge:4.71.6:all@jar")
-    compileOnly("com.ssomar:SCore:5.24.10.5")
-    compileOnly("com.nexomc:nexo:0.7.0")
-    compileOnly("net.momirealms:craft-engine-core:26.5")
-    compileOnly("net.momirealms:craft-engine-bukkit:26.5")
-    compileOnly(fileTree("libs"))
+    implementation(project(":core"))
+    implementation(project(":hook:azureflow"))
+    implementation(project(":hook:craftengine"))
+    implementation(project(":hook:ecoitems"))
+    implementation(project(":hook:executableitems"))
+    implementation(project(":hook:itemsadder"))
+    implementation(project(":hook:mmoitems"))
+    implementation(project(":hook:mythicmobs"))
+    implementation(project(":hook:neigeitems"))
+    implementation(project(":hook:nexo"))
+    implementation(project(":hook:oraxen"))
     implementation("com.crypticlib:bukkit:${rootProject.findProperty("crypticlibVer")}")
-    implementation("com.crypticlib:bukkit-ui:${rootProject.findProperty("crypticlibVer")}")
-    implementation("com.crypticlib:bukkit-conversation:${rootProject.findProperty("crypticlibVer")}")
-    implementation("com.crypticlib:bukkit-i18n:${rootProject.findProperty("crypticlibVer")}")
-    implementation("com.crypticlib:bukkit-action:${rootProject.findProperty("crypticlibVer")}")
-//    implementation("de.tr7zw:item-nbt-api:2.12.4")
 }
 
 version = "${rootProject.findProperty("pluginVer")}"
@@ -82,6 +41,8 @@ publishing {
         from(components["java"])
     }
 }
+
+val crypticlibRelocate = "pers.yufiria.craftorithm.crypticlib"
 
 tasks {
     val props = HashMap<String, String>()
@@ -103,6 +64,45 @@ tasks {
     }
     shadowJar {
         archiveFileName.set("Craftorithm-$version.jar")
-        relocate("crypticlib", "pers.yufiria.craftorithm.crypticlib")
+        relocate("crypticlib", crypticlibRelocate)
+    }
+}
+
+subprojects {
+    apply(plugin = "java")
+    apply(plugin = "maven-publish")
+    apply(plugin = "io.github.goooler.shadow")
+    version = rootProject.version
+    java.sourceCompatibility = JavaVersion.VERSION_21
+    java.targetCompatibility = JavaVersion.VERSION_21
+    repositories {
+        mavenLocal()
+        maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+        maven("https://repo.papermc.io/repository/maven-public/")
+        maven("https://oss.sonatype.org/content/groups/public/")
+        maven("https://repo.maven.apache.org/maven2/")
+        //CrypticLib
+        maven("http://110.42.10.241:8082/repository/maven-public/") {
+            isAllowInsecureProtocol = true
+        }
+        mavenCentral()
+    }
+    dependencies {
+        compileOnly("org.jetbrains:annotations:24.0.1")
+        compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
+        compileOnly("com.crypticlib:bukkit:${rootProject.findProperty("crypticlibVer")}")
+    }
+    tasks {
+        build {
+            dependsOn(shadowJar)
+        }
+        compileJava {
+            dependsOn(clean)
+            options.encoding = "UTF-8"
+        }
+        shadowJar {
+            archiveFileName.set("Craftorithm-$version.jar")
+            relocate("crypticlib", crypticlibRelocate)
+        }
     }
 }
