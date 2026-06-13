@@ -6,6 +6,7 @@ import crypticlib.ui.menu.Menu;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.recipe.CraftingBookCategory;
 import pers.yufiria.craftorithm.config.menu.creator.VanillaShapedCreatorConfig;
 import pers.yufiria.craftorithm.ui.creator.CreatorIconParser;
@@ -30,24 +31,25 @@ public class RecipeBookCategoryIcon extends TranslatableIcon {
 
     @Override
     public ItemStack display() {
+        ItemStack display;
         switch (category) {
             case MISC -> {
-                return CreatorIconParser.INSTANCE.parseIconDisplay(
+                display = CreatorIconParser.INSTANCE.parseIconDisplay(
                     VanillaShapedCreatorConfig.CATEGORY_ICON_MISC.value()
                 ).toItemStack();
             }
             case BUILDING -> {
-                return CreatorIconParser.INSTANCE.parseIconDisplay(
+                display = CreatorIconParser.INSTANCE.parseIconDisplay(
                     VanillaShapedCreatorConfig.CATEGORY_ICON_BUILDING.value()
                 ).toItemStack();
             }
             case REDSTONE -> {
-                return CreatorIconParser.INSTANCE.parseIconDisplay(
+                display = CreatorIconParser.INSTANCE.parseIconDisplay(
                     VanillaShapedCreatorConfig.CATEGORY_ICON_REDSTONE.value()
                 ).toItemStack();
             }
             case EQUIPMENT -> {
-                return CreatorIconParser.INSTANCE.parseIconDisplay(
+                display = CreatorIconParser.INSTANCE.parseIconDisplay(
                     VanillaShapedCreatorConfig.CATEGORY_ICON_EQUIPMENT.value()
                 ).toItemStack();
             }
@@ -55,6 +57,22 @@ public class RecipeBookCategoryIcon extends TranslatableIcon {
                 return new ItemStack(Material.AIR);
             }
         }
+        ItemMeta meta = display.getItemMeta();
+        if (meta != null) {
+            if (meta.hasDisplayName()) {
+                meta.setDisplayName(this.parseIconText(meta.getDisplayName()));
+            }
+            if (meta.hasLore()) {
+                List<String> lore = meta.getLore();
+                if (lore != null) {
+                    lore.replaceAll(this::parseIconText);
+                }
+                meta.setLore(lore);
+            }
+            display.setItemMeta(meta);
+        }
+
+        return display;
     }
 
     @Override

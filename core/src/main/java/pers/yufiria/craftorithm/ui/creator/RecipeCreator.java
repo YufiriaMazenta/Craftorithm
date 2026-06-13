@@ -11,6 +11,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.Craftorithm;
+import pers.yufiria.craftorithm.item.ItemManager;
+import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.util.ItemUtils;
 
 public abstract class RecipeCreator extends StoredMenu {
@@ -61,4 +63,11 @@ public abstract class RecipeCreator extends StoredMenu {
         return BukkitTextProcessor.color(BukkitTextProcessor.placeholder(player, title));
     }
 
+    /**
+     * 解析材料物品的ID字符串。
+     */
+    protected String resolveIngredientId(ItemStack item) {
+        NamespacedItemIdStack itemId = ItemManager.INSTANCE.matchItemIdOrCreate(item, true);
+        return itemId != null ? itemId.itemId().toString() : null;
+    }
 }

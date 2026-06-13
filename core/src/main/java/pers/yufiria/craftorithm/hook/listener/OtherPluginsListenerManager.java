@@ -80,7 +80,7 @@ public enum OtherPluginsListenerManager implements BukkitLifeCycleTask {
                     ));
                 }
 
-                IOHelper.info("Converted pers.yufiria.craftorithm.listener: " + listenerClassName);
+                IOHelper.info("Converted listener: " + listenerClassName);
             }
         }
     }

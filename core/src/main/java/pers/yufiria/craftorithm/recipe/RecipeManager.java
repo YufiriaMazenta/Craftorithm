@@ -27,6 +27,8 @@ import pers.yufiria.craftorithm.util.LangUtils;
 import pers.yufiria.craftorithm.util.ServerUtils;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -127,6 +129,7 @@ public enum RecipeManager implements BukkitLifeCycleTask {
             RecipeType recipeType = getRecipeType(recipe);
             recipeType.recipeRegister().unregisterRecipe(recipeKey);
         });
+        craftorithmRecipes.clear();
 
         //重置所有配方的Nbt保留规则
         CopyComponentsManager.INSTANCE.resetRecipeCopyNbtRules();
@@ -153,16 +156,16 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         String typeId = recipeConfig.getString("type");
         RecipeType recipeType;
         if (typeId == null) {
-            throw new RecipeLoadException("Unknown pers.yufiria.craftorithm.recipe type of " + recipeName + ": " + null);
+            throw new RecipeLoadException("Unknown recipe type of " + recipeName + ": " + null);
         }
         recipeType = recipeTypes.get(typeId);
         if (recipeType == null) {
-            throw new RecipeLoadException("Unknown pers.yufiria.craftorithm.recipe type of " + recipeName + ": " + typeId);
+            throw new RecipeLoadException("Unknown recipe type of " + recipeName + ": " + typeId);
         }
         RecipeLoader<?> recipeLoader = recipeType.recipeLoader();
         Recipe recipe = recipeLoader.loadRecipe(recipeName, recipeConfig);
         if (recipe == null) {
-            BukkitMsgSender.INSTANCE.info("&eLoad pers.yufiria.craftorithm.recipe " + recipeName + " failed");
+            BukkitMsgSender.INSTANCE.info("&eLoad recipe " + recipeName + " failed");
             return false;
         }
         RecipeRegister recipeRegister = recipeType.recipeRegister();
@@ -182,7 +185,7 @@ public enum RecipeManager implements BukkitLifeCycleTask {
                 }
             }
         } else {
-            BukkitMsgSender.INSTANCE.info("&eRegister pers.yufiria.craftorithm.recipe " + recipeName + " failed");
+            BukkitMsgSender.INSTANCE.info("&eRegister recipe " + recipeName + " failed");
         }
         return result;
     }
@@ -287,9 +290,10 @@ public enum RecipeManager implements BukkitLifeCycleTask {
     public boolean removeCraftorithmRecipe(NamespacedKey recipeKey, boolean deleteFile, boolean updateRecipes) {
         boolean result = removeRecipe(recipeKey, updateRecipes);
         if (result) {
+            craftorithmRecipes.remove(recipeKey);
             if (recipeConfigWrapperMap.containsKey(recipeKey) && deleteFile) {
                 BukkitConfigWrapper removed = recipeConfigWrapperMap.remove(recipeKey);
-                removed.configFile().delete();
+                removed.deleteConfigFile();
             }
         }
         return result;

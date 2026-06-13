@@ -58,7 +58,6 @@ public final class CreateRecipeCommand extends CommandNode implements BukkitLife
             return;
         }
         String recipeTypeStr = args.get(0);
-        IOHelper.info(recipeTypeStr);
         String recipeName;
         if (args.size() < 2)
             recipeName = UUID.randomUUID().toString();
@@ -76,13 +75,11 @@ public final class CreateRecipeCommand extends CommandNode implements BukkitLife
         }
         RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipeTypeStr);
         if (recipeType == null) {
-            IOHelper.info("1");
             LangUtils.sendLang(invoker, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
             return;
         }
         BiConsumer<Player, String> creatorConsumer = recipeCreatorMap.get(recipeType);
         if (creatorConsumer == null) {
-            IOHelper.info("2");
             LangUtils.sendLang(invoker, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
             return;
         }

@@ -12,17 +12,14 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.recipe.CraftingBookCategory;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.menu.creator.VanillaShapedCreatorConfig;
 import pers.yufiria.craftorithm.item.ItemManager;
-import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.ui.creator.CreatorIconParser;
 import pers.yufiria.craftorithm.ui.creator.RecipeCreator;
-import pers.yufiria.craftorithm.ui.creator.tag.TagSelectMenu;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
 import pers.yufiria.craftorithm.util.LangUtils;
 
@@ -50,14 +47,13 @@ public final class VanillaShapedCreator extends RecipeCreator {
                 "#123#***#",
                 "#456A* *#",
                 "#789#***#",
-                "##T#C####"
+                "####C####"
             ), () -> {
                 Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
                 layoutMap.put('*', this::getResultFrameIcon);
                 layoutMap.put('A', this::getConfirmIcon);
                 layoutMap.put('C', RecipeBookCategoryIcon::new);
-                layoutMap.put('T', this::getTagSelectIcon);
                 return layoutMap;
             })
         );
@@ -101,70 +97,6 @@ public final class VanillaShapedCreator extends RecipeCreator {
         return CreatorIconParser.INSTANCE.parse(VanillaShapedCreatorConfig.RESULT_FRAME_ICON.value()).get();
     }
 
-    /**
-     * 从物品的显示名中提取Tag key。
-     * 如果物品显示名以 "[Tag] " 开头，则返回 "tag:KEY" 格式的字符串。
-     * 否则返回 null，表示该物品不是Tag标记物品。
-     */
-    private @Nullable String extractTagKey(ItemStack item) {
-        if (item == null || !item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) {
-            return null;
-        }
-        String displayName = item.getItemMeta().getDisplayName();
-        // 去除颜色代码
-        String cleanName = displayName.replace("§e", "").replace("§6", "").replace("§a", "")
-            .replace("§b", "").replace("§c", "").replace("§d", "").replace("§f", "")
-            .replace("§0", "").replace("§1", "").replace("§2", "").replace("§3", "")
-            .replace("§4", "").replace("§5", "").replace("§7", "").replace("§8", "")
-            .replace("§9", "").replace("§k", "").replace("§l", "").replace("§m", "")
-            .replace("§n", "").replace("§o", "").replace("§r", "");
-        if (cleanName.startsWith(TAG_PREFIX)) {
-            String tagKey = cleanName.substring(TAG_PREFIX.length()).trim();
-            return "tag:" + tagKey;
-        }
-        return null;
-    }
-
-    /**
-     * 解析材料物品的ID字符串。
-     * 如果是Tag标记物品，返回 "tag:KEY" 格式。
-     * 否则通过 ItemManager 解析为正常的物品ID。
-     */
-    private String resolveIngredientId(ItemStack item) {
-        String tagKey = extractTagKey(item);
-        if (tagKey != null) {
-            return tagKey;
-        }
-        NamespacedItemIdStack itemId = ItemManager.INSTANCE.matchItemIdOrCreate(item, true);
-        return itemId != null ? itemId.itemId().toString() : null;
-    }
-
-    /**
-     * Tag选择按钮图标，点击后打开Tag选择菜单
-     */
-    private Icon getTagSelectIcon() {
-        IconDisplay iconDisplay = CreatorIconParser.INSTANCE.parseIconDisplay(
-            VanillaShapedCreatorConfig.FRAME_ICON.value()
-        );
-        return new TranslatableIcon(iconDisplay) {
-            @Override
-            public ItemStack display() {
-                ItemStack item = super.display();
-                ItemHelper.setDisplayName(item, "&e打开Tag选择菜单");
-                return item;
-            }
-
-            @Override
-            public Icon onClick(InventoryClickEvent event) {
-                event.getWhoClicked().closeInventory();
-                org.bukkit.Bukkit.getScheduler().runTask(
-                    pers.yufiria.craftorithm.Craftorithm.instance(),
-                    () -> new TagSelectMenu(VanillaShapedCreator.this).openMenu()
-                );
-                return this;
-            }
-        };
-    }
 
     /**
      * 确认创建配方按钮
@@ -289,7 +221,7 @@ public final class VanillaShapedCreator extends RecipeCreator {
                     );
                 }
 
-                // 12. 关闭菜单 (StoredMenu.onClose会自动返还物品)
+                // 12. 关闭菜单
                 creator.setReturnStoredItems(true);
                 event.getWhoClicked().closeInventory();
                 return this;
