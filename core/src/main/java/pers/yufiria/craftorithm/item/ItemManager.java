@@ -258,7 +258,6 @@ public enum ItemManager implements BukkitLifeCycleTask {
      * @return
      */
     public boolean containsCannotCraftItem(ItemStack... items) {
-        IOHelper.info("Can not craft items: " + cannotCraftItems);
         if (cannotCraftItems.isEmpty())
             return false;
         boolean result = false;

@@ -10,18 +10,25 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.item.ItemManager;
+import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
+import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.util.ItemUtils;
+
+import java.text.SimpleDateFormat;
+import java.util.Objects;
 
 public abstract class RecipeCreator extends StoredMenu {
 
-    protected String recipeName;
+    private @Nullable String recipeName;
+    private final SimpleDateFormat FORMAT = new SimpleDateFormat("yyyyMMdd_HHmmss");
 
     public RecipeCreator(
         @NotNull Player player,
-        @NotNull String recipeName
+        @Nullable String recipeName
     ) {
         super(player);
         this.recipeName = recipeName;
@@ -39,19 +46,35 @@ public abstract class RecipeCreator extends StoredMenu {
 
     protected abstract Icon getResultFrameIcon();
 
-    protected BukkitConfigWrapper createRecipeConfig() {
+    protected BukkitConfigWrapper createRecipeConfig(String recipeName) {
         BukkitConfigWrapper recipeConfigWrapper = new BukkitConfigWrapper(Craftorithm.instance(), "recipes/" + recipeName + ".yml");
         recipeConfigWrapper.saveDefaultConfigFile();
         return recipeConfigWrapper;
     }
 
-    public String recipeName() {
-        return recipeName;
-    }
-
-    public RecipeCreator setRecipeName(String recipeName) {
+    public RecipeCreator setRecipeName(@Nullable String recipeName) {
         this.recipeName = recipeName;
         return this;
+    }
+
+    /**
+     * 解析配方名字,如果打开页面时已经输入,将返回recipeName
+     * 如果未输入,则生成以配方名字为基础生成的配方id
+     * @param resultId
+     * @return
+     */
+    public String resolveRecipeName(@NotNull NamespacedItemId resultId) {
+        if (this.recipeName != null) {
+            return this.recipeName;
+        }
+        Objects.requireNonNull(resultId, "Recipe result is null!");
+        String resolveRecipeName = resultId.namespace() + "_" + resultId.itemId();
+        if (!RecipeManager.INSTANCE.containsRecipe(resolveRecipeName)) {
+            return resolveRecipeName;
+        }
+        resolveRecipeName = resolveRecipeName + "_" + FORMAT.format(System.currentTimeMillis());
+        this.recipeName = resolveRecipeName;
+        return recipeName;
     }
 
     //实现标题的翻译功能
@@ -70,4 +93,5 @@ public abstract class RecipeCreator extends StoredMenu {
         NamespacedItemIdStack itemId = ItemManager.INSTANCE.matchItemIdOrCreate(item, true);
         return itemId != null ? itemId.itemId().toString() : null;
     }
+
 }

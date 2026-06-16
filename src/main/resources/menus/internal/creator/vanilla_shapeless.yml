@@ -1,0 +1,23 @@
+title: <translate:lang:recipe_type_name.vanilla_shapeless><translate:lang:menu.recipe_creator.name>
+frame_icon:
+  material: minecraft:green_stained_glass_pane
+  name: '&a<translate:lang:recipe_type_name.vanilla_shapeless>'
+result_frame_icon:
+  material: minecraft:lime_stained_glass_pane
+  name: '&a<translate:lang:menu.recipe_creator.result_frame_icon_name>'
+confirm_icon:
+  material: minecraft:crafting_table
+  name: '&a<translate:lang:menu.recipe_creator.confirm_icon_name>'
+category_icon:
+  misc:
+    material: minecraft:apple
+    name: '&a配方类型:物品'
+  building:
+    material: minecraft:bricks
+    name: '&a配方类型:建筑方块'
+  redstone:
+    material: minecraft:redstone
+    name: '&a配方类型:红石物品'
+  equipment:
+    material: minecraft:iron_axe
+    name: '&a配方类型:工具'

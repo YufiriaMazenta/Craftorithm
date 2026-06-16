@@ -299,8 +299,13 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         return result;
     }
 
-    public boolean containsRecipe(String recipeKeyStr) {
-        NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeKeyStr);
+    /**
+     * 查看某名字的配方是否存在
+     * @param recipeName 需要查询的配方名字
+     * @return 是否存在
+     */
+    public boolean containsRecipe(String recipeName) {
+        NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeName);
         return containsRecipe(recipeKey);
     }
 

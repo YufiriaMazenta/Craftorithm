@@ -101,7 +101,6 @@ subprojects {
             options.encoding = "UTF-8"
         }
         shadowJar {
-            archiveFileName.set("Craftorithm-$version.jar")
             relocate("crypticlib", crypticlibRelocate)
         }
     }

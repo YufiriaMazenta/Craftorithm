@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.ui.creator.vanillaShaped;
+package pers.yufiria.craftorithm.ui.creator.crafting;
 
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;

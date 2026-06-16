@@ -8,7 +8,6 @@ import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
 import crypticlib.perm.PermInfo;
-import crypticlib.util.IOHelper;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -17,7 +16,8 @@ import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.RecipeTypeMap;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
-import pers.yufiria.craftorithm.ui.creator.vanillaShaped.VanillaShapedCreator;
+import pers.yufiria.craftorithm.ui.creator.crafting.VanillaShapedCreator;
+import pers.yufiria.craftorithm.ui.creator.crafting.VanillaShapelessCreator;
 import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
 
@@ -60,19 +60,20 @@ public final class CreateRecipeCommand extends CommandNode implements BukkitLife
         String recipeTypeStr = args.get(0);
         String recipeName;
         if (args.size() < 2)
-            recipeName = UUID.randomUUID().toString();
-        else
+            recipeName = null;
+        else {
             recipeName = args.get(1);
+            Matcher matcher = recipeNamePattern.matcher(recipeName);
+            if (!matcher.matches()) {
+                LangUtils.sendLang(invoker, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_NAME);
+                return;
+            }
+            if (RecipeManager.INSTANCE.containsRecipe(recipeName)) {
+                LangUtils.sendLang(invoker, Languages.COMMAND_CREATE_NAME_USED);
+                return;
+            }
+        }
 
-        Matcher matcher = recipeNamePattern.matcher(recipeName);
-        if (!matcher.matches()) {
-            LangUtils.sendLang(invoker, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_NAME);
-            return;
-        }
-        if (RecipeManager.INSTANCE.containsRecipe(recipeName)) {
-            LangUtils.sendLang(invoker, Languages.COMMAND_CREATE_NAME_USED);
-            return;
-        }
         RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipeTypeStr);
         if (recipeType == null) {
             LangUtils.sendLang(invoker, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
@@ -98,6 +99,9 @@ public final class CreateRecipeCommand extends CommandNode implements BukkitLife
     private void registerDefRecipeCreators() {
         addRecipeCreator(SimpleRecipeTypes.VANILLA_SHAPED, (player, recipeName) -> {
             new VanillaShapedCreator(player, recipeName).openMenu();
+        });
+        addRecipeCreator(SimpleRecipeTypes.VANILLA_SHAPELESS, (player, recipeName) -> {
+            new VanillaShapelessCreator(player, recipeName).openMenu();
         });
     }
 

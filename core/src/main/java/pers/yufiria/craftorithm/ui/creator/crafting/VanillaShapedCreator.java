@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.ui.creator.vanillaShaped;
+package pers.yufiria.craftorithm.ui.creator.crafting;
 
 import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.ui.display.Icon;
@@ -12,6 +12,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.recipe.CraftingBookCategory;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.menu.creator.VanillaShapedCreatorConfig;
 import pers.yufiria.craftorithm.item.ItemManager;
@@ -36,9 +37,8 @@ public final class VanillaShapedCreator extends RecipeCreator {
      */
     private static final int[] INGREDIENT_SLOTS = {10, 11, 12, 19, 20, 21, 28, 29, 30};
     private static final int RESULT_SLOT = 24;
-    private static final String TAG_PREFIX = "[Tag] ";
 
-    public VanillaShapedCreator(@NotNull Player player, @NotNull String recipeName) {
+    public VanillaShapedCreator(@NotNull Player player, @Nullable String recipeName) {
         super(player, recipeName);
         this.display = new MenuDisplay(
             VanillaShapedCreatorConfig.TITLE.value(),
@@ -190,8 +190,9 @@ public final class VanillaShapedCreator extends RecipeCreator {
                     category = categoryIcon.category();
                 }
 
+                String recipeName = resolveRecipeName(resultId.itemId());
                 // 10. 创建并保存配方配置文件
-                BukkitConfigWrapper recipeConfig = createRecipeConfig();
+                BukkitConfigWrapper recipeConfig = createRecipeConfig(recipeName);
                 recipeConfig.set("type", SimpleRecipeTypes.VANILLA_SHAPED.typeKey());
                 recipeConfig.set("result", resultId.toString());
                 recipeConfig.set("shape", shape);
