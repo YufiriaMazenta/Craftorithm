@@ -27,6 +27,7 @@ dependencies {
     implementation(project(":hook:neigeitems"))
     implementation(project(":hook:nexo"))
     implementation(project(":hook:oraxen"))
+    implementation(project(":hook:sx-item"))
     implementation("com.crypticlib:bukkit:${rootProject.findProperty("crypticlibVer")}")
 }
 

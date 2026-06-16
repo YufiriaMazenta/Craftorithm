@@ -10,5 +10,6 @@ include(
     "hook:mythicmobs",
     "hook:neigeitems",
     "hook:nexo",
-    "hook:oraxen"
+    "hook:oraxen",
+    "hook:sx-item"
 )

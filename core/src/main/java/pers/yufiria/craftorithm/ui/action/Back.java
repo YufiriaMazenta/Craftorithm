@@ -26,7 +26,7 @@ public class Back extends BaseAction {
     public void run(@Nullable Player player, @NotNull Plugin plugin, @Nullable Function<String, String> function) {
         if (player != null) {
             Optional<Menu> openingMenuOpt = MenuHelper.getOpeningMenu(player);
-            IOHelper.info("is opening menu: " + openingMenuOpt.isPresent());
+            IOHelper.debug("is opening menu: " + openingMenuOpt.isPresent());
             if (openingMenuOpt.isPresent()) {
                 Menu menu = openingMenuOpt.get();
                 if (menu instanceof BackableMenu backableMenu) {

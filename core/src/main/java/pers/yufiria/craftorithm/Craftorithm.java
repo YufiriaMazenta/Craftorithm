@@ -19,6 +19,7 @@ import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.exception.UnsupportedVersionException;
 import pers.yufiria.craftorithm.hook.listener.OtherPluginsListenerManager;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.script.ScriptEngine;
 import pers.yufiria.craftorithm.ui.action.Back;
 import pers.yufiria.craftorithm.ui.action.Close;
 import pers.yufiria.craftorithm.ui.action.OpenMenu;
