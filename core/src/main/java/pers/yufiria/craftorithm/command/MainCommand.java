@@ -54,4 +54,7 @@ public class MainCommand extends CommandTree {
     @Subcommand
     CommandNode openMenu = OpenMenuCommand.INSTANCE;
 
+    @Subcommand
+    CommandNode script = ScriptCommand.INSTANCE;
+
 }

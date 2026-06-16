@@ -3,6 +3,7 @@ package pers.yufiria.craftorithm.script.func;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.chat.BukkitMsgSender;
 import crypticlib.chat.BukkitTextProcessor;
+import crypticlib.util.IOHelper;
 import net.milkbowl.vault.economy.Economy;
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.black_ixx.playerpoints.PlayerPointsAPI;
@@ -53,7 +54,9 @@ public enum ActionModule implements ScriptModule {
     private ScriptValue command(ScriptContext ctx, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
         Player player = ctx.player();
+        IOHelper.info(args[0].asString());
         String cmd = BukkitTextProcessor.placeholder(player, args[0].asString());
+        IOHelper.info(cmd);
         return ScriptValue.of(Bukkit.dispatchCommand(player, cmd));
     }
 

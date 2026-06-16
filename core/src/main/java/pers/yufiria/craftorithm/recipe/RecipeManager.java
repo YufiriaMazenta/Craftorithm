@@ -27,8 +27,6 @@ import pers.yufiria.craftorithm.util.LangUtils;
 import pers.yufiria.craftorithm.util.ServerUtils;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -369,6 +367,7 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         private int useTick = 0;
         //配方加载完毕后执行的代码
         private final Runnable callback;
+        private long useMilliseconds = 0;
 
         public RecipeLoadTask(File folder, Runnable doneActions) {
             this.callback = doneActions;
@@ -389,7 +388,7 @@ public enum RecipeManager implements BukkitLifeCycleTask {
             if (CrypticLibBukkit.isPaper() && MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_20_1)) {
                 Bukkit.updateRecipes();
             }
-            BukkitMsgSender.INSTANCE.debug("Loaded " + craftorithmRecipes.size() + " recipes ,took " + useTick + " ticks");
+            BukkitMsgSender.INSTANCE.info("Registered " + craftorithmRecipes.size() + " recipes in " + useTick + " ticks(" + useMilliseconds + "ms)");
             if (callback != null) {
                 callback.run();
             }
@@ -428,7 +427,7 @@ public enum RecipeManager implements BukkitLifeCycleTask {
                     throwable.printStackTrace();
                 }
             }
-            BukkitMsgSender.INSTANCE.debug("Tick " + useTick + ": Loaded " + recipeNum + " recipes, took " + (System.currentTimeMillis() - startTime) + "ms");
+            useMilliseconds += (System.currentTimeMillis() - startTime);
             useTick ++;
         }
 

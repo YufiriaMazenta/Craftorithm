@@ -46,6 +46,8 @@ command:
     unsupported_recipe_type: '<prefix> &c不支持的配方类型'
   openmenu:
     unknown_menu: '<prefix> &c未知的菜单:<menu_name>'
+  script:
+    operation_time: '<prefix> &a语句执行消耗<time>毫秒'
 recipe_type_name:
   vanilla_shaped: 有序配方
   vanilla_shapeless: 无序配方

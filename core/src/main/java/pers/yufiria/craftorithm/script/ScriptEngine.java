@@ -154,7 +154,7 @@ public enum ScriptEngine implements BukkitLifeCycleTask {
     @Override
     public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
         switch (lifeCycle) {
-            case ACTIVE -> {
+            case ENABLE -> {
                 ScriptEngine.INSTANCE.init();
             }
             case RELOAD -> {

@@ -39,6 +39,7 @@ public class Languages {
     public static final StringLangEntry COMMAND_CREATE_INPUT_HINT_ANVIL_COST_LEVEL = new StringLangEntry("command.create.input_hint.anvil_cost_level");
     public static final StringLangEntry COMMAND_DISPLAY_UNSUPPORTED_RECIPE_TYPE = new StringLangEntry("command.display.unsupported_recipe_type");
     public static final StringLangEntry COMMAND_OPENMENU_UNKNOWN_MENU = new StringLangEntry("command.openmenu.unknown_menu");
+    public static final StringLangEntry COMMAND_SCRIPT_OPERATION_TIME = new StringLangEntry("command.script.operation_time");
 
     public static final StringLangEntry LOAD_FINISH = new StringLangEntry("load_finish");
     public static final StringLangEntry RECIPE_LOAD_EXCEPTION = new StringLangEntry("recipe_load_exception");
