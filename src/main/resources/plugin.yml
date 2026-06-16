@@ -20,6 +20,8 @@ softdepend:
   - SCore
   - Nexo
   - AzureFlow
+  - CraftEngine
+  - SX-Item
 authors: [ YufiriaMazenta ]
 folia-supported: true
 website: https://github.com/YufiriaMazenta/Craftorithm
