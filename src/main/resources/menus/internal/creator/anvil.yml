@@ -1,0 +1,13 @@
+title: <translate:lang:recipe_type_name.anvil><translate:lang:menu.recipe_creator.name>
+frame_icon:
+  material: minecraft:green_stained_glass_pane
+  name: '&a<translate:lang:recipe_type_name.anvil>'
+confirm_icon:
+  material: minecraft:anvil
+  name: '&a<translate:lang:menu.recipe_creator.confirm_icon_name>'
+cost_level_icon:
+  material: minecraft:experience_bottle
+  name: '&a所需经验等级: &e<level>'
+  lore:
+    - '&7点击输入所需经验等级'
+default_cost_level: 1

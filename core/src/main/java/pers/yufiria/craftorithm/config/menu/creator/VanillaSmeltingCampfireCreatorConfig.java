@@ -1,0 +1,24 @@
+package pers.yufiria.craftorithm.config.menu.creator;
+
+import crypticlib.config.ConfigHandler;
+import crypticlib.config.node.impl.bukkit.ConfigSectionConfig;
+import crypticlib.config.node.impl.bukkit.IntConfig;
+import crypticlib.config.node.impl.bukkit.StringConfig;
+
+@ConfigHandler(path = "menus/internal/creator/vanilla_smelting_campfire.yml")
+public class VanillaSmeltingCampfireCreatorConfig {
+
+    public static final StringConfig TITLE = new StringConfig("title", "<translate:lang:recipe_type_name.vanilla_smelting_campfire><translate:lang:menu.recipe_creator.name>");
+    public static final ConfigSectionConfig FRAME_ICON = new ConfigSectionConfig("frame_icon");
+    public static final ConfigSectionConfig RESULT_FRAME_ICON = new ConfigSectionConfig("result_frame_icon");
+    public static final ConfigSectionConfig CONFIRM_ICON = new ConfigSectionConfig("confirm_icon");
+    public static final ConfigSectionConfig EXP_ICON = new ConfigSectionConfig("exp_icon");
+    public static final ConfigSectionConfig TIME_ICON = new ConfigSectionConfig("time_icon");
+    public static final IntConfig DEFAULT_EXP = new IntConfig("default_exp", 1);
+    public static final IntConfig DEFAULT_TIME = new IntConfig("default_time", 100);
+
+    public static final ConfigSectionConfig CATEGORY_ICON_FOOD = new ConfigSectionConfig("category_icon.food");
+    public static final ConfigSectionConfig CATEGORY_ICON_BLOCKS = new ConfigSectionConfig("category_icon.blocks");
+    public static final ConfigSectionConfig CATEGORY_ICON_MISC = new ConfigSectionConfig("category_icon.misc");
+
+}

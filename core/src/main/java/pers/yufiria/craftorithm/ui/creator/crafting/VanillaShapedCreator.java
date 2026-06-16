@@ -223,7 +223,6 @@ public final class VanillaShapedCreator extends RecipeCreator {
                 }
 
                 // 12. 关闭菜单
-                creator.setReturnStoredItems(true);
                 event.getWhoClicked().closeInventory();
                 return this;
             }

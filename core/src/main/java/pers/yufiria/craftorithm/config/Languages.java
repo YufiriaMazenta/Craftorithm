@@ -34,6 +34,9 @@ public class Languages {
     public static final StringLangEntry COMMAND_CREATE_UNSUPPORTED_RECIPE_NAME = new StringLangEntry("command.create.unsupported_recipe_name");
     public static final StringLangEntry COMMAND_CREATE_NAME_USED = new StringLangEntry("command.create.name_used");
     public static final StringLangEntry COMMAND_CREATE_SUCCESS = new StringLangEntry("command.create.success");
+    public static final StringLangEntry COMMAND_CREATE_INPUT_HINT_SMELTING_TIME = new StringLangEntry("command.create.input_hint.smelting_time");
+    public static final StringLangEntry COMMAND_CREATE_INPUT_HINT_SMELTING_EXP = new StringLangEntry("command.create.input_hint.smelting_exp");
+    public static final StringLangEntry COMMAND_CREATE_INPUT_HINT_ANVIL_COST_LEVEL = new StringLangEntry("command.create.input_hint.anvil_cost_level");
     public static final StringLangEntry COMMAND_DISPLAY_UNSUPPORTED_RECIPE_TYPE = new StringLangEntry("command.display.unsupported_recipe_type");
     public static final StringLangEntry COMMAND_OPENMENU_UNKNOWN_MENU = new StringLangEntry("command.openmenu.unknown_menu");
 

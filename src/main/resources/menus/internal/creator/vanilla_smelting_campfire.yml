@@ -1,0 +1,38 @@
+title: <translate:lang:recipe_type_name.vanilla_smelting_campfire><translate:lang:menu.recipe_creator.name>
+frame_icon:
+  material: minecraft:green_stained_glass_pane
+  name: '&a<translate:lang:recipe_type_name.vanilla_smelting_campfire>'
+result_frame_icon:
+  material: minecraft:lime_stained_glass_pane
+  name: '&a<translate:lang:menu.recipe_creator.result_frame_icon_name>'
+confirm_icon:
+  material: minecraft:campfire
+  name: '&a<translate:lang:menu.recipe_creator.confirm_icon_name>'
+exp_icon:
+  material: minecraft:experience_bottle
+  name: '&a奖励经验: &e<exp>'
+  lore:
+    - '&7点击输入奖励经验'
+time_icon:
+  material: minecraft:clock
+  name: '&a熔炼时间: &e<time> &7(tick)'
+  lore:
+    - '&7点击输入熔炼时间'
+category_icon:
+  food:
+    material: minecraft:cooked_beef
+    name: '&a配方书分类: &e食物'
+    lore:
+      - '&7点击切换分类'
+  blocks:
+    material: minecraft:stone
+    name: '&a配方书分类: &e方块'
+    lore:
+      - '&7点击切换分类'
+  misc:
+    material: minecraft:stick
+    name: '&a配方书分类: &e杂项'
+    lore:
+      - '&7点击切换分类'
+default_exp: 1
+default_time: 100

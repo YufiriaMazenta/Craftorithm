@@ -16,15 +16,22 @@ import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.RecipeTypeMap;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
+import pers.yufiria.craftorithm.ui.creator.anvil.AnvilCreator;
+import pers.yufiria.craftorithm.ui.creator.brewing.VanillaBrewingCreator;
 import pers.yufiria.craftorithm.ui.creator.crafting.VanillaShapedCreator;
 import pers.yufiria.craftorithm.ui.creator.crafting.VanillaShapelessCreator;
+import pers.yufiria.craftorithm.ui.creator.smelting.VanillaSmeltingBlastCreator;
+import pers.yufiria.craftorithm.ui.creator.smelting.VanillaSmeltingCampfireCreator;
+import pers.yufiria.craftorithm.ui.creator.smelting.VanillaSmeltingFurnaceCreator;
+import pers.yufiria.craftorithm.ui.creator.smelting.VanillaSmeltingSmokerCreator;
+import pers.yufiria.craftorithm.ui.creator.smithing.VanillaSmithingCreator;
+import pers.yufiria.craftorithm.ui.creator.stonecutting.VanillaStonecuttingCreator;
 import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -102,6 +109,35 @@ public final class CreateRecipeCommand extends CommandNode implements BukkitLife
         });
         addRecipeCreator(SimpleRecipeTypes.VANILLA_SHAPELESS, (player, recipeName) -> {
             new VanillaShapelessCreator(player, recipeName).openMenu();
+        });
+        // 熔炉配方 (furnace, blast, smoker, campfire)
+        addRecipeCreator(SimpleRecipeTypes.VANILLA_SMELTING_FURNACE, (player, recipeName) -> {
+            new VanillaSmeltingFurnaceCreator(player, recipeName).openMenu();
+        });
+        addRecipeCreator(SimpleRecipeTypes.VANILLA_SMELTING_BLAST, (player, recipeName) -> {
+            new VanillaSmeltingBlastCreator(player, recipeName).openMenu();
+        });
+        addRecipeCreator(SimpleRecipeTypes.VANILLA_SMELTING_SMOKER, (player, recipeName) -> {
+            new VanillaSmeltingSmokerCreator(player, recipeName).openMenu();
+        });
+        addRecipeCreator(SimpleRecipeTypes.VANILLA_SMELTING_CAMPFIRE, (player, recipeName) -> {
+            new VanillaSmeltingCampfireCreator(player, recipeName).openMenu();
+        });
+        // 锻造台配方
+        addRecipeCreator(SimpleRecipeTypes.VANILLA_SMITHING_TRANSFORM, (player, recipeName) -> {
+            new VanillaSmithingCreator(player, recipeName).openMenu();
+        });
+        // 切石机配方
+        addRecipeCreator(SimpleRecipeTypes.VANILLA_STONECUTTING, (player, recipeName) -> {
+            new VanillaStonecuttingCreator(player, recipeName).openMenu();
+        });
+        // 酿造台配方
+        addRecipeCreator(SimpleRecipeTypes.VANILLA_BREWING, (player, recipeName) -> {
+            new VanillaBrewingCreator(player, recipeName).openMenu();
+        });
+        // 铁砧配方
+        addRecipeCreator(SimpleRecipeTypes.ANVIL, (player, recipeName) -> {
+            new AnvilCreator(player, recipeName).openMenu();
         });
     }
 

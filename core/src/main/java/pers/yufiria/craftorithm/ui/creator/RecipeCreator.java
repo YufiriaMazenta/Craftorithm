@@ -91,7 +91,7 @@ public abstract class RecipeCreator extends StoredMenu {
      */
     protected String resolveIngredientId(ItemStack item) {
         NamespacedItemIdStack itemId = ItemManager.INSTANCE.matchItemIdOrCreate(item, true);
-        return itemId != null ? itemId.itemId().toString() : null;
+        return itemId != null ? itemId.toString() : null;
     }
 
 }
