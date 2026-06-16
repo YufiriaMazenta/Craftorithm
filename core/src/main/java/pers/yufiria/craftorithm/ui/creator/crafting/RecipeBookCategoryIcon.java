@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.ui.creator.crafting;
 
+import crypticlib.config.node.impl.bukkit.ConfigSectionConfig;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.menu.Menu;
@@ -8,16 +9,25 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.recipe.CraftingBookCategory;
-import pers.yufiria.craftorithm.config.menu.creator.VanillaShapedCreatorConfig;
 import pers.yufiria.craftorithm.ui.creator.CreatorIconParser;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
 
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * 合成配方的配方书分类图标
+ * 支持 MISC, BUILDING, REDSTONE, EQUIPMENT 四种分类
+ */
 public class RecipeBookCategoryIcon extends TranslatableIcon {
 
     private CraftingBookCategory category = CraftingBookCategory.MISC;
+
+    private final ConfigSectionConfig miscIconConfig;
+    private final ConfigSectionConfig buildingIconConfig;
+    private final ConfigSectionConfig redstoneIconConfig;
+    private final ConfigSectionConfig equipmentIconConfig;
+
     private static final List<CraftingBookCategory> CATEGORIES = List.of(
         CraftingBookCategory.MISC,
         CraftingBookCategory.BUILDING,
@@ -25,8 +35,13 @@ public class RecipeBookCategoryIcon extends TranslatableIcon {
         CraftingBookCategory.EQUIPMENT
     );
 
-    public RecipeBookCategoryIcon() {
+    public RecipeBookCategoryIcon(ConfigSectionConfig miscIconConfig, ConfigSectionConfig buildingIconConfig,
+                                  ConfigSectionConfig redstoneIconConfig, ConfigSectionConfig equipmentIconConfig) {
         super(new IconDisplay(Material.STONE));
+        this.miscIconConfig = miscIconConfig;
+        this.buildingIconConfig = buildingIconConfig;
+        this.redstoneIconConfig = redstoneIconConfig;
+        this.equipmentIconConfig = equipmentIconConfig;
     }
 
     @Override
@@ -35,22 +50,22 @@ public class RecipeBookCategoryIcon extends TranslatableIcon {
         switch (category) {
             case MISC -> {
                 display = CreatorIconParser.INSTANCE.parseIconDisplay(
-                    VanillaShapedCreatorConfig.CATEGORY_ICON_MISC.value()
+                    miscIconConfig.value()
                 ).toItemStack();
             }
             case BUILDING -> {
                 display = CreatorIconParser.INSTANCE.parseIconDisplay(
-                    VanillaShapedCreatorConfig.CATEGORY_ICON_BUILDING.value()
+                    buildingIconConfig.value()
                 ).toItemStack();
             }
             case REDSTONE -> {
                 display = CreatorIconParser.INSTANCE.parseIconDisplay(
-                    VanillaShapedCreatorConfig.CATEGORY_ICON_REDSTONE.value()
+                    redstoneIconConfig.value()
                 ).toItemStack();
             }
             case EQUIPMENT -> {
                 display = CreatorIconParser.INSTANCE.parseIconDisplay(
-                    VanillaShapedCreatorConfig.CATEGORY_ICON_EQUIPMENT.value()
+                    equipmentIconConfig.value()
                 ).toItemStack();
             }
             default -> {

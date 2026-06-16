@@ -19,7 +19,7 @@ import java.util.Objects;
  * 熔炼配方的配方书分类图标
  * 支持 FOOD, BLOCKS, MISC 三种分类
  */
-public class CookingBookCategoryIcon extends TranslatableIcon {
+public class CookingRecipeBookCategoryIcon extends TranslatableIcon {
 
     private CookingBookCategory category = CookingBookCategory.MISC;
 
@@ -33,7 +33,7 @@ public class CookingBookCategoryIcon extends TranslatableIcon {
         CookingBookCategory.MISC
     );
 
-    public CookingBookCategoryIcon(ConfigSectionConfig foodIconConfig, ConfigSectionConfig blocksIconConfig, ConfigSectionConfig miscIconConfig) {
+    public CookingRecipeBookCategoryIcon(ConfigSectionConfig foodIconConfig, ConfigSectionConfig blocksIconConfig, ConfigSectionConfig miscIconConfig) {
         super(new IconDisplay(Material.STONE));
         this.foodIconConfig = foodIconConfig;
         this.blocksIconConfig = blocksIconConfig;

@@ -45,13 +45,13 @@ public abstract class AbstractSmeltingCreator extends RecipeCreator {
 
     protected float exp;
     protected int time;
-    protected CookingBookCategoryIcon categoryIcon;
+    protected CookingRecipeBookCategoryIcon categoryIcon;
 
     public AbstractSmeltingCreator(@NotNull Player player, @Nullable String recipeName) {
         super(player, recipeName);
         this.exp = defaultExp();
         this.time = defaultTime();
-        this.categoryIcon = new CookingBookCategoryIcon(
+        this.categoryIcon = new CookingRecipeBookCategoryIcon(
             categoryIconFoodConfig(), categoryIconBlocksConfig(), categoryIconMiscConfig()
         );
         this.display = new MenuDisplay(
@@ -61,7 +61,7 @@ public abstract class AbstractSmeltingCreator extends RecipeCreator {
                 "#####FFF#",
                 "##I#AFRF#",
                 "#####FFF#",
-                "##E###T##"
+                "##E#G#T##"
             ), () -> {
                 Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);

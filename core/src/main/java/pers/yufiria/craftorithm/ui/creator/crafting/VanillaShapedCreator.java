@@ -53,7 +53,12 @@ public final class VanillaShapedCreator extends RecipeCreator {
                 layoutMap.put('#', this::getFrameIcon);
                 layoutMap.put('*', this::getResultFrameIcon);
                 layoutMap.put('A', this::getConfirmIcon);
-                layoutMap.put('C', RecipeBookCategoryIcon::new);
+                layoutMap.put('C', () -> new RecipeBookCategoryIcon(
+                    VanillaShapedCreatorConfig.CATEGORY_ICON_MISC,
+                    VanillaShapedCreatorConfig.CATEGORY_ICON_BUILDING,
+                    VanillaShapedCreatorConfig.CATEGORY_ICON_REDSTONE,
+                    VanillaShapedCreatorConfig.CATEGORY_ICON_EQUIPMENT
+                ));
                 return layoutMap;
             })
         );

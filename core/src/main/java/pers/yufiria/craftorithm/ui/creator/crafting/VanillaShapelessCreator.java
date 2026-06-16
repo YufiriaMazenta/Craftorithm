@@ -53,7 +53,12 @@ public class VanillaShapelessCreator extends RecipeCreator {
                 layoutMap.put('#', this::getFrameIcon);
                 layoutMap.put('*', this::getResultFrameIcon);
                 layoutMap.put('A', this::getConfirmIcon);
-                layoutMap.put('C', RecipeBookCategoryIcon::new);
+                layoutMap.put('C', () -> new RecipeBookCategoryIcon(
+                    VanillaShapelessCreatorConfig.CATEGORY_ICON_MISC,
+                    VanillaShapelessCreatorConfig.CATEGORY_ICON_BUILDING,
+                    VanillaShapelessCreatorConfig.CATEGORY_ICON_REDSTONE,
+                    VanillaShapelessCreatorConfig.CATEGORY_ICON_EQUIPMENT
+                ));
                 return layoutMap;
             })
         );
