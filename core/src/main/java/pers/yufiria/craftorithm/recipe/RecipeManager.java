@@ -285,7 +285,8 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         return result;
     }
 
-    public boolean removeCraftorithmRecipe(NamespacedKey recipeKey, boolean deleteFile, boolean updateRecipes) {
+    public boolean removeCraftorithmRecipe(String recipeId, boolean deleteFile, boolean updateRecipes) {
+        NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeId);
         boolean result = removeRecipe(recipeKey, updateRecipes);
         if (result) {
             craftorithmRecipes.remove(recipeKey);
@@ -317,6 +318,10 @@ public enum RecipeManager implements BukkitLifeCycleTask {
 
     public @Nullable RecipeType getRecipeType(String typeId) {
         return recipeTypes.get(typeId);
+    }
+
+    public @Nullable BukkitConfigWrapper getRecipeConfigWrapper(NamespacedKey recipeKey) {
+        return recipeConfigWrapperMap.get(recipeKey);
     }
 
     /**

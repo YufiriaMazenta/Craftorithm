@@ -1,0 +1,22 @@
+title: <translate:lang:recipe_type_name.vanilla_smelting_smoker> - <recipe_key> - 编辑器
+frame_icon:
+  material: minecraft:gray_stained_glass_pane
+  name: '&7<translate:lang:recipe_type_name.vanilla_smelting_smoker>'
+result_frame_icon:
+  material: minecraft:lime_stained_glass_pane
+  name: '&a编辑器 - 结果物品'
+confirm_icon:
+  material: minecraft:smoker
+  name: '&a&l确认编辑'
+  lore:
+    - '&7点击保存配方修改'
+exp_icon:
+  material: minecraft:experience_bottle
+  name: '&a奖励经验: &e<exp>'
+  lore:
+    - '&7点击输入奖励经验'
+time_icon:
+  material: minecraft:clock
+  name: '&a熔炼时间: &e<time> &7(tick)'
+  lore:
+    - '&7点击输入熔炼时间'

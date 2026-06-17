@@ -48,6 +48,9 @@ command:
     unknown_menu: '<prefix> &c未知的菜单:<menu_name>'
   script:
     operation_time: '<prefix> &a语句执行消耗<time>毫秒'
+  edit:
+    invalid_recipe_id: '<prefix> &c无效的配方ID'
+    recipe_not_found: '<prefix> &c找不到该配方'
 recipe_type_name:
   vanilla_shaped: 有序配方
   vanilla_shapeless: 无序配方
@@ -55,7 +58,8 @@ recipe_type_name:
   vanilla_smelting_blast: 高炉配方
   vanilla_smelting_smoker: 烟熏炉配方
   vanilla_smelting_campfire: 营火配方
-  vanilla_smithing: 锻造配方
+  vanilla_smithing_transform: 锻造配方
+  vanilla_smithing_trim: 模板锻造配方
   vanilla_stonecutting: 切石配方
   vanilla_brewing: 酿造配方
   anvil: 铁砧配方

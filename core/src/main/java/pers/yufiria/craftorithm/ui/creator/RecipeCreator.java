@@ -34,14 +34,6 @@ public abstract class RecipeCreator extends StoredMenu {
         this.recipeName = recipeName;
     }
 
-    protected void toggleIconGlowing(int slot, InventoryClickEvent event) {
-        ItemStack display = event.getCurrentItem();
-        if (ItemHelper.isAir(display))
-            return;
-        ItemUtils.toggleItemGlowing(display);
-        event.getClickedInventory().setItem(slot, display);
-    }
-
     protected abstract Icon getFrameIcon();
 
     protected abstract Icon getResultFrameIcon();

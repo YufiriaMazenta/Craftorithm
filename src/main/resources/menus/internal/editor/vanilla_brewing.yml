@@ -1,0 +1,12 @@
+title: <translate:lang:recipe_type_name.vanilla_brewing> - <recipe_key> - 编辑器
+frame_icon:
+  material: minecraft:gray_stained_glass_pane
+  name: '&7<translate:lang:recipe_type_name.vanilla_brewing>'
+result_frame_icon:
+  material: minecraft:lime_stained_glass_pane
+  name: '&a编辑器 - 结果物品'
+confirm_icon:
+  material: minecraft:brewing_stand
+  name: '&a&l确认编辑'
+  lore:
+    - '&7点击保存配方修改'

@@ -4,6 +4,7 @@ import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.menu.Menu;
 import crypticlib.ui.util.MenuHelper;
+import crypticlib.util.IOHelper;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -17,6 +18,7 @@ import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.ui.BackableMenu;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayManager;
+import pers.yufiria.craftorithm.ui.editor.RecipeEditorManager;
 import pers.yufiria.craftorithm.ui.icon.ActionIcon;
 import pers.yufiria.craftorithm.util.LangUtils;
 
@@ -96,7 +98,9 @@ public class RecipeDisplayIcon extends ActionIcon {
             if (!whoClicked.hasPermission("craftorithm.edit_recipe")) {
                 return this;
             }
-            //TODO 未来实现
+            RecipeEditorManager.INSTANCE.getEditor(recipeType).ifPresent(editorFunc -> {
+                editorFunc.apply(whoClicked, recipeKey, recipe);
+            });
         }
         return this;
     }

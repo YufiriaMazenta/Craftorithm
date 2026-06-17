@@ -17,15 +17,15 @@ import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.RecipeTypeMap;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.ui.creator.anvil.AnvilCreator;
-import pers.yufiria.craftorithm.ui.creator.brewing.VanillaBrewingCreator;
-import pers.yufiria.craftorithm.ui.creator.crafting.VanillaShapedCreator;
-import pers.yufiria.craftorithm.ui.creator.crafting.VanillaShapelessCreator;
-import pers.yufiria.craftorithm.ui.creator.smelting.VanillaSmeltingBlastCreator;
-import pers.yufiria.craftorithm.ui.creator.smelting.VanillaSmeltingCampfireCreator;
-import pers.yufiria.craftorithm.ui.creator.smelting.VanillaSmeltingFurnaceCreator;
-import pers.yufiria.craftorithm.ui.creator.smelting.VanillaSmeltingSmokerCreator;
-import pers.yufiria.craftorithm.ui.creator.smithing.VanillaSmithingCreator;
-import pers.yufiria.craftorithm.ui.creator.stonecutting.VanillaStonecuttingCreator;
+import pers.yufiria.craftorithm.ui.creator.vanillaBrewing.VanillaBrewingCreator;
+import pers.yufiria.craftorithm.ui.creator.vanillaCrafting.VanillaShapedCreator;
+import pers.yufiria.craftorithm.ui.creator.vanillaCrafting.VanillaShapelessCreator;
+import pers.yufiria.craftorithm.ui.creator.vanillaSmelting.VanillaSmeltingBlastCreator;
+import pers.yufiria.craftorithm.ui.creator.vanillaSmelting.VanillaSmeltingCampfireCreator;
+import pers.yufiria.craftorithm.ui.creator.vanillaSmelting.VanillaSmeltingFurnaceCreator;
+import pers.yufiria.craftorithm.ui.creator.vanillaSmelting.VanillaSmeltingSmokerCreator;
+import pers.yufiria.craftorithm.ui.creator.vanillaSmithing.VanillaSmithingTransformCreator;
+import pers.yufiria.craftorithm.ui.creator.vanillaStonecutting.VanillaStonecuttingCreator;
 import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
 
@@ -125,7 +125,7 @@ public final class CreateRecipeCommand extends CommandNode implements BukkitLife
         });
         // 锻造台配方
         addRecipeCreator(SimpleRecipeTypes.VANILLA_SMITHING_TRANSFORM, (player, recipeName) -> {
-            new VanillaSmithingCreator(player, recipeName).openMenu();
+            new VanillaSmithingTransformCreator(player, recipeName).openMenu();
         });
         // 切石机配方
         addRecipeCreator(SimpleRecipeTypes.VANILLA_STONECUTTING, (player, recipeName) -> {

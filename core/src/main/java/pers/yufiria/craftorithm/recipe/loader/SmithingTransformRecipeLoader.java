@@ -42,7 +42,7 @@ public enum SmithingTransformRecipeLoader implements RecipeLoader<SmithingRecipe
             } else {
                 String templateId = recipeConfig.getString("template");
                 RecipeChoice template = BukkitRecipeChoiceParser.parseChoice(templateId);
-                recipe = new SmithingTransformRecipe(key, result, base, addition, template);
+                recipe = new SmithingTransformRecipe(key, result, template, base, addition);
             }
             return recipe;
         } catch (RecipeLoadException e) {

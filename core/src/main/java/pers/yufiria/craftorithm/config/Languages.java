@@ -40,6 +40,8 @@ public class Languages {
     public static final StringLangEntry COMMAND_DISPLAY_UNSUPPORTED_RECIPE_TYPE = new StringLangEntry("command.display.unsupported_recipe_type");
     public static final StringLangEntry COMMAND_OPENMENU_UNKNOWN_MENU = new StringLangEntry("command.openmenu.unknown_menu");
     public static final StringLangEntry COMMAND_SCRIPT_OPERATION_TIME = new StringLangEntry("command.script.operation_time");
+    public static final StringLangEntry COMMAND_EDIT_INVALID_RECIPE_ID = new StringLangEntry("command.edit.invalid_recipe_id");
+    public static final StringLangEntry COMMAND_EDIT_RECIPE_NOT_FOUND = new StringLangEntry("command.edit.recipe_not_found");
 
     public static final StringLangEntry LOAD_FINISH = new StringLangEntry("load_finish");
     public static final StringLangEntry RECIPE_LOAD_EXCEPTION = new StringLangEntry("recipe_load_exception");
@@ -52,7 +54,8 @@ public class Languages {
     public static final StringLangEntry RECIPE_TYPE_NAME_VANILLA_SMELTING_BLAST = new StringLangEntry("recipe_type_name.vanilla_smelting_blast");
     public static final StringLangEntry RECIPE_TYPE_NAME_VANILLA_SMELTING_SMOKER = new StringLangEntry("recipe_type_name.vanilla_smelting_smoker");
     public static final StringLangEntry RECIPE_TYPE_NAME_VANILLA_SMELTING_CAMPFIRE = new StringLangEntry("recipe_type_name.vanilla_smelting_campfire");
-    public static final StringLangEntry RECIPE_TYPE_NAME_VANILLA_SMITHING = new StringLangEntry("recipe_type_name.vanilla_smithing");
+    public static final StringLangEntry RECIPE_TYPE_NAME_VANILLA_SMITHING_TRANSFORM = new StringLangEntry("recipe_type_name.vanilla_smithing_transform");
+    public static final StringLangEntry RECIPE_TYPE_NAME_VANILLA_SMITHING_TRIM = new StringLangEntry("recipe_type_name.vanilla_smithing_trim");
     public static final StringLangEntry RECIPE_TYPE_NAME_VANILLA_STONECUTTING = new StringLangEntry("recipe_type_name.vanilla_stonecutting");
     public static final StringLangEntry RECIPE_TYPE_NAME_VANILLA_BREWING = new StringLangEntry("recipe_type_name.vanilla_brewing");
     public static final StringLangEntry RECIPE_TYPE_NAME_ANVIL = new StringLangEntry("recipe_type_name.anvil");
