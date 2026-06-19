@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm;
+package pers.yufiria.craftorithm.api;
 
 import org.bukkit.inventory.ItemStack;
 import pers.yufiria.craftorithm.item.ItemManager;
@@ -11,10 +11,6 @@ public enum CraftorithmAPI {
 
     public ItemStack getCraftorithmItem(String itemName) {
         return CraftorithmItemProvider.INSTANCE.matchItem(itemName);
-    }
-
-    public void regItemProvider(ItemProvider itemProvider) {
-        ItemManager.INSTANCE.regItemProvider(itemProvider);
     }
 
 }
