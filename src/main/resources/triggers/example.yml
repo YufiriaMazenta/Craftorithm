@@ -1,0 +1,19 @@
+
+on_craft_diamond_sword:
+  type: 'crafting'  # crafting | smithing | anvil
+  recipes:
+    - 'craftorithm:diamond_sword'
+    - 'craftorithm:netherite_sword'
+  event_conditions:
+    - 'perm "craftorithm.trigger.vip"'
+    - 'level >= 10'
+  actions:
+    conditions:
+      - 控制条件
+    actions:
+     - 'tell "&a合成成功！"'
+     - 'give-money 100'
+  priority: 0
+  enabled: true
+  cooldown: 5
+  per-player: true

@@ -1,9 +1,5 @@
 package pers.yufiria.craftorithm.recipe;
 
-import org.bukkit.inventory.Recipe;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Range;
-
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;

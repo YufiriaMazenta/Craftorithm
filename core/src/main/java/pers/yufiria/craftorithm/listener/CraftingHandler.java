@@ -19,23 +19,23 @@ public enum CraftingHandler implements Listener {
     INSTANCE;
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void refreshResult(PrepareItemCraftEvent event) {
+    public void refreshDynamicResult(PrepareItemCraftEvent event) {
         if (event.getRecipe() == null)
             return;
         Recipe recipe = event.getRecipe();
         NamespacedKey namespacedKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
         if (namespacedKey == null) {
-            throw new RuntimeException("Can not get pers.yufiria.craftorithm.recipe key");
+            throw new RuntimeException("Can not get recipe key");
         }
         if (!namespacedKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
             return;
         }
         ItemStack item = event.getRecipe().getResult();
-        NamespacedItemIdStack itemId = ItemManager.INSTANCE.matchItemId(item, true);
-        if (itemId == null) {
+        NamespacedItemIdStack resultItemId = ItemManager.INSTANCE.matchItemId(item, true);
+        if (resultItemId == null) {
             return;
         }
-        ItemStack refreshItem = ItemManager.INSTANCE.matchItem(itemId, (Player) event.getViewers().get(0));
+        ItemStack refreshItem = ItemManager.INSTANCE.matchItem(resultItemId, (Player) event.getViewers().getFirst());
         if (item.isSimilar(refreshItem)) {
             return;
         }

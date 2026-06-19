@@ -24,7 +24,7 @@ public class ScriptCompiler {
         instructions.clear();
         emitNode(node);
         instructions.add(Instruction.of(OpCode.RETURN, 0));
-        return new CompiledScript(name, instructions);
+        return new CompiledScript(name, new ArrayList<>(instructions));//不重新包装列表导致每个被编译的脚本都一样的内容,垃圾mimo
     }
 
     private void emitNode(ASTNode node) {

@@ -23,7 +23,10 @@ import pers.yufiria.craftorithm.ui.creator.RecipeCreator;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
 import pers.yufiria.craftorithm.util.LangUtils;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 public class VanillaSmithingTransformCreator extends RecipeCreator {

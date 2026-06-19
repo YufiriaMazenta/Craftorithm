@@ -64,34 +64,6 @@ public final class VanillaShapedCreator extends RecipeCreator {
         );
     }
 
-    /**
-     * 移除配方形状中的全空白列
-     */
-    private void removeEmptyColumn(List<String> shape) {
-        if (shape.isEmpty()) return;
-        int maxLen = shape.stream().mapToInt(String::length).max().orElse(0);
-        if (maxLen == 0) return;
-
-        boolean[] emptyCol = new boolean[maxLen];
-        for (int col = 0; col < maxLen; col++) {
-            final int c = col;
-            emptyCol[col] = shape.stream().allMatch(s -> c >= s.length() || s.charAt(c) == ' ');
-        }
-
-        List<String> newShape = new ArrayList<>();
-        for (String row : shape) {
-            StringBuilder newRow = new StringBuilder();
-            for (int col = 0; col < maxLen; col++) {
-                if (!emptyCol[col] && col < row.length()) {
-                    newRow.append(row.charAt(col));
-                }
-            }
-            newShape.add(newRow.toString());
-        }
-        shape.clear();
-        shape.addAll(newShape);
-    }
-
     @Override
     protected Icon getFrameIcon() {
         return CreatorIconParser.INSTANCE.parse(VanillaShapedCreatorConfig.FRAME_ICON.value()).get();
@@ -173,8 +145,8 @@ public final class VanillaShapedCreator extends RecipeCreator {
                     shape.add(new String(shapeChars, row * 3, 3));
                 }
 
-                // 7. 移除全空行和全空列
-                shape.removeIf(s -> s.trim().isEmpty());
+                // 7. 移除首尾的全空行和全空列（保留中间的空行/列）
+                removeEmptyRow(shape);
                 removeEmptyColumn(shape);
 
                 if (shape.isEmpty()) {
@@ -232,6 +204,55 @@ public final class VanillaShapedCreator extends RecipeCreator {
                 return this;
             }
         };
+    }
+
+
+    /**
+     * 移除配方形状中首尾的全空白行（保留中间的空行）
+     */
+    private void removeEmptyRow(List<String> shape) {
+        // 移除开头的空行
+        while (!shape.isEmpty() && shape.get(0).trim().isEmpty()) {
+            shape.remove(0);
+        }
+        // 移除结尾的空行
+        while (!shape.isEmpty() && shape.get(shape.size() - 1).trim().isEmpty()) {
+            shape.remove(shape.size() - 1);
+        }
+    }
+
+    /**
+     * 移除配方形状中首尾的全空白列（保留中间的空列）
+     */
+    private void removeEmptyColumn(List<String> shape) {
+        boolean[] empty = new boolean[3];
+        for (int i = 0; i < 3; i++) {
+            int finalI = i;
+            empty[i] = shape.stream().allMatch(s -> finalI >= s.length() || s.charAt(finalI) == ' ');
+        }
+        if (empty[0]) {
+            if (empty[1]) {
+                if (!empty[2]) {
+                    shape.replaceAll(s -> s.length() > 2 ? s.substring(2) : "");
+                }
+            } else {
+                if (empty[2]) {
+                    shape.replaceAll(s -> s.length() >= 2 ? s.substring(1, 2) : "");
+                } else {
+                    shape.replaceAll(s -> s.length() >= 2 ? s.substring(1) : "");
+                }
+            }
+        } else {
+            if (empty[1]) {
+                if (empty[2]) {
+                    shape.replaceAll(s -> s.substring(0, 1));
+                }
+            } else {
+                if (empty[2]) {
+                    shape.replaceAll(s -> s.substring(0, Math.min(2, s.length())));
+                }
+            }
+        }
     }
 
 }

@@ -1,8 +1,6 @@
 package pers.yufiria.craftorithm.api;
 
 import org.bukkit.inventory.ItemStack;
-import pers.yufiria.craftorithm.item.ItemManager;
-import pers.yufiria.craftorithm.item.ItemProvider;
 import pers.yufiria.craftorithm.item.CraftorithmItemProvider;
 
 public enum CraftorithmAPI {

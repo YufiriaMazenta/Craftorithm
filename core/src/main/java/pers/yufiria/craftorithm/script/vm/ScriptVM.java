@@ -5,7 +5,6 @@ import pers.yufiria.craftorithm.script.ScriptException;
 import pers.yufiria.craftorithm.script.ScriptValue;
 import pers.yufiria.craftorithm.script.compile.CompiledScript;
 import pers.yufiria.craftorithm.script.compile.Instruction;
-import pers.yufiria.craftorithm.script.compile.OpCode;
 import pers.yufiria.craftorithm.script.func.ScriptFunction;
 import pers.yufiria.craftorithm.script.func.ScriptFunctionRegistry;
 
