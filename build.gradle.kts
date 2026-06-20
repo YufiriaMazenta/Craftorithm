@@ -78,14 +78,14 @@ subprojects {
     java.targetCompatibility = JavaVersion.VERSION_21
     repositories {
         mavenLocal()
+        //CrypticLib, Spigot
+        maven("http://110.42.10.241:8082/repository/maven-public/") {
+            isAllowInsecureProtocol = true
+        }
         maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
         maven("https://repo.papermc.io/repository/maven-public/")
         maven("https://oss.sonatype.org/content/groups/public/")
         maven("https://repo.maven.apache.org/maven2/")
-        //CrypticLib
-        maven("http://110.42.10.241:8082/repository/maven-public/") {
-            isAllowInsecureProtocol = true
-        }
         mavenCentral()
     }
     dependencies {

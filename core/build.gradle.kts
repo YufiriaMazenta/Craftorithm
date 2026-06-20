@@ -25,4 +25,5 @@ dependencies {
     implementation("com.crypticlib:bukkit-conversation:${rootProject.findProperty("crypticlibVer")}")
     implementation("com.crypticlib:bukkit-i18n:${rootProject.findProperty("crypticlibVer")}")
     implementation("com.crypticlib:bukkit-action:${rootProject.findProperty("crypticlibVer")}")
+    implementation("com.crypticlib:common-compat:${rootProject.findProperty("crypticlibVer")}")
 }

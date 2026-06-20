@@ -13,3 +13,6 @@ include(
     "hook:oraxen",
     "hook:sx-item"
 )
+include(
+    "compat:recipe_register_26_1"
+)
