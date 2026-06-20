@@ -28,6 +28,7 @@ public enum BukkitRecipeRegister implements RecipeRegister {
                 return -1;
             }
         });
+    private NMSRecipeRegister nmsRecipeRegister;
 
     @Override
     public boolean registerRecipe(Recipe recipe) {
@@ -62,11 +63,14 @@ public enum BukkitRecipeRegister implements RecipeRegister {
     }
 
     public NMSRecipeRegister findNMSRecipeRegisterIns() {
+        if (nmsRecipeRegister != null) {
+            return nmsRecipeRegister;
+        }
         Optional<NMSRecipeRegister> implementation = nmsRecipeRegisterCompat.findImplementation(MinecraftVersion.current().name());
         if (implementation.isEmpty()) {
             IOHelper.info("&e[WARN] Failed to load minecraft recipe register");
         }
-        return implementation.orElse(new NMSRecipeRegister() {
+        NMSRecipeRegister orElse = implementation.orElse(new NMSRecipeRegister() {
             @Override
             public boolean registerRecipe(Recipe recipe) {
                 return false;
@@ -77,6 +81,8 @@ public enum BukkitRecipeRegister implements RecipeRegister {
                 return false;
             }
         });
+        nmsRecipeRegister = orElse;
+        return orElse;
     }
 
     /**
