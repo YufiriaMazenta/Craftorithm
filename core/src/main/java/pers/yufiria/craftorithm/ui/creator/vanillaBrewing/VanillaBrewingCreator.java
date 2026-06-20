@@ -123,7 +123,7 @@ public class VanillaBrewingCreator extends RecipeCreator {
                 recipeConfig.reloadConfig();
 
                 // 7. 加载配方到RecipeManager
-                boolean loadResult = RecipeManager.INSTANCE.loadRecipeFromConfig(recipeName, recipeConfig);
+                boolean loadResult = RecipeManager.INSTANCE.loadRecipeFromConfig(recipeName, recipeConfig, false);
                 if (loadResult) {
                     LangUtils.sendLang(
                         event.getWhoClicked(),

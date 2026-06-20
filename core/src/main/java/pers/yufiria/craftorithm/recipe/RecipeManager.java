@@ -54,6 +54,7 @@ public enum RecipeManager implements BukkitLifeCycleTask {
     private final Map<NamespacedKey, Recipe> serverRecipesCache = new ConcurrentHashMap<>();
     private final Map<String, RecipeGroup> recipeGroupMap = new ConcurrentHashMap<>();
     private Boolean supportPotionMix;
+    private Boolean isReloadingRecipeManager = false;
 
     //配方类型相关
 
@@ -110,10 +111,14 @@ public enum RecipeManager implements BukkitLifeCycleTask {
     //配方加载相关
 
     public void reloadRecipeManager() {
+        isReloadingRecipeManager = true;
         resetRecipes();
         loadRecipesFromConfig(() -> {
             loadServerRecipeCache();
             reloadDisabledRecipes();
+            isReloadingRecipeManager = false;
+            //所有操作进行完毕后，为玩家更新配方信息
+            Bukkit.updateRecipes();
         });
     }
 
@@ -150,7 +155,14 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         new RecipeLoadTask(RECIPE_FILE_FOLDER, callback).start();
     }
 
-    public boolean loadRecipeFromConfig(String recipeName, BukkitConfigWrapper recipeConfigWrapper) {
+    /**
+     * 从配置文件里加载并注册一个配方
+     * @param recipeName
+     * @param recipeConfigWrapper
+     * @param resendRecipes 是否给玩家更新服务器的配方列表，实际上这个配置项只在一些版本有效
+     * @return
+     */
+    public boolean loadRecipeFromConfig(String recipeName, BukkitConfigWrapper recipeConfigWrapper, boolean resendRecipes) {
         YamlConfiguration recipeConfig = recipeConfigWrapper.config();
         String typeId = recipeConfig.getString("type");
         RecipeType recipeType;
@@ -161,8 +173,8 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         if (recipeType == null) {
             throw new RecipeLoadException("Unknown recipe type of " + recipeName + ": " + typeId);
         }
-        RecipeLoader<?> recipeLoader = recipeType.recipeLoader();
-        Recipe recipe = recipeLoader.loadRecipe(recipeName, recipeConfig);
+        RecipeParser<?> recipeParser = recipeType.recipeParser();
+        Recipe recipe = recipeParser.parse(recipeName, recipeConfig);
         if (recipe == null) {
             BukkitMsgSender.INSTANCE.info("&eLoad recipe " + recipeName + " failed");
             return false;
@@ -187,6 +199,9 @@ public enum RecipeManager implements BukkitLifeCycleTask {
                     recipeGroup.addRecipe(recipe);
                     recipeGroupMap.put(groupId, recipeGroup);
                 }
+            }
+            if (resendRecipes) {
+                Bukkit.updateRecipes();
             }
         } else {
             BukkitMsgSender.INSTANCE.info("&eRegister recipe " + recipeName + " failed");
@@ -361,13 +376,20 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         return craftorithmRecipes;
     }
 
+    public Boolean isReloadingRecipeManager() {
+        return isReloadingRecipeManager;
+    }
+
     @Override
     public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
-        if (lifeCycle.equals(LifeCycle.ENABLE)) {
-            //设置各类型配方的注册方法
-            regDefaultRecipeTypes();
-        } else {
-            reloadRecipeManager();
+        switch (lifeCycle) {
+            case ENABLE -> {
+                //注册各内置配方类型
+                regDefaultRecipeTypes();
+            }
+            case RELOAD -> {
+                reloadRecipeManager();
+            }
         }
     }
 
@@ -395,10 +417,6 @@ public enum RecipeManager implements BukkitLifeCycleTask {
 
         public void end() {
             this.cancel();
-            //1.20.1以上paper端环境下,加载完配方给玩家更新配方信息
-            if (CrypticLibBukkit.isPaper() && MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_20_1)) {
-                Bukkit.updateRecipes();
-            }
             BukkitMsgSender.INSTANCE.info("Registered " + craftorithmRecipes.size() + " recipes in " + useTick + " ticks(" + useMilliseconds + "ms)");
             if (callback != null) {
                 callback.run();
@@ -429,7 +447,7 @@ public enum RecipeManager implements BukkitLifeCycleTask {
                 recipeName = recipeName.substring(0, lastDotIndex).toLowerCase();
                 BukkitConfigWrapper recipeConfigWrapper = new BukkitConfigWrapper(file);
                 try {
-                    boolean result = loadRecipeFromConfig(recipeName, recipeConfigWrapper);
+                    boolean result = loadRecipeFromConfig(recipeName, recipeConfigWrapper, false);
                     if (result) {
                         recipeNum ++;
                     }

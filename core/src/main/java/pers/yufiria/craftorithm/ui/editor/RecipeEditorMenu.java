@@ -138,7 +138,7 @@ public abstract class RecipeEditorMenu extends StoredMenu implements BackableMen
         configWrapper.reloadConfig();
         String recipeId = recipeKey.getKey();
         RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeId, false, false);
-        RecipeManager.INSTANCE.loadRecipeFromConfig(recipeId, configWrapper);
+        RecipeManager.INSTANCE.loadRecipeFromConfig(recipeId, configWrapper, true);
     }
 
     /**

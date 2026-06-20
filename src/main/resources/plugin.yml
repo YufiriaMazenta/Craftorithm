@@ -5,6 +5,7 @@ main: pers.yufiria.craftorithm.Craftorithm
 api-version: '1.19'
 load: POSTWORLD
 softdepend:
+  - packetevents
   - Vault
   - LuckPerms
   - PlayerPoints

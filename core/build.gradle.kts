@@ -8,6 +8,7 @@ repositories {
     maven("http://110.42.10.241:8082/repository/maven-public/") {
         isAllowInsecureProtocol = true
     }
+
     //PlayerPoints
     maven("https://repo.rosewooddev.io/repository/public/")
 }
@@ -21,6 +22,8 @@ dependencies {
         exclude("org.bukkit", "bukkit")
     }
     compileOnly("org.black_ixx:playerpoints:3.2.5")
+    //用于拦截服务端发送的配方更新包
+    compileOnly("com.crypticlib:bukkit:${rootProject.findProperty("crypticlibVer")}")
     implementation("com.crypticlib:bukkit-ui:${rootProject.findProperty("crypticlibVer")}")
     implementation("com.crypticlib:bukkit-conversation:${rootProject.findProperty("crypticlibVer")}")
     implementation("com.crypticlib:bukkit-i18n:${rootProject.findProperty("crypticlibVer")}")

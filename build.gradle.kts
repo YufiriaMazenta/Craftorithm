@@ -78,11 +78,6 @@ subprojects {
     java.targetCompatibility = JavaVersion.VERSION_21
     repositories {
         mavenLocal()
-        //CrypticLib, Spigot
-        maven("http://110.42.10.241:8082/repository/maven-public/") {
-            isAllowInsecureProtocol = true
-        }
-        maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
         maven("https://repo.papermc.io/repository/maven-public/")
         maven("https://oss.sonatype.org/content/groups/public/")
         maven("https://repo.maven.apache.org/maven2/")
@@ -90,7 +85,6 @@ subprojects {
     }
     dependencies {
         compileOnly("org.jetbrains:annotations:24.0.1")
-        compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
         compileOnly("com.crypticlib:bukkit:${rootProject.findProperty("crypticlibVer")}")
     }
     tasks {

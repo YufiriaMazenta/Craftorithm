@@ -14,7 +14,7 @@ public interface RecipeType {
 
     @Range(from = 0, to = 256) int typeId();
 
-    @NotNull RecipeLoader<?> recipeLoader();
+    @NotNull RecipeParser<?> recipeParser();
 
     @NotNull RecipeRegister recipeRegister();
 

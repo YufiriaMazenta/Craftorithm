@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.recipe.loader;
+package pers.yufiria.craftorithm.recipe.parser;
 
 import crypticlib.MinecraftVersion;
 import org.bukkit.NamespacedKey;
@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
-import pers.yufiria.craftorithm.recipe.RecipeLoader;
+import pers.yufiria.craftorithm.recipe.RecipeParser;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
@@ -18,12 +18,12 @@ import pers.yufiria.craftorithm.recipe.util.BukkitRecipeChoiceParser;
 
 import java.util.Objects;
 
-public enum SmeltingRecipeLoader implements RecipeLoader<CookingRecipe<?>> {
+public enum SmeltingRecipeParser implements RecipeParser<CookingRecipe<?>> {
 
     INSTANCE;
 
     @Override
-    public @NotNull CookingRecipe<?> loadRecipe(String recipeKey, ConfigurationSection recipeConfig) {
+    public @NotNull CookingRecipe<?> parse(String recipeKey, ConfigurationSection recipeConfig) {
         try {
             String recipeTypeId = recipeConfig.getString("type");
             RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipeTypeId);

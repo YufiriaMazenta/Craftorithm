@@ -180,7 +180,7 @@ public class AnvilCreator extends RecipeCreator {
                 recipeConfig.reloadConfig();
 
                 // 6. 加载配方到RecipeManager
-                boolean loadResult = RecipeManager.INSTANCE.loadRecipeFromConfig(recipeName, recipeConfig);
+                boolean loadResult = RecipeManager.INSTANCE.loadRecipeFromConfig(recipeName, recipeConfig, false);
                 if (loadResult) {
                     LangUtils.sendLang(
                         event.getWhoClicked(),

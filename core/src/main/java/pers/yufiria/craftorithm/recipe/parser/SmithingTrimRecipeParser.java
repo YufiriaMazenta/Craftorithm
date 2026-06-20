@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.recipe.loader;
+package pers.yufiria.craftorithm.recipe.parser;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
@@ -7,17 +7,17 @@ import org.bukkit.inventory.SmithingRecipe;
 import org.bukkit.inventory.SmithingTrimRecipe;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.Craftorithm;
-import pers.yufiria.craftorithm.recipe.RecipeLoader;
+import pers.yufiria.craftorithm.recipe.RecipeParser;
 import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsManager;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 import pers.yufiria.craftorithm.recipe.util.BukkitRecipeChoiceParser;
 
-public enum SmithingTrimRecipeLoader implements RecipeLoader<SmithingRecipe> {
+public enum SmithingTrimRecipeParser implements RecipeParser<SmithingRecipe> {
 
     INSTANCE;
 
     @Override
-    public @NotNull SmithingRecipe loadRecipe(String recipeKey, ConfigurationSection recipeConfig) {
+    public @NotNull SmithingRecipe parse(String recipeKey, ConfigurationSection recipeConfig) {
         try {
             NamespacedKey key = new NamespacedKey(Craftorithm.instance(), recipeKey);
             String baseId = recipeConfig.getString("base");

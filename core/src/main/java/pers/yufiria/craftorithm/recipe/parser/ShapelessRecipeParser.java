@@ -1,35 +1,38 @@
-package pers.yufiria.craftorithm.recipe.loader;
+package pers.yufiria.craftorithm.recipe.parser;
 
 import crypticlib.MinecraftVersion;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.recipe.CraftingBookCategory;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
-import pers.yufiria.craftorithm.recipe.RecipeLoader;
+import pers.yufiria.craftorithm.recipe.RecipeParser;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 import pers.yufiria.craftorithm.recipe.util.BukkitRecipeChoiceParser;
 
+import java.util.List;
 import java.util.Objects;
 
-public enum ShapedRecipeLoader implements RecipeLoader<ShapedRecipe> {
+public enum ShapelessRecipeParser implements RecipeParser<ShapelessRecipe> {
 
     INSTANCE;
 
     @Override
-    public ShapedRecipe loadRecipe(String recipeKey, ConfigurationSection recipeConfig) {
+    public ShapelessRecipe parse(String recipeKey, ConfigurationSection recipeConfig) {
         try {
             String resultId = recipeConfig.getString("result");
             ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId));
             NamespacedKey key = new NamespacedKey(Craftorithm.instance(), recipeKey);
-            ShapedRecipe recipe = new ShapedRecipe(key, result);
-            recipe.shape(recipeConfig.getStringList("shape").toArray(new String[0]));
-            ConfigurationSection ingredientsConfig = recipeConfig.getConfigurationSection("ingredients");
-            for (String ingredientKey : Objects.requireNonNull(ingredientsConfig).getKeys(false)) {
-                recipe.setIngredient(ingredientKey.charAt(0), BukkitRecipeChoiceParser.parseChoice(Objects.requireNonNull(ingredientsConfig.getString(ingredientKey))));
+            ShapelessRecipe recipe = new ShapelessRecipe(key, result);
+            List<String> ingredientKeys = recipeConfig.getStringList("ingredients");
+            if (ingredientKeys.isEmpty()) {
+                throw new RecipeLoadException("No ingredients found for " + recipeKey);
+            }
+            for (String ingredientKey : ingredientKeys) {
+                recipe.addIngredient(BukkitRecipeChoiceParser.parseChoice(ingredientKey));
             }
             String group = recipeConfig.getString("group");
             if (group != null) {
@@ -49,5 +52,4 @@ public enum ShapedRecipeLoader implements RecipeLoader<ShapedRecipe> {
             throw new RecipeLoadException(e);
         }
     }
-
 }

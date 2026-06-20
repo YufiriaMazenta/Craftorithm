@@ -1,22 +1,22 @@
-package pers.yufiria.craftorithm.recipe.loader;
+package pers.yufiria.craftorithm.recipe.parser;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
-import pers.yufiria.craftorithm.recipe.RecipeLoader;
+import pers.yufiria.craftorithm.recipe.RecipeParser;
 import pers.yufiria.craftorithm.recipe.choice.StackableItemIdChoice;
 import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsManager;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 import pers.yufiria.craftorithm.recipe.extra.AnvilRecipe;
 
-public enum AnvilRecipeLoader implements RecipeLoader<AnvilRecipe> {
+public enum AnvilRecipeParser implements RecipeParser<AnvilRecipe> {
 
     INSTANCE;
 
     @Override
-    public @NotNull AnvilRecipe loadRecipe(String recipeKey, ConfigurationSection recipeConfig) {
+    public @NotNull AnvilRecipe parse(String recipeKey, ConfigurationSection recipeConfig) {
         try {
             NamespacedKey namespacedKey = new NamespacedKey(Craftorithm.instance(), recipeKey);
             String resultId = recipeConfig.getString("result");

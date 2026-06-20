@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 import pers.yufiria.craftorithm.recipe.extra.AnvilRecipe;
 import pers.yufiria.craftorithm.recipe.extra.BrewingRecipe;
-import pers.yufiria.craftorithm.recipe.loader.*;
+import pers.yufiria.craftorithm.recipe.parser.*;
 import pers.yufiria.craftorithm.recipe.register.AnvilRecipeRegister;
 import pers.yufiria.craftorithm.recipe.register.BrewingRecipeRegister;
 import pers.yufiria.craftorithm.recipe.register.BukkitRecipeRegister;
@@ -20,9 +20,9 @@ public enum SimpleRecipeTypes implements RecipeType {
 
     UNKNOWN(
         "unknown",
-        new RecipeLoader<>() {
+        new RecipeParser<>() {
             @Override
-            public @Nullable Recipe loadRecipe(String recipeKey, ConfigurationSection recipeConfig) {
+            public @Nullable Recipe parse(String recipeKey, ConfigurationSection recipeConfig) {
                 return null;
             }
         },
@@ -42,49 +42,49 @@ public enum SimpleRecipeTypes implements RecipeType {
     ),
     VANILLA_SHAPED(
         "vanilla_shaped",
-        ShapedRecipeLoader.INSTANCE,
+        ShapedRecipeParser.INSTANCE,
         BukkitRecipeRegister.INSTANCE,
         recipe -> recipe instanceof ShapedRecipe,
         1
     ),
     VANILLA_SHAPELESS(
         "vanilla_shapeless",
-        ShapelessRecipeLoader.INSTANCE,
+        ShapelessRecipeParser.INSTANCE,
         BukkitRecipeRegister.INSTANCE,
         recipe -> recipe instanceof ShapelessRecipe,
         2
     ),
     VANILLA_SMELTING_FURNACE(
         "vanilla_smelting_furnace",
-        SmeltingRecipeLoader.INSTANCE,
+        SmeltingRecipeParser.INSTANCE,
         BukkitRecipeRegister.INSTANCE,
         recipe -> recipe instanceof FurnaceRecipe,
         3
     ),
     VANILLA_SMELTING_BLAST(
         "vanilla_smelting_blast",
-        SmeltingRecipeLoader.INSTANCE,
+        SmeltingRecipeParser.INSTANCE,
         BukkitRecipeRegister.INSTANCE,
         recipe -> recipe instanceof BlastingRecipe,
         4
     ),
     VANILLA_SMELTING_SMOKER(
         "vanilla_smelting_smoker",
-        SmeltingRecipeLoader.INSTANCE,
+        SmeltingRecipeParser.INSTANCE,
         BukkitRecipeRegister.INSTANCE,
         recipe -> recipe instanceof SmokingRecipe,
         5
     ),
     VANILLA_SMELTING_CAMPFIRE(
         "vanilla_smelting_campfire",
-        SmeltingRecipeLoader.INSTANCE,
+        SmeltingRecipeParser.INSTANCE,
         BukkitRecipeRegister.INSTANCE,
         recipe -> recipe instanceof CampfireRecipe,
         6
     ),
     VANILLA_SMITHING_TRANSFORM(
         "vanilla_smithing_transform",
-        SmithingTransformRecipeLoader.INSTANCE,
+        SmithingTransformRecipeParser.INSTANCE,
         BukkitRecipeRegister.INSTANCE,
         recipe -> {
             if (MinecraftVersion.current().before(MinecraftVersion.V1_20)) {
@@ -96,7 +96,7 @@ public enum SimpleRecipeTypes implements RecipeType {
     ),
     VANILLA_SMITHING_TRIM(
         "vanilla_smithing_trim",
-        SmithingTrimRecipeLoader.INSTANCE,
+        SmithingTrimRecipeParser.INSTANCE,
         BukkitRecipeRegister.INSTANCE,
         recipe -> {
             if (MinecraftVersion.current().before(MinecraftVersion.V1_20)) {
@@ -108,41 +108,41 @@ public enum SimpleRecipeTypes implements RecipeType {
     ),
     VANILLA_STONECUTTING(
         "vanilla_stonecutting",
-        StonecuttingRecipeLoader.INSTANCE,
+        StonecuttingRecipeParser.INSTANCE,
         BukkitRecipeRegister.INSTANCE,
         recipe -> recipe instanceof StonecuttingRecipe,
         9
     ),
     VANILLA_BREWING(
         "vanilla_brewing",
-        BrewingRecipeLoader.INSTANCE,
+        BrewingRecipeParser.INSTANCE,
         BrewingRecipeRegister.INSTANCE,
         recipe -> recipe instanceof BrewingRecipe,
         10
     ),
     ANVIL(
         "anvil",
-        AnvilRecipeLoader.INSTANCE,
+        AnvilRecipeParser.INSTANCE,
         AnvilRecipeRegister.INSTANCE,
         recipe -> recipe instanceof AnvilRecipe,
         11
     );
 
     private final String typeKey;
-    private final RecipeLoader<?> recipeLoader;
+    private final RecipeParser<?> recipeParser;
     private final RecipeRegister recipeRegister;
     private final Function<Recipe, Boolean> isThisTypeFunction;
     private final @Range(from = 0, to = 256) Integer typeId;
 
     SimpleRecipeTypes(
         String typeKey,
-        RecipeLoader<?> recipeLoader,
+        RecipeParser<?> recipeParser,
         RecipeRegister recipeRegister,
         Function<Recipe, Boolean> isThisTypeFunction,
         @Range(from = 0, to = 256) Integer typeId
     ) {
         this.typeKey = typeKey;
-        this.recipeLoader = recipeLoader;
+        this.recipeParser = recipeParser;
         this.recipeRegister = recipeRegister;
         this.isThisTypeFunction = isThisTypeFunction;
         this.typeId = typeId;
@@ -159,8 +159,8 @@ public enum SimpleRecipeTypes implements RecipeType {
     }
 
     @Override
-    public @NotNull RecipeLoader<?> recipeLoader() {
-        return recipeLoader;
+    public @NotNull RecipeParser<?> recipeParser() {
+        return recipeParser;
     }
 
     @Override

@@ -11,8 +11,6 @@ include(
     "hook:neigeitems",
     "hook:nexo",
     "hook:oraxen",
-    "hook:sx-item"
-)
-include(
-    "compat:recipe_register_26_1"
+    "hook:sx-item",
+    "hook:packetevents"
 )

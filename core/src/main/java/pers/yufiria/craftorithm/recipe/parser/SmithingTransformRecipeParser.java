@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.recipe.loader;
+package pers.yufiria.craftorithm.recipe.parser;
 
 import crypticlib.MinecraftVersion;
 import org.bukkit.NamespacedKey;
@@ -11,19 +11,19 @@ import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
-import pers.yufiria.craftorithm.recipe.RecipeLoader;
+import pers.yufiria.craftorithm.recipe.RecipeParser;
 import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsManager;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 import pers.yufiria.craftorithm.recipe.util.BukkitRecipeChoiceParser;
 
 import java.util.List;
 
-public enum SmithingTransformRecipeLoader implements RecipeLoader<SmithingRecipe> {
+public enum SmithingTransformRecipeParser implements RecipeParser<SmithingRecipe> {
 
     INSTANCE;
 
     @Override
-    public @NotNull SmithingRecipe loadRecipe(String recipeKey, ConfigurationSection recipeConfig) {
+    public @NotNull SmithingRecipe parse(String recipeKey, ConfigurationSection recipeConfig) {
         try {
             String resultId = recipeConfig.getString("result");
             ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId));

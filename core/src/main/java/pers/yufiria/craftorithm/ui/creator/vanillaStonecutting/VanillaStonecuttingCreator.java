@@ -110,7 +110,7 @@ public class VanillaStonecuttingCreator extends RecipeCreator {
                 recipeConfig.reloadConfig();
 
                 // 6. 加载配方到RecipeManager
-                boolean loadResult = RecipeManager.INSTANCE.loadRecipeFromConfig(recipeName, recipeConfig);
+                boolean loadResult = RecipeManager.INSTANCE.loadRecipeFromConfig(recipeName, recipeConfig, true);
                 if (loadResult) {
                     LangUtils.sendLang(
                         event.getWhoClicked(),
