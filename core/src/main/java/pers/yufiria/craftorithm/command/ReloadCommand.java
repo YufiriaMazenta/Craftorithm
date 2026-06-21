@@ -7,6 +7,7 @@ import crypticlib.perm.PermInfo;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.config.Languages;
+import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.util.List;
@@ -21,6 +22,10 @@ public final class ReloadCommand extends CommandNode {
 
     @Override
     public void execute(@NotNull CommandInvoker invoker, List<String> args) {
+        if (RecipeManager.INSTANCE.isReloadingRecipeManager()) {
+            LangUtils.sendLang(invoker, Languages.COMMAND_RELOAD_RECIPE_MANAGER_RELOADING);
+            return;
+        }
         try {
             Craftorithm.instance().reloadPlugin();
             LangUtils.sendLang(invoker, Languages.COMMAND_RELOAD_SUCCESS);

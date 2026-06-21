@@ -28,6 +28,8 @@ dependencies {
     implementation(project(":hook:nexo"))
     implementation(project(":hook:oraxen"))
     implementation(project(":hook:sx-item"))
+    implementation(project(":hook:packetevents"))
+    implementation(project(":hook:protocollib"))
     implementation("com.crypticlib:bukkit:${rootProject.findProperty("crypticlibVer")}")
 }
 
@@ -50,9 +52,6 @@ tasks {
     props["version"] = pluginVersion
     processResources {
         filesMatching("plugin.yml") {
-            expand(props)
-        }
-        filesMatching("config.yml") {
             expand(props)
         }
     }

@@ -25,6 +25,7 @@ command:
   reload:
     success: '<prefix> &a插件重载成功'
     exception: '<prefix> &c插件重载过程中发生错误，请查看控制台'
+    recipe_manager_reloading: '<prefix> &c配方管理器正在进行重载，请稍后再执行重载命令'
   remove:
     success: '<prefix> &a配方删除成功'
     not_exist: '<prefix> &c配方不存在'

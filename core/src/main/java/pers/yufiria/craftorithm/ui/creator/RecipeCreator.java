@@ -57,7 +57,9 @@ public abstract class RecipeCreator extends StoredMenu {
             return this.recipeName;
         }
         Objects.requireNonNull(resultId, "Recipe result is null!");
-        String resolveRecipeName = resultId.namespace() + "_" + resultId.itemId();
+        String resolveRecipeName = resultId.namespace() + "_" + resultId.itemId()
+            .replace(':', '_')
+            .replace('-', '_');
         if (!RecipeManager.INSTANCE.containsRecipe(resolveRecipeName)) {
             return resolveRecipeName;
         }

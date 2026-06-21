@@ -2,6 +2,7 @@ package pers.yufiria.craftorithm.recipe.extra;
 
 import crypticlib.chat.BukkitMsgSender;
 import crypticlib.listener.EventListener;
+import crypticlib.util.IOHelper;
 import crypticlib.util.ItemHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -22,6 +23,9 @@ import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.choice.StackableItemIdChoice;
 import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsManager;
 import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsRules;
+import pers.yufiria.craftorithm.trigger.BuiltInTriggerTypes;
+import pers.yufiria.craftorithm.trigger.TriggerContext;
+import pers.yufiria.craftorithm.trigger.TriggerManager;
 import pers.yufiria.craftorithm.util.PlayerUtils;
 
 import java.util.HashMap;
@@ -78,7 +82,7 @@ public enum AnvilRecipeHandler implements Listener {
         return null;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPrepareAnvil(PrepareAnvilEvent event) {
         if (!PluginConfigs.ENABLE_ANVIL_RECIPE.value())
             return;
@@ -86,9 +90,18 @@ public enum AnvilRecipeHandler implements Listener {
         ItemStack addition = event.getInventory().getItem(1);
         if (ItemHelper.isAir(base) || ItemHelper.isAir(addition))
             return;
+
         //如果原材料包含不能用于合成的物品，结束流程
         boolean cannotCraft = ItemManager.INSTANCE.containsCannotCraftItem(base, addition);
         if (cannotCraft) {
+            return;
+        }
+
+        //处理trigger模块的条件判断
+        TriggerContext ctx = BuiltInTriggerTypes.ANVIL.extractPrepareContext(event);
+        if (ctx == null) return;
+        int denied = TriggerManager.INSTANCE.firePrepare(BuiltInTriggerTypes.ANVIL.typeKey(), ctx);
+        if (denied > 0) {
             return;
         }
 
@@ -166,8 +179,12 @@ public enum AnvilRecipeHandler implements Listener {
         event.setCancelled(true);
         int canCraftNum = Math.min(baseNum / needBaseNum, additionNum / needAdditionNum);
         canCraftNum = Math.min(result.getMaxStackSize(), canCraftNum);
-        //判断是否合成成功,用于触发事件等操作
 
+        //在合成开始前先提取上下文,以便后面执行操作
+        TriggerContext ctx = BuiltInTriggerTypes.ANVIL.extractContext(event);
+        IOHelper.info(ctx.recipeKey().toString());
+
+        //判断是否合成成功,用于触发事件等操作
         boolean craftResult = false;
         switch (event.getClick()) {
             case LEFT:
@@ -249,7 +266,12 @@ public enum AnvilRecipeHandler implements Listener {
                 break;
         }
 
-        //todo 触发事件
+        //合成成功后执行trigger的actions
+        if (craftResult) {
+            if (ctx != null) {
+                TriggerManager.INSTANCE.fire(BuiltInTriggerTypes.ANVIL.typeKey(), ctx);
+            }
+        }
 
         //更新页面
         AnvilRecipe afterClickRecipe = matchAnvilRecipe(base, addition);

@@ -8,7 +8,11 @@ import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
 import org.bukkit.plugin.Plugin;
+import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.hook.PluginHook;
+import pers.yufiria.craftorithm.util.LangUtils;
+
+import java.util.Map;
 
 @LifeCycleTaskSettings(
     rules = {
@@ -38,7 +42,7 @@ public enum PacketEventsHook implements PluginHook, BukkitLifeCycleTask {
 
     @Override
     public String pluginName() {
-        return "";
+        return "packetevents";
     }
 
     @Override
@@ -46,6 +50,7 @@ public enum PacketEventsHook implements PluginHook, BukkitLifeCycleTask {
         if (!isPluginEnabled()) {
             return false;
         }
+        LangUtils.info(Languages.LOAD_HOOK_PLUGIN_SUCCESS, Map.of("<plugin>", pluginName()));
         //注册数据包监听器
         listenerCommon = PacketEvents.getAPI().getEventManager().registerListener(RecipeUpdatePacketListener.INSTANCE, PacketListenerPriority.NORMAL);
         return true;

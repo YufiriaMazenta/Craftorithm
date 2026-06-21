@@ -12,5 +12,6 @@ include(
     "hook:nexo",
     "hook:oraxen",
     "hook:sx-item",
-    "hook:packetevents"
+    "hook:packetevents",
+    "hook:protocollib"
 )

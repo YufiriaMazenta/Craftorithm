@@ -82,7 +82,6 @@ public final class Craftorithm extends BukkitPlugin implements BukkitLifeCycleTa
     public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
         CrypticLibBukkit.scheduler().sync(() -> {
             RecipeManager.INSTANCE.reloadRecipeManager();
-            OtherPluginsListenerManager.INSTANCE.convertOtherPluginsListeners();
             LangUtils.info(Languages.LOAD_FINISH);
             loadBStat();
         });

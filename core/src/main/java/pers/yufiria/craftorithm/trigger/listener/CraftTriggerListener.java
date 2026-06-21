@@ -21,7 +21,7 @@ public enum CraftTriggerListener implements Listener {
     /**
      * Prepare 阶段：检查 deny 条件，清空结果槽拒绝合成
      */
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPrepareCraft(PrepareItemCraftEvent event) {
         TriggerContext ctx = BuiltInTriggerTypes.CRAFTING.extractPrepareContext(event);
         if (ctx == null) return;
@@ -34,7 +34,7 @@ public enum CraftTriggerListener implements Listener {
     /**
      * 实际阶段：执行 actions
      */
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onCraft(CraftItemEvent event) {
         TriggerContext ctx = BuiltInTriggerTypes.CRAFTING.extractContext(event);
         if (ctx == null) return;

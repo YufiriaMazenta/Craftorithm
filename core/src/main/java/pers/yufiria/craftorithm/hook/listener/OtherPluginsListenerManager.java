@@ -25,67 +25,88 @@ import pers.yufiria.craftorithm.util.EventUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @LifeCycleTaskSettings(
     rules = {
-        @TaskRule(lifeCycle = LifeCycle.RELOAD)
+        @TaskRule(lifeCycle = LifeCycle.ACTIVE),
+        @TaskRule(lifeCycle = LifeCycle.RELOAD),
+        @TaskRule(lifeCycle = LifeCycle.DISABLE)
     }
 )
 public enum OtherPluginsListenerManager implements BukkitLifeCycleTask {
 
     INSTANCE;
     private final Field executorField = ReflectionHelper.getDeclaredField(RegisteredListener.class, "executor");
+    private final Map<String, ConvertedRegisteredListener> convertedListenerMap = new ConcurrentHashMap<>();
 
-    public void convertOtherPluginsListeners() {
+    private void convertOtherPluginsListeners() {
         for (HandlerList handlerList : getCraftEventHandlerLists()) {
-            for (RegisteredListener registeredListener : handlerList.getRegisteredListeners()) {
-                if (registeredListener.getPlugin().equals(Craftorithm.instance())) continue;
-                if (registeredListener instanceof RecipeCheckRegisteredListener || registeredListener instanceof RecipeCheckTimedRegisteredListener)
+            for (RegisteredListener originRegisteredListener : handlerList.getRegisteredListeners()) {
+                if (originRegisteredListener.getPlugin().equals(Craftorithm.instance())) continue;
+                if (originRegisteredListener instanceof RecipeCheckRegisteredListener || originRegisteredListener instanceof RecipeCheckTimedRegisteredListener)
                     continue;
 
-                Listener listener = registeredListener.getListener();
+                Listener listener = originRegisteredListener.getListener();
                 String listenerClassName = listener.getClass().getName();
                 if (PluginConfigs.NOT_CONVERT_LISTENER_CLASSES.value().contains(listenerClassName)) {
                     //如果该监听器被配置为不转化,则直接跳过
                     continue;
                 }
 
-                handlerList.unregister(registeredListener);
-
+                RegisteredListener convertedRegisteredListener;
                 try {
-                    if (registeredListener instanceof TimedRegisteredListener) {
-                        handlerList.register(new RecipeCheckTimedRegisteredListener(
-                            registeredListener.getListener(),
-                            getRegisteredListenerExecutor(registeredListener),
-                            registeredListener.getPriority(),
-                            registeredListener.getPlugin(),
-                            registeredListener.isIgnoringCancelled()
-                        ));
+                    if (originRegisteredListener instanceof TimedRegisteredListener) {
+                        convertedRegisteredListener = new RecipeCheckTimedRegisteredListener(
+                            originRegisteredListener.getListener(),
+                            getRegisteredListenerExecutor(originRegisteredListener),
+                            originRegisteredListener.getPriority(),
+                            originRegisteredListener.getPlugin(),
+                            originRegisteredListener.isIgnoringCancelled()
+                        );
                     } else {
-                        handlerList.register(new RecipeCheckRegisteredListener(
-                            registeredListener.getListener(),
-                            getRegisteredListenerExecutor(registeredListener),
-                            registeredListener.getPriority(),
-                            registeredListener.getPlugin(),
-                            registeredListener.isIgnoringCancelled()
-                        ));
+                        convertedRegisteredListener = new RecipeCheckRegisteredListener(
+                            originRegisteredListener.getListener(),
+                            getRegisteredListenerExecutor(originRegisteredListener),
+                            originRegisteredListener.getPriority(),
+                            originRegisteredListener.getPlugin(),
+                            originRegisteredListener.isIgnoringCancelled()
+                        );
                     }
                 } catch (Throwable ignore) {
-                    handlerList.register(new RecipeCheckRegisteredListener(
-                        registeredListener.getListener(),
-                        getRegisteredListenerExecutor(registeredListener),
-                        registeredListener.getPriority(),
-                        registeredListener.getPlugin(),
-                        registeredListener.isIgnoringCancelled()
-                    ));
+                    convertedRegisteredListener = new RecipeCheckRegisteredListener(
+                        originRegisteredListener.getListener(),
+                        getRegisteredListenerExecutor(originRegisteredListener),
+                        originRegisteredListener.getPriority(),
+                        originRegisteredListener.getPlugin(),
+                        originRegisteredListener.isIgnoringCancelled()
+                    );
                 }
+                handlerList.unregister(originRegisteredListener);
+                handlerList.register(convertedRegisteredListener);
+                convertedListenerMap.put(listenerClassName, new ConvertedRegisteredListener(
+                    listenerClassName,
+                    originRegisteredListener,
+                    convertedRegisteredListener,
+                    handlerList
+                ));
 
                 IOHelper.info("Converted listener: " + listenerClassName);
             }
         }
     }
 
-    public EventExecutor getRegisteredListenerExecutor(RegisteredListener registeredListener) {
+    private void resetRegisteredListeners() {
+        convertedListenerMap.forEach((listenerClassName, convertedRegisteredListener) -> {
+            HandlerList handlerList = convertedRegisteredListener.handlerList();
+            handlerList.unregister(convertedRegisteredListener.recipeCheckRegisteredListener());
+            handlerList.register(convertedRegisteredListener.originRegisteredListener());
+        });
+        convertedListenerMap.clear();
+    }
+
+    private EventExecutor getRegisteredListenerExecutor(RegisteredListener registeredListener) {
         return ReflectionHelper.getDeclaredFieldObj(executorField, registeredListener);
     }
 
@@ -115,7 +136,18 @@ public enum OtherPluginsListenerManager implements BukkitLifeCycleTask {
 
     @Override
     public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
-        convertOtherPluginsListeners();
+        switch (lifeCycle) {
+            case ACTIVE -> {
+                convertOtherPluginsListeners();
+            }
+            case RELOAD -> {
+                resetRegisteredListeners();
+                convertOtherPluginsListeners();
+            }
+            case DISABLE -> {
+                resetRegisteredListeners();
+            }
+        }
     }
 
 }

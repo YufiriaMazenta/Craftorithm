@@ -17,7 +17,6 @@ import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.extra.AnvilRecipe;
 import pers.yufiria.craftorithm.recipe.extra.AnvilRecipeHandler;
-import pers.yufiria.craftorithm.trigger.listener.AnvilTriggerListener;
 import pers.yufiria.craftorithm.trigger.listener.CraftTriggerListener;
 import pers.yufiria.craftorithm.trigger.listener.SmithingTriggerListener;
 
@@ -130,7 +129,7 @@ public enum BuiltInTriggerTypes implements TriggerType {
 
         @Override
         public Listener listener() {
-            return AnvilTriggerListener.INSTANCE;
+            return AnvilRecipeHandler.INSTANCE;
         }
 
         @Override

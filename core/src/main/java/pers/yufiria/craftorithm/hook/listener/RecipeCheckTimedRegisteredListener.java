@@ -10,11 +10,11 @@ import org.bukkit.plugin.TimedRegisteredListener;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.util.EventUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class RecipeCheckTimedRegisteredListener extends TimedRegisteredListener {
+
+    private final UUID UNIQUE_KEY = UUID.randomUUID();
 
     public RecipeCheckTimedRegisteredListener(@NotNull Listener pluginListener, @NotNull EventExecutor eventExecutor, @NotNull EventPriority eventPriority, @NotNull Plugin registeredPlugin, boolean listenCancelled) {
         super(pluginListener, eventExecutor, eventPriority, registeredPlugin, listenCancelled);
@@ -34,6 +34,17 @@ public class RecipeCheckTimedRegisteredListener extends TimedRegisteredListener 
             throwable.setStackTrace(stackTraceElementList.toArray(new StackTraceElement[0]));
             throw throwable;
         }
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (!(object instanceof RecipeCheckTimedRegisteredListener that)) return false;
+        return Objects.equals(UNIQUE_KEY, that.UNIQUE_KEY);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(UNIQUE_KEY);
     }
 
 }

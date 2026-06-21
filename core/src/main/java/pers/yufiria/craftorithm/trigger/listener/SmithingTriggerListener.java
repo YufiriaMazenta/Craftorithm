@@ -21,7 +21,7 @@ public enum SmithingTriggerListener implements Listener {
     /**
      * Prepare 阶段：检查 deny 条件，清空结果槽拒绝锻造
      */
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPrepareSmithing(PrepareSmithingEvent event) {
         TriggerContext ctx = BuiltInTriggerTypes.SMITHING.extractPrepareContext(event);
         if (ctx == null) return;
@@ -35,7 +35,7 @@ public enum SmithingTriggerListener implements Listener {
     /**
      * 实际阶段：执行 actions
      */
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onSmithing(SmithItemEvent event) {
         TriggerContext ctx = BuiltInTriggerTypes.SMITHING.extractContext(event);
         if (ctx == null) return;

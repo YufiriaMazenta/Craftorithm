@@ -109,7 +109,6 @@ public enum RecipeManager implements BukkitLifeCycleTask {
     }
 
     //配方加载相关
-
     public void reloadRecipeManager() {
         isReloadingRecipeManager = true;
         resetRecipes();

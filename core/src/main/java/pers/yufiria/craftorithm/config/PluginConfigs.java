@@ -8,7 +8,7 @@ import crypticlib.config.node.impl.bukkit.StringListConfig;
 import java.util.Collections;
 import java.util.List;
 
-@ConfigHandler(path = "pers.yufiria.craftorithm.config.yml")
+@ConfigHandler(path = "config.yml")
 public class PluginConfigs {
 
     public final static BooleanConfig CHECK_UPDATE = new BooleanConfig("check_update", true);

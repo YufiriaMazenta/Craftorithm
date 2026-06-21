@@ -33,6 +33,5 @@ public enum RecipeUpdatePacketListener implements PacketListener {
         if (BLOCK_PACKET_TYPES.contains(event.getPacketType())) {
             event.setCancelled(true);
         }
-
     }
 }
