@@ -28,7 +28,7 @@ public enum SmeltingRecipeParser implements RecipeParser<CookingRecipe<?>> {
             String recipeTypeId = recipeConfig.getString("type");
             RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipeTypeId);
             if (recipeType == null) {
-                throw new RecipeLoadException(recipeTypeId + " is not a smelting pers.yufiria.craftorithm.recipe type.");
+                throw new RecipeLoadException(recipeTypeId + " is not a smelting recipe type.");
             }
             String resultId = recipeConfig.getString("result");
             ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId));
@@ -55,7 +55,7 @@ public enum SmeltingRecipeParser implements RecipeParser<CookingRecipe<?>> {
                     time = recipeConfig.getInt("time", 100);
                     recipe = new CampfireRecipe(key, result, ingredient, exp, time);
                 }
-                default -> throw new RecipeLoadException(recipeTypeId + " is not a smelting pers.yufiria.craftorithm.recipe.");
+                default -> throw new RecipeLoadException(recipeTypeId + " is not a smelting recipe.");
             }
             String group = recipeConfig.getString("group");
             if (group != null) {

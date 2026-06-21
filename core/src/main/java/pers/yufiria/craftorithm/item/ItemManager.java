@@ -108,6 +108,7 @@ public enum ItemManager implements BukkitLifeCycleTask {
 
     /**
      * 获取一个物品的完整id,包含命名空间和id
+     * 不会匹配没有数据的原版物品
      * @param item 传入的物品
      * @return 传入的物品id
      */
