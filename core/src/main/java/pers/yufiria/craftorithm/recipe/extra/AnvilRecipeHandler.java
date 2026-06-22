@@ -1,9 +1,9 @@
 package pers.yufiria.craftorithm.recipe.extra;
 
 import crypticlib.CrypticLibBukkit;
+import crypticlib.MinecraftVersion;
 import crypticlib.chat.BukkitMsgSender;
 import crypticlib.listener.EventListener;
-import crypticlib.util.IOHelper;
 import crypticlib.util.ItemHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -11,13 +11,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.AnvilInventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.view.AnvilView;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.item.ItemManager;
@@ -31,6 +32,8 @@ import pers.yufiria.craftorithm.trigger.TriggerContext;
 import pers.yufiria.craftorithm.trigger.TriggerManager;
 import pers.yufiria.craftorithm.util.PlayerUtils;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -137,10 +140,10 @@ public enum AnvilRecipeHandler implements Listener {
 
         event.setResult(result);
         event.getInventory().setItem(2, result);
-        Bukkit.getPluginManager().callEvent(new PrepareAnvilRecipeEvent(event, anvilRecipe));
+        Bukkit.getPluginManager().callEvent(new CraftorithmPrepareAnvilEvent(event, anvilRecipe));
     }
 
-    @SuppressWarnings("removal")
+    @SuppressWarnings({"removal"})
     @EventHandler(priority = EventPriority.MONITOR)
     public void onClickAnvilResult(InventoryClickEvent event) {
         if (!PluginConfigs.ENABLE_ANVIL_RECIPE.value())
@@ -295,13 +298,36 @@ public enum AnvilRecipeHandler implements Listener {
         //更新页面
         CrypticLibBukkit.scheduler().sync(() -> {
             AnvilRecipe afterClickRecipe = matchAnvilRecipe(base, addition);
-            if (afterClickRecipe == null) {
-                anvilInventory.setItem(2, null);
-                anvilInventory.setRepairCost(0);
-                return;
+            ItemStack afterResult = null;
+            int afterRepairCost = 0;
+            if (afterClickRecipe != null) {
+                afterResult = afterClickRecipe.getResult();
+                afterRepairCost = anvilRecipe.costLevel();
             }
-            anvilInventory.setItem(2, afterClickRecipe.getResult());
-            anvilInventory.setRepairCost(anvilRecipe.costLevel());
+
+            anvilInventory.setItem(2, afterResult);
+
+            PrepareAnvilEvent prepareAnvilEvent;
+            if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_21)) {
+                AnvilView view = (AnvilView) event.getView();
+                view.setRepairCost(afterRepairCost);
+                prepareAnvilEvent = new PrepareAnvilEvent(
+                    view,
+                    afterClickRecipe.getResult()
+                );
+            } else {
+                anvilInventory.setRepairCost(afterRepairCost);
+                try {
+                    Class<PrepareAnvilEvent> prepareAnvilEventClass = PrepareAnvilEvent.class;
+                    Constructor<PrepareAnvilEvent> constructor = prepareAnvilEventClass
+                        .getConstructor(InventoryView.class, ItemStack.class);
+                    prepareAnvilEvent = constructor.newInstance(event.getView(), afterClickRecipe.getResult());
+                } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
+                         InvocationTargetException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            Bukkit.getPluginManager().callEvent(prepareAnvilEvent);
         });
     }
 
