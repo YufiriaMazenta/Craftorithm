@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.recipe.extra;
 
+import crypticlib.CrypticLibBukkit;
 import crypticlib.chat.BukkitMsgSender;
 import crypticlib.listener.EventListener;
 import crypticlib.util.IOHelper;
@@ -10,6 +11,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.AnvilInventory;
@@ -67,6 +70,9 @@ public enum AnvilRecipeHandler implements Listener {
     public AnvilRecipe matchAnvilRecipe(ItemStack base, ItemStack addition) {
         if (!PluginConfigs.ENABLE_ANVIL_RECIPE.value())
             throw new UnsupportedOperationException("AnvilRecipe is not enabled");
+        if (ItemHelper.isAir(base) || ItemHelper.isAir(addition)) {
+            return null;
+        }
         for (Map.Entry<NamespacedKey, AnvilRecipe> anvilRecipeEntry : anvilRecipes.entrySet()) {
             AnvilRecipe anvilRecipe = anvilRecipeEntry.getValue();
             StackableItemIdChoice recipeBaseId = anvilRecipe.base();
@@ -82,6 +88,7 @@ public enum AnvilRecipeHandler implements Listener {
         return null;
     }
 
+    @SuppressWarnings("removal")
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPrepareAnvil(PrepareAnvilEvent event) {
         if (!PluginConfigs.ENABLE_ANVIL_RECIPE.value())
@@ -133,14 +140,14 @@ public enum AnvilRecipeHandler implements Listener {
         Bukkit.getPluginManager().callEvent(new PrepareAnvilRecipeEvent(event, anvilRecipe));
     }
 
+    @SuppressWarnings("removal")
     @EventHandler(priority = EventPriority.MONITOR)
     public void onClickAnvilResult(InventoryClickEvent event) {
         if (!PluginConfigs.ENABLE_ANVIL_RECIPE.value())
             return;
         if (!(event.getInventory() instanceof AnvilInventory anvilInventory))
             return;
-        if (event.getSlot() != 2)
-            return;
+
         ItemStack base = anvilInventory.getItem(0);
         ItemStack addition = anvilInventory.getItem(1);
         //如果原材料包含不能用于合成的物品，结束流程
@@ -153,6 +160,14 @@ public enum AnvilRecipeHandler implements Listener {
         if (ItemHelper.isAir(base) || ItemHelper.isAir(addition) || ItemHelper.isAir(result))
             return;
 
+        if (!(event.getClickedInventory() instanceof AnvilInventory)) {
+            //如果点击的不是铁砧的页面，那么需要拦截双击收集所有物品这个操作
+            if (result.isSimilar(event.getCurrentItem())) {
+                if (event.getAction().equals(InventoryAction.PICKUP_ALL) || event.getAction().equals(InventoryAction.COLLECT_TO_CURSOR)) {
+                    event.setCancelled(true);
+                }
+            }
+        }
         AnvilRecipe anvilRecipe = matchAnvilRecipe(base, addition);
         if (anvilRecipe == null)
             return;
@@ -176,14 +191,18 @@ public enum AnvilRecipeHandler implements Listener {
         int baseNum = base.getAmount(), additionNum = addition.getAmount();
         int needBaseNum = anvilRecipe.base().getUseAmount(baseId.itemId()), needAdditionNum = anvilRecipe.addition().getUseAmount(additionId.itemId());
         int costLevel = anvilRecipe.costLevel();
-        event.setCancelled(true);
         int canCraftNum = Math.min(baseNum / needBaseNum, additionNum / needAdditionNum);
         canCraftNum = Math.min(result.getMaxStackSize(), canCraftNum);
 
         //在合成开始前先提取上下文,以便后面执行操作
         TriggerContext ctx = BuiltInTriggerTypes.ANVIL.extractContext(event);
-        IOHelper.info(ctx.recipeKey().toString());
 
+        if (!(event.getClickedInventory() instanceof AnvilInventory)) {
+            return;
+        }
+        if (event.getSlot() != 2)
+            return;
+        event.setCancelled(true);
         //判断是否合成成功,用于触发事件等操作
         boolean craftResult = false;
         switch (event.getClick()) {
@@ -274,14 +293,16 @@ public enum AnvilRecipeHandler implements Listener {
         }
 
         //更新页面
-        AnvilRecipe afterClickRecipe = matchAnvilRecipe(base, addition);
-        if (afterClickRecipe == null) {
-            anvilInventory.setItem(2, null);
-            anvilInventory.setRepairCost(0);
-            return;
-        }
-        anvilInventory.setItem(2, afterClickRecipe.getResult());
-        anvilInventory.setRepairCost(anvilRecipe.costLevel());
+        CrypticLibBukkit.scheduler().sync(() -> {
+            AnvilRecipe afterClickRecipe = matchAnvilRecipe(base, addition);
+            if (afterClickRecipe == null) {
+                anvilInventory.setItem(2, null);
+                anvilInventory.setRepairCost(0);
+                return;
+            }
+            anvilInventory.setItem(2, afterClickRecipe.getResult());
+            anvilInventory.setRepairCost(anvilRecipe.costLevel());
+        });
     }
 
 }

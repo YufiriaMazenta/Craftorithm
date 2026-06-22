@@ -18,7 +18,7 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
-import pers.yufiria.craftorithm.api.event.RecipeRegisterEvent;
+import pers.yufiria.craftorithm.api.event.RecipeLoadFromConfigEvent;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsManager;
@@ -180,12 +180,17 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         }
         RecipeRegister recipeRegister = recipeType.recipeRegister();
         NamespacedKey recipeKey = Objects.requireNonNull(getRecipeKey(recipe));
-        RecipeRegisterEvent recipeRegisterEvent = new RecipeRegisterEvent(recipe, recipeKey, recipeType, recipeRegister);
-        recipeRegisterEvent.call();
-        if (recipeRegisterEvent.isCancelled()) {
+        RecipeLoadFromConfigEvent recipeLoadFromConfigEvent = new RecipeLoadFromConfigEvent(
+            recipe,
+            recipeKey,
+            recipeConfig,
+            recipeRegister
+        );
+        recipeLoadFromConfigEvent.call();
+        if (recipeLoadFromConfigEvent.isCancelled()) {
             return false;
         }
-        boolean result = recipeRegisterEvent.recipeRegister().registerRecipe(recipe);
+        boolean result = recipeLoadFromConfigEvent.recipeRegister().registerRecipe(recipeLoadFromConfigEvent.recipe());
         if (result) {
             craftorithmRecipes.put(recipeKey, recipe);
             recipeConfigWrapperMap.put(recipeKey, recipeConfigWrapper);

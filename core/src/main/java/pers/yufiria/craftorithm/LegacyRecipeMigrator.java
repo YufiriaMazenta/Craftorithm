@@ -389,7 +389,7 @@ public enum LegacyRecipeMigrator implements BukkitLifeCycleTask {
                 }
             }
             case "random_cooking" -> {
-                logger.warning("[Craftorithm] random_cooking recipe type is no longer supported in the new version, skipping.");
+                logger.warning("[Craftorithm] random_cooking recipe is no longer supported in the new version.");
             }
         }
 
@@ -490,7 +490,7 @@ public enum LegacyRecipeMigrator implements BukkitLifeCycleTask {
                 return null;
             }
             case "random_cooking" -> {
-                logger.warning("[Craftorithm] random_cooking recipe type is no longer supported in the new version, skipping.");
+                logger.warning("[Craftorithm] random_cooking recipe is no longer supported in the new version, skipping.");
                 return null;
             }
             default -> {
@@ -661,7 +661,6 @@ public enum LegacyRecipeMigrator implements BukkitLifeCycleTask {
      */
     private String mapCookingType(String block) {
         return switch (block.toLowerCase()) {
-            case "furnace" -> "vanilla_smelting_furnace";
             case "blast_furnace", "blast" -> "vanilla_smelting_blast";
             case "smoker" -> "vanilla_smelting_smoker";
             case "campfire" -> "vanilla_smelting_campfire";

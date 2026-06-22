@@ -1,13 +1,16 @@
 package pers.yufiria.craftorithm.hook.packetevents;
 
 import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.event.EventManager;
 import com.github.retrooper.packetevents.event.PacketListenerCommon;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
+import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.hook.PluginHook;
 import pers.yufiria.craftorithm.util.LangUtils;
@@ -24,7 +27,7 @@ public enum PacketEventsHook implements PluginHook, BukkitLifeCycleTask {
 
     INSTANCE;
 
-    private Object listenerCommon = null;
+    private Object recipeUpdatePacketListenerCommon = null, fakeResultPacketListenerCommon = null;
 
     @Override
     public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
@@ -33,8 +36,12 @@ public enum PacketEventsHook implements PluginHook, BukkitLifeCycleTask {
                 hook();
             }
             case DISABLE -> {
-                if (listenerCommon != null) {
-                    PacketEvents.getAPI().getEventManager().unregisterListener((PacketListenerCommon) listenerCommon);
+                EventManager eventManager = PacketEvents.getAPI().getEventManager();
+                if (recipeUpdatePacketListenerCommon != null) {
+                    eventManager.unregisterListener((PacketListenerCommon) recipeUpdatePacketListenerCommon);
+                }
+                if (fakeResultPacketListenerCommon != null) {
+                    eventManager.unregisterListener((PacketListenerCommon) fakeResultPacketListenerCommon);
                 }
             }
         }
@@ -52,7 +59,14 @@ public enum PacketEventsHook implements PluginHook, BukkitLifeCycleTask {
         }
         LangUtils.info(Languages.LOAD_HOOK_PLUGIN_SUCCESS, Map.of("<plugin>", pluginName()));
         //注册数据包监听器
-        listenerCommon = PacketEvents.getAPI().getEventManager().registerListener(RecipeUpdatePacketListener.INSTANCE, PacketListenerPriority.NORMAL);
+        EventManager eventManager = PacketEvents
+            .getAPI()
+            .getEventManager();
+        recipeUpdatePacketListenerCommon = eventManager
+            .registerListener(RecipeUpdatePacketListener.INSTANCE, PacketListenerPriority.NORMAL);
+        fakeResultPacketListenerCommon = eventManager
+            .registerListener(FakeResultPreviewPacketListener.INSTANCE, PacketListenerPriority.NORMAL);
+        Bukkit.getPluginManager().registerEvents(FakeResultPreviewPacketListener.INSTANCE, Craftorithm.instance());
         return true;
     }
 }
