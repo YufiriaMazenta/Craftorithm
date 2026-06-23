@@ -33,7 +33,7 @@ public abstract class LockableIcon extends ActionIcon {
     public ItemStack display() {
         if (locked) {
             if (lockedDisplay != null) {
-                return lockedDisplay.display();
+                return lockedDisplay.toItemStack();
             } else {
                 return super.display();
             }

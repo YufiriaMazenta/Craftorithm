@@ -6,6 +6,7 @@ import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.util.MaterialHelper;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.ClickType;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +39,17 @@ public interface IconParser {
         String name = config.getString("name");
         List<String> lore = config.getStringList("lore");
         Integer customModelData = config.getInt("custom_model_data");
-        return new IconDisplay(Objects.requireNonNull(material), name, lore, customModelData);
+        NamespacedKey itemModel;
+        if (config.isString("item_model")) {
+            itemModel = NamespacedKey.fromString(Objects.requireNonNull(config.getString("item_model")));
+        } else {
+            itemModel = null;
+        }
+        return new IconDisplay(Objects.requireNonNull(material))
+            .setName(name)
+            .setLore(lore)
+            .setCustomModelData(customModelData)
+            .setItemModel(itemModel);
     }
 
     default @NotNull Map<ClickType, Action> parseActions(ConfigurationSection actionsConfig) {

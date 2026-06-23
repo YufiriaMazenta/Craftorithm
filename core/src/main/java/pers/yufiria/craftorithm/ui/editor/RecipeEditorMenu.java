@@ -85,9 +85,7 @@ public abstract class RecipeEditorMenu extends StoredMenu implements BackableMen
      */
     protected Icon getBackIcon() {
         IconDisplay iconDisplay = new IconDisplay(
-            Material.RED_STAINED_GLASS_PANE,
-            "§c← 返回",
-            List.of("§7点击返回上一级菜单")
+            Material.RED_STAINED_GLASS_PANE
         );
         return new TranslatableIcon(iconDisplay) {
             @Override
