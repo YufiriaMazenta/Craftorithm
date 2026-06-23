@@ -4,15 +4,18 @@ import crypticlib.CrypticLibBukkit;
 import crypticlib.MinecraftVersion;
 import crypticlib.chat.BukkitMsgSender;
 import crypticlib.listener.EventListener;
+import crypticlib.util.IOHelper;
 import crypticlib.util.ItemHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.InventoryView;
@@ -96,6 +99,7 @@ public enum AnvilRecipeHandler implements Listener {
     public void onPrepareAnvil(PrepareAnvilEvent event) {
         if (!PluginConfigs.ENABLE_ANVIL_RECIPE.value())
             return;
+
         ItemStack base = event.getInventory().getItem(0);
         ItemStack addition = event.getInventory().getItem(1);
         if (ItemHelper.isAir(base) || ItemHelper.isAir(addition))
@@ -122,7 +126,7 @@ public enum AnvilRecipeHandler implements Listener {
         ItemStack result = anvilRecipe.getResult();
         NamespacedItemIdStack resultId = ItemManager.INSTANCE.matchItemId(result, false);
         if (resultId != null) {
-            ItemStack refreshItem = ItemManager.INSTANCE.matchItem(resultId, (Player) event.getViewers().get(0));
+            ItemStack refreshItem = ItemManager.INSTANCE.matchItem(resultId, (Player) event.getViewers().getFirst());
             result.setItemMeta(refreshItem.getItemMeta());
         }
 
@@ -136,10 +140,17 @@ public enum AnvilRecipeHandler implements Listener {
                 result.setItemMeta(resultMeta);
             }
         );
-        event.getInventory().setRepairCost(anvilRecipe.costLevel());
 
         event.setResult(result);
-        event.getInventory().setItem(2, result);
+        if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_21)) {
+            AnvilView view = event.getView();
+            view.setRepairCost(anvilRecipe.costLevel());
+            view.setItem(2, result);
+        } else {
+            InventoryView view = ((InventoryEvent) event).getView();
+            view.setItem(2, result);
+            view.setProperty(InventoryView.Property.REPAIR_COST, anvilRecipe.costLevel());
+        }
         Bukkit.getPluginManager().callEvent(new CraftorithmPrepareAnvilEvent(event, anvilRecipe));
     }
 
@@ -171,6 +182,15 @@ public enum AnvilRecipeHandler implements Listener {
                 }
             }
         }
+
+        //处理trigger模块的条件判断
+        TriggerContext ctx = BuiltInTriggerTypes.ANVIL.extractContext(event);
+        if (ctx == null) return;
+        int denied = TriggerManager.INSTANCE.firePrepare(BuiltInTriggerTypes.ANVIL.typeKey(), ctx);
+        if (denied > 0) {
+            return;
+        }
+
         AnvilRecipe anvilRecipe = matchAnvilRecipe(base, addition);
         if (anvilRecipe == null)
             return;
@@ -197,15 +217,13 @@ public enum AnvilRecipeHandler implements Listener {
         int canCraftNum = Math.min(baseNum / needBaseNum, additionNum / needAdditionNum);
         canCraftNum = Math.min(result.getMaxStackSize(), canCraftNum);
 
-        //在合成开始前先提取上下文,以便后面执行操作
-        TriggerContext ctx = BuiltInTriggerTypes.ANVIL.extractContext(event);
-
         if (!(event.getClickedInventory() instanceof AnvilInventory)) {
             return;
         }
         if (event.getSlot() != 2)
             return;
-        event.setCancelled(true);
+//        event.setCancelled(true);
+        event.setResult(Event.Result.DENY);
         //判断是否合成成功,用于触发事件等操作
         boolean craftResult = false;
         switch (event.getClick()) {
@@ -224,6 +242,9 @@ public enum AnvilRecipeHandler implements Listener {
                         player.setLevel(player.getLevel() - costLevel);
                     }
                 } else {
+                    if (!result.isSimilar(cursor)) {
+                        break;
+                    }
                     int resultCursor = cursor.getAmount() + result.getAmount();
                     if (resultCursor > result.getMaxStackSize())
                         break;
@@ -290,45 +311,43 @@ public enum AnvilRecipeHandler implements Listener {
 
         //合成成功后执行trigger的actions
         if (craftResult) {
-            if (ctx != null) {
-                TriggerManager.INSTANCE.fire(BuiltInTriggerTypes.ANVIL.typeKey(), ctx);
-            }
+            TriggerManager.INSTANCE.fire(BuiltInTriggerTypes.ANVIL.typeKey(), ctx);
         }
 
         //更新页面
-        CrypticLibBukkit.scheduler().sync(() -> {
-            AnvilRecipe afterClickRecipe = matchAnvilRecipe(base, addition);
-            ItemStack afterResult = null;
-            int afterRepairCost = 0;
-            if (afterClickRecipe != null) {
-                afterResult = afterClickRecipe.getResult();
-                afterRepairCost = anvilRecipe.costLevel();
-            }
+        AnvilRecipe afterClickRecipe = matchAnvilRecipe(base, addition);
+        ItemStack afterResult = null;
+        int afterRepairCost = 0;
+        if (afterClickRecipe != null) {
+            afterResult = afterClickRecipe.getResult();
+            afterRepairCost = anvilRecipe.costLevel();
+        }
 
-            anvilInventory.setItem(2, afterResult);
-
-            PrepareAnvilEvent prepareAnvilEvent;
-            if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_21)) {
-                AnvilView view = (AnvilView) event.getView();
-                view.setRepairCost(afterRepairCost);
-                prepareAnvilEvent = new PrepareAnvilEvent(
-                    view,
-                    afterClickRecipe.getResult()
-                );
-            } else {
-                anvilInventory.setRepairCost(afterRepairCost);
-                try {
-                    Class<PrepareAnvilEvent> prepareAnvilEventClass = PrepareAnvilEvent.class;
-                    Constructor<PrepareAnvilEvent> constructor = prepareAnvilEventClass
-                        .getConstructor(InventoryView.class, ItemStack.class);
-                    prepareAnvilEvent = constructor.newInstance(event.getView(), afterClickRecipe.getResult());
-                } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
-                         InvocationTargetException e) {
-                    throw new RuntimeException(e);
-                }
+        PrepareAnvilEvent prepareAnvilEvent;
+        if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_21)) {
+            AnvilView view = (AnvilView) event.getView();
+            view.setRepairCost(afterRepairCost);
+            view.setItem(2, afterResult);
+            prepareAnvilEvent = new PrepareAnvilEvent(
+                view,
+                afterResult
+            );
+        } else {
+            InventoryView view = event.getView();
+            view.setProperty(InventoryView.Property.REPAIR_COST, afterRepairCost);
+            view.setItem(2, afterResult);
+            try {
+                Class<PrepareAnvilEvent> prepareAnvilEventClass = PrepareAnvilEvent.class;
+                Constructor<PrepareAnvilEvent> constructor = prepareAnvilEventClass
+                    .getConstructor(InventoryView.class, ItemStack.class);
+                prepareAnvilEvent = constructor.newInstance(event.getView(), afterClickRecipe.getResult());
+            } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
+                     InvocationTargetException e) {
+                throw new RuntimeException(e);
             }
-            Bukkit.getPluginManager().callEvent(prepareAnvilEvent);
-        });
+        }
+        Bukkit.getPluginManager().callEvent(prepareAnvilEvent);
+        player.updateInventory();
     }
 
 }

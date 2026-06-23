@@ -1,7 +1,6 @@
 package pers.yufiria.craftorithm.hook.protocolLib;
 
 import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLib;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.ListenerPriority;
@@ -11,6 +10,7 @@ import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.config.Languages;
@@ -53,7 +53,12 @@ public enum ProtocolLibHook implements PluginHook, BukkitLifeCycleTask {
             return false;
         }
         LangUtils.info(Languages.LOAD_HOOK_PLUGIN_SUCCESS, Map.of("<plugin>", pluginName()));
-        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(
+        //注册虚假合成结果预览数据包监听器
+        ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
+        protocolManager.addPacketListener(FakeResultPreviewPacketListener.INSTANCE);
+        Bukkit.getPluginManager().registerEvents(FakeResultPreviewPacketListener.INSTANCE, Craftorithm.instance());
+        //注册配方书数据包监听器
+        protocolManager.addPacketListener(new PacketAdapter(
             Craftorithm.instance(),
             ListenerPriority.NORMAL,
             PacketType.Play.Server.RECIPE_BOOK_ADD,
