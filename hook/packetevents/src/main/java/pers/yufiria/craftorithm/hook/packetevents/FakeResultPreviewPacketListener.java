@@ -150,19 +150,15 @@ public enum FakeResultPreviewPacketListener implements PacketListener, Listener 
 
         switch (event.getPacketType()) {
             case PacketType.Play.Server.SET_SLOT -> {
-                IOHelper.info("Send set slot");
                 NamespacedItemIdStack recipeFakeResult = FakeResultHandler.INSTANCE.getRecipeFakeResult(recipeKey);
                 if (recipeFakeResult == null) {
                     return;
                 }
                 ItemStack fakeResult = ItemManager.INSTANCE.matchItem(recipeFakeResult);
                 WrapperPlayServerSetSlot packet = new WrapperPlayServerSetSlot(event);
-                IOHelper.info("Slot:" + packet.getSlot());
-
                 if (packet.getSlot() != cacheRecipeData.resultSlot) {
                     return;
                 }
-                IOHelper.info(packet.getItem().toString());
                 packet.setItem(SpigotConversionUtil.fromBukkitItemStack(fakeResult));
             }
             case PacketType.Play.Server.WINDOW_ITEMS -> {

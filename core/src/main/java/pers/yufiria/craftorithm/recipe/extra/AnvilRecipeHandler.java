@@ -99,7 +99,6 @@ public enum AnvilRecipeHandler implements Listener {
     public void onPrepareAnvil(PrepareAnvilEvent event) {
         if (!PluginConfigs.ENABLE_ANVIL_RECIPE.value())
             return;
-        IOHelper.info("Call event");
 
         ItemStack base = event.getInventory().getItem(0);
         ItemStack addition = event.getInventory().getItem(1);
@@ -124,7 +123,6 @@ public enum AnvilRecipeHandler implements Listener {
         if (anvilRecipe == null)
             return;
 
-        IOHelper.info("Recipe id: " + anvilRecipe.getKey());
         ItemStack result = anvilRecipe.getResult();
         NamespacedItemIdStack resultId = ItemManager.INSTANCE.matchItemId(result, false);
         if (resultId != null) {
