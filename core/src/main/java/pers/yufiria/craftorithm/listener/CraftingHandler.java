@@ -23,11 +23,11 @@ public enum CraftingHandler implements Listener {
         if (event.getRecipe() == null)
             return;
         Recipe recipe = event.getRecipe();
-        NamespacedKey namespacedKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
-        if (namespacedKey == null) {
+        NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
+        if (recipeKey == null) {
             throw new RuntimeException("Can not get recipe key");
         }
-        if (!namespacedKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
+        if (!recipeKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
             return;
         }
         ItemStack item = event.getRecipe().getResult();

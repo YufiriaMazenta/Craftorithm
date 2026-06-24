@@ -23,26 +23,26 @@ public enum SmithingTransformRecipeParser implements RecipeParser<SmithingRecipe
     INSTANCE;
 
     @Override
-    public @NotNull SmithingRecipe parse(String recipeKey, ConfigurationSection recipeConfig) {
+    public @NotNull SmithingRecipe parse(String recipeName, ConfigurationSection recipeConfig) {
         try {
             String resultId = recipeConfig.getString("result");
             ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId));
-            NamespacedKey key = new NamespacedKey(Craftorithm.instance(), recipeKey);
+            NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeName);
             String baseId = recipeConfig.getString("base");
             RecipeChoice base = BukkitRecipeChoiceParser.parseChoice(baseId);
             String additionId = recipeConfig.getString("addition");
             RecipeChoice addition = BukkitRecipeChoiceParser.parseChoice(additionId);
             if (recipeConfig.isList("copy_components_rules")) {
                 List<String> keepNbtRules = recipeConfig.getStringList("copy_components_rules");
-                CopyComponentsManager.INSTANCE.addRecipeCopyNbtRules(key, keepNbtRules);
+                CopyComponentsManager.INSTANCE.addRecipeCopyNbtRules(recipeKey, keepNbtRules);
             }
             SmithingRecipe recipe;
             if (MinecraftVersion.current().before(MinecraftVersion.V1_20)) {
-                recipe = new SmithingRecipe(key, result, base, addition);
+                recipe = new SmithingRecipe(recipeKey, result, base, addition);
             } else {
                 String templateId = recipeConfig.getString("template");
                 RecipeChoice template = BukkitRecipeChoiceParser.parseChoice(templateId);
-                recipe = new SmithingTransformRecipe(key, result, template, base, addition);
+                recipe = new SmithingTransformRecipe(recipeKey, result, template, base, addition);
             }
             return recipe;
         } catch (RecipeLoadException e) {

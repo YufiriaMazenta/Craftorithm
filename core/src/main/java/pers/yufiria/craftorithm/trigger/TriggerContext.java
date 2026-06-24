@@ -140,11 +140,11 @@ public class TriggerContext {
         @Nullable String recipeKeyStr,
         @Nullable Event bukkitEvent
     ) {
-        NamespacedKey key = null;
+        NamespacedKey recipeKey = null;
         if (recipeKeyStr != null) {
-            key = NamespacedKey.fromString(recipeKeyStr);
+            recipeKey = NamespacedKey.fromString(recipeKeyStr);
         }
-        return new TriggerContext(player, result, key, baseId, additionId, null, null, bukkitEvent);
+        return new TriggerContext(player, result, recipeKey, baseId, additionId, null, null, bukkitEvent);
     }
 
     private static @Nullable String resolveItemId(@Nullable ItemStack item) {

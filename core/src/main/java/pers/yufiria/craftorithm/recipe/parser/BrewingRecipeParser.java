@@ -20,19 +20,19 @@ public enum BrewingRecipeParser implements RecipeParser<BrewingRecipe> {
     INSTANCE;
 
     @Override
-    public @NotNull BrewingRecipe parse(String recipeKey, ConfigurationSection recipeConfig) {
+    public @NotNull BrewingRecipe parse(String recipeName, ConfigurationSection recipeConfig) {
         if (!ServerUtils.supportPotionMix()) {
             throw new RecipeLoadException("&cThe server does not support brewing recipes");
         }
         try {
             String resultId = recipeConfig.getString("result");
             ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId));
-            NamespacedKey key = new NamespacedKey(Craftorithm.instance(), recipeKey);
+            NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeName);
             String inputId = recipeConfig.getString("input");
             RecipeChoice input = BukkitRecipeChoiceParser.parseChoice(inputId);
             String ingredientId = recipeConfig.getString("ingredient");
             RecipeChoice ingredient = BukkitRecipeChoiceParser.parseChoice(ingredientId);
-            PotionMix potionMix = new PotionMix(key, result, input, ingredient);
+            PotionMix potionMix = new PotionMix(recipeKey, result, input, ingredient);
             return new BrewingRecipe(potionMix);
         } catch (RecipeLoadException e) {
             throw e;

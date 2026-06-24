@@ -1,0 +1,85 @@
+prefix: '&8[&3Craftorithm&8]'
+unsupported_version: '<prefix> サポートされていないバージョンです'
+new_version: '<prefix> &a新しいバージョン <new_version> が検出されました。最新バージョンにアップデートしてください！'
+command:
+  no_perm: '<prefix> &cこのコマンドを使用する権限がありません。'
+  player_only: '<prefix> &cこのコマンドはプレイヤーのみ実行できます。'
+  unknown_player: '<prefix> &c不明なプレイヤー: <player_name>'
+  item:
+    save:
+      success: '<prefix> &aアイテムを保存しました。'
+      failed_save_air: '<prefix> &cアイテムの保存に失敗しました。理由：存在しないアイテムは保存できません。'
+    give:
+      success: '<prefix> &aアイテムを取得しました。'
+      not_exist_item: '<prefix> &cアイテム <item_name> は存在しません。'
+      player_offline: '<prefix> &cそのプレイヤーはオフラインまたは存在しません。'
+    fuel:
+      add:
+        success: '<prefix> &aカスタム燃料を追加しました。'
+        failed_add_air: '<prefix> &cカスタム燃料の追加に失敗しました。理由：存在しないアイテムを燃料として追加できません。'
+        failed_exist: '<prefix> &cカスタム燃料の追加に失敗しました。理由：この燃料はすでに存在します。'
+      remove:
+        success: '<prefix> &aカスタム燃料を削除しました。'
+        failed_not_exist: '<prefix> &cカスタム燃料の削除に失敗しました。理由：この燃料は存在しません。'
+  reload:
+    success: '<prefix> &aプラグインをリロードしました。'
+    exception: '<prefix> &cプラグインのリロード中にエラーが発生しました。コンソールを確認してください。'
+    recipe_manager_reloading: '<prefix> &cレシピマネージャーは現在リロード中です。しばらくしてからもう一度お試しください。'
+  remove:
+    success: '<prefix> &aレシピを削除しました。'
+    not_exist: '<prefix> &cレシピが存在しません。'
+  disable:
+    success: '<prefix> &cレシピを無効化しました。'
+    not_exist: '<prefix> &cレシピが存在しないか、すでに無効化されています。'
+    failed: '<prefix> &cレシピの無効化に失敗しました。すでに無効化されているか、存在しない可能性があります。'
+  version: '<prefix> &aプラグインバージョン: <version>'
+  create:
+    unsupported_recipe_type: '<prefix> &cサポートされていないレシピタイプです。'
+    unsupported_recipe_name: '<prefix> &cサポートされていないレシピ名です。小文字の英字、数字、"_"、"-"、"."のみ使用できます。'
+    name_used: '<prefix> &cこのレシピIDはすでに使用されています。'
+    success: '<prefix> <recipe_type> レシピ <recipe_name> を作成しました。'
+    input_hint:
+      smelting_time: '&aこのレシピの精錬時間を入力してください（cancelでキャンセル）'
+      smelting_exp: '&aこのレシピの精錬経験値を入力してください（cancelでキャンセル）'
+      anvil_cost_level: '&aこの金床レシピの消費経験値を入力してください（cancelでキャンセル）'
+  display:
+    unsupported_recipe_type: '<prefix> &cこのレシピタイプの表示には対応していません。'
+  openmenu:
+    unknown_menu: '<prefix> &c不明なメニュー: <menu_name>'
+  script:
+    operation_time: '<prefix> &aステートメントの実行に <time> ミリ秒かかりました。'
+  edit:
+    invalid_recipe_id: '<prefix> &c無効なレシピIDです。'
+    recipe_not_found: '<prefix> &cレシピが見つかりません。'
+recipe_type_name:
+  vanilla_shaped: 定形レシピ
+  vanilla_shapeless: 不定形レシピ
+  vanilla_smelting_furnace: かまどレシピ
+  vanilla_smelting_blast: 溶鉱炉レシピ
+  vanilla_smelting_smoker: 燻製器レシピ
+  vanilla_smelting_campfire: 焚き火レシピ
+  vanilla_smithing_transform: 鍛冶台レシピ
+  vanilla_smithing_trim: 装飾鍛冶レシピ
+  vanilla_stonecutting: 石切台レシピ
+  vanilla_brewing: 醸造台レシピ
+  anvil: 金床レシピ
+load_finish: '<prefix> &aプラグインの読み込みが完了しました。'
+recipe_load_exception: '<prefix> &cレシピ <recipe_name> の読み込み中にエラーが発生しました。'
+item_load_exception: '<prefix> &cアイテム <item_name> の読み込み中にエラーが発生しました。'
+hook_plugin_success: '<prefix> &a<plugin> を検出し、フックしました。'
+menu:
+  recipe_creator:
+    name: 'レシピ作成'
+    null_result: '<prefix> &cレシピの結果を空にすることはできません！'
+    null_ingredients: '<prefix> &cレシピの材料を空にすることはできません！'
+    result_frame_icon_name: '&aここにレシピの結果を配置してください'
+    confirm_icon_name: '&6&lレシピ作成を確定'
+  tag_select:
+    name: 'Tag選択ページ'
+    frame_icon_name: '&c使用するTagを選択してください！'
+  recipe_display:
+    anvil:
+      cost_level: '&3必要レベル: &a<level>'
+    vanilla_smelting:
+      time: '&3精錬時間: &a<time>'
+      reward_exp: '&3経験値報酬: &a<reward_exp>'

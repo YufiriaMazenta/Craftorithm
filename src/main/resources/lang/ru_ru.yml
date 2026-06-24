@@ -1,0 +1,85 @@
+prefix: '&8[&3Craftorithm&8]'
+unsupported_version: '<prefix> Неподдерживаемая версия'
+new_version: '<prefix> &aОбнаружена новая версия <new_version>. Пожалуйста, обновитесь до последней версии!'
+command:
+  no_perm: '<prefix> &cУ вас нет прав на использование этой команды.'
+  player_only: '<prefix> &cЭту команду могут выполнять только игроки.'
+  unknown_player: '<prefix> &cНеизвестный игрок: <player_name>'
+  item:
+    save:
+      success: '<prefix> &aПредмет успешно сохранён.'
+      failed_save_air: '<prefix> &cНе удалось сохранить предмет. Причина: невозможно сохранить несуществующий предмет.'
+    give:
+      success: '<prefix> &aПредмет успешно выдан.'
+      not_exist_item: '<prefix> &cПредмет <item_name> не существует.'
+      player_offline: '<prefix> &cЭтот игрок не в сети или не существует.'
+    fuel:
+      add:
+        success: '<prefix> &aПользовательское топливо успешно добавлено.'
+        failed_add_air: '<prefix> &cНе удалось добавить топливо. Причина: невозможно добавить несуществующий предмет в качестве топлива.'
+        failed_exist: '<prefix> &cНе удалось добавить топливо. Причина: это топливо уже существует.'
+      remove:
+        success: '<prefix> &aПользовательское топливо успешно удалено.'
+        failed_not_exist: '<prefix> &cНе удалось удалить топливо. Причина: это топливо не существует.'
+  reload:
+    success: '<prefix> &aПлагин успешно перезагружен.'
+    exception: '<prefix> &cПри перезагрузке плагина произошла ошибка. Проверьте консоль.'
+    recipe_manager_reloading: '<prefix> &cМенеджер рецептов сейчас перезагружается. Попробуйте позже.'
+  remove:
+    success: '<prefix> &aРецепт успешно удалён.'
+    not_exist: '<prefix> &cРецепт не существует.'
+  disable:
+    success: '<prefix> &cРецепт успешно отключён.'
+    not_exist: '<prefix> &cРецепт не существует или уже отключён.'
+    failed: '<prefix> &cНе удалось отключить рецепт. Возможно, он уже отключён или не существует.'
+  version: '<prefix> &aВерсия плагина: <version>'
+  create:
+    unsupported_recipe_type: '<prefix> &cНеподдерживаемый тип рецепта.'
+    unsupported_recipe_name: '<prefix> &cНеподдерживаемое имя рецепта. Допустимы только строчные буквы, цифры, "_", "-" и ".".'
+    name_used: '<prefix> &cИдентификатор рецепта уже используется.'
+    success: '<prefix> Рецепт <recipe_type> <recipe_name> успешно создан.'
+    input_hint:
+      smelting_time: '&aВведите время плавки для этого рецепта (cancel для отмены)'
+      smelting_exp: '&aВведите количество опыта за плавку (cancel для отмены)'
+      anvil_cost_level: '&aВведите стоимость в опыте для этого рецепта наковальни (cancel для отмены)'
+  display:
+    unsupported_recipe_type: '<prefix> &cНеподдерживаемый тип рецепта.'
+  openmenu:
+    unknown_menu: '<prefix> &cНеизвестное меню: <menu_name>'
+  script:
+    operation_time: '<prefix> &aВыполнение инструкции заняло <time> мс.'
+  edit:
+    invalid_recipe_id: '<prefix> &cНедопустимый идентификатор рецепта.'
+    recipe_not_found: '<prefix> &cРецепт не найден.'
+recipe_type_name:
+  vanilla_shaped: Формованный рецепт
+  vanilla_shapeless: Беспорядочный рецепт
+  vanilla_smelting_furnace: Печной рецепт
+  vanilla_smelting_blast: Доменный рецепт
+  vanilla_smelting_smoker: Коптильный рецепт
+  vanilla_smelting_campfire: Рецепт на костре
+  vanilla_smithing_transform: Кузнечный рецепт
+  vanilla_smithing_trim: Декоративный кузнечный рецепт
+  vanilla_stonecutting: Камнерезный рецепт
+  vanilla_brewing: Зельеварочный рецепт
+  anvil: Рецепт наковальни
+load_finish: '<prefix> &aПлагин успешно загружен.'
+recipe_load_exception: '<prefix> &cОшибка при загрузке рецепта <recipe_name>.'
+item_load_exception: '<prefix> &cОшибка при загрузке предмета <item_name>.'
+hook_plugin_success: '<prefix> &a<plugin> обнаружен и подключён.'
+menu:
+  recipe_creator:
+    name: 'Создатель'
+    null_result: '<prefix> &cРезультат рецепта не может быть пустым!'
+    null_ingredients: '<prefix> &cИнгредиенты рецепта не могут быть пустыми!'
+    result_frame_icon_name: '&aПоместите результат рецепта сюда'
+    confirm_icon_name: '&6&lПодтвердить создание рецепта'
+  tag_select:
+    name: 'Страница выбора тега'
+    frame_icon_name: '&cВыберите нужный тег!'
+  recipe_display:
+    anvil:
+      cost_level: '&3Необходимый уровень: &a<level>'
+    vanilla_smelting:
+      time: '&3Время плавки: &a<time>'
+      reward_exp: '&3Опыт за плавку: &a<reward_exp>'

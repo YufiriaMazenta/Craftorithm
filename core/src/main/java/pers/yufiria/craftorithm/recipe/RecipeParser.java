@@ -14,6 +14,6 @@ public interface RecipeParser<R extends Recipe> {
      * 从配置文件里解析配方
      * @param recipeConfig 配方的加载源
      */
-    @Nullable R parse(String recipeKey, ConfigurationSection recipeConfig);
+    @Nullable R parse(String recipeName, ConfigurationSection recipeConfig);
 
 }

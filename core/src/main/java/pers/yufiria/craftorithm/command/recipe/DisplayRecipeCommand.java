@@ -56,8 +56,8 @@ public class DisplayRecipeCommand extends CommandNode {
             }
             target = (Player) invoker.asPlayer().getPlatformPlayer();
         }
-        NamespacedKey namespacedKey = NamespacedKey.fromString(args.get(0));
-        Recipe recipe = RecipeManager.INSTANCE.getRecipe(namespacedKey);
+        NamespacedKey recipeKey = NamespacedKey.fromString(args.get(0));
+        Recipe recipe = RecipeManager.INSTANCE.getRecipe(recipeKey);
         if (recipe == null) {
             return;
         }

@@ -60,16 +60,16 @@ public enum AnvilRecipeHandler implements Listener {
         return true;
     }
 
-    public boolean unregisterAnvilRecipe(final NamespacedKey key) {
+    public boolean unregisterAnvilRecipe(final NamespacedKey recipeKey) {
         if (!PluginConfigs.ENABLE_ANVIL_RECIPE.value())
             throw new UnsupportedOperationException("AnvilRecipe is not enabled");
-        return anvilRecipes.remove(key) != null;
+        return anvilRecipes.remove(recipeKey) != null;
     }
 
-    public AnvilRecipe getAnvilRecipe(final NamespacedKey key) {
+    public AnvilRecipe getAnvilRecipe(final NamespacedKey recipeKey) {
         if (!PluginConfigs.ENABLE_ANVIL_RECIPE.value())
             throw new UnsupportedOperationException("AnvilRecipe is not enabled");
-        return anvilRecipes.get(key);
+        return anvilRecipes.get(recipeKey);
     }
 
     @Nullable

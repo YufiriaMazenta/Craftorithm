@@ -1,0 +1,85 @@
+prefix: '&8[&3Craftorithm&8]'
+unsupported_version: '<prefix> Unsupported Version'
+new_version: '<prefix> &aDetected a new version <new_version>, please update to the latest version promptly!'
+command:
+  no_perm: '<prefix> &cYou do not have permission to use this command.'
+  player_only: '<prefix> &cOnly players can execute this command.'
+  unknown_player: '<prefix> &cUnknown player: <player_name>'
+  item:
+    save:
+      success: '<prefix> &aItem saved successfully.'
+      failed_save_air: '<prefix> &cItem save failed. Reason: Cannot save a non-existent item.'
+    give:
+      success: '<prefix> &aItem given successfully.'
+      not_exist_item: '<prefix> &cItem <item_name> does not exist.'
+      player_offline: '<prefix> &cThe player is not online or does not exist.'
+    fuel:
+      add:
+        success: '<prefix> &aCustom fuel added successfully.'
+        failed_add_air: '<prefix> &cFailed to add custom fuel. Reason: Cannot add a non-existent item as fuel.'
+        failed_exist: '<prefix> &cFailed to add custom fuel. Reason: This fuel already exists.'
+      remove:
+        success: '<prefix> &aCustom fuel removed successfully.'
+        failed_not_exist: '<prefix> &cFailed to remove custom fuel. Reason: This fuel does not exist.'
+  reload:
+    success: '<prefix> &aPlugin reloaded successfully.'
+    exception: '<prefix> &cAn error occurred during plugin reload, please check the console.'
+    recipe_manager_reloading: '<prefix> &cRecipe manager is currently reloading, please try again later.'
+  remove:
+    success: '<prefix> &aRecipe removed successfully.'
+    not_exist: '<prefix> &cRecipe does not exist.'
+  disable:
+    success: '<prefix> &cRecipe disabled successfully.'
+    not_exist: '<prefix> &cRecipe does not exist or has already been disabled.'
+    failed: '<prefix> &cFailed to disable recipe, it may already be disabled or does not exist.'
+  version: '<prefix> &aPlugin version: <version>'
+  create:
+    unsupported_recipe_type: '<prefix> &cUnsupported recipe type.'
+    unsupported_recipe_name: '<prefix> &cUnsupported recipe name, only lowercase letters, numbers, "_", "-", and "." are allowed.'
+    name_used: '<prefix> &cRecipe ID has already been used.'
+    success: '<prefix> <recipe_type> recipe <recipe_name> created successfully.'
+    input_hint:
+      smelting_time: '&aPlease enter the smelting time for this recipe (type cancel to cancel)'
+      smelting_exp: '&aPlease enter the reward experience for this recipe (type cancel to cancel)'
+      anvil_cost_level: '&aPlease enter the experience cost for this anvil recipe (type cancel to cancel)'
+  display:
+    unsupported_recipe_type: '<prefix> &cUnsupported recipe type.'
+  openmenu:
+    unknown_menu: '<prefix> &cUnknown menu: <menu_name>'
+  script:
+    operation_time: '<prefix> &aStatement execution took <time> ms.'
+  edit:
+    invalid_recipe_id: '<prefix> &cInvalid recipe ID.'
+    recipe_not_found: '<prefix> &cRecipe not found.'
+recipe_type_name:
+  vanilla_shaped: Shaped Recipe
+  vanilla_shapeless: Shapeless Recipe
+  vanilla_smelting_furnace: Furnace Recipe
+  vanilla_smelting_blast: Blasting Recipe
+  vanilla_smelting_smoker: Smoking Recipe
+  vanilla_smelting_campfire: Campfire Recipe
+  vanilla_smithing_transform: Smithing Recipe
+  vanilla_smithing_trim: Smithing Trim Recipe
+  vanilla_stonecutting: Stonecutting Recipe
+  vanilla_brewing: Brewing Recipe
+  anvil: Anvil Recipe
+load_finish: '<prefix> &aPlugin loaded successfully.'
+recipe_load_exception: '<prefix> &cAn error occurred while loading recipe <recipe_name>.'
+item_load_exception: '<prefix> &cAn error occurred while loading item <item_name>.'
+hook_plugin_success: '<prefix> &aFound <plugin>, hooked successfully.'
+menu:
+  recipe_creator:
+    name: 'Creator'
+    null_result: '<prefix> &cRecipe result cannot be empty!'
+    null_ingredients: '<prefix> &cRecipe ingredients cannot be empty!'
+    result_frame_icon_name: '&aPlace recipe result here'
+    confirm_icon_name: '&6&lConfirm Recipe Creation'
+  tag_select:
+    name: 'Tag Selection'
+    frame_icon_name: '&cSelect the tag you want to use!'
+  recipe_display:
+    anvil:
+      cost_level: '&3Required Level: &a<level>'
+    vanilla_smelting:
+      time: '&3Smelting Time: &a<time>'
+      reward_exp: '&3Reward Experience: &a<reward_exp>'

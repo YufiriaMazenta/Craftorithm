@@ -23,7 +23,7 @@ public enum SmeltingRecipeParser implements RecipeParser<CookingRecipe<?>> {
     INSTANCE;
 
     @Override
-    public @NotNull CookingRecipe<?> parse(String recipeKey, ConfigurationSection recipeConfig) {
+    public @NotNull CookingRecipe<?> parse(String recipeName, ConfigurationSection recipeConfig) {
         try {
             String recipeTypeId = recipeConfig.getString("type");
             RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipeTypeId);
@@ -34,26 +34,26 @@ public enum SmeltingRecipeParser implements RecipeParser<CookingRecipe<?>> {
             ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId));
             String ingredientId = recipeConfig.getString("ingredient");
             RecipeChoice ingredient = BukkitRecipeChoiceParser.parseChoice(ingredientId);
-            NamespacedKey key = new NamespacedKey(Craftorithm.instance(), recipeKey);
+            NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeName);
             float exp = (float) recipeConfig.getDouble("exp", 0);
             int time;
             CookingRecipe<?> recipe;
             switch (recipeType) {
                 case SimpleRecipeTypes.VANILLA_SMELTING_FURNACE -> {
                     time = recipeConfig.getInt("time", 200);
-                    recipe = new FurnaceRecipe(key, result, ingredient, exp, time);
+                    recipe = new FurnaceRecipe(recipeKey, result, ingredient, exp, time);
                 }
                 case SimpleRecipeTypes.VANILLA_SMELTING_BLAST -> {
                     time = recipeConfig.getInt("time", 100);
-                    recipe = new BlastingRecipe(key, result, ingredient, exp, time);
+                    recipe = new BlastingRecipe(recipeKey, result, ingredient, exp, time);
                 }
                 case SimpleRecipeTypes.VANILLA_SMELTING_SMOKER -> {
                     time = recipeConfig.getInt("time", 100);
-                    recipe = new SmokingRecipe(key, result, ingredient, exp, time);
+                    recipe = new SmokingRecipe(recipeKey, result, ingredient, exp, time);
                 }
                 case SimpleRecipeTypes.VANILLA_SMELTING_CAMPFIRE -> {
                     time = recipeConfig.getInt("time", 100);
-                    recipe = new CampfireRecipe(key, result, ingredient, exp, time);
+                    recipe = new CampfireRecipe(recipeKey, result, ingredient, exp, time);
                 }
                 default -> throw new RecipeLoadException(recipeTypeId + " is not a smelting recipe.");
             }

@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 import pers.yufiria.craftorithm.recipe.extra.AnvilRecipe;
+import pers.yufiria.craftorithm.recipe.extra.AnvilRecipeParser;
 import pers.yufiria.craftorithm.recipe.extra.BrewingRecipe;
 import pers.yufiria.craftorithm.recipe.parser.*;
 import pers.yufiria.craftorithm.recipe.register.AnvilRecipeRegister;
@@ -22,7 +23,7 @@ public enum SimpleRecipeTypes implements RecipeType {
         "unknown",
         new RecipeParser<>() {
             @Override
-            public @Nullable Recipe parse(String recipeKey, ConfigurationSection recipeConfig) {
+            public @Nullable Recipe parse(String recipeName, ConfigurationSection recipeConfig) {
                 return null;
             }
         },

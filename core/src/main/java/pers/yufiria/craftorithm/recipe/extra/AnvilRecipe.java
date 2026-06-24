@@ -10,21 +10,21 @@ import pers.yufiria.craftorithm.recipe.choice.StackableItemIdChoice;
 
 public class AnvilRecipe implements CustomRecipe {
 
-    private NamespacedKey key;
+    private NamespacedKey recipeKey;
     private NamespacedItemIdStack result;
     private StackableItemIdChoice base;
     private StackableItemIdChoice addition;
     private int costLevel = 0;
 
-    public AnvilRecipe(NamespacedKey key, NamespacedItemIdStack result, StackableItemIdChoice base, StackableItemIdChoice addition) {
-        this.key = key;
+    public AnvilRecipe(NamespacedKey recipeKey, NamespacedItemIdStack result, StackableItemIdChoice base, StackableItemIdChoice addition) {
+        this.recipeKey = recipeKey;
         this.result = result;
         this.base = base;
         this.addition = addition;
     }
 
-    public AnvilRecipe setKey(NamespacedKey key) {
-        this.key = key;
+    public AnvilRecipe setKey(NamespacedKey recipeKey) {
+        this.recipeKey = recipeKey;
         return this;
     }
 
@@ -53,7 +53,7 @@ public class AnvilRecipe implements CustomRecipe {
 
     @Override
     public @NotNull NamespacedKey getKey() {
-        return key;
+        return recipeKey;
     }
 
     @Override

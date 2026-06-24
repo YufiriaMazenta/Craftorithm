@@ -19,8 +19,8 @@ public class RecipeGroup {
         return groupId;
     }
 
-    public boolean contains(NamespacedKey namespacedKey) {
-        return groupRecipes.containsKey(namespacedKey);
+    public boolean contains(NamespacedKey recipeKey) {
+        return groupRecipes.containsKey(recipeKey);
     }
 
     public boolean contains(Recipe recipe) {

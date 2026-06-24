@@ -1,0 +1,85 @@
+prefix: '&8[&3Craftorithm&8]'
+unsupported_version: '<prefix> Version non prise en charge'
+new_version: '<prefix> &aNouvelle version <new_version> détectée, veuillez mettre à jour vers la dernière version !'
+command:
+  no_perm: '<prefix> &cVous n''avez pas la permission d''utiliser cette commande.'
+  player_only: '<prefix> &cSeuls les joueurs peuvent exécuter cette commande.'
+  unknown_player: '<prefix> &cJoueur inconnu : <player_name>'
+  item:
+    save:
+      success: '<prefix> &aObjet enregistré avec succès.'
+      failed_save_air: '<prefix> &cÉchec de l''enregistrement de l''objet. Raison : impossible d''enregistrer un objet inexistant.'
+    give:
+      success: '<prefix> &aObjet donné avec succès.'
+      not_exist_item: '<prefix> &cL''objet <item_name> n''existe pas.'
+      player_offline: '<prefix> &cLe joueur est hors ligne ou n''existe pas.'
+    fuel:
+      add:
+        success: '<prefix> &aCarburant personnalisé ajouté avec succès.'
+        failed_add_air: '<prefix> &cÉchec de l''ajout du carburant personnalisé. Raison : impossible d''ajouter un objet inexistant comme carburant.'
+        failed_exist: '<prefix> &cÉchec de l''ajout du carburant personnalisé. Raison : ce carburant existe déjà.'
+      remove:
+        success: '<prefix> &aCarburant personnalisé supprimé avec succès.'
+        failed_not_exist: '<prefix> &cÉchec de la suppression du carburant personnalisé. Raison : ce carburant n''existe pas.'
+  reload:
+    success: '<prefix> &aPlugin rechargé avec succès.'
+    exception: '<prefix> &cUne erreur est survenue lors du rechargement du plugin. Veuillez consulter la console.'
+    recipe_manager_reloading: '<prefix> &cLe gestionnaire de recettes est en cours de rechargement. Veuillez réessayer plus tard.'
+  remove:
+    success: '<prefix> &aRecette supprimée avec succès.'
+    not_exist: '<prefix> &cLa recette n''existe pas.'
+  disable:
+    success: '<prefix> &cRecette désactivée avec succès.'
+    not_exist: '<prefix> &cLa recette n''existe pas ou est déjà désactivée.'
+    failed: '<prefix> &cÉchec de la désactivation de la recette. Elle est peut-être déjà désactivée ou n''existe pas.'
+  version: '<prefix> &aVersion du plugin : <version>'
+  create:
+    unsupported_recipe_type: '<prefix> &cType de recette non pris en charge.'
+    unsupported_recipe_name: '<prefix> &cNom de recette non pris en charge. Seules les lettres minuscules, les chiffres, "_", "-" et "." sont autorisés.'
+    name_used: '<prefix> &cL''identifiant de la recette est déjà utilisé.'
+    success: '<prefix> Recette <recipe_type> <recipe_name> créée avec succès.'
+    input_hint:
+      smelting_time: '&aVeuillez entrer le temps de cuisson pour cette recette (tapez cancel pour annuler)'
+      smelting_exp: '&aVeuillez entrer l''expérience de récompense pour cette recette (tapez cancel pour annuler)'
+      anvil_cost_level: '&aVeuillez entrer le coût en expérience pour cette recette d''enclume (tapez cancel pour annuler)'
+  display:
+    unsupported_recipe_type: '<prefix> &cType de recette non pris en charge.'
+  openmenu:
+    unknown_menu: '<prefix> &cMenu inconnu : <menu_name>'
+  script:
+    operation_time: '<prefix> &aL''exécution de l''instruction a pris <time> ms.'
+  edit:
+    invalid_recipe_id: '<prefix> &cIdentifiant de recette invalide.'
+    recipe_not_found: '<prefix> &cRecette introuvable.'
+recipe_type_name:
+  vanilla_shaped: Recette avec forme
+  vanilla_shapeless: Recette sans forme
+  vanilla_smelting_furnace: Recette de fourneau
+  vanilla_smelting_blast: Recette de haut fourneau
+  vanilla_smelting_smoker: Recette de fumoir
+  vanilla_smelting_campfire: Recette de feu de camp
+  vanilla_smithing_transform: Recette de forge
+  vanilla_smithing_trim: Recette de forge décorative
+  vanilla_stonecutting: Recette de tailleur de pierre
+  vanilla_brewing: Recette d''alambic
+  anvil: Recette d''enclume
+load_finish: '<prefix> &aPlugin chargé avec succès.'
+recipe_load_exception: '<prefix> &cUne erreur est survenue lors du chargement de la recette <recipe_name>.'
+item_load_exception: '<prefix> &cUne erreur est survenue lors du chargement de l''objet <item_name>.'
+hook_plugin_success: '<prefix> &a<plugin> détecté et connecté avec succès.'
+menu:
+  recipe_creator:
+    name: 'Créateur'
+    null_result: '<prefix> &cLe résultat de la recette ne peut pas être vide !'
+    null_ingredients: '<prefix> &cLes ingrédients de la recette ne peuvent pas être vides !'
+    result_frame_icon_name: '&aPlacez le résultat de la recette ici'
+    confirm_icon_name: '&6&lConfirmer la création de la recette'
+  tag_select:
+    name: 'Page de sélection de Tag'
+    frame_icon_name: '&cSélectionnez le tag que vous souhaitez utiliser !'
+  recipe_display:
+    anvil:
+      cost_level: '&3Niveau requis : &a<level>'
+    vanilla_smelting:
+      time: '&3Temps de cuisson : &a<time>'
+      reward_exp: '&3Expérience de récompense : &a<reward_exp>'

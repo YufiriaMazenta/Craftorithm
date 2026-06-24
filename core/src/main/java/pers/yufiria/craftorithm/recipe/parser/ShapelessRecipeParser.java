@@ -21,15 +21,15 @@ public enum ShapelessRecipeParser implements RecipeParser<ShapelessRecipe> {
     INSTANCE;
 
     @Override
-    public ShapelessRecipe parse(String recipeKey, ConfigurationSection recipeConfig) {
+    public ShapelessRecipe parse(String recipeName, ConfigurationSection recipeConfig) {
         try {
             String resultId = recipeConfig.getString("result");
             ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId));
-            NamespacedKey key = new NamespacedKey(Craftorithm.instance(), recipeKey);
-            ShapelessRecipe recipe = new ShapelessRecipe(key, result);
+            NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeName);
+            ShapelessRecipe recipe = new ShapelessRecipe(recipeKey, result);
             List<String> ingredientKeys = recipeConfig.getStringList("ingredients");
             if (ingredientKeys.isEmpty()) {
-                throw new RecipeLoadException("No ingredients found for " + recipeKey);
+                throw new RecipeLoadException("No ingredients found for " + recipeName);
             }
             for (String ingredientKey : ingredientKeys) {
                 recipe.addIngredient(BukkitRecipeChoiceParser.parseChoice(ingredientKey));

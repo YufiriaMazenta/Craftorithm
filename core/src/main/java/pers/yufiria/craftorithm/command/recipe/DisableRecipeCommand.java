@@ -32,12 +32,12 @@ public final class DisableRecipeCommand extends CommandNode {
             sendDescriptions(invoker);
             return;
         }
-        NamespacedKey disableRecipeKey = NamespacedKey.fromString(args.get(0));
-        if (!RecipeManager.INSTANCE.serverRecipesCache().containsKey(disableRecipeKey)) {
+        NamespacedKey recipeKey = NamespacedKey.fromString(args.get(0));
+        if (!RecipeManager.INSTANCE.serverRecipesCache().containsKey(recipeKey)) {
             LangUtils.sendLang(invoker, Languages.COMMAND_DISABLE_NOT_EXIST);
             return;
         }
-        if (RecipeManager.INSTANCE.disableRecipe(disableRecipeKey, true, true)) {
+        if (RecipeManager.INSTANCE.disableRecipe(recipeKey, true, true)) {
             LangUtils.sendLang(invoker, Languages.COMMAND_DISABLE_SUCCESS);
         } else
             LangUtils.sendLang(invoker, Languages.COMMAND_DISABLE_FAILED);
@@ -47,10 +47,10 @@ public final class DisableRecipeCommand extends CommandNode {
     public List<String> tab(@NotNull CommandInvoker invoker, List<String> args) {
         if (args.size() <= 1) {
             List<String> tabList = new ArrayList<>();
-            for (NamespacedKey key : RecipeManager.INSTANCE.serverRecipesCache().keySet()) {
-                String str = key.toString();
+            for (NamespacedKey recipeKey : RecipeManager.INSTANCE.serverRecipesCache().keySet()) {
+                String str = recipeKey.toString();
                 if (str.contains(args.get(0)))
-                    tabList.add(key.toString());
+                    tabList.add(recipeKey.toString());
             }
             return tabList;
         }

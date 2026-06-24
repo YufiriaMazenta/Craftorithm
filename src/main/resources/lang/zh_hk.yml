@@ -1,0 +1,85 @@
+prefix: '&8[&3Craftorithm&8]'
+unsupported_version: '<prefix> 不支援的版本'
+new_version: '<prefix> &a偵測到有新版本 <new_version>，請及時更新到新版本！'
+command:
+  no_perm: '<prefix> &c你冇使用呢個指令嘅權限。'
+  player_only: '<prefix> &c只有玩家先可以執行呢個指令。'
+  unknown_player: '<prefix> &c未知嘅玩家：<player_name>'
+  item:
+    save:
+      success: '<prefix> &a物品儲存成功。'
+      failed_save_air: '<prefix> &c物品儲存失敗，原因：無法儲存唔存在嘅物品。'
+    give:
+      success: '<prefix> &a物品取得成功。'
+      not_exist_item: '<prefix> &c唔存在物品 <item_name>。'
+      player_offline: '<prefix> &c該玩家唔喺線上或唔存在。'
+    fuel:
+      add:
+        success: '<prefix> &a自訂燃料新增成功。'
+        failed_add_air: '<prefix> &c自訂燃料新增失敗，原因：無法將唔存在嘅物品作為燃料。'
+        failed_exist: '<prefix> &c自訂燃料新增失敗，原因：呢個燃料已經存在。'
+      remove:
+        success: '<prefix> &a自訂燃料刪除成功。'
+        failed_not_exist: '<prefix> &c自訂燃料刪除失敗，原因：呢個燃料唔存在。'
+  reload:
+    success: '<prefix> &a插件重載成功。'
+    exception: '<prefix> &c插件重載過程中發生錯誤，請查看控制台。'
+    recipe_manager_reloading: '<prefix> &c配方管理器正在重載中，請稍後再試。'
+  remove:
+    success: '<prefix> &a配方刪除成功。'
+    not_exist: '<prefix> &c配方唔存在。'
+  disable:
+    success: '<prefix> &c配方停用成功。'
+    not_exist: '<prefix> &c配方唔存在或已經被停用。'
+    failed: '<prefix> &c配方停用失敗，可能已被停用或唔存在。'
+  version: '<prefix> &a插件版本：<version>'
+  create:
+    unsupported_recipe_type: '<prefix> &c唔支援嘅配方類型。'
+    unsupported_recipe_name: '<prefix> &c唔支援嘅配方名稱，只允許使用小寫英文字母、數字、"_"、"-"同"."。'
+    name_used: '<prefix> &c配方ID已被使用。'
+    success: '<prefix> <recipe_type> 配方 <recipe_name> 建立成功。'
+    input_hint:
+      smelting_time: '&a請輸入呢個配方嘅燒煉時間（輸入 cancel 取消）'
+      smelting_exp: '&a請輸入呢個配方燒煉完成嘅獎勵經驗（輸入 cancel 取消）'
+      anvil_cost_level: '&a請輸入呢個鐵砧配方需要消耗嘅經驗（輸入 cancel 取消）'
+  display:
+    unsupported_recipe_type: '<prefix> &c唔支援嘅配方類型。'
+  openmenu:
+    unknown_menu: '<prefix> &c未知嘅選單：<menu_name>'
+  script:
+    operation_time: '<prefix> &a語句執行耗費 <time> 毫秒。'
+  edit:
+    invalid_recipe_id: '<prefix> &c無效嘅配方ID。'
+    recipe_not_found: '<prefix> &c搵唔到該配方。'
+recipe_type_name:
+  vanilla_shaped: 有序配方
+  vanilla_shapeless: 無序配方
+  vanilla_smelting_furnace: 熔爐配方
+  vanilla_smelting_blast: 高爐配方
+  vanilla_smelting_smoker: 煙燻爐配方
+  vanilla_smelting_campfire: 營火配方
+  vanilla_smithing_transform: 鍛造配方
+  vanilla_smithing_trim: 模板鍛造配方
+  vanilla_stonecutting: 切石配方
+  vanilla_brewing: 釀造配方
+  anvil: 鐵砧配方
+load_finish: '<prefix> &a插件載入完畢。'
+recipe_load_exception: '<prefix> &c載入配方 <recipe_name> 時發生錯誤。'
+item_load_exception: '<prefix> &c載入物品 <item_name> 時發生錯誤。'
+hook_plugin_success: '<prefix> &a發現 <plugin>，已掛鉤。'
+menu:
+  recipe_creator:
+    name: '建立器'
+    null_result: '<prefix> &c配方結果唔允許為空！'
+    null_ingredients: '<prefix> &c配方材料唔允許為空！'
+    result_frame_icon_name: '&a喺呢度放置配方結果'
+    confirm_icon_name: '&6&l確認建立配方'
+  tag_select:
+    name: 'Tag 選擇頁面'
+    frame_icon_name: '&c揀選你要使用嘅 Tag！'
+  recipe_display:
+    anvil:
+      cost_level: '&3所需經驗：<level>'
+    vanilla_smelting:
+      time: '&3所需時間：&a<time>'
+      reward_exp: '&3獎勵經驗：&a<reward_exp>'

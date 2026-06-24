@@ -1,0 +1,85 @@
+prefix: '&8[&3Craftorithm&8]'
+unsupported_version: '<prefix> Versión no soportada'
+new_version: '<prefix> &aNueva versión <new_version> detectada. ¡Por favor, actualiza a la última versión!'
+command:
+  no_perm: '<prefix> &cNo tienes permiso para usar este comando.'
+  player_only: '<prefix> &cSolo los jugadores pueden ejecutar este comando.'
+  unknown_player: '<prefix> &cJugador desconocido: <player_name>'
+  item:
+    save:
+      success: '<prefix> &aObjeto guardado con éxito.'
+      failed_save_air: '<prefix> &cError al guardar el objeto. Motivo: no se puede guardar un objeto inexistente.'
+    give:
+      success: '<prefix> &aObjeto entregado con éxito.'
+      not_exist_item: '<prefix> &cEl objeto <item_name> no existe.'
+      player_offline: '<prefix> &cEl jugador no está en línea o no existe.'
+    fuel:
+      add:
+        success: '<prefix> &aCombustible personalizado añadido con éxito.'
+        failed_add_air: '<prefix> &cError al añadir combustible personalizado. Motivo: no se puede añadir un objeto inexistente como combustible.'
+        failed_exist: '<prefix> &cError al añadir combustible personalizado. Motivo: este combustible ya existe.'
+      remove:
+        success: '<prefix> &aCombustible personalizado eliminado con éxito.'
+        failed_not_exist: '<prefix> &cError al eliminar combustible personalizado. Motivo: este combustible no existe.'
+  reload:
+    success: '<prefix> &a¡Plugin recargado con éxito!'
+    exception: '<prefix> &cSe produjo un error durante la recarga del plugin. Por favor, revisa la consola.'
+    recipe_manager_reloading: '<prefix> &cEl gestor de recetas se está recargando. Por favor, inténtalo de nuevo más tarde.'
+  remove:
+    success: '<prefix> &aReceta eliminada con éxito.'
+    not_exist: '<prefix> &cLa receta no existe.'
+  disable:
+    success: '<prefix> &cReceta deshabilitada con éxito.'
+    not_exist: '<prefix> &cLa receta no existe o ya ha sido deshabilitada.'
+    failed: '<prefix> &cError al deshabilitar la receta. Puede que ya esté deshabilitada o no exista.'
+  version: '<prefix> &aVersión del plugin: <version>'
+  create:
+    unsupported_recipe_type: '<prefix> &cTipo de receta no soportado.'
+    unsupported_recipe_name: '<prefix> &cNombre de receta no soportado. Solo se permiten letras minúsculas, números, "_", "-" y ".".'
+    name_used: '<prefix> &cEl ID de la receta ya está en uso.'
+    success: '<prefix> Receta <recipe_type> <recipe_name> creada con éxito.'
+    input_hint:
+      smelting_time: '&aIntroduce el tiempo de fundición para esta receta (escribe cancel para cancelar)'
+      smelting_exp: '&aIntroduce la experiencia de recompensa para esta receta (escribe cancel para cancelar)'
+      anvil_cost_level: '&aIntroduce el costo en experiencia para esta receta de yunque (escribe cancel para cancelar)'
+  display:
+    unsupported_recipe_type: '<prefix> &cTipo de receta no soportado.'
+  openmenu:
+    unknown_menu: '<prefix> &cMenú desconocido: <menu_name>'
+  script:
+    operation_time: '<prefix> &aLa ejecución de la instrucción tardó <time> ms.'
+  edit:
+    invalid_recipe_id: '<prefix> &cID de receta inválido.'
+    recipe_not_found: '<prefix> &cReceta no encontrada.'
+recipe_type_name:
+  vanilla_shaped: Receta con forma
+  vanilla_shapeless: Receta sin forma
+  vanilla_smelting_furnace: Receta de horno
+  vanilla_smelting_blast: Receta de alto horno
+  vanilla_smelting_smoker: Receta de ahumador
+  vanilla_smelting_campfire: Receta de hoguera
+  vanilla_smithing_transform: Receta de herrería
+  vanilla_smithing_trim: Receta de decoración de herrería
+  vanilla_stonecutting: Receta de cortapiedras
+  vanilla_brewing: Receta de elaboración de pociones
+  anvil: Receta de yunque
+load_finish: '<prefix> &aPlugin cargado con éxito.'
+recipe_load_exception: '<prefix> &cError al cargar la receta <recipe_name>.'
+item_load_exception: '<prefix> &cError al cargar el objeto <item_name>.'
+hook_plugin_success: '<prefix> &a<plugin> encontrado y conectado con éxito.'
+menu:
+  recipe_creator:
+    name: 'Creador'
+    null_result: '<prefix> &c¡El resultado de la receta no puede estar vacío!'
+    null_ingredients: '<prefix> &c¡Los ingredientes de la receta no pueden estar vacíos!'
+    result_frame_icon_name: '&aColoca el resultado de la receta aquí'
+    confirm_icon_name: '&6&lConfirmar creación de receta'
+  tag_select:
+    name: 'Página de selección de Tag'
+    frame_icon_name: '&c¡Selecciona el tag que deseas usar!'
+  recipe_display:
+    anvil:
+      cost_level: '&3Nivel requerido: &a<level>'
+    vanilla_smelting:
+      time: '&3Tiempo de fundición: &a<time>'
+      reward_exp: '&3Experiencia de recompensa: &a<reward_exp>'

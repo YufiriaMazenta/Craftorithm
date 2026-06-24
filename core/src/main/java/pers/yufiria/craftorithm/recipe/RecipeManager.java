@@ -218,9 +218,9 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         serverRecipesCache.clear();
         while (recipeIterator.hasNext()) {
             Recipe recipe = recipeIterator.next();
-            NamespacedKey key = getRecipeKey(recipe);
-            if (key != null)
-                serverRecipesCache.put(key, recipe);
+            NamespacedKey recipeKey = getRecipeKey(recipe);
+            if (recipeKey != null)
+                serverRecipesCache.put(recipeKey, recipe);
         }
     }
 
@@ -228,17 +228,17 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         disabledRecipesConfigWrapper.reloadConfig();
         List<String> disabledRecipes = disabledRecipesConfigWrapper.config().getStringList("recipes");
         if (PluginConfigs.REMOVE_ALL_VANILLA_RECIPE.value()) {
-            serverRecipesCache.forEach((key, recipe) -> {
-                if (key.getNamespace().equals("minecraft")) {
-                    if (disabledRecipes.contains(key.toString()))
+            serverRecipesCache.forEach((recipeKey, recipe) -> {
+                if (recipeKey.getNamespace().equals("minecraft")) {
+                    if (disabledRecipes.contains(recipeKey.toString()))
                         return;
-                    disabledRecipes.add(key.toString());
+                    disabledRecipes.add(recipeKey.toString());
                 }
             });
         }
-        for (String recipeKey : disabledRecipes) {
-            NamespacedKey key = NamespacedKey.fromString(recipeKey);
-            disableRecipe(key, false, false);
+        for (String recipeKeyStr : disabledRecipes) {
+            NamespacedKey recipeKey = NamespacedKey.fromString(recipeKeyStr);
+            disableRecipe(recipeKey, false, false);
         }
     }
 
@@ -247,10 +247,10 @@ public enum RecipeManager implements BukkitLifeCycleTask {
     /**
      * 根据给定NamespacedKey获取配方实例,会从插件配方和服务器配方中寻找
      */
-    public @Nullable Recipe getRecipe(NamespacedKey namespacedKey) {
-        Recipe recipe = craftorithmRecipes.get(namespacedKey);
+    public @Nullable Recipe getRecipe(NamespacedKey recipeKey) {
+        Recipe recipe = craftorithmRecipes.get(recipeKey);
         if (recipe == null) {
-            return serverRecipesCache.get(namespacedKey);
+            return serverRecipesCache.get(recipeKey);
         }
         return recipe;
     }

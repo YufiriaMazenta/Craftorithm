@@ -20,14 +20,14 @@ public enum StonecuttingRecipeParser implements RecipeParser<StonecuttingRecipe>
     INSTANCE;
 
     @Override
-    public @NotNull StonecuttingRecipe parse(String recipeKey, ConfigurationSection recipeConfig) {
+    public @NotNull StonecuttingRecipe parse(String recipeName, ConfigurationSection recipeConfig) {
         try {
             String resultId = recipeConfig.getString("result");
             ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId));
-            NamespacedKey key = new NamespacedKey(Craftorithm.instance(), recipeKey);
+            NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeName);
             String ingredientId = recipeConfig.getString("ingredient");
             RecipeChoice ingredient = BukkitRecipeChoiceParser.parseChoice(ingredientId);
-            StonecuttingRecipe recipe = new StonecuttingRecipe(key, result, ingredient);
+            StonecuttingRecipe recipe = new StonecuttingRecipe(recipeKey, result, ingredient);
             if (recipeConfig.contains("group")) {
                 recipe.setGroup(Objects.requireNonNull(recipeConfig.getString("group")));
             }

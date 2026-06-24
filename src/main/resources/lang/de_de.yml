@@ -1,0 +1,85 @@
+prefix: '&8[&3Craftorithm&8]'
+unsupported_version: '<prefix> Nicht unterstützte Version'
+new_version: '<prefix> &aNeue Version <new_version> erkannt. Bitte aktualisiere auf die neueste Version!'
+command:
+  no_perm: '<prefix> &cDu hast keine Berechtigung, diesen Befehl zu verwenden.'
+  player_only: '<prefix> &cNur Spieler können diesen Befehl ausführen.'
+  unknown_player: '<prefix> &cUnbekannter Spieler: <player_name>'
+  item:
+    save:
+      success: '<prefix> &aGegenstand erfolgreich gespeichert.'
+      failed_save_air: '<prefix> &cGegenstand konnte nicht gespeichert werden. Grund: Ein nicht vorhandener Gegenstand kann nicht gespeichert werden.'
+    give:
+      success: '<prefix> &aGegenstand erfolgreich erhalten.'
+      not_exist_item: '<prefix> &cGegenstand <item_name> existiert nicht.'
+      player_offline: '<prefix> &cDer Spieler ist nicht online oder existiert nicht.'
+    fuel:
+      add:
+        success: '<prefix> &aBenutzerdefinierter Brennstoff erfolgreich hinzugefügt.'
+        failed_add_air: '<prefix> &cBenutzerdefinierter Brennstoff konnte nicht hinzugefügt werden. Grund: Ein nicht vorhandener Gegenstand kann nicht als Brennstoff hinzugefügt werden.'
+        failed_exist: '<prefix> &cBenutzerdefinierter Brennstoff konnte nicht hinzugefügt werden. Grund: Dieser Brennstoff existiert bereits.'
+      remove:
+        success: '<prefix> &aBenutzerdefinierter Brennstoff erfolgreich entfernt.'
+        failed_not_exist: '<prefix> &cBenutzerdefinierter Brennstoff konnte nicht entfernt werden. Grund: Dieser Brennstoff existiert nicht.'
+  reload:
+    success: '<prefix> &aPlugin erfolgreich neu geladen.'
+    exception: '<prefix> &cBeim Neuladen des Plugins ist ein Fehler aufgetreten. Bitte überprüfe die Konsole.'
+    recipe_manager_reloading: '<prefix> &cDer Rezeptmanager wird gerade neu geladen. Bitte versuche es später erneut.'
+  remove:
+    success: '<prefix> &aRezept erfolgreich entfernt.'
+    not_exist: '<prefix> &cRezept existiert nicht.'
+  disable:
+    success: '<prefix> &cRezept erfolgreich deaktiviert.'
+    not_exist: '<prefix> &cRezept existiert nicht oder wurde bereits deaktiviert.'
+    failed: '<prefix> &cRezept konnte nicht deaktiviert werden. Es wurde möglicherweise bereits deaktiviert oder existiert nicht.'
+  version: '<prefix> &aPlugin-Version: <version>'
+  create:
+    unsupported_recipe_type: '<prefix> &cNicht unterstützter Rezepttyp.'
+    unsupported_recipe_name: '<prefix> &cNicht unterstützter Rezeptname. Es sind nur Kleinbuchstaben, Ziffern, "_", "-" und "." erlaubt.'
+    name_used: '<prefix> &cRezept-ID wird bereits verwendet.'
+    success: '<prefix> <recipe_type>-Rezept <recipe_name> erfolgreich erstellt.'
+    input_hint:
+      smelting_time: '&aBitte gib die Schmelzzeit für dieses Rezept ein (cancel zum Abbrechen)'
+      smelting_exp: '&aBitte gib die Erfahrungsbelohnung für dieses Rezept ein (cancel zum Abbrechen)'
+      anvil_cost_level: '&aBitte gib die erforderlichen Erfahrungspunkte für dieses Amboss-Rezept ein (cancel zum Abbrechen)'
+  display:
+    unsupported_recipe_type: '<prefix> &cNicht unterstützter Rezepttyp.'
+  openmenu:
+    unknown_menu: '<prefix> &cUnbekanntes Menü: <menu_name>'
+  script:
+    operation_time: '<prefix> &aAusführung der Anweisung dauerte <time> ms.'
+  edit:
+    invalid_recipe_id: '<prefix> &cUngültige Rezept-ID.'
+    recipe_not_found: '<prefix> &cRezept nicht gefunden.'
+recipe_type_name:
+  vanilla_shaped: Geformtes Rezept
+  vanilla_shapeless: Formloses Rezept
+  vanilla_smelting_furnace: Ofen-Rezept
+  vanilla_smelting_blast: Schmelzofen-Rezept
+  vanilla_smelting_smoker: Räucherofen-Rezept
+  vanilla_smelting_campfire: Lagerfeuer-Rezept
+  vanilla_smithing_transform: Schmiederezept
+  vanilla_smithing_trim: Schmiedeverzierung
+  vanilla_stonecutting: Steinsäge-Rezept
+  vanilla_brewing: Braustand-Rezept
+  anvil: Amboss-Rezept
+load_finish: '<prefix> &aPlugin erfolgreich geladen.'
+recipe_load_exception: '<prefix> &cBeim Laden des Rezepts <recipe_name> ist ein Fehler aufgetreten.'
+item_load_exception: '<prefix> &cBeim Laden des Gegenstands <item_name> ist ein Fehler aufgetreten.'
+hook_plugin_success: '<prefix> &a<plugin> gefunden und erfolgreich eingebunden.'
+menu:
+  recipe_creator:
+    name: 'Ersteller'
+    null_result: '<prefix> &cRezeptergebnis darf nicht leer sein!'
+    null_ingredients: '<prefix> &cRezeptzutaten dürfen nicht leer sein!'
+    result_frame_icon_name: '&aRezeptergebnis hier platzieren'
+    confirm_icon_name: '&6&lRezepterstellung bestätigen'
+  tag_select:
+    name: 'Tag-Auswahlseite'
+    frame_icon_name: '&cWähle den Tag, den du verwenden möchtest!'
+  recipe_display:
+    anvil:
+      cost_level: '&3Erforderliches Level: &a<level>'
+    vanilla_smelting:
+      time: '&3Schmelzzeit: &a<time>'
+      reward_exp: '&3Erfahrungsbelohnung: &a<reward_exp>'

@@ -20,12 +20,12 @@ public enum ShapedRecipeParser implements RecipeParser<ShapedRecipe> {
     INSTANCE;
 
     @Override
-    public ShapedRecipe parse(String recipeKey, ConfigurationSection recipeConfig) {
+    public ShapedRecipe parse(String recipeName, ConfigurationSection recipeConfig) {
         try {
             String resultId = recipeConfig.getString("result");
             ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId));
-            NamespacedKey key = new NamespacedKey(Craftorithm.instance(), recipeKey);
-            ShapedRecipe recipe = new ShapedRecipe(key, result);
+            NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeName);
+            ShapedRecipe recipe = new ShapedRecipe(recipeKey, result);
             recipe.shape(recipeConfig.getStringList("shape").toArray(new String[0]));
             ConfigurationSection ingredientsConfig = recipeConfig.getConfigurationSection("ingredients");
             for (String ingredientKey : Objects.requireNonNull(ingredientsConfig).getKeys(false)) {

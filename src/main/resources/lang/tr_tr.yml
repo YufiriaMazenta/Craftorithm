@@ -1,0 +1,85 @@
+prefix: '&8[&3Craftorithm&8]'
+unsupported_version: '<prefix> Desteklenmeyen sürüm'
+new_version: '<prefix> &aYeni sürüm <new_version> algılandı. Lütfen en son sürüme güncelleyin!'
+command:
+  no_perm: '<prefix> &cBu komutu kullanma izniniz yok.'
+  player_only: '<prefix> &cBu komutu yalnızca oyuncular çalıştırabilir.'
+  unknown_player: '<prefix> &cBilinmeyen oyuncu: <player_name>'
+  item:
+    save:
+      success: '<prefix> &aEşya başarıyla kaydedildi.'
+      failed_save_air: '<prefix> &cEşya kaydedilemedi. Neden: Var olmayan bir eşya kaydedilemez.'
+    give:
+      success: '<prefix> &aEşya başarıyla verildi.'
+      not_exist_item: '<prefix> &c<item_name> adlı eşya bulunmuyor.'
+      player_offline: '<prefix> &cOyuncu çevrimdışı veya mevcut değil.'
+    fuel:
+      add:
+        success: '<prefix> &aÖzel yakıt başarıyla eklendi.'
+        failed_add_air: '<prefix> &cÖzel yakıt eklenemedi. Neden: Var olmayan bir eşya yakıt olarak eklenemez.'
+        failed_exist: '<prefix> &cÖzel yakıt eklenemedi. Neden: Bu yakıt zaten mevcut.'
+      remove:
+        success: '<prefix> &aÖzel yakıt başarıyla kaldırıldı.'
+        failed_not_exist: '<prefix> &cÖzel yakıt kaldırılamadı. Neden: Bu yakıt mevcut değil.'
+  reload:
+    success: '<prefix> &aEklenti başarıyla yeniden yüklendi!'
+    exception: '<prefix> &cEklenti yeniden yüklenirken bir hata oluştu. Lütfen konsolu kontrol edin.'
+    recipe_manager_reloading: '<prefix> &cTarif yöneticisi şu anda yeniden yükleniyor. Lütfen daha sonra tekrar deneyin.'
+  remove:
+    success: '<prefix> &aTarif başarıyla kaldırıldı.'
+    not_exist: '<prefix> &cTarif mevcut değil.'
+  disable:
+    success: '<prefix> &cTarif başarıyla devre dışı bırakıldı.'
+    not_exist: '<prefix> &cTarif mevcut değil veya zaten devre dışı.'
+    failed: '<prefix> &cTarif devre dışı bırakılamadı. Zaten devre dışı bırakılmış olabilir veya mevcut değil.'
+  version: '<prefix> &aEklenti sürümü: <version>'
+  create:
+    unsupported_recipe_type: '<prefix> &cDesteklenmeyen tarif tipi.'
+    unsupported_recipe_name: '<prefix> &cDesteklenmeyen tarif adı. Yalnızca küçük harfler, rakamlar, "_", "-" ve "." kullanılabilir.'
+    name_used: '<prefix> &cTarif kimliği zaten kullanılmış.'
+    success: '<prefix> <recipe_type> tarifi <recipe_name> başarıyla oluşturuldu.'
+    input_hint:
+      smelting_time: '&aBu tarif için eritme süresini girin (iptal etmek için cancel yazın)'
+      smelting_exp: '&aBu tarif için deneyim ödülünü girin (iptal etmek için cancel yazın)'
+      anvil_cost_level: '&aBu örs tarifi için deneyim maliyetini girin (iptal etmek için cancel yazın)'
+  display:
+    unsupported_recipe_type: '<prefix> &cDesteklenmeyen tarif tipi.'
+  openmenu:
+    unknown_menu: '<prefix> &cBilinmeyen menü: <menu_name>'
+  script:
+    operation_time: '<prefix> &aİfade yürütme <time> ms sürdü.'
+  edit:
+    invalid_recipe_id: '<prefix> &cGeçersiz tarif kimliği.'
+    recipe_not_found: '<prefix> &cTarif bulunamadı.'
+recipe_type_name:
+  vanilla_shaped: Şekilli tarif
+  vanilla_shapeless: Şekilsiz tarif
+  vanilla_smelting_furnace: Ocak tarifi
+  vanilla_smelting_blast: Maden eritme ocağı tarifi
+  vanilla_smelting_smoker: Duman fırını tarifi
+  vanilla_smelting_campfire: Kamp ateşi tarifi
+  vanilla_smithing_transform: Demirci tarifi
+  vanilla_smithing_trim: Demirci süsleme tarifi
+  vanilla_stonecutting: Taş yontma tarifi
+  vanilla_brewing: Mayalama tarifi
+  anvil: Örs tarifi
+load_finish: '<prefix> &aEklenti başarıyla yüklendi.'
+recipe_load_exception: '<prefix> &c<recipe_name> tarifi yüklenirken bir hata oluştu.'
+item_load_exception: '<prefix> &c<item_name> eşyası yüklenirken bir hata oluştu.'
+hook_plugin_success: '<prefix> &a<plugin> bulundu ve başarıyla bağlandı.'
+menu:
+  recipe_creator:
+    name: 'Oluşturucu'
+    null_result: '<prefix> &cTarif sonucu boş olamaz!'
+    null_ingredients: '<prefix> &cTarif malzemeleri boş olamaz!'
+    result_frame_icon_name: '&aTarif sonucunu buraya yerleştirin'
+    confirm_icon_name: '&6&lTarif Oluşturmayı Onayla'
+  tag_select:
+    name: 'Tag seçim sayfası'
+    frame_icon_name: '&cKullanmak istediğiniz tagı seçin!'
+  recipe_display:
+    anvil:
+      cost_level: '&3Gerekli seviye: &a<level>'
+    vanilla_smelting:
+      time: '&3Eritme süresi: &a<time>'
+      reward_exp: '&3Deneyim ödülü: &a<reward_exp>'

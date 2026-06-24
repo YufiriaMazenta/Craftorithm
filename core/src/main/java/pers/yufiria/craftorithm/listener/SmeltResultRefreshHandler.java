@@ -35,8 +35,8 @@ public enum SmeltResultRefreshHandler implements Listener {
             return;
         }
         CookingRecipe<?> recipe = event.getRecipe();
-        NamespacedKey namespacedKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
-        if (!namespacedKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
+        NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
+        if (!recipeKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
             return;
         }
         putRecipeCache(event.getBlock(), recipe);
@@ -72,8 +72,8 @@ public enum SmeltResultRefreshHandler implements Listener {
             return;
         }
         CampfireRecipe recipe = event.getRecipe();
-        NamespacedKey namespacedKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
-        if (!namespacedKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
+        NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
+        if (!recipeKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
             return;
         }
         putRecipeCache(event.getBlock(), recipe);

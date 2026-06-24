@@ -75,7 +75,7 @@ public enum CopyComponentsManager {
      * @param key 配方的key
      * @param ruleStrList 所需的组件保留策略
      */
-    public void addRecipeCopyNbtRules(NamespacedKey key, List<String> ruleStrList) {
+    public void addRecipeCopyNbtRules(NamespacedKey recipeKey, List<String> ruleStrList) {
         List<CopyComponentsRule> rules = new ArrayList<>();
         for (String ruleName : ruleStrList) {
             compileRule(ruleName).ifPresentOrElse(
@@ -84,18 +84,18 @@ public enum CopyComponentsManager {
                     IOHelper.info("&eUnknown rule: " + ruleName);
                 });
         }
-        recipeCopyNbtRules.put(key, new CopyComponentsRules(rules));
+        recipeCopyNbtRules.put(recipeKey, new CopyComponentsRules(rules));
     }
 
-    public boolean removeRecipeCopyNbtRules(NamespacedKey key) {
-        return recipeCopyNbtRules.remove(key) != null;
+    public boolean removeRecipeCopyNbtRules(NamespacedKey recipeKey) {
+        return recipeCopyNbtRules.remove(recipeKey) != null;
     }
 
-    public Optional<CopyComponentsRules> getRecipeCopyNbtRules(NamespacedKey key) {
-        if (!recipeCopyNbtRules.containsKey(key)) {
+    public Optional<CopyComponentsRules> getRecipeCopyNbtRules(NamespacedKey recipeKey) {
+        if (!recipeCopyNbtRules.containsKey(recipeKey)) {
             return Optional.empty();
         }
-        return Optional.ofNullable(recipeCopyNbtRules.get(key));
+        return Optional.ofNullable(recipeCopyNbtRules.get(recipeKey));
     }
 
     public void resetRecipeCopyNbtRules() {
