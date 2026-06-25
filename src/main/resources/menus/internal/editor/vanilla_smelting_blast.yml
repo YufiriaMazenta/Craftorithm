@@ -20,3 +20,27 @@ time_icon:
   name: '&a熔炼时间: &e<time> &7(tick)'
   lore:
     - '&7点击输入熔炼时间'
+back_icon:
+  material: minecraft:red_stained_glass_pane
+  name: '&c&l返回'
+  lore:
+    - '&7点击返回配方列表'
+category_icon:
+  food:
+    material: minecraft:cooked_beef
+    name: '&a配方书分类: &e食物'
+    lore:
+      - ''
+      - '&7点击切换分类'
+  blocks:
+    material: minecraft:stone
+    name: '&a配方书分类: &e方块'
+    lore:
+      - ''
+      - '&7点击切换分类'
+  misc:
+    material: minecraft:stick
+    name: '&a配方书分类: &e杂项'
+    lore:
+      - ''
+      - '&7点击切换分类'

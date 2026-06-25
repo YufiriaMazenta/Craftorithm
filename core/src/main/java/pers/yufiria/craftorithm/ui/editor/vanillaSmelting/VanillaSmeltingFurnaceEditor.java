@@ -18,4 +18,8 @@ public final class VanillaSmeltingFurnaceEditor extends BaseSmeltingEditor {
     @Override protected ConfigSectionConfig confirmIconConfig() { return VanillaSmeltingFurnaceEditorConfig.CONFIRM_ICON; }
     @Override protected ConfigSectionConfig expIconConfig() { return VanillaSmeltingFurnaceEditorConfig.EXP_ICON; }
     @Override protected ConfigSectionConfig timeIconConfig() { return VanillaSmeltingFurnaceEditorConfig.TIME_ICON; }
+    @Override protected ConfigSectionConfig getBackIconConfig() { return VanillaSmeltingFurnaceEditorConfig.BACK_ICON; }
+    @Override protected ConfigSectionConfig categoryIconFoodConfig() { return VanillaSmeltingFurnaceEditorConfig.CATEGORY_ICON_FOOD; }
+    @Override protected ConfigSectionConfig categoryIconBlocksConfig() { return VanillaSmeltingFurnaceEditorConfig.CATEGORY_ICON_BLOCKS; }
+    @Override protected ConfigSectionConfig categoryIconMiscConfig() { return VanillaSmeltingFurnaceEditorConfig.CATEGORY_ICON_MISC; }
 }

@@ -47,7 +47,7 @@ public final class VanillaStonecuttingEditor extends RecipeEditorMenu {
         this.display = new MenuDisplay(
             VanillaStonecuttingEditorConfig.TITLE.value(),
             new MenuLayout(Arrays.asList(
-                "#########",
+                "B########",
                 "#####FFF#",
                 "##I#AFRF#",
                 "#####FFF#",
@@ -58,6 +58,7 @@ public final class VanillaStonecuttingEditor extends RecipeEditorMenu {
                 layoutMap.put('#', this::getFrameIcon);
                 layoutMap.put('F', this::getResultFrameIcon);
                 layoutMap.put('A', this::getConfirmIcon);
+                layoutMap.put('B', this::getBackIcon);
                 return layoutMap;
             })
         );
@@ -77,6 +78,10 @@ public final class VanillaStonecuttingEditor extends RecipeEditorMenu {
 
     private Icon getResultFrameIcon() {
         return CreatorIconParser.INSTANCE.parse(VanillaStonecuttingEditorConfig.RESULT_FRAME_ICON.value()).get();
+    }
+
+    private Icon getBackIcon() {
+        return createBackIcon(VanillaStonecuttingEditorConfig.BACK_ICON.value());
     }
 
     private Icon getConfirmIcon() {
@@ -105,7 +110,9 @@ public final class VanillaStonecuttingEditor extends RecipeEditorMenu {
                     configWrapper.set("type", SimpleRecipeTypes.VANILLA_STONECUTTING.typeKey());
                     if (ingredientId != null) configWrapper.set("ingredient", ingredientId);
                     configWrapper.set("result", resultId.toString());
-                    saveRecipeConfig(configWrapper);
+                    saveRecipeEdit(configWrapper, () -> {
+                        LangUtils.sendLang(event.getWhoClicked(), Languages.COMMAND_EDIT_SUCCESS, Map.of("<recipe_name>", recipeId));
+                    });
                 }
 
                 event.getWhoClicked().closeInventory();

@@ -51,7 +51,7 @@ public class ScriptVM {
 
         while (pc < instructions.size() && !returned) {
             if (++executedCount > maxInstructions) {
-                throw new ScriptException("Script execution exceeded maximum instruction limit (" + maxInstructions + "): " + script.name());
+                throw new ScriptException("Script execution exceeded maximum instruction limit (" + maxInstructions + "): " + script.sourceName());
             }
 
             Instruction inst = instructions.get(pc);
@@ -106,14 +106,14 @@ public class ScriptVM {
 
     private ScriptValue popStack(String opName) {
         if (stack.isEmpty()) {
-            throw new ScriptException("Stack underflow at operation " + opName + " (line " + (pc > 0 ? pc - 1 : 0) + ") in script: " + script.name());
+            throw new ScriptException("Stack underflow at operation " + opName + " (line " + (pc > 0 ? pc - 1 : 0) + ") in script: " + script.sourceName());
         }
         return stack.pop();
     }
 
     private ScriptValue peekStack(String opName) {
         if (stack.isEmpty()) {
-            throw new ScriptException("Stack underflow at operation " + opName + " (line " + (pc > 0 ? pc - 1 : 0) + ") in script: " + script.name());
+            throw new ScriptException("Stack underflow at operation " + opName + " (line " + (pc > 0 ? pc - 1 : 0) + ") in script: " + script.sourceName());
         }
         return stack.peek();
     }

@@ -37,7 +37,7 @@ command:
     unsupported_recipe_type: '<prefix> &cНеподдерживаемый тип рецепта.'
     unsupported_recipe_name: '<prefix> &cНеподдерживаемое имя рецепта. Допустимы только строчные буквы, цифры, "_", "-" и ".".'
     name_used: '<prefix> &cИдентификатор рецепта уже используется.'
-    success: '<prefix> Рецепт <recipe_type> <recipe_name> успешно создан.'
+    success: '<prefix> <recipe_type> <recipe_name> успешно создан.'
     input_hint:
       smelting_time: '&aВведите время плавки для этого рецепта (cancel для отмены)'
       smelting_exp: '&aВведите количество опыта за плавку (cancel для отмены)'
@@ -51,6 +51,7 @@ command:
   edit:
     invalid_recipe_id: '<prefix> &cНедопустимый идентификатор рецепта.'
     recipe_not_found: '<prefix> &cРецепт не найден.'
+    success: '<prefix> &aРецепт <recipe_name> успешно изменён.'
 recipe_type_name:
   vanilla_shaped: Формованный рецепт
   vanilla_shapeless: Беспорядочный рецепт

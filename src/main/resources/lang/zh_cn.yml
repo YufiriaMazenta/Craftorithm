@@ -38,7 +38,7 @@ command:
     unsupported_recipe_type: '<prefix> &c不支持的配方类型'
     unsupported_recipe_name: '<prefix> &c不支持的配方名字，只允许使用小写英文字母、数字、"_"、"-"和"."。'
     name_used: '<prefix> &c配方ID已经被使用'
-    success: '<prefix> <recipe_type> 配方 <recipe_name> 创建成功'
+    success: '<prefix> <recipe_type> <recipe_name> 创建成功'
     input_hint:
       smelting_time: '&a请输入此配方的烧炼时间(输入cancel取消)'
       smelting_exp: '&a请输入此配方烧炼完成的奖励经验(输入cancel取消)'
@@ -52,6 +52,7 @@ command:
   edit:
     invalid_recipe_id: '<prefix> &c无效的配方ID'
     recipe_not_found: '<prefix> &c找不到该配方'
+    success: '<prefix> &a配方 <recipe_name> 编辑成功'
 recipe_type_name:
   vanilla_shaped: 有序配方
   vanilla_shapeless: 无序配方

@@ -18,4 +18,8 @@ public final class VanillaSmeltingCampfireEditor extends BaseSmeltingEditor {
     @Override protected ConfigSectionConfig confirmIconConfig() { return VanillaSmeltingCampfireEditorConfig.CONFIRM_ICON; }
     @Override protected ConfigSectionConfig expIconConfig() { return VanillaSmeltingCampfireEditorConfig.EXP_ICON; }
     @Override protected ConfigSectionConfig timeIconConfig() { return VanillaSmeltingCampfireEditorConfig.TIME_ICON; }
+    @Override protected ConfigSectionConfig getBackIconConfig() { return VanillaSmeltingCampfireEditorConfig.BACK_ICON; }
+    @Override protected ConfigSectionConfig categoryIconFoodConfig() { return VanillaSmeltingCampfireEditorConfig.CATEGORY_ICON_FOOD; }
+    @Override protected ConfigSectionConfig categoryIconBlocksConfig() { return VanillaSmeltingCampfireEditorConfig.CATEGORY_ICON_BLOCKS; }
+    @Override protected ConfigSectionConfig categoryIconMiscConfig() { return VanillaSmeltingCampfireEditorConfig.CATEGORY_ICON_MISC; }
 }

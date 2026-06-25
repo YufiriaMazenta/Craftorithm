@@ -61,7 +61,7 @@ public final class AnvilEditor extends RecipeEditorMenu {
         this.display = new MenuDisplay(
             AnvilEditorConfig.TITLE.value(),
             new MenuLayout(Arrays.asList(
-                "#########",
+                "X########",
                 "#B#A###R#",
                 "##L###C##",
                 "#########"
@@ -70,6 +70,7 @@ public final class AnvilEditor extends RecipeEditorMenu {
                 layoutMap.put('#', this::getFrameIcon);
                 layoutMap.put('C', this::getConfirmIcon);
                 layoutMap.put('L', this::getCostLevelIcon);
+                layoutMap.put('X', this::getBackIcon);
                 return layoutMap;
             })
         );
@@ -90,6 +91,10 @@ public final class AnvilEditor extends RecipeEditorMenu {
 
     private Icon getFrameIcon() {
         return CreatorIconParser.INSTANCE.parse(AnvilEditorConfig.FRAME_ICON.value()).get();
+    }
+
+    private Icon getBackIcon() {
+        return createBackIcon(AnvilEditorConfig.BACK_ICON.value());
     }
 
     private Icon getCostLevelIcon() {
@@ -165,7 +170,9 @@ public final class AnvilEditor extends RecipeEditorMenu {
                     if (baseId != null) configWrapper.set("base", baseId);
                     if (additionId != null) configWrapper.set("addition", additionId);
                     configWrapper.set("cost_level", costLevel);
-                    saveRecipeConfig(configWrapper);
+                    saveRecipeEdit(configWrapper, () -> {
+                        LangUtils.sendLang(event.getWhoClicked(), Languages.COMMAND_EDIT_SUCCESS, Map.of("<recipe_name>", recipeId));
+                    });
                 }
 
                 event.getWhoClicked().closeInventory();

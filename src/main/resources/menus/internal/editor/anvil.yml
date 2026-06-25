@@ -12,3 +12,8 @@ cost_level_icon:
   name: '&a所需经验等级: &e<level>'
   lore:
     - '&7点击输入所需经验等级'
+back_icon:
+  material: minecraft:red_stained_glass_pane
+  name: '&c&l返回'
+  lore:
+    - '&7点击返回配方列表'

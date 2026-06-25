@@ -47,7 +47,7 @@ public class VanillaShapelessCreator extends RecipeCreator {
                 "#123#***#",
                 "#456A* *#",
                 "#789#***#",
-                "####C####"
+                "#########"
             ), () -> {
                 Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);

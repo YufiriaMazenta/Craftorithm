@@ -1,23 +1,46 @@
 title: <translate:lang:recipe_type_name.vanilla_shaped><translate:lang:menu.recipe_creator.name>
 frame_icon:
-  material: minecraft:green_stained_glass_pane
-  name: '&a<translate:lang:recipe_type_name.vanilla_shaped>'
+  material: minecraft:cyan_stained_glass_pane
+  name: '&b<translate:lang:recipe_type_name.vanilla_shaped>'
+  lore:
+    - ''
+    - '&7将材料放入左侧 3x3 网格'
+    - '&7将结果物品放入右侧'
+    - '&7点击下方按钮确认创建'
 result_frame_icon:
   material: minecraft:lime_stained_glass_pane
-  name: '&a<translate:lang:menu.recipe_creator.result_frame_icon_name>'
+  name: '&a结果物品'
+  lore:
+    - ''
+    - '&7将合成结果物品放在这里'
 confirm_icon:
   material: minecraft:crafting_table
-  name: '&a<translate:lang:menu.recipe_creator.confirm_icon_name>'
+  name: '&a&l确认创建'
+  lore:
+    - ''
+    - '&7点击创建有序合成配方'
 category_icon:
   misc:
     material: minecraft:apple
-    name: '&a配方类型:物品'
+    name: '&a配方类型: &e物品'
+    lore:
+      - ''
+      - '&7点击切换分类'
   building:
     material: minecraft:bricks
-    name: '&a配方类型:建筑方块'
+    name: '&a配方类型: &e建筑方块'
+    lore:
+      - ''
+      - '&7点击切换分类'
   redstone:
     material: minecraft:redstone
-    name: '&a配方类型:红石物品'
+    name: '&a配方类型: &e红石物品'
+    lore:
+      - ''
+      - '&7点击切换分类'
   equipment:
     material: minecraft:iron_axe
-    name: '&a配方类型:工具'
+    name: '&a配方类型: &e工具'
+    lore:
+      - ''
+      - '&7点击切换分类'

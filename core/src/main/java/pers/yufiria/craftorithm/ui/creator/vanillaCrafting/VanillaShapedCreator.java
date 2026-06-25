@@ -47,7 +47,7 @@ public final class VanillaShapedCreator extends RecipeCreator {
                 "#123#***#",
                 "#456A* *#",
                 "#789#***#",
-                "####C####"
+                "#########"
             ), () -> {
                 Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
@@ -212,12 +212,12 @@ public final class VanillaShapedCreator extends RecipeCreator {
      */
     private void removeEmptyRow(List<String> shape) {
         // 移除开头的空行
-        while (!shape.isEmpty() && shape.get(0).trim().isEmpty()) {
-            shape.remove(0);
+        while (!shape.isEmpty() && shape.getFirst().trim().isEmpty()) {
+            shape.removeFirst();
         }
         // 移除结尾的空行
-        while (!shape.isEmpty() && shape.get(shape.size() - 1).trim().isEmpty()) {
-            shape.remove(shape.size() - 1);
+        while (!shape.isEmpty() && shape.getLast().trim().isEmpty()) {
+            shape.removeLast();
         }
     }
 

@@ -10,3 +10,8 @@ confirm_icon:
   name: '&a&l确认编辑'
   lore:
     - '&7点击保存配方修改'
+back_icon:
+  material: minecraft:red_stained_glass_pane
+  name: '&c&l返回'
+  lore:
+    - '&7点击返回配方列表'

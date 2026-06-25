@@ -20,6 +20,7 @@ import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.ui.creator.CreatorIconParser;
+import pers.yufiria.craftorithm.ui.creator.vanillaCrafting.RecipeBookCategoryIcon;
 import pers.yufiria.craftorithm.ui.editor.RecipeEditorMenu;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
 import pers.yufiria.craftorithm.util.LangUtils;
@@ -42,14 +43,21 @@ public final class VanillaShapedEditor extends RecipeEditorMenu {
     private static final int RESULT_SLOT = 24;
 
     private final ShapedRecipe shapedRecipe;
+    private final RecipeBookCategoryIcon categoryIcon;
 
     public VanillaShapedEditor(@NotNull Player player, @NotNull NamespacedKey recipeKey, @NotNull ShapedRecipe recipe) {
         super(player, recipeKey, recipeKey.toString());
         this.shapedRecipe = recipe;
+        this.categoryIcon = new RecipeBookCategoryIcon(
+            VanillaShapedEditorConfig.CATEGORY_ICON_MISC,
+            VanillaShapedEditorConfig.CATEGORY_ICON_BUILDING,
+            VanillaShapedEditorConfig.CATEGORY_ICON_REDSTONE,
+            VanillaShapedEditorConfig.CATEGORY_ICON_EQUIPMENT
+        );
         this.display = new MenuDisplay(
             VanillaShapedEditorConfig.TITLE.value(),
             new MenuLayout(Arrays.asList(
-                "#########",
+                "B########",
                 "#123#***#",
                 "#456A* *#",
                 "#789#***#",
@@ -59,6 +67,8 @@ public final class VanillaShapedEditor extends RecipeEditorMenu {
                 layoutMap.put('#', this::getFrameIcon);
                 layoutMap.put('*', this::getResultFrameIcon);
                 layoutMap.put('A', this::getConfirmIcon);
+                layoutMap.put('B', this::getBackIcon);
+                layoutMap.put('C', () -> categoryIcon);
                 return layoutMap;
             })
         );
@@ -86,6 +96,8 @@ public final class VanillaShapedEditor extends RecipeEditorMenu {
 
         ItemStack result = shapedRecipe.getResult();
         inventory.setItem(RESULT_SLOT, result.clone());
+
+        categoryIcon.setCategory(shapedRecipe.getCategory());
     }
 
     private Icon getFrameIcon() {
@@ -94,6 +106,10 @@ public final class VanillaShapedEditor extends RecipeEditorMenu {
 
     private Icon getResultFrameIcon() {
         return CreatorIconParser.INSTANCE.parse(VanillaShapedEditorConfig.RESULT_FRAME_ICON.value()).get();
+    }
+
+    private Icon getBackIcon() {
+        return createBackIcon(VanillaShapedEditorConfig.BACK_ICON.value());
     }
 
     private Icon getConfirmIcon() {
@@ -155,7 +171,8 @@ public final class VanillaShapedEditor extends RecipeEditorMenu {
                 for (int row = 0; row < 3; row++) {
                     shape.add(new String(shapeChars, row * 3, 3));
                 }
-                shape.removeIf(s -> s.trim().isEmpty());
+
+                removeEmptyRow(shape);
                 removeEmptyColumn(shape);
 
                 if (shape.isEmpty()) {
@@ -176,7 +193,10 @@ public final class VanillaShapedEditor extends RecipeEditorMenu {
                     configWrapper.set("result", resultId.toString());
                     configWrapper.set("shape", shape);
                     configWrapper.set("ingredients", ingredientIdMap);
-                    saveRecipeConfig(configWrapper);
+                    configWrapper.set("recipe_book_category", categoryIcon.category().name().toLowerCase());
+                    saveRecipeEdit(configWrapper, () -> {
+                        LangUtils.sendLang(event.getWhoClicked(), Languages.COMMAND_EDIT_SUCCESS, Map.of("<recipe_name>", recipeId));
+                    });
                 }
 
                 event.getWhoClicked().closeInventory();
@@ -185,29 +205,52 @@ public final class VanillaShapedEditor extends RecipeEditorMenu {
         };
     }
 
-    private void removeEmptyColumn(List<String> shape) {
-        if (shape.isEmpty()) return;
-        int maxLen = shape.stream().mapToInt(String::length).max().orElse(0);
-        if (maxLen == 0) return;
-
-        boolean[] emptyCol = new boolean[maxLen];
-        for (int col = 0; col < maxLen; col++) {
-            final int c = col;
-            emptyCol[col] = shape.stream().allMatch(s -> c >= s.length() || s.charAt(c) == ' ');
+    /**
+     * 移除配方形状中首尾的全空白行（保留中间的空行）
+     */
+    private void removeEmptyRow(List<String> shape) {
+        // 移除开头的空行
+        while (!shape.isEmpty() && shape.getFirst().trim().isEmpty()) {
+            shape.removeFirst();
         }
+        // 移除结尾的空行
+        while (!shape.isEmpty() && shape.getLast().trim().isEmpty()) {
+            shape.removeLast();
+        }
+    }
 
-        List<String> newShape = new ArrayList<>();
-        for (String row : shape) {
-            StringBuilder newRow = new StringBuilder();
-            for (int col = 0; col < maxLen; col++) {
-                if (!emptyCol[col] && col < row.length()) {
-                    newRow.append(row.charAt(col));
+    /**
+     * 移除配方形状中首尾的全空白列（保留中间的空列）
+     */
+    private void removeEmptyColumn(List<String> shape) {
+        boolean[] empty = new boolean[3];
+        for (int i = 0; i < 3; i++) {
+            int finalI = i;
+            empty[i] = shape.stream().allMatch(s -> finalI >= s.length() || s.charAt(finalI) == ' ');
+        }
+        if (empty[0]) {
+            if (empty[1]) {
+                if (!empty[2]) {
+                    shape.replaceAll(s -> s.length() > 2 ? s.substring(2) : "");
+                }
+            } else {
+                if (empty[2]) {
+                    shape.replaceAll(s -> s.length() >= 2 ? s.substring(1, 2) : "");
+                } else {
+                    shape.replaceAll(s -> s.length() >= 2 ? s.substring(1) : "");
                 }
             }
-            newShape.add(newRow.toString());
+        } else {
+            if (empty[1]) {
+                if (empty[2]) {
+                    shape.replaceAll(s -> s.substring(0, 1));
+                }
+            } else {
+                if (empty[2]) {
+                    shape.replaceAll(s -> s.substring(0, Math.min(2, s.length())));
+                }
+            }
         }
-        shape.clear();
-        shape.addAll(newShape);
     }
 
 }

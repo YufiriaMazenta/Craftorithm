@@ -37,7 +37,7 @@ command:
     unsupported_recipe_type: '<prefix> &cType de recette non pris en charge.'
     unsupported_recipe_name: '<prefix> &cNom de recette non pris en charge. Seules les lettres minuscules, les chiffres, "_", "-" et "." sont autorisés.'
     name_used: '<prefix> &cL''identifiant de la recette est déjà utilisé.'
-    success: '<prefix> Recette <recipe_type> <recipe_name> créée avec succès.'
+    success: '<prefix> <recipe_type> <recipe_name> créée avec succès.'
     input_hint:
       smelting_time: '&aVeuillez entrer le temps de cuisson pour cette recette (tapez cancel pour annuler)'
       smelting_exp: '&aVeuillez entrer l''expérience de récompense pour cette recette (tapez cancel pour annuler)'
@@ -51,6 +51,7 @@ command:
   edit:
     invalid_recipe_id: '<prefix> &cIdentifiant de recette invalide.'
     recipe_not_found: '<prefix> &cRecette introuvable.'
+    success: '<prefix> &aRecette <recipe_name> modifiée avec succès.'
 recipe_type_name:
   vanilla_shaped: Recette avec forme
   vanilla_shapeless: Recette sans forme

@@ -18,4 +18,8 @@ public final class VanillaSmeltingSmokerEditor extends BaseSmeltingEditor {
     @Override protected ConfigSectionConfig confirmIconConfig() { return VanillaSmeltingSmokerEditorConfig.CONFIRM_ICON; }
     @Override protected ConfigSectionConfig expIconConfig() { return VanillaSmeltingSmokerEditorConfig.EXP_ICON; }
     @Override protected ConfigSectionConfig timeIconConfig() { return VanillaSmeltingSmokerEditorConfig.TIME_ICON; }
+    @Override protected ConfigSectionConfig getBackIconConfig() { return VanillaSmeltingSmokerEditorConfig.BACK_ICON; }
+    @Override protected ConfigSectionConfig categoryIconFoodConfig() { return VanillaSmeltingSmokerEditorConfig.CATEGORY_ICON_FOOD; }
+    @Override protected ConfigSectionConfig categoryIconBlocksConfig() { return VanillaSmeltingSmokerEditorConfig.CATEGORY_ICON_BLOCKS; }
+    @Override protected ConfigSectionConfig categoryIconMiscConfig() { return VanillaSmeltingSmokerEditorConfig.CATEGORY_ICON_MISC; }
 }

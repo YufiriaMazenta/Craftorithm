@@ -10,4 +10,5 @@ public class VanillaStonecuttingEditorConfig {
     public static final ConfigSectionConfig FRAME_ICON = new ConfigSectionConfig("frame_icon");
     public static final ConfigSectionConfig RESULT_FRAME_ICON = new ConfigSectionConfig("result_frame_icon");
     public static final ConfigSectionConfig CONFIRM_ICON = new ConfigSectionConfig("confirm_icon");
+    public static final ConfigSectionConfig BACK_ICON = new ConfigSectionConfig("back_icon");
 }

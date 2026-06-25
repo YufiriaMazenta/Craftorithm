@@ -43,6 +43,7 @@ public class Languages {
     public static final StringLangEntry COMMAND_SCRIPT_OPERATION_TIME = new StringLangEntry("command.script.operation_time");
     public static final StringLangEntry COMMAND_EDIT_INVALID_RECIPE_ID = new StringLangEntry("command.edit.invalid_recipe_id");
     public static final StringLangEntry COMMAND_EDIT_RECIPE_NOT_FOUND = new StringLangEntry("command.edit.recipe_not_found");
+    public static final StringLangEntry COMMAND_EDIT_SUCCESS = new StringLangEntry("command.edit.success");
 
     public static final StringLangEntry LOAD_FINISH = new StringLangEntry("load_finish");
     public static final StringLangEntry RECIPE_LOAD_EXCEPTION = new StringLangEntry("recipe_load_exception");

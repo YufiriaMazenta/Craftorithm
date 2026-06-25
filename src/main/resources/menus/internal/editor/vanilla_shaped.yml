@@ -10,3 +10,33 @@ confirm_icon:
   name: '&a&l确认编辑'
   lore:
     - '&7点击保存配方修改'
+back_icon:
+  material: minecraft:red_stained_glass_pane
+  name: '&c&l返回'
+  lore:
+    - '&7点击返回配方列表'
+category_icon:
+  misc:
+    material: minecraft:apple
+    name: '&a配方类型: &e物品'
+    lore:
+      - ''
+      - '&7点击切换分类'
+  building:
+    material: minecraft:bricks
+    name: '&a配方类型: &e建筑方块'
+    lore:
+      - ''
+      - '&7点击切换分类'
+  redstone:
+    material: minecraft:redstone
+    name: '&a配方类型: &e红石物品'
+    lore:
+      - ''
+      - '&7点击切换分类'
+  equipment:
+    material: minecraft:iron_axe
+    name: '&a配方类型: &e工具'
+    lore:
+      - ''
+      - '&7点击切换分类'

@@ -10,4 +10,5 @@ public class AnvilEditorConfig {
     public static final ConfigSectionConfig FRAME_ICON = new ConfigSectionConfig("frame_icon");
     public static final ConfigSectionConfig CONFIRM_ICON = new ConfigSectionConfig("confirm_icon");
     public static final ConfigSectionConfig COST_LEVEL_ICON = new ConfigSectionConfig("cost_level_icon");
+    public static final ConfigSectionConfig BACK_ICON = new ConfigSectionConfig("back_icon");
 }

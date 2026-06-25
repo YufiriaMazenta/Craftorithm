@@ -37,7 +37,7 @@ command:
     unsupported_recipe_type: '<prefix> &c唔支援嘅配方類型。'
     unsupported_recipe_name: '<prefix> &c唔支援嘅配方名稱，只允許使用小寫英文字母、數字、"_"、"-"同"."。'
     name_used: '<prefix> &c配方ID已被使用。'
-    success: '<prefix> <recipe_type> 配方 <recipe_name> 建立成功。'
+    success: '<prefix> <recipe_type> <recipe_name> 建立成功。'
     input_hint:
       smelting_time: '&a請輸入呢個配方嘅燒煉時間（輸入 cancel 取消）'
       smelting_exp: '&a請輸入呢個配方燒煉完成嘅獎勵經驗（輸入 cancel 取消）'
@@ -51,6 +51,7 @@ command:
   edit:
     invalid_recipe_id: '<prefix> &c無效嘅配方ID。'
     recipe_not_found: '<prefix> &c搵唔到該配方。'
+    success: '<prefix> &a配方 <recipe_name> 編輯成功。'
 recipe_type_name:
   vanilla_shaped: 有序配方
   vanilla_shapeless: 無序配方

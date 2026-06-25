@@ -1,5 +1,7 @@
 package pers.yufiria.craftorithm.ui.editor;
 
+import crypticlib.CrypticLib;
+import crypticlib.CrypticLibBukkit;
 import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.lang.LangManager;
@@ -8,8 +10,8 @@ import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.menu.Menu;
 import crypticlib.ui.menu.StoredMenu;
 import crypticlib.util.ItemHelper;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -20,9 +22,8 @@ import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.ui.BackableMenu;
+import pers.yufiria.craftorithm.ui.creator.CreatorIconParser;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
-
-import java.util.List;
 
 /**
  * 配方编辑器基类
@@ -81,12 +82,12 @@ public abstract class RecipeEditorMenu extends StoredMenu implements BackableMen
     protected abstract void fillRecipeData(Inventory inventory);
 
     /**
-     * 获取返回按钮图标（红色玻璃板）
+     * 创建返回按钮图标，从配置中读取外观
+     * 子类调用此方法并传入自己的配置来创建返回按钮
+     * @param config 返回按钮的配置节
      */
-    protected Icon getBackIcon() {
-        IconDisplay iconDisplay = new IconDisplay(
-            Material.RED_STAINED_GLASS_PANE
-        );
+    protected Icon createBackIcon(ConfigurationSection config) {
+        IconDisplay iconDisplay = CreatorIconParser.INSTANCE.parseIconDisplay(config);
         return new TranslatableIcon(iconDisplay) {
             @Override
             public Icon onClick(InventoryClickEvent event) {
@@ -130,13 +131,20 @@ public abstract class RecipeEditorMenu extends StoredMenu implements BackableMen
 
     /**
      * 保存配方配置到文件并重新加载
+     * @param configWrapper 配方配置
+     * @param callback 配方加载完成后的回调
      */
-    protected void saveRecipeConfig(BukkitConfigWrapper configWrapper) {
+    protected void saveRecipeEdit(BukkitConfigWrapper configWrapper, Runnable callback) {
         configWrapper.saveConfig();
         configWrapper.reloadConfig();
         String recipeId = recipeKey.getKey();
         RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeId, false, false);
-        RecipeManager.INSTANCE.loadRecipeFromConfig(recipeId, configWrapper, true);
+        CrypticLibBukkit.scheduler().syncLater(() -> {
+            RecipeManager.INSTANCE.loadRecipeFromConfig(recipeId, configWrapper, true);
+            if (callback != null) {
+                callback.run();
+            }
+        }, 2L);
     }
 
     /**

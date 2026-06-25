@@ -37,7 +37,7 @@ command:
     unsupported_recipe_type: '<prefix> &cDesteklenmeyen tarif tipi.'
     unsupported_recipe_name: '<prefix> &cDesteklenmeyen tarif adı. Yalnızca küçük harfler, rakamlar, "_", "-" ve "." kullanılabilir.'
     name_used: '<prefix> &cTarif kimliği zaten kullanılmış.'
-    success: '<prefix> <recipe_type> tarifi <recipe_name> başarıyla oluşturuldu.'
+    success: '<prefix> <recipe_type> <recipe_name> başarıyla oluşturuldu.'
     input_hint:
       smelting_time: '&aBu tarif için eritme süresini girin (iptal etmek için cancel yazın)'
       smelting_exp: '&aBu tarif için deneyim ödülünü girin (iptal etmek için cancel yazın)'
@@ -51,6 +51,7 @@ command:
   edit:
     invalid_recipe_id: '<prefix> &cGeçersiz tarif kimliği.'
     recipe_not_found: '<prefix> &cTarif bulunamadı.'
+    success: '<prefix> &aTarif <recipe_name> başarıyla düzenlendi.'
 recipe_type_name:
   vanilla_shaped: Şekilli tarif
   vanilla_shapeless: Şekilsiz tarif

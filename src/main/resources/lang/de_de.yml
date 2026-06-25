@@ -37,7 +37,7 @@ command:
     unsupported_recipe_type: '<prefix> &cNicht unterstützter Rezepttyp.'
     unsupported_recipe_name: '<prefix> &cNicht unterstützter Rezeptname. Es sind nur Kleinbuchstaben, Ziffern, "_", "-" und "." erlaubt.'
     name_used: '<prefix> &cRezept-ID wird bereits verwendet.'
-    success: '<prefix> <recipe_type>-Rezept <recipe_name> erfolgreich erstellt.'
+    success: '<prefix> <recipe_type> <recipe_name> erfolgreich erstellt.'
     input_hint:
       smelting_time: '&aBitte gib die Schmelzzeit für dieses Rezept ein (cancel zum Abbrechen)'
       smelting_exp: '&aBitte gib die Erfahrungsbelohnung für dieses Rezept ein (cancel zum Abbrechen)'
@@ -51,6 +51,7 @@ command:
   edit:
     invalid_recipe_id: '<prefix> &cUngültige Rezept-ID.'
     recipe_not_found: '<prefix> &cRezept nicht gefunden.'
+    success: '<prefix> &aRezept <recipe_name> erfolgreich bearbeitet.'
 recipe_type_name:
   vanilla_shaped: Geformtes Rezept
   vanilla_shapeless: Formloses Rezept

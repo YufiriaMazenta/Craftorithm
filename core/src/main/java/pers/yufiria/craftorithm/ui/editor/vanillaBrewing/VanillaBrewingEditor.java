@@ -60,7 +60,7 @@ public final class VanillaBrewingEditor extends RecipeEditorMenu {
         this.display = new MenuDisplay(
             VanillaBrewingEditorConfig.TITLE.value(),
             new MenuLayout(Arrays.asList(
-                "#########",
+                "B########",
                 "##I##FFF#",
                 "####AFRF#",
                 "##G##FFF#",
@@ -70,6 +70,7 @@ public final class VanillaBrewingEditor extends RecipeEditorMenu {
                 layoutMap.put('#', this::getFrameIcon);
                 layoutMap.put('A', this::getConfirmIcon);
                 layoutMap.put('F', this::getResultFrameIcon);
+                layoutMap.put('B', this::getBackIcon);
                 return layoutMap;
             })
         );
@@ -94,6 +95,10 @@ public final class VanillaBrewingEditor extends RecipeEditorMenu {
 
     private Icon getResultFrameIcon() {
         return CreatorIconParser.INSTANCE.parse(VanillaBrewingEditorConfig.RESULT_FRAME_ICON.value()).get();
+    }
+
+    private Icon getBackIcon() {
+        return createBackIcon(VanillaBrewingEditorConfig.BACK_ICON.value());
     }
 
     private Icon getConfirmIcon() {
@@ -138,7 +143,9 @@ public final class VanillaBrewingEditor extends RecipeEditorMenu {
                     configWrapper.set("result", resultId.toString());
                     if (inputId != null) configWrapper.set("input", inputId);
                     if (ingredientId != null) configWrapper.set("ingredient", ingredientId);
-                    saveRecipeConfig(configWrapper);
+                    saveRecipeEdit(configWrapper, () -> {
+                        LangUtils.sendLang(event.getWhoClicked(), Languages.COMMAND_EDIT_SUCCESS, Map.of("<recipe_name>", recipeId));
+                    });
                 }
 
                 event.getWhoClicked().closeInventory();

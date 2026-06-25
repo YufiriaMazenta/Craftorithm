@@ -105,4 +105,8 @@ public class RecipeBookCategoryIcon extends TranslatableIcon {
         return category;
     }
 
+    public void setCategory(CraftingBookCategory category) {
+        this.category = category;
+    }
+
 }

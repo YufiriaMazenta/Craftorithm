@@ -37,7 +37,7 @@ command:
     unsupported_recipe_type: '<prefix> &cUnsupported recipe type.'
     unsupported_recipe_name: '<prefix> &cUnsupported recipe name, only lowercase letters, numbers, "_", "-", and "." are allowed.'
     name_used: '<prefix> &cRecipe ID has already been used.'
-    success: '<prefix> <recipe_type> recipe <recipe_name> created successfully.'
+    success: '<prefix> <recipe_type> <recipe_name> created successfully.'
     input_hint:
       smelting_time: '&aPlease enter the smelting time for this recipe (type cancel to cancel)'
       smelting_exp: '&aPlease enter the reward experience for this recipe (type cancel to cancel)'
@@ -51,6 +51,7 @@ command:
   edit:
     invalid_recipe_id: '<prefix> &cInvalid recipe ID.'
     recipe_not_found: '<prefix> &cRecipe not found.'
+    success: '<prefix> &aRecipe <recipe_name> edited successfully.'
 recipe_type_name:
   vanilla_shaped: Shaped Recipe
   vanilla_shapeless: Shapeless Recipe

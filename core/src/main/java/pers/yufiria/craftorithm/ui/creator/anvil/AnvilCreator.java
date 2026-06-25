@@ -39,9 +39,9 @@ import java.util.function.Supplier;
 
 public class AnvilCreator extends RecipeCreator {
 
-    private static final int BASE_SLOT = 10;
-    private static final int ADDITION_SLOT = 12;
-    private static final int RESULT_SLOT = 16;
+    private static final int BASE_SLOT = 11;
+    private static final int ADDITION_SLOT = 13;
+    private static final int RESULT_SLOT = 15;
 
     private int costLevel;
 
@@ -52,9 +52,10 @@ public class AnvilCreator extends RecipeCreator {
             AnvilCreatorConfig.TITLE.value(),
             new MenuLayout(Arrays.asList(
                 "#########",
-                "#B#A###R#",
-                "##L###C##",
-                "#########"
+                "##B#A#R##",
+                "#########",
+                "####C####",
+                "####L####"
             ), () -> {
                 Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);

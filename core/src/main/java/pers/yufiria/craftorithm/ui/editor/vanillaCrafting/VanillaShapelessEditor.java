@@ -20,6 +20,7 @@ import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.ui.creator.CreatorIconParser;
+import pers.yufiria.craftorithm.ui.creator.vanillaCrafting.RecipeBookCategoryIcon;
 import pers.yufiria.craftorithm.ui.editor.RecipeEditorMenu;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
 import pers.yufiria.craftorithm.util.LangUtils;
@@ -29,33 +30,41 @@ import java.util.function.Supplier;
 
 /**
  * 无序合成配方编辑器
- * 材料槽位: 10-17 (最多8个)
+ * 材料槽位: 10,11,12 / 19,20,21 / 28,29,30 (3x3网格)
  * 结果槽位: 24
  */
 public final class VanillaShapelessEditor extends RecipeEditorMenu {
 
-    private static final int[] INGREDIENT_SLOTS = {10, 11, 12, 13, 19, 20, 21, 22};
+    private static final int[] INGREDIENT_SLOTS = {10, 11, 12, 19, 20, 21, 28, 29, 30};
     private static final int RESULT_SLOT = 24;
 
     private final ShapelessRecipe shapelessRecipe;
+    private final RecipeBookCategoryIcon categoryIcon;
 
     public VanillaShapelessEditor(@NotNull Player player, @NotNull NamespacedKey recipeKey, @NotNull ShapelessRecipe recipe) {
         super(player, recipeKey, recipeKey.toString());
         this.shapelessRecipe = recipe;
+        this.categoryIcon = new RecipeBookCategoryIcon(
+            VanillaShapelessEditorConfig.CATEGORY_ICON_MISC,
+            VanillaShapelessEditorConfig.CATEGORY_ICON_BUILDING,
+            VanillaShapelessEditorConfig.CATEGORY_ICON_REDSTONE,
+            VanillaShapelessEditorConfig.CATEGORY_ICON_EQUIPMENT
+        );
         this.display = new MenuDisplay(
             VanillaShapelessEditorConfig.TITLE.value(),
             new MenuLayout(Arrays.asList(
-                "#########",
-                "#1234#***#",
-                "#5678A* *#",
-                "######***#",
-                "##########",
-                "####C#####"
+                "B########",
+                "#123#***#",
+                "#456A* *#",
+                "#789#***#",
+                "####C####"
             ), () -> {
                 Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
                 layoutMap.put('*', this::getResultFrameIcon);
                 layoutMap.put('A', this::getConfirmIcon);
+                layoutMap.put('B', this::getBackIcon);
+                layoutMap.put('C', () -> categoryIcon);
                 return layoutMap;
             })
         );
@@ -69,6 +78,8 @@ public final class VanillaShapelessEditor extends RecipeEditorMenu {
         }
         ItemStack result = shapelessRecipe.getResult();
         inventory.setItem(RESULT_SLOT, result.clone());
+
+        categoryIcon.setCategory(shapelessRecipe.getCategory());
     }
 
     private Icon getFrameIcon() {
@@ -77,6 +88,10 @@ public final class VanillaShapelessEditor extends RecipeEditorMenu {
 
     private Icon getResultFrameIcon() {
         return CreatorIconParser.INSTANCE.parse(VanillaShapelessEditorConfig.RESULT_FRAME_ICON.value()).get();
+    }
+
+    private Icon getBackIcon() {
+        return createBackIcon(VanillaShapelessEditorConfig.BACK_ICON.value());
     }
 
     private Icon getConfirmIcon() {
@@ -117,7 +132,10 @@ public final class VanillaShapelessEditor extends RecipeEditorMenu {
                     configWrapper.set("type", SimpleRecipeTypes.VANILLA_SHAPELESS.typeKey());
                     configWrapper.set("result", resultId.toString());
                     configWrapper.set("ingredients", ingredientIds);
-                    saveRecipeConfig(configWrapper);
+                    configWrapper.set("recipe_book_category", categoryIcon.category().name().toLowerCase());
+                    saveRecipeEdit(configWrapper, () -> {
+                        LangUtils.sendLang(event.getWhoClicked(), Languages.COMMAND_EDIT_SUCCESS, Map.of("<recipe_name>", recipeId));
+                    });
                 }
 
                 event.getWhoClicked().closeInventory();

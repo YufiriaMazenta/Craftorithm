@@ -50,7 +50,7 @@ public final class VanillaSmithingTransformEditor extends RecipeEditorMenu {
         this.display = new MenuDisplay(
             VanillaSmithingTransformEditorConfig.TITLE.value(),
             new MenuLayout(Arrays.asList(
-                "#########",
+                "X########",
                 "######FFF",
                 "#T#BCAFRF",
                 "######FFF",
@@ -60,6 +60,7 @@ public final class VanillaSmithingTransformEditor extends RecipeEditorMenu {
                 layoutMap.put('#', this::getFrameIcon);
                 layoutMap.put('F', this::getResultFrameIcon);
                 layoutMap.put('C', this::getConfirmIcon);
+                layoutMap.put('X', this::getBackIcon);
                 return layoutMap;
             })
         );
@@ -86,6 +87,10 @@ public final class VanillaSmithingTransformEditor extends RecipeEditorMenu {
 
     private Icon getResultFrameIcon() {
         return CreatorIconParser.INSTANCE.parse(VanillaSmithingTransformEditorConfig.RESULT_FRAME_ICON.value()).get();
+    }
+
+    private Icon getBackIcon() {
+        return createBackIcon(VanillaSmithingTransformEditorConfig.BACK_ICON.value());
     }
 
     private Icon getConfirmIcon() {
@@ -119,7 +124,9 @@ public final class VanillaSmithingTransformEditor extends RecipeEditorMenu {
                     if (templateId != null) configWrapper.set("template", templateId);
 
                     configWrapper.set("result", resultId.toString());
-                    saveRecipeConfig(configWrapper);
+                    saveRecipeEdit(configWrapper, () -> {
+                        LangUtils.sendLang(event.getWhoClicked(), Languages.COMMAND_EDIT_SUCCESS, Map.of("<recipe_name>", recipeId));
+                    });
                 }
 
                 event.getWhoClicked().closeInventory();

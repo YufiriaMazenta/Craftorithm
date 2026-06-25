@@ -18,4 +18,8 @@ public final class VanillaSmeltingBlastEditor extends BaseSmeltingEditor {
     @Override protected ConfigSectionConfig confirmIconConfig() { return VanillaSmeltingBlastEditorConfig.CONFIRM_ICON; }
     @Override protected ConfigSectionConfig expIconConfig() { return VanillaSmeltingBlastEditorConfig.EXP_ICON; }
     @Override protected ConfigSectionConfig timeIconConfig() { return VanillaSmeltingBlastEditorConfig.TIME_ICON; }
+    @Override protected ConfigSectionConfig getBackIconConfig() { return VanillaSmeltingBlastEditorConfig.BACK_ICON; }
+    @Override protected ConfigSectionConfig categoryIconFoodConfig() { return VanillaSmeltingBlastEditorConfig.CATEGORY_ICON_FOOD; }
+    @Override protected ConfigSectionConfig categoryIconBlocksConfig() { return VanillaSmeltingBlastEditorConfig.CATEGORY_ICON_BLOCKS; }
+    @Override protected ConfigSectionConfig categoryIconMiscConfig() { return VanillaSmeltingBlastEditorConfig.CATEGORY_ICON_MISC; }
 }

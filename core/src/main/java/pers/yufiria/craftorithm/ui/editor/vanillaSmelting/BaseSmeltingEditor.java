@@ -21,12 +21,14 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.CookingRecipe;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.recipe.CookingBookCategory;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.ui.creator.CreatorIconParser;
+import pers.yufiria.craftorithm.ui.creator.vanillaSmelting.CookingRecipeBookCategoryIcon;
 import pers.yufiria.craftorithm.ui.editor.RecipeEditorMenu;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
 import pers.yufiria.craftorithm.util.LangUtils;
@@ -54,6 +56,7 @@ public abstract class BaseSmeltingEditor extends RecipeEditorMenu {
     protected final CookingRecipe<?> cookingRecipe;
     protected float exp;
     protected int time;
+    protected final CookingRecipeBookCategoryIcon categoryIcon;
 
     protected BaseSmeltingEditor(
         @NotNull Player player,
@@ -64,10 +67,13 @@ public abstract class BaseSmeltingEditor extends RecipeEditorMenu {
         this.cookingRecipe = recipe;
         this.exp = recipe.getExperience();
         this.time = recipe.getCookingTime();
+        this.categoryIcon = new CookingRecipeBookCategoryIcon(
+            categoryIconFoodConfig(), categoryIconBlocksConfig(), categoryIconMiscConfig()
+        );
         this.display = new MenuDisplay(
             title().value(),
             new MenuLayout(Arrays.asList(
-                "#########",
+                "B########",
                 "#####FFF#",
                 "##I#AFRF#",
                 "#####FFF#",
@@ -79,6 +85,8 @@ public abstract class BaseSmeltingEditor extends RecipeEditorMenu {
                 layoutMap.put('E', this::getExpIcon);
                 layoutMap.put('T', this::getTimeIcon);
                 layoutMap.put('F', this::getResultFrameIcon);
+                layoutMap.put('B', this::getBackIcon);
+                layoutMap.put('G', () -> categoryIcon);
                 return layoutMap;
             })
         );
@@ -91,6 +99,10 @@ public abstract class BaseSmeltingEditor extends RecipeEditorMenu {
     protected abstract ConfigSectionConfig confirmIconConfig();
     protected abstract ConfigSectionConfig expIconConfig();
     protected abstract ConfigSectionConfig timeIconConfig();
+    protected abstract ConfigSectionConfig getBackIconConfig();
+    protected abstract ConfigSectionConfig categoryIconFoodConfig();
+    protected abstract ConfigSectionConfig categoryIconBlocksConfig();
+    protected abstract ConfigSectionConfig categoryIconMiscConfig();
 
     @Override
     protected void fillRecipeData(Inventory inventory) {
@@ -100,6 +112,8 @@ public abstract class BaseSmeltingEditor extends RecipeEditorMenu {
         // 填充结果
         ItemStack result = cookingRecipe.getResult();
         inventory.setItem(RESULT_SLOT, result.clone());
+
+        categoryIcon.setCategory(cookingRecipe.getCategory());
     }
 
     private Icon getFrameIcon() {
@@ -108,6 +122,10 @@ public abstract class BaseSmeltingEditor extends RecipeEditorMenu {
 
     private Icon getResultFrameIcon() {
         return CreatorIconParser.INSTANCE.parse(resultFrameIconConfig().value()).get();
+    }
+
+    private Icon getBackIcon() {
+        return createBackIcon(getBackIconConfig().value());
     }
 
     private Icon getExpIcon() {
@@ -233,7 +251,10 @@ public abstract class BaseSmeltingEditor extends RecipeEditorMenu {
                     configWrapper.set("ingredient", ingredientId);
                     configWrapper.set("exp", exp);
                     configWrapper.set("time", time);
-                    saveRecipeConfig(configWrapper);
+                    configWrapper.set("recipe_book_category", categoryIcon.category().name().toLowerCase());
+                    saveRecipeEdit(configWrapper, () -> {
+                        LangUtils.sendLang(event.getWhoClicked(), Languages.COMMAND_EDIT_SUCCESS, Map.of("<recipe_name>", recipeId));
+                    });
                 }
 
                 event.getWhoClicked().closeInventory();
