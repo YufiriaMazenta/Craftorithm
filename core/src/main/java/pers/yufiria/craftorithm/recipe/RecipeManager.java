@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @LifeCycleTaskSettings(
     rules = {
@@ -54,7 +55,7 @@ public enum RecipeManager implements BukkitLifeCycleTask {
     private final Map<NamespacedKey, Recipe> serverRecipesCache = new ConcurrentHashMap<>();
     private final Map<String, RecipeGroup> recipeGroupMap = new ConcurrentHashMap<>();
     private Boolean supportPotionMix;
-    private Boolean isReloadingRecipeManager = false;
+    private final AtomicBoolean isReloadingRecipeManager = new AtomicBoolean(false);
 
     //配方类型相关
 
@@ -110,12 +111,12 @@ public enum RecipeManager implements BukkitLifeCycleTask {
 
     //配方加载相关
     public void reloadRecipeManager() {
-        isReloadingRecipeManager = true;
+        isReloadingRecipeManager.set(true);
         resetRecipes();
         loadRecipesFromConfig(() -> {
             loadServerRecipeCache();
             reloadDisabledRecipes();
-            isReloadingRecipeManager = false;
+            isReloadingRecipeManager.set(false);
             //所有操作进行完毕后，为玩家更新配方信息
             Bukkit.updateRecipes();
         });
@@ -265,6 +266,14 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         return ((Keyed) recipe).getKey();
     }
 
+    /**
+     * 禁用某配方
+     * 会将指定配方从服务器里卸载,并存入配方垃圾箱
+     * @param recipeKey
+     * @param save
+     * @param updateRecipes
+     * @return
+     */
     public boolean disableRecipe(NamespacedKey recipeKey, boolean save, boolean updateRecipes) {
         if (save)
             saveDisabledRecipesData(recipeKey);
@@ -333,8 +342,16 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         return containsRecipe(recipeKey);
     }
 
+    /**
+     * 检查某配方是否存在
+     * @param recipeKey
+     * @return
+     */
     public boolean containsRecipe(NamespacedKey recipeKey) {
-        return craftorithmRecipes.containsKey(recipeKey);
+        if (craftorithmRecipes.containsKey(recipeKey)) {
+            return true;
+        }
+        return serverRecipesCache.containsKey(recipeKey);
     }
 
     public @Nullable RecipeGroup getRecipeGroup(String groupId) {
@@ -380,8 +397,8 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         return craftorithmRecipes;
     }
 
-    public Boolean isReloadingRecipeManager() {
-        return isReloadingRecipeManager;
+    public boolean isReloadingRecipeManager() {
+        return isReloadingRecipeManager.get();
     }
 
     @Override

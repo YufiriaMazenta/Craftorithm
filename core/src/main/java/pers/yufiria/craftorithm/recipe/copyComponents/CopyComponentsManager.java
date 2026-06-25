@@ -59,6 +59,9 @@ public enum CopyComponentsManager {
             arg = ruleStr.substring(spaceIndex + 1);
         }
         Function<String, CopyComponentsRule> ruleCreator = copyNbtRuleCreatorMap.get(ruleName);
+        if (ruleCreator == null) {
+            return Optional.empty();
+        }
         return Optional.ofNullable(ruleCreator.apply(arg));
     }
 

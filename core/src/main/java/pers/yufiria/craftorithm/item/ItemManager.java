@@ -233,6 +233,7 @@ public enum ItemManager implements BukkitLifeCycleTask {
     public Map<NamespacedItemId, Integer> customCookingFuelMap() {
         return customCookingFuelMap;
     }
+
     @Override
     public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
         if (lifeCycle.equals(LifeCycle.ACTIVE)) {
