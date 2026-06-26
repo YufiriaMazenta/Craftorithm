@@ -1,3 +1,4 @@
+recipe_id: 'shaped'
 type: 'vanilla_shaped'
 result: 'minecraft:diamond_sword'
 group: 'example'
@@ -10,3 +11,4 @@ ingredients:
   B: 'minecraft:barrier'
   C: 'minecraft:diamond'
 recipe_book_category: building
+fake_result_preview: 'minecraft:stone'

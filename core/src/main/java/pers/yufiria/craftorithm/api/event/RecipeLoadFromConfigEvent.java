@@ -6,9 +6,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.recipe.RecipeRegister;
-import pers.yufiria.craftorithm.recipe.RecipeType;
 
 import java.util.Objects;
 

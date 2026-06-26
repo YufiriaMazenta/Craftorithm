@@ -36,7 +36,7 @@ public final class RemoveRecipeCommand extends CommandNode {
             return;
         }
 
-        if (RecipeManager.INSTANCE.removeCraftorithmRecipe(args.getFirst(), true, true)) {
+        if (RecipeManager.INSTANCE.removeCraftorithmRecipe(args.getFirst(), true)) {
             LangUtils.sendLang(invoker, Languages.COMMAND_REMOVE_SUCCESS);
         }
         else

@@ -36,16 +36,22 @@ public final class Craftorithm extends BukkitPlugin implements BukkitLifeCycleTa
 
     public Craftorithm() {
         INSTANCE = this;
+        CrypticLib.debug = true;
     }
 
     @Override
-    public void whenEnable() {
+    public void whenLoad() {
         CrypticLib.debug = PluginConfigs.DEBUG.value();
         IOHelper.info("&7Server Type: " + CrypticLibBukkit.serverAdapter().type() + ", Version: " + MinecraftVersion.current().version());
         if (MinecraftVersion.current().before(MinecraftVersion.V1_19_4)) {
             BukkitMsgSender.INSTANCE.info("&cUnsupported Version");
             throw new UnsupportedVersionException();
         }
+    }
+
+    @Override
+    public void whenEnable() {
+
         ActionCompiler.INSTANCE.regAction("close", Close::new);
         ActionCompiler.INSTANCE.regAction("openmenu", OpenMenu::new);
         ActionCompiler.INSTANCE.regAction("back", Back::new);

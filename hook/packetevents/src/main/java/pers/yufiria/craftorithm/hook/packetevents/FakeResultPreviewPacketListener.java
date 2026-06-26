@@ -8,7 +8,6 @@ import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerSe
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerWindowItems;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import crypticlib.util.IOHelper;
 import crypticlib.util.ItemHelper;
 import io.github.retrooper.packetevents.util.SpigotConversionUtil;
 import org.bukkit.NamespacedKey;
@@ -24,7 +23,7 @@ import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.NotNull;
-import pers.yufiria.craftorithm.fakeResult.FakeResultHandler;
+import pers.yufiria.craftorithm.fakeResult.FakeResultDataHandler;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
@@ -150,7 +149,7 @@ public enum FakeResultPreviewPacketListener implements PacketListener, Listener 
 
         switch (event.getPacketType()) {
             case PacketType.Play.Server.SET_SLOT -> {
-                NamespacedItemIdStack recipeFakeResult = FakeResultHandler.INSTANCE.getRecipeFakeResult(recipeKey);
+                NamespacedItemIdStack recipeFakeResult = FakeResultDataHandler.INSTANCE.getRecipeFakeResult(recipeKey);
                 if (recipeFakeResult == null) {
                     return;
                 }
@@ -162,7 +161,7 @@ public enum FakeResultPreviewPacketListener implements PacketListener, Listener 
                 packet.setItem(SpigotConversionUtil.fromBukkitItemStack(fakeResult));
             }
             case PacketType.Play.Server.WINDOW_ITEMS -> {
-                NamespacedItemIdStack recipeFakeResult = FakeResultHandler.INSTANCE.getRecipeFakeResult(recipeKey);
+                NamespacedItemIdStack recipeFakeResult = FakeResultDataHandler.INSTANCE.getRecipeFakeResult(recipeKey);
                 if (recipeFakeResult == null) {
                     return;
                 }

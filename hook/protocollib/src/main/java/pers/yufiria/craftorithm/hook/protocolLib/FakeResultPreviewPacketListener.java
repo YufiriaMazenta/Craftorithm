@@ -20,7 +20,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.Craftorithm;
-import pers.yufiria.craftorithm.fakeResult.FakeResultHandler;
+import pers.yufiria.craftorithm.fakeResult.FakeResultDataHandler;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
@@ -148,14 +148,14 @@ public class FakeResultPreviewPacketListener extends PacketAdapter implements Li
             if (slot != cacheRecipeData.resultSlot) {
                 return;
             }
-            NamespacedItemIdStack recipeFakeResult = FakeResultHandler.INSTANCE.getRecipeFakeResult(recipeKey);
+            NamespacedItemIdStack recipeFakeResult = FakeResultDataHandler.INSTANCE.getRecipeFakeResult(recipeKey);
             if (recipeFakeResult == null) {
                 return;
             }
             ItemStack fakeResult = ItemManager.INSTANCE.matchItem(recipeFakeResult);
             event.getPacket().getItemModifier().write(0, fakeResult);
         } else if (packetType.equals(PacketType.Play.Server.WINDOW_ITEMS)) {
-            NamespacedItemIdStack recipeFakeResult = FakeResultHandler.INSTANCE.getRecipeFakeResult(recipeKey);
+            NamespacedItemIdStack recipeFakeResult = FakeResultDataHandler.INSTANCE.getRecipeFakeResult(recipeKey);
             if (recipeFakeResult == null) {
                 return;
             }

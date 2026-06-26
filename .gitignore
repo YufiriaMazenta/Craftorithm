@@ -1,6 +1,8 @@
 # User-specific stuff
 .idea/
 
+.mimocode/
+
 *.iml
 *.ipr
 *.iws

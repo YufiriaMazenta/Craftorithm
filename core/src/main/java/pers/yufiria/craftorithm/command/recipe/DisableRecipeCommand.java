@@ -37,7 +37,7 @@ public final class DisableRecipeCommand extends CommandNode {
             LangUtils.sendLang(invoker, Languages.COMMAND_DISABLE_NOT_EXIST);
             return;
         }
-        if (RecipeManager.INSTANCE.disableRecipe(recipeKey, true, true)) {
+        if (RecipeManager.INSTANCE.disableRecipe(recipeKey, true)) {
             LangUtils.sendLang(invoker, Languages.COMMAND_DISABLE_SUCCESS);
         } else
             LangUtils.sendLang(invoker, Languages.COMMAND_DISABLE_FAILED);
