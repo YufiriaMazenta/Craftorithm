@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @LifeCycleTaskSettings(
     rules = {@TaskRule(lifeCycle = LifeCycle.RELOAD)}
 )
-public enum FakeResultHandler implements Listener, BukkitLifeCycleTask {
+public enum FakeResultDataLoader implements Listener, BukkitLifeCycleTask {
 
     INSTANCE;
 

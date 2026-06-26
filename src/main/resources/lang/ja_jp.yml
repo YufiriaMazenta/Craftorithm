@@ -37,7 +37,8 @@ command:
     unsupported_recipe_type: '<prefix> &cサポートされていないレシピタイプです。'
     unsupported_recipe_name: '<prefix> &cサポートされていないレシピ名です。小文字の英字、数字、"_"、"-"、"."のみ使用できます。'
     name_used: '<prefix> &cこのレシピIDはすでに使用されています。'
-    success: '<prefix> <recipe_type> <recipe_name> を作成しました。'
+    invalid_recipe_id: '<prefix> &cサポートされていないレシピ名です。小文字の英字、数字、"_"、"-"、"."のみ使用できます。'
+    success: '<prefix> <recipe_type> <recipe_file_name> (<recipe_id>) を作成しました。'
     input_hint:
       smelting_time: '&aこのレシピの精錬時間を入力してください（cancelでキャンセル）'
       smelting_exp: '&aこのレシピの精錬経験値を入力してください（cancelでキャンセル）'
@@ -51,7 +52,9 @@ command:
   edit:
     invalid_recipe_id: '<prefix> &c無効なレシピIDです。'
     recipe_not_found: '<prefix> &cレシピが見つかりません。'
-    success: '<prefix> &aレシピ <recipe_name> を編集しました。'
+    success: '<prefix> &aレシピ <recipe_file_name> (<recipe_id>) を編集しました。'
+  recipebook:
+    success: '<prefix> &aレシピブックを開きました。'
 recipe_type_name:
   vanilla_shaped: 定形レシピ
   vanilla_shapeless: 不定形レシピ

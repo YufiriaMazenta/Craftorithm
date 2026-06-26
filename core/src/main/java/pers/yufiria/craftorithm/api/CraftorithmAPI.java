@@ -9,7 +9,9 @@ import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.hook.item.ItemPluginHook;
 import pers.yufiria.craftorithm.hook.item.ItemPluginHookManager;
-import pers.yufiria.craftorithm.item.*;
+import pers.yufiria.craftorithm.item.CraftorithmItemProvider;
+import pers.yufiria.craftorithm.item.ItemManager;
+import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeGroup;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
@@ -177,7 +179,7 @@ public enum CraftorithmAPI {
      * @return 是否成功
      */
     public boolean disableRecipe(@NotNull NamespacedKey recipeKey, boolean save) {
-        return RecipeManager.INSTANCE.disableRecipe(recipeKey, save, true);
+        return RecipeManager.INSTANCE.disableRecipe(recipeKey, save);
     }
 
     /**
@@ -187,7 +189,25 @@ public enum CraftorithmAPI {
      * @return 是否成功
      */
     public boolean removeCraftorithmRecipe(@NotNull String recipeId, boolean deleteFile) {
-        return RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeId, deleteFile, true);
+        return RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeId, deleteFile);
+    }
+
+    /**
+     * 通过配方Key查找配方文件名
+     * @param recipeKey 配方Key
+     * @return 配方文件名，不存在返回null
+     */
+    public @Nullable String getRecipeFileNameByKey(@NotNull NamespacedKey recipeKey) {
+        return RecipeManager.INSTANCE.getRecipeFileNameByKey(recipeKey);
+    }
+
+    /**
+     * 通过配方文件名查找配方Key
+     * @param recipeFileName 配方文件名
+     * @return 配方Key，不存在返回null
+     */
+    public @Nullable NamespacedKey getRecipeKeyByFileName(@NotNull String recipeFileName) {
+        return RecipeManager.INSTANCE.getRecipeKeyByFileName(recipeFileName);
     }
 
     // ==================== Trigger API ====================

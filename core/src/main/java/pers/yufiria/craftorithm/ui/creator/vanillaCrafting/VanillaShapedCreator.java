@@ -38,8 +38,8 @@ public final class VanillaShapedCreator extends RecipeCreator {
     private static final int[] INGREDIENT_SLOTS = {10, 11, 12, 19, 20, 21, 28, 29, 30};
     private static final int RESULT_SLOT = 24;
 
-    public VanillaShapedCreator(@NotNull Player player, @Nullable String recipeName) {
-        super(player, recipeName);
+    public VanillaShapedCreator(@NotNull Player player, @Nullable String recipeId, @Nullable String recipeFileName) {
+        super(player, recipeId, recipeFileName);
         this.display = new MenuDisplay(
             VanillaShapedCreatorConfig.TITLE.value(),
             new MenuLayout(Arrays.asList(
@@ -47,7 +47,7 @@ public final class VanillaShapedCreator extends RecipeCreator {
                 "#123#***#",
                 "#456A* *#",
                 "#789#***#",
-                "#########"
+                "####C####"
             ), () -> {
                 Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
@@ -167,19 +167,23 @@ public final class VanillaShapedCreator extends RecipeCreator {
                     category = categoryIcon.category();
                 }
 
-                String recipeName = resolveRecipeName(resultId.itemId());
+                String recipeId = resolveRecipeId(SimpleRecipeTypes.VANILLA_SHAPED.typeKey(), resultId.itemId());
+                String recipeFileName = resolveRecipeFileName(resultId.itemId());
                 // 10. 创建并保存配方配置文件
-                BukkitConfigWrapper recipeConfig = createRecipeConfig(recipeName);
+                BukkitConfigWrapper recipeConfig = createRecipeConfig(recipeFileName);
                 recipeConfig.set("type", SimpleRecipeTypes.VANILLA_SHAPED.typeKey());
                 recipeConfig.set("result", resultId.toString());
                 recipeConfig.set("shape", shape);
                 recipeConfig.set("ingredients", ingredientIdMap);
                 recipeConfig.set("recipe_book_category", category.name().toLowerCase());
+                if (recipeId != null) {
+                    recipeConfig.set("recipe_id", recipeId);
+                }
                 recipeConfig.saveConfig();
                 recipeConfig.reloadConfig();
 
                 // 11. 加载配方到RecipeManager
-                boolean loadResult = RecipeManager.INSTANCE.loadRecipeFromConfig(recipeName, recipeConfig, true);
+                boolean loadResult = RecipeManager.INSTANCE.loadRecipeFromConfig(recipeFileName, recipeConfig);
                 if (loadResult) {
                     LangUtils.sendLang(
                         event.getWhoClicked(),
@@ -187,15 +191,17 @@ public final class VanillaShapedCreator extends RecipeCreator {
                         Map.of(
                             "<recipe_type>",
                             Languages.RECIPE_TYPE_NAME_VANILLA_SHAPED.value((Player) event.getWhoClicked()),
-                            "<recipe_name>",
-                            recipeName
+                            "<recipe_file_name>",
+                            recipeFileName,
+                            "<recipe_id>",
+                            recipeId != null ? recipeId : recipeFileName
                         )
                     );
                 } else {
                     LangUtils.sendLang(
                         event.getWhoClicked(),
                         Languages.RECIPE_LOAD_EXCEPTION,
-                        Map.of("<recipe_name>", recipeName)
+                        Map.of("<recipe_name>", recipeFileName)
                     );
                 }
 

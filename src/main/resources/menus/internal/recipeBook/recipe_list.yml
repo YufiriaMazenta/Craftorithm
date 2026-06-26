@@ -1,0 +1,28 @@
+title: '&6配方书 - <type_name> (<page>/<max_page>)'
+layout:
+  - '#########'
+  - '#RRRRRRR#'
+  - '#RRRRRRR#'
+  - '#RRRRRRR#'
+  - '#BS###PN#'
+icons:
+  '#':
+    material: 'minecraft:gray_stained_glass_pane'
+    name: '&r'
+  R:
+    material: 'minecraft:air'
+    name: '&r'
+  S:
+    material: 'minecraft:hopper'
+    name: '&e排序: <sort_mode>'
+    lore:
+      - '&7点击切换排序模式'
+  P:
+    material: 'minecraft:arrow'
+    name: '&a上一页'
+  N:
+    material: 'minecraft:arrow'
+    name: '&a下一页'
+  B:
+    material: 'minecraft:barrier'
+    name: '&c返回'

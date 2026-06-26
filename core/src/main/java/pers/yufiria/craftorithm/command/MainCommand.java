@@ -57,4 +57,7 @@ public class MainCommand extends CommandTree {
     @Subcommand
     CommandNode edit = EditCommand.INSTANCE;
 
+    @Subcommand
+    CommandNode recipebook = RecipeBookCommand.INSTANCE;
+
 }

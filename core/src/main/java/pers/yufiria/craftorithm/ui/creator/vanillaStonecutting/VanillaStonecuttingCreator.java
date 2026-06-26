@@ -34,8 +34,8 @@ public class VanillaStonecuttingCreator extends RecipeCreator {
     private static final int INGREDIENT_SLOT = 11;
     private static final int RESULT_SLOT = 15;
 
-    public VanillaStonecuttingCreator(@NotNull Player player, @Nullable String recipeName) {
-        super(player, recipeName);
+    public VanillaStonecuttingCreator(@NotNull Player player, @Nullable String recipeId, @Nullable String recipeFileName) {
+        super(player, recipeId, recipeFileName);
         this.display = new MenuDisplay(
             VanillaStonecuttingCreatorConfig.TITLE.value(),
             new MenuLayout(Arrays.asList(
@@ -100,17 +100,21 @@ public class VanillaStonecuttingCreator extends RecipeCreator {
                     return this;
                 }
 
-                String recipeName = resolveRecipeName(resultId.itemId());
+                String recipeId = resolveRecipeId(SimpleRecipeTypes.VANILLA_STONECUTTING.typeKey(), resultId.itemId());
+                String recipeFileName = resolveRecipeFileName(resultId.itemId());
                 // 5. 创建并保存配方配置文件
-                BukkitConfigWrapper recipeConfig = createRecipeConfig(recipeName);
+                BukkitConfigWrapper recipeConfig = createRecipeConfig(recipeFileName);
                 recipeConfig.set("type", SimpleRecipeTypes.VANILLA_STONECUTTING.typeKey());
                 recipeConfig.set("result", resultId.toString());
                 recipeConfig.set("ingredient", ingredientId);
+                if (recipeId != null) {
+                    recipeConfig.set("recipe_id", recipeId);
+                }
                 recipeConfig.saveConfig();
                 recipeConfig.reloadConfig();
 
                 // 6. 加载配方到RecipeManager
-                boolean loadResult = RecipeManager.INSTANCE.loadRecipeFromConfig(recipeName, recipeConfig, true);
+                boolean loadResult = RecipeManager.INSTANCE.loadRecipeFromConfig(recipeFileName, recipeConfig);
                 if (loadResult) {
                     LangUtils.sendLang(
                         event.getWhoClicked(),
@@ -118,15 +122,17 @@ public class VanillaStonecuttingCreator extends RecipeCreator {
                         Map.of(
                             "<recipe_type>",
                             Languages.RECIPE_TYPE_NAME_VANILLA_STONECUTTING.value((Player) event.getWhoClicked()),
-                            "<recipe_name>",
-                            recipeName
+                            "<recipe_file_name>",
+                            recipeFileName,
+                            "<recipe_id>",
+                            recipeId != null ? recipeId : recipeFileName
                         )
                     );
                 } else {
                     LangUtils.sendLang(
                         event.getWhoClicked(),
                         Languages.RECIPE_LOAD_EXCEPTION,
-                        Map.of("<recipe_name>", recipeName)
+                        Map.of("<recipe_name>", recipeFileName)
                     );
                 }
 

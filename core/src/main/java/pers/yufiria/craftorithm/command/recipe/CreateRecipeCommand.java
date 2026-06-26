@@ -11,6 +11,7 @@ import crypticlib.perm.PermInfo;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
@@ -32,7 +33,6 @@ import pers.yufiria.craftorithm.util.LangUtils;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,14 +44,14 @@ import java.util.regex.Pattern;
 public final class CreateRecipeCommand extends CommandNode implements BukkitLifeCycleTask {
 
     public static final CreateRecipeCommand INSTANCE = new CreateRecipeCommand();
-    private final Pattern recipeNamePattern = Pattern.compile("^[a-z0-9._-]+$");
-    private final Map<RecipeType, BiConsumer<Player, String>> recipeCreatorMap = new RecipeTypeMap<>();
+    private final Pattern RECIPE_ID_PATTERN = Pattern.compile("^[a-z0-9._-]+$");
+    private final Map<RecipeType, RecipeCreatorFactory> recipeCreatorMap = new RecipeTypeMap<>();
 
     private CreateRecipeCommand() {
         super(CommandInfo
             .builder("create")
             .permission(new PermInfo("craftorithm.command.create"))
-            .usage("&r/craftorithm create <recipe_type> [recipe_name]")
+            .usage("&r/craftorithm create <recipe_type> [recipe_id] [recipe_file_name]")
             .build()
         );
     }
@@ -64,21 +64,24 @@ public final class CreateRecipeCommand extends CommandNode implements BukkitLife
             sendDescriptions(invoker);
             return;
         }
-        String recipeTypeStr = args.get(0);
-        String recipeName;
-        if (args.size() < 2)
-            recipeName = null;
-        else {
-            recipeName = args.get(1);
-            Matcher matcher = recipeNamePattern.matcher(recipeName);
+        String recipeTypeStr = args.getFirst();
+        String recipeId = null;
+        String recipeFileName = null;
+
+        if (args.size() >= 2) {
+            recipeId = args.get(1);
+            Matcher matcher = RECIPE_ID_PATTERN.matcher(recipeId);
             if (!matcher.matches()) {
                 LangUtils.sendLang(invoker, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_NAME);
                 return;
             }
-            if (RecipeManager.INSTANCE.containsRecipe(recipeName)) {
+            if (RecipeManager.INSTANCE.containsRecipe(recipeId)) {
                 LangUtils.sendLang(invoker, Languages.COMMAND_CREATE_NAME_USED);
                 return;
             }
+        }
+        if (args.size() >= 3) {
+            recipeFileName = args.get(2);
         }
 
         RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipeTypeStr);
@@ -86,13 +89,13 @@ public final class CreateRecipeCommand extends CommandNode implements BukkitLife
             LangUtils.sendLang(invoker, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
             return;
         }
-        BiConsumer<Player, String> creatorConsumer = recipeCreatorMap.get(recipeType);
-        if (creatorConsumer == null) {
+        RecipeCreatorFactory creatorFactory = recipeCreatorMap.get(recipeType);
+        if (creatorFactory == null) {
             LangUtils.sendLang(invoker, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
             return;
         }
         Player player = (Player) invoker.asPlayer().getPlatformPlayer();
-        creatorConsumer.accept(player, recipeName);
+        creatorFactory.create(player, recipeId, recipeFileName);
     }
 
     @Override
@@ -100,48 +103,51 @@ public final class CreateRecipeCommand extends CommandNode implements BukkitLife
         if (args.size() <= 1) {
             return recipeCreatorMap.keySet().stream().map(RecipeType::typeKey).toList();
         }
-        return Collections.singletonList("<recipe_name>");
+        if (args.size() == 2) {
+            return Collections.singletonList("<recipe_id>");
+        }
+        return Collections.singletonList("<recipe_file_name>");
     }
 
     private void registerDefRecipeCreators() {
-        addRecipeCreator(SimpleRecipeTypes.VANILLA_SHAPED, (player, recipeName) -> {
-            new VanillaShapedCreator(player, recipeName).openMenu();
+        addRecipeCreator(SimpleRecipeTypes.VANILLA_SHAPED, (player, recipeId, recipeFileName) -> {
+            new VanillaShapedCreator(player, recipeId, recipeFileName).openMenu();
         });
-        addRecipeCreator(SimpleRecipeTypes.VANILLA_SHAPELESS, (player, recipeName) -> {
-            new VanillaShapelessCreator(player, recipeName).openMenu();
+        addRecipeCreator(SimpleRecipeTypes.VANILLA_SHAPELESS, (player, recipeId, recipeFileName) -> {
+            new VanillaShapelessCreator(player, recipeId, recipeFileName).openMenu();
         });
         // 熔炉配方 (furnace, blast, smoker, campfire)
-        addRecipeCreator(SimpleRecipeTypes.VANILLA_SMELTING_FURNACE, (player, recipeName) -> {
-            new VanillaSmeltingFurnaceCreator(player, recipeName).openMenu();
+        addRecipeCreator(SimpleRecipeTypes.VANILLA_SMELTING_FURNACE, (player, recipeId, recipeFileName) -> {
+            new VanillaSmeltingFurnaceCreator(player, recipeId, recipeFileName).openMenu();
         });
-        addRecipeCreator(SimpleRecipeTypes.VANILLA_SMELTING_BLAST, (player, recipeName) -> {
-            new VanillaSmeltingBlastCreator(player, recipeName).openMenu();
+        addRecipeCreator(SimpleRecipeTypes.VANILLA_SMELTING_BLAST, (player, recipeId, recipeFileName) -> {
+            new VanillaSmeltingBlastCreator(player, recipeId, recipeFileName).openMenu();
         });
-        addRecipeCreator(SimpleRecipeTypes.VANILLA_SMELTING_SMOKER, (player, recipeName) -> {
-            new VanillaSmeltingSmokerCreator(player, recipeName).openMenu();
+        addRecipeCreator(SimpleRecipeTypes.VANILLA_SMELTING_SMOKER, (player, recipeId, recipeFileName) -> {
+            new VanillaSmeltingSmokerCreator(player, recipeId, recipeFileName).openMenu();
         });
-        addRecipeCreator(SimpleRecipeTypes.VANILLA_SMELTING_CAMPFIRE, (player, recipeName) -> {
-            new VanillaSmeltingCampfireCreator(player, recipeName).openMenu();
+        addRecipeCreator(SimpleRecipeTypes.VANILLA_SMELTING_CAMPFIRE, (player, recipeId, recipeFileName) -> {
+            new VanillaSmeltingCampfireCreator(player, recipeId, recipeFileName).openMenu();
         });
         // 锻造台配方
-        addRecipeCreator(SimpleRecipeTypes.VANILLA_SMITHING_TRANSFORM, (player, recipeName) -> {
-            new VanillaSmithingTransformCreator(player, recipeName).openMenu();
+        addRecipeCreator(SimpleRecipeTypes.VANILLA_SMITHING_TRANSFORM, (player, recipeId, recipeFileName) -> {
+            new VanillaSmithingTransformCreator(player, recipeId, recipeFileName).openMenu();
         });
         // 切石机配方
-        addRecipeCreator(SimpleRecipeTypes.VANILLA_STONECUTTING, (player, recipeName) -> {
-            new VanillaStonecuttingCreator(player, recipeName).openMenu();
+        addRecipeCreator(SimpleRecipeTypes.VANILLA_STONECUTTING, (player, recipeId, recipeFileName) -> {
+            new VanillaStonecuttingCreator(player, recipeId, recipeFileName).openMenu();
         });
         // 酿造台配方
-        addRecipeCreator(SimpleRecipeTypes.VANILLA_BREWING, (player, recipeName) -> {
-            new VanillaBrewingCreator(player, recipeName).openMenu();
+        addRecipeCreator(SimpleRecipeTypes.VANILLA_BREWING, (player, recipeId, recipeFileName) -> {
+            new VanillaBrewingCreator(player, recipeId, recipeFileName).openMenu();
         });
         // 铁砧配方
-        addRecipeCreator(SimpleRecipeTypes.ANVIL, (player, recipeName) -> {
-            new AnvilCreator(player, recipeName).openMenu();
+        addRecipeCreator(SimpleRecipeTypes.ANVIL, (player, recipeId, recipeFileName) -> {
+            new AnvilCreator(player, recipeId, recipeFileName).openMenu();
         });
     }
 
-    public void addRecipeCreator(RecipeType recipeType, BiConsumer<Player, String> creatorFunc) {
+    public void addRecipeCreator(RecipeType recipeType, RecipeCreatorFactory creatorFunc) {
         recipeCreatorMap.put(recipeType, creatorFunc);
     }
 
@@ -152,6 +158,11 @@ public final class CreateRecipeCommand extends CommandNode implements BukkitLife
     @Override
     public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
         registerDefRecipeCreators();
+    }
+
+    @FunctionalInterface
+    public interface RecipeCreatorFactory {
+        void create(Player player, @Nullable String recipeId, @Nullable String recipeFileName);
     }
 
 }

@@ -1,0 +1,90 @@
+title: '&6配方书 - 选择类型'
+layout:
+  - '#########'
+  - '#ABCDEFG#'
+  - '#HIJKLMN#'
+  - '#########'
+icons:
+  '#':
+    material: 'minecraft:gray_stained_glass_pane'
+    name: '&r'
+  A:
+    icon_type: recipe_list
+    recipe_type: vanilla_shaped
+    material: 'minecraft:crafting_table'
+    name: '&a有序合成'
+    lore:
+      - '&7<recipe_count> 个配方'
+      - '&7点击查看'
+  B:
+    icon_type: recipe_list
+    recipe_type: vanilla_shapeless
+    material: 'minecraft:crafting_table'
+    name: '&a无序合成'
+    lore:
+      - '&7<recipe_count> 个配方'
+      - '&7点击查看'
+  C:
+    icon_type: recipe_list
+    recipe_type: vanilla_smelting_furnace
+    material: 'minecraft:furnace'
+    name: '&a熔炉配方'
+    lore:
+      - '&7<recipe_count> 个配方'
+      - '&7点击查看'
+  D:
+    icon_type: recipe_list
+    recipe_type: vanilla_smelting_blast
+    material: 'minecraft:blast_furnace'
+    name: '&a高炉配方'
+    lore:
+      - '&7<recipe_count> 个配方'
+      - '&7点击查看'
+  E:
+    icon_type: recipe_list
+    recipe_type: vanilla_smelting_smoker
+    material: 'minecraft:smoker'
+    name: '&a烟熏炉配方'
+    lore:
+      - '&7<recipe_count> 个配方'
+      - '&7点击查看'
+  F:
+    icon_type: recipe_list
+    recipe_type: vanilla_smelting_campfire
+    material: 'minecraft:campfire'
+    name: '&a营火配方'
+    lore:
+      - '&7<recipe_count> 个配方'
+      - '&7点击查看'
+  G:
+    icon_type: recipe_list
+    recipe_type: vanilla_smithing_transform
+    material: 'minecraft:smithing_table'
+    name: '&a锻造配方'
+    lore:
+      - '&7<recipe_count> 个配方'
+      - '&7点击查看'
+  H:
+    icon_type: recipe_list
+    recipe_type: vanilla_stonecutting
+    material: 'minecraft:stonecutter'
+    name: '&a切石配方'
+    lore:
+      - '&7<recipe_count> 个配方'
+      - '&7点击查看'
+  I:
+    icon_type: recipe_list
+    recipe_type: vanilla_brewing
+    material: 'minecraft:brewing_stand'
+    name: '&a酿造配方'
+    lore:
+      - '&7<recipe_count> 个配方'
+      - '&7点击查看'
+  J:
+    icon_type: recipe_list
+    recipe_type: anvil
+    material: 'minecraft:anvil'
+    name: '&a铁砧配方'
+    lore:
+      - '&7<recipe_count> 个配方'
+      - '&7点击查看'

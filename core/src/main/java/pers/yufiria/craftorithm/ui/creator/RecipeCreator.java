@@ -17,55 +17,92 @@ import pers.yufiria.craftorithm.recipe.RecipeManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 public abstract class RecipeCreator extends StoredMenu {
 
-    private @Nullable String recipeName;
+    private static final Pattern ID_PATTERN = Pattern.compile("^[a-z0-9._-]+$");
+
+    private @Nullable String recipeId;
+    private @Nullable String recipeFileName;
     private final SimpleDateFormat FORMAT = new SimpleDateFormat("yyyyMMdd_HHmmss");
 
     public RecipeCreator(
         @NotNull Player player,
-        @Nullable String recipeName
+        @Nullable String recipeId,
+        @Nullable String recipeFileName
     ) {
         super(player);
-        this.recipeName = recipeName;
+        this.recipeId = recipeId;
+        this.recipeFileName = recipeFileName;
     }
 
     protected abstract Icon getFrameIcon();
 
     protected abstract Icon getResultFrameIcon();
 
-    protected BukkitConfigWrapper createRecipeConfig(String recipeName) {
-        BukkitConfigWrapper recipeConfigWrapper = new BukkitConfigWrapper(Craftorithm.instance(), "recipes/" + recipeName + ".yml");
+    protected BukkitConfigWrapper createRecipeConfig(String recipeFileName) {
+        BukkitConfigWrapper recipeConfigWrapper = new BukkitConfigWrapper(Craftorithm.instance(), "recipes/" + recipeFileName + ".yml");
         recipeConfigWrapper.saveDefaultConfigFile();
         return recipeConfigWrapper;
     }
 
-    public RecipeCreator setRecipeName(@Nullable String recipeName) {
-        this.recipeName = recipeName;
+    public RecipeCreator setRecipeFileName(@Nullable String recipeFileName) {
+        this.recipeFileName = recipeFileName;
         return this;
     }
 
     /**
-     * 解析配方名字,如果打开页面时已经输入,将返回recipeName
-     * 如果未输入,则生成以配方名字为基础生成的配方id
+     * 解析配方文件名
+     * 优先级：recipeFileName > recipeId > 自动生成
+     * 如果recipeId已存在（通过命令或resolveRecipeId生成），则使用recipeId作为文件名
      * @param resultId
      * @return
      */
-    public String resolveRecipeName(@NotNull NamespacedItemId resultId) {
-        if (this.recipeName != null) {
-            return this.recipeName;
+    public String resolveRecipeFileName(@NotNull NamespacedItemId resultId) {
+        if (this.recipeFileName != null) {
+            return this.recipeFileName;
+        }
+        if (this.recipeId != null) {
+            this.recipeFileName = this.recipeId;
+            return this.recipeFileName;
         }
         Objects.requireNonNull(resultId, "Recipe result is null!");
-        String resolveRecipeName = resultId.namespace() + "_" + resultId.itemId()
+        String resolved = resultId.namespace() + "_" + resultId.itemId()
             .replace(':', '_')
             .replace('-', '_');
-        if (!RecipeManager.INSTANCE.containsRecipe(resolveRecipeName)) {
-            return resolveRecipeName;
+        if (!RecipeManager.INSTANCE.containsRecipe(resolved)) {
+            return resolved;
         }
-        resolveRecipeName = resolveRecipeName + "_" + FORMAT.format(System.currentTimeMillis());
-        this.recipeName = resolveRecipeName;
-        return recipeName;
+        resolved = resolved + "_" + FORMAT.format(System.currentTimeMillis());
+        this.recipeFileName = resolved;
+        return recipeFileName;
+    }
+
+    /**
+     * 解析配方id
+     * 如果命令中已指定recipeId,直接返回
+     * 否则根据 typeKey + resultItemId 自动生成
+     * 如果result物品id不符合命名规则,返回null(使用文件名作为配方id)
+     * @param typeKey 配方类型的typeKey
+     * @param resultId 结果物品id
+     * @return 配方id, 或null
+     */
+    public @Nullable String resolveRecipeId(@NotNull String typeKey, @NotNull NamespacedItemId resultId) {
+        if (this.recipeId != null) {
+            return this.recipeId;
+        }
+        String itemIdStr = resultId.itemId()
+            .replace(':', '_')
+            .replace('-', '_');
+        if (!ID_PATTERN.matcher(itemIdStr).matches()) {
+            return null;
+        }
+        String resolved = typeKey + "_" + itemIdStr;
+        if (RecipeManager.INSTANCE.containsRecipe(resolved)) {
+            resolved = resolved + "_" + FORMAT.format(System.currentTimeMillis());
+        }
+        return resolved;
     }
 
     //实现标题的翻译功能

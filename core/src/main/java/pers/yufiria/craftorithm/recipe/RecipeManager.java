@@ -25,13 +25,9 @@ import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsManager;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 import pers.yufiria.craftorithm.util.CollectionsUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
-import pers.yufiria.craftorithm.util.ServerUtils;
 
 import java.io.File;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -51,6 +47,9 @@ public enum RecipeManager implements BukkitLifeCycleTask {
     private final Map<String, RecipeType> recipeTypes = new ConcurrentHashMap<>();
     private final Map<NamespacedKey, Recipe> craftorithmRecipes = new ConcurrentHashMap<>();
     private final Map<NamespacedKey, BukkitConfigWrapper> recipeConfigWrapperMap = new ConcurrentHashMap<>();
+    private final Map<String, NamespacedKey> recipeFileNameToKeyMap = new ConcurrentHashMap<>();
+    private final Map<NamespacedKey, String> recipeKeyToFileNameMap = new ConcurrentHashMap<>();
+    private final Map<NamespacedKey, Long> recipeCreateTimeMap = new ConcurrentHashMap<>();
     private final List<Recipe> disabledRecipesCache = new CopyOnWriteArrayList<>();
     private final Map<NamespacedKey, Recipe> serverRecipesCache = new ConcurrentHashMap<>();
     private final Map<String, RecipeGroup> recipeGroupMap = new ConcurrentHashMap<>();
@@ -134,6 +133,9 @@ public enum RecipeManager implements BukkitLifeCycleTask {
             recipeType.recipeRegister().unregisterRecipe(recipeKey);
         });
         craftorithmRecipes.clear();
+        recipeCreateTimeMap.clear();
+        recipeFileNameToKeyMap.clear();
+        recipeKeyToFileNameMap.clear();
 
         //重置所有配方的Nbt保留规则
         CopyComponentsManager.INSTANCE.resetRecipeCopyNbtRules();
@@ -157,26 +159,31 @@ public enum RecipeManager implements BukkitLifeCycleTask {
 
     /**
      * 从配置文件里加载并注册一个配方
-     * @param recipeName
+     * @param recipeFileName 配方文件的名字,当配方文件里不存在recipe_id这个配置时,会尝试使用文件名字作为配方id
      * @param recipeConfigWrapper
-     * @param resendRecipes 是否给玩家更新服务器的配方列表，实际上这个配置项只在一些版本有效
      * @return
      */
-    public boolean loadRecipeFromConfig(String recipeName, BukkitConfigWrapper recipeConfigWrapper, boolean resendRecipes) {
+    public boolean loadRecipeFromConfig(String recipeFileName, BukkitConfigWrapper recipeConfigWrapper) {
         YamlConfiguration recipeConfig = recipeConfigWrapper.config();
+        String recipeId;
+        if (recipeConfig.contains("recipe_id")) {
+            recipeId = recipeConfig.getString("recipe_id");
+        } else {
+            recipeId = recipeFileName;
+        }
         String typeId = recipeConfig.getString("type");
         RecipeType recipeType;
         if (typeId == null) {
-            throw new RecipeLoadException("Unknown recipe type of " + recipeName + ": " + null);
+            throw new RecipeLoadException("Unknown recipe type of " + recipeFileName + "(" + recipeId + "): " + null);
         }
         recipeType = recipeTypes.get(typeId);
         if (recipeType == null) {
-            throw new RecipeLoadException("Unknown recipe type of " + recipeName + ": " + typeId);
+            throw new RecipeLoadException("Unknown recipe type of " + recipeFileName + "(" + recipeId + "): " + typeId);
         }
         RecipeParser<?> recipeParser = recipeType.recipeParser();
-        Recipe recipe = recipeParser.parse(recipeName, recipeConfig);
+        Recipe recipe = recipeParser.parse(recipeId, recipeConfig);
         if (recipe == null) {
-            BukkitMsgSender.INSTANCE.info("&eLoad recipe " + recipeName + " failed");
+            BukkitMsgSender.INSTANCE.info("&eLoad recipe " + recipeFileName + "(" + recipeId + ") failed");
             return false;
         }
         RecipeRegister recipeRegister = recipeType.recipeRegister();
@@ -195,6 +202,10 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         if (result) {
             craftorithmRecipes.put(recipeKey, recipe);
             recipeConfigWrapperMap.put(recipeKey, recipeConfigWrapper);
+            recipeFileNameToKeyMap.put(recipeFileName, recipeKey);
+            recipeKeyToFileNameMap.put(recipeKey, recipeFileName);
+            File recipeFile = recipeConfigWrapper.configFile();
+            recipeCreateTimeMap.put(recipeKey, recipeFile.exists() ? recipeFile.lastModified() : System.currentTimeMillis());
             if (recipeConfig.contains("group")) {
                 String groupId = recipeConfig.getString("group");
                 if (recipeGroupMap.containsKey(groupId)) {
@@ -205,11 +216,8 @@ public enum RecipeManager implements BukkitLifeCycleTask {
                     recipeGroupMap.put(groupId, recipeGroup);
                 }
             }
-            if (resendRecipes) {
-                Bukkit.updateRecipes();
-            }
         } else {
-            BukkitMsgSender.INSTANCE.info("&eRegister recipe " + recipeName + " failed");
+            BukkitMsgSender.INSTANCE.info("&eRegister recipe " + recipeFileName + "(" + recipeId + ") failed");
         }
         return result;
     }
@@ -239,7 +247,7 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         }
         for (String recipeKeyStr : disabledRecipes) {
             NamespacedKey recipeKey = NamespacedKey.fromString(recipeKeyStr);
-            disableRecipe(recipeKey, false, false);
+            disableRecipe(recipeKey, false);
         }
     }
 
@@ -271,13 +279,12 @@ public enum RecipeManager implements BukkitLifeCycleTask {
      * 会将指定配方从服务器里卸载,并存入配方垃圾箱
      * @param recipeKey
      * @param save
-     * @param updateRecipes
      * @return
      */
-    public boolean disableRecipe(NamespacedKey recipeKey, boolean save, boolean updateRecipes) {
+    public boolean disableRecipe(NamespacedKey recipeKey, boolean save) {
         if (save)
             saveDisabledRecipesData(recipeKey);
-        boolean result = removeRecipe(recipeKey, updateRecipes);
+        boolean result = removeRecipe(recipeKey);
         if (result) {
             addDisabledRecipeCache(recipeKey);
         }
@@ -309,21 +316,22 @@ public enum RecipeManager implements BukkitLifeCycleTask {
     /**
      * 删除一个配方,并通知玩家
      */
-    public boolean removeRecipe(NamespacedKey recipeKey, boolean updateRecipes) {
+    public boolean removeRecipe(NamespacedKey recipeKey) {
         Recipe recipe = getRecipe(recipeKey);
         RecipeType recipeType = getRecipeType(recipe);
-        boolean result = recipeType.recipeRegister().unregisterRecipe(recipeKey);
-        if (result && ServerUtils.after1_20Paper() && updateRecipes) {
-            Bukkit.updateRecipes();
-        }
-        return result;
+        return recipeType.recipeRegister().unregisterRecipe(recipeKey);
     }
 
-    public boolean removeCraftorithmRecipe(String recipeId, boolean deleteFile, boolean updateRecipes) {
+    public boolean removeCraftorithmRecipe(String recipeId, boolean deleteFile) {
         NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeId);
-        boolean result = removeRecipe(recipeKey, updateRecipes);
+        boolean result = removeRecipe(recipeKey);
         if (result) {
             craftorithmRecipes.remove(recipeKey);
+            recipeCreateTimeMap.remove(recipeKey);
+            String removedFileName = recipeKeyToFileNameMap.remove(recipeKey);
+            if (removedFileName != null) {
+                recipeFileNameToKeyMap.remove(removedFileName);
+            }
             if (recipeConfigWrapperMap.containsKey(recipeKey) && deleteFile) {
                 BukkitConfigWrapper removed = recipeConfigWrapperMap.remove(recipeKey);
                 removed.deleteConfigFile();
@@ -356,6 +364,65 @@ public enum RecipeManager implements BukkitLifeCycleTask {
 
     public @Nullable RecipeGroup getRecipeGroup(String groupId) {
         return recipeGroupMap.get(groupId);
+    }
+
+    /**
+     * 通过配方文件名查找配方的NamespacedKey
+     * @param recipeFileName 配方文件名
+     * @return 配方的NamespacedKey, 如果不存在则返回null
+     */
+    public @Nullable NamespacedKey getRecipeKeyByFileName(String recipeFileName) {
+        return recipeFileNameToKeyMap.get(recipeFileName);
+    }
+
+    /**
+     * 通过配方的NamespacedKey查找配方文件名
+     * @param recipeKey 配方的NamespacedKey
+     * @return 配方文件名, 如果不存在则返回null
+     */
+    public @Nullable String getRecipeFileNameByKey(NamespacedKey recipeKey) {
+        return recipeKeyToFileNameMap.get(recipeKey);
+    }
+
+    /**
+     * 获取配方的创建时间
+     * @param recipeKey 配方的NamespacedKey
+     * @return 创建时间戳(毫秒), 如果不存在则返回null
+     */
+    public @Nullable Long getRecipeCreateTime(NamespacedKey recipeKey) {
+        return recipeCreateTimeMap.get(recipeKey);
+    }
+
+    /**
+     * 获取指定类型的所有Craftorithm配方
+     * @param type 配方类型
+     * @return 该类型的所有配方的NamespacedKey列表
+     */
+    public List<Map.Entry<NamespacedKey, Recipe>> getRecipesByType(RecipeType type) {
+        return craftorithmRecipes.entrySet().stream()
+            .filter(entry -> type.isThisType(entry.getValue()))
+            .toList();
+    }
+
+    /**
+     * 获取所有有配方注册的Craftorithm配方类型
+     * @return 包含配方的类型集合
+     */
+    public java.util.Set<RecipeType> getAllRecipeTypes() {
+        java.util.Set<RecipeType> types = new java.util.LinkedHashSet<>();
+        for (Recipe recipe : craftorithmRecipes.values()) {
+            RecipeType type = getRecipeType(recipe);
+            if (type != SimpleRecipeTypes.UNKNOWN) {
+                types.add(type);
+            }
+        }
+        return types.stream()
+            .sorted(Comparator.comparingInt(RecipeType::typeId))
+            .collect(java.util.stream.Collectors.toCollection(java.util.LinkedHashSet::new));
+    }
+
+    public Map<NamespacedKey, Recipe> craftorithmRecipes() {
+        return craftorithmRecipes;
     }
 
     public @Nullable RecipeType getRecipeType(String typeId) {
@@ -391,10 +458,6 @@ public enum RecipeManager implements BukkitLifeCycleTask {
             supportPotionMix = CrypticLibBukkit.isPaper();
         }
         return supportPotionMix;
-    }
-
-    public Map<NamespacedKey, Recipe> craftorithmRecipes() {
-        return craftorithmRecipes;
     }
 
     public boolean isReloadingRecipeManager() {
@@ -468,7 +531,7 @@ public enum RecipeManager implements BukkitLifeCycleTask {
                 recipeName = recipeName.substring(0, lastDotIndex).toLowerCase();
                 BukkitConfigWrapper recipeConfigWrapper = new BukkitConfigWrapper(file);
                 try {
-                    boolean result = loadRecipeFromConfig(recipeName, recipeConfigWrapper, false);
+                    boolean result = loadRecipeFromConfig(recipeName, recipeConfigWrapper);
                     if (result) {
                         recipeNum ++;
                     }

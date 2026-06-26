@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.ui.editor;
 
-import crypticlib.CrypticLib;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.config.BukkitConfigWrapper;
@@ -138,9 +137,9 @@ public abstract class RecipeEditorMenu extends StoredMenu implements BackableMen
         configWrapper.saveConfig();
         configWrapper.reloadConfig();
         String recipeId = recipeKey.getKey();
-        RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeId, false, false);
+        RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeId, false);
         CrypticLibBukkit.scheduler().syncLater(() -> {
-            RecipeManager.INSTANCE.loadRecipeFromConfig(recipeId, configWrapper, true);
+            RecipeManager.INSTANCE.loadRecipeFromConfig(recipeId, configWrapper);
             if (callback != null) {
                 callback.run();
             }

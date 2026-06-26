@@ -34,6 +34,7 @@ public class Languages {
     public static final StringLangEntry COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE = new StringLangEntry("command.create.unsupported_recipe_type");
     public static final StringLangEntry COMMAND_CREATE_UNSUPPORTED_RECIPE_NAME = new StringLangEntry("command.create.unsupported_recipe_name");
     public static final StringLangEntry COMMAND_CREATE_NAME_USED = new StringLangEntry("command.create.name_used");
+    public static final StringLangEntry COMMAND_CREATE_INVALID_RECIPE_ID = new StringLangEntry("command.create.invalid_recipe_id");
     public static final StringLangEntry COMMAND_CREATE_SUCCESS = new StringLangEntry("command.create.success");
     public static final StringLangEntry COMMAND_CREATE_INPUT_HINT_SMELTING_TIME = new StringLangEntry("command.create.input_hint.smelting_time");
     public static final StringLangEntry COMMAND_CREATE_INPUT_HINT_SMELTING_EXP = new StringLangEntry("command.create.input_hint.smelting_exp");
@@ -44,6 +45,7 @@ public class Languages {
     public static final StringLangEntry COMMAND_EDIT_INVALID_RECIPE_ID = new StringLangEntry("command.edit.invalid_recipe_id");
     public static final StringLangEntry COMMAND_EDIT_RECIPE_NOT_FOUND = new StringLangEntry("command.edit.recipe_not_found");
     public static final StringLangEntry COMMAND_EDIT_SUCCESS = new StringLangEntry("command.edit.success");
+    public static final StringLangEntry COMMAND_RECIPEBOOK_SUCCESS = new StringLangEntry("command.recipebook.success");
 
     public static final StringLangEntry LOAD_FINISH = new StringLangEntry("load_finish");
     public static final StringLangEntry RECIPE_LOAD_EXCEPTION = new StringLangEntry("recipe_load_exception");

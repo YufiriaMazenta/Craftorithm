@@ -35,8 +35,8 @@ public class VanillaBrewingCreator extends RecipeCreator {
     private static final int INGREDIENT_SLOT = 29;
     private static final int RESULT_SLOT = 24;
 
-    public VanillaBrewingCreator(@NotNull Player player, @Nullable String recipeName) {
-        super(player, recipeName);
+    public VanillaBrewingCreator(@NotNull Player player, @Nullable String recipeId, @Nullable String recipeFileName) {
+        super(player, recipeId, recipeFileName);
         this.display = new MenuDisplay(
             VanillaBrewingCreatorConfig.TITLE.value(),
             new MenuLayout(Arrays.asList(
@@ -112,18 +112,22 @@ public class VanillaBrewingCreator extends RecipeCreator {
                     return this;
                 }
 
-                String recipeName = resolveRecipeName(resultId.itemId());
+                String recipeId = resolveRecipeId(SimpleRecipeTypes.VANILLA_BREWING.typeKey(), resultId.itemId());
+                String recipeFileName = resolveRecipeFileName(resultId.itemId());
                 // 6. 创建并保存配方配置文件
-                BukkitConfigWrapper recipeConfig = createRecipeConfig(recipeName);
+                BukkitConfigWrapper recipeConfig = createRecipeConfig(recipeFileName);
                 recipeConfig.set("type", SimpleRecipeTypes.VANILLA_BREWING.typeKey());
                 recipeConfig.set("result", resultId.toString());
                 recipeConfig.set("input", inputId);
                 recipeConfig.set("ingredient", ingredientId);
+                if (recipeId != null) {
+                    recipeConfig.set("recipe_id", recipeId);
+                }
                 recipeConfig.saveConfig();
                 recipeConfig.reloadConfig();
 
                 // 7. 加载配方到RecipeManager
-                boolean loadResult = RecipeManager.INSTANCE.loadRecipeFromConfig(recipeName, recipeConfig, false);
+                boolean loadResult = RecipeManager.INSTANCE.loadRecipeFromConfig(recipeFileName, recipeConfig);
                 if (loadResult) {
                     LangUtils.sendLang(
                         event.getWhoClicked(),
@@ -131,15 +135,17 @@ public class VanillaBrewingCreator extends RecipeCreator {
                         Map.of(
                             "<recipe_type>",
                             Languages.RECIPE_TYPE_NAME_VANILLA_BREWING.value((Player) event.getWhoClicked()),
-                            "<recipe_name>",
-                            recipeName
+                            "<recipe_file_name>",
+                            recipeFileName,
+                            "<recipe_id>",
+                            recipeId != null ? recipeId : recipeFileName
                         )
                     );
                 } else {
                     LangUtils.sendLang(
                         event.getWhoClicked(),
                         Languages.RECIPE_LOAD_EXCEPTION,
-                        Map.of("<recipe_name>", recipeName)
+                        Map.of("<recipe_name>", recipeFileName)
                     );
                 }
 

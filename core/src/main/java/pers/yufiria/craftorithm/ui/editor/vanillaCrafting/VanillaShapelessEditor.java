@@ -18,6 +18,7 @@ import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.menu.editor.VanillaShapelessEditorConfig;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
+import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.ui.creator.CreatorIconParser;
 import pers.yufiria.craftorithm.ui.creator.vanillaCrafting.RecipeBookCategoryIcon;
@@ -134,7 +135,11 @@ public final class VanillaShapelessEditor extends RecipeEditorMenu {
                     configWrapper.set("ingredients", ingredientIds);
                     configWrapper.set("recipe_book_category", categoryIcon.category().name().toLowerCase());
                     saveRecipeEdit(configWrapper, () -> {
-                        LangUtils.sendLang(event.getWhoClicked(), Languages.COMMAND_EDIT_SUCCESS, Map.of("<recipe_name>", recipeId));
+                        String fileName = RecipeManager.INSTANCE.getRecipeFileNameByKey(recipeKey);
+                        LangUtils.sendLang(event.getWhoClicked(), Languages.COMMAND_EDIT_SUCCESS, Map.of(
+                            "<recipe_id>", recipeId,
+                            "<recipe_file_name>", fileName != null ? fileName : recipeId
+                        ));
                     });
                 }
 

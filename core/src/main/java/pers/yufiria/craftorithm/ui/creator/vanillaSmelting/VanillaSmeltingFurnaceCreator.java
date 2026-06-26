@@ -10,8 +10,8 @@ import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 
 public class VanillaSmeltingFurnaceCreator extends AbstractSmeltingCreator {
 
-    public VanillaSmeltingFurnaceCreator(@NotNull Player player, @Nullable String recipeName) {
-        super(player, recipeName);
+    public VanillaSmeltingFurnaceCreator(@NotNull Player player, @Nullable String recipeId, @Nullable String recipeFileName) {
+        super(player, recipeId, recipeFileName);
     }
 
     @Override
