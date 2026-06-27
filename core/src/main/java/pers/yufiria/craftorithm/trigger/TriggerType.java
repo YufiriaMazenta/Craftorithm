@@ -35,12 +35,17 @@ public interface TriggerType {
      * Prepare 事件类（PrepareItemCraftEvent / PrepareSmithingEvent / PrepareAnvilEvent 等）
      * 返回 null 表示此类型不支持 Prepare 阶段
      */
-    @Nullable Class<? extends Event> prepareEventClass();
+    default @Nullable Class<? extends Event> prepareEventClass() {
+        return null;
+    }
 
     /**
      * 从 Prepare 事件中提取触发上下文
+     * 其实大部分玩家事件都不需要重写此方法
      * 返回 null 表示此事件不应触发
      */
-    @Nullable TriggerContext extractPrepareContext(Event event);
+    default @Nullable TriggerContext extractPrepareContext(Event event) {
+        return null;
+    }
 
 }

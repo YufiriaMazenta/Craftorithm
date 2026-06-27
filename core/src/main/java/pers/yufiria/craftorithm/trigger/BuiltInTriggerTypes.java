@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.trigger;
 
-import crypticlib.MinecraftVersion;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -10,15 +9,13 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.SmithingInventory;
 import org.jetbrains.annotations.Nullable;
-import pers.yufiria.craftorithm.item.ItemManager;
-import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.extra.AnvilRecipe;
 import pers.yufiria.craftorithm.recipe.extra.AnvilRecipeHandler;
-import pers.yufiria.craftorithm.trigger.listener.CraftTriggerListener;
-import pers.yufiria.craftorithm.trigger.listener.SmithingTriggerListener;
+import pers.yufiria.craftorithm.trigger.listener.CraftTriggerHandler;
+import pers.yufiria.craftorithm.trigger.listener.SmithingTriggerHandler;
 
 /**
  * 内置触发器类型
@@ -33,18 +30,17 @@ public enum BuiltInTriggerTypes implements TriggerType {
 
         @Override
         public Listener listener() {
-            return CraftTriggerListener.INSTANCE;
+            return CraftTriggerHandler.INSTANCE;
         }
 
         @Override
         public @Nullable TriggerContext extractContext(Event event) {
             CraftItemEvent e = (CraftItemEvent) event;
             if (!(e.getWhoClicked() instanceof Player player)) return null;
-            ItemStack result = e.getCurrentItem();
-            if (result == null) return null;
             Recipe recipe = e.getRecipe();
-            NamespacedKey recipeKey = recipe != null ? RecipeManager.INSTANCE.getRecipeKey(recipe) : null;
-            return TriggerContext.ofCraft(player, result, recipeKey, e.getInventory().getMatrix(), event);
+            NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
+            RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipe);
+            return new TriggerContext(player, recipeKey, recipeType);
         }
 
         @Override
@@ -57,9 +53,9 @@ public enum BuiltInTriggerTypes implements TriggerType {
             PrepareItemCraftEvent e = (PrepareItemCraftEvent) event;
             if (e.getRecipe() == null) return null;
             if (!(e.getInventory().getHolder() instanceof Player player)) return null;
-            ItemStack result = e.getRecipe().getResult();
             NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(e.getRecipe());
-            return TriggerContext.ofCraft(player, result, recipeKey, e.getInventory().getMatrix(), event);
+            RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(e.getRecipe());
+            return new TriggerContext(player, recipeKey, recipeType);
         }
     },
 
@@ -71,28 +67,17 @@ public enum BuiltInTriggerTypes implements TriggerType {
 
         @Override
         public Listener listener() {
-            return SmithingTriggerListener.INSTANCE;
+            return SmithingTriggerHandler.INSTANCE;
         }
 
         @Override
         public @Nullable TriggerContext extractContext(Event event) {
             SmithItemEvent e = (SmithItemEvent) event;
             if (!(e.getWhoClicked() instanceof Player player)) return null;
-            ItemStack result = e.getCurrentItem();
-            if (result == null) return null;
-            SmithingInventory inv = e.getInventory();
-            ItemStack base, addition, template = null;
-            if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_20)) {
-                base = inv.getItem(1);
-                addition = inv.getItem(2);
-                template = inv.getItem(0);
-            } else {
-                base = inv.getItem(0);
-                addition = inv.getItem(1);
-            }
-            Recipe recipe = inv.getRecipe();
+            Recipe recipe = e.getInventory().getRecipe();
             NamespacedKey recipeKey = recipe != null ? RecipeManager.INSTANCE.getRecipeKey(recipe) : null;
-            return TriggerContext.ofSmithing(player, result, base, addition, template, recipeKey, event);
+            RecipeType recipeType = recipe != null ? RecipeManager.INSTANCE.getRecipeType(recipe) : null;
+            return new TriggerContext(player, recipeKey, recipeType);
         }
 
         @Override
@@ -105,19 +90,10 @@ public enum BuiltInTriggerTypes implements TriggerType {
             PrepareSmithingEvent e = (PrepareSmithingEvent) event;
             if (e.getResult() == null) return null;
             if (!(e.getInventory().getHolder() instanceof Player player)) return null;
-            SmithingInventory inv = e.getInventory();
-            ItemStack base, addition, template = null;
-            if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_20)) {
-                base = inv.getItem(1);
-                addition = inv.getItem(2);
-                template = inv.getItem(0);
-            } else {
-                base = inv.getItem(0);
-                addition = inv.getItem(1);
-            }
-            Recipe recipe = inv.getRecipe();
+            Recipe recipe = e.getInventory().getRecipe();
             NamespacedKey recipeKey = recipe != null ? RecipeManager.INSTANCE.getRecipeKey(recipe) : null;
-            return TriggerContext.ofSmithing(player, e.getResult(), base, addition, template, recipeKey, event);
+            RecipeType recipeType = recipe != null ? RecipeManager.INSTANCE.getRecipeType(recipe) : null;
+            return new TriggerContext(player, recipeKey, recipeType);
         }
     },
 
@@ -141,15 +117,12 @@ public enum BuiltInTriggerTypes implements TriggerType {
 
             ItemStack base = anvilInv.getItem(0);
             ItemStack addition = anvilInv.getItem(1);
-            ItemStack result = anvilInv.getItem(2);
-            if (base == null || addition == null || result == null) return null;
+            if (base == null || addition == null) return null;
 
             AnvilRecipe customRecipe = AnvilRecipeHandler.INSTANCE.matchAnvilRecipe(base, addition);
-            String baseIdStr = resolveItemId(base);
-            String additionIdStr = resolveItemId(addition);
-            String recipeKeyStr = customRecipe != null ? customRecipe.getKey().toString() : null;
-
-            return TriggerContext.ofAnvil(player, result, baseIdStr, additionIdStr, recipeKeyStr, event);
+            NamespacedKey recipeKey = customRecipe != null ? customRecipe.getKey() : null;
+            RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType("anvil");
+            return new TriggerContext(player, recipeKey, recipeType);
         }
 
         @Override
@@ -174,12 +147,9 @@ public enum BuiltInTriggerTypes implements TriggerType {
             if (player == null) return null;
 
             AnvilRecipe customRecipe = AnvilRecipeHandler.INSTANCE.matchAnvilRecipe(base, addition);
-            String baseIdStr = resolveItemId(base);
-            String additionIdStr = resolveItemId(addition);
-            String recipeKeyStr = customRecipe != null ? customRecipe.getKey().toString() : null;
-            ItemStack result = e.getResult();
-
-            return TriggerContext.ofAnvil(player, result, baseIdStr, additionIdStr, recipeKeyStr, event);
+            NamespacedKey recipeKey = customRecipe != null ? customRecipe.getKey() : null;
+            RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType("anvil");
+            return new TriggerContext(player, recipeKey, recipeType);
         }
     };
 
@@ -199,12 +169,6 @@ public enum BuiltInTriggerTypes implements TriggerType {
             if (type.key.equalsIgnoreCase(key)) return type;
         }
         return null;
-    }
-
-    private static @Nullable String resolveItemId(ItemStack item) {
-        if (item == null) return null;
-        NamespacedItemIdStack id = ItemManager.INSTANCE.matchItemId(item, true);
-        return id != null ? id.toString() : item.getType().getKey().toString();
     }
 
 }

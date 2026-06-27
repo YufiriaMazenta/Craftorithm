@@ -12,6 +12,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
+import pers.yufiria.craftorithm.trigger.event.DynamicEventRegistry;
 import pers.yufiria.craftorithm.script.ScriptEngine;
 import pers.yufiria.craftorithm.script.compile.CompiledScript;
 
@@ -72,7 +73,9 @@ public enum TriggerManager implements BukkitLifeCycleTask {
      * 获取已注册的触发器类型
      */
     public @Nullable TriggerType getTriggerType(String typeKey) {
-        return triggerTypes.get(typeKey);
+        TriggerType type = triggerTypes.get(typeKey);
+        if (type != null) return type;
+        return DynamicEventRegistry.INSTANCE.getEventType(typeKey);
     }
 
     /**
@@ -126,6 +129,9 @@ public enum TriggerManager implements BukkitLifeCycleTask {
                                 .add(trigger);
                         triggerById.put(fullId, trigger);
                         count++;
+                        BukkitMsgSender.INSTANCE.info(
+                            "Loaded trigger '" + localId + "' in " + fileName
+                        );
                     }
                 } catch (Exception e) {
                     BukkitMsgSender.INSTANCE.info(
@@ -160,7 +166,7 @@ public enum TriggerManager implements BukkitLifeCycleTask {
             return null;
         }
 
-        if (!triggerTypes.containsKey(typeKey)) {
+        if (getTriggerType(typeKey) == null) {
             BukkitMsgSender.INSTANCE.info("&eUnknown trigger type '" + typeKey + "' in " + fullId);
             return null;
         }
@@ -209,7 +215,7 @@ public enum TriggerManager implements BukkitLifeCycleTask {
     public int firePrepare(String typeKey, TriggerContext context) {
         int denied = 0;
         for (Trigger trigger : getTriggers(typeKey)) {
-            if (!trigger.matchesRecipe(context.recipeKey())) continue;
+            if (!trigger.matches(context.recipeKey())) continue;
             if (cooldownManager.isOnCooldown(trigger, context.player())) continue;
             if (!trigger.evaluateConditions(context)) {
                 denied++;
@@ -224,7 +230,7 @@ public enum TriggerManager implements BukkitLifeCycleTask {
     public boolean fire(String typeKey, TriggerContext context) {
         boolean fired = false;
         for (Trigger trigger : getTriggers(typeKey)) {
-            if (!trigger.matchesRecipe(context.recipeKey())) continue;
+            if (!trigger.matches(context.recipeKey())) continue;
             if (cooldownManager.isOnCooldown(trigger, context.player())) continue;
             if (!trigger.evaluateConditions(context)) continue;
 
@@ -252,6 +258,8 @@ public enum TriggerManager implements BukkitLifeCycleTask {
     public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
         if (lifeCycle == LifeCycle.ACTIVE) {
             TRIGGER_FOLDER.mkdirs();
+            // 初始化动态事件注册器
+            DynamicEventRegistry.INSTANCE.init();
         }
         // 注册内置类型（仅首次）
         if (triggerTypes.isEmpty()) {

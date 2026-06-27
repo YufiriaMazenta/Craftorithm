@@ -14,7 +14,7 @@ import pers.yufiria.craftorithm.trigger.TriggerManager;
  * 锻造台触发器监听器
  */
 @EventListener
-public enum SmithingTriggerListener implements Listener {
+public enum SmithingTriggerHandler implements Listener {
 
     INSTANCE;
 

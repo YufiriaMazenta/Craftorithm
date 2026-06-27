@@ -63,10 +63,11 @@ public class Trigger {
     public boolean perPlayer() { return perPlayer; }
 
     /**
-     * 检查配方是否匹配
-     * recipes 为空时匹配所有配方
+     * 检查是否匹配
+     * recipes 为空时匹配所有（包括非配方事件）
+     * recipes 非空时检查 recipeKey 是否在列表中
      */
-    public boolean matchesRecipe(@Nullable NamespacedKey recipeKey) {
+    public boolean matches(@Nullable NamespacedKey recipeKey) {
         if (recipes.isEmpty()) return true;
         if (recipeKey == null) return false;
         return recipes.contains(recipeKey.toString());

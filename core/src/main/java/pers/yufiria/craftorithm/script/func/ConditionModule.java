@@ -4,11 +4,14 @@ import crypticlib.chat.BukkitTextProcessor;
 import net.milkbowl.vault.economy.Economy;
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.black_ixx.playerpoints.PlayerPointsAPI;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import pers.yufiria.craftorithm.hook.PlayerPointsHook;
 import pers.yufiria.craftorithm.hook.VaultHook;
 import pers.yufiria.craftorithm.script.ScriptContext;
 import pers.yufiria.craftorithm.script.ScriptValue;
+import pers.yufiria.craftorithm.trigger.Trigger;
 
 /**
  * 内置条件函数模块
@@ -36,6 +39,14 @@ public enum ConditionModule implements ScriptModule {
         registry.register("level", this::level);
         registry.register("money", this::money);
         registry.register("points", this::points);
+        registry.register("world", this::world);
+        registry.register("game_mode", this::gameMode);
+        registry.register("item", this::item);
+        registry.register("biome", this::biome);
+        registry.register("in_water", this::inWater);
+        registry.register("in_rain", this::inRain);
+        registry.register("light_level", this::lightLevel);
+        registry.register("context", this::context);
     }
 
     /**
@@ -50,24 +61,19 @@ public enum ConditionModule implements ScriptModule {
     }
 
     /**
-     * papi "%placeholder%" → 解析 PAPI 变量
-     * papi "%placeholder%" ">=" "10" → 比较
+     * papi "%placeholder%" → 解析 PAPI 变量并返回值
+     * 比较通过脚本运算符实现: papi "%level%" >= 10
      */
     private ScriptValue papi(ScriptContext ctx, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.nil();
         Player player = ctx.player();
         String placeholder = args[0].asString();
         String resolved = BukkitTextProcessor.placeholder(player, placeholder);
-
-        if (args.length == 1) {
+        try {
+            return ScriptValue.of(Double.parseDouble(resolved));
+        } catch (NumberFormatException e) {
             return ScriptValue.of(resolved);
         }
-        if (args.length >= 3) {
-            String operator = args[1].asString();
-            String value = args[2].asString();
-            return compareStrings(resolved, operator, value);
-        }
-        return ScriptValue.of(Boolean.parseBoolean(resolved));
     }
 
     /**
@@ -99,32 +105,133 @@ public enum ConditionModule implements ScriptModule {
         return ScriptValue.of(api.look(ctx.player().getUniqueId()));
     }
 
-    private ScriptValue compareStrings(String left, String operator, String right) {
-        try {
-            double l = Double.parseDouble(left);
-            double r = Double.parseDouble(right);
+    /**
+     * world "world" → 检查玩家所在世界
+     */
+    private ScriptValue world(ScriptContext ctx, ScriptValue... args) {
+        if (args.length == 0) return ScriptValue.of(ctx.player().getWorld().getName());
+        String expected = args[0].asString();
+        return ScriptValue.of(ctx.player().getWorld().getName().equals(expected));
+    }
+
+    /**
+     * game_mode "SURVIVAL" → 检查玩家游戏模式
+     */
+    private ScriptValue gameMode(ScriptContext ctx, ScriptValue... args) {
+        if (args.length == 0) return ScriptValue.of(ctx.player().getGameMode().name());
+        String expected = args[0].asString();
+        return ScriptValue.of(ctx.player().getGameMode().name().equalsIgnoreCase(expected));
+    }
+
+    /**
+     * biome "minecraft:ocean" → 检查玩家所在群系
+     */
+    private ScriptValue biome(ScriptContext ctx, ScriptValue... args) {
+        if (args.length < 1) return ScriptValue.of(false);
+        String expected = args[0].asString();
+        String actual = ctx.player().getLocation().getBlock().getBiome().getKey().toString();
+        return ScriptValue.of(actual.equalsIgnoreCase(expected));
+    }
+
+    /**
+     * in_water → 检查玩家是否在水中
+     */
+    private ScriptValue inWater(ScriptContext ctx, ScriptValue... args) {
+        Block block = ctx.player().getLocation().getBlock();
+        return ScriptValue.of(block.getType() == Material.WATER);
+    }
+
+    /**
+     * in_rain → 检查玩家是否在雨中
+     */
+    private ScriptValue inRain(ScriptContext ctx, ScriptValue... args) {
+        return ScriptValue.of(ctx.player().getLocation().getBlock().getBiome().name().contains("RAIN")
+            || ctx.player().getWorld().hasStorm());
+    }
+
+    /**
+     * light_level → 返回玩家所在位置亮度
+     * light_level >= 7 → 检查亮度
+     */
+    private ScriptValue lightLevel(ScriptContext ctx, ScriptValue... args) {
+        int level = ctx.player().getLocation().getBlock().getLightLevel();
+        if (args.length == 0) return ScriptValue.of(level);
+        if (args.length >= 2) {
+            String operator = args[0].asString();
+            int expected = (int) args[1].asNumber();
             boolean result = switch (operator) {
-                case "==" -> l == r;
-                case "!=" -> l != r;
-                case ">"  -> l > r;
-                case ">=" -> l >= r;
-                case "<"  -> l < r;
-                case "<=" -> l <= r;
-                default -> false;
-            };
-            return ScriptValue.of(result);
-        } catch (NumberFormatException e) {
-            int cmp = left.compareTo(right);
-            boolean result = switch (operator) {
-                case "==" -> cmp == 0;
-                case "!=" -> cmp != 0;
-                case ">"  -> cmp > 0;
-                case ">=" -> cmp >= 0;
-                case "<"  -> cmp < 0;
-                case "<=" -> cmp <= 0;
+                case "==" -> level == expected;
+                case "!=" -> level != expected;
+                case ">"  -> level > expected;
+                case ">=" -> level >= expected;
+                case "<"  -> level < expected;
+                case "<=" -> level <= expected;
                 default -> false;
             };
             return ScriptValue.of(result);
         }
+        return ScriptValue.of(level);
     }
+
+    /**
+     * context "key" → 返回上下文变量值
+     * 比较通过脚本运算符实现: context "damage" >= 10
+     */
+    private ScriptValue context(ScriptContext ctx, ScriptValue... args) {
+        if (args.length < 1) return ScriptValue.nil();
+        String key = args[0].asString();
+        ScriptValue var = ctx.getVariable(key);
+        if (var == null) return ScriptValue.nil();
+        return var;
+    }
+
+    /**
+     * item "craftorithm:my_item" → 检查事件中的物品ID（不含数量部分）
+     * item "craftorithm:my_item" >= 5 → 检查物品ID和数量
+     */
+    private ScriptValue item(ScriptContext ctx, ScriptValue... args) {
+        if (args.length < 1) return ScriptValue.of(false);
+        ScriptValue eventItem = ctx.getVariable("item");
+        if (eventItem == null) return ScriptValue.of(false);
+        String itemStr = eventItem.asString();
+        // itemStr 格式: "namespace:id:amount" 或 "namespace:id"
+        String expectedId = args[0].asString();
+        String itemId = itemStr.contains(":") ? itemStr.substring(0, itemStr.lastIndexOf(':')) : itemStr;
+        if (args.length == 1) {
+            return ScriptValue.of(itemId.equals(expectedId));
+        }
+        if (args.length >= 3) {
+            String operator = args[1].asString();
+            String amountStr = args[2].asString();
+            try {
+                boolean result = compareItem(itemStr, amountStr, operator);
+                return ScriptValue.of(itemId.equals(expectedId) && result);
+            } catch (NumberFormatException e) {
+                return ScriptValue.of(itemId.equals(expectedId));
+            }
+        }
+        return ScriptValue.of(itemId.equals(expectedId));
+    }
+
+    /**
+     * 判断物品是否符合要求
+     * @param itemStr
+     * @param amountStr
+     * @param operator
+     * @return
+     */
+    private static boolean compareItem(String itemStr, String amountStr, String operator) {
+        int amount = Integer.parseInt(itemStr.substring(itemStr.lastIndexOf(':') + 1));
+        int expected = Integer.parseInt(amountStr);
+        return switch (operator) {
+            case "==" -> amount == expected;
+            case "!=" -> amount != expected;
+            case ">"  -> amount > expected;
+            case ">=" -> amount >= expected;
+            case "<"  -> amount < expected;
+            case "<=" -> amount <= expected;
+            default -> false;
+        };
+    }
+
 }

@@ -1,13 +1,13 @@
 on_craft_diamond_sword:
-  type: 'crafting'  # crafting | smithing | anvil
+  type: 'crafting'
   recipes:
     - 'minecraft:diamond_sword'
   conditions:
-    - 'perm "craftorithm.trigger.vip"'
+    - 'perm("craftorithm.trigger.vip")'
     - 'level >= 10'
   actions:
-    - 'tell "&a合成成功！"'
-    - 'give-level 100'
+    - 'tell("&a合成成功！")'
+    - 'give-level(100)'
   priority: 0
   enabled: true
   cooldown: 5

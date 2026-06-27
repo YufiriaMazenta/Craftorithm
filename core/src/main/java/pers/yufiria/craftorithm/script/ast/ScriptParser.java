@@ -214,11 +214,16 @@ public class ScriptParser {
                 return new ASTNode.FunctionCallNode(name.value(), args, name.line());
             }
 
-            // 情况2/3: 判断后面是否跟着可作为参数的 token（STRING/NUMBER/BOOLEAN）
+            // 情况2/3: 判断后面是否跟着可作为参数的 token（STRING/NUMBER/BOOLEAN/IDENTIFIER）
             // 如果是，收集为裸参数；否则是无参调用
+            // IDENTIFIER 作为参数时会递归解析为函数调用（如 papi "%player_name%"）
             List<ASTNode> args = new ArrayList<>();
             while (isBareArgToken()) {
-                args.add(parseAtom());
+                if (check(Token.Type.IDENTIFIER)) {
+                    args.add(parseCall());
+                } else {
+                    args.add(parseAtom());
+                }
             }
             return new ASTNode.FunctionCallNode(name.value(), args, name.line());
         }
@@ -228,12 +233,12 @@ public class ScriptParser {
 
     /**
      * 判断当前 token 是否可以作为裸函数调用的参数
-     * 只有 STRING / NUMBER / BOOLEAN 可以，IDENTIFIER 不行（它可能是下一个函数名）
+     * STRING / NUMBER / BOOLEAN / IDENTIFIER（函数调用）都可以
      */
     private boolean isBareArgToken() {
         if (isAtEnd()) return false;
         Token.Type type = tokens.get(pos).type();
-        return type == Token.Type.STRING || type == Token.Type.NUMBER || type == Token.Type.BOOLEAN;
+        return type == Token.Type.STRING || type == Token.Type.NUMBER || type == Token.Type.BOOLEAN || type == Token.Type.IDENTIFIER;
     }
 
     private ASTNode parseAtom() {

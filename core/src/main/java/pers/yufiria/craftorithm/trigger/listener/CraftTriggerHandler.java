@@ -14,7 +14,7 @@ import pers.yufiria.craftorithm.trigger.TriggerManager;
  * 合成触发器监听器
  */
 @EventListener
-public enum CraftTriggerListener implements Listener {
+public enum CraftTriggerHandler implements Listener {
 
     INSTANCE;
 

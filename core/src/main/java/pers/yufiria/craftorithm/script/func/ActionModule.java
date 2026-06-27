@@ -6,11 +6,14 @@ import net.milkbowl.vault.economy.Economy;
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.black_ixx.playerpoints.PlayerPointsAPI;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import pers.yufiria.craftorithm.hook.PlayerPointsHook;
 import pers.yufiria.craftorithm.hook.VaultHook;
 import pers.yufiria.craftorithm.script.ScriptContext;
 import pers.yufiria.craftorithm.script.ScriptValue;
+
+import java.util.Objects;
 
 /**
  * 内置动作函数模块
@@ -47,26 +50,41 @@ public enum ActionModule implements ScriptModule {
         registry.register("take-points", this::takePoints);
         registry.register("give-points", this::givePoints);
         registry.register("close", this::close);
+        registry.register("discover-recipe", this::discoverRecipe);
+        registry.register("undiscover-recipe", this::undiscoverRecipe);
+        registry.register("set", this::set);
     }
 
     private ScriptValue command(ScriptContext ctx, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
         Player player = ctx.player();
-        String cmd = BukkitTextProcessor.placeholder(player, args[0].asString());
+        StringBuilder sb = new StringBuilder();
+        for (ScriptValue arg : args) {
+            sb.append(arg.asString());
+        }
+        String cmd = BukkitTextProcessor.placeholder(player, sb.toString());
         return ScriptValue.of(Bukkit.dispatchCommand(player, cmd));
     }
 
     private ScriptValue console(ScriptContext ctx, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
         Player player = ctx.player();
-        String cmd = BukkitTextProcessor.placeholder(player, args[0].asString());
+        StringBuilder sb = new StringBuilder();
+        for (ScriptValue arg : args) {
+            sb.append(arg.asString());
+        }
+        String cmd = BukkitTextProcessor.placeholder(player, sb.toString());
         return ScriptValue.of(Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd));
     }
 
     private ScriptValue tell(ScriptContext ctx, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.nil();
         Player player = ctx.player();
-        String msg = BukkitTextProcessor.placeholder(player, args[0].asString());
+        StringBuilder sb = new StringBuilder();
+        for (ScriptValue arg : args) {
+            sb.append(arg.asString());
+        }
+        String msg = BukkitTextProcessor.placeholder(player, sb.toString());
         BukkitMsgSender.INSTANCE.sendMsg(player, msg);
         return ScriptValue.nil();
     }
@@ -74,7 +92,11 @@ public enum ActionModule implements ScriptModule {
     private ScriptValue actionbar(ScriptContext ctx, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.nil();
         Player player = ctx.player();
-        String msg = BukkitTextProcessor.placeholder(player, args[0].asString());
+        StringBuilder sb = new StringBuilder();
+        for (ScriptValue arg : args) {
+            sb.append(arg.asString());
+        }
+        String msg = BukkitTextProcessor.placeholder(player, sb.toString());
         BukkitMsgSender.INSTANCE.sendActionBar(player, msg);
         return ScriptValue.nil();
     }
@@ -159,6 +181,29 @@ public enum ActionModule implements ScriptModule {
     private ScriptValue close(ScriptContext ctx, ScriptValue... args) {
         ctx.player().closeInventory();
         return ScriptValue.nil();
+    }
+
+    private ScriptValue discoverRecipe(ScriptContext ctx, ScriptValue... args) {
+        if (args.length < 1) return ScriptValue.of(false);
+        NamespacedKey recipeKey = NamespacedKey.fromString(args[0].asString());
+        return ScriptValue.of(ctx.player().discoverRecipe(Objects.requireNonNull(recipeKey)));
+    }
+
+    private ScriptValue undiscoverRecipe(ScriptContext ctx, ScriptValue... args) {
+        if (args.length < 1) return ScriptValue.of(false);
+        NamespacedKey recipeKey = NamespacedKey.fromString(args[0].asString());
+        return ScriptValue.of(ctx.player().undiscoverRecipe(Objects.requireNonNull(recipeKey)));
+    }
+
+    /**
+     * set("key", value) → 往上下文添加变量
+     */
+    private ScriptValue set(ScriptContext ctx, ScriptValue... args) {
+        if (args.length < 2) return ScriptValue.nil();
+        String key = args[0].asString();
+        ScriptValue value = args[1];
+        ctx.setVariable(key, value);
+        return value;
     }
 
 }

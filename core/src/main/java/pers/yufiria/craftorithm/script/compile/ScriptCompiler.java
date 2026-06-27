@@ -60,9 +60,10 @@ public class ScriptCompiler {
         if (node.operator().equals("&&")) {
             // 短路求值: left 为 false 时直接返回 false，不计算 right
             emitNode(node.left());
+            instructions.add(Instruction.of(OpCode.DUP, node.line()));
             int jumpIdx = instructions.size();
-            instructions.add(Instruction.jump(OpCode.JUMP_IF_FALSE, 0, node.line())); // 占位
-            instructions.add(Instruction.of(OpCode.POP, node.line())); // 弹出 left 的 false
+            instructions.add(Instruction.jump(OpCode.JUMP_IF_FALSE, 0, node.line()));
+            instructions.add(Instruction.of(OpCode.POP, node.line()));
             emitNode(node.right());
             patchJump(jumpIdx);
             return;

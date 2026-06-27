@@ -27,10 +27,12 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * 使用方式:
  *   // 条件判断
- *   boolean result = ScriptEngine.INSTANCE.evaluate("perm \"craftorithm.vip\"", player, recipe, recipeKey);
+ *   ScriptContext ctx = new ScriptContext(player);
+ *   ctx.setVariable("recipe", ScriptValue.of(recipeKey.toString()));
+ *   boolean result = ScriptEngine.INSTANCE.evaluate("perm \"craftorithm.vip\"", ctx);
  *
  *   // 动作执行
- *   ScriptEngine.INSTANCE.execute("command \"give %player% diamond 1\"\ntell \"&aDone!\"", player, recipe, recipeKey);
+ *   ScriptEngine.INSTANCE.execute("command \"give %player% diamond 1\"\ntell \"&aDone!\"", ctx);
  *
  *   // 编译后缓存
  *   CompiledScript script = ScriptEngine.INSTANCE.compile("my_script", source);
