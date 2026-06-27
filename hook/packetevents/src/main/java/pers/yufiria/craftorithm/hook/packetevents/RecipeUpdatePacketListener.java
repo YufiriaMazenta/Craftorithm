@@ -4,6 +4,7 @@ import com.github.retrooper.packetevents.event.PacketListener;
 import com.github.retrooper.packetevents.event.PacketSendEvent;
 import com.github.retrooper.packetevents.protocol.packettype.PacketType;
 import com.github.retrooper.packetevents.protocol.packettype.PacketTypeCommon;
+import crypticlib.util.IOHelper;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 
 import java.util.Set;
@@ -20,7 +21,11 @@ public enum RecipeUpdatePacketListener implements PacketListener {
         //配方书设置
         PacketType.Play.Server.RECIPE_BOOK_SETTINGS,
         //更新配方
-        PacketType.Play.Server.DECLARE_RECIPES
+        PacketType.Play.Server.DECLARE_RECIPES,
+        //更新成就
+        PacketType.Play.Server.UPDATE_ADVANCEMENTS,
+        //更新tag
+        PacketType.Play.Server.TAGS
     );
 
     @Override
@@ -29,8 +34,8 @@ public enum RecipeUpdatePacketListener implements PacketListener {
             //如果当前不是正在重载配方，那么不进行拦截
             return;
         }
-        //拦截处于黑名单状态下的数据包发送类型
         if (BLOCK_PACKET_TYPES.contains(event.getPacketType())) {
+            //拦截处于黑名单状态下的数据包发送类型
             event.setCancelled(true);
         }
     }

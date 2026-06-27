@@ -64,7 +64,9 @@ public enum ProtocolLibHook implements PluginHook, BukkitLifeCycleTask {
             PacketType.Play.Server.RECIPE_BOOK_ADD,
             PacketType.Play.Server.RECIPE_BOOK_REMOVE,
             PacketType.Play.Server.RECIPE_BOOK_SETTINGS,
-            PacketType.Play.Server.RECIPE_UPDATE
+            PacketType.Play.Server.RECIPE_UPDATE,
+            PacketType.Play.Server.ADVANCEMENTS,
+            PacketType.Play.Server.TAGS
         ) {
             @Override
             public void onPacketSending(PacketEvent event) {
