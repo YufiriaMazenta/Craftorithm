@@ -55,6 +55,7 @@ command:
     success: '<prefix> &aReceta <recipe_file_name> (<recipe_id>) editada con éxito.'
   recipebook:
     success: '<prefix> &aLibro de recetas abierto.'
+    type_not_found: '<prefix> &cEl tipo de receta <recipe_type> no existe'
 recipe_type_name:
   vanilla_shaped: Receta con forma
   vanilla_shapeless: Receta sin forma
@@ -72,6 +73,12 @@ recipe_load_exception: '<prefix> &cError al cargar la receta <recipe_name>.'
 item_load_exception: '<prefix> &cError al cargar el objeto <item_name>.'
 hook_plugin_success: '<prefix> &a<plugin> encontrado y conectado con éxito.'
 menu:
+  recipe_book:
+    sort_mode:
+      name_asc: A-Z
+      name_desc: Z-A
+      time_asc: Antiguo→Nuevo
+      time_desc: Nuevo→Antiguo
   recipe_creator:
     name: 'Creador'
     null_result: '<prefix> &c¡El resultado de la receta no puede estar vacío!'

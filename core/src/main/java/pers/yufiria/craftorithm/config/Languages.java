@@ -46,6 +46,7 @@ public class Languages {
     public static final StringLangEntry COMMAND_EDIT_RECIPE_NOT_FOUND = new StringLangEntry("command.edit.recipe_not_found");
     public static final StringLangEntry COMMAND_EDIT_SUCCESS = new StringLangEntry("command.edit.success");
     public static final StringLangEntry COMMAND_RECIPEBOOK_SUCCESS = new StringLangEntry("command.recipebook.success");
+    public static final StringLangEntry COMMAND_RECIPEBOOK_TYPE_NOT_FOUND = new StringLangEntry("command.recipebook.type_not_found");
 
     public static final StringLangEntry LOAD_FINISH = new StringLangEntry("load_finish");
     public static final StringLangEntry RECIPE_LOAD_EXCEPTION = new StringLangEntry("recipe_load_exception");
@@ -73,5 +74,10 @@ public class Languages {
     public static final StringLangEntry MENU_RECIPE_DISPLAY_ANVIL_COST_LEVEL = new StringLangEntry("menu.recipe_display.anvil.cost_level");
     public static final StringLangEntry MENU_RECIPE_DISPLAY_VANILLA_SMELTING_TIME = new StringLangEntry("menu.recipe_display.vanilla_smelting.time");
     public static final StringLangEntry MENU_RECIPE_DISPLAY_VANILLA_SMELTING_REWARD_EXP = new StringLangEntry("menu.recipe_display.vanilla_smelting.reward_exp");
+
+    public static final StringLangEntry MENU_RECIPE_BOOK_SORT_MODE_NAME_ASC = new StringLangEntry("menu.recipe_book.sort_mode.name_asc");
+    public static final StringLangEntry MENU_RECIPE_BOOK_SORT_MODE_NAME_DESC = new StringLangEntry("menu.recipe_book.sort_mode.name_desc");
+    public static final StringLangEntry MENU_RECIPE_BOOK_SORT_MODE_TIME_ASC = new StringLangEntry("menu.recipe_book.sort_mode.time_asc");
+    public static final StringLangEntry MENU_RECIPE_BOOK_SORT_MODE_TIME_DESC = new StringLangEntry("menu.recipe_book.sort_mode.time_desc");
 
 }

@@ -36,7 +36,6 @@ public final class Craftorithm extends BukkitPlugin implements BukkitLifeCycleTa
 
     public Craftorithm() {
         INSTANCE = this;
-        CrypticLib.debug = true;
     }
 
     @Override

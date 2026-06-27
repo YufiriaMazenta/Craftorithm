@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.ui.custom;
+package pers.yufiria.craftorithm.ui.icon;
 
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
@@ -18,7 +18,6 @@ import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.ui.BackableMenu;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayManager;
 import pers.yufiria.craftorithm.ui.editor.RecipeEditorManager;
-import pers.yufiria.craftorithm.ui.icon.ActionIcon;
 import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.util.ArrayList;
@@ -29,15 +28,15 @@ import java.util.function.BiFunction;
 
 public class RecipeDisplayIcon extends ActionIcon {
 
-    private final NamespacedKey recipeKey;
-    private final Recipe recipe;
-    private final RecipeType recipeType;
+    private NamespacedKey recipeKey;
+    private Recipe recipe;
+    private RecipeType recipeType;
     private final ClickType viewClick;
     private final ClickType editClick;
     private final List<String> extraLore;
 
     public RecipeDisplayIcon(NamespacedKey recipeKey, List<String> extraLore) {
-        this(recipeKey, extraLore, ClickType.LEFT, ClickType.SHIFT_RIGHT);
+        this(recipeKey, extraLore, ClickType.LEFT, ClickType.RIGHT);
     }
 
     public RecipeDisplayIcon(NamespacedKey recipeKey, List<String> extraLore, ClickType viewClick, ClickType editClick) {
@@ -46,9 +45,7 @@ public class RecipeDisplayIcon extends ActionIcon {
         this.viewClick = viewClick;
         this.editClick = editClick;
         this.extraLore = extraLore;
-        Recipe recipe = RecipeManager.INSTANCE.getRecipe(recipeKey);
-        this.recipe = recipe;
-        this.recipeType = RecipeManager.INSTANCE.getRecipeType(recipe);
+        setRecipeKey(recipeKey);
     }
 
     @Override
@@ -106,6 +103,18 @@ public class RecipeDisplayIcon extends ActionIcon {
 
     public NamespacedKey recipeKey() {
         return recipeKey;
+    }
+
+    public void setRecipeKey(NamespacedKey recipeKey) {
+        this.recipeKey = recipeKey;
+        if (recipeKey != null) {
+            Recipe recipe = RecipeManager.INSTANCE.getRecipe(recipeKey);
+            this.recipe = recipe;
+            this.recipeType = RecipeManager.INSTANCE.getRecipeType(recipe);
+        } else {
+            this.recipe = null;
+            this.recipeType = null;
+        }
     }
 
 }

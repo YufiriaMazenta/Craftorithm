@@ -39,7 +39,7 @@ public class RecipeListIcon extends TranslatableIcon {
         Player player = (Player) event.getWhoClicked();
         Optional<Menu> currentMenuOpt = MenuHelper.getOpeningMenu(player);
         Menu parentMenu = currentMenuOpt.orElse(null);
-        new RecipeBookListMenu(player, recipeType, 0, SortMode.NAME_ASC, parentMenu).openMenu();
+        new RecipeListMenu(player, recipeType, SortMode.NAME_ASC, parentMenu).openMenu();
         return this;
     }
 

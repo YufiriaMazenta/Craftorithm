@@ -55,6 +55,7 @@ command:
     success: '<prefix> &aRecipe <recipe_file_name> (<recipe_id>) edited successfully.'
   recipebook:
     success: '<prefix> &aRecipe book opened.'
+    type_not_found: '<prefix> &cRecipe type <recipe_type> does not exist.'
 recipe_type_name:
   vanilla_shaped: Shaped Recipe
   vanilla_shapeless: Shapeless Recipe
@@ -72,6 +73,12 @@ recipe_load_exception: '<prefix> &cAn error occurred while loading recipe <recip
 item_load_exception: '<prefix> &cAn error occurred while loading item <item_name>.'
 hook_plugin_success: '<prefix> &aFound <plugin>, hooked successfully.'
 menu:
+  recipe_book:
+    sort_mode:
+      name_asc: A-Z
+      name_desc: Z-A
+      time_asc: Old→New
+      time_desc: New→Old
   recipe_creator:
     name: 'Creator'
     null_result: '<prefix> &cRecipe result cannot be empty!'

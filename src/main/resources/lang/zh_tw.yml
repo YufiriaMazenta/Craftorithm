@@ -55,6 +55,7 @@ command:
     success: '<prefix> &a配方 <recipe_file_name> (<recipe_id>) 編輯成功。'
   recipebook:
     success: '<prefix> &a配方書已打開。'
+    type_not_found: '<prefix> &c配方類型 <recipe_type> 不存在'
 recipe_type_name:
   vanilla_shaped: 有序配方
   vanilla_shapeless: 無序配方
@@ -72,6 +73,12 @@ recipe_load_exception: '<prefix> &c載入配方 <recipe_name> 時發生錯誤。
 item_load_exception: '<prefix> &c載入物品 <item_name> 時發生錯誤。'
 hook_plugin_success: '<prefix> &a發現 <plugin>，已掛鉤。'
 menu:
+  recipe_book:
+    sort_mode:
+      name_asc: A-Z
+      name_desc: Z-A
+      time_asc: 舊→新
+      time_desc: 新→舊
   recipe_creator:
     name: '建立器'
     null_result: '<prefix> &c配方結果不允許為空！'

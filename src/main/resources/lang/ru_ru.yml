@@ -55,6 +55,7 @@ command:
     success: '<prefix> &aРецепт <recipe_file_name> (<recipe_id>) успешно изменён.'
   recipebook:
     success: '<prefix> &aКнига рецептов открыта.'
+    type_not_found: '<prefix> &cТип рецепта <recipe_type> не существует'
 recipe_type_name:
   vanilla_shaped: Формованный рецепт
   vanilla_shapeless: Беспорядочный рецепт
@@ -72,6 +73,12 @@ recipe_load_exception: '<prefix> &cОшибка при загрузке реце
 item_load_exception: '<prefix> &cОшибка при загрузке предмета <item_name>.'
 hook_plugin_success: '<prefix> &a<plugin> обнаружен и подключён.'
 menu:
+  recipe_book:
+    sort_mode:
+      name_asc: A-Z
+      name_desc: Z-A
+      time_asc: Старые→Новые
+      time_desc: Новые→Старые
   recipe_creator:
     name: 'Создатель'
     null_result: '<prefix> &cРезультат рецепта не может быть пустым!'

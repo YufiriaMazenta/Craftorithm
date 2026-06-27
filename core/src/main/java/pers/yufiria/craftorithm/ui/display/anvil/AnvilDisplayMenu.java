@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.recipe.extra.AnvilRecipe;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayMenu;
-import pers.yufiria.craftorithm.ui.display.RecipeResultIcon;
+import pers.yufiria.craftorithm.ui.icon.RecipeResultIcon;
 import pers.yufiria.craftorithm.ui.icon.ActionIcon;
 
 import java.util.Map;

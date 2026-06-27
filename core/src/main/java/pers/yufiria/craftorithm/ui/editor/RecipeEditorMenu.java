@@ -22,6 +22,7 @@ import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.ui.BackableMenu;
 import pers.yufiria.craftorithm.ui.creator.CreatorIconParser;
+import pers.yufiria.craftorithm.ui.icon.BackIcon;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
 
 /**
@@ -87,16 +88,7 @@ public abstract class RecipeEditorMenu extends StoredMenu implements BackableMen
      */
     protected Icon createBackIcon(ConfigurationSection config) {
         IconDisplay iconDisplay = CreatorIconParser.INSTANCE.parseIconDisplay(config);
-        return new TranslatableIcon(iconDisplay) {
-            @Override
-            public Icon onClick(InventoryClickEvent event) {
-                event.getWhoClicked().closeInventory();
-                if (parentMenu != null) {
-                    parentMenu.openMenu();
-                }
-                return this;
-            }
-        };
+        return new BackIcon(iconDisplay);
     }
 
     /**
@@ -108,24 +100,6 @@ public abstract class RecipeEditorMenu extends StoredMenu implements BackableMen
         }
         NamespacedItemIdStack itemId = ItemManager.INSTANCE.matchItemIdOrCreate(item, true);
         return itemId != null ? itemId.toString() : null;
-    }
-
-    /**
-     * 从物品ID字符串创建ItemStack用于GUI显示
-     */
-    protected @Nullable ItemStack itemFromId(@Nullable String itemId) {
-        if (itemId == null || itemId.isEmpty()) {
-            return null;
-        }
-        NamespacedItemIdStack stackedId = NamespacedItemIdStack.fromString(itemId);
-        if (stackedId == null) {
-            return null;
-        }
-        try {
-            return ItemManager.INSTANCE.matchItem(stackedId);
-        } catch (Exception e) {
-            return null;
-        }
     }
 
     /**

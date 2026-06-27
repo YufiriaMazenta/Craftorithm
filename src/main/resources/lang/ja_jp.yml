@@ -55,6 +55,7 @@ command:
     success: '<prefix> &aレシピ <recipe_file_name> (<recipe_id>) を編集しました。'
   recipebook:
     success: '<prefix> &aレシピブックを開きました。'
+    type_not_found: '<prefix> &cレシピタイプ <recipe_type> は存在しません'
 recipe_type_name:
   vanilla_shaped: 定形レシピ
   vanilla_shapeless: 不定形レシピ
@@ -72,6 +73,12 @@ recipe_load_exception: '<prefix> &cレシピ <recipe_name> の読み込み中に
 item_load_exception: '<prefix> &cアイテム <item_name> の読み込み中にエラーが発生しました。'
 hook_plugin_success: '<prefix> &a<plugin> を検出し、フックしました。'
 menu:
+  recipe_book:
+    sort_mode:
+      name_asc: A-Z
+      name_desc: Z-A
+      time_asc: 古い→新しい
+      time_desc: 新しい→古い
   recipe_creator:
     name: 'レシピ作成'
     null_result: '<prefix> &cレシピの結果を空にすることはできません！'

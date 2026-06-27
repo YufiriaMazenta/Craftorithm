@@ -20,7 +20,7 @@ public class RecipeBookTypeSelectMenu extends TranslatableMenu implements Recipe
 
     @Override
     public IconParser iconParser() {
-        return RecipeBookIconParser.INSTANCE;
+        return RecipeBookTypeSelectIconParser.INSTANCE;
     }
 
 }

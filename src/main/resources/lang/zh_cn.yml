@@ -56,6 +56,7 @@ command:
     success: '<prefix> &a配方 <recipe_file_name> (<recipe_id>) 编辑成功'
   recipebook:
     success: '<prefix> &a配方书已打开'
+    type_not_found: '<prefix> &c配方类型 <recipe_type> 不存在'
 recipe_type_name:
   vanilla_shaped: 有序配方
   vanilla_shapeless: 无序配方
@@ -74,6 +75,12 @@ recipe_load_exception: '<prefix> &c加载配方<recipe_name>时出现错误'
 item_load_exception: '<prefix> &c加载物品<item_name>时出现错误'
 hook_plugin_success: '<prefix> &a发现<plugin>，已挂钩'
 menu:
+  recipe_book:
+    sort_mode:
+      name_asc: A-Z
+      name_desc: Z-A
+      time_asc: 旧→新
+      time_desc: 新→旧
   recipe_creator:
     name: '创建器'
     null_result: '<prefix> &c配方结果不允许为空！'

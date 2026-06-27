@@ -55,6 +55,7 @@ command:
     success: '<prefix> &aRecette <recipe_file_name> (<recipe_id>) modifiée avec succès.'
   recipebook:
     success: '<prefix> &aLivre de recettes ouvert.'
+    type_not_found: '<prefix> &cLe type de recette <recipe_type> n''existe pas'
 recipe_type_name:
   vanilla_shaped: Recette avec forme
   vanilla_shapeless: Recette sans forme
@@ -72,6 +73,12 @@ recipe_load_exception: '<prefix> &cUne erreur est survenue lors du chargement de
 item_load_exception: '<prefix> &cUne erreur est survenue lors du chargement de l''objet <item_name>.'
 hook_plugin_success: '<prefix> &a<plugin> détecté et connecté avec succès.'
 menu:
+  recipe_book:
+    sort_mode:
+      name_asc: A-Z
+      name_desc: Z-A
+      time_asc: Ancien→Récent
+      time_desc: Récent→Ancien
   recipe_creator:
     name: 'Créateur'
     null_result: '<prefix> &cLe résultat de la recette ne peut pas être vide !'

@@ -3,6 +3,9 @@
 
 .mimocode/
 
+build/
+
+.gradle/
 *.iml
 *.ipr
 *.iws

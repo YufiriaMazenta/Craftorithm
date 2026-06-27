@@ -55,6 +55,7 @@ command:
     success: '<prefix> &aTarif <recipe_file_name> (<recipe_id>) başarıyla düzenlendi.'
   recipebook:
     success: '<prefix> &aTarif kitabı açıldı.'
+    type_not_found: '<prefix> &cTarif tipi <recipe_type> mevcut değil'
 recipe_type_name:
   vanilla_shaped: Şekilli tarif
   vanilla_shapeless: Şekilsiz tarif
@@ -72,6 +73,12 @@ recipe_load_exception: '<prefix> &c<recipe_name> tarifi yüklenirken bir hata ol
 item_load_exception: '<prefix> &c<item_name> eşyası yüklenirken bir hata oluştu.'
 hook_plugin_success: '<prefix> &a<plugin> bulundu ve başarıyla bağlandı.'
 menu:
+  recipe_book:
+    sort_mode:
+      name_asc: A-Z
+      name_desc: Z-A
+      time_asc: Eski→Yeni
+      time_desc: Yeni→Eski
   recipe_creator:
     name: 'Oluşturucu'
     null_result: '<prefix> &cTarif sonucu boş olamaz!'

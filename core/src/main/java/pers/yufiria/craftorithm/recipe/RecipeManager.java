@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.recipe;
 
+import crypticlib.CrypticLib;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.MinecraftVersion;
 import crypticlib.chat.BukkitMsgSender;
@@ -115,9 +116,11 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         loadRecipesFromConfig(() -> {
             loadServerRecipeCache();
             reloadDisabledRecipes();
-            isReloadingRecipeManager.set(false);
-            //所有操作进行完毕后，为玩家更新配方信息
-            Bukkit.updateRecipes();
+            CrypticLibBukkit.scheduler().syncLater(() -> {
+                isReloadingRecipeManager.set(false);
+                //所有操作进行完毕后，为玩家更新配方信息
+                Bukkit.updateRecipes();
+            }, 2L);
         });
     }
 
@@ -404,29 +407,16 @@ public enum RecipeManager implements BukkitLifeCycleTask {
             .toList();
     }
 
-    /**
-     * 获取所有有配方注册的Craftorithm配方类型
-     * @return 包含配方的类型集合
-     */
-    public java.util.Set<RecipeType> getAllRecipeTypes() {
-        java.util.Set<RecipeType> types = new java.util.LinkedHashSet<>();
-        for (Recipe recipe : craftorithmRecipes.values()) {
-            RecipeType type = getRecipeType(recipe);
-            if (type != SimpleRecipeTypes.UNKNOWN) {
-                types.add(type);
-            }
-        }
-        return types.stream()
-            .sorted(Comparator.comparingInt(RecipeType::typeId))
-            .collect(java.util.stream.Collectors.toCollection(java.util.LinkedHashSet::new));
-    }
-
     public Map<NamespacedKey, Recipe> craftorithmRecipes() {
         return craftorithmRecipes;
     }
 
     public @Nullable RecipeType getRecipeType(String typeId) {
         return recipeTypes.get(typeId);
+    }
+
+    public List<RecipeType> getRecipeTypes() {
+        return new ArrayList<>(recipeTypes.values());
     }
 
     public @Nullable BukkitConfigWrapper getRecipeConfigWrapper(NamespacedKey recipeKey) {
@@ -501,7 +491,7 @@ public enum RecipeManager implements BukkitLifeCycleTask {
 
         public void end() {
             this.cancel();
-            BukkitMsgSender.INSTANCE.info("Registered " + craftorithmRecipes.size() + " recipes in " + useTick + " ticks(" + useMilliseconds + "ms)");
+            BukkitMsgSender.INSTANCE.info("Loaded " + craftorithmRecipes.size() + " recipes in " + useTick + " ticks(" + useMilliseconds + "ms)");
             if (callback != null) {
                 callback.run();
             }
@@ -540,7 +530,9 @@ public enum RecipeManager implements BukkitLifeCycleTask {
                     throwable.printStackTrace();
                 }
             }
-            useMilliseconds += (System.currentTimeMillis() - startTime);
+            long thisTickUseMs = System.currentTimeMillis() - startTime;
+            IOHelper.info("Loaded " + recipeNum + " recipes in " + thisTickUseMs + " ms.");
+            useMilliseconds += thisTickUseMs;
             useTick ++;
         }
 

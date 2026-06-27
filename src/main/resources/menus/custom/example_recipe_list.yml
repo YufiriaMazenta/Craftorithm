@@ -19,7 +19,7 @@ icons:
     icon_type: recipe_display
     recipe_id: 'craftorithm:anvil'
     view_click: left
-    edit_click: shift_right
+    edit_click: right
     extra_lore:
       - '&r'
       - '&7点击查看配方'
@@ -27,7 +27,7 @@ icons:
     icon_type: recipe_display
     recipe_id: 'craftorithm:brewing'
     view_click: left
-    edit_click: shift_right
+    edit_click: right
     extra_lore:
       - '&r'
       - '&7点击查看配方'
@@ -35,7 +35,7 @@ icons:
     icon_type: recipe_display
     recipe_id: 'craftorithm:shaped'
     view_click: left
-    edit_click: shift_right
+    edit_click: right
     extra_lore:
       - '&r'
       - '&7点击查看配方'
@@ -43,7 +43,7 @@ icons:
     icon_type: recipe_display
     recipe_id: 'craftorithm:shapless'
     view_click: left
-    edit_click: shift_right
+    edit_click: right
     extra_lore:
       - '&r'
       - '&7点击查看配方'
@@ -51,7 +51,7 @@ icons:
     icon_type: recipe_display
     recipe_id: 'craftorithm:smelting_furnace'
     view_click: left
-    edit_click: shift_right
+    edit_click: right
     extra_lore:
       - '&r'
       - '&7点击查看配方'
@@ -59,7 +59,7 @@ icons:
     icon_type: recipe_display
     recipe_id: 'craftorithm:smithing_transform'
     view_click: left
-    edit_click: shift_right
+    edit_click: right
     extra_lore:
       - '&r'
       - '&7点击查看配方'
@@ -67,7 +67,7 @@ icons:
     icon_type: recipe_display
     recipe_id: 'craftorithm:stonecutting'
     view_click: left
-    edit_click: shift_right
+    edit_click: right
     extra_lore:
       - '&r'
       - '&7点击查看配方'

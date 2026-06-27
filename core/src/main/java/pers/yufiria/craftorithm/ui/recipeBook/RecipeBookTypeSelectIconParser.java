@@ -10,7 +10,7 @@ import pers.yufiria.craftorithm.ui.icon.IconParser;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public enum RecipeBookIconParser implements IconParser {
+public enum RecipeBookTypeSelectIconParser implements IconParser {
 
     INSTANCE;
 
