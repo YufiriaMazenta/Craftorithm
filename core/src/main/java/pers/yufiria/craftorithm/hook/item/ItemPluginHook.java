@@ -12,6 +12,10 @@ public interface ItemPluginHook extends PluginHook, BukkitLifeCycleTask {
 
     @Override
     default void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
-        ItemPluginHookManager.INSTANCE.addItemPluginHooker(this);
+        ItemPluginHookManager.INSTANCE.addItemPluginHook(this);
     }
+
+    @Override
+    default void unhook() {}
+
 }

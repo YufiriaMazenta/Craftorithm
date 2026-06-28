@@ -72,7 +72,7 @@ public enum CraftorithmAPI {
      * @param hook 物品插件挂钩
      */
     public void registerItemPluginHook(@NotNull ItemPluginHook hook) {
-        ItemPluginHookManager.INSTANCE.addItemPluginHooker(hook);
+        ItemPluginHookManager.INSTANCE.addItemPluginHook(hook);
     }
 
     /**

@@ -22,7 +22,7 @@ import java.util.Map;
 
 @LifeCycleTaskSettings(
     rules = {
-        @TaskRule(lifeCycle = LifeCycle.ENABLE),
+        @TaskRule(lifeCycle = LifeCycle.ACTIVE),
         @TaskRule(lifeCycle = LifeCycle.DISABLE)
     }
 )
@@ -37,7 +37,7 @@ public enum ProtocolLibHook implements PluginHook, BukkitLifeCycleTask {
                 hook();
             }
             case DISABLE -> {
-                ProtocolLibrary.getProtocolManager().removePacketListeners(Craftorithm.instance());
+                unhook();
             }
         }
     }
@@ -76,6 +76,11 @@ public enum ProtocolLibHook implements PluginHook, BukkitLifeCycleTask {
             }
         });
         return true;
+    }
+
+    @Override
+    public void unhook() {
+        ProtocolLibrary.getProtocolManager().removePacketListeners(Craftorithm.instance());
     }
 
 }

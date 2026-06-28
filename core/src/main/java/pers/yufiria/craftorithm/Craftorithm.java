@@ -50,7 +50,6 @@ public final class Craftorithm extends BukkitPlugin implements BukkitLifeCycleTa
 
     @Override
     public void whenEnable() {
-
         ActionCompiler.INSTANCE.regAction("close", Close::new);
         ActionCompiler.INSTANCE.regAction("openmenu", OpenMenu::new);
         ActionCompiler.INSTANCE.regAction("back", Back::new);

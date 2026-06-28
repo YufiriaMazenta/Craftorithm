@@ -46,6 +46,9 @@ public enum VaultHook implements PluginHook, BukkitLifeCycleTask {
         return true;
     }
 
+    @Override
+    public void unhook() {}
+
     /**
      * 获取经济插件实现实例
      * @return 经济插件的实例,如果挂钩失败将返回null

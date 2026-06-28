@@ -25,10 +25,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public enum ItemPluginHookManager implements BukkitLifeCycleTask {
 
     INSTANCE;
-    private final Map<String, ItemPluginHook> itemPluginHookerMap = new ConcurrentHashMap<>();
+    private final Map<String, ItemPluginHook> itemPluginHookMap = new ConcurrentHashMap<>();
 
     @Override
     public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
+        for (ItemPluginHook itemPluginHook : itemPluginHookMap.values()) {
+            itemPluginHook.unhook();
+        }
         ItemManager.INSTANCE.resetItemProviders();
         for (String hookPluginName : PluginConfigs.ITEM_PLUGIN_HOOK_PRIORITY.value()) {
             ItemPluginHook itemPluginHooker = getItemPluginHook(hookPluginName);
@@ -44,12 +47,12 @@ public enum ItemPluginHookManager implements BukkitLifeCycleTask {
         ItemManager.INSTANCE.regItemProvider(CraftorithmItemProvider.INSTANCE);
     }
 
-    public void addItemPluginHooker(ItemPluginHook hooker) {
-        itemPluginHookerMap.put(hooker.pluginName(), hooker);
+    public void addItemPluginHook(ItemPluginHook hooker) {
+        itemPluginHookMap.put(hooker.pluginName(), hooker);
     }
 
     public ItemPluginHook getItemPluginHook(String pluginName) {
-        return itemPluginHookerMap.get(pluginName);
+        return itemPluginHookMap.get(pluginName);
     }
 
 }

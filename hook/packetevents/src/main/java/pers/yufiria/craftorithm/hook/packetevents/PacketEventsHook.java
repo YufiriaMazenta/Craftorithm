@@ -19,7 +19,7 @@ import java.util.Map;
 
 @LifeCycleTaskSettings(
     rules = {
-        @TaskRule(lifeCycle = LifeCycle.ENABLE),
+        @TaskRule(lifeCycle = LifeCycle.ACTIVE),
         @TaskRule(lifeCycle = LifeCycle.DISABLE)
     }
 )
@@ -36,13 +36,7 @@ public enum PacketEventsHook implements PluginHook, BukkitLifeCycleTask {
                 hook();
             }
             case DISABLE -> {
-                EventManager eventManager = PacketEvents.getAPI().getEventManager();
-                if (recipeUpdatePacketListenerCommon != null) {
-                    eventManager.unregisterListener((PacketListenerCommon) recipeUpdatePacketListenerCommon);
-                }
-                if (fakeResultPacketListenerCommon != null) {
-                    eventManager.unregisterListener((PacketListenerCommon) fakeResultPacketListenerCommon);
-                }
+                unhook();
             }
         }
     }
@@ -68,5 +62,16 @@ public enum PacketEventsHook implements PluginHook, BukkitLifeCycleTask {
             .registerListener(FakeResultPreviewPacketListener.INSTANCE, PacketListenerPriority.NORMAL);
         Bukkit.getPluginManager().registerEvents(FakeResultPreviewPacketListener.INSTANCE, Craftorithm.instance());
         return true;
+    }
+
+    @Override
+    public void unhook() {
+        EventManager eventManager = PacketEvents.getAPI().getEventManager();
+        if (recipeUpdatePacketListenerCommon != null) {
+            eventManager.unregisterListener((PacketListenerCommon) recipeUpdatePacketListenerCommon);
+        }
+        if (fakeResultPacketListenerCommon != null) {
+            eventManager.unregisterListener((PacketListenerCommon) fakeResultPacketListenerCommon);
+        }
     }
 }

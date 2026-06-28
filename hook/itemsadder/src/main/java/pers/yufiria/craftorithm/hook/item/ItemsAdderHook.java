@@ -4,9 +4,10 @@ import crypticlib.chat.BukkitMsgSender;
 import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
+import dev.lone.itemsadder.api.Events.ItemsAdderLoadDataEvent;
 import org.bukkit.Bukkit;
 import pers.yufiria.craftorithm.Craftorithm;
-import pers.yufiria.craftorithm.hook.listener.ItemsAdderHandler;
+import pers.yufiria.craftorithm.hook.listener.ItemsAdderListener;
 import pers.yufiria.craftorithm.item.ItemProvider;
 
 @LifeCycleTaskSettings(rules = {
@@ -15,6 +16,7 @@ import pers.yufiria.craftorithm.item.ItemProvider;
 public enum ItemsAdderHook implements ItemPluginHook {
 
     INSTANCE;
+    private boolean hook = false;
 
     @Override
     public String pluginName() {
@@ -23,17 +25,24 @@ public enum ItemsAdderHook implements ItemPluginHook {
 
     @Override
     public boolean hook() {
-        boolean hooked = isPluginEnabled();
-        if (hooked) {
-            BukkitMsgSender.INSTANCE.debug("[Craftorithm] Registering ItemsAdder Handler");
-            Bukkit.getPluginManager().registerEvents(ItemsAdderHandler.INSTANCE, Craftorithm.instance());
+        hook = isPluginEnabled();
+        if (hook) {
+            BukkitMsgSender.INSTANCE.debug("[Craftorithm] Registering ItemsAdder Listener");
+            Bukkit.getPluginManager().registerEvents(ItemsAdderListener.INSTANCE, Craftorithm.instance());
         }
-        return hooked;
+        return hook;
     }
 
     @Override
     public ItemProvider itemProvider() {
         return ItemsAdderItemProvider.INSTANCE;
+    }
+
+    @Override
+    public void unhook() {
+        if (hook) {
+            ItemsAdderLoadDataEvent.getHandlerList().unregister(ItemsAdderListener.INSTANCE);
+        }
     }
 
 }

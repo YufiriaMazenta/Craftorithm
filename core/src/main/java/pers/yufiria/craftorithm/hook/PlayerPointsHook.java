@@ -35,6 +35,9 @@ public enum PlayerPointsHook implements PluginHook, BukkitLifeCycleTask {
         return playerPointsHooked;
     }
 
+    @Override
+    public void unhook() {}
+
     public @Nullable Object playerPoints() {
         return playerPoints;
     }

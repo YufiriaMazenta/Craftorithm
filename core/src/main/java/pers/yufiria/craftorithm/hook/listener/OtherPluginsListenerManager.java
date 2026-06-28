@@ -26,6 +26,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 @LifeCycleTaskSettings(
@@ -39,7 +40,10 @@ public enum OtherPluginsListenerManager implements BukkitLifeCycleTask {
 
     INSTANCE;
     private final Field executorField = ReflectionHelper.getDeclaredField(RegisteredListener.class, "executor");
-    private final Map<String, ConvertedRegisteredListener> convertedListenerMap = new ConcurrentHashMap<>();
+    private final List<ConvertedRegisteredListener> convertedListenerList = new ArrayList<>();
+    //用于记录一个类转换了多少次
+    private final Map<String, Integer> listenerConvertedCountMap = new ConcurrentHashMap<>();
+    private final Map<String, Integer> allowReregisterListenerNumMap = new ConcurrentHashMap<>();
 
     private void convertOtherPluginsListeners() {
         for (HandlerList handlerList : getCraftEventHandlerLists()) {
@@ -85,7 +89,8 @@ public enum OtherPluginsListenerManager implements BukkitLifeCycleTask {
                 }
                 handlerList.unregister(originRegisteredListener);
                 handlerList.register(convertedRegisteredListener);
-                convertedListenerMap.put(listenerClassName, new ConvertedRegisteredListener(
+                listenerConvertedCountMap.merge(listenerClassName, 1, Integer::sum);
+                convertedListenerList.add(new ConvertedRegisteredListener(
                     listenerClassName,
                     originRegisteredListener,
                     convertedRegisteredListener,
@@ -95,15 +100,48 @@ public enum OtherPluginsListenerManager implements BukkitLifeCycleTask {
                 IOHelper.info("Converted listener: " + listenerClassName);
             }
         }
+        allowReregisterListenerNumMap.putAll(listenerConvertedCountMap);
     }
 
     private void resetRegisteredListeners() {
-        convertedListenerMap.forEach((listenerClassName, convertedRegisteredListener) -> {
+        for (ConvertedRegisteredListener convertedRegisteredListener : convertedListenerList) {
             HandlerList handlerList = convertedRegisteredListener.handlerList();
             handlerList.unregister(convertedRegisteredListener.recipeCheckRegisteredListener());
+            String convertedListenerName = convertedRegisteredListener.listenerClassName();
+            int allowReregisterNum = allowReregisterListenerNumMap.getOrDefault(convertedListenerName, 0);
+            if (allowReregisterNum <= 0) {
+                //已经不再允许注册这个监听类的监听器了
+                continue;
+            }
+            int convertedNum = listenerConvertedCountMap.getOrDefault(convertedListenerName, 0);
+            if (allowReregisterNum == convertedNum) {
+                //如果允许重新注册的数量与之前转化的数量相等,意味着这是第一次为这个监听器类注册
+                boolean hasSameListenerClass = containsSameListenerClass(convertedRegisteredListener, handlerList);
+                if (hasSameListenerClass) {
+                    allowReregisterListenerNumMap.remove(convertedListenerName);
+                    continue;
+                }
+            }
             handlerList.register(convertedRegisteredListener.originRegisteredListener());
-        });
-        convertedListenerMap.clear();
+            allowReregisterListenerNumMap.merge(convertedListenerName, -1, Integer::sum);
+        }
+        convertedListenerList.clear();
+        listenerConvertedCountMap.clear();
+        allowReregisterListenerNumMap.clear();
+    }
+
+    private static boolean containsSameListenerClass(ConvertedRegisteredListener convertedRegisteredListener, HandlerList handlerList) {
+        boolean hasSameListenerClass = false;
+        for (RegisteredListener registeredListener : handlerList.getRegisteredListeners()) {
+            if (Objects.equals(
+                registeredListener.getListener().getClass(),
+                convertedRegisteredListener.originRegisteredListener().getListener().getClass()
+            )) {
+                //如果在HandlerList里已经存在了这个类的监听器,意味着其他插件已经自己重新注册了,这时候我们就不应该重新注册
+                hasSameListenerClass = true;
+            }
+        }
+        return hasSameListenerClass;
     }
 
     private EventExecutor getRegisteredListenerExecutor(RegisteredListener registeredListener) {
