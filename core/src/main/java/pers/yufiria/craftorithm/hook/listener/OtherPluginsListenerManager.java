@@ -41,8 +41,9 @@ public enum OtherPluginsListenerManager implements BukkitLifeCycleTask {
     INSTANCE;
     private final Field executorField = ReflectionHelper.getDeclaredField(RegisteredListener.class, "executor");
     private final List<ConvertedRegisteredListener> convertedListenerList = new ArrayList<>();
-    //用于记录一个类转换了多少次
+    //用于记录一个Listener类被转换了多少次
     private final Map<String, Integer> listenerConvertedCountMap = new ConcurrentHashMap<>();
+    //用于记录一个Listener类在重新注册时可以注册几个,主要是用于一些情况下其他插件会主动重新注册自己的监听器
     private final Map<String, Integer> allowReregisterListenerNumMap = new ConcurrentHashMap<>();
 
     private void convertOtherPluginsListeners() {
