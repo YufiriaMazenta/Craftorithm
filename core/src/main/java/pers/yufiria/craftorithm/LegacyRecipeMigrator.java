@@ -97,11 +97,6 @@ public enum LegacyRecipeMigrator implements BukkitLifeCycleTask {
      * 旧版配方的特征是包含 source 配置项
      */
     private boolean isLegacyFormat(YamlConfiguration config) {
-        // 新版格式使用 type 字段且值为新版类型名
-        String type = config.getString("type", "");
-        if (isNewFormatType(type)) {
-            return false;
-        }
         // 旧版配方基本都有 source 配置项
         return config.contains("source");
     }
