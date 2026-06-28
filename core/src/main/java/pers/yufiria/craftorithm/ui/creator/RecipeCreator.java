@@ -14,6 +14,7 @@ import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.recipe.RecipeType;
 
 import java.text.SimpleDateFormat;
 import java.util.Objects;
@@ -36,6 +37,8 @@ public abstract class RecipeCreator extends StoredMenu {
         this.recipeId = recipeId;
         this.recipeFileName = recipeFileName;
     }
+
+    protected abstract RecipeType recipeType();
 
     protected abstract Icon getFrameIcon();
 

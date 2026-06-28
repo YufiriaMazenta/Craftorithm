@@ -25,6 +25,7 @@ import pers.yufiria.craftorithm.config.menu.creator.AnvilCreatorConfig;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.ui.creator.CreatorIconParser;
 import pers.yufiria.craftorithm.ui.creator.RecipeCreator;
@@ -64,6 +65,11 @@ public class AnvilCreator extends RecipeCreator {
                 return layoutMap;
             })
         );
+    }
+
+    @Override
+    protected RecipeType recipeType() {
+        return SimpleRecipeTypes.ANVIL;
     }
 
     @Override

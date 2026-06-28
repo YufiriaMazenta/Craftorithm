@@ -1,8 +1,13 @@
 package pers.yufiria.craftorithm.recipe;
 
+import crypticlib.lang.entry.StringLangEntry;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
+
+import java.util.Locale;
 
 /**
  * 配方类型的接口,表示一种配方类型
@@ -19,5 +24,13 @@ public interface RecipeType {
     @NotNull RecipeRegister recipeRegister();
 
     boolean isThisType(Recipe recipe);
+
+    @Nullable String getLocalizedName(@NotNull Player player);
+
+    @Nullable String getLocalizedName(@NotNull Locale locale);
+
+    default String getLocalizedName() {
+        return getLocalizedName(Locale.getDefault());
+    }
 
 }

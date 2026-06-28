@@ -18,6 +18,7 @@ import pers.yufiria.craftorithm.config.menu.creator.VanillaShapelessCreatorConfi
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.ui.creator.CreatorIconParser;
 import pers.yufiria.craftorithm.ui.creator.RecipeCreator;
@@ -63,7 +64,12 @@ public class VanillaShapelessCreator extends RecipeCreator {
             })
         );
     }
-    
+
+    @Override
+    protected RecipeType recipeType() {
+        return SimpleRecipeTypes.VANILLA_SHAPELESS;
+    }
+
     @Override
     protected Icon getFrameIcon() {
         return CreatorIconParser.INSTANCE.parse(VanillaShapelessCreatorConfig.FRAME_ICON.value()).get();

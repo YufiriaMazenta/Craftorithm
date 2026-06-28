@@ -90,9 +90,6 @@ public abstract class AbstractSmeltingCreator extends RecipeCreator {
     protected abstract ConfigSectionConfig categoryIconMiscConfig();
     protected abstract int defaultExp();
     protected abstract int defaultTime();
-    protected abstract SimpleRecipeTypes recipeType();
-
-
 
     @Override
     protected Icon getFrameIcon() {
@@ -250,7 +247,7 @@ public abstract class AbstractSmeltingCreator extends RecipeCreator {
                         Languages.COMMAND_CREATE_SUCCESS,
                         Map.of(
                             "<recipe_type>",
-                            recipeTypeName((Player) event.getWhoClicked()),
+                            recipeType().getLocalizedName(),
                             "<recipe_file_name>",
                             recipeFileName,
                             "<recipe_id>",
@@ -269,16 +266,6 @@ public abstract class AbstractSmeltingCreator extends RecipeCreator {
                 event.getWhoClicked().closeInventory();
                 return this;
             }
-        };
-    }
-
-    private String recipeTypeName(Player player) {
-        return switch (recipeType()) {
-            case VANILLA_SMELTING_FURNACE -> Languages.RECIPE_TYPE_NAME_VANILLA_SMELTING_FURNACE.value(player);
-            case VANILLA_SMELTING_BLAST -> Languages.RECIPE_TYPE_NAME_VANILLA_SMELTING_BLAST.value(player);
-            case VANILLA_SMELTING_SMOKER -> Languages.RECIPE_TYPE_NAME_VANILLA_SMELTING_SMOKER.value(player);
-            case VANILLA_SMELTING_CAMPFIRE -> Languages.RECIPE_TYPE_NAME_VANILLA_SMELTING_CAMPFIRE.value(player);
-            default -> recipeType().typeKey();
         };
     }
 
