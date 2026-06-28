@@ -135,12 +135,12 @@ public class RecipeListMenu extends Menu implements BackableMenu, Multipage {
     @Override
     public String parsedMenuTitle() {
         String title = this.display.title();
+        Player player = player();
+        title = LangManager.INSTANCE.replaceLang(title, player);
         title = title.replace("<page>", String.valueOf(page + 1))
             .replace("<max_page>", String.valueOf(maxPage + 1))
             .replace("<type_name>", recipeType.typeKey())
             .replace("<sort_mode>", getSortModeName(sortMode));
-        Player player = player();
-        title = LangManager.INSTANCE.replaceLang(title, player);
         return BukkitTextProcessor.color(BukkitTextProcessor.placeholder(player, title));
     }
 
