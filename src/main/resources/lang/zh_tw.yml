@@ -79,18 +79,85 @@ menu:
       name_desc: Z-A
       time_asc: 舊→新
       time_desc: 新→舊
+    title: '&6配方書 - <type_name> (<page>/<max_page>)'
+    select_title: '&6配方書 - 選擇類型'
+    sort_name: '&e排序: <sort_mode>'
+    sort_lore: '&7點擊切換排序模式'
+    recipe_count: '&7<recipe_count> 個配方'
+    click_recipe: '&7點擊檢視配方'
+  recipe_editor:
+    name: '編輯器'
+    result_frame: '&a編輯器 - 結果物品'
+    confirm_lore: '&7點擊儲存配方修改'
+    back_lore: '&7點擊返回配方列表'
+    category_prefix: '&a配方類型:'
+    category_lore: '&7點擊切換分類'
+    crafting_category:
+      misc: '&e物品'
+      building: '&e建築方塊'
+      redstone: '&e紅石物品'
+      tools: '&e工具'
+    cooking_category:
+      food: '&e食物'
+      blocks: '&e方塊'
+      misc: '&e雜項'
+    smelting:
+      time: '&a燒煉時間: &e<time> &7(tick)'
+      time_lore: '&7點擊輸入燒煉時間'
+      exp: '&a獎勵經驗: &e<exp>'
+      exp_lore: '&7點擊輸入獎勵經驗'
+    anvil:
+      cost_level: '&a所需經驗等級: &e<level>'
+      cost_level_lore: '&7點擊輸入所需經驗等級'
   recipe_creator:
     name: '建立器'
     null_result: '<prefix> &c配方結果不允許為空！'
     null_ingredients: '<prefix> &c配方材料不允許為空！'
     result_frame_icon_name: '&a在此放置配方結果'
     confirm_icon_name: '&6&l確認建立配方'
-  tag_select:
-    name: 'Tag 選擇頁面'
-    frame_icon_name: '&c選擇你要使用的 Tag！'
+    result_frame: '&a結果物品'
+    frame_lore:
+      crafting: '&7將材料放入左側 3x3 網格'
+      smelting: '&7將材料放入左側'
+      brewing_input: '&7將輸入藥水放入左側'
+      brewing_ingredient: '&7將材料放入左側下方'
+      stonecutting: '&7將材料放入左側'
+      smithing: '&7將模板、基礎、添加物放入左側'
+      anvil: '&7將材料放入左側'
+      result_right: '&7將結果物品放入右側'
+      confirm_button: '&7點擊下方按鈕確認建立'
+    result_lore:
+      shaped: '&7將合成結果物品放在這裡'
+      smelting: '&7將燒煉結果物品放在這裡'
+      brewing: '&7將釀造結果物品放在這裡'
+      stonecutting: '&7將切石結果物品放在這裡'
+      smithing: '&7將鍛造結果物品放在這裡'
+    confirm_lore:
+      shaped: '&7點擊建立有序合成配方'
+      shapeless: '&7點擊建立無序合成配方'
+      smelting: '&7點擊建立熔爐配方'
+      blasting: '&7點擊建立高爐配方'
+      smoking: '&7點擊建立煙燻爐配方'
+      campfire: '&7點擊建立營火配方'
+      smithing: '&7點擊建立鍛造配方'
+      stonecutting: '&7點擊建立切石機配方'
+      brewing: '&7點擊建立釀造配方'
+      anvil: '&7點擊建立鐵砧配方'
   recipe_display:
     anvil:
       cost_level: '&3所需經驗：&a<level>'
     vanilla_smelting:
       time: '&3所需時間：&a<time>'
       reward_exp: '&3獎勵經驗：&a<reward_exp>'
+    back: '&c點擊返回上一頁'
+  tag_select:
+    name: 'Tag 選擇頁面'
+    frame_icon_name: '&c選擇你要使用的 Tag！'
+  common:
+    prev_page: '&a上一頁'
+    next_page: '&a下一頁'
+    back: '&c&l返回'
+    back_lore: '&7點擊返回上一頁'
+    click_to_view: '&7點擊檢視'
+    confirm_edit: '&a&l確認編輯'
+    confirm_create: '&a&l確認建立'

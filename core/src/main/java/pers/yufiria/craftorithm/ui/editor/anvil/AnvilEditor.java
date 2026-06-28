@@ -27,7 +27,7 @@ import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.recipe.extra.AnvilRecipe;
-import pers.yufiria.craftorithm.ui.creator.CreatorIconParser;
+import pers.yufiria.craftorithm.ui.editor.EditorIconParser;
 import pers.yufiria.craftorithm.ui.editor.RecipeEditorMenu;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
 import pers.yufiria.craftorithm.util.LangUtils;
@@ -91,7 +91,7 @@ public final class AnvilEditor extends RecipeEditorMenu {
     }
 
     private Icon getFrameIcon() {
-        return CreatorIconParser.INSTANCE.parse(AnvilEditorConfig.FRAME_ICON.value()).get();
+        return EditorIconParser.INSTANCE.parse(AnvilEditorConfig.FRAME_ICON.value()).get();
     }
 
     private Icon getBackIcon() {
@@ -99,7 +99,7 @@ public final class AnvilEditor extends RecipeEditorMenu {
     }
 
     private Icon getCostLevelIcon() {
-        IconDisplay iconDisplay = CreatorIconParser.INSTANCE.parseIconDisplay(
+        IconDisplay iconDisplay = EditorIconParser.INSTANCE.parseIconDisplay(
             AnvilEditorConfig.COST_LEVEL_ICON.value()
         );
         return new TranslatableIcon(iconDisplay) {
@@ -143,7 +143,7 @@ public final class AnvilEditor extends RecipeEditorMenu {
     }
 
     private Icon getConfirmIcon() {
-        IconDisplay iconDisplay = CreatorIconParser.INSTANCE.parseIconDisplay(AnvilEditorConfig.CONFIRM_ICON.value());
+        IconDisplay iconDisplay = EditorIconParser.INSTANCE.parseIconDisplay(AnvilEditorConfig.CONFIRM_ICON.value());
         return new TranslatableIcon(iconDisplay) {
             @Override
             public Icon onClick(InventoryClickEvent event) {

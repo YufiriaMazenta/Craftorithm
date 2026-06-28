@@ -1,46 +1,46 @@
-title: <translate:lang:recipe_type_name.vanilla_shapeless><translate:lang:menu.recipe_creator.name>
+﻿title: <translate:lang:recipe_type_name.vanilla_shapeless><translate:lang:menu.recipe_creator.name>
 frame_icon:
   material: minecraft:cyan_stained_glass_pane
   name: '&b<translate:lang:recipe_type_name.vanilla_shapeless>'
   lore:
     - ''
-    - '&7将材料放入左侧 3x3 网格'
-    - '&7将结果物品放入右侧'
-    - '&7点击下方按钮确认创建'
+    - '<translate:lang:menu.recipe_creator.frame_lore.crafting>'
+    - '<translate:lang:menu.recipe_creator.frame_lore.result_right>'
+    - '<translate:lang:menu.recipe_creator.frame_lore.confirm_button>'
 result_frame_icon:
   material: minecraft:lime_stained_glass_pane
-  name: '&a结果物品'
+  name: '<translate:lang:menu.recipe_creator.result_frame>'
   lore:
     - ''
-    - '&7将合成结果物品放在这里'
+    - '<translate:lang:menu.recipe_creator.result_lore.shaped>'
 confirm_icon:
   material: minecraft:crafting_table
-  name: '&a&l确认创建'
+  name: '<translate:lang:menu.common.confirm_create>'
   lore:
     - ''
-    - '&7点击创建无序合成配方'
+    - '<translate:lang:menu.recipe_creator.confirm_lore.shapeless>'
 category_icon:
   misc:
     material: minecraft:apple
-    name: '&a配方类型: &e物品'
+    name: '<translate:lang:menu.recipe_editor.category_prefix> <translate:lang:menu.recipe_editor.crafting_category.misc>'
     lore:
       - ''
-      - '&7点击切换分类'
+      - '<translate:lang:menu.recipe_editor.category_lore>'
   building:
     material: minecraft:bricks
-    name: '&a配方类型: &e建筑方块'
+    name: '<translate:lang:menu.recipe_editor.category_prefix> <translate:lang:menu.recipe_editor.crafting_category.building>'
     lore:
       - ''
-      - '&7点击切换分类'
+      - '<translate:lang:menu.recipe_editor.category_lore>'
   redstone:
     material: minecraft:redstone
-    name: '&a配方类型: &e红石物品'
+    name: '<translate:lang:menu.recipe_editor.category_prefix> <translate:lang:menu.recipe_editor.crafting_category.redstone>'
     lore:
       - ''
-      - '&7点击切换分类'
+      - '<translate:lang:menu.recipe_editor.category_lore>'
   equipment:
     material: minecraft:iron_axe
-    name: '&a配方类型: &e工具'
+    name: '<translate:lang:menu.recipe_editor.category_prefix> <translate:lang:menu.recipe_editor.crafting_category.tools>'
     lore:
       - ''
-      - '&7点击切换分类'
+      - '<translate:lang:menu.recipe_editor.category_lore>'

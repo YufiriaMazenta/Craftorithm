@@ -1,4 +1,4 @@
-title: '&6配方书 - 选择类型'
+﻿title: '<translate:lang:menu.recipe_book.select_title>'
 layout:
   - '#########'
   - '#ABCDEFG#'
@@ -12,79 +12,79 @@ icons:
     icon_type: recipe_list
     recipe_type: vanilla_shaped
     material: 'minecraft:crafting_table'
-    name: '&a有序合成'
+    name: '&a<translate:lang:recipe_type_name.vanilla_shaped>'
     lore:
-      - '&7<recipe_count> 个配方'
-      - '&7点击查看'
+      - '<translate:lang:menu.recipe_book.recipe_count>'
+      - '<translate:lang:menu.common.click_to_view>'
   B:
     icon_type: recipe_list
     recipe_type: vanilla_shapeless
     material: 'minecraft:crafting_table'
-    name: '&a无序合成'
+    name: '&a<translate:lang:recipe_type_name.vanilla_shapeless>'
     lore:
-      - '&7<recipe_count> 个配方'
-      - '&7点击查看'
+      - '<translate:lang:menu.recipe_book.recipe_count>'
+      - '<translate:lang:menu.common.click_to_view>'
   C:
     icon_type: recipe_list
     recipe_type: vanilla_smelting_furnace
     material: 'minecraft:furnace'
-    name: '&a熔炉配方'
+    name: '&a<translate:lang:recipe_type_name.vanilla_smelting_furnace>'
     lore:
-      - '&7<recipe_count> 个配方'
-      - '&7点击查看'
+      - '<translate:lang:menu.recipe_book.recipe_count>'
+      - '<translate:lang:menu.common.click_to_view>'
   D:
     icon_type: recipe_list
     recipe_type: vanilla_smelting_blast
     material: 'minecraft:blast_furnace'
-    name: '&a高炉配方'
+    name: '&a<translate:lang:recipe_type_name.vanilla_smelting_blast>'
     lore:
-      - '&7<recipe_count> 个配方'
-      - '&7点击查看'
+      - '<translate:lang:menu.recipe_book.recipe_count>'
+      - '<translate:lang:menu.common.click_to_view>'
   E:
     icon_type: recipe_list
     recipe_type: vanilla_smelting_smoker
     material: 'minecraft:smoker'
-    name: '&a烟熏炉配方'
+    name: '&a<translate:lang:recipe_type_name.vanilla_smelting_smoker>'
     lore:
-      - '&7<recipe_count> 个配方'
-      - '&7点击查看'
+      - '<translate:lang:menu.recipe_book.recipe_count>'
+      - '<translate:lang:menu.common.click_to_view>'
   F:
     icon_type: recipe_list
     recipe_type: vanilla_smelting_campfire
     material: 'minecraft:campfire'
-    name: '&a营火配方'
+    name: '&a<translate:lang:recipe_type_name.vanilla_smelting_campfire>'
     lore:
-      - '&7<recipe_count> 个配方'
-      - '&7点击查看'
+      - '<translate:lang:menu.recipe_book.recipe_count>'
+      - '<translate:lang:menu.common.click_to_view>'
   G:
     icon_type: recipe_list
     recipe_type: vanilla_smithing_transform
     material: 'minecraft:smithing_table'
-    name: '&a锻造配方'
+    name: '&a<translate:lang:recipe_type_name.vanilla_smithing_transform>'
     lore:
-      - '&7<recipe_count> 个配方'
-      - '&7点击查看'
+      - '<translate:lang:menu.recipe_book.recipe_count>'
+      - '<translate:lang:menu.common.click_to_view>'
   H:
     icon_type: recipe_list
     recipe_type: vanilla_stonecutting
     material: 'minecraft:stonecutter'
-    name: '&a切石配方'
+    name: '&a<translate:lang:recipe_type_name.vanilla_stonecutting>'
     lore:
-      - '&7<recipe_count> 个配方'
-      - '&7点击查看'
+      - '<translate:lang:menu.recipe_book.recipe_count>'
+      - '<translate:lang:menu.common.click_to_view>'
   I:
     icon_type: recipe_list
     recipe_type: vanilla_brewing
     material: 'minecraft:brewing_stand'
-    name: '&a酿造配方'
+    name: '&a<translate:lang:recipe_type_name.vanilla_brewing>'
     lore:
-      - '&7<recipe_count> 个配方'
-      - '&7点击查看'
+      - '<translate:lang:menu.recipe_book.recipe_count>'
+      - '<translate:lang:menu.common.click_to_view>'
   J:
     icon_type: recipe_list
     recipe_type: anvil
     material: 'minecraft:anvil'
-    name: '&a铁砧配方'
+    name: '&a<translate:lang:recipe_type_name.anvil>'
     lore:
-      - '&7<recipe_count> 个配方'
-      - '&7点击查看'
+      - '<translate:lang:menu.recipe_book.recipe_count>'
+      - '<translate:lang:menu.common.click_to_view>'

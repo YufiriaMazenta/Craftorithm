@@ -10,7 +10,7 @@ import java.util.List;
 @ConfigHandler(path = "menus/internal/recipeBook/recipe_list.yml")
 public class RecipeListConfig {
 
-    public static final StringConfig TITLE = new StringConfig("title", "&6配方书 - <type_name> (<page>/<max_page>)");
+    public static final StringConfig TITLE = new StringConfig("title", "<translate:lang:menu.recipe_book.title>");
     public static final StringListConfig LAYOUT = new StringListConfig("layout", List.of(
         "#########",
         "#RRRRRRR#",

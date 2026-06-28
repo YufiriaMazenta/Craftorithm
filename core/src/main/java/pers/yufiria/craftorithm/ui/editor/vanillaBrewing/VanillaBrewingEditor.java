@@ -20,7 +20,7 @@ import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.recipe.extra.BrewingRecipe;
-import pers.yufiria.craftorithm.ui.creator.CreatorIconParser;
+import pers.yufiria.craftorithm.ui.editor.EditorIconParser;
 import pers.yufiria.craftorithm.ui.editor.RecipeEditorMenu;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
 import pers.yufiria.craftorithm.util.LangUtils;
@@ -91,11 +91,11 @@ public final class VanillaBrewingEditor extends RecipeEditorMenu {
     }
 
     private Icon getFrameIcon() {
-        return CreatorIconParser.INSTANCE.parse(VanillaBrewingEditorConfig.FRAME_ICON.value()).get();
+        return EditorIconParser.INSTANCE.parse(VanillaBrewingEditorConfig.FRAME_ICON.value()).get();
     }
 
     private Icon getResultFrameIcon() {
-        return CreatorIconParser.INSTANCE.parse(VanillaBrewingEditorConfig.RESULT_FRAME_ICON.value()).get();
+        return EditorIconParser.INSTANCE.parse(VanillaBrewingEditorConfig.RESULT_FRAME_ICON.value()).get();
     }
 
     private Icon getBackIcon() {
@@ -103,7 +103,7 @@ public final class VanillaBrewingEditor extends RecipeEditorMenu {
     }
 
     private Icon getConfirmIcon() {
-        IconDisplay iconDisplay = CreatorIconParser.INSTANCE.parseIconDisplay(VanillaBrewingEditorConfig.CONFIRM_ICON.value());
+        IconDisplay iconDisplay = EditorIconParser.INSTANCE.parseIconDisplay(VanillaBrewingEditorConfig.CONFIRM_ICON.value());
         return new TranslatableIcon(iconDisplay) {
             @Override
             public Icon onClick(InventoryClickEvent event) {

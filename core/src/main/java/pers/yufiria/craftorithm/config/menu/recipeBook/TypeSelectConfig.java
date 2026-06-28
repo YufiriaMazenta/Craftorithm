@@ -10,7 +10,7 @@ import java.util.List;
 @ConfigHandler(path = "menus/internal/recipeBook/type_select.yml")
 public class TypeSelectConfig {
 
-    public static final StringConfig TITLE = new StringConfig("title", "&6配方书 - 选择类型");
+    public static final StringConfig TITLE = new StringConfig("title", "<translate:lang:menu.recipe_book.select_title>");
     public static final StringListConfig LAYOUT = new StringListConfig("layout", List.of(
         "#########",
         "#RRRRRRR#",

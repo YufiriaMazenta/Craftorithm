@@ -1,22 +1,22 @@
-title: <translate:lang:recipe_type_name.anvil><translate:lang:menu.recipe_creator.name>
+﻿title: <translate:lang:recipe_type_name.anvil><translate:lang:menu.recipe_creator.name>
 frame_icon:
   material: minecraft:cyan_stained_glass_pane
   name: '&b<translate:lang:recipe_type_name.anvil>'
   lore:
     - ''
-    - '&7将材料放入左侧'
-    - '&7将结果物品放入右侧'
-    - '&7点击下方按钮确认创建'
+    - '<translate:lang:menu.recipe_creator.frame_lore.anvil>'
+    - '<translate:lang:menu.recipe_creator.frame_lore.result_right>'
+    - '<translate:lang:menu.recipe_creator.frame_lore.confirm_button>'
 confirm_icon:
   material: minecraft:anvil
-  name: '&a&l确认创建'
+  name: '<translate:lang:menu.common.confirm_create>'
   lore:
     - ''
-    - '&7点击创建铁砧配方'
+    - '<translate:lang:menu.recipe_creator.confirm_lore.anvil>'
 cost_level_icon:
   material: minecraft:experience_bottle
-  name: '&a所需经验等级: &e<level>'
+  name: '<translate:lang:menu.recipe_editor.anvil.cost_level>'
   lore:
     - ''
-    - '&7点击输入所需经验等级'
+    - '<translate:lang:menu.recipe_editor.anvil.cost_level_lore>'
 default_cost_level: 1

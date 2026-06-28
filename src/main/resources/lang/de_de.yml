@@ -79,18 +79,85 @@ menu:
       name_desc: Z-A
       time_asc: Alt→Neu
       time_desc: Neu→Alt
+    title: '&6Rezeptbuch - <type_name> (<page>/<max_page>)'
+    select_title: '&6Rezeptbuch - Typ auswählen'
+    sort_name: '&eSortierung: <sort_mode>'
+    sort_lore: '&7Klicke zum Ändern der Sortierung'
+    recipe_count: '&7<recipe_count> Rezept(e)'
+    click_recipe: '&7Klicke zum Anzeigen'
+  recipe_editor:
+    name: 'Editor'
+    result_frame: '&aEditor - Ergebnis'
+    confirm_lore: '&7Klicke zum Speichern'
+    back_lore: '&7Klicke zur Rezeptliste'
+    category_prefix: '&aKategorie:'
+    category_lore: '&7Klicke zum Wechseln'
+    crafting_category:
+      misc: '&eGegenstände'
+      building: '&eBausteine'
+      redstone: '&eRedstone'
+      tools: '&eWerkzeuge'
+    cooking_category:
+      food: '&eEssen'
+      blocks: '&eBlöcke'
+      misc: '&eVerschiedenes'
+    smelting:
+      time: '&aSchmelzzeit: &e<time> &7(tick)'
+      time_lore: '&7Klicke zum Eingeben'
+      exp: '&aXP-Belohnung: &e<exp>'
+      exp_lore: '&7Klicke zum Eingeben'
+    anvil:
+      cost_level: '&aErforderliches Level: &e<level>'
+      cost_level_lore: '&7Klicke zum Eingeben'
   recipe_creator:
     name: 'Ersteller'
     null_result: '<prefix> &cRezeptergebnis darf nicht leer sein!'
     null_ingredients: '<prefix> &cRezeptzutaten dürfen nicht leer sein!'
     result_frame_icon_name: '&aRezeptergebnis hier platzieren'
     confirm_icon_name: '&6&lRezepterstellung bestätigen'
-  tag_select:
-    name: 'Tag-Auswahlseite'
-    frame_icon_name: '&cWähle den Tag, den du verwenden möchtest!'
+    result_frame: '&aErgebnis'
+    frame_lore:
+      crafting: '&7Platziere Materialien im 3x3-Raster'
+      smelting: '&7Platziere Material links'
+      brewing_input: '&7Platziere Trank links'
+      brewing_ingredient: '&7Platziere Zutat unten links'
+      stonecutting: '&7Platziere Material links'
+      smithing: '&7Platziere Vorlage, Basis und Ergänzung links'
+      anvil: '&7Platziere Gegenstände links'
+      result_right: '&7Platziere Ergebnis rechts'
+      confirm_button: '&7Klicke auf die Schaltfläche unten zum Erstellen'
+    result_lore:
+      shaped: '&7Platziere das Ergebnis hier'
+      smelting: '&7Platziere das Schmelzergebnis hier'
+      brewing: '&7Platziere das Brauergebnis hier'
+      stonecutting: '&7Platziere das Steinsägeergebnis hier'
+      smithing: '&7Platziere das Schmiedeergebnis hier'
+    confirm_lore:
+      shaped: '&7Klicke zum Erstellen eines geformten Rezepts'
+      shapeless: '&7Klicke zum Erstellen eines formlosen Rezepts'
+      smelting: '&7Klicke zum Erstellen eines Ofen-Rezepts'
+      blasting: '&7Klicke zum Erstellen eines Schmelzofen-Rezepts'
+      smoking: '&7Klicke zum Erstellen eines Räucherofen-Rezepts'
+      campfire: '&7Klicke zum Erstellen eines Lagerfeuer-Rezepts'
+      smithing: '&7Klicke zum Erstellen eines Schmiederezepts'
+      stonecutting: '&7Klicke zum Erstellen eines Steinsäge-Rezepts'
+      brewing: '&7Klicke zum Erstellen eines Braustand-Rezepts'
+      anvil: '&7Klicke zum Erstellen eines Amboss-Rezepts'
   recipe_display:
     anvil:
       cost_level: '&3Erforderliches Level: &a<level>'
     vanilla_smelting:
       time: '&3Schmelzzeit: &a<time>'
       reward_exp: '&3Erfahrungsbelohnung: &a<reward_exp>'
+    back: '&cKlicke zum Zurückkehren'
+  tag_select:
+    name: 'Tag-Auswahlseite'
+    frame_icon_name: '&cWähle den Tag, den du verwenden möchtest!'
+  common:
+    prev_page: '&aVorherige'
+    next_page: '&aNächste'
+    back: '&c&lZurück'
+    back_lore: '&7Klicke zum Zurückkehren'
+    click_to_view: '&7Klicke zum Anzeigen'
+    confirm_edit: '&a&lBestätigen'
+    confirm_create: '&a&lErstellen'

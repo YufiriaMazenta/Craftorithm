@@ -27,7 +27,7 @@ import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
-import pers.yufiria.craftorithm.ui.creator.CreatorIconParser;
+import pers.yufiria.craftorithm.ui.editor.EditorIconParser;
 import pers.yufiria.craftorithm.ui.creator.vanillaSmelting.CookingRecipeBookCategoryIcon;
 import pers.yufiria.craftorithm.ui.editor.RecipeEditorMenu;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
@@ -117,11 +117,11 @@ public abstract class BaseSmeltingEditor extends RecipeEditorMenu {
     }
 
     private Icon getFrameIcon() {
-        return CreatorIconParser.INSTANCE.parse(frameIconConfig().value()).get();
+        return EditorIconParser.INSTANCE.parse(frameIconConfig().value()).get();
     }
 
     private Icon getResultFrameIcon() {
-        return CreatorIconParser.INSTANCE.parse(resultFrameIconConfig().value()).get();
+        return EditorIconParser.INSTANCE.parse(resultFrameIconConfig().value()).get();
     }
 
     private Icon getBackIcon() {
@@ -129,7 +129,7 @@ public abstract class BaseSmeltingEditor extends RecipeEditorMenu {
     }
 
     private Icon getExpIcon() {
-        IconDisplay iconDisplay = CreatorIconParser.INSTANCE.parseIconDisplay(expIconConfig().value());
+        IconDisplay iconDisplay = EditorIconParser.INSTANCE.parseIconDisplay(expIconConfig().value());
         return new TranslatableIcon(iconDisplay) {
             @Override
             public ItemStack display() {
@@ -171,7 +171,7 @@ public abstract class BaseSmeltingEditor extends RecipeEditorMenu {
     }
 
     private Icon getTimeIcon() {
-        IconDisplay iconDisplay = CreatorIconParser.INSTANCE.parseIconDisplay(timeIconConfig().value());
+        IconDisplay iconDisplay = EditorIconParser.INSTANCE.parseIconDisplay(timeIconConfig().value());
         return new TranslatableIcon(iconDisplay) {
             @Override
             public ItemStack display() {
@@ -213,7 +213,7 @@ public abstract class BaseSmeltingEditor extends RecipeEditorMenu {
     }
 
     private Icon getConfirmIcon() {
-        IconDisplay iconDisplay = CreatorIconParser.INSTANCE.parseIconDisplay(confirmIconConfig().value());
+        IconDisplay iconDisplay = EditorIconParser.INSTANCE.parseIconDisplay(confirmIconConfig().value());
         return new TranslatableIcon(iconDisplay) {
             @Override
             public Icon onClick(InventoryClickEvent event) {

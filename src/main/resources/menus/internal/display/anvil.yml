@@ -1,4 +1,4 @@
-title: <translate:lang:recipe_type_name.anvil>, <translate:lang:menu.recipe_display.anvil.cost_level>
+﻿title: <translate:lang:recipe_type_name.anvil>, <translate:lang:menu.recipe_display.anvil.cost_level>
 layout:
 - '########X'
 - '#A#B###C#'
@@ -17,7 +17,7 @@ icons:
     icon_type: result
   X:
     material: minecraft:red_stained_glass_pane
-    name: '&c点击返回上一页'
+    name: '<translate:lang:menu.recipe_display.back>'
     actions:
       left:
         - back

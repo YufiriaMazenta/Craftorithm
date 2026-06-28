@@ -1,42 +1,42 @@
-title: <translate:lang:recipe_type_name.vanilla_shapeless> - <recipe_key> - 编辑器
+﻿title: <translate:lang:recipe_type_name.vanilla_shapeless> - <recipe_key> - <translate:lang:menu.recipe_editor.name>
 frame_icon:
   material: minecraft:gray_stained_glass_pane
   name: '&7<translate:lang:recipe_type_name.vanilla_shapeless>'
 result_frame_icon:
   material: minecraft:lime_stained_glass_pane
-  name: '&a编辑器 - 结果物品'
+  name: '<translate:lang:menu.recipe_editor.result_frame>'
 confirm_icon:
   material: minecraft:crafting_table
-  name: '&a&l确认编辑'
+  name: '<translate:lang:menu.common.confirm_edit>'
   lore:
-    - '&7点击保存配方修改'
+    - '<translate:lang:menu.recipe_editor.confirm_lore>'
 back_icon:
   material: minecraft:red_stained_glass_pane
-  name: '&c&l返回'
+  name: '<translate:lang:menu.common.back>'
   lore:
-    - '&7点击返回配方列表'
+    - '<translate:lang:menu.recipe_editor.back_lore>'
 category_icon:
   misc:
     material: minecraft:apple
-    name: '&a配方类型: &e物品'
+    name: '<translate:lang:menu.recipe_editor.category_prefix> <translate:lang:menu.recipe_editor.crafting_category.misc>'
     lore:
       - ''
-      - '&7点击切换分类'
+      - '<translate:lang:menu.recipe_editor.category_lore>'
   building:
     material: minecraft:bricks
-    name: '&a配方类型: &e建筑方块'
+    name: '<translate:lang:menu.recipe_editor.category_prefix> <translate:lang:menu.recipe_editor.crafting_category.building>'
     lore:
       - ''
-      - '&7点击切换分类'
+      - '<translate:lang:menu.recipe_editor.category_lore>'
   redstone:
     material: minecraft:redstone
-    name: '&a配方类型: &e红石物品'
+    name: '<translate:lang:menu.recipe_editor.category_prefix> <translate:lang:menu.recipe_editor.crafting_category.redstone>'
     lore:
       - ''
-      - '&7点击切换分类'
+      - '<translate:lang:menu.recipe_editor.category_lore>'
   equipment:
     material: minecraft:iron_axe
-    name: '&a配方类型: &e工具'
+    name: '<translate:lang:menu.recipe_editor.category_prefix> <translate:lang:menu.recipe_editor.crafting_category.tools>'
     lore:
       - ''
-      - '&7点击切换分类'
+      - '<translate:lang:menu.recipe_editor.category_lore>'

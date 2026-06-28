@@ -1,4 +1,4 @@
-title: '&6配方书 - <type_name> (<page>/<max_page>)'
+﻿title: '<translate:lang:menu.recipe_book.title>'
 layout:
   - '#########'
   - '#RRRRRRR#'
@@ -15,22 +15,22 @@ icons:
     edit_click: right
     extra_lore:
       - '&r'
-      - '&7点击查看配方'
+      - '<translate:lang:menu.recipe_book.click_recipe>'
   S:
     icon_type: sort
     material: 'minecraft:hopper'
-    name: '&e排序: <sort_mode>'
+    name: '<translate:lang:menu.recipe_book.sort_name>'
     lore:
-      - '&7点击切换排序模式'
+      - '<translate:lang:menu.recipe_book.sort_lore>'
   P:
     icon_type: prev_page
     material: 'minecraft:arrow'
-    name: '&a上一页'
+    name: '<translate:lang:menu.common.prev_page>'
   N:
     icon_type: next_page
     material: 'minecraft:arrow'
-    name: '&a下一页'
+    name: '<translate:lang:menu.common.next_page>'
   B:
     icon_type: back
     material: 'minecraft:barrier'
-    name: '&c返回'
+    name: '<translate:lang:menu.common.back>'

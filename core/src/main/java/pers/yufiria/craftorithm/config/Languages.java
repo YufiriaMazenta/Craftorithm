@@ -80,4 +80,72 @@ public class Languages {
     public static final StringLangEntry MENU_RECIPE_BOOK_SORT_MODE_TIME_ASC = new StringLangEntry("menu.recipe_book.sort_mode.time_asc");
     public static final StringLangEntry MENU_RECIPE_BOOK_SORT_MODE_TIME_DESC = new StringLangEntry("menu.recipe_book.sort_mode.time_desc");
 
+    public static final StringLangEntry MENU_COMMON_PREV_PAGE = new StringLangEntry("menu.common.prev_page");
+    public static final StringLangEntry MENU_COMMON_NEXT_PAGE = new StringLangEntry("menu.common.next_page");
+    public static final StringLangEntry MENU_COMMON_BACK = new StringLangEntry("menu.common.back");
+    public static final StringLangEntry MENU_COMMON_BACK_LORE = new StringLangEntry("menu.common.back_lore");
+    public static final StringLangEntry MENU_COMMON_CLICK_TO_VIEW = new StringLangEntry("menu.common.click_to_view");
+    public static final StringLangEntry MENU_COMMON_CONFIRM_EDIT = new StringLangEntry("menu.common.confirm_edit");
+    public static final StringLangEntry MENU_COMMON_CONFIRM_CREATE = new StringLangEntry("menu.common.confirm_create");
+
+    public static final StringLangEntry MENU_RECIPE_BOOK_TITLE = new StringLangEntry("menu.recipe_book.title");
+    public static final StringLangEntry MENU_RECIPE_BOOK_SELECT_TITLE = new StringLangEntry("menu.recipe_book.select_title");
+    public static final StringLangEntry MENU_RECIPE_BOOK_SORT_NAME = new StringLangEntry("menu.recipe_book.sort_name");
+    public static final StringLangEntry MENU_RECIPE_BOOK_SORT_LORE = new StringLangEntry("menu.recipe_book.sort_lore");
+    public static final StringLangEntry MENU_RECIPE_BOOK_RECIPE_COUNT = new StringLangEntry("menu.recipe_book.recipe_count");
+    public static final StringLangEntry MENU_RECIPE_BOOK_CLICK_RECIPE = new StringLangEntry("menu.recipe_book.click_recipe");
+
+    public static final StringLangEntry MENU_RECIPE_EDITOR_NAME = new StringLangEntry("menu.recipe_editor.name");
+    public static final StringLangEntry MENU_RECIPE_EDITOR_RESULT_FRAME = new StringLangEntry("menu.recipe_editor.result_frame");
+    public static final StringLangEntry MENU_RECIPE_EDITOR_CONFIRM_LORE = new StringLangEntry("menu.recipe_editor.confirm_lore");
+    public static final StringLangEntry MENU_RECIPE_EDITOR_BACK_LORE = new StringLangEntry("menu.recipe_editor.back_lore");
+    public static final StringLangEntry MENU_RECIPE_EDITOR_CATEGORY_PREFIX = new StringLangEntry("menu.recipe_editor.category_prefix");
+    public static final StringLangEntry MENU_RECIPE_EDITOR_CATEGORY_LORE = new StringLangEntry("menu.recipe_editor.category_lore");
+
+    public static final StringLangEntry MENU_RECIPE_EDITOR_CRAFTING_CATEGORY_MISC = new StringLangEntry("menu.recipe_editor.crafting_category.misc");
+    public static final StringLangEntry MENU_RECIPE_EDITOR_CRAFTING_CATEGORY_BUILDING = new StringLangEntry("menu.recipe_editor.crafting_category.building");
+    public static final StringLangEntry MENU_RECIPE_EDITOR_CRAFTING_CATEGORY_REDSTONE = new StringLangEntry("menu.recipe_editor.crafting_category.redstone");
+    public static final StringLangEntry MENU_RECIPE_EDITOR_CRAFTING_CATEGORY_TOOLS = new StringLangEntry("menu.recipe_editor.crafting_category.tools");
+
+    public static final StringLangEntry MENU_RECIPE_EDITOR_COOKING_CATEGORY_FOOD = new StringLangEntry("menu.recipe_editor.cooking_category.food");
+    public static final StringLangEntry MENU_RECIPE_EDITOR_COOKING_CATEGORY_BLOCKS = new StringLangEntry("menu.recipe_editor.cooking_category.blocks");
+    public static final StringLangEntry MENU_RECIPE_EDITOR_COOKING_CATEGORY_MISC = new StringLangEntry("menu.recipe_editor.cooking_category.misc");
+
+    public static final StringLangEntry MENU_RECIPE_EDITOR_SMELTING_TIME = new StringLangEntry("menu.recipe_editor.smelting.time");
+    public static final StringLangEntry MENU_RECIPE_EDITOR_SMELTING_TIME_LORE = new StringLangEntry("menu.recipe_editor.smelting.time_lore");
+    public static final StringLangEntry MENU_RECIPE_EDITOR_SMELTING_EXP = new StringLangEntry("menu.recipe_editor.smelting.exp");
+    public static final StringLangEntry MENU_RECIPE_EDITOR_SMELTING_EXP_LORE = new StringLangEntry("menu.recipe_editor.smelting.exp_lore");
+
+    public static final StringLangEntry MENU_RECIPE_EDITOR_ANVIL_COST_LEVEL = new StringLangEntry("menu.recipe_editor.anvil.cost_level");
+    public static final StringLangEntry MENU_RECIPE_EDITOR_ANVIL_COST_LEVEL_LORE = new StringLangEntry("menu.recipe_editor.anvil.cost_level_lore");
+
+    public static final StringLangEntry MENU_RECIPE_CREATOR_RESULT_FRAME = new StringLangEntry("menu.recipe_creator.result_frame");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_FRAME_LORE_CRAFTING = new StringLangEntry("menu.recipe_creator.frame_lore.crafting");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_FRAME_LORE_SMELTING = new StringLangEntry("menu.recipe_creator.frame_lore.smelting");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_FRAME_LORE_BREWING_INPUT = new StringLangEntry("menu.recipe_creator.frame_lore.brewing_input");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_FRAME_LORE_BREWING_INGREDIENT = new StringLangEntry("menu.recipe_creator.frame_lore.brewing_ingredient");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_FRAME_LORE_STONECUTTING = new StringLangEntry("menu.recipe_creator.frame_lore.stonecutting");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_FRAME_LORE_SMITHING = new StringLangEntry("menu.recipe_creator.frame_lore.smithing");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_FRAME_LORE_ANVIL = new StringLangEntry("menu.recipe_creator.frame_lore.anvil");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_FRAME_LORE_RESULT_RIGHT = new StringLangEntry("menu.recipe_creator.frame_lore.result_right");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_FRAME_LORE_CONFIRM_BUTTON = new StringLangEntry("menu.recipe_creator.frame_lore.confirm_button");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_RESULT_LORE_SHAPED = new StringLangEntry("menu.recipe_creator.result_lore_shaped");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_RESULT_LORE_SMELTING = new StringLangEntry("menu.recipe_creator.result_lore_smelting");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_RESULT_LORE_BREWING = new StringLangEntry("menu.recipe_creator.result_lore_brewing");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_RESULT_LORE_STONECUTTING = new StringLangEntry("menu.recipe_creator.result_lore_stonecutting");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_RESULT_LORE_SMITHING = new StringLangEntry("menu.recipe_creator.result_lore_smithing");
+
+    public static final StringLangEntry MENU_RECIPE_CREATOR_CONFIRM_LORE_SHAPED = new StringLangEntry("menu.recipe_creator.confirm_lore.shaped");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_CONFIRM_LORE_SHAPELESS = new StringLangEntry("menu.recipe_creator.confirm_lore.shapeless");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_CONFIRM_LORE_SMELTING = new StringLangEntry("menu.recipe_creator.confirm_lore.smelting");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_CONFIRM_LORE_BLASTING = new StringLangEntry("menu.recipe_creator.confirm_lore.blasting");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_CONFIRM_LORE_SMOKING = new StringLangEntry("menu.recipe_creator.confirm_lore.smoking");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_CONFIRM_LORE_CAMPFIRE = new StringLangEntry("menu.recipe_creator.confirm_lore.campfire");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_CONFIRM_LORE_SMITHING = new StringLangEntry("menu.recipe_creator.confirm_lore.smithing");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_CONFIRM_LORE_STONECUTTING = new StringLangEntry("menu.recipe_creator.confirm_lore.stonecutting");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_CONFIRM_LORE_BREWING = new StringLangEntry("menu.recipe_creator.confirm_lore.brewing");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_CONFIRM_LORE_ANVIL = new StringLangEntry("menu.recipe_creator.confirm_lore.anvil");
+
+    public static final StringLangEntry MENU_RECIPE_DISPLAY_BACK = new StringLangEntry("menu.recipe_display.back");
+
 }

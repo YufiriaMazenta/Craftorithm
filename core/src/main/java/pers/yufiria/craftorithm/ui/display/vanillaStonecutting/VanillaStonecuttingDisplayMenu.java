@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.StonecuttingRecipe;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayMenu;
-import pers.yufiria.craftorithm.ui.icon.RecipeResultIcon;
+import pers.yufiria.craftorithm.ui.display.RecipeResultIcon;
 
 public class VanillaStonecuttingDisplayMenu extends RecipeDisplayMenu<StonecuttingRecipe> {
 

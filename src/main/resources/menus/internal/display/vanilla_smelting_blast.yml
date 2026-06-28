@@ -1,4 +1,4 @@
-title: <translate:lang:recipe_type_name.vanilla_smelting_blast>
+﻿title: <translate:lang:recipe_type_name.vanilla_smelting_blast>
 layout:
 - '########X'
 - '##A###R##'
@@ -16,7 +16,7 @@ icons:
     icon_type: result
   X:
     material: minecraft:red_stained_glass_pane
-    name: '&c点击返回上一页'
+    name: '<translate:lang:menu.recipe_display.back>'
     actions:
       left:
         - back

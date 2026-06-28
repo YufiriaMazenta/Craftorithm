@@ -92,6 +92,8 @@ public abstract class AbstractSmeltingCreator extends RecipeCreator {
     protected abstract int defaultTime();
     protected abstract SimpleRecipeTypes recipeType();
 
+
+
     @Override
     protected Icon getFrameIcon() {
         return CreatorIconParser.INSTANCE.parse(frameIconConfig().value()).get();

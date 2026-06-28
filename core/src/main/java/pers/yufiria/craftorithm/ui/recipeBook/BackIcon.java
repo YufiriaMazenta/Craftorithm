@@ -1,6 +1,5 @@
-package pers.yufiria.craftorithm.ui.icon;
+package pers.yufiria.craftorithm.ui.recipeBook;
 
-import crypticlib.CrypticLib;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
@@ -9,6 +8,7 @@ import crypticlib.ui.util.MenuHelper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import pers.yufiria.craftorithm.ui.BackableMenu;
+import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
 
 import java.util.Optional;
 

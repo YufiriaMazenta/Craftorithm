@@ -79,18 +79,85 @@ menu:
       name_desc: Z-A
       time_asc: 古い→新しい
       time_desc: 新しい→古い
+    title: '&6レシピブック - <type_name> (<page>/<max_page>)'
+    select_title: '&6レシピブック - タイプ選択'
+    sort_name: '&e並び替え: <sort_mode>'
+    sort_lore: '&7クリックで並び替えを変更'
+    recipe_count: '&7<recipe_count> 件のレシピ'
+    click_recipe: '&7クリックでレシピを表示'
+  recipe_editor:
+    name: 'エディター'
+    result_frame: '&aエディター - 結果アイテム'
+    confirm_lore: '&7クリックでレシピの変更を保存'
+    back_lore: '&7クリックでレシピリストに戻る'
+    category_prefix: '&aカテゴリ:'
+    category_lore: '&7クリックでカテゴリを切り替え'
+    crafting_category:
+      misc: '&eアイテム'
+      building: '&e建築ブロック'
+      redstone: '&eレッドストーン'
+      tools: '&eツール'
+    cooking_category:
+      food: '&e食べ物'
+      blocks: '&eブロック'
+      misc: '&eその他'
+    smelting:
+      time: '&a精錬時間: &e<time> &7(tick)'
+      time_lore: '&7クリックで精錬時間を入力'
+      exp: '&a経験値報酬: &e<exp>'
+      exp_lore: '&7クリックで経験値を入力'
+    anvil:
+      cost_level: '&a必要レベル: &e<level>'
+      cost_level_lore: '&7クリックで必要レベルを入力'
   recipe_creator:
     name: 'レシピ作成'
     null_result: '<prefix> &cレシピの結果を空にすることはできません！'
     null_ingredients: '<prefix> &cレシピの材料を空にすることはできません！'
     result_frame_icon_name: '&aここにレシピの結果を配置してください'
     confirm_icon_name: '&6&lレシピ作成を確定'
-  tag_select:
-    name: 'Tag選択ページ'
-    frame_icon_name: '&c使用するTagを選択してください！'
+    result_frame: '&a結果アイテム'
+    frame_lore:
+      crafting: '&7材料を左の3x3グリッドに配置'
+      smelting: '&7材料を左側に配置'
+      brewing_input: '&7入力ポーションを左側に配置'
+      brewing_ingredient: '&7材料を左下に配置'
+      stonecutting: '&7材料を左側に配置'
+      smithing: '&7テンプレート、ベース、添加物を左側に配置'
+      anvil: '&7アイテムを左側に配置'
+      result_right: '&7結果アイテムを右側に配置'
+      confirm_button: '&7下のボタンで作成を確定'
+    result_lore:
+      shaped: '&7合成結果アイテムをここに配置'
+      smelting: '&7精錬結果アイテムをここに配置'
+      brewing: '&7醸造結果アイテムをここに配置'
+      stonecutting: '&7石切結果アイテムをここに配置'
+      smithing: '&7鍛冶結果アイテムをここに配置'
+    confirm_lore:
+      shaped: '&7クリックで定形レシピを作成'
+      shapeless: '&7クリックで不定形レシピを作成'
+      smelting: '&7クリックでかまどレシピを作成'
+      blasting: '&7クリックで溶鉱炉レシピを作成'
+      smoking: '&7クリックで燻製器レシピを作成'
+      campfire: '&7クリックで焚き火レシピを作成'
+      smithing: '&7クリックで鍛冶台レシピを作成'
+      stonecutting: '&7クリックで石切台レシピを作成'
+      brewing: '&7クリックで醸造台レシピを作成'
+      anvil: '&7クリックで金床レシピを作成'
   recipe_display:
     anvil:
       cost_level: '&3必要レベル: &a<level>'
     vanilla_smelting:
       time: '&3精錬時間: &a<time>'
       reward_exp: '&3経験値報酬: &a<reward_exp>'
+    back: '&cクリックで戻る'
+  tag_select:
+    name: 'Tag選択ページ'
+    frame_icon_name: '&c使用するTagを選択してください！'
+  common:
+    prev_page: '&a前のページ'
+    next_page: '&a次のページ'
+    back: '&c&l戻る'
+    back_lore: '&7クリックで戻る'
+    click_to_view: '&7クリックで表示'
+    confirm_edit: '&a&l編集を確定'
+    confirm_create: '&a&l作成を確定'

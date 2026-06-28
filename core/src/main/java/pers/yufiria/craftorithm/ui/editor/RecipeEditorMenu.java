@@ -12,7 +12,6 @@ import crypticlib.util.ItemHelper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -21,9 +20,8 @@ import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.ui.BackableMenu;
-import pers.yufiria.craftorithm.ui.creator.CreatorIconParser;
-import pers.yufiria.craftorithm.ui.icon.BackIcon;
-import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
+import pers.yufiria.craftorithm.ui.editor.EditorIconParser;
+import pers.yufiria.craftorithm.ui.recipeBook.BackIcon;
 
 /**
  * 配方编辑器基类
@@ -87,7 +85,7 @@ public abstract class RecipeEditorMenu extends StoredMenu implements BackableMen
      * @param config 返回按钮的配置节
      */
     protected Icon createBackIcon(ConfigurationSection config) {
-        IconDisplay iconDisplay = CreatorIconParser.INSTANCE.parseIconDisplay(config);
+        IconDisplay iconDisplay = EditorIconParser.INSTANCE.parseIconDisplay(config);
         return new BackIcon(iconDisplay);
     }
 

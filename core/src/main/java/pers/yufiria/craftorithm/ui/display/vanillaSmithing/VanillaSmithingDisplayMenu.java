@@ -9,7 +9,7 @@ import org.bukkit.inventory.SmithingTransformRecipe;
 import org.bukkit.inventory.SmithingTrimRecipe;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayMenu;
-import pers.yufiria.craftorithm.ui.icon.RecipeResultIcon;
+import pers.yufiria.craftorithm.ui.display.RecipeResultIcon;
 
 public class VanillaSmithingDisplayMenu extends RecipeDisplayMenu<SmithingRecipe> {
 

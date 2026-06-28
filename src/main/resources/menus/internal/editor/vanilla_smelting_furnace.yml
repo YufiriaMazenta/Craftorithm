@@ -1,46 +1,46 @@
-title: <translate:lang:recipe_type_name.vanilla_smelting_furnace> - <recipe_key> - 编辑器
+﻿title: <translate:lang:recipe_type_name.vanilla_smelting_furnace> - <recipe_key> - <translate:lang:menu.recipe_editor.name>
 frame_icon:
   material: minecraft:gray_stained_glass_pane
   name: '&7<translate:lang:recipe_type_name.vanilla_smelting_furnace>'
 result_frame_icon:
   material: minecraft:lime_stained_glass_pane
-  name: '&a编辑器 - 结果物品'
+  name: '<translate:lang:menu.recipe_editor.result_frame>'
 confirm_icon:
   material: minecraft:furnace
-  name: '&a&l确认编辑'
+  name: '<translate:lang:menu.common.confirm_edit>'
   lore:
-    - '&7点击保存配方修改'
+    - '<translate:lang:menu.recipe_editor.confirm_lore>'
 exp_icon:
   material: minecraft:experience_bottle
-  name: '&a奖励经验: &e<exp>'
+  name: '<translate:lang:menu.recipe_editor.smelting.exp>'
   lore:
-    - '&7点击输入奖励经验'
+    - '<translate:lang:menu.recipe_editor.smelting.exp_lore>'
 time_icon:
   material: minecraft:clock
-  name: '&a熔炼时间: &e<time> &7(tick)'
+  name: '<translate:lang:menu.recipe_editor.smelting.time>'
   lore:
-    - '&7点击输入熔炼时间'
+    - '<translate:lang:menu.recipe_editor.smelting.time_lore>'
 back_icon:
   material: minecraft:red_stained_glass_pane
-  name: '&c&l返回'
+  name: '<translate:lang:menu.common.back>'
   lore:
-    - '&7点击返回配方列表'
+    - '<translate:lang:menu.recipe_editor.back_lore>'
 category_icon:
   food:
     material: minecraft:cooked_beef
-    name: '&a配方书分类: &e食物'
+    name: '<translate:lang:menu.recipe_editor.smelting.category_food>'
     lore:
       - ''
-      - '&7点击切换分类'
+      - '<translate:lang:menu.recipe_editor.category_lore>'
   blocks:
     material: minecraft:stone
-    name: '&a配方书分类: &e方块'
+    name: '<translate:lang:menu.recipe_editor.smelting.category_blocks>'
     lore:
       - ''
-      - '&7点击切换分类'
+      - '<translate:lang:menu.recipe_editor.category_lore>'
   misc:
     material: minecraft:stick
-    name: '&a配方书分类: &e杂项'
+    name: '<translate:lang:menu.recipe_editor.smelting.category_misc>'
     lore:
       - ''
-      - '&7点击切换分类'
+      - '<translate:lang:menu.recipe_editor.category_lore>'

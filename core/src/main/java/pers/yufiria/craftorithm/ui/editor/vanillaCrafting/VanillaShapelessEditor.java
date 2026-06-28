@@ -20,7 +20,7 @@ import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
-import pers.yufiria.craftorithm.ui.creator.CreatorIconParser;
+import pers.yufiria.craftorithm.ui.editor.EditorIconParser;
 import pers.yufiria.craftorithm.ui.creator.vanillaCrafting.RecipeBookCategoryIcon;
 import pers.yufiria.craftorithm.ui.editor.RecipeEditorMenu;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
@@ -84,11 +84,11 @@ public final class VanillaShapelessEditor extends RecipeEditorMenu {
     }
 
     private Icon getFrameIcon() {
-        return CreatorIconParser.INSTANCE.parse(VanillaShapelessEditorConfig.FRAME_ICON.value()).get();
+        return EditorIconParser.INSTANCE.parse(VanillaShapelessEditorConfig.FRAME_ICON.value()).get();
     }
 
     private Icon getResultFrameIcon() {
-        return CreatorIconParser.INSTANCE.parse(VanillaShapelessEditorConfig.RESULT_FRAME_ICON.value()).get();
+        return EditorIconParser.INSTANCE.parse(VanillaShapelessEditorConfig.RESULT_FRAME_ICON.value()).get();
     }
 
     private Icon getBackIcon() {
@@ -96,7 +96,7 @@ public final class VanillaShapelessEditor extends RecipeEditorMenu {
     }
 
     private Icon getConfirmIcon() {
-        IconDisplay iconDisplay = CreatorIconParser.INSTANCE.parseIconDisplay(VanillaShapelessEditorConfig.CONFIRM_ICON.value());
+        IconDisplay iconDisplay = EditorIconParser.INSTANCE.parseIconDisplay(VanillaShapelessEditorConfig.CONFIRM_ICON.value());
         return new TranslatableIcon(iconDisplay) {
             @Override
             public Icon onClick(InventoryClickEvent event) {

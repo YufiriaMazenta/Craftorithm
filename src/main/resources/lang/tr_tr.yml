@@ -79,18 +79,85 @@ menu:
       name_desc: Z-A
       time_asc: Eski→Yeni
       time_desc: Yeni→Eski
+    title: '&6Tarif kitabı - <type_name> (<page>/<max_page>)'
+    select_title: '&6Tarif kitabı - Tip seç'
+    sort_name: '&eSıralama: <sort_mode>'
+    sort_lore: '&7Sıralamayı değiştirmek için tıkla'
+    recipe_count: '&7<recipe_count> tarif'
+    click_recipe: '&7Görmek için tıkla'
+  recipe_editor:
+    name: 'Düzenleyici'
+    result_frame: '&aDüzenleyici - Sonuç'
+    confirm_lore: '&7Değişiklikleri kaydetmek için tıkla'
+    back_lore: '&7Listeye dönmek için tıkla'
+    category_prefix: '&aKategori:'
+    category_lore: '&7Kategori değiştirmek için tıkla'
+    crafting_category:
+      misc: '&eEşyalar'
+      building: '&eİnşaat blokları'
+      redstone: '&eRedstone'
+      tools: '&eAletler'
+    cooking_category:
+      food: '&eYemek'
+      blocks: '&eBloklar'
+      misc: '&eÇeşitli'
+    smelting:
+      time: '&aEritme süresi: &e<time> &7(tick)'
+      time_lore: '&7Süre girmek için tıkla'
+      exp: '&aDeneyim ödülü: &e<exp>'
+      exp_lore: '&7Deneyim girmek için tıkla'
+    anvil:
+      cost_level: '&aGerekli seviye: &e<level>'
+      cost_level_lore: '&7Seviye girmek için tıkla'
   recipe_creator:
     name: 'Oluşturucu'
     null_result: '<prefix> &cTarif sonucu boş olamaz!'
     null_ingredients: '<prefix> &cTarif malzemeleri boş olamaz!'
     result_frame_icon_name: '&aTarif sonucunu buraya yerleştirin'
     confirm_icon_name: '&6&lTarif Oluşturmayı Onayla'
-  tag_select:
-    name: 'Tag seçim sayfası'
-    frame_icon_name: '&cKullanmak istediğiniz tagı seçin!'
+    result_frame: '&aSonuç'
+    frame_lore:
+      crafting: '&7Malzemeleri 3x3 ızgaraya yerleştir'
+      smelting: '&7Malzemeyi sol tarafa yerleştir'
+      brewing_input: '&7Giriş iksirini sol tarafa yerleştir'
+      brewing_ingredient: '&7Malzemeyi sol alta yerleştir'
+      stonecutting: '&7Malzemeyi sol tarafa yerleştir'
+      smithing: '&7Şablon, baz ve eklemeyi sol tarafa yerleştir'
+      anvil: '&7Eşyaları sol tarafa yerleştir'
+      result_right: '&7Sonucu sağ tarafa yerleştir'
+      confirm_button: '&7Oluşturmak için aşağıdaki düğmeye tıkla'
+    result_lore:
+      shaped: '&7Sonucu buraya yerleştir'
+      smelting: '&7Eritme sonucunu buraya yerleştir'
+      brewing: '&7Mayalama sonucunu buraya yerleştir'
+      stonecutting: '&7Taş yontma sonucunu buraya yerleştir'
+      smithing: '&7Demirci sonucunu buraya yerleştir'
+    confirm_lore:
+      shaped: '&7Şekilli tarif oluşturmak için tıkla'
+      shapeless: '&7Şekilsiz tarif oluşturmak için tıkla'
+      smelting: '&7Ocak tarifi oluşturmak için tıkla'
+      blasting: '&7Maden eritme ocağı tarifi oluşturmak için tıkla'
+      smoking: '&7Duman fırını tarifi oluşturmak için tıkla'
+      campfire: '&7Kamp ateşi tarifi oluşturmak için tıkla'
+      smithing: '&7Demirci tarifi oluşturmak için tıkla'
+      stonecutting: '&7Taş yontma tarifi oluşturmak için tıkla'
+      brewing: '&7Mayalama tarifi oluşturmak için tıkla'
+      anvil: '&7Örs tarifi oluşturmak için tıkla'
   recipe_display:
     anvil:
       cost_level: '&3Gerekli seviye: &a<level>'
     vanilla_smelting:
       time: '&3Eritme süresi: &a<time>'
       reward_exp: '&3Deneyim ödülü: &a<reward_exp>'
+    back: '&cGeri dönmek için tıkla'
+  tag_select:
+    name: 'Tag seçim sayfası'
+    frame_icon_name: '&cKullanmak istediğiniz tagı seçin!'
+  common:
+    prev_page: '&aÖnceki'
+    next_page: '&aSonraki'
+    back: '&c&lGeri'
+    back_lore: '&7Geri dönmek için tıkla'
+    click_to_view: '&7Görmek için tıkla'
+    confirm_edit: '&a&lOnayla'
+    confirm_create: '&a&lOluştur'

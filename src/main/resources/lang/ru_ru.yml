@@ -79,18 +79,85 @@ menu:
       name_desc: Z-A
       time_asc: Старые→Новые
       time_desc: Новые→Старые
+    title: '&6Книга рецептов - <type_name> (<page>/<max_page>)'
+    select_title: '&6Книга рецептов - Выбор типа'
+    sort_name: '&eСортировка: <sort_mode>'
+    sort_lore: '&7Нажмите для изменения сортировки'
+    recipe_count: '&7<recipe_count> рецепт(ов)'
+    click_recipe: '&7Нажмите для просмотра'
+  recipe_editor:
+    name: 'Редактор'
+    result_frame: '&aРедактор - Результат'
+    confirm_lore: '&7Нажмите для сохранения'
+    back_lore: '&7Нажмите для возврата к списку'
+    category_prefix: '&aКатегория:'
+    category_lore: '&7Нажмите для переключения'
+    crafting_category:
+      misc: '&eПредметы'
+      building: '&eСтроительные блоки'
+      redstone: '&eРедстоун'
+      tools: '&eИнструменты'
+    cooking_category:
+      food: '&eЕда'
+      blocks: '&eБлоки'
+      misc: '&eРазное'
+    smelting:
+      time: '&aВремя плавки: &e<time> &7(tick)'
+      time_lore: '&7Нажмите для ввода времени'
+      exp: '&aОпыт: &e<exp>'
+      exp_lore: '&7Нажмите для ввода опыта'
+    anvil:
+      cost_level: '&aНеобходимый уровень: &e<level>'
+      cost_level_lore: '&7Нажмите для ввода уровня'
   recipe_creator:
     name: 'Создатель'
     null_result: '<prefix> &cРезультат рецепта не может быть пустым!'
     null_ingredients: '<prefix> &cИнгредиенты рецепта не могут быть пустыми!'
     result_frame_icon_name: '&aПоместите результат рецепта сюда'
     confirm_icon_name: '&6&lПодтвердить создание рецепта'
-  tag_select:
-    name: 'Страница выбора тега'
-    frame_icon_name: '&cВыберите нужный тег!'
+    result_frame: '&aРезультат'
+    frame_lore:
+      crafting: '&7Разместите материалы в сетке 3x3'
+      smelting: '&7Разместите материал слева'
+      brewing_input: '&7Разместите зелье слева'
+      brewing_ingredient: '&7Разместите ингредиент снизу слева'
+      stonecutting: '&7Разместите материал слева'
+      smithing: '&7Разместите шаблон, основу и добавку слева'
+      anvil: '&7Разместите предметы слева'
+      result_right: '&7Разместите результат справа'
+      confirm_button: '&7Нажмите кнопку ниже для создания'
+    result_lore:
+      shaped: '&7Разместите результат здесь'
+      smelting: '&7Разместите результат плавки здесь'
+      brewing: '&7Разместите результат зельеварения здесь'
+      stonecutting: '&7Разместите результат камнерезки здесь'
+      smithing: '&7Разместите результат ковки здесь'
+    confirm_lore:
+      shaped: '&7Нажмите для создания формованного рецепта'
+      shapeless: '&7Нажмите для создания беспорядочного рецепта'
+      smelting: '&7Нажмите для создания печного рецепта'
+      blasting: '&7Нажмите для создания доменного рецепта'
+      smoking: '&7Нажмите для создания коптильного рецепта'
+      campfire: '&7Нажмите для создания рецепта на костре'
+      smithing: '&7Нажмите для создания кузнечного рецепта'
+      stonecutting: '&7Нажмите для создания камнерезного рецепта'
+      brewing: '&7Нажмите для создания зельеварочного рецепта'
+      anvil: '&7Нажмите для создания рецепта наковальни'
   recipe_display:
     anvil:
       cost_level: '&3Необходимый уровень: &a<level>'
     vanilla_smelting:
       time: '&3Время плавки: &a<time>'
       reward_exp: '&3Опыт за плавку: &a<reward_exp>'
+    back: '&cНажмите для возврата'
+  tag_select:
+    name: 'Страница выбора тега'
+    frame_icon_name: '&cВыберите нужный тег!'
+  common:
+    prev_page: '&aНазад'
+    next_page: '&aВперёд'
+    back: '&c&lНазад'
+    back_lore: '&7Нажмите для возврата'
+    click_to_view: '&7Нажмите для просмотра'
+    confirm_edit: '&a&lПодтвердить'
+    confirm_create: '&a&lСоздать'

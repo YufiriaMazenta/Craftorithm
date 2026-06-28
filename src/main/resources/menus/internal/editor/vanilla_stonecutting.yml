@@ -1,17 +1,17 @@
-title: <translate:lang:recipe_type_name.vanilla_stonecutting> - <recipe_key> - 编辑器
+﻿title: <translate:lang:recipe_type_name.vanilla_stonecutting> - <recipe_key> - <translate:lang:menu.recipe_editor.name>
 frame_icon:
   material: minecraft:gray_stained_glass_pane
   name: '&7<translate:lang:recipe_type_name.vanilla_stonecutting>'
 result_frame_icon:
   material: minecraft:lime_stained_glass_pane
-  name: '&a编辑器 - 结果物品'
+  name: '<translate:lang:menu.recipe_editor.result_frame>'
 confirm_icon:
   material: minecraft:stonecutter
-  name: '&a&l确认编辑'
+  name: '<translate:lang:menu.common.confirm_edit>'
   lore:
-    - '&7点击保存配方修改'
+    - '<translate:lang:menu.recipe_editor.confirm_lore>'
 back_icon:
   material: minecraft:red_stained_glass_pane
-  name: '&c&l返回'
+  name: '<translate:lang:menu.common.back>'
   lore:
-    - '&7点击返回配方列表'
+    - '<translate:lang:menu.recipe_editor.back_lore>'

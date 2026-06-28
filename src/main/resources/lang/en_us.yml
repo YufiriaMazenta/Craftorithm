@@ -79,18 +79,85 @@ menu:
       name_desc: Z-A
       time_asc: Old→New
       time_desc: New→Old
+    title: '&6Recipe Book - <type_name> (<page>/<max_page>)'
+    select_title: '&6Recipe Book - Select Type'
+    sort_name: '&eSort: <sort_mode>'
+    sort_lore: '&7Click to change sort mode'
+    recipe_count: '&7<recipe_count> recipe(s)'
+    click_recipe: '&7Click to view recipe'
+  recipe_editor:
+    name: 'Editor'
+    result_frame: '&aEditor - Result Item'
+    confirm_lore: '&7Click to save recipe changes'
+    back_lore: '&7Click to return to recipe list'
+    category_prefix: '&aCategory:'
+    category_lore: '&7Click to switch category'
+    crafting_category:
+      misc: '&eItems'
+      building: '&eBuilding Blocks'
+      redstone: '&eRedstone'
+      tools: '&eTools'
+    cooking_category:
+      food: '&eFood'
+      blocks: '&eBlocks'
+      misc: '&eMiscellaneous'
+    smelting:
+      time: '&aCooking Time: &e<time> &7(ticks)'
+      time_lore: '&7Click to set cooking time'
+      exp: '&aReward XP: &e<exp>'
+      exp_lore: '&7Click to set reward XP'
+    anvil:
+      cost_level: '&aRequired Level: &e<level>'
+      cost_level_lore: '&7Click to set required level'
   recipe_creator:
     name: 'Creator'
     null_result: '<prefix> &cRecipe result cannot be empty!'
     null_ingredients: '<prefix> &cRecipe ingredients cannot be empty!'
     result_frame_icon_name: '&aPlace recipe result here'
     confirm_icon_name: '&6&lConfirm Recipe Creation'
-  tag_select:
-    name: 'Tag Selection'
-    frame_icon_name: '&cSelect the tag you want to use!'
+    result_frame: '&aResult Item'
+    frame_lore:
+      crafting: '&7Place ingredients in the 3x3 grid'
+      smelting: '&7Place ingredient on the left'
+      brewing_input: '&7Place input potion on the left'
+      brewing_ingredient: '&7Place ingredient below left'
+      stonecutting: '&7Place ingredient on the left'
+      smithing: '&7Place template, base, addition on left'
+      anvil: '&7Place items on the left'
+      result_right: '&7Place result item on the right'
+      confirm_button: '&7Click the button below to confirm'
+    result_lore:
+      shaped: '&7Place the crafting result here'
+      smelting: '&7Place the smelting result here'
+      brewing: '&7Place the brewing result here'
+      stonecutting: '&7Place the stonecutting result here'
+      smithing: '&7Place the smithing result here'
+    confirm_lore:
+      shaped: '&7Click to create shaped recipe'
+      shapeless: '&7Click to create shapeless recipe'
+      smelting: '&7Click to create smelting recipe'
+      blasting: '&7Click to create blasting recipe'
+      smoking: '&7Click to create smoking recipe'
+      campfire: '&7Click to create campfire recipe'
+      smithing: '&7Click to create smithing recipe'
+      stonecutting: '&7Click to create stonecutting recipe'
+      brewing: '&7Click to create brewing recipe'
+      anvil: '&7Click to create anvil recipe'
   recipe_display:
     anvil:
       cost_level: '&3Required Level: &a<level>'
     vanilla_smelting:
       time: '&3Smelting Time: &a<time>'
       reward_exp: '&3Reward Experience: &a<reward_exp>'
+    back: '&cClick to return'
+  tag_select:
+    name: 'Tag Selection'
+    frame_icon_name: '&cSelect the tag you want to use!'
+  common:
+    prev_page: '&aPrevious Page'
+    next_page: '&aNext Page'
+    back: '&c&lBack'
+    back_lore: '&7Click to return'
+    click_to_view: '&7Click to view'
+    confirm_edit: '&a&lConfirm Edit'
+    confirm_create: '&a&lCreate'

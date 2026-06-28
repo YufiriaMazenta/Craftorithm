@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.ui.icon;
+package pers.yufiria.craftorithm.ui.recipeBook;
 
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
@@ -7,11 +7,13 @@ import crypticlib.ui.menu.Multipage;
 import crypticlib.ui.util.MenuHelper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
 
 import java.util.Optional;
 
-public class NextPageIcon extends TranslatableIcon {
-    public NextPageIcon(IconDisplay iconDisplay) {
+public class PrevPageIcon extends TranslatableIcon {
+
+    public PrevPageIcon(IconDisplay iconDisplay) {
         super(iconDisplay);
     }
 
@@ -20,7 +22,7 @@ public class NextPageIcon extends TranslatableIcon {
         Optional<Menu> openingMenu = MenuHelper.getOpeningMenu((Player) event.getWhoClicked());
         openingMenu.ifPresent((menu -> {
             if (menu instanceof Multipage multipage) {
-                multipage.nextPage();
+                multipage.previousPage();
             }
         }));
         return this;

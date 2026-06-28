@@ -79,18 +79,85 @@ menu:
       name_desc: Z-A
       time_asc: Antiguo→Nuevo
       time_desc: Nuevo→Antiguo
+    title: '&6Libro de recetas - <type_name> (<page>/<max_page>)'
+    select_title: '&6Libro de recetas - Seleccionar tipo'
+    sort_name: '&eOrden: <sort_mode>'
+    sort_lore: '&7Haz clic para cambiar el orden'
+    recipe_count: '&7<recipe_count> receta(s)'
+    click_recipe: '&7Haz clic para ver la receta'
+  recipe_editor:
+    name: 'Editor'
+    result_frame: '&aEditor - Resultado'
+    confirm_lore: '&7Haz clic para guardar cambios'
+    back_lore: '&7Haz clic para volver a la lista'
+    category_prefix: '&aCategoría:'
+    category_lore: '&7Haz clic para cambiar categoría'
+    crafting_category:
+      misc: '&eObjetos'
+      building: '&eBloques de construcción'
+      redstone: '&eRedstone'
+      tools: '&eHerramientas'
+    cooking_category:
+      food: '&eComida'
+      blocks: '&eBloques'
+      misc: '&eDiversos'
+    smelting:
+      time: '&aTiempo de fundición: &e<time> &7(tick)'
+      time_lore: '&7Haz clic para introducir el tiempo'
+      exp: '&aXP de recompensa: &e<exp>'
+      exp_lore: '&7Haz clic para introducir la XP'
+    anvil:
+      cost_level: '&aNivel requerido: &e<level>'
+      cost_level_lore: '&7Haz clic para introducir el nivel'
   recipe_creator:
     name: 'Creador'
     null_result: '<prefix> &c¡El resultado de la receta no puede estar vacío!'
     null_ingredients: '<prefix> &c¡Los ingredientes de la receta no pueden estar vacíos!'
     result_frame_icon_name: '&aColoca el resultado de la receta aquí'
     confirm_icon_name: '&6&lConfirmar creación de receta'
-  tag_select:
-    name: 'Página de selección de Tag'
-    frame_icon_name: '&c¡Selecciona el tag que deseas usar!'
+    result_frame: '&aResultado'
+    frame_lore:
+      crafting: '&7Coloca los materiales en la cuadrícula 3x3'
+      smelting: '&7Coloca el material a la izquierda'
+      brewing_input: '&7Coloca la poción a la izquierda'
+      brewing_ingredient: '&7Coloca el ingrediente abajo a la izquierda'
+      stonecutting: '&7Coloca el material a la izquierda'
+      smithing: '&7Coloca plantilla, base y adición a la izquierda'
+      anvil: '&7Coloca los objetos a la izquierda'
+      result_right: '&7Coloca el resultado a la derecha'
+      confirm_button: '&7Haz clic en el botón de abajo para crear'
+    result_lore:
+      shaped: '&7Coloca el resultado aquí'
+      smelting: '&7Coloca el resultado de fundición aquí'
+      brewing: '&7Coloca el resultado de elaboración aquí'
+      stonecutting: '&7Coloca el resultado del cortapiedras aquí'
+      smithing: '&7Coloca el resultado de herrería aquí'
+    confirm_lore:
+      shaped: '&7Haz clic para crear receta con forma'
+      shapeless: '&7Haz clic para crear receta sin forma'
+      smelting: '&7Haz clic para crear receta de horno'
+      blasting: '&7Haz clic para crear receta de alto horno'
+      smoking: '&7Haz clic para crear receta de ahumador'
+      campfire: '&7Haz clic para crear receta de hoguera'
+      smithing: '&7Haz clic para crear receta de herrería'
+      stonecutting: '&7Haz clic para crear receta de cortapiedras'
+      brewing: '&7Haz clic para crear receta de elaboración'
+      anvil: '&7Haz clic para crear receta de yunque'
   recipe_display:
     anvil:
       cost_level: '&3Nivel requerido: &a<level>'
     vanilla_smelting:
       time: '&3Tiempo de fundición: &a<time>'
       reward_exp: '&3Experiencia de recompensa: &a<reward_exp>'
+    back: '&cHaz clic para volver'
+  tag_select:
+    name: 'Página de selección de Tag'
+    frame_icon_name: '&c¡Selecciona el tag que deseas usar!'
+  common:
+    prev_page: '&aAnterior'
+    next_page: '&aSiguiente'
+    back: '&c&lVolver'
+    back_lore: '&7Haz clic para volver'
+    click_to_view: '&7Haz clic para ver'
+    confirm_edit: '&a&lConfirmar edición'
+    confirm_create: '&a&lCrear'

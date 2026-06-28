@@ -1,22 +1,22 @@
-title: <translate:lang:recipe_type_name.vanilla_brewing><translate:lang:menu.recipe_creator.name>
+﻿title: <translate:lang:recipe_type_name.vanilla_brewing><translate:lang:menu.recipe_creator.name>
 frame_icon:
   material: minecraft:cyan_stained_glass_pane
   name: '&b<translate:lang:recipe_type_name.vanilla_brewing>'
   lore:
     - ''
-    - '&7将输入药水放入左侧'
-    - '&7将材料放入左侧下方'
-    - '&7将结果物品放入右侧'
-    - '&7点击下方按钮确认创建'
+    - '<translate:lang:menu.recipe_creator.frame_lore.brewing_input>'
+    - '<translate:lang:menu.recipe_creator.frame_lore.brewing_ingredient>'
+    - '<translate:lang:menu.recipe_creator.frame_lore.result_right>'
+    - '<translate:lang:menu.recipe_creator.frame_lore.confirm_button>'
 result_frame_icon:
   material: minecraft:lime_stained_glass_pane
-  name: '&a结果物品'
+  name: '<translate:lang:menu.recipe_creator.result_frame>'
   lore:
     - ''
-    - '&7将酿造结果物品放在这里'
+    - '<translate:lang:menu.recipe_creator.result_lore.brewing>'
 confirm_icon:
   material: minecraft:brewing_stand
-  name: '&a&l确认创建'
+  name: '<translate:lang:menu.common.confirm_create>'
   lore:
     - ''
-    - '&7点击创建酿造配方'
+    - '<translate:lang:menu.recipe_creator.confirm_lore.brewing>'
