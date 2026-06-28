@@ -41,9 +41,9 @@ public enum OtherPluginsListenerManager implements BukkitLifeCycleTask {
     INSTANCE;
     private final Field executorField = ReflectionHelper.getDeclaredField(RegisteredListener.class, "executor");
     private final List<ConvertedRegisteredListener> convertedListenerList = new ArrayList<>();
-    //鐢ㄤ簬璁板綍涓€涓狶istener绫昏杞崲浜嗗灏戞
+    //用于记录一个Listener类被转换了多少次
     private final Map<String, Integer> listenerConvertedCountMap = new ConcurrentHashMap<>();
-    //鐢ㄤ簬璁板綍涓€涓狶istener绫诲湪閲嶆柊娉ㄥ唽鏃跺彲浠ユ敞鍐屽嚑涓�,涓昏鏄敤浜庝竴浜涙儏鍐典笅鍏朵粬鎻掍欢浼氫富鍔ㄩ噸鏂版敞鍐岃嚜宸辩殑鐩戝惉鍣�
+    //用于记录一个Listener类在重新注册时可以注册几个,主要是用于一些情况下其他插件会主动重新注册自己的监听器
     private final Map<String, Integer> allowReregisterListenerNumMap = new ConcurrentHashMap<>();
 
     private void convertOtherPluginsListeners() {
@@ -56,7 +56,7 @@ public enum OtherPluginsListenerManager implements BukkitLifeCycleTask {
                 Listener listener = originRegisteredListener.getListener();
                 String listenerClassName = listener.getClass().getName();
                 if (PluginConfigs.NOT_CONVERT_LISTENER_CLASSES.value().contains(listenerClassName)) {
-                    //濡傛灉璇ョ洃鍚櫒琚厤缃负涓嶈浆鍖�,鍒欑洿鎺ヨ烦杩�
+                    //如果该监听器被配置为不转化,则直接跳过
                     continue;
                 }
 
@@ -111,12 +111,12 @@ public enum OtherPluginsListenerManager implements BukkitLifeCycleTask {
             String convertedListenerName = convertedRegisteredListener.listenerClassName();
             int allowReregisterNum = allowReregisterListenerNumMap.getOrDefault(convertedListenerName, 0);
             if (allowReregisterNum <= 0) {
-                //宸茬粡涓嶅啀鍏佽娉ㄥ唽杩欎釜鐩戝惉绫荤殑鐩戝惉鍣ㄤ簡
+                //已经不再允许注册这个监听类的监听器了
                 continue;
             }
             int convertedNum = listenerConvertedCountMap.getOrDefault(convertedListenerName, 0);
             if (allowReregisterNum == convertedNum) {
-                //濡傛灉鍏佽閲嶆柊娉ㄥ唽鐨勬暟閲忎笌涔嬪墠杞寲鐨勬暟閲忕浉绛�,鎰忓懗鐫€杩欐槸绗竴娆′负杩欎釜鐩戝惉鍣ㄧ被娉ㄥ唽
+                //如果允许重新注册的数量与之前转化的数量相等,意味着这是第一次为这个监听器类注册
                 boolean hasSameListenerClass = containsSameListenerClass(convertedRegisteredListener, handlerList);
                 if (hasSameListenerClass) {
                     allowReregisterListenerNumMap.remove(convertedListenerName);
@@ -134,7 +134,7 @@ public enum OtherPluginsListenerManager implements BukkitLifeCycleTask {
     private static boolean containsSameListenerClass(ConvertedRegisteredListener convertedRegisteredListener, HandlerList handlerList) {
         boolean hasSameListenerClass = false;
         for (RegisteredListener registeredListener : handlerList.getRegisteredListeners()) {
-            //璺宠繃RecipeCheck鍖呰鍣�,閬垮厤灏嗗皻鏈繕鍘熺殑鍚屽悕鐩戝惉鍣ㄨ鍒や负"鍏朵粬鎻掍欢宸查噸鏂版敞鍐�"
+            //跳过RecipeCheck包装器,避免将尚未还原的同名监听器误判为"其他插件已重新注册"
             if (registeredListener instanceof RecipeCheckRegisteredListener || registeredListener instanceof RecipeCheckTimedRegisteredListener) {
                 continue;
             }
@@ -142,7 +142,7 @@ public enum OtherPluginsListenerManager implements BukkitLifeCycleTask {
                 registeredListener.getListener().getClass(),
                 convertedRegisteredListener.originRegisteredListener().getListener().getClass()
             )) {
-                //濡傛灉鍦℉andlerList閲屽凡缁忓瓨鍦ㄤ簡杩欎釜绫荤殑鐩戝惉鍣�,鎰忓懗鐫€鍏朵粬鎻掍欢宸茬粡鑷繁閲嶆柊娉ㄥ唽浜�,杩欐椂鍊欐垜浠氨涓嶅簲璇ラ噸鏂版敞鍐�
+                //如果在HandlerList里已经存在了这个类的监听器,意味着其他插件已经自己重新注册了,这时候我们就不应该重新注册
                 hasSameListenerClass = true;
             }
         }
