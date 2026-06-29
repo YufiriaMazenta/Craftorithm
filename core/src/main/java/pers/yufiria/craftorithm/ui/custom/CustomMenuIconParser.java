@@ -4,10 +4,12 @@ import crypticlib.ui.display.Icon;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.ClickType;
+import pers.yufiria.craftorithm.script.compile.CompiledScript;
 import pers.yufiria.craftorithm.ui.icon.RecipeDisplayIcon;
 import pers.yufiria.craftorithm.ui.icon.IconParser;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
 
@@ -34,11 +36,13 @@ public enum CustomMenuIconParser implements IconParser {
                     editClick = null;
                 }
                 List<String> extraLore = config.getStringList("extra_lore");
+                Map<ClickType, CompiledScript> actions = parseActions(config.getConfigurationSection("actions"));
                 return () -> new RecipeDisplayIcon(
                     recipeKey,
                     extraLore,
                     viewClick != null ? viewClick : ClickType.LEFT,
-                    editClick != null ? editClick : ClickType.SHIFT_RIGHT
+                    editClick != null ? editClick : ClickType.SHIFT_RIGHT,
+                    actions
                 );
             }
             default -> {

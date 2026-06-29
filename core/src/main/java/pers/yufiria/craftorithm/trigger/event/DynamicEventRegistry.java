@@ -79,7 +79,10 @@ public enum DynamicEventRegistry {
             Map.of("sprinting", event -> ScriptValue.of(((PlayerToggleSprintEvent) event).isSprinting()))
         );
         register("player_item_consume", PlayerItemConsumeEvent.class, PlayerExtractor.PLAYER,
-            Map.of("item", event -> resolveItemId(((PlayerItemConsumeEvent) event).getItem()))
+            Map.of(
+                "item", event -> resolveItemId(((PlayerItemConsumeEvent) event).getItem()),
+                "amount", event -> resolveItemAmount(((PlayerItemConsumeEvent) event).getItem())
+            )
         );
         register("player_item_held", PlayerItemHeldEvent.class, PlayerExtractor.PLAYER,
             Map.of(
@@ -112,10 +115,16 @@ public enum DynamicEventRegistry {
         );
         register("player_swap_hand_items", PlayerSwapHandItemsEvent.class, PlayerExtractor.PLAYER, Map.of());
         register("player_drop_item", PlayerDropItemEvent.class, PlayerExtractor.PLAYER,
-            Map.of("item", event -> resolveItemId(((PlayerDropItemEvent) event).getItemDrop().getItemStack()))
+            Map.of(
+                "item", event -> resolveItemId(((PlayerDropItemEvent) event).getItemDrop().getItemStack()),
+                "amount", event -> resolveItemAmount(((PlayerDropItemEvent) event).getItemDrop().getItemStack())
+            )
         );
         register("player_pickup_item", PlayerPickupItemEvent.class, PlayerExtractor.PLAYER,
-            Map.of("item", event -> resolveItemId(((PlayerPickupItemEvent) event).getItem().getItemStack()))
+            Map.of(
+                "item", event -> resolveItemId(((PlayerPickupItemEvent) event).getItem().getItemStack()),
+                "amount", event -> resolveItemAmount(((PlayerPickupItemEvent) event).getItem().getItemStack())
+            )
         );
         register("player_velocity", PlayerVelocityEvent.class, PlayerExtractor.PLAYER, Map.of());
         register("player_game_mode_change", PlayerGameModeChangeEvent.class, PlayerExtractor.PLAYER,
@@ -127,12 +136,14 @@ public enum DynamicEventRegistry {
         register("player_item_damage", PlayerItemDamageEvent.class, PlayerExtractor.PLAYER,
             Map.of(
                 "item", event -> resolveItemId(((PlayerItemDamageEvent) event).getItem()),
+                "amount", event -> resolveItemAmount(((PlayerItemDamageEvent) event).getItem()),
                 "damage", event -> ScriptValue.of(((PlayerItemDamageEvent) event).getDamage())
             )
         );
         register("player_item_mend", PlayerItemMendEvent.class, PlayerExtractor.PLAYER,
             Map.of(
                 "item", event -> resolveItemId(((PlayerItemMendEvent) event).getItem()),
+                "amount", event -> resolveItemAmount(((PlayerItemMendEvent) event).getItem()),
                 "repair_amount", event -> ScriptValue.of(((PlayerItemMendEvent) event).getRepairAmount())
             )
         );
@@ -271,8 +282,13 @@ public enum DynamicEventRegistry {
     private static ScriptValue resolveItemId(ItemStack item) {
         if (item == null) return ScriptValue.nil();
         NamespacedItemIdStack id = ItemManager.INSTANCE.matchItemId(item, false);
-        if (id != null) return ScriptValue.of(id.toString());
-        return ScriptValue.of(item.getType().getKey() + ":" + item.getAmount());
+        if (id != null) return ScriptValue.of(id.itemId().toString());
+        return ScriptValue.of(item.getType().getKey().toString());
+    }
+
+    private static ScriptValue resolveItemAmount(ItemStack item) {
+        if (item == null) return ScriptValue.of(0);
+        return ScriptValue.of(item.getAmount());
     }
 
 }

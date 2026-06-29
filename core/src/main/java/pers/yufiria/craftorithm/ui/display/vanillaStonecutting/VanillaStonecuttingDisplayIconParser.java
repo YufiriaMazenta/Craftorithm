@@ -2,9 +2,12 @@ package pers.yufiria.craftorithm.ui.display.vanillaStonecutting;
 
 import crypticlib.ui.display.Icon;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.inventory.ClickType;
+import pers.yufiria.craftorithm.script.compile.CompiledScript;
 import pers.yufiria.craftorithm.ui.display.RecipeResultIcon;
 import pers.yufiria.craftorithm.ui.icon.IconParser;
 
+import java.util.Map;
 import java.util.function.Supplier;
 
 public enum VanillaStonecuttingDisplayIconParser implements IconParser {
@@ -16,10 +19,12 @@ public enum VanillaStonecuttingDisplayIconParser implements IconParser {
         String iconType = config.getString("icon_type", "common").toLowerCase();
         switch (iconType) {
             case "vanilla_stonecutting_ingredient" -> {
-                return VanillaStonecuttingIngredientIcon::new;
+                Map<ClickType, CompiledScript> actions = parseActions(config.getConfigurationSection("actions"));
+                return () -> new VanillaStonecuttingIngredientIcon(actions);
             }
             case "result" -> {
-                return RecipeResultIcon::new;
+                Map<ClickType, CompiledScript> actions = parseActions(config.getConfigurationSection("actions"));
+                return () -> new RecipeResultIcon(actions);
             }
             default -> {
                 return IconParser.super.parse(config);

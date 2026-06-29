@@ -5,22 +5,29 @@ import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.menu.Menu;
 import crypticlib.ui.util.MenuHelper;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
-import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
+import pers.yufiria.craftorithm.script.compile.CompiledScript;
+import pers.yufiria.craftorithm.ui.icon.ActionIcon;
 
 import java.util.Map;
 import java.util.Optional;
 
-public class RecipeListIcon extends TranslatableIcon {
+public class RecipeListIcon extends ActionIcon {
 
     private final RecipeType recipeType;
 
     public RecipeListIcon(@NotNull IconDisplay iconDisplay, @NotNull RecipeType recipeType) {
         super(iconDisplay);
+        this.recipeType = recipeType;
+    }
+
+    public RecipeListIcon(@NotNull IconDisplay iconDisplay, @NotNull RecipeType recipeType, @NotNull Map<ClickType, CompiledScript> actions) {
+        super(iconDisplay, actions);
         this.recipeType = recipeType;
     }
 
@@ -40,6 +47,7 @@ public class RecipeListIcon extends TranslatableIcon {
         Optional<Menu> currentMenuOpt = MenuHelper.getOpeningMenu(player);
         Menu parentMenu = currentMenuOpt.orElse(null);
         new RecipeListMenu(player, recipeType, SortMode.NAME_ASC, parentMenu).openMenu();
+        runActions(event, this.actions);
         return this;
     }
 

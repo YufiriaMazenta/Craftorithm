@@ -4,7 +4,6 @@ import crypticlib.BukkitPlugin;
 import crypticlib.CrypticLib;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.MinecraftVersion;
-import crypticlib.action.ActionCompiler;
 import crypticlib.chat.BukkitMsgSender;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
@@ -19,9 +18,6 @@ import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.exception.UnsupportedVersionException;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
-import pers.yufiria.craftorithm.ui.action.Back;
-import pers.yufiria.craftorithm.ui.action.Close;
-import pers.yufiria.craftorithm.ui.action.OpenMenu;
 import pers.yufiria.craftorithm.util.LangUtils;
 import pers.yufiria.craftorithm.util.UpdateChecker;
 
@@ -50,9 +46,6 @@ public final class Craftorithm extends BukkitPlugin implements BukkitLifeCycleTa
 
     @Override
     public void whenEnable() {
-        ActionCompiler.INSTANCE.regAction("close", Close::new);
-        ActionCompiler.INSTANCE.regAction("openmenu", OpenMenu::new);
-        ActionCompiler.INSTANCE.regAction("back", Back::new);
         UpdateChecker.pullUpdateCheckRequest(Bukkit.getConsoleSender());
     }
 

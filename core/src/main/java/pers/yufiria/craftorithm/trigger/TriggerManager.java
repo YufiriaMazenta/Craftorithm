@@ -216,7 +216,7 @@ public enum TriggerManager implements BukkitLifeCycleTask {
         int denied = 0;
         for (Trigger trigger : getTriggers(typeKey)) {
             if (!trigger.matches(context.recipeKey())) continue;
-            if (cooldownManager.isOnCooldown(trigger, context.player())) continue;
+            if (cooldownManager.isOnCooldown(trigger, context.playerUniqueId())) continue;
             if (!trigger.evaluateConditions(context)) {
                 denied++;
             }
@@ -231,11 +231,11 @@ public enum TriggerManager implements BukkitLifeCycleTask {
         boolean fired = false;
         for (Trigger trigger : getTriggers(typeKey)) {
             if (!trigger.matches(context.recipeKey())) continue;
-            if (cooldownManager.isOnCooldown(trigger, context.player())) continue;
+            if (cooldownManager.isOnCooldown(trigger, context.playerUniqueId())) continue;
             if (!trigger.evaluateConditions(context)) continue;
 
             trigger.execute(context);
-            cooldownManager.setCooldown(trigger, context.player());
+            cooldownManager.setCooldown(trigger, context.playerUniqueId());
             fired = true;
         }
         return fired;

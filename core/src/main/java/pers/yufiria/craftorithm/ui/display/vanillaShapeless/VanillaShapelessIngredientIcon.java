@@ -1,13 +1,23 @@
 package pers.yufiria.craftorithm.ui.display.vanillaShapeless;
 
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import pers.yufiria.craftorithm.script.compile.CompiledScript;
 import pers.yufiria.craftorithm.ui.icon.ItemDisplayIcon;
+
+import java.util.Map;
 
 public class VanillaShapelessIngredientIcon extends ItemDisplayIcon {
 
     private final Integer ingredientSlot;
 
     public VanillaShapelessIngredientIcon(int ingredientSlot) {
+        this.ingredientSlot = ingredientSlot;
+    }
+
+    public VanillaShapelessIngredientIcon(int ingredientSlot, @NotNull Map<ClickType, CompiledScript> actions) {
+        super(actions);
         this.ingredientSlot = ingredientSlot;
     }
 

@@ -15,6 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
+import pers.yufiria.craftorithm.script.compile.CompiledScript;
 import pers.yufiria.craftorithm.ui.BackableMenu;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayManager;
 import pers.yufiria.craftorithm.ui.editor.RecipeEditorManager;
@@ -23,6 +24,7 @@ import pers.yufiria.craftorithm.util.LangUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
@@ -35,12 +37,18 @@ public class RecipeDisplayIcon extends ActionIcon {
     private final ClickType editClick;
     private final List<String> extraLore;
 
-    public RecipeDisplayIcon(NamespacedKey recipeKey, List<String> extraLore) {
-        this(recipeKey, extraLore, ClickType.LEFT, ClickType.RIGHT);
+    public RecipeDisplayIcon(NamespacedKey recipeKey, List<String> extraLore, ClickType viewClick, ClickType editClick) {
+        this(recipeKey, extraLore, viewClick, editClick, new HashMap<>());
     }
 
-    public RecipeDisplayIcon(NamespacedKey recipeKey, List<String> extraLore, ClickType viewClick, ClickType editClick) {
-        super(new IconDisplay(Material.AIR), new HashMap<>());
+    public RecipeDisplayIcon(
+        NamespacedKey recipeKey,
+        List<String> extraLore,
+        ClickType viewClick,
+        ClickType editClick,
+        Map<ClickType, CompiledScript> actions
+    ) {
+        super(new IconDisplay(Material.AIR), actions);
         this.recipeKey = recipeKey;
         this.viewClick = viewClick;
         this.editClick = editClick;
@@ -94,10 +102,12 @@ public class RecipeDisplayIcon extends ActionIcon {
             if (!whoClicked.hasPermission("craftorithm.edit_recipe")) {
                 return this;
             }
+            runActions(event, this.actions);
             RecipeEditorManager.INSTANCE.getEditor(recipeType).ifPresent(editorFunc -> {
                 editorFunc.apply(whoClicked, recipeKey, recipe);
             });
         }
+        runActions(event, this.actions);
         return this;
     }
 

@@ -23,6 +23,9 @@ icons:
     extra_lore:
       - '&r'
       - '&7点击查看配方'
+    actions:
+      left:
+        - 'tell "你点击了铁砧配方!"'
   B:
     icon_type: recipe_display
     recipe_id: 'craftorithm:brewing'
@@ -31,6 +34,9 @@ icons:
     extra_lore:
       - '&r'
       - '&7点击查看配方'
+    actions:
+      left:
+        - 'tell "你点击了酿造配方!"'
   C:
     icon_type: recipe_display
     recipe_id: 'craftorithm:shaped'
@@ -39,6 +45,9 @@ icons:
     extra_lore:
       - '&r'
       - '&7点击查看配方'
+    actions:
+      left:
+        - 'tell "你点击了有序合成配方!"'
   D:
     icon_type: recipe_display
     recipe_id: 'craftorithm:shapless'
@@ -47,6 +56,9 @@ icons:
     extra_lore:
       - '&r'
       - '&7点击查看配方'
+    actions:
+      left:
+        - 'tell "你点击了无序合成配方!"'
   E:
     icon_type: recipe_display
     recipe_id: 'craftorithm:smelting_furnace'
@@ -55,6 +67,9 @@ icons:
     extra_lore:
       - '&r'
       - '&7点击查看配方'
+    actions:
+      left:
+        - 'tell "你点击了熔炉冶炼配方!"'
   F:
     icon_type: recipe_display
     recipe_id: 'craftorithm:smithing_transform'
@@ -63,6 +78,9 @@ icons:
     extra_lore:
       - '&r'
       - '&7点击查看配方'
+    actions:
+      left:
+        - 'tell "你点击了锻造台配方!"'
   G:
     icon_type: recipe_display
     recipe_id: 'craftorithm:stonecutting'
@@ -71,3 +89,6 @@ icons:
     extra_lore:
       - '&r'
       - '&7点击查看配方'
+    actions:
+      left:
+        - 'tell "你点击了切石机配方!"'

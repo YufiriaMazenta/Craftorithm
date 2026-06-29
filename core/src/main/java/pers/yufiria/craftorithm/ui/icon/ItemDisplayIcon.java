@@ -3,15 +3,23 @@ package pers.yufiria.craftorithm.ui.icon;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import org.bukkit.Material;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import pers.yufiria.craftorithm.script.compile.CompiledScript;
 
-public abstract class ItemDisplayIcon extends Icon {
+import java.util.Map;
+
+public abstract class ItemDisplayIcon extends ActionIcon {
 
     private ItemStack displayItem;
 
     public ItemDisplayIcon() {
         super(new IconDisplay(Material.AIR));
+    }
+
+    public ItemDisplayIcon(@NotNull Map<ClickType, CompiledScript> actions) {
+        super(new IconDisplay(Material.AIR), actions);
     }
 
     @Override

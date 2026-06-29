@@ -1,7 +1,5 @@
 package pers.yufiria.craftorithm.ui.icon;
 
-import crypticlib.action.Action;
-import crypticlib.action.ActionCompiler;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.util.MaterialHelper;
@@ -10,6 +8,8 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.ClickType;
 import org.jetbrains.annotations.NotNull;
+import pers.yufiria.craftorithm.script.ScriptEngine;
+import pers.yufiria.craftorithm.script.compile.CompiledScript;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +26,7 @@ public interface IconParser {
         switch (iconType) {
             default -> {
                 IconDisplay iconDisplay = parseIconDisplay(config);
-                Map<ClickType, Action> actions = parseActions(config.getConfigurationSection("actions"));
+                Map<ClickType, CompiledScript> actions = parseActions(config.getConfigurationSection("actions"));
                 return () -> new ActionIcon(iconDisplay, actions);
             }
         }
@@ -52,15 +52,20 @@ public interface IconParser {
             .setItemModel(itemModel);
     }
 
-    default @NotNull Map<ClickType, Action> parseActions(ConfigurationSection actionsConfig) {
+    default @NotNull Map<ClickType, CompiledScript> parseActions(ConfigurationSection actionsConfig) {
         if (actionsConfig == null) {
             return new HashMap<>();
         }
-        Map<ClickType, Action> actions = new HashMap<>();
+        Map<ClickType, CompiledScript> actions = new HashMap<>();
         for (String key : actionsConfig.getKeys(false)) {
             ClickType clickType = ClickType.valueOf(key.toUpperCase());
-            Action action = ActionCompiler.INSTANCE.compile(actionsConfig.getStringList(key));
-            actions.put(clickType, action);
+            List<String> actSources = actionsConfig.getStringList(key);
+            if (actSources.isEmpty()) {
+                continue;
+            }
+            String actSource = String.join("\n", actSources);
+            CompiledScript compiledScript = ScriptEngine.INSTANCE.compile("icon_act_" + actSource.hashCode(), actSource);
+            actions.put(clickType, compiledScript);
         }
         return actions;
     }

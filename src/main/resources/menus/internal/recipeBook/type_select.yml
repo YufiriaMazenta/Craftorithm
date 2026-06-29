@@ -16,6 +16,9 @@ icons:
     lore:
       - '<translate:lang:menu.recipe_book.recipe_count>'
       - '<translate:lang:menu.common.click_to_view>'
+    actions:
+      left:
+        - 'tell "你点击了有序合成!"'
   B:
     icon_type: recipe_list
     recipe_type: vanilla_shapeless
@@ -24,6 +27,9 @@ icons:
     lore:
       - '<translate:lang:menu.recipe_book.recipe_count>'
       - '<translate:lang:menu.common.click_to_view>'
+    actions:
+      left:
+        - 'tell "你点击了无序合成!"'
   C:
     icon_type: recipe_list
     recipe_type: vanilla_smelting_furnace
@@ -32,6 +38,9 @@ icons:
     lore:
       - '<translate:lang:menu.recipe_book.recipe_count>'
       - '<translate:lang:menu.common.click_to_view>'
+    actions:
+      left:
+        - 'tell "你点击了熔炉冶炼!"'
   D:
     icon_type: recipe_list
     recipe_type: vanilla_smelting_blast
@@ -40,6 +49,9 @@ icons:
     lore:
       - '<translate:lang:menu.recipe_book.recipe_count>'
       - '<translate:lang:menu.common.click_to_view>'
+    actions:
+      left:
+        - 'tell "你点击了高炉冶炼!"'
   E:
     icon_type: recipe_list
     recipe_type: vanilla_smelting_smoker
@@ -48,6 +60,9 @@ icons:
     lore:
       - '<translate:lang:menu.recipe_book.recipe_count>'
       - '<translate:lang:menu.common.click_to_view>'
+    actions:
+      left:
+        - 'tell "你点击了烟熏炉冶炼!"'
   F:
     icon_type: recipe_list
     recipe_type: vanilla_smelting_campfire
@@ -56,6 +71,9 @@ icons:
     lore:
       - '<translate:lang:menu.recipe_book.recipe_count>'
       - '<translate:lang:menu.common.click_to_view>'
+    actions:
+      left:
+        - 'tell "你点击了营火冶炼!"'
   G:
     icon_type: recipe_list
     recipe_type: vanilla_smithing_transform
@@ -64,6 +82,9 @@ icons:
     lore:
       - '<translate:lang:menu.recipe_book.recipe_count>'
       - '<translate:lang:menu.common.click_to_view>'
+    actions:
+      left:
+        - 'tell "你点击了锻造台!"'
   H:
     icon_type: recipe_list
     recipe_type: vanilla_stonecutting
@@ -72,6 +93,9 @@ icons:
     lore:
       - '<translate:lang:menu.recipe_book.recipe_count>'
       - '<translate:lang:menu.common.click_to_view>'
+    actions:
+      left:
+        - 'tell "你点击了切石机!"'
   I:
     icon_type: recipe_list
     recipe_type: vanilla_brewing
@@ -80,6 +104,9 @@ icons:
     lore:
       - '<translate:lang:menu.recipe_book.recipe_count>'
       - '<translate:lang:menu.common.click_to_view>'
+    actions:
+      left:
+        - 'tell "你点击了酿造台!"'
   J:
     icon_type: recipe_list
     recipe_type: anvil
@@ -88,3 +115,6 @@ icons:
     lore:
       - '<translate:lang:menu.recipe_book.recipe_count>'
       - '<translate:lang:menu.common.click_to_view>'
+    actions:
+      left:
+        - 'tell "你点击了铁砧!"'

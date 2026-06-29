@@ -2,9 +2,12 @@ package pers.yufiria.craftorithm.ui.display.vanillaSmithing;
 
 import crypticlib.ui.display.Icon;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.inventory.ClickType;
+import pers.yufiria.craftorithm.script.compile.CompiledScript;
 import pers.yufiria.craftorithm.ui.display.RecipeResultIcon;
 import pers.yufiria.craftorithm.ui.icon.IconParser;
 
+import java.util.Map;
 import java.util.function.Supplier;
 
 public enum VanillaSmithingDisplayIconParser implements IconParser {
@@ -16,16 +19,20 @@ public enum VanillaSmithingDisplayIconParser implements IconParser {
         String iconType = config.getString("icon_type", "common").toLowerCase();
         switch (iconType) {
             case "vanilla_smithing_base" -> {
-                return VanillaSmithingBaseIcon::new;
+                Map<ClickType, CompiledScript> actions = parseActions(config.getConfigurationSection("actions"));
+                return () -> new VanillaSmithingBaseIcon(actions);
             }
             case "vanilla_smithing_addition" -> {
-                return VanillaSmithingAdditionIcon::new;
+                Map<ClickType, CompiledScript> actions = parseActions(config.getConfigurationSection("actions"));
+                return () -> new VanillaSmithingAdditionIcon(actions);
             }
             case "vanilla_smithing_template" -> {
-                return VanillaSmithingTemplateIcon::new;
+                Map<ClickType, CompiledScript> actions = parseActions(config.getConfigurationSection("actions"));
+                return () -> new VanillaSmithingTemplateIcon(actions);
             }
             case "result" -> {
-                return RecipeResultIcon::new;
+                Map<ClickType, CompiledScript> actions = parseActions(config.getConfigurationSection("actions"));
+                return () -> new RecipeResultIcon(actions);
             }
             default -> {
                 return IconParser.super.parse(config);

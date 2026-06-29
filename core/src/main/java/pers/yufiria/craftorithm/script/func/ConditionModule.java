@@ -11,6 +11,7 @@ import pers.yufiria.craftorithm.hook.PlayerPointsHook;
 import pers.yufiria.craftorithm.hook.VaultHook;
 import pers.yufiria.craftorithm.script.ScriptContext;
 import pers.yufiria.craftorithm.script.ScriptValue;
+import pers.yufiria.craftorithm.script.vm.ScriptVM;
 import pers.yufiria.craftorithm.trigger.Trigger;
 
 /**
@@ -49,24 +50,19 @@ public enum ConditionModule implements ScriptModule {
         registry.register("context", this::context);
     }
 
-    /**
-     * perm "xxx" → 检查玩家是否有权限
-     */
-    private ScriptValue perm(ScriptContext ctx, ScriptValue... args) {
+    private ScriptValue perm(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
         String perm = args[0].asString();
         Player player = ctx.player();
+        if (player == null) return ScriptValue.of(false);
         perm = BukkitTextProcessor.placeholder(player, perm);
         return ScriptValue.of(player.hasPermission(perm));
     }
 
-    /**
-     * papi "%placeholder%" → 解析 PAPI 变量并返回值
-     * 比较通过脚本运算符实现: papi "%level%" >= 10
-     */
-    private ScriptValue papi(ScriptContext ctx, ScriptValue... args) {
+    private ScriptValue papi(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.nil();
         Player player = ctx.player();
+        if (player == null) return ScriptValue.nil();
         String placeholder = args[0].asString();
         String resolved = BukkitTextProcessor.placeholder(player, placeholder);
         try {
@@ -76,85 +72,73 @@ public enum ConditionModule implements ScriptModule {
         }
     }
 
-    /**
-     * level → 返回玩家等级
-     */
-    private ScriptValue level(ScriptContext ctx, ScriptValue... args) {
-        return ScriptValue.of(ctx.player().getLevel());
+    private ScriptValue level(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
+        Player player = ctx.player();
+        if (player == null) return ScriptValue.of(0);
+        return ScriptValue.of(player.getLevel());
     }
 
-    /**
-     * money → 返回玩家余额
-     */
-    private ScriptValue money(ScriptContext ctx, ScriptValue... args) {
+    private ScriptValue money(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (!VaultHook.INSTANCE.isEconomyHooked()) {
             return ScriptValue.of(0);
         }
+        Player player = ctx.player();
+        if (player == null) return ScriptValue.of(0);
         Economy economy = (Economy) VaultHook.INSTANCE.economy();
-        return ScriptValue.of(economy.getBalance(ctx.player()));
+        return ScriptValue.of(economy.getBalance(player));
     }
 
-    /**
-     * points → 返回玩家点数
-     */
-    private ScriptValue points(ScriptContext ctx, ScriptValue... args) {
+    private ScriptValue points(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (!PlayerPointsHook.INSTANCE.isPlayerPointsHooked()) {
             return ScriptValue.of(0);
         }
         PlayerPointsAPI api = ((PlayerPoints) PlayerPointsHook.INSTANCE.playerPoints()).getAPI();
-        return ScriptValue.of(api.look(ctx.player().getUniqueId()));
+        return ScriptValue.of(api.look(ctx.playerUniqueId()));
     }
 
-    /**
-     * world "world" → 检查玩家所在世界
-     */
-    private ScriptValue world(ScriptContext ctx, ScriptValue... args) {
-        if (args.length == 0) return ScriptValue.of(ctx.player().getWorld().getName());
+    private ScriptValue world(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
+        Player player = ctx.player();
+        if (player == null) return ScriptValue.nil();
+        if (args.length == 0) return ScriptValue.of(player.getWorld().getName());
         String expected = args[0].asString();
-        return ScriptValue.of(ctx.player().getWorld().getName().equals(expected));
+        return ScriptValue.of(player.getWorld().getName().equals(expected));
     }
 
-    /**
-     * game_mode "SURVIVAL" → 检查玩家游戏模式
-     */
-    private ScriptValue gameMode(ScriptContext ctx, ScriptValue... args) {
-        if (args.length == 0) return ScriptValue.of(ctx.player().getGameMode().name());
+    private ScriptValue gameMode(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
+        Player player = ctx.player();
+        if (player == null) return ScriptValue.nil();
+        if (args.length == 0) return ScriptValue.of(player.getGameMode().name());
         String expected = args[0].asString();
-        return ScriptValue.of(ctx.player().getGameMode().name().equalsIgnoreCase(expected));
+        return ScriptValue.of(player.getGameMode().name().equalsIgnoreCase(expected));
     }
 
-    /**
-     * biome "minecraft:ocean" → 检查玩家所在群系
-     */
-    private ScriptValue biome(ScriptContext ctx, ScriptValue... args) {
+    private ScriptValue biome(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
+        Player player = ctx.player();
+        if (player == null) return ScriptValue.of(false);
         String expected = args[0].asString();
-        String actual = ctx.player().getLocation().getBlock().getBiome().getKey().toString();
+        String actual = player.getLocation().getBlock().getBiome().getKey().toString();
         return ScriptValue.of(actual.equalsIgnoreCase(expected));
     }
 
-    /**
-     * in_water → 检查玩家是否在水中
-     */
-    private ScriptValue inWater(ScriptContext ctx, ScriptValue... args) {
-        Block block = ctx.player().getLocation().getBlock();
+    private ScriptValue inWater(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
+        Player player = ctx.player();
+        if (player == null) return ScriptValue.of(false);
+        Block block = player.getLocation().getBlock();
         return ScriptValue.of(block.getType() == Material.WATER);
     }
 
-    /**
-     * in_rain → 检查玩家是否在雨中
-     */
-    private ScriptValue inRain(ScriptContext ctx, ScriptValue... args) {
-        return ScriptValue.of(ctx.player().getLocation().getBlock().getBiome().name().contains("RAIN")
-            || ctx.player().getWorld().hasStorm());
+    private ScriptValue inRain(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
+        Player player = ctx.player();
+        if (player == null) return ScriptValue.of(false);
+        return ScriptValue.of(player.getLocation().getBlock().getBiome().name().contains("RAIN")
+            || player.getWorld().hasStorm());
     }
 
-    /**
-     * light_level → 返回玩家所在位置亮度
-     * light_level >= 7 → 检查亮度
-     */
-    private ScriptValue lightLevel(ScriptContext ctx, ScriptValue... args) {
-        int level = ctx.player().getLocation().getBlock().getLightLevel();
+    private ScriptValue lightLevel(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
+        Player player = ctx.player();
+        if (player == null) return ScriptValue.of(0);
+        int level = player.getLocation().getBlock().getLightLevel();
         if (args.length == 0) return ScriptValue.of(level);
         if (args.length >= 2) {
             String operator = args[0].asString();
@@ -173,11 +157,7 @@ public enum ConditionModule implements ScriptModule {
         return ScriptValue.of(level);
     }
 
-    /**
-     * context "key" → 返回上下文变量值
-     * 比较通过脚本运算符实现: context "damage" >= 10
-     */
-    private ScriptValue context(ScriptContext ctx, ScriptValue... args) {
+    private ScriptValue context(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.nil();
         String key = args[0].asString();
         ScriptValue var = ctx.getVariable(key);
@@ -185,53 +165,13 @@ public enum ConditionModule implements ScriptModule {
         return var;
     }
 
-    /**
-     * item "craftorithm:my_item" → 检查事件中的物品ID（不含数量部分）
-     * item "craftorithm:my_item" >= 5 → 检查物品ID和数量
-     */
-    private ScriptValue item(ScriptContext ctx, ScriptValue... args) {
+    private ScriptValue item(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
         ScriptValue eventItem = ctx.getVariable("item");
         if (eventItem == null) return ScriptValue.of(false);
-        String itemStr = eventItem.asString();
-        // itemStr 格式: "namespace:id:amount" 或 "namespace:id"
+        String itemId = eventItem.asString();
         String expectedId = args[0].asString();
-        String itemId = itemStr.contains(":") ? itemStr.substring(0, itemStr.lastIndexOf(':')) : itemStr;
-        if (args.length == 1) {
-            return ScriptValue.of(itemId.equals(expectedId));
-        }
-        if (args.length >= 3) {
-            String operator = args[1].asString();
-            String amountStr = args[2].asString();
-            try {
-                boolean result = compareItem(itemStr, amountStr, operator);
-                return ScriptValue.of(itemId.equals(expectedId) && result);
-            } catch (NumberFormatException e) {
-                return ScriptValue.of(itemId.equals(expectedId));
-            }
-        }
         return ScriptValue.of(itemId.equals(expectedId));
-    }
-
-    /**
-     * 判断物品是否符合要求
-     * @param itemStr
-     * @param amountStr
-     * @param operator
-     * @return
-     */
-    private static boolean compareItem(String itemStr, String amountStr, String operator) {
-        int amount = Integer.parseInt(itemStr.substring(itemStr.lastIndexOf(':') + 1));
-        int expected = Integer.parseInt(amountStr);
-        return switch (operator) {
-            case "==" -> amount == expected;
-            case "!=" -> amount != expected;
-            case ">"  -> amount > expected;
-            case ">=" -> amount >= expected;
-            case "<"  -> amount < expected;
-            case "<=" -> amount <= expected;
-            default -> false;
-        };
     }
 
 }

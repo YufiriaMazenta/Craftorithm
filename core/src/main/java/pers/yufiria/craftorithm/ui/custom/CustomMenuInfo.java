@@ -1,12 +1,11 @@
 package pers.yufiria.craftorithm.ui.custom;
 
-import crypticlib.action.Action;
-import crypticlib.action.ActionCompiler;
-import crypticlib.action.impl.EmptyAction;
 import crypticlib.ui.display.MenuDisplay;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.yufiria.craftorithm.script.ScriptEngine;
+import pers.yufiria.craftorithm.script.compile.CompiledScript;
 import pers.yufiria.craftorithm.ui.RecipeDisplayLoader;
 import pers.yufiria.craftorithm.ui.icon.IconParser;
 
@@ -16,8 +15,8 @@ public class CustomMenuInfo implements RecipeDisplayLoader {
 
     private final @NotNull MenuDisplay menuDisplay;
     private final @Nullable String permission;
-    private final @Nullable Action openAction;
-    private final @Nullable Action closeAction;
+    private final @Nullable CompiledScript openAction;
+    private final @Nullable CompiledScript closeAction;
     private static final IconParser iconParser = CustomMenuIconParser.INSTANCE;
 
     public CustomMenuInfo(@NotNull ConfigurationSection menuConfig) {
@@ -39,19 +38,19 @@ public class CustomMenuInfo implements RecipeDisplayLoader {
         return permission;
     }
 
-    public @Nullable Action openAction() {
+    public @Nullable CompiledScript openAction() {
         return openAction;
     }
 
-    public @Nullable Action closeAction() {
+    public @Nullable CompiledScript closeAction() {
         return closeAction;
     }
 
-    private Action parseActions(List<String> actionStrList) {
+    private CompiledScript parseActions(List<String> actionStrList) {
         if (actionStrList == null || actionStrList.isEmpty()) {
-            return new EmptyAction();
+            return null;
         }
-        return ActionCompiler.INSTANCE.compile(actionStrList);
+        return ScriptEngine.INSTANCE.compile("custom_menu_" + menuDisplay.title(), String.join("\n", actionStrList));
     }
 
     @Override

@@ -16,21 +16,36 @@ icons:
     extra_lore:
       - '&r'
       - '<translate:lang:menu.recipe_book.click_recipe>'
+    actions:
+      left:
+        - 'tell "你点击了配方!"'
   S:
     icon_type: sort
     material: 'minecraft:hopper'
     name: '<translate:lang:menu.recipe_book.sort_name>'
     lore:
       - '<translate:lang:menu.recipe_book.sort_lore>'
+    actions:
+      left:
+        - 'tell "你点击了排序按钮!"'
   P:
     icon_type: prev_page
     material: 'minecraft:arrow'
     name: '<translate:lang:menu.common.prev_page>'
+    actions:
+      left:
+        - 'tell "你点击了上一页按钮!"'
   N:
     icon_type: next_page
     material: 'minecraft:arrow'
     name: '<translate:lang:menu.common.next_page>'
+    actions:
+      left:
+        - 'tell "你点击了下一页按钮!"'
   B:
     icon_type: back
     material: 'minecraft:barrier'
     name: '<translate:lang:menu.common.back>'
+    actions:
+      left:
+        - 'tell "你点击了返回按钮!"'
