@@ -33,7 +33,7 @@ public enum ProtocolLibHook implements PluginHook, BukkitLifeCycleTask {
     @Override
     public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
         switch (lifeCycle) {
-            case ENABLE -> {
+            case ACTIVE -> {
                 hook();
             }
             case DISABLE -> {

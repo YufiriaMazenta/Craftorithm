@@ -51,6 +51,7 @@ public enum ActionModule implements ScriptModule {
         registry.register("tell", this::tell);
         registry.register("actionbar", this::actionbar);
         registry.register("title", this::title);
+        registry.register("log", this::log);
         registry.register("take-money", this::takeMoney);
         registry.register("give-money", this::giveMoney);
         registry.register("take-level", this::takeLevel);
@@ -156,6 +157,19 @@ public enum ActionModule implements ScriptModule {
         String title = BukkitTextProcessor.placeholder(player, args[0].asString());
         String subtitle = args.length > 1 ? BukkitTextProcessor.placeholder(player, args[1].asString()) : "";
         BukkitMsgSender.INSTANCE.sendTitle(player, title, subtitle, 10, 70, 20);
+        return ScriptValue.nil();
+    }
+
+    private ScriptValue log(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
+        if (args.length < 1) return ScriptValue.nil();
+        Player player = ctx.player();
+        if (player == null) return ScriptValue.nil();
+        StringBuilder sb = new StringBuilder();
+        for (ScriptValue arg : args) {
+            sb.append(arg.asString());
+        }
+        String msg = BukkitTextProcessor.placeholder(player, sb.toString());
+        IOHelper.info(msg);
         return ScriptValue.nil();
     }
 

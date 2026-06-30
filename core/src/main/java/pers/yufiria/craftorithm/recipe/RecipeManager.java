@@ -118,9 +118,11 @@ public enum RecipeManager implements BukkitLifeCycleTask {
         loadRecipesFromConfig(() -> {
             loadServerRecipeCache();
             reloadDisabledRecipes();
-            isReloadingRecipeManager.set(false);
-            //所有操作进行完毕后，为玩家更新配方信息
-            Bukkit.updateRecipes();
+            CrypticLibBukkit.scheduler().syncLater(() -> {
+                isReloadingRecipeManager.set(false);
+                //所有操作进行完毕后，为玩家更新配方信息
+                Bukkit.updateRecipes();
+            }, 2L);
         });
     }
 

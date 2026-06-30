@@ -1,5 +1,7 @@
 package pers.yufiria.craftorithm.script.ast;
 
+import java.util.List;
+
 /**
  * AST 节点基类
  * 所有语法树节点都继承此类
@@ -118,7 +120,7 @@ public abstract sealed class ASTNode permits
         }
 
         public String name()                      { return name; }
-        public java.util.List<ASTNode> args()     { return args; }
+        public List<ASTNode> args()     { return args; }
 
         @Override
         public String toString() {
@@ -143,8 +145,8 @@ public abstract sealed class ASTNode permits
         }
 
         public ASTNode condition()                  { return condition; }
-        public java.util.List<ASTNode> thenBody()   { return thenBody; }
-        public java.util.List<ASTNode> elseBody()   { return elseBody; }
+        public List<ASTNode> thenBody()   { return thenBody; }
+        public List<ASTNode> elseBody()   { return elseBody; }
     }
 
     /**
@@ -172,6 +174,6 @@ public abstract sealed class ASTNode permits
             this.statements = statements;
         }
 
-        public java.util.List<ASTNode> statements() { return statements; }
+        public List<ASTNode> statements() { return statements; }
     }
 }

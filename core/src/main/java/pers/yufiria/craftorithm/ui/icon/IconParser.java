@@ -2,6 +2,7 @@ package pers.yufiria.craftorithm.ui.icon;
 
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
+import crypticlib.util.IOHelper;
 import crypticlib.util.MaterialHelper;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;

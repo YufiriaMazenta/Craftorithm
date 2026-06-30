@@ -40,12 +40,12 @@ public enum ConditionModule implements ScriptModule {
         registry.register("money", this::money);
         registry.register("points", this::points);
         registry.register("world", this::world);
-        registry.register("game_mode", this::gameMode);
+        registry.register("gamemode", this::gameMode);
         registry.register("item", this::item);
         registry.register("biome", this::biome);
-        registry.register("in_water", this::inWater);
-        registry.register("in_rain", this::inRain);
-        registry.register("light_level", this::lightLevel);
+        registry.register("in-water", this::inWater);
+        registry.register("in-rain", this::inRain);
+        registry.register("light-level", this::lightLevel);
         registry.register("context", this::context);
     }
 
@@ -112,12 +112,12 @@ public enum ConditionModule implements ScriptModule {
     }
 
     private ScriptValue biome(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        if (args.length < 1) return ScriptValue.of(false);
         Player player = ctx.player();
         if (player == null) return ScriptValue.of(false);
+        String playerBiome = player.getLocation().getBlock().getBiome().getKey().toString();
+        if (args.length < 1) return ScriptValue.of(playerBiome);
         String expected = args[0].asString();
-        String actual = player.getLocation().getBlock().getBiome().getKey().toString();
-        return ScriptValue.of(actual.equalsIgnoreCase(expected));
+        return ScriptValue.of(playerBiome.equalsIgnoreCase(expected));
     }
 
     private ScriptValue inWater(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
@@ -138,21 +138,6 @@ public enum ConditionModule implements ScriptModule {
         Player player = ctx.player();
         if (player == null) return ScriptValue.of(0);
         int level = player.getLocation().getBlock().getLightLevel();
-        if (args.length == 0) return ScriptValue.of(level);
-        if (args.length >= 2) {
-            String operator = args[0].asString();
-            int expected = (int) args[1].asNumber();
-            boolean result = switch (operator) {
-                case "==" -> level == expected;
-                case "!=" -> level != expected;
-                case ">"  -> level > expected;
-                case ">=" -> level >= expected;
-                case "<"  -> level < expected;
-                case "<=" -> level <= expected;
-                default -> false;
-            };
-            return ScriptValue.of(result);
-        }
         return ScriptValue.of(level);
     }
 
