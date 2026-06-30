@@ -3,7 +3,6 @@ package pers.yufiria.craftorithm.recipe;
 import crypticlib.MinecraftVersion;
 import crypticlib.lang.entry.StringLangEntry;
 import org.bukkit.NamespacedKey;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
 import org.jetbrains.annotations.NotNull;

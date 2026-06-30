@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.recipe;
 
-import crypticlib.lang.entry.StringLangEntry;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.NotNull;

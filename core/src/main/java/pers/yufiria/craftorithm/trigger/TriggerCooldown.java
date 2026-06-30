@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.trigger;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 

@@ -1,7 +1,6 @@
 package pers.yufiria.craftorithm.ui.display.vanillaSmelting;
 
 import crypticlib.ui.display.Icon;
-import crypticlib.ui.display.MenuDisplay;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
 import org.jetbrains.annotations.NotNull;

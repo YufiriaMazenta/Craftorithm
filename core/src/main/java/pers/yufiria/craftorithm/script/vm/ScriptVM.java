@@ -1,10 +1,6 @@
 package pers.yufiria.craftorithm.script.vm;
 
-import crypticlib.CrypticLib;
 import crypticlib.CrypticLibBukkit;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
-import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.script.ScriptContext;
 import pers.yufiria.craftorithm.script.ScriptException;
 import pers.yufiria.craftorithm.script.ScriptValue;

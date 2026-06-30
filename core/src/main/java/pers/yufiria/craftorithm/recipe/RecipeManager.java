@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.recipe;
 
-import crypticlib.CrypticLib;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.MinecraftVersion;
 import crypticlib.chat.BukkitMsgSender;

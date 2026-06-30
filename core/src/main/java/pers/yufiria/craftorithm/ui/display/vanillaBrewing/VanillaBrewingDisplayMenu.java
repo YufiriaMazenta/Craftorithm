@@ -1,7 +1,6 @@
 package pers.yufiria.craftorithm.ui.display.vanillaBrewing;
 
 import crypticlib.ui.display.Icon;
-import crypticlib.ui.display.MenuDisplay;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.config.menu.display.VanillaBrewingDisplay;

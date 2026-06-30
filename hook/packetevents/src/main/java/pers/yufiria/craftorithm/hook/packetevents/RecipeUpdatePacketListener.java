@@ -4,7 +4,6 @@ import com.github.retrooper.packetevents.event.PacketListener;
 import com.github.retrooper.packetevents.event.PacketSendEvent;
 import com.github.retrooper.packetevents.protocol.packettype.PacketType;
 import com.github.retrooper.packetevents.protocol.packettype.PacketTypeCommon;
-import crypticlib.util.IOHelper;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 
 import java.util.Set;

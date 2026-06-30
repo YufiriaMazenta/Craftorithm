@@ -5,7 +5,8 @@ import crypticlib.ui.display.IconDisplay;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.ClickType;
 import pers.yufiria.craftorithm.script.compile.CompiledScript;
-import pers.yufiria.craftorithm.ui.icon.*;
+import pers.yufiria.craftorithm.ui.icon.IconParser;
+import pers.yufiria.craftorithm.ui.icon.RecipeDisplayIcon;
 
 import java.util.List;
 import java.util.Map;

@@ -12,9 +12,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
-import pers.yufiria.craftorithm.trigger.event.DynamicEventRegistry;
 import pers.yufiria.craftorithm.script.ScriptEngine;
 import pers.yufiria.craftorithm.script.compile.CompiledScript;
+import pers.yufiria.craftorithm.trigger.event.DynamicEventRegistry;
 
 import java.io.File;
 import java.util.*;

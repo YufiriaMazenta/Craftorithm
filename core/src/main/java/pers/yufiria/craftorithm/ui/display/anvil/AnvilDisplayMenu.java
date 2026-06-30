@@ -1,19 +1,15 @@
 package pers.yufiria.craftorithm.ui.display.anvil;
 
 import crypticlib.ui.display.Icon;
-import crypticlib.ui.display.MenuDisplay;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.config.menu.display.AnvilDisplay;
 import pers.yufiria.craftorithm.recipe.extra.AnvilRecipe;
-import pers.yufiria.craftorithm.ui.MenuDisplayLoader;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayMenu;
 import pers.yufiria.craftorithm.ui.display.RecipeResultIcon;
 import pers.yufiria.craftorithm.ui.icon.ActionIcon;
 import pers.yufiria.craftorithm.ui.icon.IconParser;
 
-import java.util.List;
 import java.util.Map;
 
 public class AnvilDisplayMenu extends RecipeDisplayMenu<AnvilRecipe> {

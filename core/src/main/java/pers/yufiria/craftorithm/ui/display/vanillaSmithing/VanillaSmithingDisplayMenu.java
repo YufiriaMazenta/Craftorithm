@@ -2,7 +2,6 @@ package pers.yufiria.craftorithm.ui.display.vanillaSmithing;
 
 import crypticlib.MinecraftVersion;
 import crypticlib.ui.display.Icon;
-import crypticlib.ui.display.MenuDisplay;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.SmithingRecipe;
 import org.bukkit.inventory.SmithingTransformRecipe;

@@ -12,7 +12,6 @@ import pers.yufiria.craftorithm.hook.VaultHook;
 import pers.yufiria.craftorithm.script.ScriptContext;
 import pers.yufiria.craftorithm.script.ScriptValue;
 import pers.yufiria.craftorithm.script.vm.ScriptVM;
-import pers.yufiria.craftorithm.trigger.Trigger;
 
 /**
  * 内置条件函数模块
