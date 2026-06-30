@@ -262,7 +262,7 @@ public enum ActionModule implements ScriptModule {
         String key = args[0].asString();
         ScriptValue value = args[1];
         ctx.setVariable(key, value);
-        return value;
+        return ScriptValue.nil();
     }
 
     /**
