@@ -8,15 +8,22 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.jetbrains.annotations.NotNull;
+import pers.yufiria.craftorithm.config.menu.display.VanillaShapelessDisplay;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayMenu;
 import pers.yufiria.craftorithm.ui.display.RecipeResultIcon;
+import pers.yufiria.craftorithm.ui.icon.IconParser;
 
 import java.util.List;
 
 public class VanillaShapelessDisplayMenu extends RecipeDisplayMenu<ShapelessRecipe> {
 
-    public VanillaShapelessDisplayMenu(@NotNull Player player, @NotNull MenuDisplay display, ShapelessRecipe recipe) {
-        super(player, display, recipe);
+    public VanillaShapelessDisplayMenu(@NotNull Player player, ShapelessRecipe recipe) {
+        super(player, recipe);
+        setDisplay(loadMenuDisplay(
+            VanillaShapelessDisplay.TITLE.value(),
+            VanillaShapelessDisplay.LAYOUT.value(),
+            VanillaShapelessDisplay.ICONS.value()
+        ));
     }
 
     @Override
@@ -42,4 +49,8 @@ public class VanillaShapelessDisplayMenu extends RecipeDisplayMenu<ShapelessReci
         }
     }
 
+    @Override
+    public IconParser iconParser() {
+        return VanillaShapelessDisplayIconParser.INSTANCE;
+    }
 }

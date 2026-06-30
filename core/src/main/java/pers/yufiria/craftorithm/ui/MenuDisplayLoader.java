@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 /**
  * 配方展示UI的加载器接口
  */
-public interface RecipeDisplayLoader {
+public interface MenuDisplayLoader {
 
     IconParser iconParser();
 

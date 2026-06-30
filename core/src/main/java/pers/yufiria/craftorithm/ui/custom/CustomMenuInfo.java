@@ -6,12 +6,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.script.ScriptEngine;
 import pers.yufiria.craftorithm.script.compile.CompiledScript;
-import pers.yufiria.craftorithm.ui.RecipeDisplayLoader;
+import pers.yufiria.craftorithm.ui.MenuDisplayLoader;
 import pers.yufiria.craftorithm.ui.icon.IconParser;
 
 import java.util.List;
 
-public class CustomMenuInfo implements RecipeDisplayLoader {
+public class CustomMenuInfo implements MenuDisplayLoader {
 
     private final @NotNull MenuDisplay menuDisplay;
     private final @Nullable String permission;
