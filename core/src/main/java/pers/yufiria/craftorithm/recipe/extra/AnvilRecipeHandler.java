@@ -122,10 +122,9 @@ public enum AnvilRecipeHandler implements Listener {
             return;
 
         ItemStack result = anvilRecipe.getResult();
-        NamespacedItemIdStack resultId = ItemManager.INSTANCE.matchItemId(result, false);
+        NamespacedItemIdStack resultId = ItemManager.INSTANCE.matchItemId(result, false).orElse(null);
         if (resultId != null) {
-            ItemStack refreshItem = ItemManager.INSTANCE.matchItem(resultId, (Player) event.getViewers().getFirst());
-            result.setItemMeta(refreshItem.getItemMeta());
+            ItemManager.INSTANCE.matchItem(resultId, (Player) event.getViewers().getFirst()).ifPresent(refreshItem -> result.setItemMeta(refreshItem.getItemMeta()));
         }
 
         //处理NBT保留操作
@@ -192,10 +191,10 @@ public enum AnvilRecipeHandler implements Listener {
         AnvilRecipe anvilRecipe = matchAnvilRecipe(base, addition);
         if (anvilRecipe == null)
             return;
-        NamespacedItemIdStack baseId = ItemManager.INSTANCE.matchItemId(base, true);
-        baseId = baseId != null ? baseId : new NamespacedItemIdStack(NamespacedItemId.fromMaterial(base.getType()), base.getAmount());
-        NamespacedItemIdStack additionId = ItemManager.INSTANCE.matchItemId(addition, true);
-        additionId = additionId != null ? additionId : new NamespacedItemIdStack(NamespacedItemId.fromMaterial(addition.getType()), addition.getAmount());
+        NamespacedItemIdStack baseId = ItemManager.INSTANCE.matchItemId(base, true)
+            .orElseGet(() -> new NamespacedItemIdStack(NamespacedItemId.fromMaterial(base.getType()), base.getAmount()));
+        NamespacedItemIdStack additionId = ItemManager.INSTANCE.matchItemId(addition, true)
+            .orElseGet(() -> new NamespacedItemIdStack(NamespacedItemId.fromMaterial(addition.getType()), addition.getAmount()));
         Player player = (Player) event.getWhoClicked();
 
         //处理NBT保留操作

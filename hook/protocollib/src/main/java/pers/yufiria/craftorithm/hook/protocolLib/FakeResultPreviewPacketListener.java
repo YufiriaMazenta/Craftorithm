@@ -152,14 +152,14 @@ public class FakeResultPreviewPacketListener extends PacketAdapter implements Li
             if (recipeFakeResult == null) {
                 return;
             }
-            ItemStack fakeResult = ItemManager.INSTANCE.matchItem(recipeFakeResult);
+            ItemStack fakeResult = ItemManager.INSTANCE.matchItem(recipeFakeResult).orElseThrow();
             event.getPacket().getItemModifier().write(0, fakeResult);
         } else if (packetType.equals(PacketType.Play.Server.WINDOW_ITEMS)) {
             NamespacedItemIdStack recipeFakeResult = FakeResultDataHandler.INSTANCE.getRecipeFakeResult(recipeKey);
             if (recipeFakeResult == null) {
                 return;
             }
-            ItemStack fakeResult = ItemManager.INSTANCE.matchItem(recipeFakeResult);
+            ItemStack fakeResult = ItemManager.INSTANCE.matchItem(recipeFakeResult).orElseThrow();
             List<ItemStack> items = event.getPacket().getItemListModifier().read(0);
             if (items != null && !items.isEmpty()) {
                 items.set(cacheRecipeData.resultSlot, fakeResult);

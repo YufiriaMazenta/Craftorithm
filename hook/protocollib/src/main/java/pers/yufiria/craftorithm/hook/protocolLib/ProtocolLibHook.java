@@ -6,6 +6,7 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
+import crypticlib.MinecraftVersion;
 import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.LifeCycleTaskSettings;
@@ -53,20 +54,32 @@ public enum ProtocolLibHook implements PluginHook, BukkitLifeCycleTask {
             return false;
         }
         LangUtils.info(Languages.LOAD_HOOK_PLUGIN_SUCCESS, Map.of("<plugin>", pluginName()));
+        Bukkit.getPluginManager().registerEvents(FakeResultPreviewPacketListener.INSTANCE, Craftorithm.instance());
         //注册虚假合成结果预览数据包监听器
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
         protocolManager.addPacketListener(FakeResultPreviewPacketListener.INSTANCE);
-        Bukkit.getPluginManager().registerEvents(FakeResultPreviewPacketListener.INSTANCE, Craftorithm.instance());
         //注册配方书数据包监听器
+        PacketType[] handlePacketTypes;
+        if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_21_2)) {
+            handlePacketTypes = new PacketType[] {
+                PacketType.Play.Server.RECIPE_BOOK_ADD,
+                PacketType.Play.Server.RECIPE_BOOK_REMOVE,
+                PacketType.Play.Server.RECIPE_BOOK_SETTINGS,
+                PacketType.Play.Server.RECIPE_UPDATE,
+                PacketType.Play.Server.ADVANCEMENTS,
+                PacketType.Play.Server.TAGS
+            };
+        } else {
+            handlePacketTypes = new PacketType[] {
+                PacketType.Play.Server.RECIPE_UPDATE,
+                PacketType.Play.Server.ADVANCEMENTS,
+                PacketType.Play.Server.TAGS
+            };
+        }
         protocolManager.addPacketListener(new PacketAdapter(
             Craftorithm.instance(),
             ListenerPriority.NORMAL,
-            PacketType.Play.Server.RECIPE_BOOK_ADD,
-            PacketType.Play.Server.RECIPE_BOOK_REMOVE,
-            PacketType.Play.Server.RECIPE_BOOK_SETTINGS,
-            PacketType.Play.Server.RECIPE_UPDATE,
-            PacketType.Play.Server.ADVANCEMENTS,
-            PacketType.Play.Server.TAGS
+            handlePacketTypes
         ) {
             @Override
             public void onPacketSending(PacketEvent event) {

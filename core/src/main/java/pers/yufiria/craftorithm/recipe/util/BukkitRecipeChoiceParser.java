@@ -66,7 +66,7 @@ public class BukkitRecipeChoiceParser {
                     return new RecipeChoice.ExactChoice(itemPack.items());
                 }
             default:
-                ItemStack item = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(choiceStr)).clone();
+                ItemStack item = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(choiceStr)).orElseThrow().clone();
                 item.setAmount(1);
                 return new RecipeChoice.ExactChoice(item);
         }

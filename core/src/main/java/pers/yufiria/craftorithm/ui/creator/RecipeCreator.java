@@ -26,7 +26,7 @@ public abstract class RecipeCreator extends StoredMenu {
 
     private @Nullable String recipeId;
     private @Nullable String recipeFileName;
-    private final SimpleDateFormat FORMAT = new SimpleDateFormat("yyyyMMdd_HHmmss");
+    private final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("yyyyMMdd_HHmmss");
 
     public RecipeCreator(
         @NotNull Player player,
@@ -77,7 +77,7 @@ public abstract class RecipeCreator extends StoredMenu {
         if (!RecipeManager.INSTANCE.containsRecipe(resolved)) {
             return resolved;
         }
-        resolved = resolved + "_" + FORMAT.format(System.currentTimeMillis());
+        resolved = resolved + "_" + TIME_FORMAT.format(System.currentTimeMillis());
         this.recipeFileName = resolved;
         return recipeFileName;
     }
@@ -103,8 +103,9 @@ public abstract class RecipeCreator extends StoredMenu {
         }
         String resolved = typeKey + "_" + itemIdStr;
         if (RecipeManager.INSTANCE.containsRecipe(resolved)) {
-            resolved = resolved + "_" + FORMAT.format(System.currentTimeMillis());
+            resolved = resolved + "_" + TIME_FORMAT.format(System.currentTimeMillis());
         }
+        this.recipeId = resolved;
         return resolved;
     }
 

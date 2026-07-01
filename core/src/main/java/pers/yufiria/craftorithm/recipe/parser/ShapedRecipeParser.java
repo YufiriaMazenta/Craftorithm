@@ -23,7 +23,7 @@ public enum ShapedRecipeParser implements RecipeParser<ShapedRecipe> {
     public ShapedRecipe parse(String recipeName, ConfigurationSection recipeConfig) {
         try {
             String resultId = recipeConfig.getString("result");
-            ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId));
+            ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId)).orElseThrow();
             NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeName);
             ShapedRecipe recipe = new ShapedRecipe(recipeKey, result);
             recipe.shape(recipeConfig.getStringList("shape").toArray(new String[0]));

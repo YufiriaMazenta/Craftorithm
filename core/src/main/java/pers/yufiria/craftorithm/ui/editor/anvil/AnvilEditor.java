@@ -86,7 +86,7 @@ public final class AnvilEditor extends RecipeEditorMenu {
         inventory.setItem(ADDITION_SLOT, anvilRecipe.addition().getItemStack().clone());
 
         // result - NamespacedItemIdStack, 用ItemManager.matchItem获取ItemStack
-        ItemStack resultItem = ItemManager.INSTANCE.matchItem(anvilRecipe.result());
+        ItemStack resultItem = ItemManager.INSTANCE.matchItem(anvilRecipe.result()).orElseThrow();
         inventory.setItem(RESULT_SLOT, resultItem.clone());
     }
 

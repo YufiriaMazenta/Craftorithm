@@ -58,7 +58,7 @@ public class AnvilRecipe implements CustomRecipe {
 
     @Override
     public @NotNull ItemStack getResult() {
-        return ItemManager.INSTANCE.matchItem(result);
+        return ItemManager.INSTANCE.matchItem(result).orElseThrow();
     }
 
     public NamespacedItemIdStack result() {

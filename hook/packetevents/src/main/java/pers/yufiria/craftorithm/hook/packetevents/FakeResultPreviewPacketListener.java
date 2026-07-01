@@ -153,7 +153,7 @@ public enum FakeResultPreviewPacketListener implements PacketListener, Listener 
                 if (recipeFakeResult == null) {
                     return;
                 }
-                ItemStack fakeResult = ItemManager.INSTANCE.matchItem(recipeFakeResult);
+                ItemStack fakeResult = ItemManager.INSTANCE.matchItem(recipeFakeResult).orElseThrow();
                 WrapperPlayServerSetSlot packet = new WrapperPlayServerSetSlot(event);
                 if (packet.getSlot() != cacheRecipeData.resultSlot) {
                     return;
@@ -165,7 +165,7 @@ public enum FakeResultPreviewPacketListener implements PacketListener, Listener 
                 if (recipeFakeResult == null) {
                     return;
                 }
-                ItemStack fakeResult = ItemManager.INSTANCE.matchItem(recipeFakeResult);
+                ItemStack fakeResult = ItemManager.INSTANCE.matchItem(recipeFakeResult).orElseThrow();
                 WrapperPlayServerWindowItems packet = new WrapperPlayServerWindowItems(event);
                 List<com.github.retrooper.packetevents.protocol.item.ItemStack> items = packet.getItems();
                 if (!items.isEmpty()) {

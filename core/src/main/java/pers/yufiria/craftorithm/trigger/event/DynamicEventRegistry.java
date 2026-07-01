@@ -283,9 +283,9 @@ public enum DynamicEventRegistry {
 
     private static ScriptValue resolveItemId(ItemStack item) {
         if (item == null) return ScriptValue.nil();
-        NamespacedItemIdStack id = ItemManager.INSTANCE.matchItemId(item, false);
-        if (id != null) return ScriptValue.of(id.itemId().toString());
-        return ScriptValue.of(item.getType().getKey().toString());
+        return ItemManager.INSTANCE.matchItemId(item, false)
+            .map(id -> ScriptValue.of(id.itemId().toString()))
+            .orElseGet(() -> ScriptValue.of(item.getType().getKey().toString()));
     }
 
     private static ScriptValue resolveItemAmount(ItemStack item) {

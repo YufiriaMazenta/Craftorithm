@@ -1,8 +1,6 @@
 package pers.yufiria.craftorithm.item;
 
-import crypticlib.chat.BukkitMsgSender;
 import org.bukkit.inventory.ItemStack;
-import pers.yufiria.craftorithm.item.exception.ItemNotFoundException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,14 +18,7 @@ public class ItemPack {
         this.itemIds = itemIds;
         this.items = new ArrayList<>();
         for (NamespacedItemIdStack itemId : itemIds) {
-            try {
-                ItemStack item = ItemManager.INSTANCE.matchItem(itemId).clone();
-                items.add(item);
-            } catch (ItemNotFoundException e) {
-                BukkitMsgSender.INSTANCE.info("&cItem Pack Init Error | " + e.getMessage());
-            } catch (Throwable throwable) {
-                throwable.printStackTrace();
-            }
+            ItemManager.INSTANCE.matchItem(itemId).ifPresent(item -> items.add(item.clone()));
         }
     }
 

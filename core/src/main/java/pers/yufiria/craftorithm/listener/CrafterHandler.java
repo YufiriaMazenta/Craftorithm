@@ -32,16 +32,14 @@ public enum CrafterHandler implements Listener {
         ItemStack result = event.getResult();
         if (ItemHelper.isAir(result))
             return;
-        NamespacedItemIdStack id = ItemManager.INSTANCE.matchItemId(result, true);
-        if (id == null) {
-            return;
-        }
-        ItemStack refreshItem = ItemManager.INSTANCE.matchItem(id);
-        if (result.isSimilar(refreshItem)) {
-            return;
-        }
-        result.setItemMeta(refreshItem.getItemMeta());
-        event.setResult(result);
+        ItemManager.INSTANCE.matchItemId(result, true)
+            .flatMap(ItemManager.INSTANCE::matchItem)
+            .ifPresent(refreshItem -> {
+                if (!result.isSimilar(refreshItem)) {
+                    result.setItemMeta(refreshItem.getItemMeta());
+                    event.setResult(result);
+                }
+            });
     }
 
 }

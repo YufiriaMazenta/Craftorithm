@@ -13,6 +13,8 @@ import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 
+import java.util.Optional;
+
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Locale;
@@ -99,7 +101,7 @@ public class StackableItemIdChoice implements RecipeChoice {
 
     @Override
     public @NotNull ItemStack getItemStack() {
-        return ItemManager.INSTANCE.matchItem(itemIds.get(rand.nextInt(itemIds.size())));
+        return ItemManager.INSTANCE.matchItem(itemIds.get(rand.nextInt(itemIds.size()))).orElseThrow();
     }
 
     @Override
@@ -118,10 +120,8 @@ public class StackableItemIdChoice implements RecipeChoice {
 
     @Override
     public boolean test(@NotNull ItemStack itemStack) {
-        NamespacedItemIdStack stackedItemId = ItemManager.INSTANCE.matchItemId(itemStack, true);
-        if (stackedItemId == null) {
-            stackedItemId = new NamespacedItemIdStack(NamespacedItemId.fromMaterial(itemStack.getType()), itemStack.getAmount());
-        }
+        NamespacedItemIdStack stackedItemId = ItemManager.INSTANCE.matchItemId(itemStack, true)
+            .orElseGet(() -> new NamespacedItemIdStack(NamespacedItemId.fromMaterial(itemStack.getType()), itemStack.getAmount()));
         NamespacedItemIdStack finalStackedItemId = stackedItemId;
         return itemIds.stream().anyMatch(itemId -> itemId.isSimilar(finalStackedItemId) && finalStackedItemId.amount() >= itemId.amount());
     }
@@ -129,8 +129,8 @@ public class StackableItemIdChoice implements RecipeChoice {
     @Override
     public @NotNull RecipeChoice validate(boolean allowEmptyRecipes) {
         if (this.itemIds.stream().anyMatch((it) -> {
-            ItemStack itemStack = ItemManager.INSTANCE.matchItem(it);
-            return ItemHelper.isAir(itemStack);
+            Optional<ItemStack> itemStack = ItemManager.INSTANCE.matchItem(it);
+            return itemStack.isEmpty() || ItemHelper.isAir(itemStack.get());
         })) {
             throw new IllegalArgumentException("RecipeChoice.ExactChoice cannot contain air");
         } else {

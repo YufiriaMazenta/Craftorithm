@@ -23,7 +23,7 @@ public enum StonecuttingRecipeParser implements RecipeParser<StonecuttingRecipe>
     public @NotNull StonecuttingRecipe parse(String recipeName, ConfigurationSection recipeConfig) {
         try {
             String resultId = recipeConfig.getString("result");
-            ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId));
+            ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId)).orElseThrow();
             NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeName);
             String ingredientId = recipeConfig.getString("ingredient");
             RecipeChoice ingredient = BukkitRecipeChoiceParser.parseChoice(ingredientId);

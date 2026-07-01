@@ -21,7 +21,9 @@ import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @LifeCycleTaskSettings(
@@ -46,6 +48,7 @@ public enum ItemManager implements BukkitLifeCycleTask {
     private final Map<String, ItemPack> itemPacks = new ConcurrentHashMap<>();
     //存储不能用于合成的物品列表
     private final Set<NamespacedItemId> cannotCraftItems = new HashSet<>();
+    private final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("yyyyMMdd_HHmmss");
 
     /**
      * 注册一个物品提供源
@@ -77,17 +80,17 @@ public enum ItemManager implements BukkitLifeCycleTask {
 
     /**
      * 根据名字获取一个物品
-     * @return 获取到的物品，如果为空则为不存在此物品
+     * @return 获取到的物品，不存在返回 Optional.empty()
      */
-    public @NotNull ItemStack matchItem(NamespacedItemIdStack stackedItemId) {
+    public Optional<ItemStack> matchItem(NamespacedItemIdStack stackedItemId) {
         return matchItem(stackedItemId, null);
     }
 
     /**
      * 根据名字获取一个物品,并解析玩家变量
-     * @return 获取到的物品，如果为空则为不存在此物品
+     * @return 获取到的物品，不存在返回 Optional.empty()
      */
-    public @NotNull ItemStack matchItem(NamespacedItemIdStack stackedItemId, @Nullable OfflinePlayer player) {
+    public Optional<ItemStack> matchItem(NamespacedItemIdStack stackedItemId, @Nullable OfflinePlayer player) {
         ItemStack item;
         NamespacedItemId itemId = stackedItemId.itemId();
         int amount = stackedItemId.amount();
@@ -101,30 +104,29 @@ public enum ItemManager implements BukkitLifeCycleTask {
         else
             item = provider.matchItem(itemId.itemId());
         if (item == null)
-            throw new IllegalArgumentException("Can not found item " + itemId.itemId() + " from provider: " + itemId.namespace());
+            return Optional.empty();
         item.setAmount(amount);
-        return item;
+        return Optional.of(item);
     }
 
     /**
      * 获取一个物品的完整id,包含命名空间和id
      * 不会匹配没有数据的原版物品
      * @param item 传入的物品
-     * @return 传入的物品id
+     * @return 传入的物品id，未找到返回 Optional.empty()
      */
-    @Nullable
-    public NamespacedItemIdStack matchItemId(ItemStack item, boolean ignoreAmount) {
+    public Optional<NamespacedItemIdStack> matchItemId(ItemStack item, boolean ignoreAmount) {
         if (ItemHelper.isAir(item))
-            return null;
+            return Optional.empty();
 
         for (Map.Entry<String, ItemProvider> itemProviderEntry : itemProviderMap.entrySet()) {
             NamespacedItemIdStack namespacedItemIdStack = itemProviderEntry.getValue().matchItemId(item, ignoreAmount);
             if (namespacedItemIdStack != null) {
-                return namespacedItemIdStack;
+                return Optional.of(namespacedItemIdStack);
             }
         }
 
-        return null;
+        return Optional.empty();
     }
 
     /**
@@ -138,9 +140,12 @@ public enum ItemManager implements BukkitLifeCycleTask {
         }
         NamespacedItemIdStack itemId;
         if (item.hasItemMeta()) {
-            itemId = ItemManager.INSTANCE.matchItemId(item, ignoreAmount);
+            itemId = ItemManager.INSTANCE.matchItemId(item, ignoreAmount).orElse(null);
             if (itemId == null) {
-                String id = UUID.randomUUID().toString();
+                String id = item.getType().getKey().getKey();
+                if (CraftorithmItemProvider.INSTANCE.matchItem(id) != null) {
+                    id += TIME_FORMAT.format(System.currentTimeMillis());
+                }
                 itemId = CraftorithmItemProvider.INSTANCE.regCraftorithmItem("plugin_created", id, item);
                 if (ignoreAmount) {
                     itemId.setAmount(1);
@@ -160,15 +165,15 @@ public enum ItemManager implements BukkitLifeCycleTask {
      * 获取原版物品
      * @param itemId 物品的ID
      * @param amount 物品数量
-     * @return 物品
+     * @return 物品，不存在返回 Optional.empty()
      */
-    public ItemStack matchVanillaItem(NamespacedItemId itemId, int amount) {
+    public Optional<ItemStack> matchVanillaItem(NamespacedItemId itemId, int amount) {
         String itemIdString = itemId.toString();
         Material material = MaterialHelper.matchMaterial(itemIdString);
         if (material == null) {
-            throw new IllegalArgumentException("Can not found item " + itemIdString);
+            return Optional.empty();
         }
-        return new ItemStack(material, amount);
+        return Optional.of(new ItemStack(material, amount));
     }
 
     public void reloadCustomCookingFuel() {
@@ -197,13 +202,9 @@ public enum ItemManager implements BukkitLifeCycleTask {
     public Integer matchCustomFuelBurnTime(ItemStack item) {
         if (customCookingFuelMap.isEmpty())
             return null;
-        NamespacedItemIdStack stackedItemId = matchItemId(item, true);
-        NamespacedItemId itemId;
-        if (stackedItemId == null) {
-            itemId = NamespacedItemId.fromMaterial(item.getType());
-        } else {
-            itemId = stackedItemId.itemId();
-        }
+        NamespacedItemId itemId = matchItemId(item, true)
+            .map(NamespacedItemIdStack::itemId)
+            .orElseGet(() -> NamespacedItemId.fromMaterial(item.getType()));
         return customCookingFuelMap.get(itemId);
     }
 
@@ -267,13 +268,9 @@ public enum ItemManager implements BukkitLifeCycleTask {
         for (ItemStack item : items) {
             if (item == null)
                 continue;
-            NamespacedItemId itemId;
-            NamespacedItemIdStack itemIdStack = matchItemId(item, true);
-            if (itemIdStack == null) {
-                itemId = NamespacedItemId.fromMaterial(item.getType());
-            } else {
-                itemId = itemIdStack.itemId();
-            }
+            NamespacedItemId itemId = matchItemId(item, true)
+                .map(NamespacedItemIdStack::itemId)
+                .orElseGet(() -> NamespacedItemId.fromMaterial(item.getType()));
             IOHelper.debug("check: " + itemId);
             if (cannotCraftItems.contains(itemId)) {
                 result = true;

@@ -56,13 +56,12 @@ public enum SmeltResultRefreshHandler implements Listener {
             return;
         }
         ItemStack result = event.getResult();
-        NamespacedItemIdStack id = ItemManager.INSTANCE.matchItemId(result, true);
-        if (id == null) {
-            return;
-        }
-        ItemStack refreshItem = ItemManager.INSTANCE.matchItem(id);
-        result.setItemMeta(refreshItem.getItemMeta());
-        event.setResult(result);
+        ItemManager.INSTANCE.matchItemId(result, true)
+            .flatMap(ItemManager.INSTANCE::matchItem)
+            .ifPresent(refreshItem -> {
+                result.setItemMeta(refreshItem.getItemMeta());
+                event.setResult(result);
+            });
     }
 
     @EventHandler
@@ -93,13 +92,12 @@ public enum SmeltResultRefreshHandler implements Listener {
             return;
         }
         ItemStack result = event.getResult();
-        NamespacedItemIdStack id = ItemManager.INSTANCE.matchItemId(result, true);
-        if (id == null) {
-            return;
-        }
-        ItemStack refreshItem = ItemManager.INSTANCE.matchItem(id);
-        result.setItemMeta(refreshItem.getItemMeta());
-        event.setResult(result);
+        ItemManager.INSTANCE.matchItemId(result, true)
+            .flatMap(ItemManager.INSTANCE::matchItem)
+            .ifPresent(refreshItem -> {
+                result.setItemMeta(refreshItem.getItemMeta());
+                event.setResult(result);
+            });
     }
 
     private void putRecipeCache(Block block, CookingRecipe<?> recipe) {

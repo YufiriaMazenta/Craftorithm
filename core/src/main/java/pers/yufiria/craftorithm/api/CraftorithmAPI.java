@@ -21,6 +21,7 @@ import pers.yufiria.craftorithm.trigger.TriggerManager;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 
 public enum CraftorithmAPI {
 
@@ -40,9 +41,9 @@ public enum CraftorithmAPI {
     /**
      * 根据NamespacedItemIdStack获取物品
      * @param itemIdStack 物品ID栈
-     * @return 物品栈
+     * @return 物品栈，不存在返回 Optional.empty()
      */
-    public @NotNull ItemStack getItem(@NotNull NamespacedItemIdStack itemIdStack) {
+    public Optional<ItemStack> getItem(@NotNull NamespacedItemIdStack itemIdStack) {
         return ItemManager.INSTANCE.matchItem(itemIdStack);
     }
 
@@ -50,9 +51,9 @@ public enum CraftorithmAPI {
      * 根据NamespacedItemIdStack获取物品（带玩家变量解析）
      * @param itemIdStack 物品ID栈
      * @param player 玩家
-     * @return 物品栈
+     * @return 物品栈，不存在返回 Optional.empty()
      */
-    public @NotNull ItemStack getItem(@NotNull NamespacedItemIdStack itemIdStack, @Nullable Player player) {
+    public Optional<ItemStack> getItem(@NotNull NamespacedItemIdStack itemIdStack, @Nullable Player player) {
         return ItemManager.INSTANCE.matchItem(itemIdStack, player);
     }
 
@@ -60,9 +61,9 @@ public enum CraftorithmAPI {
      * 获取物品的NamespacedItemId
      * @param item 物品栈
      * @param ignoreAmount 是否忽略数量
-     * @return 物品ID，无法识别返回null
+     * @return 物品ID，无法识别返回 Optional.empty()
      */
-    public @Nullable NamespacedItemIdStack matchItemId(@NotNull ItemStack item, boolean ignoreAmount) {
+    public Optional<NamespacedItemIdStack> matchItemId(@NotNull ItemStack item, boolean ignoreAmount) {
         return ItemManager.INSTANCE.matchItemId(item, ignoreAmount);
     }
 

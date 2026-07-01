@@ -30,12 +30,10 @@ public enum BrewingHandler implements Listener {
         List<ItemStack> resultsClone = new ArrayList<>(results);
         for (int i = 0; i < resultsClone.size(); i++) {
             ItemStack result = resultsClone.get(i);
-            NamespacedItemIdStack resultItemId = ItemManager.INSTANCE.matchItemId(result, true);
-            if (resultItemId == null) {
-                continue;
-            }
-            ItemStack refreshItem = ItemManager.INSTANCE.matchItem(resultItemId);
-            if (result.isSimilar(refreshItem)) {
+            ItemStack refreshItem = ItemManager.INSTANCE.matchItemId(result, true)
+                .flatMap(ItemManager.INSTANCE::matchItem)
+                .orElse(null);
+            if (refreshItem == null || result.isSimilar(refreshItem)) {
                 return;
             }
             results.set(i, refreshItem);

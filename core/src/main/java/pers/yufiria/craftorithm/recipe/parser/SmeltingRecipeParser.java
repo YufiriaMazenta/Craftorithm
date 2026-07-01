@@ -31,7 +31,7 @@ public enum SmeltingRecipeParser implements RecipeParser<CookingRecipe<?>> {
                 throw new RecipeLoadException(recipeTypeId + " is not a smelting recipe type.");
             }
             String resultId = recipeConfig.getString("result");
-            ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId));
+            ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId)).orElseThrow();
             String ingredientId = recipeConfig.getString("ingredient");
             RecipeChoice ingredient = BukkitRecipeChoiceParser.parseChoice(ingredientId);
             NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeName);

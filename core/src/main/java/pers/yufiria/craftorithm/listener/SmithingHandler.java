@@ -41,13 +41,13 @@ public enum SmithingHandler implements Listener {
         }
 
         ItemStack result = event.getInventory().getRecipe().getResult();
-        NamespacedItemIdStack resultId = ItemManager.INSTANCE.matchItemId(result, true);
-        if (resultId != null) {
-            ItemStack refreshItem = ItemManager.INSTANCE.matchItem(resultId, (Player) event.getViewers().get(0));
-            if (!result.isSimilar(refreshItem)) {
-                result.setItemMeta(refreshItem.getItemMeta());
-            }
-        }
+        ItemManager.INSTANCE.matchItemId(result, true)
+            .flatMap(id -> ItemManager.INSTANCE.matchItem(id, (Player) event.getViewers().get(0)))
+            .ifPresent(refreshItem -> {
+                if (!result.isSimilar(refreshItem)) {
+                    result.setItemMeta(refreshItem.getItemMeta());
+                }
+            });
 
         //处理NBT保留操作
         Optional<CopyComponentsRules> recipeCopyNbtRules = CopyComponentsManager.INSTANCE.getRecipeCopyNbtRules(recipeKey);

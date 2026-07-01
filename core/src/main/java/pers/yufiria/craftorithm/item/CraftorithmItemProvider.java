@@ -83,10 +83,6 @@ public enum CraftorithmItemProvider implements ItemProvider, BukkitLifeCycleTask
                 throw new RuntimeException("Create item folder failed");
         }
         List<File> allFiles = IOHelper.allYamlFiles(ITEM_FILE_FOLDER);
-        if (allFiles.isEmpty()) {
-            Craftorithm.instance().saveResource("items/example_item.yml", false);
-            allFiles.add(new File(ITEM_FILE_FOLDER, "example_item.yml"));
-        }
         for (File file : allFiles) {
             String key = file.getPath().substring(ITEM_FILE_FOLDER.getPath().length() + 1);
             key = key.replace("\\", "/");

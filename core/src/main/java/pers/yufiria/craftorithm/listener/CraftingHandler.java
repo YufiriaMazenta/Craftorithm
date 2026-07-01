@@ -31,16 +31,14 @@ public enum CraftingHandler implements Listener {
             return;
         }
         ItemStack item = event.getRecipe().getResult();
-        NamespacedItemIdStack resultItemId = ItemManager.INSTANCE.matchItemId(item, true);
-        if (resultItemId == null) {
-            return;
-        }
-        ItemStack refreshItem = ItemManager.INSTANCE.matchItem(resultItemId, (Player) event.getViewers().getFirst());
-        if (item.isSimilar(refreshItem)) {
-            return;
-        }
-        item.setItemMeta(refreshItem.getItemMeta());
-        event.getInventory().setResult(item);
+        ItemManager.INSTANCE.matchItemId(item, true)
+            .flatMap(id -> ItemManager.INSTANCE.matchItem(id, (Player) event.getViewers().getFirst()))
+            .ifPresent(refreshItem -> {
+                if (!item.isSimilar(refreshItem)) {
+                    item.setItemMeta(refreshItem.getItemMeta());
+                    event.getInventory().setResult(item);
+                }
+            });
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

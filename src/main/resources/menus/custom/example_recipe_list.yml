@@ -4,9 +4,9 @@ layout:
   - 'ABCDEFGHI'
   - '#########'
 open_actions:
-  - 'tell hello world!'
+  - 'tell "hello world!"'
 close_actions:
-  - 'tell bye bye world!'
+  - 'tell "bye bye world!"'
 permission: 'craftorithm.ui.recipe_list_1'
 icons:
   '#':

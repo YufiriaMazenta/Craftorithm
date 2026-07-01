@@ -26,7 +26,7 @@ public enum BrewingRecipeParser implements RecipeParser<BrewingRecipe> {
         }
         try {
             String resultId = recipeConfig.getString("result");
-            ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId));
+            ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId)).orElseThrow();
             NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeName);
             String inputId = recipeConfig.getString("input");
             RecipeChoice input = BukkitRecipeChoiceParser.parseChoice(inputId);

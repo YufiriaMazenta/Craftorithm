@@ -26,7 +26,7 @@ public enum SmithingTransformRecipeParser implements RecipeParser<SmithingRecipe
     public @NotNull SmithingRecipe parse(String recipeName, ConfigurationSection recipeConfig) {
         try {
             String resultId = recipeConfig.getString("result");
-            ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId));
+            ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId)).orElseThrow();
             NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeName);
             String baseId = recipeConfig.getString("base");
             RecipeChoice base = BukkitRecipeChoiceParser.parseChoice(baseId);
