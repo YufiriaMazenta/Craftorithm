@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.script.func;
 
+import crypticlib.MinecraftVersion;
 import crypticlib.chat.BukkitMsgSender;
 import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.ui.menu.Menu;
@@ -304,11 +305,18 @@ public enum ActionModule implements ScriptModule {
         String soundName = args[0].asString();
         float volume = args.length > 1 ? (float) args[1].asNumber() : 1.0f;
         float pitch = args.length > 2 ? (float) args[2].asNumber() : 1.0f;
-        Sound sound = Registry.SOUNDS.get(Objects.requireNonNull(NamespacedKey.fromString(soundName)));
-        if (sound == null) {
-            return ScriptValue.nil();
+        if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_21_4)) {
+            Sound sound = Registry.SOUNDS.get(Objects.requireNonNull(NamespacedKey.fromString(soundName)));
+            if (sound == null) {
+                return ScriptValue.nil();
+            }
+            player.playSound(player.getLocation(), sound, volume, pitch);
+        } else {
+            NamespacedKey soundKey = NamespacedKey.fromString(soundName);
+            if (soundKey != null) {
+                player.playSound(player.getLocation(), soundKey.getKey(), volume, pitch);
+            }
         }
-        player.playSound(player.getLocation(), sound, volume, pitch);
         return ScriptValue.nil();
     }
 
