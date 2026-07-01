@@ -78,9 +78,6 @@ subprojects {
     repositories {
         mavenLocal()
         maven("https://repo.papermc.io/repository/maven-public/")
-        maven("https://oss.sonatype.org/content/groups/public/")
-        maven("https://repo.maven.apache.org/maven2/")
-        mavenCentral()
     }
     dependencies {
         compileOnly("org.jetbrains:annotations:24.0.1")

@@ -1,14 +1,13 @@
 repositories {
+    //CrypticLib
+    maven("http://110.42.10.241:8082/repository/maven-public/") {
+        isAllowInsecureProtocol = true
+    }
     //Vault
     maven("https://jitpack.io")
     //PlaceHolderAPI
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     maven("https://mvn.lumine.io/repository/maven-public/")
-    //CrypticLib
-    maven("http://110.42.10.241:8082/repository/maven-public/") {
-        isAllowInsecureProtocol = true
-    }
-
     //PlayerPoints
     maven("https://repo.rosewooddev.io/repository/public/")
 }
