@@ -38,7 +38,7 @@ public final class Craftorithm extends BukkitPlugin implements BukkitLifeCycleTa
     public void whenLoad() {
         CrypticLib.debug = PluginConfigs.DEBUG.value();
         IOHelper.info("&7Server Type: " + CrypticLibBukkit.serverAdapter().type() + ", Version: " + MinecraftVersion.current().version());
-        if (MinecraftVersion.current().before(MinecraftVersion.V1_19_4)) {
+        if (MinecraftVersion.current().before(MinecraftVersion.V1_20)) {
             BukkitMsgSender.INSTANCE.info("&cUnsupported Version");
             throw new UnsupportedVersionException();
         }

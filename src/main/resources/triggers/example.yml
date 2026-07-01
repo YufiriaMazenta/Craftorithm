@@ -11,4 +11,4 @@ on_craft_diamond_sword:
   priority: 0
   enabled: true
   cooldown: 5
-  per-player: true
+  per_player: true

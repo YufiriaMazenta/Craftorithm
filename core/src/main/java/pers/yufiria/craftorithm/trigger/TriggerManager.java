@@ -192,7 +192,7 @@ public enum TriggerManager implements BukkitLifeCycleTask {
         int priority = section.getInt("priority", 0);
         boolean enabled = section.getBoolean("enabled", true);
         long cooldown = (long) (section.getDouble("cooldown", 0) * 1000);
-        boolean perPlayer = section.getBoolean("per-player", true);
+        boolean perPlayer = section.getBoolean("per_player", true);
 
         return new Trigger(
             fullId, typeKey, recipeKeys, conditionScript, actionScript,
