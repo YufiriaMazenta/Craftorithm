@@ -170,6 +170,7 @@ public class ScriptLexer {
 
         if (c == '=' && next == '=') { tokens.add(new Token(Token.Type.EQ, "==", line)); pos += 2; return true; }
         if (c == '!' && next == '=') { tokens.add(new Token(Token.Type.NEQ, "!=", line)); pos += 2; return true; }
+        if (c == '!' && next != '=') { tokens.add(new Token(Token.Type.NOT, "!", line)); pos++; return true; }
         if (c == '>' && next == '=') { tokens.add(new Token(Token.Type.GTE, ">=", line)); pos += 2; return true; }
         if (c == '<' && next == '=') { tokens.add(new Token(Token.Type.LTE, "<=", line)); pos += 2; return true; }
         if (c == '&' && next == '&') { tokens.add(new Token(Token.Type.AND, "&&", line)); pos += 2; return true; }

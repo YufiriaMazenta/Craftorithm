@@ -25,6 +25,7 @@ public record Token(Type type, String value, int line) {
         LTE,        // <=
         AND,        // &&
         OR,         // ||
+        NOT,        // !
 
         // 分隔符
         LPAREN,     // (

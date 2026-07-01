@@ -188,7 +188,7 @@ public class ScriptParser {
 
     private ASTNode parseUnary() {
         // 支持 ! 前缀
-        if (check(Token.Type.IDENTIFIER) && peek().value().equals("!")) {
+        if (check(Token.Type.NOT)) {
             advance();
             int line = previous().line();
             ASTNode operand = parseUnary();
