@@ -20,7 +20,6 @@ import org.bukkit.plugin.EventExecutor;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.item.ItemManager;
-import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.script.ScriptValue;
 import pers.yufiria.craftorithm.trigger.TriggerContext;
 import pers.yufiria.craftorithm.trigger.TriggerManager;
@@ -50,7 +49,7 @@ public enum DynamicEventRegistry {
             Map.of(
                 "killer_name", event -> {
                     Player killer = ((PlayerDeathEvent) event).getEntity().getKiller();
-                    return killer != null ? ScriptValue.of(killer.getName()) : null;
+                    return killer != null ? ScriptValue.of(killer.getName()) : ScriptValue.nil();
                 }
             )
         );
@@ -189,7 +188,10 @@ public enum DynamicEventRegistry {
 
         // InventoryEvent 子类
         register("inventory_click", InventoryClickEvent.class, PlayerExtractor.WHO_CLICKED,
-            Map.of("slot", event -> ScriptValue.of(((InventoryClickEvent) event).getSlot()))
+            Map.of(
+                "slot", event -> ScriptValue.of(((InventoryClickEvent) event).getSlot()),
+                "click_type", event -> ScriptValue.of(((InventoryClickEvent) event).getClick().name())
+            )
         );
         register("inventory_close", InventoryCloseEvent.class, (event) -> {
             if (!(event instanceof InventoryCloseEvent closeEvent)) {
