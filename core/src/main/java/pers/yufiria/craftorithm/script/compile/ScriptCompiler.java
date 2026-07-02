@@ -94,6 +94,7 @@ public class ScriptCompiler {
             case "-"  -> OpCode.SUB;
             case "*"  -> OpCode.MUL;
             case "/"  -> OpCode.DIV;
+            case "%"  -> OpCode.MOD;
             default -> throw new IllegalArgumentException("Unknown operator: " + node.operator());
         };
         instructions.add(Instruction.of(opCode, node.line()));

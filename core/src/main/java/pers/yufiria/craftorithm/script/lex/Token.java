@@ -2,12 +2,15 @@ package pers.yufiria.craftorithm.script.lex;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Set;
+
 /**
  * 词法分析产出的Token
  */
 public record Token(Type type, String value, int line) {
 
     public enum Type {
+
         // 字面量
         STRING,     // "hello world"
         NUMBER,     // 123, 3.14
@@ -32,6 +35,7 @@ public record Token(Type type, String value, int line) {
         MINUS,      // -
         MULTIPLY,   // *
         DIVIDE,     // /
+        MODULO,     // %
 
         // 分隔符
         LPAREN,     // (
@@ -49,10 +53,12 @@ public record Token(Type type, String value, int line) {
         NEWLINE,
         EOF;
 
+        private static final Set<Type> OPERATOR_TYPES = Set.of(
+            EQ, NEQ, GT, GTE, LT, LTE, AND, OR, PLUS, MINUS, MULTIPLY, DIVIDE, MODULO
+        );
+
         public boolean isOperator() {
-            return this == EQ || this == NEQ || this == GT || this == GTE
-                || this == LT || this == LTE || this == AND || this == OR
-                || this == PLUS || this == MINUS || this == MULTIPLY || this == DIVIDE;
+            return OPERATOR_TYPES.contains(this);
         }
     }
 

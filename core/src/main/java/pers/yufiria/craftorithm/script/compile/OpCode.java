@@ -26,6 +26,7 @@ public enum OpCode {
     SUB,            // a - b  → Number
     MUL,            // a * b  → Number
     DIV,            // a / b  → Number
+    MOD,            // a % b  → Number（取余）
     NEG,            // -a     → Number（取负）
 
     // 函数调用

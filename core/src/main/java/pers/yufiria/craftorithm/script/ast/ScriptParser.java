@@ -23,7 +23,7 @@ import java.util.List;
  *   and_expr      = comparison ("&&" comparison)*
  *   comparison    = additive (("==" | "!=" | ">" | ">=" | "<" | "<=") additive)?
  *   additive      = multiplicative (("+" | "-") multiplicative)*
- *   multiplicative = unary (("*" | "/") unary)*
+ *   multiplicative = unary (("*" | "/" | "%") unary)*
  *   unary         = ("!" | "-") unary | call
  *   call          = IDENTIFIER "(" args ")" | IDENTIFIER bare_args | atom
  *   bare_args     = atom+
@@ -201,7 +201,7 @@ public class ScriptParser {
 
     private ASTNode parseMultiplicative() {
         ASTNode left = parseUnary();
-        while (matchAny(Token.Type.MULTIPLY, Token.Type.DIVIDE)) {
+        while (matchAny(Token.Type.MULTIPLY, Token.Type.DIVIDE, Token.Type.MODULO)) {
             String op = previous().value();
             int line = previous().line();
             ASTNode right = parseUnary();

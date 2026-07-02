@@ -13,7 +13,7 @@ import java.util.List;
  * - 引号字符串: "hello world"
  * - 数字: 123, 3.14, -5
  * - 布尔: true, false
- * - 运算符: == != > >= < <= && ||
+ * - 运算符: == != > >= < <= && || + - * / %
  * - 标识符: perm, command, my_func
  * - 控制流关键字: if, else, elseif, endif
  * - 注释: // 行注释
@@ -182,6 +182,7 @@ public class ScriptLexer {
         if (c == '-') { tokens.add(new Token(Token.Type.MINUS, "-", line)); pos++; return true; }
         if (c == '*') { tokens.add(new Token(Token.Type.MULTIPLY, "*", line)); pos++; return true; }
         if (c == '/') { tokens.add(new Token(Token.Type.DIVIDE, "/", line)); pos++; return true; }
+        if (c == '%') { tokens.add(new Token(Token.Type.MODULO, "%", line)); pos++; return true; }
 
         return false;
     }
