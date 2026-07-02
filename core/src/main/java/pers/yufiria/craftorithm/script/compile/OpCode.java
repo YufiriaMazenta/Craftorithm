@@ -21,6 +21,13 @@ public enum OpCode {
     OR,             // a || b → Boolean
     NOT,            // !a     → Boolean
 
+    // 算术运算
+    ADD,            // a + b  → Number 或 String（字符串拼接）
+    SUB,            // a - b  → Number
+    MUL,            // a * b  → Number
+    DIV,            // a / b  → Number
+    NEG,            // -a     → Number（取负）
+
     // 函数调用
     CALL,           // CALL funcName argCount → 调用函数
 

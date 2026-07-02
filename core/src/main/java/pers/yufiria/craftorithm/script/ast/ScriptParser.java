@@ -21,8 +21,10 @@ import java.util.List;
  *   expression    = or_expr
  *   or_expr       = and_expr ("||" and_expr)*
  *   and_expr      = comparison ("&&" comparison)*
- *   comparison    = unary (("==" | "!=" | ">" | ">=" | "<" | "<=") unary)?
- *   unary         = "!" unary | call
+ *   comparison    = additive (("==" | "!=" | ">" | ">=" | "<" | "<=") additive)?
+ *   additive      = multiplicative (("+" | "-") multiplicative)*
+ *   multiplicative = unary (("*" | "/") unary)*
+ *   unary         = ("!" | "-") unary | call
  *   call          = IDENTIFIER "(" args ")" | IDENTIFIER bare_args | atom
  *   bare_args     = atom+
  *   args          = (expression ("," expression)*)?
@@ -176,23 +178,50 @@ public class ScriptParser {
     }
 
     private ASTNode parseComparison() {
-        ASTNode left = parseUnary();
+        ASTNode left = parseAdditive();
         if (matchAny(Token.Type.EQ, Token.Type.NEQ, Token.Type.GT, Token.Type.GTE, Token.Type.LT, Token.Type.LTE)) {
             String op = previous().value();
             int line = previous().line();
-            ASTNode right = parseUnary();
+            ASTNode right = parseAdditive();
             return new ASTNode.BinaryOpNode(op, left, right, line);
         }
         return left;
     }
 
+    private ASTNode parseAdditive() {
+        ASTNode left = parseMultiplicative();
+        while (matchAny(Token.Type.PLUS, Token.Type.MINUS)) {
+            String op = previous().value();
+            int line = previous().line();
+            ASTNode right = parseMultiplicative();
+            left = new ASTNode.BinaryOpNode(op, left, right, line);
+        }
+        return left;
+    }
+
+    private ASTNode parseMultiplicative() {
+        ASTNode left = parseUnary();
+        while (matchAny(Token.Type.MULTIPLY, Token.Type.DIVIDE)) {
+            String op = previous().value();
+            int line = previous().line();
+            ASTNode right = parseUnary();
+            left = new ASTNode.BinaryOpNode(op, left, right, line);
+        }
+        return left;
+    }
+
     private ASTNode parseUnary() {
-        // 支持 ! 前缀
         if (check(Token.Type.NOT)) {
             advance();
             int line = previous().line();
             ASTNode operand = parseUnary();
             return new ASTNode.UnaryOpNode("!", operand, line);
+        }
+        if (check(Token.Type.MINUS)) {
+            advance();
+            int line = previous().line();
+            ASTNode operand = parseUnary();
+            return new ASTNode.UnaryOpNode("-", operand, line);
         }
         return parseCall();
     }

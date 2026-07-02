@@ -32,9 +32,9 @@ import java.util.Optional;
  *   command "give %player% diamond 1"
  *   console "say hello"
  *   tell "&aHello!"
- *   take-money 100
- *   give-exp 50
- *   take-level 5
+ *   take_money 100
+ *   give_exp 50
+ *   take_level 5
  */
 public enum ActionModule implements ScriptModule {
 
@@ -53,18 +53,18 @@ public enum ActionModule implements ScriptModule {
         registry.register("actionbar", this::actionbar);
         registry.register("title", this::title);
         registry.register("log", this::log);
-        registry.register("take-money", this::takeMoney);
-        registry.register("give-money", this::giveMoney);
-        registry.register("take-level", this::takeLevel);
-        registry.register("give-level", this::giveLevel);
-        registry.register("give-exp", this::giveExp);
-        registry.register("take-points", this::takePoints);
-        registry.register("give-points", this::givePoints);
+        registry.register("take_money", this::takeMoney);
+        registry.register("give_money", this::giveMoney);
+        registry.register("take_level", this::takeLevel);
+        registry.register("give_level", this::giveLevel);
+        registry.register("give_exp", this::giveExp);
+        registry.register("take_points", this::takePoints);
+        registry.register("give_points", this::givePoints);
         registry.register("close", this::close);
         registry.register("back", this::back);
         registry.register("openmenu", this::openmenu);
-        registry.register("discover-recipe", this::discoverRecipe);
-        registry.register("undiscover-recipe", this::undiscoverRecipe);
+        registry.register("discover_recipe", this::discoverRecipe);
+        registry.register("undiscover_recipe", this::undiscoverRecipe);
         registry.register("set", this::set);
         registry.register("delay", this::delay);
         registry.register("sound", this::sound);

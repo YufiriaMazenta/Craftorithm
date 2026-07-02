@@ -105,6 +105,35 @@ public class ScriptVM {
                     stack.push(ScriptValue.of(!popStack("NOT").asBoolean()));
                 }
 
+                case ADD -> {
+                    ScriptValue r = popStack("ADD"), l = popStack("ADD");
+                    if (l.isString() || r.isString()) {
+                        stack.push(ScriptValue.of(l.asString() + r.asString()));
+                    } else {
+                        stack.push(ScriptValue.of(l.asNumber() + r.asNumber()));
+                    }
+                }
+                case SUB -> {
+                    ScriptValue r = popStack("SUB"), l = popStack("SUB");
+                    stack.push(ScriptValue.of(l.asNumber() - r.asNumber()));
+                }
+                case MUL -> {
+                    ScriptValue r = popStack("MUL"), l = popStack("MUL");
+                    stack.push(ScriptValue.of(l.asNumber() * r.asNumber()));
+                }
+                case DIV -> {
+                    ScriptValue r = popStack("DIV"), l = popStack("DIV");
+                    double divisor = r.asNumber();
+                    if (divisor == 0) {
+                        throw new ScriptException("Division by zero at line " + inst.line() + " in script: " + script.sourceName());
+                    }
+                    stack.push(ScriptValue.of(l.asNumber() / divisor));
+                }
+                case NEG -> {
+                    ScriptValue operand = popStack("NEG");
+                    stack.push(ScriptValue.of(-operand.asNumber()));
+                }
+
                 case CALL -> executeCall(inst);
 
                 case JUMP -> pc = inst.jumpOffset();

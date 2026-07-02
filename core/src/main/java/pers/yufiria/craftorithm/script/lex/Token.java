@@ -27,6 +27,12 @@ public record Token(Type type, String value, int line) {
         OR,         // ||
         NOT,        // !
 
+        // 算术运算符
+        PLUS,       // +
+        MINUS,      // -
+        MULTIPLY,   // *
+        DIVIDE,     // /
+
         // 分隔符
         LPAREN,     // (
         RPAREN,     // )
@@ -45,7 +51,8 @@ public record Token(Type type, String value, int line) {
 
         public boolean isOperator() {
             return this == EQ || this == NEQ || this == GT || this == GTE
-                || this == LT || this == LTE || this == AND || this == OR;
+                || this == LT || this == LTE || this == AND || this == OR
+                || this == PLUS || this == MINUS || this == MULTIPLY || this == DIVIDE;
         }
     }
 

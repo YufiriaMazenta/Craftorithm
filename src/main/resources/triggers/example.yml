@@ -7,7 +7,7 @@ on_craft_diamond_sword:
     - 'level >= 10'
   actions:
     - 'tell("&a合成成功！")'
-    - 'give-level(100)'
+    - 'give_level(100)'
   priority: 0
   enabled: true
   cooldown: 5

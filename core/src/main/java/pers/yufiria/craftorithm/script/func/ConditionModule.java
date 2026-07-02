@@ -43,9 +43,9 @@ public enum ConditionModule implements ScriptModule {
         registry.register("gamemode", this::gameMode);
         registry.register("item", this::item);
         registry.register("biome", this::biome);
-        registry.register("in-water", this::inWater);
-        registry.register("in-rain", this::inRain);
-        registry.register("light-level", this::lightLevel);
+        registry.register("in_water", this::inWater);
+        registry.register("in_rain", this::inRain);
+        registry.register("light_level", this::lightLevel);
         registry.register("context", this::context);
     }
 

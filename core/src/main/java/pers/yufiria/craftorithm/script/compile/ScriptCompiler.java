@@ -90,6 +90,10 @@ public class ScriptCompiler {
             case ">=" -> OpCode.CMP_GTE;
             case "<"  -> OpCode.CMP_LT;
             case "<=" -> OpCode.CMP_LTE;
+            case "+"  -> OpCode.ADD;
+            case "-"  -> OpCode.SUB;
+            case "*"  -> OpCode.MUL;
+            case "/"  -> OpCode.DIV;
             default -> throw new IllegalArgumentException("Unknown operator: " + node.operator());
         };
         instructions.add(Instruction.of(opCode, node.line()));
@@ -99,6 +103,8 @@ public class ScriptCompiler {
         emitNode(node.operand(), instructions);
         if (node.operator().equals("!")) {
             instructions.add(Instruction.of(OpCode.NOT, node.line()));
+        } else if (node.operator().equals("-")) {
+            instructions.add(Instruction.of(OpCode.NEG, node.line()));
         }
     }
 

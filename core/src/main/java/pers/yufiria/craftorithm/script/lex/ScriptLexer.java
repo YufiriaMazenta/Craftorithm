@@ -71,8 +71,8 @@ public class ScriptLexer {
                 continue;
             }
 
-            // 数字（含负号前缀）
-            if (isDigit(c) || (c == '-' && peek() != '\0' && isDigit(peek()))) {
+            // 数字
+            if (isDigit(c)) {
                 readNumber();
                 continue;
             }
@@ -86,7 +86,7 @@ public class ScriptLexer {
             if (c == ',') { tokens.add(new Token(Token.Type.COMMA, ",", line)); pos++; continue; }
 
             // 标识符 / 关键字
-            if (isAlpha(c) || c == '_' || c == '-') {
+            if (isAlpha(c) || c == '_') {
                 readIdentifier();
                 continue;
             }
@@ -147,7 +147,7 @@ public class ScriptLexer {
 
     private void readIdentifier() {
         int start = pos;
-        while (pos < source.length() && (isAlphaNumeric(source.charAt(pos)) || source.charAt(pos) == '_' || source.charAt(pos) == '-')) {
+        while (pos < source.length() && (isAlphaNumeric(source.charAt(pos)) || source.charAt(pos) == '_')) {
             pos++;
         }
         String word = source.substring(start, pos);
@@ -177,6 +177,11 @@ public class ScriptLexer {
         if (c == '|' && next == '|') { tokens.add(new Token(Token.Type.OR, "||", line)); pos += 2; return true; }
         if (c == '>') { tokens.add(new Token(Token.Type.GT, ">", line)); pos++; return true; }
         if (c == '<') { tokens.add(new Token(Token.Type.LT, "<", line)); pos++; return true; }
+        // 算术运算符
+        if (c == '+') { tokens.add(new Token(Token.Type.PLUS, "+", line)); pos++; return true; }
+        if (c == '-') { tokens.add(new Token(Token.Type.MINUS, "-", line)); pos++; return true; }
+        if (c == '*') { tokens.add(new Token(Token.Type.MULTIPLY, "*", line)); pos++; return true; }
+        if (c == '/') { tokens.add(new Token(Token.Type.DIVIDE, "/", line)); pos++; return true; }
 
         return false;
     }
