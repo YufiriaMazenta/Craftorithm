@@ -1,7 +1,7 @@
 package pers.yufiria.craftorithm.fakeResult;
 
-import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
+import crypticlib.lifecycle.LifeCycleTask;
 import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
 import crypticlib.listener.EventListener;
@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @LifeCycleTaskSettings(
     rules = {@TaskRule(lifeCycle = LifeCycle.RELOAD)}
 )
-public enum FakeResultDataHandler implements Listener, BukkitLifeCycleTask {
+public enum FakeResultDataHandler implements Listener, LifeCycleTask {
 
     INSTANCE;
 
@@ -59,7 +59,7 @@ public enum FakeResultDataHandler implements Listener, BukkitLifeCycleTask {
     }
 
     @Override
-    public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
+    public void lifecycle(Object plugin, LifeCycle lifeCycle) {
         this.FAKE_RESULT_MAP.clear();
     }
 }

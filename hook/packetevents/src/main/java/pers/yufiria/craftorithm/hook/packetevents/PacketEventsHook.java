@@ -4,8 +4,8 @@ import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.EventManager;
 import com.github.retrooper.packetevents.event.PacketListenerCommon;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
-import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
+import crypticlib.lifecycle.LifeCycleTask;
 import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
 import org.bukkit.Bukkit;
@@ -23,14 +23,14 @@ import java.util.Map;
         @TaskRule(lifeCycle = LifeCycle.DISABLE)
     }
 )
-public enum PacketEventsHook implements PluginHook, BukkitLifeCycleTask {
+public enum PacketEventsHook implements PluginHook, LifeCycleTask {
 
     INSTANCE;
 
     private Object recipeUpdatePacketListenerCommon = null, fakeResultPacketListenerCommon = null;
 
     @Override
-    public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
+    public void lifecycle(Object plugin, LifeCycle lifeCycle) {
         switch (lifeCycle) {
             case ACTIVE -> {
                 hook();

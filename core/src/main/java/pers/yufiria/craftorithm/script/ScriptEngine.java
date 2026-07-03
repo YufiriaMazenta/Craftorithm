@@ -1,7 +1,7 @@
 package pers.yufiria.craftorithm.script;
 
-import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
+import crypticlib.lifecycle.LifeCycleTask;
 import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
 import org.bukkit.plugin.Plugin;
@@ -44,7 +44,7 @@ import java.util.concurrent.ConcurrentHashMap;
         @TaskRule(lifeCycle = LifeCycle.RELOAD)
     }
 )
-public enum ScriptEngine implements BukkitLifeCycleTask {
+public enum ScriptEngine implements LifeCycleTask {
 
     INSTANCE;
 
@@ -154,7 +154,7 @@ public enum ScriptEngine implements BukkitLifeCycleTask {
 
 
     @Override
-    public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
+    public void lifecycle(Object plugin, LifeCycle lifeCycle) {
         switch (lifeCycle) {
             case ENABLE -> {
                 ScriptEngine.INSTANCE.init();

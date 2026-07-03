@@ -1,9 +1,6 @@
 package pers.yufiria.craftorithm.ui.editor;
 
-import crypticlib.lifecycle.BukkitLifeCycleTask;
-import crypticlib.lifecycle.LifeCycle;
-import crypticlib.lifecycle.LifeCycleTaskSettings;
-import crypticlib.lifecycle.TaskRule;
+import crypticlib.lifecycle.*;
 import crypticlib.ui.menu.Menu;
 import crypticlib.util.TriFunction;
 import org.bukkit.NamespacedKey;
@@ -39,7 +36,7 @@ import java.util.Optional;
         @TaskRule(lifeCycle = LifeCycle.ENABLE)
     }
 )
-public enum RecipeEditorManager implements BukkitLifeCycleTask {
+public enum RecipeEditorManager implements LifeCycleTask {
 
     INSTANCE;
 
@@ -58,7 +55,7 @@ public enum RecipeEditorManager implements BukkitLifeCycleTask {
     }
 
     @Override
-    public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
+    public void lifecycle(Object plugin, LifeCycle lifeCycle) {
         registerDefaultEditors();
     }
 

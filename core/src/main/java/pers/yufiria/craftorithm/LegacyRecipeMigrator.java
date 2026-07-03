@@ -1,9 +1,6 @@
 package pers.yufiria.craftorithm;
 
-import crypticlib.lifecycle.BukkitLifeCycleTask;
-import crypticlib.lifecycle.LifeCycle;
-import crypticlib.lifecycle.LifeCycleTaskSettings;
-import crypticlib.lifecycle.TaskRule;
+import crypticlib.lifecycle.*;
 import crypticlib.util.IOHelper;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -26,7 +23,7 @@ import java.util.logging.Logger;
         @TaskRule(lifeCycle = LifeCycle.ENABLE, priority = -1)
     }
 )
-public enum LegacyRecipeMigrator implements BukkitLifeCycleTask {
+public enum LegacyRecipeMigrator implements LifeCycleTask {
 
     INSTANCE;
 
@@ -675,7 +672,7 @@ public enum LegacyRecipeMigrator implements BukkitLifeCycleTask {
     }
 
     @Override
-    public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
+    public void lifecycle(Object plugin, LifeCycle lifeCycle) {
         migrateIfNeeded();
     }
 }

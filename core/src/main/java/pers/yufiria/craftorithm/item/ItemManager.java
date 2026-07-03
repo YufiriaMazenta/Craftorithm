@@ -2,10 +2,7 @@ package pers.yufiria.craftorithm.item;
 
 import com.google.common.base.Preconditions;
 import crypticlib.config.BukkitConfigWrapper;
-import crypticlib.lifecycle.BukkitLifeCycleTask;
-import crypticlib.lifecycle.LifeCycle;
-import crypticlib.lifecycle.LifeCycleTaskSettings;
-import crypticlib.lifecycle.TaskRule;
+import crypticlib.lifecycle.*;
 import crypticlib.util.IOHelper;
 import crypticlib.util.ItemHelper;
 import crypticlib.util.MaterialHelper;
@@ -36,7 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
         )
     }
 )
-public enum ItemManager implements BukkitLifeCycleTask {
+public enum ItemManager implements LifeCycleTask {
 
     INSTANCE;
 
@@ -236,7 +233,7 @@ public enum ItemManager implements BukkitLifeCycleTask {
     }
 
     @Override
-    public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
+    public void lifecycle(Object plugin, LifeCycle lifeCycle) {
         if (lifeCycle.equals(LifeCycle.ACTIVE)) {
             customFuelConfig = new BukkitConfigWrapper(Craftorithm.instance(), "custom_fuels.yml");
             itemPacksConfig = new BukkitConfigWrapper(Craftorithm.instance(), "item_packs.yml");

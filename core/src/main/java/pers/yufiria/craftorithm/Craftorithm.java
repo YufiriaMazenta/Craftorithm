@@ -5,10 +5,7 @@ import crypticlib.CrypticLib;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.MinecraftVersion;
 import crypticlib.chat.BukkitMsgSender;
-import crypticlib.lifecycle.BukkitLifeCycleTask;
-import crypticlib.lifecycle.LifeCycle;
-import crypticlib.lifecycle.LifeCycleTaskSettings;
-import crypticlib.lifecycle.TaskRule;
+import crypticlib.lifecycle.*;
 import crypticlib.util.IOHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
@@ -26,7 +23,7 @@ import pers.yufiria.craftorithm.util.UpdateChecker;
         @TaskRule(lifeCycle = LifeCycle.ACTIVE, priority = 2),
     }
 )
-public final class Craftorithm extends BukkitPlugin implements BukkitLifeCycleTask {
+public final class Craftorithm extends BukkitPlugin implements LifeCycleTask {
 
     private static Craftorithm INSTANCE;
 
@@ -75,7 +72,7 @@ public final class Craftorithm extends BukkitPlugin implements BukkitLifeCycleTa
     }
 
     @Override
-    public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
+    public void lifecycle(Object plugin, LifeCycle lifeCycle) {
         CrypticLibBukkit.scheduler().sync(() -> {
             RecipeManager.INSTANCE.reloadRecipeManager();
             LangUtils.info(Languages.LOAD_FINISH);

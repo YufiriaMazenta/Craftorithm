@@ -1,8 +1,8 @@
 package pers.yufiria.craftorithm.ui.custom;
 
 import crypticlib.config.BukkitConfigWrapper;
-import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
+import crypticlib.lifecycle.LifeCycleTask;
 import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
 import crypticlib.ui.menu.Menu;
@@ -28,7 +28,7 @@ import java.util.function.Function;
     @TaskRule(lifeCycle = LifeCycle.ENABLE),
     @TaskRule(lifeCycle = LifeCycle.RELOAD)
 })
-public enum CustomMenuManager implements BukkitLifeCycleTask {
+public enum CustomMenuManager implements LifeCycleTask {
 
     INSTANCE;
 
@@ -75,9 +75,9 @@ public enum CustomMenuManager implements BukkitLifeCycleTask {
     }
 
     @Override
-    public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
+    public void lifecycle(Object plugin, LifeCycle lifeCycle) {
         if (lifeCycle == LifeCycle.ENABLE) {
-            customMenuFolder = new File(plugin.getDataFolder(), "menus/custom");
+            customMenuFolder = new File(((Plugin) plugin).getDataFolder(), "menus/custom");
         }
         reloadMenus();
     }

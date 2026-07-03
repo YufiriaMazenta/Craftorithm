@@ -1,9 +1,6 @@
 package pers.yufiria.craftorithm.hook.item;
 
-import crypticlib.lifecycle.BukkitLifeCycleTask;
-import crypticlib.lifecycle.LifeCycle;
-import crypticlib.lifecycle.LifeCycleTaskSettings;
-import crypticlib.lifecycle.TaskRule;
+import crypticlib.lifecycle.*;
 import crypticlib.util.IOHelper;
 import org.bukkit.plugin.Plugin;
 import pers.yufiria.craftorithm.config.Languages;
@@ -22,13 +19,13 @@ import java.util.concurrent.ConcurrentHashMap;
     @TaskRule(lifeCycle = LifeCycle.ACTIVE),
     @TaskRule(lifeCycle = LifeCycle.RELOAD)
 })
-public enum ItemPluginHookManager implements BukkitLifeCycleTask {
+public enum ItemPluginHookManager implements LifeCycleTask {
 
     INSTANCE;
     private final Map<String, ItemPluginHook> itemPluginHookMap = new ConcurrentHashMap<>();
 
     @Override
-    public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
+    public void lifecycle(Object plugin, LifeCycle lifeCycle) {
         for (ItemPluginHook itemPluginHook : itemPluginHookMap.values()) {
             itemPluginHook.unhook();
         }

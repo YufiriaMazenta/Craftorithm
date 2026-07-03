@@ -1,10 +1,7 @@
 package pers.yufiria.craftorithm.item;
 
 import crypticlib.config.BukkitConfigWrapper;
-import crypticlib.lifecycle.BukkitLifeCycleTask;
-import crypticlib.lifecycle.LifeCycle;
-import crypticlib.lifecycle.LifeCycleTaskSettings;
-import crypticlib.lifecycle.TaskRule;
+import crypticlib.lifecycle.*;
 import crypticlib.util.IOHelper;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
@@ -29,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
         @TaskRule(lifeCycle = LifeCycle.RELOAD)
     }
 )
-public enum CraftorithmItemProvider implements ItemProvider, BukkitLifeCycleTask {
+public enum CraftorithmItemProvider implements ItemProvider, LifeCycleTask {
 
     INSTANCE;
     public final File ITEM_FILE_FOLDER = new File(Craftorithm.instance().getDataFolder(), "items");
@@ -147,7 +144,7 @@ public enum CraftorithmItemProvider implements ItemProvider, BukkitLifeCycleTask
     }
 
     @Override
-    public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
+    public void lifecycle(Object plugin, LifeCycle lifeCycle) {
         loadItemFiles();
         loadItems();
     }

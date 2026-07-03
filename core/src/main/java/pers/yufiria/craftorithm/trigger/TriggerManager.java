@@ -2,10 +2,7 @@ package pers.yufiria.craftorithm.trigger;
 
 import crypticlib.chat.BukkitMsgSender;
 import crypticlib.config.BukkitConfigWrapper;
-import crypticlib.lifecycle.BukkitLifeCycleTask;
-import crypticlib.lifecycle.LifeCycle;
-import crypticlib.lifecycle.LifeCycleTaskSettings;
-import crypticlib.lifecycle.TaskRule;
+import crypticlib.lifecycle.*;
 import crypticlib.util.IOHelper;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -29,7 +26,7 @@ import java.util.stream.Collectors;
     @TaskRule(lifeCycle = LifeCycle.ACTIVE, priority = 3),
     @TaskRule(lifeCycle = LifeCycle.RELOAD, priority = 3)
 })
-public enum TriggerManager implements BukkitLifeCycleTask {
+public enum TriggerManager implements LifeCycleTask {
 
     INSTANCE;
 
@@ -255,7 +252,7 @@ public enum TriggerManager implements BukkitLifeCycleTask {
     // ---- 生命周期 ----
 
     @Override
-    public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
+    public void lifecycle(Object plugin, LifeCycle lifeCycle) {
         if (lifeCycle == LifeCycle.ACTIVE) {
             TRIGGER_FOLDER.mkdirs();
             // 初始化动态事件注册器

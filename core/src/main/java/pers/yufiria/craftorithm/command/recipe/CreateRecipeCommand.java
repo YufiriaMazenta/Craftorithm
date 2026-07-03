@@ -3,8 +3,8 @@ package pers.yufiria.craftorithm.command.recipe;
 import crypticlib.command.CommandInfo;
 import crypticlib.command.CommandInvoker;
 import crypticlib.command.CommandNode;
-import crypticlib.lifecycle.BukkitLifeCycleTask;
 import crypticlib.lifecycle.LifeCycle;
+import crypticlib.lifecycle.LifeCycleTask;
 import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
 import crypticlib.perm.PermInfo;
@@ -41,7 +41,7 @@ import java.util.regex.Pattern;
         @TaskRule(lifeCycle = LifeCycle.ACTIVE)
     }
 )
-public final class CreateRecipeCommand extends CommandNode implements BukkitLifeCycleTask {
+public final class CreateRecipeCommand extends CommandNode implements LifeCycleTask {
 
     public static final CreateRecipeCommand INSTANCE = new CreateRecipeCommand();
     private final Pattern RECIPE_ID_PATTERN = Pattern.compile("^[a-z0-9._-]+$");
@@ -156,7 +156,7 @@ public final class CreateRecipeCommand extends CommandNode implements BukkitLife
     }
 
     @Override
-    public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
+    public void lifecycle(Object plugin, LifeCycle lifeCycle) {
         registerDefRecipeCreators();
     }
 

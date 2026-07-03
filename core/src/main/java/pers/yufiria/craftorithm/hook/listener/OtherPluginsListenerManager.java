@@ -2,10 +2,7 @@ package pers.yufiria.craftorithm.hook.listener;
 
 import crypticlib.CrypticLibBukkit;
 import crypticlib.MinecraftVersion;
-import crypticlib.lifecycle.BukkitLifeCycleTask;
-import crypticlib.lifecycle.LifeCycle;
-import crypticlib.lifecycle.LifeCycleTaskSettings;
-import crypticlib.lifecycle.TaskRule;
+import crypticlib.lifecycle.*;
 import crypticlib.util.IOHelper;
 import crypticlib.util.ReflectionHelper;
 import org.bukkit.event.HandlerList;
@@ -36,7 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
         @TaskRule(lifeCycle = LifeCycle.DISABLE)
     }
 )
-public enum OtherPluginsListenerManager implements BukkitLifeCycleTask {
+public enum OtherPluginsListenerManager implements LifeCycleTask {
 
     INSTANCE;
     private final Field executorField = ReflectionHelper.getDeclaredField(RegisteredListener.class, "executor");
@@ -178,7 +175,7 @@ public enum OtherPluginsListenerManager implements BukkitLifeCycleTask {
     }
 
     @Override
-    public void lifecycle(Plugin plugin, LifeCycle lifeCycle) {
+    public void lifecycle(Object plugin, LifeCycle lifeCycle) {
         switch (lifeCycle) {
             case ACTIVE -> {
                 convertOtherPluginsListeners();
