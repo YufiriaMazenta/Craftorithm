@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.script.func;
 
+import crypticlib.BukkitPlayer;
 import crypticlib.MinecraftVersion;
 import crypticlib.chat.BukkitMsgSender;
 import crypticlib.chat.BukkitTextProcessor;
@@ -134,7 +135,7 @@ public enum ActionModule implements ScriptModule {
             sb.append(arg.asString());
         }
         String msg = BukkitTextProcessor.placeholder(player, sb.toString());
-        BukkitMsgSender.INSTANCE.sendMsg(player, msg);
+        BukkitPlayer.byPlayer(player).sendMsg(msg);
         return ScriptValue.nil();
     }
 
@@ -147,7 +148,7 @@ public enum ActionModule implements ScriptModule {
             sb.append(arg.asString());
         }
         String msg = BukkitTextProcessor.placeholder(player, sb.toString());
-        BukkitMsgSender.INSTANCE.sendActionBar(player, msg);
+        BukkitPlayer.byPlayer(player).sendActionBar(msg);
         return ScriptValue.nil();
     }
 
@@ -157,7 +158,7 @@ public enum ActionModule implements ScriptModule {
         if (player == null) return ScriptValue.nil();
         String title = BukkitTextProcessor.placeholder(player, args[0].asString());
         String subtitle = args.length > 1 ? BukkitTextProcessor.placeholder(player, args[1].asString()) : "";
-        BukkitMsgSender.INSTANCE.sendTitle(player, title, subtitle, 10, 70, 20);
+        BukkitPlayer.byPlayer(player).sendTitle(title, subtitle, 10, 70, 20);
         return ScriptValue.nil();
     }
 
