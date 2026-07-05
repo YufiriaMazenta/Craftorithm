@@ -4,19 +4,22 @@ import crypticlib.command.CommandInfo;
 import crypticlib.command.CommandInvoker;
 import crypticlib.command.CommandNode;
 import crypticlib.perm.PermInfo;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
+import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.ui.recipeBook.RecipeBookTypeSelectMenu;
 import pers.yufiria.craftorithm.ui.recipeBook.RecipeListMenu;
 import pers.yufiria.craftorithm.ui.recipeBook.SortMode;
 import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -25,34 +28,50 @@ public class RecipeBookCommand extends CommandNode {
 
     public static final RecipeBookCommand INSTANCE = new RecipeBookCommand();
 
+    private static final String FLAG_PLAYER = "--player";
+    private static final String FLAG_TYPE = "--type";
+
     private RecipeBookCommand() {
         super(
             CommandInfo
                 .builder("recipebook")
                 .permission(new PermInfo("craftorithm.command.recipebook"))
-                .usage("&r/craftorithm recipebook [recipe_type]")
+                .usage("&r/craftorithm recipebook [--player <name>] [--type <type>]")
                 .build()
         );
     }
 
     @Override
     public void execute(@NotNull CommandInvoker invoker, List<String> args) {
-        if (!CommandUtils.checkInvokerIsPlayer(invoker)) {
-            return;
-        }
-        Player target = (Player) invoker.asPlayer().getPlatformPlayer();
-
-        if (!args.isEmpty()) {
-            String recipeTypeKey = args.get(0);
-            RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipeTypeKey);
-
-            if (recipeType == null) {
-                LangUtils.sendLang(invoker, Languages.COMMAND_RECIPEBOOK_TYPE_NOT_FOUND, Map.of("<recipe_type>", recipeTypeKey));
+        // Resolve target player
+        Player target;
+        String playerName = CommandUtils.parseFlag(args, FLAG_PLAYER);
+        if (playerName != null) {
+            target = Bukkit.getPlayerExact(playerName);
+            if (target == null) {
+                LangUtils.sendLang(invoker, Languages.COMMAND_UNKNOWN_PLAYER, Map.of("<player_name>", playerName));
                 return;
             }
+        } else {
+            if (!CommandUtils.checkInvokerIsPlayer(invoker)) {
+                return;
+            }
+            target = (Player) invoker.asPlayer().getPlatformPlayer();
+        }
 
-            RecipeListMenu listMenu = new RecipeListMenu(target, recipeType, SortMode.NAME_ASC);
-            listMenu.openMenu();
+        if (target == null) {
+            LangUtils.sendLang(invoker, Languages.COMMAND_UNKNOWN_PLAYER, Map.of("<player_name>", "null"));
+            return;
+        }
+
+        String typeKey = CommandUtils.parseFlag(args, FLAG_TYPE);
+        if (typeKey != null) {
+            RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(typeKey);
+            if (recipeType == null) {
+                LangUtils.sendLang(invoker, Languages.COMMAND_RECIPEBOOK_TYPE_NOT_FOUND, Map.of("<recipe_type>", typeKey));
+                return;
+            }
+            new RecipeListMenu(target, recipeType, SortMode.NAME_ASC).openMenu();
         } else {
             new RecipeBookTypeSelectMenu(target).openMenu();
         }
@@ -61,11 +80,30 @@ public class RecipeBookCommand extends CommandNode {
     @Override
     public @Nullable List<String> tab(@NotNull CommandInvoker invoker, List<String> args) {
         if (args.size() <= 1) {
-            return RecipeManager.INSTANCE.getRecipeTypes().stream()
-                .map(RecipeType::typeKey)
-                .collect(Collectors.toList());
+            return Arrays.asList(FLAG_PLAYER, FLAG_TYPE);
         }
-        return Collections.emptyList();
+
+        String lastArg = args.get(args.size() - 2);
+        switch (lastArg.toLowerCase()) {
+            case FLAG_PLAYER:
+                return Bukkit.getOnlinePlayers().stream()
+                    .map(Player::getName)
+                    .collect(Collectors.toList());
+            case FLAG_TYPE:
+                return RecipeManager.INSTANCE.getRecipeTypes().stream()
+                    .filter(type -> type != SimpleRecipeTypes.UNKNOWN)
+                    .map(RecipeType::typeKey)
+                    .collect(Collectors.toList());
+            default:
+                List<String> suggestions = new ArrayList<>();
+                if (!CommandUtils.hasFlag(args, FLAG_PLAYER)) {
+                    suggestions.add(FLAG_PLAYER);
+                }
+                if (!CommandUtils.hasFlag(args, FLAG_TYPE)) {
+                    suggestions.add(FLAG_TYPE);
+                }
+                return suggestions;
+        }
     }
 
 }
