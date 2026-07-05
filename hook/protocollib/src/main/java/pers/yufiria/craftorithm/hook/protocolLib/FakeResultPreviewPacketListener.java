@@ -3,10 +3,12 @@ package pers.yufiria.craftorithm.hook.protocolLib;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.injector.temporary.TemporaryPlayer;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import crypticlib.util.ItemHelper;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -135,7 +137,11 @@ public class FakeResultPreviewPacketListener extends PacketAdapter implements Li
 
     @Override
     public void onPacketSending(PacketEvent event) {
-        UUID uuid = event.getPlayer().getUniqueId();
+        Player player = event.getPlayer();
+        if (player instanceof TemporaryPlayer) {
+            return;
+        }
+        UUID uuid = player.getUniqueId();
         CacheRecipeData cacheRecipeData = PLAYER_PREPARING_RECIPE.getIfPresent(uuid);
         if (cacheRecipeData == null) {
             return;

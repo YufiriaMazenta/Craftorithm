@@ -25,25 +25,26 @@ public class TriggerContext {
     private final Map<String, ScriptValue> variables;
 
     public TriggerContext(@NotNull UUID playerId, @Nullable NamespacedKey recipeKey, @Nullable RecipeType recipeType) {
-        this.playerId = playerId;
-        this.recipeKey = recipeKey;
-        this.recipeType = recipeType;
-        this.variables = new HashMap<>();
+        this(playerId, recipeKey, recipeType, null);
     }
 
     public TriggerContext(@NotNull Player player, @Nullable NamespacedKey recipeKey, @Nullable RecipeType recipeType) {
-        this(player.getUniqueId(), recipeKey, recipeType);
+        this(player.getUniqueId(), recipeKey, recipeType, null);
     }
 
     public TriggerContext(@NotNull UUID playerId, @NotNull Map<String, ScriptValue> variables) {
-        this.playerId = playerId;
-        this.recipeKey = null;
-        this.recipeType = null;
-        this.variables = new HashMap<>(variables);
+        this(playerId, null, null, new HashMap<>(variables));
     }
 
     public TriggerContext(@NotNull Player player, @NotNull Map<String, ScriptValue> variables) {
         this(player.getUniqueId(), variables);
+    }
+
+    public TriggerContext(@NotNull UUID playerId, @Nullable NamespacedKey recipeKey, @Nullable RecipeType recipeType, Map<String, ScriptValue> variables) {
+        this.playerId = playerId;
+        this.recipeKey = recipeKey;
+        this.recipeType = recipeType;
+        this.variables = variables != null ? variables : new HashMap<>();
     }
 
     public void setVariable(@NotNull String name, @NotNull ScriptValue value) {

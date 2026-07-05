@@ -6,9 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
-import org.bukkit.inventory.AnvilInventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.*;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
@@ -16,6 +14,8 @@ import pers.yufiria.craftorithm.recipe.extra.AnvilRecipe;
 import pers.yufiria.craftorithm.recipe.extra.AnvilRecipeHandler;
 import pers.yufiria.craftorithm.trigger.listener.CraftTriggerHandler;
 import pers.yufiria.craftorithm.trigger.listener.SmithingTriggerHandler;
+
+import java.util.Map;
 
 /**
  * 内置触发器类型
@@ -40,7 +40,7 @@ public enum BuiltInTriggerTypes implements TriggerType {
             Recipe recipe = e.getRecipe();
             NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
             RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipe);
-            return new TriggerContext(player, recipeKey, recipeType);
+            return new TriggerContext(player.getUniqueId(), recipeKey, recipeType);
         }
 
         @Override
@@ -50,12 +50,12 @@ public enum BuiltInTriggerTypes implements TriggerType {
 
         @Override
         public @Nullable TriggerContext extractPrepareContext(Event event) {
-            PrepareItemCraftEvent e = (PrepareItemCraftEvent) event;
-            if (e.getRecipe() == null) return null;
-            if (!(e.getInventory().getHolder() instanceof Player player)) return null;
-            NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(e.getRecipe());
-            RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(e.getRecipe());
-            return new TriggerContext(player, recipeKey, recipeType);
+            PrepareItemCraftEvent prepareItemCraftEvent = (PrepareItemCraftEvent) event;
+            if (prepareItemCraftEvent.getRecipe() == null) return null;
+            if (!(prepareItemCraftEvent.getInventory().getHolder() instanceof Player player)) return null;
+            NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(prepareItemCraftEvent.getRecipe());
+            RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(prepareItemCraftEvent.getRecipe());
+            return new TriggerContext(player.getUniqueId(), recipeKey, recipeType);
         }
     },
 
