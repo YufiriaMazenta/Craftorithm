@@ -30,7 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 动态事件注册器
  * 预定义所有玩家相关事件类型，通过 Bukkit API 动态注册监听器
  */
-public enum DynamicEventRegistry {
+public enum EventTriggerTypes {
 
     INSTANCE;
 

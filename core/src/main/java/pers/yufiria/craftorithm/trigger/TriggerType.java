@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * 触发器类型接口
- * 内置类型由 {@link BuiltInTriggerTypes} 枚举实现
+ * 内置类型由 {@link CraftTriggerTypes} 枚举实现
  * 外部插件可实现此接口以注册自定义触发器类型
  */
 public interface TriggerType {

@@ -6,7 +6,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareSmithingEvent;
 import org.bukkit.event.inventory.SmithItemEvent;
-import pers.yufiria.craftorithm.trigger.BuiltInTriggerTypes;
+import pers.yufiria.craftorithm.trigger.CraftTriggerTypes;
 import pers.yufiria.craftorithm.trigger.TriggerContext;
 import pers.yufiria.craftorithm.trigger.TriggerManager;
 
@@ -23,9 +23,9 @@ public enum SmithingTriggerHandler implements Listener {
      */
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPrepareSmithing(PrepareSmithingEvent event) {
-        TriggerContext ctx = BuiltInTriggerTypes.SMITHING.extractPrepareContext(event);
+        TriggerContext ctx = CraftTriggerTypes.SMITHING.extractPrepareContext(event);
         if (ctx == null) return;
-        int denied = TriggerManager.INSTANCE.firePrepare(BuiltInTriggerTypes.SMITHING.typeKey(), ctx);
+        int denied = TriggerManager.INSTANCE.firePrepare(CraftTriggerTypes.SMITHING.typeKey(), ctx);
         if (denied > 0) {
             event.setResult(null);
             event.getInventory().setResult(null);
@@ -37,9 +37,9 @@ public enum SmithingTriggerHandler implements Listener {
      */
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onSmithing(SmithItemEvent event) {
-        TriggerContext ctx = BuiltInTriggerTypes.SMITHING.extractContext(event);
+        TriggerContext ctx = CraftTriggerTypes.SMITHING.extractContext(event);
         if (ctx == null) return;
-        TriggerManager.INSTANCE.fire(BuiltInTriggerTypes.SMITHING.typeKey(), ctx);
+        TriggerManager.INSTANCE.fire(CraftTriggerTypes.SMITHING.typeKey(), ctx);
     }
 
 }

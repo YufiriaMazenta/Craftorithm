@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.trigger;
 
-import crypticlib.util.IOHelper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -25,7 +24,7 @@ import java.util.List;
 /**
  * 内置触发器类型
  */
-public enum BuiltInTriggerTypes implements TriggerType {
+public enum CraftTriggerTypes implements TriggerType {
 
     CRAFTING("crafting") {
         @Override
@@ -184,7 +183,7 @@ public enum BuiltInTriggerTypes implements TriggerType {
 
     private final String key;
 
-    BuiltInTriggerTypes(String key) {
+    CraftTriggerTypes(String key) {
         this.key = key;
     }
 
@@ -193,8 +192,8 @@ public enum BuiltInTriggerTypes implements TriggerType {
         return key;
     }
 
-    public static @Nullable BuiltInTriggerTypes fromKey(String key) {
-        for (BuiltInTriggerTypes type : values()) {
+    public static @Nullable CraftTriggerTypes fromKey(String key) {
+        for (CraftTriggerTypes type : values()) {
             if (type.key.equalsIgnoreCase(key)) return type;
         }
         return null;

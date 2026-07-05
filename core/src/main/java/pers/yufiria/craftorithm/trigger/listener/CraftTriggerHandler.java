@@ -6,7 +6,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
-import pers.yufiria.craftorithm.trigger.BuiltInTriggerTypes;
+import pers.yufiria.craftorithm.trigger.CraftTriggerTypes;
 import pers.yufiria.craftorithm.trigger.TriggerContext;
 import pers.yufiria.craftorithm.trigger.TriggerManager;
 
@@ -23,9 +23,9 @@ public enum CraftTriggerHandler implements Listener {
      */
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPrepareCraft(PrepareItemCraftEvent event) {
-        TriggerContext ctx = BuiltInTriggerTypes.CRAFTING.extractPrepareContext(event);
+        TriggerContext ctx = CraftTriggerTypes.CRAFTING.extractPrepareContext(event);
         if (ctx == null) return;
-        int denied = TriggerManager.INSTANCE.firePrepare(BuiltInTriggerTypes.CRAFTING.typeKey(), ctx);
+        int denied = TriggerManager.INSTANCE.firePrepare(CraftTriggerTypes.CRAFTING.typeKey(), ctx);
         if (denied > 0) {
             event.getInventory().setItem(0, null);
         }
@@ -36,9 +36,9 @@ public enum CraftTriggerHandler implements Listener {
      */
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onCraft(CraftItemEvent event) {
-        TriggerContext ctx = BuiltInTriggerTypes.CRAFTING.extractContext(event);
+        TriggerContext ctx = CraftTriggerTypes.CRAFTING.extractContext(event);
         if (ctx == null) return;
-        TriggerManager.INSTANCE.fire(BuiltInTriggerTypes.CRAFTING.typeKey(), ctx);
+        TriggerManager.INSTANCE.fire(CraftTriggerTypes.CRAFTING.typeKey(), ctx);
     }
 
 }
