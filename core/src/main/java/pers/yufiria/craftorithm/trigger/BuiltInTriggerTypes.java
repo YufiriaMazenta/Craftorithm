@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.trigger;
 
+import crypticlib.util.IOHelper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -15,7 +16,11 @@ import pers.yufiria.craftorithm.recipe.extra.AnvilRecipeHandler;
 import pers.yufiria.craftorithm.trigger.listener.CraftTriggerHandler;
 import pers.yufiria.craftorithm.trigger.listener.SmithingTriggerHandler;
 
-import java.util.Map;
+import pers.yufiria.craftorithm.util.CollectionsUtils;
+import pers.yufiria.craftorithm.util.ItemUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 内置触发器类型
@@ -40,7 +45,12 @@ public enum BuiltInTriggerTypes implements TriggerType {
             Recipe recipe = e.getRecipe();
             NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
             RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipe);
-            return new TriggerContext(player.getUniqueId(), recipeKey, recipeType);
+            TriggerContext ctx = new TriggerContext(player.getUniqueId(), recipeKey, recipeType);
+            @Nullable ItemStack[] matrix = e.getInventory().getMatrix();
+            if (matrix != null) {
+                addIngredientsFromMatrix(ctx, matrix);
+            }
+            return ctx;
         }
 
         @Override
@@ -55,7 +65,12 @@ public enum BuiltInTriggerTypes implements TriggerType {
             if (!(prepareItemCraftEvent.getInventory().getHolder() instanceof Player player)) return null;
             NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(prepareItemCraftEvent.getRecipe());
             RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(prepareItemCraftEvent.getRecipe());
-            return new TriggerContext(player.getUniqueId(), recipeKey, recipeType);
+            TriggerContext ctx = new TriggerContext(player.getUniqueId(), recipeKey, recipeType);
+            @Nullable ItemStack[] matrix = prepareItemCraftEvent.getInventory().getMatrix();
+            if (matrix != null) {
+                addIngredientsFromMatrix(ctx, matrix);
+            }
+            return ctx;
         }
     },
 
@@ -77,7 +92,11 @@ public enum BuiltInTriggerTypes implements TriggerType {
             Recipe recipe = e.getInventory().getRecipe();
             NamespacedKey recipeKey = recipe != null ? RecipeManager.INSTANCE.getRecipeKey(recipe) : null;
             RecipeType recipeType = recipe != null ? RecipeManager.INSTANCE.getRecipeType(recipe) : null;
-            return new TriggerContext(player, recipeKey, recipeType);
+            TriggerContext ctx = new TriggerContext(player, recipeKey, recipeType);
+            addSlotVariable(ctx, "template", e.getInventory().getItem(0));
+            addSlotVariable(ctx, "base", e.getInventory().getItem(1));
+            addSlotVariable(ctx, "addition", e.getInventory().getItem(2));
+            return ctx;
         }
 
         @Override
@@ -93,7 +112,11 @@ public enum BuiltInTriggerTypes implements TriggerType {
             Recipe recipe = e.getInventory().getRecipe();
             NamespacedKey recipeKey = recipe != null ? RecipeManager.INSTANCE.getRecipeKey(recipe) : null;
             RecipeType recipeType = recipe != null ? RecipeManager.INSTANCE.getRecipeType(recipe) : null;
-            return new TriggerContext(player, recipeKey, recipeType);
+            TriggerContext ctx = new TriggerContext(player, recipeKey, recipeType);
+            addSlotVariable(ctx, "template", e.getInventory().getItem(0));
+            addSlotVariable(ctx, "base", e.getInventory().getItem(1));
+            addSlotVariable(ctx, "addition", e.getInventory().getItem(2));
+            return ctx;
         }
     },
 
@@ -122,7 +145,10 @@ public enum BuiltInTriggerTypes implements TriggerType {
             AnvilRecipe customRecipe = AnvilRecipeHandler.INSTANCE.matchAnvilRecipe(base, addition);
             NamespacedKey recipeKey = customRecipe != null ? customRecipe.getKey() : null;
             RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType("anvil");
-            return new TriggerContext(player, recipeKey, recipeType);
+            TriggerContext ctx = new TriggerContext(player, recipeKey, recipeType);
+            addSlotVariable(ctx, "base", base);
+            addSlotVariable(ctx, "addition", addition);
+            return ctx;
         }
 
         @Override
@@ -149,7 +175,10 @@ public enum BuiltInTriggerTypes implements TriggerType {
             AnvilRecipe customRecipe = AnvilRecipeHandler.INSTANCE.matchAnvilRecipe(base, addition);
             NamespacedKey recipeKey = customRecipe != null ? customRecipe.getKey() : null;
             RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType("anvil");
-            return new TriggerContext(player, recipeKey, recipeType);
+            TriggerContext ctx = new TriggerContext(player, recipeKey, recipeType);
+            addSlotVariable(ctx, "base", base);
+            addSlotVariable(ctx, "addition", addition);
+            return ctx;
         }
     };
 
@@ -169,6 +198,35 @@ public enum BuiltInTriggerTypes implements TriggerType {
             if (type.key.equalsIgnoreCase(key)) return type;
         }
         return null;
+    }
+
+    private static void addIngredientsFromMatrix(TriggerContext ctx, ItemStack[] matrix) {
+        int cols = (int) Math.sqrt(matrix.length);
+        List<List<ItemStack>> grid = new ArrayList<>();
+        for (int r = 0; r < cols; r++) {
+            List<ItemStack> row = new ArrayList<>();
+            for (int c = 0; c < cols; c++) {
+                row.add(matrix[r * cols + c]);
+            }
+            grid.add(row);
+        }
+        CollectionsUtils.trimEmptyBorders(grid, item -> item == null || item.isEmpty());
+        for (int r = 0; r < grid.size(); r++) {
+            List<ItemStack> row = grid.get(r);
+            for (int c = 0; c < row.size(); c++) {
+                ItemStack item = row.get(c);
+                if (item == null || item.isEmpty()) continue;
+                String key = "ingredient_" + r + "_" + c;
+                ctx.setVariable(key, ItemUtils.resolveItemId(item));
+                ctx.setVariable(key + "_amount", ItemUtils.resolveItemAmount(item));
+            }
+        }
+    }
+
+    private static void addSlotVariable(TriggerContext ctx, String slotName, ItemStack item) {
+        if (item == null || item.isEmpty()) return;
+        ctx.setVariable(slotName, ItemUtils.resolveItemId(item));
+        ctx.setVariable(slotName + "_amount", ItemUtils.resolveItemAmount(item));
     }
 
 }

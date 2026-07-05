@@ -44,7 +44,7 @@ public class TriggerContext {
         this.playerId = playerId;
         this.recipeKey = recipeKey;
         this.recipeType = recipeType;
-        this.variables = variables != null ? variables : new HashMap<>();
+        this.variables = variables != null ? new HashMap<>(variables) : new HashMap<>();
     }
 
     public void setVariable(@NotNull String name, @NotNull ScriptValue value) {

@@ -47,4 +47,13 @@ public class ScriptContext {
     public Map<String, ScriptValue> variables() {
         return variables;
     }
+
+    @Override
+    public String toString() {
+        return "ScriptContext{" +
+            "playerUniqueId=" + playerUniqueId +
+            ", variables=" + variables +
+            '}';
+    }
+
 }
