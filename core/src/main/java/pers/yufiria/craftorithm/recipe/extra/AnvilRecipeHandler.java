@@ -11,6 +11,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryEvent;
@@ -28,7 +29,8 @@ import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.choice.StackableItemIdChoice;
 import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsManager;
 import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsRules;
-import pers.yufiria.craftorithm.trigger.BuiltInTriggerTypes;
+import pers.yufiria.craftorithm.script.ScriptValue;
+import pers.yufiria.craftorithm.trigger.CraftTriggerTypes;
 import pers.yufiria.craftorithm.trigger.TriggerContext;
 import pers.yufiria.craftorithm.trigger.TriggerManager;
 import pers.yufiria.craftorithm.util.PlayerUtils;
@@ -110,9 +112,9 @@ public enum AnvilRecipeHandler implements Listener {
         }
 
         //处理trigger模块的条件判断
-        TriggerContext ctx = BuiltInTriggerTypes.ANVIL.extractPrepareContext(event);
+        TriggerContext ctx = CraftTriggerTypes.ANVIL.extractPrepareContext(event);
         if (ctx == null) return;
-        int denied = TriggerManager.INSTANCE.firePrepare(BuiltInTriggerTypes.ANVIL.typeKey(), ctx);
+        int denied = TriggerManager.INSTANCE.firePrepare(CraftTriggerTypes.ANVIL.typeKey(), ctx);
         if (denied > 0) {
             return;
         }
@@ -181,9 +183,9 @@ public enum AnvilRecipeHandler implements Listener {
         }
 
         //处理trigger模块的条件判断
-        TriggerContext ctx = BuiltInTriggerTypes.ANVIL.extractContext(event);
+        TriggerContext ctx = CraftTriggerTypes.ANVIL.extractContext(event);
         if (ctx == null) return;
-        int denied = TriggerManager.INSTANCE.firePrepare(BuiltInTriggerTypes.ANVIL.typeKey(), ctx);
+        int denied = TriggerManager.INSTANCE.firePrepare(CraftTriggerTypes.ANVIL.typeKey(), ctx);
         if (denied > 0) {
             return;
         }
@@ -308,7 +310,10 @@ public enum AnvilRecipeHandler implements Listener {
 
         //合成成功后执行trigger的actions
         if (craftResult) {
-            TriggerManager.INSTANCE.fire(BuiltInTriggerTypes.ANVIL.typeKey(), ctx);
+            int craftNum = (event.getClick() == ClickType.SHIFT_LEFT || event.getClick() == ClickType.SHIFT_RIGHT)
+                ? canCraftNum : 1;
+            ctx.setVariable("craft_num", ScriptValue.of(craftNum));
+            TriggerManager.INSTANCE.fire(CraftTriggerTypes.ANVIL.typeKey(), ctx);
         }
 
         //更新页面

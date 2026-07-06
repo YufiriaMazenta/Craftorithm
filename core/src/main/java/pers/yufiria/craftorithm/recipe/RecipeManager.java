@@ -5,6 +5,7 @@ import crypticlib.MinecraftVersion;
 import crypticlib.chat.BukkitMsgSender;
 import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.lifecycle.*;
+import crypticlib.scheduler.BatchTask;
 import crypticlib.scheduler.CrypticLibRunnable;
 import crypticlib.util.IOHelper;
 import org.bukkit.Bukkit;
@@ -111,15 +112,16 @@ public enum RecipeManager implements LifeCycleTask {
             return;
         }
         isReloadingRecipeManager.set(true);
-        resetRecipes();
-        loadRecipesFromConfig(() -> {
-            loadServerRecipeCache();
-            reloadDisabledRecipes();
-            CrypticLibBukkit.scheduler().syncLater(() -> {
-                isReloadingRecipeManager.set(false);
-                //所有操作进行完毕后，为玩家更新配方信息
-                Bukkit.updateRecipes();
-            }, 2L);
+        resetRecipesBatched(() -> {
+            loadRecipesFromConfig(() -> {
+                loadServerRecipeCache();
+                reloadDisabledRecipes();
+                CrypticLibBukkit.scheduler().syncLater(() -> {
+                    isReloadingRecipeManager.set(false);
+                    //所有操作进行完毕后，为玩家更新配方信息
+                    Bukkit.updateRecipes();
+                }, 2L);
+            });
         });
     }
 
@@ -148,6 +150,57 @@ public enum RecipeManager implements LifeCycleTask {
             recipeType.recipeRegister().registerRecipe(recipe);
         }
         disabledRecipesCache.clear();
+    }
+
+    /**
+     * 分片重置配方，使用 BatchTask 分片执行
+     * 先分片注销插件配方，再分片还原被禁用配方，完成后调用 callback
+     */
+    public void resetRecipesBatched(Runnable callback) {
+        int maxPerTick = PluginConfigs.MAX_REG_RECIPE_PER_TICK.value();
+        List<Map.Entry<NamespacedKey, Recipe>> entries = new ArrayList<>(craftorithmRecipes.entrySet());
+
+        // Phase 1: 分片注销插件配方
+        new BatchTask<Map.Entry<NamespacedKey, Recipe>, Void>(
+            entries,
+            entry -> {
+                RecipeType recipeType = getRecipeType(entry.getValue());
+                recipeType.recipeRegister().unregisterRecipe(entry.getKey());
+                return null;
+            },
+            maxPerTick,
+            (results, batch) -> {
+                craftorithmRecipes.clear();
+                recipeCreateTimeMap.clear();
+                recipeFileNameToKeyMap.clear();
+                recipeKeyToFileNameMap.clear();
+                CopyComponentsManager.INSTANCE.resetRecipeCopyNbtRules();
+                // Phase 2: 还原被禁用配方
+                restoreDisabledRecipes(callback);
+            }
+        ).start();
+    }
+
+    private void restoreDisabledRecipes(Runnable callback) {
+        int maxPerTick = PluginConfigs.MAX_REG_RECIPE_PER_TICK.value();
+        List<Recipe> disabled = new ArrayList<>(disabledRecipesCache);
+
+        new BatchTask<Recipe, Void>(
+            disabled,
+            recipe -> {
+                RecipeType recipeType = getRecipeType(recipe);
+                recipeType.recipeRegister().registerRecipe(recipe);
+                return null;
+            },
+            maxPerTick,
+            (results, batch) -> {
+                disabledRecipesCache.clear();
+                IOHelper.info("Recipe system reset complete");
+                if (callback != null) {
+                    callback.run();
+                }
+            }
+        ).start();
     }
 
     private void loadRecipesFromConfig(Runnable callback) {
@@ -498,6 +551,9 @@ public enum RecipeManager implements LifeCycleTask {
 
         @Override
         public void run() {
+            if (isCancelled()) {
+                return;
+            }
             int maxRegRecipePerTick = PluginConfigs.MAX_REG_RECIPE_PER_TICK.value();
             if (recipeFiles.size() <= maxRegRecipePerTick) {
                 loadRecipes(recipeFiles);

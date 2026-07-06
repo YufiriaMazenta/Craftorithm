@@ -4,6 +4,9 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.Nullable;
+import pers.yufiria.craftorithm.item.ItemManager;
+import pers.yufiria.craftorithm.script.ScriptValue;
 
 public class ItemUtils {
 
@@ -19,6 +22,18 @@ public class ItemUtils {
             itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             item.setItemMeta(itemMeta);
         }
+    }
+
+    public static ScriptValue resolveItemId(@Nullable ItemStack item) {
+        if (item == null) return ScriptValue.nil();
+        return ItemManager.INSTANCE.matchItemId(item, false)
+            .map(id -> ScriptValue.of(id.itemId().toString()))
+            .orElseGet(() -> ScriptValue.of(item.getType().getKey().toString()));
+    }
+
+    public static ScriptValue resolveItemAmount(@Nullable ItemStack item) {
+        if (item == null) return ScriptValue.of(0);
+        return ScriptValue.of(item.getAmount());
     }
 
 }

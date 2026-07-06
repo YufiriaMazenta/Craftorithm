@@ -6,12 +6,11 @@ import crypticlib.lifecycle.*;
 import crypticlib.util.IOHelper;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.script.ScriptEngine;
 import pers.yufiria.craftorithm.script.compile.CompiledScript;
-import pers.yufiria.craftorithm.trigger.event.DynamicEventRegistry;
+import pers.yufiria.craftorithm.trigger.event.EventTriggerTypes;
 
 import java.io.File;
 import java.util.*;
@@ -72,7 +71,7 @@ public enum TriggerManager implements LifeCycleTask {
     public @Nullable TriggerType getTriggerType(String typeKey) {
         TriggerType type = triggerTypes.get(typeKey);
         if (type != null) return type;
-        return DynamicEventRegistry.INSTANCE.getEventType(typeKey);
+        return EventTriggerTypes.INSTANCE.getEventType(typeKey);
     }
 
     /**
@@ -208,12 +207,16 @@ public enum TriggerManager implements LifeCycleTask {
 
     /**
      * 触发 Prepare 阶段：评估条件，条件不通过的数量即为需要拒绝的数量
+     * 如果配方的某个触发器正在冷却, 那么最少返回1
      */
     public int firePrepare(String typeKey, TriggerContext context) {
         int denied = 0;
         for (Trigger trigger : getTriggers(typeKey)) {
             if (!trigger.matches(context.recipeKey())) continue;
-            if (cooldownManager.isOnCooldown(trigger, context.playerUniqueId())) continue;
+            if (cooldownManager.isOnCooldown(trigger, context.playerUniqueId())) {
+                denied ++;
+                continue;
+            }
             if (!trigger.evaluateConditions(context)) {
                 denied++;
             }
@@ -256,11 +259,11 @@ public enum TriggerManager implements LifeCycleTask {
         if (lifeCycle == LifeCycle.ACTIVE) {
             TRIGGER_FOLDER.mkdirs();
             // 初始化动态事件注册器
-            DynamicEventRegistry.INSTANCE.init();
+            EventTriggerTypes.INSTANCE.init();
         }
         // 注册内置类型（仅首次）
         if (triggerTypes.isEmpty()) {
-            for (BuiltInTriggerTypes type : BuiltInTriggerTypes.values()) {
+            for (CraftTriggerTypes type : CraftTriggerTypes.values()) {
                 regTriggerType(type);
             }
         }
