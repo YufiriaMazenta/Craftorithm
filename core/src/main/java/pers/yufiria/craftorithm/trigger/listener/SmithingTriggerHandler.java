@@ -46,51 +46,8 @@ public enum SmithingTriggerHandler implements Listener {
     public void onSmithing(SmithItemEvent event) {
         TriggerContext ctx = CraftTriggerTypes.SMITHING.extractContext(event);
         if (ctx == null) return;
-        if (!(event.getWhoClicked() instanceof Player player)) return;
-        ItemStack result = event.getInventory().getResult();
-        ItemStack[] matrix = {event.getInventory().getItem(0), event.getInventory().getItem(1), event.getInventory().getItem(2)};
-        ctx.setVariable("craft_num", ScriptValue.of(calculateCraftNum(event.getClick(), matrix, result, player)));
+        if (!(event.getWhoClicked() instanceof Player)) return;
         TriggerManager.INSTANCE.fire(CraftTriggerTypes.SMITHING.typeKey(), ctx);
-    }
-
-    private int calculateCraftNum(ClickType click, ItemStack[] matrix, ItemStack result, Player player) {
-        // 普通点击只合成1个
-        if (click != ClickType.SHIFT_LEFT
-            && click != ClickType.SHIFT_RIGHT
-            && click != ClickType.CONTROL_DROP) {
-            return 1;
-        }
-        if (matrix == null) return 1;
-        int minIngredientAmount = Integer.MAX_VALUE;
-        for (ItemStack item : matrix) {
-            if (item == null || item.isEmpty()) continue;
-            minIngredientAmount = Math.min(minIngredientAmount, item.getAmount());
-        }
-        if (minIngredientAmount == Integer.MAX_VALUE) return 1;
-        // Ctrl+丢弃：合成最大数量，不受背包空间限制
-        if (click == ClickType.CONTROL_DROP) {
-            return minIngredientAmount;
-        }
-        if (ItemHelper.isAir(result)) return 1;
-        int resultAmount = result.getAmount();
-        // 计算背包能装下多少个结果物品（向上取整，适配原版行为）
-        int canFit = calculateCanFit(player, result);
-        int canFitTimes = (canFit + resultAmount - 1) / resultAmount;
-        return Math.max(1, Math.min(minIngredientAmount, canFitTimes));
-    }
-
-    private int calculateCanFit(Player player, ItemStack result) {
-        if (ItemHelper.isAir(result)) return 0;
-        int maxStack = result.getType().getMaxStackSize();
-        int space = 0;
-        for (ItemStack item : player.getInventory().getStorageContents()) {
-            if (item == null || item.isEmpty()) {
-                space += maxStack;
-            } else if (item.isSimilar(result)) {
-                space += maxStack - item.getAmount();
-            }
-        }
-        return space;
     }
 
 }

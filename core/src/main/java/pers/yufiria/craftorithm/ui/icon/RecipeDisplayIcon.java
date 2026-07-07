@@ -63,7 +63,6 @@ public class RecipeDisplayIcon extends ActionIcon {
                 extraLore.forEach(it -> {
                     finalLore.add(parseIconText(it));
                 });
-                lore.addAll(finalLore);
             } else {
                 lore = new ArrayList<>(extraLore);
                 lore.replaceAll(this::parseIconText);

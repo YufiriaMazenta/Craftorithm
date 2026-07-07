@@ -1,12 +1,15 @@
 package pers.yufiria.craftorithm.script.func;
 
 import crypticlib.BukkitPlayer;
+import crypticlib.CrypticLib;
 import crypticlib.MinecraftVersion;
 import crypticlib.chat.BukkitMsgSender;
 import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.ui.menu.Menu;
 import crypticlib.ui.util.MenuHelper;
 import crypticlib.util.IOHelper;
+import crypticlib.util.InventoryHelper;
+import crypticlib.util.InventoryViewHelper;
 import net.milkbowl.vault.economy.Economy;
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.black_ixx.playerpoints.PlayerPointsAPI;
@@ -15,8 +18,12 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import pers.yufiria.craftorithm.hook.PlayerPointsHook;
 import pers.yufiria.craftorithm.hook.VaultHook;
+import pers.yufiria.craftorithm.item.ItemManager;
+import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.script.ScriptContext;
 import pers.yufiria.craftorithm.script.ScriptValue;
 import pers.yufiria.craftorithm.script.vm.ScriptVM;
@@ -69,6 +76,30 @@ public enum ActionModule implements ScriptModule {
         registry.register("set", this::set);
         registry.register("delay", this::delay);
         registry.register("sound", this::sound);
+        registry.register("set_inv_item", this::setInvItem);
+    }
+
+    private ScriptValue setInvItem(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
+        Player player = ctx.player();
+        if (player == null) return ScriptValue.nil();
+        Inventory topInventory = InventoryViewHelper.getTopInventory(player);
+        if (args.length < 2) {
+            return ScriptValue.nil();
+        }
+        int slot = (int) args[0].asNumber();
+        String itemIdStr = args[1].asString();
+        NamespacedItemIdStack itemIdStack = NamespacedItemIdStack.fromString(itemIdStr);
+        if (itemIdStack == null) {
+            return ScriptValue.of(false);
+        }
+        Optional<ItemStack> itemStackOpt = ItemManager.INSTANCE.matchItem(itemIdStack);
+        if (itemStackOpt.isEmpty()) {
+            return ScriptValue.of(false);
+        }
+        CrypticLib.scheduler().sync(() -> {
+            topInventory.setItem(slot, itemStackOpt.get());
+        });
+        return ScriptValue.of(true);
     }
 
     private ScriptValue back(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
