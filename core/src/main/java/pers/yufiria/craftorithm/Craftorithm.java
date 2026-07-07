@@ -8,6 +8,9 @@ import crypticlib.chat.BukkitMsgSender;
 import crypticlib.lifecycle.*;
 import crypticlib.util.IOHelper;
 import org.bukkit.Bukkit;
+import java.util.HashMap;
+import java.util.Map;
+import org.bukkit.inventory.Recipe;
 import org.bukkit.plugin.Plugin;
 import pers.yufiria.craftorithm.api.CraftorithmAPI;
 import pers.yufiria.craftorithm.bstat.Metrics;
@@ -15,6 +18,7 @@ import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.exception.UnsupportedVersionException;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.util.LangUtils;
 import pers.yufiria.craftorithm.util.UpdateChecker;
 
@@ -61,6 +65,14 @@ public final class Craftorithm extends BukkitPlugin implements LifeCycleTask {
             return;
         Metrics metrics = new Metrics(this, 17821);
         metrics.addCustomChart(new Metrics.SingleLineChart("recipes", () -> RecipeManager.INSTANCE.getRecipeGroups().size()));
+        metrics.addCustomChart(new Metrics.AdvancedPie("recipe_type_count", () -> {
+            Map<String, Integer> map = new HashMap<>();
+            for (Recipe recipe : RecipeManager.INSTANCE.craftorithmRecipes().values()) {
+                RecipeType type = RecipeManager.INSTANCE.getRecipeType(recipe);
+                map.merge(type.typeKey(), 1, Integer::sum);
+            }
+            return map;
+        }));
     }
 
     public static Craftorithm instance() {
