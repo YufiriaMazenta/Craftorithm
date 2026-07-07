@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.item;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class NamespacedItemIdStack {
 
@@ -60,6 +61,7 @@ public class NamespacedItemIdStack {
         return amount <= 1 ? itemId.toString() : itemId + " " + amount;
     }
 
+    @Nullable
     public static NamespacedItemIdStack fromString(String string) {
         if (string == null) return null;
         int lastSpaceIndex = string.lastIndexOf(' ');

@@ -3,6 +3,7 @@ package pers.yufiria.craftorithm.recipe.extra;
 import crypticlib.MinecraftVersion;
 import crypticlib.chat.BukkitMsgSender;
 import crypticlib.listener.EventListener;
+import crypticlib.util.InventoryHelper;
 import crypticlib.util.ItemHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -267,14 +268,9 @@ public enum AnvilRecipeHandler implements Listener {
                 base.setAmount(baseNum - costAmount1);
                 addition.setAmount(additionNum - costAmount2);
                 result.setAmount(canCraftNum * result.getAmount());
-                HashMap<Integer, ItemStack> failedItems = event.getWhoClicked().getInventory().addItem(result);
+                InventoryHelper.addItemOrDrop(event.getWhoClicked().getInventory(), result);
                 if (PlayerUtils.isSurvivalOrAdventure(player)) {
                     player.setLevel(player.getLevel() - finalCostLevel);
-                }
-                if (failedItems.isEmpty())
-                    break;
-                for (ItemStack value : failedItems.values()) {
-                    player.getWorld().dropItem(event.getWhoClicked().getLocation(), value);
                 }
                 craftResult = true;
                 break;
