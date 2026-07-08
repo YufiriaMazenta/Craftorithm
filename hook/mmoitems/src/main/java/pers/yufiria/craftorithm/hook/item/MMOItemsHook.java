@@ -22,8 +22,4 @@ public enum MMOItemsHook implements ItemPluginHook {
         return "MMOItems";
     }
 
-    @Override
-    public boolean hook() {
-        return isPluginEnabled();
-    }
 }

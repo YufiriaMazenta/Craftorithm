@@ -24,6 +24,7 @@ import pers.yufiria.craftorithm.ui.creator.CreatorIconParser;
 import pers.yufiria.craftorithm.ui.creator.RecipeCreator;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
 import pers.yufiria.craftorithm.util.LangUtils;
+import pers.yufiria.craftorithm.util.RecipeShapeUtils;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -152,8 +153,8 @@ public final class VanillaShapedCreator extends RecipeCreator {
                 }
 
                 // 7. 移除首尾的全空行和全空列（保留中间的空行/列）
-                removeEmptyRow(shape);
-                removeEmptyColumn(shape);
+                RecipeShapeUtils.removeEmptyRow(shape);
+                RecipeShapeUtils.removeEmptyColumn(shape);
 
                 if (shape.isEmpty()) {
                     LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_RESULT);
@@ -219,52 +220,6 @@ public final class VanillaShapedCreator extends RecipeCreator {
     }
 
 
-    /**
-     * 移除配方形状中首尾的全空白行（保留中间的空行）
-     */
-    private void removeEmptyRow(List<String> shape) {
-        // 移除开头的空行
-        while (!shape.isEmpty() && shape.getFirst().trim().isEmpty()) {
-            shape.removeFirst();
-        }
-        // 移除结尾的空行
-        while (!shape.isEmpty() && shape.getLast().trim().isEmpty()) {
-            shape.removeLast();
-        }
-    }
 
-    /**
-     * 移除配方形状中首尾的全空白列（保留中间的空列）
-     */
-    private void removeEmptyColumn(List<String> shape) {
-        boolean[] empty = new boolean[3];
-        for (int i = 0; i < 3; i++) {
-            int finalI = i;
-            empty[i] = shape.stream().allMatch(s -> finalI >= s.length() || s.charAt(finalI) == ' ');
-        }
-        if (empty[0]) {
-            if (empty[1]) {
-                if (!empty[2]) {
-                    shape.replaceAll(s -> s.length() > 2 ? s.substring(2) : "");
-                }
-            } else {
-                if (empty[2]) {
-                    shape.replaceAll(s -> s.length() >= 2 ? s.substring(1, 2) : "");
-                } else {
-                    shape.replaceAll(s -> s.length() >= 2 ? s.substring(1) : "");
-                }
-            }
-        } else {
-            if (empty[1]) {
-                if (empty[2]) {
-                    shape.replaceAll(s -> s.substring(0, 1));
-                }
-            } else {
-                if (empty[2]) {
-                    shape.replaceAll(s -> s.substring(0, Math.min(2, s.length())));
-                }
-            }
-        }
-    }
 
 }

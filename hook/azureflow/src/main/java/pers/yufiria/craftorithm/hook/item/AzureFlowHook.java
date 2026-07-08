@@ -22,9 +22,6 @@ public enum AzureFlowHook implements ItemPluginHook {
         return "AzureFlow";
     }
 
-    @Override
-    public boolean hook() {
-        return isPluginEnabled();
-    }
+
 
 }

@@ -18,11 +18,6 @@ public enum ExecutableItemsHook implements ItemPluginHook {
     }
 
     @Override
-    public boolean hook() {
-        return isPluginEnabled();
-    }
-
-    @Override
     public ItemProvider itemProvider() {
         return ExecutableItemsItemProvider.INSTANCE;
     }

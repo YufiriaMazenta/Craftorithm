@@ -22,9 +22,6 @@ public enum CraftEngineHook implements ItemPluginHook {
         return "CraftEngine";
     }
 
-    @Override
-    public boolean hook() {
-        return isPluginEnabled();
-    }
+
 
 }

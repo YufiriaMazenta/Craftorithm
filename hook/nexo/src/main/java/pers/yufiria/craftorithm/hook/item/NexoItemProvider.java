@@ -2,7 +2,6 @@ package pers.yufiria.craftorithm.hook.item;
 
 import com.nexomc.nexo.api.NexoItems;
 import com.nexomc.nexo.items.ItemBuilder;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import pers.yufiria.craftorithm.item.ItemProvider;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
@@ -52,9 +51,6 @@ public enum NexoItemProvider implements ItemProvider {
         return itemBuilder.build();
     }
 
-    @Override
-    public ItemStack matchItem(String itemName, OfflinePlayer player) {
-        return matchItem(itemName);
-    }
+
 
 }

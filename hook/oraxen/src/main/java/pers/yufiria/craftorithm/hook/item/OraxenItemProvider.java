@@ -2,7 +2,6 @@ package pers.yufiria.craftorithm.hook.item;
 
 import io.th0rgal.oraxen.api.OraxenItems;
 import io.th0rgal.oraxen.items.ItemUpdater;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,9 +50,6 @@ public enum OraxenItemProvider implements ItemProvider {
         return ItemUpdater.updateItem(built);
     }
 
-    @Override
-    public @Nullable ItemStack matchItem(String itemId, OfflinePlayer player) {
-        return matchItem(itemId);
-    }
+
 
 }

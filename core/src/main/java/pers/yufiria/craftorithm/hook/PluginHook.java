@@ -10,7 +10,9 @@ public interface PluginHook {
      * 尝试挂钩插件,返回挂钩结果
      * @return 插件挂钩结果
      */
-    boolean hook();
+    default boolean hook() {
+        return isPluginEnabled();
+    }
 
     void unhook();
 

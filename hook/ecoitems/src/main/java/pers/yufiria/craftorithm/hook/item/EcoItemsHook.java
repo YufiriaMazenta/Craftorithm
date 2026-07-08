@@ -18,11 +18,6 @@ public enum EcoItemsHook implements ItemPluginHook {
     }
 
     @Override
-    public boolean hook() {
-        return isPluginEnabled();
-    }
-
-    @Override
     public ItemProvider itemProvider() {
         return EcoItemsItemProvider.INSTANCE;
     }

@@ -3,7 +3,6 @@ package pers.yufiria.craftorithm.hook.item;
 import com.willfp.ecoitems.items.EcoItem;
 import com.willfp.ecoitems.items.EcoItems;
 import com.willfp.ecoitems.items.ItemUtilsKt;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -54,8 +53,5 @@ public enum EcoItemsItemProvider implements ItemProvider {
         return ecoItem.getItemStack();
     }
 
-    @Override
-    public @Nullable ItemStack matchItem(String itemId, @Nullable OfflinePlayer player) {
-        return matchItem(itemId);
-    }
+
 }

@@ -2,7 +2,6 @@ package pers.yufiria.craftorithm.hook.item;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.MMOItems;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -56,9 +55,6 @@ public enum MMOItemsItemProvider implements ItemProvider {
         return MMOItems.plugin.getItem(type, id);
     }
 
-    @Override
-    public @Nullable ItemStack matchItem(String itemId, OfflinePlayer player) {
-        return matchItem(itemId);
-    }
+
 
 }

@@ -1,7 +1,6 @@
 package pers.yufiria.craftorithm.hook.item;
 
 import dev.lone.itemsadder.api.CustomStack;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,9 +50,6 @@ public enum ItemsAdderItemProvider implements ItemProvider {
         return customStack.getItemStack();
     }
 
-    @Override
-    public @Nullable ItemStack matchItem(String itemId, OfflinePlayer player) {
-        return matchItem(itemId);
-    }
+
 
 }

@@ -3,7 +3,6 @@ package pers.yufiria.craftorithm.item;
 import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.lifecycle.*;
 import crypticlib.util.IOHelper;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -67,10 +66,7 @@ public enum CraftorithmItemProvider implements ItemProvider, LifeCycleTask {
         return item.clone();
     }
 
-    @Override
-    public @Nullable ItemStack matchItem(String itemId, OfflinePlayer player) {
-        return matchItem(itemId);
-    }
+
 
     private void loadItemFiles() {
         itemConfigFileMap.clear();

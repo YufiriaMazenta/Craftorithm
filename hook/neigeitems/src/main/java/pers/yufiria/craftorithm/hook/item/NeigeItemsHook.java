@@ -22,9 +22,4 @@ public enum NeigeItemsHook implements ItemPluginHook {
         return "NeigeItems";
     }
 
-    @Override
-    public boolean hook() {
-        return isPluginEnabled();
-    }
-
 }

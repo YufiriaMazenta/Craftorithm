@@ -22,9 +22,4 @@ public enum NexoHook implements ItemPluginHook {
         return "Nexo";
     }
 
-    @Override
-    public boolean hook() {
-        return isPluginEnabled();
-    }
-
 }

@@ -17,6 +17,8 @@ public interface ItemProvider {
     ItemStack matchItem(String itemId);
 
     @Nullable
-    ItemStack matchItem(String itemId, @Nullable OfflinePlayer player);
+    default ItemStack matchItem(String itemId, @Nullable OfflinePlayer player) {
+        return matchItem(itemId);
+    }
 
 }

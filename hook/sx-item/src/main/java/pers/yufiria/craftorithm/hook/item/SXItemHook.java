@@ -22,9 +22,6 @@ public enum SXItemHook implements ItemPluginHook{
         return "SX-Item";
     }
 
-    @Override
-    public boolean hook() {
-        return isPluginEnabled();
-    }
+
 
 }
