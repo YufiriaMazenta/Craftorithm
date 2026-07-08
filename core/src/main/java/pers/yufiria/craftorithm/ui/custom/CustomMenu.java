@@ -1,13 +1,13 @@
 package pers.yufiria.craftorithm.ui.custom;
 
+import crypticlib.script.ScriptContext;
+import crypticlib.script.compile.CompiledScript;
 import crypticlib.ui.menu.Menu;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.yufiria.craftorithm.script.ScriptContext;
-import pers.yufiria.craftorithm.script.compile.CompiledScript;
 import pers.yufiria.craftorithm.ui.BackableMenu;
 import pers.yufiria.craftorithm.ui.TranslatableMenu;
 
@@ -33,7 +33,9 @@ public class CustomMenu extends TranslatableMenu implements BackableMenu {
         }
         CompiledScript openAction = menuInfo.openAction();
         if (openAction != null) {
-            openAction.execute(new ScriptContext(player));
+            if (player != null) {
+                openAction.execute(new ScriptContext(player.getUniqueId()));
+            }
         }
     }
 
@@ -42,7 +44,9 @@ public class CustomMenu extends TranslatableMenu implements BackableMenu {
         Player player = player();
         CompiledScript closeAction = menuInfo.closeAction();
         if (closeAction != null) {
-            closeAction.execute(new ScriptContext(player));
+            if (player != null) {
+                closeAction.execute(new ScriptContext(player.getUniqueId()));
+            }
         }
     }
 

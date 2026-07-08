@@ -2,14 +2,17 @@ package pers.yufiria.craftorithm.trigger;
 
 import crypticlib.chat.BukkitMsgSender;
 import crypticlib.config.BukkitConfigWrapper;
-import crypticlib.lifecycle.*;
+import crypticlib.lifecycle.LifeCycle;
+import crypticlib.lifecycle.LifeCycleTask;
+import crypticlib.lifecycle.LifeCycleTaskSettings;
+import crypticlib.lifecycle.TaskRule;
+import crypticlib.script.ScriptEngine;
+import crypticlib.script.compile.CompiledScript;
 import crypticlib.util.IOHelper;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
-import pers.yufiria.craftorithm.script.ScriptEngine;
-import pers.yufiria.craftorithm.script.compile.CompiledScript;
 import pers.yufiria.craftorithm.trigger.event.EventTriggerTypes;
 
 import java.io.File;

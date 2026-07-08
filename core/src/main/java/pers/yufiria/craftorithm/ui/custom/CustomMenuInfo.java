@@ -1,11 +1,11 @@
 package pers.yufiria.craftorithm.ui.custom;
 
+import crypticlib.script.ScriptEngine;
+import crypticlib.script.compile.CompiledScript;
 import crypticlib.ui.display.MenuDisplay;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.yufiria.craftorithm.script.ScriptEngine;
-import pers.yufiria.craftorithm.script.compile.CompiledScript;
 import pers.yufiria.craftorithm.ui.MenuDisplayLoader;
 import pers.yufiria.craftorithm.ui.icon.IconParser;
 

@@ -8,7 +8,6 @@ import crypticlib.ui.menu.Menu;
 import crypticlib.util.IOHelper;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
-import org.bukkit.plugin.Plugin;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.RecipeTypeMap;

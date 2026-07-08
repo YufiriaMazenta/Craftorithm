@@ -1,9 +1,9 @@
 package pers.yufiria.craftorithm.ui.display.vanillaBrewing;
 
+import crypticlib.script.compile.CompiledScript;
 import crypticlib.ui.display.Icon;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.ClickType;
-import pers.yufiria.craftorithm.script.compile.CompiledScript;
 import pers.yufiria.craftorithm.ui.display.RecipeResultIcon;
 import pers.yufiria.craftorithm.ui.icon.IconParser;
 

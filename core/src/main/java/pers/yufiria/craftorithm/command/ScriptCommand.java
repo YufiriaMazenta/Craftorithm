@@ -4,17 +4,18 @@ import crypticlib.command.CommandInvoker;
 import crypticlib.command.CommandNode;
 import crypticlib.command.annotation.Command;
 import crypticlib.perm.PermInfo;
+import crypticlib.script.ScriptContext;
+import crypticlib.script.ScriptEngine;
 import crypticlib.util.FunctionExecutor;
 import crypticlib.util.IOHelper;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.config.Languages;
-import pers.yufiria.craftorithm.script.ScriptContext;
-import pers.yufiria.craftorithm.script.ScriptEngine;
 import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Command
 public class ScriptCommand extends CommandNode {
@@ -37,9 +38,9 @@ public class ScriptCommand extends CommandNode {
         }
         String scriptLine = String.join(" ", args);
         long executeTime = FunctionExecutor.execute(() -> {
-            ScriptEngine.INSTANCE.execute(scriptLine, new ScriptContext(player));
+            ScriptEngine.INSTANCE.execute(scriptLine, new ScriptContext(Objects.requireNonNull(player).getUniqueId()));
         });
         LangUtils.sendLang(player, Languages.COMMAND_SCRIPT_OPERATION_TIME, Map.of("<time>", executeTime + ""));
-        IOHelper.info("Player \"" + player.getName() + "\" execute script line: " + scriptLine);
+        IOHelper.info("Player \"" + (player != null ? player.getName() : "null") + "\" execute script line: " + scriptLine);
     }
 }

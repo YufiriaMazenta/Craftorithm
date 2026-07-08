@@ -1,10 +1,12 @@
 package pers.yufiria.craftorithm;
 
-import crypticlib.lifecycle.*;
+import crypticlib.lifecycle.LifeCycle;
+import crypticlib.lifecycle.LifeCycleTask;
+import crypticlib.lifecycle.LifeCycleTaskSettings;
+import crypticlib.lifecycle.TaskRule;
 import crypticlib.util.IOHelper;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 
 import java.io.File;

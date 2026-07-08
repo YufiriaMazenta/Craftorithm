@@ -1,21 +1,15 @@
 package pers.yufiria.craftorithm.trigger.listener;
 
 import crypticlib.listener.EventListener;
-import crypticlib.util.ItemHelper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.PrepareSmithingEvent;
 import org.bukkit.event.inventory.SmithItemEvent;
-import org.bukkit.inventory.ItemStack;
-import pers.yufiria.craftorithm.script.ScriptValue;
 import pers.yufiria.craftorithm.trigger.CraftTriggerTypes;
 import pers.yufiria.craftorithm.trigger.TriggerContext;
 import pers.yufiria.craftorithm.trigger.TriggerManager;
-
-import java.util.Set;
 
 /**
  * 锻造台触发器监听器

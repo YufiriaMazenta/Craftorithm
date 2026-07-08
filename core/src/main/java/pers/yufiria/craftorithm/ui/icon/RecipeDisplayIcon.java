@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.ui.icon;
 
+import crypticlib.script.compile.CompiledScript;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.menu.Menu;
@@ -15,7 +16,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
-import pers.yufiria.craftorithm.script.compile.CompiledScript;
 import pers.yufiria.craftorithm.ui.BackableMenu;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayManager;
 import pers.yufiria.craftorithm.ui.editor.RecipeEditorManager;

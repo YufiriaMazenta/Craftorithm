@@ -1,14 +1,17 @@
-package pers.yufiria.craftorithm.script.func;
+package pers.yufiria.craftorithm.script;
 
 import crypticlib.BukkitPlayer;
 import crypticlib.CrypticLib;
 import crypticlib.MinecraftVersion;
-import crypticlib.chat.BukkitMsgSender;
 import crypticlib.chat.BukkitTextProcessor;
+import crypticlib.script.ScriptContext;
+import crypticlib.script.ScriptValue;
+import crypticlib.script.func.ScriptFunctionRegistry;
+import crypticlib.script.func.ScriptModule;
+import crypticlib.script.vm.ScriptVM;
 import crypticlib.ui.menu.Menu;
 import crypticlib.ui.util.MenuHelper;
 import crypticlib.util.IOHelper;
-import crypticlib.util.InventoryHelper;
 import crypticlib.util.InventoryViewHelper;
 import net.milkbowl.vault.economy.Economy;
 import org.black_ixx.playerpoints.PlayerPoints;
@@ -24,9 +27,6 @@ import pers.yufiria.craftorithm.hook.PlayerPointsHook;
 import pers.yufiria.craftorithm.hook.VaultHook;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
-import pers.yufiria.craftorithm.script.ScriptContext;
-import pers.yufiria.craftorithm.script.ScriptValue;
-import pers.yufiria.craftorithm.script.vm.ScriptVM;
 import pers.yufiria.craftorithm.ui.BackableMenu;
 import pers.yufiria.craftorithm.ui.custom.CustomMenuManager;
 
@@ -55,32 +55,31 @@ public enum ActionModule implements ScriptModule {
 
     @Override
     public void register(ScriptFunctionRegistry registry) {
-        registry.register("command", this::command);
-        registry.register("console", this::console);
-        registry.register("tell", this::tell);
-        registry.register("actionbar", this::actionbar);
-        registry.register("title", this::title);
-        registry.register("log", this::log);
-        registry.register("take_money", this::takeMoney);
-        registry.register("give_money", this::giveMoney);
-        registry.register("take_level", this::takeLevel);
-        registry.register("give_level", this::giveLevel);
-        registry.register("give_exp", this::giveExp);
-        registry.register("take_points", this::takePoints);
-        registry.register("give_points", this::givePoints);
-        registry.register("close", this::close);
-        registry.register("back", this::back);
-        registry.register("openmenu", this::openmenu);
-        registry.register("discover_recipe", this::discoverRecipe);
-        registry.register("undiscover_recipe", this::undiscoverRecipe);
-        registry.register("set", this::set);
-        registry.register("delay", this::delay);
-        registry.register("sound", this::sound);
-        registry.register("set_inv_item", this::setInvItem);
+        String moduleName = moduleName();
+        registry.register(moduleName, "command", this::command);
+        registry.register(moduleName, "console", this::console);
+        registry.register(moduleName, "tell", this::tell);
+        registry.register(moduleName, "actionbar", this::actionbar);
+        registry.register(moduleName, "title", this::title);
+        registry.register(moduleName, "log", this::log);
+        registry.register(moduleName, "take_money", this::takeMoney);
+        registry.register(moduleName, "give_money", this::giveMoney);
+        registry.register(moduleName, "take_level", this::takeLevel);
+        registry.register(moduleName, "give_level", this::giveLevel);
+        registry.register(moduleName, "give_exp", this::giveExp);
+        registry.register(moduleName, "take_points", this::takePoints);
+        registry.register(moduleName, "give_points", this::givePoints);
+        registry.register(moduleName, "close", this::close);
+        registry.register(moduleName, "back", this::back);
+        registry.register(moduleName, "openmenu", this::openmenu);
+        registry.register(moduleName, "discover_recipe", this::discoverRecipe);
+        registry.register(moduleName, "undiscover_recipe", this::undiscoverRecipe);
+        registry.register(moduleName, "sound", this::sound);
+        registry.register(moduleName, "set_inv_item", this::setInvItem);
     }
 
     private ScriptValue setInvItem(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        Player player = ctx.player();
+        Player player = Bukkit.getPlayer(ctx.playerId());
         if (player == null) return ScriptValue.nil();
         Inventory topInventory = InventoryViewHelper.getTopInventory(player);
         if (args.length < 2) {
@@ -103,7 +102,7 @@ public enum ActionModule implements ScriptModule {
     }
 
     private ScriptValue back(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        Player player = ctx.player();
+        Player player = Bukkit.getPlayer(ctx.playerId());
         if (player == null) return ScriptValue.nil();
         Optional<Menu> openingMenuOpt = MenuHelper.getOpeningMenu(player);
         IOHelper.debug("is opening menu: " + openingMenuOpt.isPresent());
@@ -127,7 +126,7 @@ public enum ActionModule implements ScriptModule {
         if (args.length < 1) {
             return ScriptValue.of(false);
         }
-        Player player = ctx.player();
+        Player player = Bukkit.getPlayer(ctx.playerId());
         if (player == null) return ScriptValue.of(false);
         String menuName = args[0].asString();
         CustomMenuManager.INSTANCE.openMenu(player, menuName, result -> {});
@@ -136,7 +135,7 @@ public enum ActionModule implements ScriptModule {
 
     private ScriptValue command(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
-        Player player = ctx.player();
+        Player player = Bukkit.getPlayer(ctx.playerId());
         if (player == null) return ScriptValue.of(false);
         StringBuilder sb = new StringBuilder();
         for (ScriptValue arg : args) {
@@ -148,7 +147,7 @@ public enum ActionModule implements ScriptModule {
 
     private ScriptValue console(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
-        Player player = ctx.player();
+        Player player = Bukkit.getPlayer(ctx.playerId());
         StringBuilder sb = new StringBuilder();
         for (ScriptValue arg : args) {
             sb.append(arg.asString());
@@ -159,7 +158,7 @@ public enum ActionModule implements ScriptModule {
 
     private ScriptValue tell(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.nil();
-        Player player = ctx.player();
+        Player player = Bukkit.getPlayer(ctx.playerId());
         if (player == null) return ScriptValue.nil();
         StringBuilder sb = new StringBuilder();
         for (ScriptValue arg : args) {
@@ -172,7 +171,7 @@ public enum ActionModule implements ScriptModule {
 
     private ScriptValue actionbar(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.nil();
-        Player player = ctx.player();
+        Player player = Bukkit.getPlayer(ctx.playerId());
         if (player == null) return ScriptValue.nil();
         StringBuilder sb = new StringBuilder();
         for (ScriptValue arg : args) {
@@ -185,7 +184,7 @@ public enum ActionModule implements ScriptModule {
 
     private ScriptValue title(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.nil();
-        Player player = ctx.player();
+        Player player = Bukkit.getPlayer(ctx.playerId());
         if (player == null) return ScriptValue.nil();
         String title = BukkitTextProcessor.placeholder(player, args[0].asString());
         String subtitle = args.length > 1 ? BukkitTextProcessor.placeholder(player, args[1].asString()) : "";
@@ -195,7 +194,7 @@ public enum ActionModule implements ScriptModule {
 
     private ScriptValue log(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.nil();
-        Player player = ctx.player();
+        Player player = Bukkit.getPlayer(ctx.playerId());
         if (player == null) return ScriptValue.nil();
         StringBuilder sb = new StringBuilder();
         for (ScriptValue arg : args) {
@@ -209,7 +208,7 @@ public enum ActionModule implements ScriptModule {
     private ScriptValue takeMoney(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
         if (!VaultHook.INSTANCE.isEconomyHooked()) return ScriptValue.of(false);
-        Player player = ctx.player();
+        Player player = Bukkit.getPlayer(ctx.playerId());
         if (player == null) return ScriptValue.of(false);
         Economy economy = (Economy) VaultHook.INSTANCE.economy();
         double amount = args[0].asNumber();
@@ -222,7 +221,7 @@ public enum ActionModule implements ScriptModule {
     private ScriptValue giveMoney(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
         if (!VaultHook.INSTANCE.isEconomyHooked()) return ScriptValue.of(false);
-        Player player = ctx.player();
+        Player player = Bukkit.getPlayer(ctx.playerId());
         if (player == null) return ScriptValue.of(false);
         Economy economy = (Economy) VaultHook.INSTANCE.economy();
         double amount = args[0].asNumber();
@@ -234,7 +233,7 @@ public enum ActionModule implements ScriptModule {
 
     private ScriptValue takeLevel(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.nil();
-        Player player = ctx.player();
+        Player player = Bukkit.getPlayer(ctx.playerId());
         if (player == null) return ScriptValue.nil();
         int amount = (int) args[0].asNumber();
         player.setLevel(Math.max(0, player.getLevel() - amount));
@@ -243,7 +242,7 @@ public enum ActionModule implements ScriptModule {
 
     private ScriptValue giveLevel(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.nil();
-        Player player = ctx.player();
+        Player player = Bukkit.getPlayer(ctx.playerId());
         if (player == null) return ScriptValue.nil();
         int amount = (int) args[0].asNumber();
         player.setLevel(player.getLevel() + amount);
@@ -252,7 +251,7 @@ public enum ActionModule implements ScriptModule {
 
     private ScriptValue giveExp(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.nil();
-        Player player = ctx.player();
+        Player player = Bukkit.getPlayer(ctx.playerId());
         if (player == null) return ScriptValue.nil();
         int amount = (int) args[0].asNumber();
         player.giveExp(Math.max(0, amount));
@@ -265,7 +264,7 @@ public enum ActionModule implements ScriptModule {
         PlayerPointsAPI api = ((PlayerPoints) PlayerPointsHook.INSTANCE.playerPoints()).getAPI();
         int amount = (int) args[0].asNumber();
         if (amount > 0) {
-            api.take(ctx.playerUniqueId(), amount);
+            api.take(ctx.playerId(), amount);
         }
         return ScriptValue.of(true);
     }
@@ -276,13 +275,13 @@ public enum ActionModule implements ScriptModule {
         PlayerPointsAPI api = ((PlayerPoints) PlayerPointsHook.INSTANCE.playerPoints()).getAPI();
         int amount = (int) args[0].asNumber();
         if (amount > 0) {
-            api.give(ctx.playerUniqueId(), amount);
+            api.give(ctx.playerId(), amount);
         }
         return ScriptValue.of(true);
     }
 
     private ScriptValue close(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        Player player = ctx.player();
+        Player player = Bukkit.getPlayer(ctx.playerId());
         if (player == null) return ScriptValue.nil();
         player.closeInventory();
         return ScriptValue.nil();
@@ -290,7 +289,7 @@ public enum ActionModule implements ScriptModule {
 
     private ScriptValue discoverRecipe(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
-        Player player = ctx.player();
+        Player player = Bukkit.getPlayer(ctx.playerId());
         if (player == null) return ScriptValue.of(false);
         NamespacedKey recipeKey = NamespacedKey.fromString(args[0].asString());
         return ScriptValue.of(player.discoverRecipe(Objects.requireNonNull(recipeKey)));
@@ -298,7 +297,7 @@ public enum ActionModule implements ScriptModule {
 
     private ScriptValue undiscoverRecipe(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
-        Player player = ctx.player();
+        Player player = Bukkit.getPlayer(ctx.playerId());
         if (player == null) return ScriptValue.of(false);
         NamespacedKey recipeKey = NamespacedKey.fromString(args[0].asString());
         return ScriptValue.of(player.undiscoverRecipe(Objects.requireNonNull(recipeKey)));
@@ -332,7 +331,7 @@ public enum ActionModule implements ScriptModule {
      */
     private ScriptValue sound(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.nil();
-        Player player = ctx.player();
+        Player player = Bukkit.getPlayer(ctx.playerId());
         if (player == null) return ScriptValue.nil();
         String soundName = args[0].asString();
         float volume = args.length > 1 ? (float) args[1].asNumber() : 1.0f;

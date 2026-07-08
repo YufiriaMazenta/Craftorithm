@@ -1,11 +1,11 @@
 package pers.yufiria.craftorithm.trigger.event;
 
+import crypticlib.script.ScriptValue;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.yufiria.craftorithm.script.ScriptValue;
 import pers.yufiria.craftorithm.trigger.TriggerContext;
 import pers.yufiria.craftorithm.trigger.TriggerType;
 

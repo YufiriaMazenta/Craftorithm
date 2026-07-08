@@ -1,12 +1,14 @@
 package pers.yufiria.craftorithm.ui.editor;
 
-import crypticlib.lifecycle.*;
+import crypticlib.lifecycle.LifeCycle;
+import crypticlib.lifecycle.LifeCycleTask;
+import crypticlib.lifecycle.LifeCycleTaskSettings;
+import crypticlib.lifecycle.TaskRule;
 import crypticlib.ui.menu.Menu;
 import crypticlib.util.TriFunction;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
-import org.bukkit.plugin.Plugin;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.RecipeTypeMap;

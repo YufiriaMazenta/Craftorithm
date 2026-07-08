@@ -1,8 +1,10 @@
 package pers.yufiria.craftorithm.hook.item;
 
-import crypticlib.lifecycle.*;
+import crypticlib.lifecycle.LifeCycle;
+import crypticlib.lifecycle.LifeCycleTask;
+import crypticlib.lifecycle.LifeCycleTaskSettings;
+import crypticlib.lifecycle.TaskRule;
 import crypticlib.util.IOHelper;
-import org.bukkit.plugin.Plugin;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.item.CraftorithmItemProvider;

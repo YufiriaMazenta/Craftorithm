@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.ui.recipeBook;
 
+import crypticlib.script.compile.CompiledScript;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.menu.Menu;
@@ -11,7 +12,6 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
-import pers.yufiria.craftorithm.script.compile.CompiledScript;
 import pers.yufiria.craftorithm.ui.icon.ActionIcon;
 
 import java.util.Map;

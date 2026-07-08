@@ -1,8 +1,10 @@
 package pers.yufiria.craftorithm.hook;
 
-import crypticlib.lifecycle.*;
+import crypticlib.lifecycle.LifeCycle;
+import crypticlib.lifecycle.LifeCycleTask;
+import crypticlib.lifecycle.LifeCycleTaskSettings;
+import crypticlib.lifecycle.TaskRule;
 import org.black_ixx.playerpoints.PlayerPoints;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.util.LangUtils;

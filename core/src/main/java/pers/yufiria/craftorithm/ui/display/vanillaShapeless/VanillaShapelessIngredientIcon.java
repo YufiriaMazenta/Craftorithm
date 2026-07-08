@@ -1,9 +1,9 @@
 package pers.yufiria.craftorithm.ui.display.vanillaShapeless;
 
+import crypticlib.script.compile.CompiledScript;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import pers.yufiria.craftorithm.script.compile.CompiledScript;
 import pers.yufiria.craftorithm.ui.icon.ItemDisplayIcon;
 
 import java.util.Map;

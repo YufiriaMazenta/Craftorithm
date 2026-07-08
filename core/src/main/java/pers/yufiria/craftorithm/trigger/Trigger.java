@@ -1,9 +1,9 @@
 package pers.yufiria.craftorithm.trigger;
 
+import crypticlib.script.ScriptContext;
+import crypticlib.script.compile.CompiledScript;
 import org.bukkit.NamespacedKey;
 import org.jetbrains.annotations.Nullable;
-import pers.yufiria.craftorithm.script.ScriptContext;
-import pers.yufiria.craftorithm.script.compile.CompiledScript;
 
 import java.util.List;
 

@@ -1,16 +1,15 @@
 package pers.yufiria.craftorithm.ui.icon;
 
+import crypticlib.script.ScriptEngine;
+import crypticlib.script.compile.CompiledScript;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
-import crypticlib.util.IOHelper;
 import crypticlib.util.MaterialHelper;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.ClickType;
 import org.jetbrains.annotations.NotNull;
-import pers.yufiria.craftorithm.script.ScriptEngine;
-import pers.yufiria.craftorithm.script.compile.CompiledScript;
 
 import java.util.HashMap;
 import java.util.List;

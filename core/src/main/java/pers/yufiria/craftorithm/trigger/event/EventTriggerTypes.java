@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.trigger.event;
 
 import crypticlib.CrypticLibBukkit;
+import crypticlib.script.ScriptValue;
 import crypticlib.util.BukkitEventHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -18,10 +19,9 @@ import org.bukkit.event.player.*;
 import org.bukkit.plugin.EventExecutor;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
-import pers.yufiria.craftorithm.script.ScriptValue;
-import pers.yufiria.craftorithm.util.ItemUtils;
 import pers.yufiria.craftorithm.trigger.TriggerContext;
 import pers.yufiria.craftorithm.trigger.TriggerManager;
+import pers.yufiria.craftorithm.util.ItemUtils;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

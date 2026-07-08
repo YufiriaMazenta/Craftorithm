@@ -1,10 +1,10 @@
 package pers.yufiria.craftorithm.ui.recipeBook;
 
+import crypticlib.script.compile.CompiledScript;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.ClickType;
-import pers.yufiria.craftorithm.script.compile.CompiledScript;
 import pers.yufiria.craftorithm.ui.icon.IconParser;
 import pers.yufiria.craftorithm.ui.icon.RecipeDisplayIcon;
 

@@ -1,12 +1,12 @@
 package pers.yufiria.craftorithm.util;
 
+import crypticlib.script.ScriptValue;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.item.ItemManager;
-import pers.yufiria.craftorithm.script.ScriptValue;
 
 public class ItemUtils {
 

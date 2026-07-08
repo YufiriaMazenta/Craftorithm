@@ -1,12 +1,12 @@
 package pers.yufiria.craftorithm.ui.icon;
 
+import crypticlib.script.compile.CompiledScript;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import pers.yufiria.craftorithm.script.compile.CompiledScript;
 
 import java.util.Map;
 

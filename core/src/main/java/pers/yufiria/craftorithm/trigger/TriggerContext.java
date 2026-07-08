@@ -1,13 +1,13 @@
 package pers.yufiria.craftorithm.trigger;
 
+import crypticlib.script.ScriptContext;
+import crypticlib.script.ScriptValue;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.recipe.RecipeType;
-import pers.yufiria.craftorithm.script.ScriptContext;
-import pers.yufiria.craftorithm.script.ScriptValue;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -13,11 +13,10 @@ import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 
-import java.util.Optional;
-
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.Random;
 
 public class StackableItemIdChoice implements RecipeChoice {

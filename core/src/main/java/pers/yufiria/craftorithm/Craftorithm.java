@@ -5,13 +5,14 @@ import crypticlib.CrypticLib;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.MinecraftVersion;
 import crypticlib.chat.BukkitMsgSender;
-import crypticlib.lifecycle.*;
+import crypticlib.lifecycle.LifeCycle;
+import crypticlib.lifecycle.LifeCycleTask;
+import crypticlib.lifecycle.LifeCycleTaskSettings;
+import crypticlib.lifecycle.TaskRule;
+import crypticlib.script.ScriptEngine;
 import crypticlib.util.IOHelper;
 import org.bukkit.Bukkit;
-import java.util.HashMap;
-import java.util.Map;
 import org.bukkit.inventory.Recipe;
-import org.bukkit.plugin.Plugin;
 import pers.yufiria.craftorithm.api.CraftorithmAPI;
 import pers.yufiria.craftorithm.bstat.Metrics;
 import pers.yufiria.craftorithm.config.Languages;
@@ -19,8 +20,13 @@ import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.exception.UnsupportedVersionException;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
+import pers.yufiria.craftorithm.script.ActionModule;
+import pers.yufiria.craftorithm.script.ConditionModule;
 import pers.yufiria.craftorithm.util.LangUtils;
 import pers.yufiria.craftorithm.util.UpdateChecker;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @LifeCycleTaskSettings(
     rules = {
@@ -47,6 +53,8 @@ public final class Craftorithm extends BukkitPlugin implements LifeCycleTask {
 
     @Override
     public void whenEnable() {
+        ScriptEngine.INSTANCE.registerModule(ActionModule.INSTANCE);
+        ScriptEngine.INSTANCE.registerModule(ConditionModule.INSTANCE);
         UpdateChecker.pullUpdateCheckRequest(Bukkit.getConsoleSender());
     }
 
