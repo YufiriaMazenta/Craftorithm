@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.util;
 
 import crypticlib.CrypticLibBukkit;
+import crypticlib.MinecraftVersion;
 import crypticlib.listener.EventListener;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.EventHandler;
@@ -10,6 +11,8 @@ import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URI;
@@ -17,6 +20,8 @@ import java.net.URLConnection;
 
 @EventListener
 public class UpdateChecker implements Listener {
+
+    private static final String MODRINTH_API_URL = "https://api.modrinth.com/v2/project/craftorithm/version?limit=1&game_versions=[\"%s\"]";
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
@@ -30,19 +35,26 @@ public class UpdateChecker implements Listener {
             return;
         CrypticLibBukkit.scheduler().async(() -> {
             try {
-                URI uri = new URI("https://api.spigotmc.org/legacy/update.php?resource=108429/");
+                String mcVersion = MinecraftVersion.current().versionStr();
+                URI uri = new URI(String.format(MODRINTH_API_URL, mcVersion));
                 URLConnection conn = uri.toURL().openConnection();
                 conn.setConnectTimeout(15000);
                 conn.setReadTimeout(60000);
+                String latestVersion;
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
-                    String latestVersion = reader.readLine();
-                    String pluginVersion = Craftorithm.instance().getDescription().getVersion();
-                    pluginVersion = pluginVersion.substring(0, pluginVersion.indexOf("-"));
-                    if (checkVersion(latestVersion, pluginVersion)) {
-                        CrypticLibBukkit.scheduler().sync(() -> {
-                            LangUtils.sendLang(sender, Languages.NEW_VERSION, CollectionsUtils.newStringHashMap("<new_version>", latestVersion));
-                        });
+                    JsonArray versions = JsonParser.parseReader(reader).getAsJsonArray();
+                    if (versions.isEmpty()) {
+                        Craftorithm.instance().getLogger().warning("No compatible version found on Modrinth for MC " + mcVersion);
+                        return;
                     }
+                    latestVersion = versions.get(0).getAsJsonObject().get("version_number").getAsString();
+                }
+                String pluginVersion = Craftorithm.instance().getDescription().getVersion();
+                pluginVersion = pluginVersion.substring(0, pluginVersion.indexOf("-"));
+                if (checkVersion(latestVersion, pluginVersion)) {
+                    CrypticLibBukkit.scheduler().sync(() -> {
+                        LangUtils.sendLang(sender, Languages.NEW_VERSION, CollectionsUtils.newStringHashMap("<new_version>", latestVersion));
+                    });
                 }
             } catch (Exception e) {
                 Craftorithm.instance().getLogger().warning("Failed to check for updates: " + e.getMessage());
