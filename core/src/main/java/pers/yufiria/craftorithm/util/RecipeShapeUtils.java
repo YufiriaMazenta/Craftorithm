@@ -2,9 +2,7 @@ package pers.yufiria.craftorithm.util;
 
 import java.util.List;
 
-public enum RecipeShapeUtils {
-
-    ;
+public class RecipeShapeUtils {
 
     /**
      * 移除配方形状中首尾的全空白行（保留中间的空行）
