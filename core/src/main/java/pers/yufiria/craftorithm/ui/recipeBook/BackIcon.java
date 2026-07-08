@@ -34,10 +34,10 @@ public class BackIcon extends ActionIcon {
                 if (parentMenu != null) {
                     parentMenu.openMenu();
                 } else {
-                    CrypticLibBukkit.scheduler().async(() -> event.getWhoClicked().closeInventory());
+                    CrypticLibBukkit.scheduler().sync(() -> event.getWhoClicked().closeInventory());
                 }
             } else {
-                CrypticLibBukkit.scheduler().async(() -> event.getWhoClicked().closeInventory());
+                CrypticLibBukkit.scheduler().sync(() -> event.getWhoClicked().closeInventory());
             }
         }));
         runActions(event, this.actions);
