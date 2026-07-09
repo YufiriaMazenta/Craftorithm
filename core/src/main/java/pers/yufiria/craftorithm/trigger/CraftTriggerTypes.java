@@ -2,6 +2,7 @@ package pers.yufiria.craftorithm.trigger;
 
 import crypticlib.script.ScriptValue;
 import crypticlib.util.ItemHelper;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -264,20 +265,26 @@ public enum CraftTriggerTypes implements TriggerType {
         if (ItemHelper.isAir(result)) return 1;
         int resultAmount = result.getAmount();
         // 计算背包能装下多少个结果物品（向上取整，适配原版行为）
-        int canFit = calculateCanFit(player, result);
+        int maxNeeded = minIngredientAmount * resultAmount;
+        int canFit = calculateCanFit(player, result, maxNeeded);
         int canFitTimes = (canFit + resultAmount - 1) / resultAmount;
         return Math.max(1, Math.min(minIngredientAmount, canFitTimes));
     }
 
-    private static int calculateCanFit(Player player, ItemStack result) {
+    private static int calculateCanFit(Player player, ItemStack result, int maxNeeded) {
         if (ItemHelper.isAir(result)) return 0;
         int maxStack = result.getType().getMaxStackSize();
         int space = 0;
+        Material resultType = result.getType();
         for (ItemStack item : player.getInventory().getStorageContents()) {
             if (item == null || item.isEmpty()) {
                 space += maxStack;
-            } else if (item.isSimilar(result)) {
+            } else if (item.getType() == resultType && item.isSimilar(result)) {
                 space += maxStack - item.getAmount();
+            }
+            // 提前退出：空间已经足够
+            if (space >= maxNeeded) {
+                return space;
             }
         }
         return space;
