@@ -144,14 +144,6 @@ public enum ConditionModule implements ScriptModule {
         return ScriptValue.of(level);
     }
 
-    private ScriptValue context(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        if (args.length < 1) return ScriptValue.nil();
-        String key = args[0].asString();
-        ScriptValue var = ctx.getVariable(key);
-        if (var == null) return ScriptValue.nil();
-        return var;
-    }
-
     private ScriptValue item(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
         ScriptValue eventItem = ctx.getVariable("item");

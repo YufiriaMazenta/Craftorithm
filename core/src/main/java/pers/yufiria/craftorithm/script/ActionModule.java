@@ -303,26 +303,6 @@ public enum ActionModule implements ScriptModule {
         return ScriptValue.of(player.undiscoverRecipe(Objects.requireNonNull(recipeKey)));
     }
 
-    private ScriptValue set(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        if (args.length < 2) return ScriptValue.nil();
-        String key = args[0].asString();
-        ScriptValue value = args[1];
-        ctx.setVariable(key, value);
-        return ScriptValue.nil();
-    }
-
-    /**
-     * delay(ticks) → 暂停执行指定tick后继续
-     */
-    private ScriptValue delay(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        if (args.length < 1) return ScriptValue.nil();
-        long ticks = (long) args[0].asNumber();
-        if (ticks > 0) {
-            vm.pauseAndScheduleResume(ticks);
-        }
-        return ScriptValue.nil();
-    }
-
     /**
      * sound <sound> [volume] [pitch] → 向玩家播放音频
      * 示例:

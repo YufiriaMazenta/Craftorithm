@@ -17,11 +17,13 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @EventListener
 public class UpdateChecker implements Listener {
 
-    private static final String MODRINTH_API_URL = "https://api.modrinth.com/v2/project/craftorithm/version?limit=1&game_versions=[\"%s\"]";
+    private static final String MODRINTH_API_URL = "https://api.modrinth.com/v2/project/craftorithm/version?limit=1&game_versions=";
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
@@ -36,7 +38,8 @@ public class UpdateChecker implements Listener {
         CrypticLibBukkit.scheduler().async(() -> {
             try {
                 String mcVersion = MinecraftVersion.current().versionStr();
-                URI uri = new URI(String.format(MODRINTH_API_URL, mcVersion));
+                mcVersion = URLEncoder.encode("[\"" + mcVersion + "\"]", StandardCharsets.UTF_8);
+                URI uri = new URI(MODRINTH_API_URL + mcVersion);
                 URLConnection conn = uri.toURL().openConnection();
                 conn.setConnectTimeout(15000);
                 conn.setReadTimeout(60000);
@@ -47,10 +50,9 @@ public class UpdateChecker implements Listener {
                         Craftorithm.instance().getLogger().warning("No compatible version found on Modrinth for MC " + mcVersion);
                         return;
                     }
-                    latestVersion = versions.get(0).getAsJsonObject().get("version_number").getAsString();
+                    latestVersion = removeSuffixAfterDash(versions.get(0).getAsJsonObject().get("version_number").getAsString());
                 }
-                String pluginVersion = Craftorithm.instance().getDescription().getVersion();
-                pluginVersion = pluginVersion.substring(0, pluginVersion.indexOf("-"));
+                String pluginVersion = removeSuffixAfterDash(Craftorithm.instance().getDescription().getVersion());
                 if (checkVersion(latestVersion, pluginVersion)) {
                     CrypticLibBukkit.scheduler().sync(() -> {
                         LangUtils.sendLang(sender, Languages.NEW_VERSION, CollectionsUtils.newStringHashMap("<new_version>", latestVersion));
@@ -60,6 +62,17 @@ public class UpdateChecker implements Listener {
                 Craftorithm.instance().getLogger().warning("Failed to check for updates: " + e.getMessage());
             }
         });
+    }
+
+    public static String removeSuffixAfterDash(String version) {
+        if (version == null || version.isEmpty()) {
+            return version;
+        }
+        int index = version.indexOf('-');
+        if (index == -1) {
+            return version; // 没有横杠，直接返回
+        }
+        return version.substring(0, index);
     }
 
     public static boolean checkVersion(String newVersion, String version) {
