@@ -172,15 +172,41 @@ public enum TriggerManager implements LifeCycleTask {
 
         List<String> recipeKeys = section.getStringList("recipes");
 
-        // 编译 conditions 脚本（正向逻辑，成立=放行）
-        List<String> condSources = section.getStringList("conditions");
+        // 编译 conditions 脚本
+        // 旧格式（列表，默认 && 连接）:
+        //   conditions:
+        //     - 'level() >= 10'
+        //     - 'perm("vip")'
+        // 新格式（对象，支持 mode 字段）:
+        //   conditions:
+        //     mode: 'block'
+        //     body:
+        //       - 'if level() >= 10'
+        //       - '  return true'
+        //       - 'endif'
         CompiledScript conditionScript = null;
-        if (!condSources.isEmpty()) {
-            // 多个条件用 && 连接
-            String joined = condSources.size() == 1
-                ? condSources.get(0)
-                : condSources.stream().map(c -> "(" + c + ")").collect(Collectors.joining(" && "));
-            conditionScript = ScriptEngine.INSTANCE.compile(fullId + "_cond", joined);
+        ConfigurationSection condSection = section.getConfigurationSection("conditions");
+        if (condSection != null) {
+            // 新格式：对象模式
+            String mode = condSection.getString("mode", "and");
+            List<String> condSources = condSection.getStringList("body");
+            if (!condSources.isEmpty()) {
+                String joined = "block".equals(mode)
+                    ? String.join("\n", condSources)
+                    : condSources.size() == 1
+                        ? condSources.getFirst()
+                        : condSources.stream().map(c -> "(" + c + ")").collect(Collectors.joining(" && "));
+                conditionScript = ScriptEngine.INSTANCE.compile(fullId + "_cond", joined);
+            }
+        } else {
+            // 旧格式：列表模式（默认 && 连接）
+            List<String> condSources = section.getStringList("conditions");
+            if (!condSources.isEmpty()) {
+                String joined = condSources.size() == 1
+                    ? condSources.getFirst()
+                    : condSources.stream().map(c -> "(" + c + ")").collect(Collectors.joining(" && "));
+                conditionScript = ScriptEngine.INSTANCE.compile(fullId + "_cond", joined);
+            }
         }
 
         // 编译 actions 脚本
