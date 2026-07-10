@@ -2,6 +2,7 @@ package pers.yufiria.craftorithm.listener;
 
 import crypticlib.MinecraftVersion;
 import crypticlib.listener.EventListener;
+import crypticlib.util.InventoryViewHelper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -41,7 +42,10 @@ public enum SmithingHandler implements Listener {
 
         ItemStack result = event.getInventory().getRecipe().getResult();
         ItemManager.INSTANCE.matchItemId(result, true)
-            .flatMap(id -> ItemManager.INSTANCE.matchItem(id, (Player) event.getViewers().get(0)))
+            .flatMap(id -> {
+                Player player = (Player) InventoryViewHelper.getViewingPlayer(InventoryViewHelper.getInventoryView(event));
+                return ItemManager.INSTANCE.matchItem(id, player);
+            })
             .ifPresent(refreshItem -> {
                 if (!result.isSimilar(refreshItem)) {
                     result.setItemMeta(refreshItem.getItemMeta());

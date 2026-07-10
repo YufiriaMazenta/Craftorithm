@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.trigger;
 
 import crypticlib.script.ScriptValue;
+import crypticlib.util.InventoryViewHelper;
 import crypticlib.util.ItemHelper;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -24,6 +25,7 @@ import pers.yufiria.craftorithm.util.ItemUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 内置触发器类型
@@ -199,16 +201,15 @@ public enum CraftTriggerTypes implements TriggerType {
             PrepareAnvilEvent e = (PrepareAnvilEvent) event;
             ItemStack base = e.getInventory().getItem(0);
             ItemStack addition = e.getInventory().getItem(1);
-            if (base == null || addition == null) return null;
-
-            Player player = null;
-            for (HumanEntity viewer : e.getViewers()) {
-                if (viewer instanceof Player p) {
-                    player = p;
-                    break;
-                }
+            if (base == null || addition == null) {
+                return null;
             }
-            if (player == null) return null;
+
+            Player player = (Player) InventoryViewHelper.getViewingPlayer(InventoryViewHelper.getInventoryView(e));
+
+            if (player == null) {
+                return null;
+            }
 
             AnvilRecipe customRecipe = AnvilRecipeHandler.INSTANCE.matchAnvilRecipe(base, addition);
             NamespacedKey recipeKey = customRecipe != null ? customRecipe.getKey() : null;

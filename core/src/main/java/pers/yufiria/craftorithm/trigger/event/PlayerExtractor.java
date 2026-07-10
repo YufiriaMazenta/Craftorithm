@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.trigger.event;
 
+import crypticlib.util.InventoryViewHelper;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -11,6 +12,8 @@ import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.event.player.PlayerEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
 
 /**
  * 从 Bukkit 事件中提取玩家的策略接口
@@ -50,9 +53,10 @@ public interface PlayerExtractor {
     };
 
     PlayerExtractor VIEWER = e -> {
-        if (e instanceof InventoryEvent ie) {
-            for (HumanEntity viewer : ie.getViewers()) {
-                if (viewer instanceof Player p) return p;
+        if (e instanceof InventoryEvent event) {
+            HumanEntity viewing = InventoryViewHelper.getViewingPlayer(InventoryViewHelper.getInventoryView(event));
+            if (viewing instanceof Player player) {
+                return player;
             }
         }
         return null;

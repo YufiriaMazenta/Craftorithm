@@ -5,9 +5,11 @@ import crypticlib.chat.BukkitMsgSender;
 import crypticlib.listener.EventListener;
 import crypticlib.script.ScriptValue;
 import crypticlib.util.InventoryHelper;
+import crypticlib.util.InventoryViewHelper;
 import crypticlib.util.ItemHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -37,6 +39,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @EventListener
@@ -120,9 +123,10 @@ public enum AnvilRecipeHandler implements Listener {
             return;
 
         ItemStack result = anvilRecipe.getResult();
+        Player player = ((Player) InventoryViewHelper.getViewingPlayer(InventoryViewHelper.getInventoryView(event)));
         NamespacedItemIdStack resultId = ItemManager.INSTANCE.matchItemId(result, false).orElse(null);
         if (resultId != null) {
-            ItemManager.INSTANCE.matchItem(resultId, (Player) event.getViewers().getFirst()).ifPresent(refreshItem -> result.setItemMeta(refreshItem.getItemMeta()));
+            ItemManager.INSTANCE.matchItem(resultId, player).ifPresent(refreshItem -> result.setItemMeta(refreshItem.getItemMeta()));
         }
 
         //处理NBT保留操作
