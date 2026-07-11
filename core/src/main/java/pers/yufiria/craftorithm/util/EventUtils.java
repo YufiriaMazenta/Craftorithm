@@ -1,8 +1,11 @@
 package pers.yufiria.craftorithm.util;
 
 import crypticlib.MinecraftVersion;
+import crypticlib.util.InventoryViewHelper;
 import crypticlib.util.ItemHelper;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockCookEvent;
 import org.bukkit.event.block.CampfireStartEvent;
@@ -14,6 +17,8 @@ import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.extra.AnvilRecipe;
 import pers.yufiria.craftorithm.recipe.extra.AnvilRecipeHandler;
+
+import java.util.Optional;
 
 public class EventUtils {
 
@@ -80,6 +85,14 @@ public class EventUtils {
         }
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
         return recipeKey != null && recipeKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE);
+    }
+
+    public static Optional<Player> getViewer(InventoryEvent event) {
+        HumanEntity viewing = InventoryViewHelper.getViewingPlayer(InventoryViewHelper.getInventoryView(event));
+        if (viewing instanceof Player player) {
+            return Optional.of(player);
+        }
+        return Optional.empty();
     }
 
 }

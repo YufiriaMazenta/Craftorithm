@@ -8,7 +8,7 @@ import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerSe
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerWindowItems;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import crypticlib.util.InventoryViewHelper;
+import pers.yufiria.craftorithm.util.EventUtils;
 import crypticlib.util.ItemHelper;
 import io.github.retrooper.packetevents.util.SpigotConversionUtil;
 import org.bukkit.NamespacedKey;
@@ -47,8 +47,8 @@ public enum FakeResultPreviewPacketListener implements PacketListener, Listener 
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void refreshCraftingRecipeCache(PrepareItemCraftEvent event) {
-        HumanEntity player = InventoryViewHelper.getViewingPlayer(InventoryViewHelper.getInventoryView(event));
-        UUID playerId = player.getUniqueId();
+        UUID playerId = EventUtils.getViewer(event).map(HumanEntity::getUniqueId).orElse(null);
+        if (playerId == null) return;
         if (ItemHelper.isAir(event.getInventory().getResult())) {
             //当玩家预览配方为null时，去除缓存
             PLAYER_PREPARING_RECIPE.invalidate(playerId);
@@ -74,8 +74,8 @@ public enum FakeResultPreviewPacketListener implements PacketListener, Listener 
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void refreshSmithingRecipeCache(PrepareSmithingEvent event) {
-        HumanEntity player = InventoryViewHelper.getViewingPlayer(InventoryViewHelper.getInventoryView(event));
-        UUID playerId = player.getUniqueId();
+        UUID playerId = EventUtils.getViewer(event).map(HumanEntity::getUniqueId).orElse(null);
+        if (playerId == null) return;
         if (ItemHelper.isAir(event.getInventory().getResult())) {
             //当玩家预览配方为null时，去除缓存
             PLAYER_PREPARING_RECIPE.invalidate(playerId);
@@ -101,8 +101,8 @@ public enum FakeResultPreviewPacketListener implements PacketListener, Listener 
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void refreshAnvilCache(PrepareAnvilEvent event) {
-        HumanEntity player = InventoryViewHelper.getViewingPlayer(InventoryViewHelper.getInventoryView(event));
-        UUID playerId = player.getUniqueId();
+        UUID playerId = EventUtils.getViewer(event).map(HumanEntity::getUniqueId).orElse(null);
+        if (playerId == null) return;
         if (ItemHelper.isAir(event.getInventory().getResult())) {
             //当玩家预览配方为null时，去除缓存
             PLAYER_PREPARING_RECIPE.invalidate(playerId);

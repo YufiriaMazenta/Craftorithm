@@ -1,7 +1,6 @@
 package pers.yufiria.craftorithm.trigger.event;
 
-import crypticlib.util.InventoryViewHelper;
-import org.bukkit.entity.HumanEntity;
+import pers.yufiria.craftorithm.util.EventUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -54,10 +53,7 @@ public interface PlayerExtractor {
 
     PlayerExtractor VIEWER = e -> {
         if (e instanceof InventoryEvent event) {
-            HumanEntity viewing = InventoryViewHelper.getViewingPlayer(InventoryViewHelper.getInventoryView(event));
-            if (viewing instanceof Player player) {
-                return player;
-            }
+            return EventUtils.getViewer(event).orElse(null);
         }
         return null;
     };

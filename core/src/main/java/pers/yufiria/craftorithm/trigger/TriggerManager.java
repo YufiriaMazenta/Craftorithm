@@ -191,7 +191,7 @@ public enum TriggerManager implements LifeCycleTask {
             String mode = condSection.getString("mode", "and");
             List<String> condSources = condSection.getStringList("body");
             if (!condSources.isEmpty()) {
-                String joined = "block".equals(mode)
+                String joined = "script".equals(mode)
                     ? String.join("\n", condSources)
                     : condSources.size() == 1
                         ? condSources.getFirst()

@@ -1,11 +1,10 @@
 package pers.yufiria.craftorithm.trigger;
 
 import crypticlib.script.ScriptValue;
-import crypticlib.util.InventoryViewHelper;
+import pers.yufiria.craftorithm.util.EventUtils;
 import crypticlib.util.ItemHelper;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
@@ -205,19 +204,15 @@ public enum CraftTriggerTypes implements TriggerType {
                 return null;
             }
 
-            Player player = (Player) InventoryViewHelper.getViewingPlayer(InventoryViewHelper.getInventoryView(e));
-
-            if (player == null) {
-                return null;
-            }
-
-            AnvilRecipe customRecipe = AnvilRecipeHandler.INSTANCE.matchAnvilRecipe(base, addition);
-            NamespacedKey recipeKey = customRecipe != null ? customRecipe.getKey() : null;
-            RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType("anvil");
-            TriggerContext ctx = new TriggerContext(player, recipeKey, recipeType);
-            addSlotVariable(ctx, "base", base);
-            addSlotVariable(ctx, "addition", addition);
-            return ctx;
+            return EventUtils.getViewer(e).map(player -> {
+                AnvilRecipe customRecipe = AnvilRecipeHandler.INSTANCE.matchAnvilRecipe(base, addition);
+                NamespacedKey recipeKey = customRecipe != null ? customRecipe.getKey() : null;
+                RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType("anvil");
+                TriggerContext ctx = new TriggerContext(player, recipeKey, recipeType);
+                addSlotVariable(ctx, "base", base);
+                addSlotVariable(ctx, "addition", addition);
+                return ctx;
+            }).orElse(null);
         }
     };
 

@@ -1,10 +1,8 @@
 package pers.yufiria.craftorithm.listener;
 
 import crypticlib.listener.EventListener;
-import crypticlib.util.InventoryViewHelper;
+import pers.yufiria.craftorithm.util.EventUtils;
 import org.bukkit.NamespacedKey;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -13,8 +11,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
-
-import java.util.UUID;
 
 @EventListener
 public enum CraftingHandler implements Listener {
@@ -35,10 +31,9 @@ public enum CraftingHandler implements Listener {
         }
         ItemStack item = event.getRecipe().getResult();
         ItemManager.INSTANCE.matchItemId(item, true)
-            .flatMap(id -> {
-                Player player = (Player) InventoryViewHelper.getViewingPlayer(InventoryViewHelper.getInventoryView(event));
-                return ItemManager.INSTANCE.matchItem(id, player);
-            })
+            .flatMap(id -> EventUtils.getViewer(event)
+                .flatMap(player -> ItemManager.INSTANCE.matchItem(id, player))
+            )
             .ifPresent(refreshItem -> {
                 if (!item.isSimilar(refreshItem)) {
                     item.setItemMeta(refreshItem.getItemMeta());

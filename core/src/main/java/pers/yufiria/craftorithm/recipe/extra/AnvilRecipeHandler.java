@@ -5,7 +5,7 @@ import crypticlib.chat.BukkitMsgSender;
 import crypticlib.listener.EventListener;
 import crypticlib.script.ScriptValue;
 import crypticlib.util.InventoryHelper;
-import crypticlib.util.InventoryViewHelper;
+import pers.yufiria.craftorithm.util.EventUtils;
 import crypticlib.util.ItemHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -123,11 +123,12 @@ public enum AnvilRecipeHandler implements Listener {
             return;
 
         ItemStack result = anvilRecipe.getResult();
-        Player player = ((Player) InventoryViewHelper.getViewingPlayer(InventoryViewHelper.getInventoryView(event)));
-        NamespacedItemIdStack resultId = ItemManager.INSTANCE.matchItemId(result, false).orElse(null);
-        if (resultId != null) {
-            ItemManager.INSTANCE.matchItem(resultId, player).ifPresent(refreshItem -> result.setItemMeta(refreshItem.getItemMeta()));
-        }
+        EventUtils.getViewer(event).ifPresent(player -> {
+            NamespacedItemIdStack resultId = ItemManager.INSTANCE.matchItemId(result, false).orElse(null);
+            if (resultId != null) {
+                ItemManager.INSTANCE.matchItem(resultId, player).ifPresent(refreshItem -> result.setItemMeta(refreshItem.getItemMeta()));
+            }
+        });
 
         //处理NBT保留操作
         Optional<CopyComponentsRules> recipeCopyNbtRules = CopyComponentsManager.INSTANCE.getRecipeCopyNbtRules(anvilRecipe.getKey());
