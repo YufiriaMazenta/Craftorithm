@@ -85,6 +85,7 @@ menu:
     sort_lore: '&7Haz clic para cambiar el orden'
     recipe_count: '&7<recipe_count> receta(s)'
     click_recipe: '&7Haz clic para ver la receta'
+    all_recipes: Todas las recetas
   recipe_editor:
     name: 'Editor'
     result_frame: '&aEditor - Resultado'

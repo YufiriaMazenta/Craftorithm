@@ -11,7 +11,6 @@ import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
-import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.ui.recipeBook.RecipeBookTypeSelectMenu;
 import pers.yufiria.craftorithm.ui.recipeBook.RecipeListMenu;
 import pers.yufiria.craftorithm.ui.recipeBook.SortMode;
@@ -66,6 +65,11 @@ public class RecipeBookCommand extends CommandNode {
 
         String typeKey = CommandUtils.parseFlag(args, FLAG_TYPE);
         if (typeKey != null) {
+            if (typeKey.equalsIgnoreCase("all")) {
+                // type为null时显示所有配方
+                new RecipeListMenu(target, null, SortMode.NAME_ASC).openMenu();
+                return;
+            }
             RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(typeKey);
             if (recipeType == null) {
                 LangUtils.sendLang(invoker, Languages.COMMAND_RECIPEBOOK_TYPE_NOT_FOUND, Map.of("<recipe_type>", typeKey));
@@ -90,10 +94,12 @@ public class RecipeBookCommand extends CommandNode {
                     .map(Player::getName)
                     .collect(Collectors.toList());
             case FLAG_TYPE:
-                return RecipeManager.INSTANCE.getRecipeTypes().stream()
-                    .filter(type -> type != SimpleRecipeTypes.UNKNOWN)
+                List<String> typeSuggestions = RecipeManager.INSTANCE.getRecipeTypes().stream()
+                    .filter(type -> type.typeId() != 0) // 过滤掉UNKNOWN类型
                     .map(RecipeType::typeKey)
                     .collect(Collectors.toList());
+                typeSuggestions.add("all");
+                return typeSuggestions;
             default:
                 List<String> suggestions = new ArrayList<>();
                 if (!CommandUtils.hasFlag(args, FLAG_PLAYER)) {

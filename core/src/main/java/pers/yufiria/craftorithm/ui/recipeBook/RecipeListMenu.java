@@ -52,7 +52,13 @@ public class RecipeListMenu extends Menu implements BackableMenu, Multipage {
     }
 
     private List<Map.Entry<NamespacedKey, Recipe>> getSortedRecipes(RecipeType type, SortMode mode) {
-        List<Map.Entry<NamespacedKey, Recipe>> recipes = new ArrayList<>(RecipeManager.INSTANCE.getRecipesByType(type));
+        List<Map.Entry<NamespacedKey, Recipe>> recipes;
+        if (type == null) {
+            // type为null时加载所有Craftorithm配方
+            recipes = new ArrayList<>(RecipeManager.INSTANCE.craftorithmRecipes().entrySet());
+        } else {
+            recipes = new ArrayList<>(RecipeManager.INSTANCE.getRecipesByType(type));
+        }
 
         switch (mode) {
             case NAME_ASC -> recipes.sort(Comparator.comparing(e -> e.getKey().getKey()));
@@ -137,9 +143,10 @@ public class RecipeListMenu extends Menu implements BackableMenu, Multipage {
         String title = this.display.title();
         Player player = player();
         title = LangManager.INSTANCE.replaceLang(title, player);
+        String typeName = recipeType != null ? recipeType.getLocalizedName() : Languages.MENU_RECIPE_BOOK_ALL_RECIPES.value(player);
         title = title.replace("<page>", String.valueOf(page + 1))
             .replace("<max_page>", String.valueOf(maxPage + 1))
-            .replace("<type_name>", recipeType.getLocalizedName())
+            .replace("<type_name>", typeName)
             .replace("<sort_mode>", getSortModeName(sortMode));
         return BukkitTextProcessor.color(BukkitTextProcessor.placeholder(player, title));
     }

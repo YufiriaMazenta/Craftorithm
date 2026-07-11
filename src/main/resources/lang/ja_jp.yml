@@ -85,6 +85,7 @@ menu:
     sort_lore: '&7クリックで並び替えを変更'
     recipe_count: '&7<recipe_count> 件のレシピ'
     click_recipe: '&7クリックでレシピを表示'
+    all_recipes: 全レシピ
   recipe_editor:
     name: 'エディター'
     result_frame: '&aエディター - 結果アイテム'

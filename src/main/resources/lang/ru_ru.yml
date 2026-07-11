@@ -85,6 +85,7 @@ menu:
     sort_lore: '&7Нажмите для изменения сортировки'
     recipe_count: '&7<recipe_count> рецепт(ов)'
     click_recipe: '&7Нажмите для просмотра'
+    all_recipes: Все рецепты
   recipe_editor:
     name: 'Редактор'
     result_frame: '&aРедактор - Результат'

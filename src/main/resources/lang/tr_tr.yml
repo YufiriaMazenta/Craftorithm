@@ -85,6 +85,7 @@ menu:
     sort_lore: '&7Sıralamayı değiştirmek için tıkla'
     recipe_count: '&7<recipe_count> tarif'
     click_recipe: '&7Görmek için tıkla'
+    all_recipes: Tüm tarifler
   recipe_editor:
     name: 'Düzenleyici'
     result_frame: '&aDüzenleyici - Sonuç'

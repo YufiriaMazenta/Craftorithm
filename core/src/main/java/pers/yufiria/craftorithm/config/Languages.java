@@ -94,6 +94,7 @@ public class Languages {
     public static final StringLangEntry MENU_RECIPE_BOOK_SORT_LORE = new StringLangEntry("menu.recipe_book.sort_lore");
     public static final StringLangEntry MENU_RECIPE_BOOK_RECIPE_COUNT = new StringLangEntry("menu.recipe_book.recipe_count");
     public static final StringLangEntry MENU_RECIPE_BOOK_CLICK_RECIPE = new StringLangEntry("menu.recipe_book.click_recipe");
+    public static final StringLangEntry MENU_RECIPE_BOOK_ALL_RECIPES = new StringLangEntry("menu.recipe_book.all_recipes");
 
     public static final StringLangEntry MENU_RECIPE_EDITOR_NAME = new StringLangEntry("menu.recipe_editor.name");
     public static final StringLangEntry MENU_RECIPE_EDITOR_RESULT_FRAME = new StringLangEntry("menu.recipe_editor.result_frame");

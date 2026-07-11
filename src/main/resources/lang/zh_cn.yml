@@ -87,6 +87,7 @@ menu:
     sort_lore: '&7点击切换排序模式'
     recipe_count: '&7<recipe_count> 个配方'
     click_recipe: '&7点击查看配方'
+    all_recipes: 全部配方
   recipe_editor:
     name: '编辑器'
     result_frame: '&a编辑器 - 结果物品'
