@@ -29,9 +29,11 @@ import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.ui.BackableMenu;
 import pers.yufiria.craftorithm.ui.custom.CustomMenuManager;
+import pers.yufiria.craftorithm.util.PlayerUtils;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * 内置动作函数模块
@@ -79,8 +81,11 @@ public enum ActionModule implements ScriptModule {
     }
 
     private ScriptValue setInvItem(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        Player player = Bukkit.getPlayer(ctx.playerId());
-        if (player == null) return ScriptValue.nil();
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        if (playerOpt.isEmpty()) {
+            return ScriptValue.nil();
+        }
+        Player player = playerOpt.get();
         Inventory topInventory = InventoryViewHelper.getTopInventory(player);
         if (args.length < 2) {
             return ScriptValue.nil();
@@ -102,8 +107,11 @@ public enum ActionModule implements ScriptModule {
     }
 
     private ScriptValue back(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        Player player = Bukkit.getPlayer(ctx.playerId());
-        if (player == null) return ScriptValue.nil();
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        if (playerOpt.isEmpty()) {
+            return ScriptValue.nil();
+        }
+        Player player = playerOpt.get();
         Optional<Menu> openingMenuOpt = MenuHelper.getOpeningMenu(player);
         IOHelper.debug("is opening menu: " + openingMenuOpt.isPresent());
         if (openingMenuOpt.isPresent()) {
@@ -126,8 +134,11 @@ public enum ActionModule implements ScriptModule {
         if (args.length < 1) {
             return ScriptValue.of(false);
         }
-        Player player = Bukkit.getPlayer(ctx.playerId());
-        if (player == null) return ScriptValue.of(false);
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        if (playerOpt.isEmpty()) {
+            return ScriptValue.nil();
+        }
+        Player player = playerOpt.get();
         String menuName = args[0].asString();
         CustomMenuManager.INSTANCE.openMenu(player, menuName, result -> {});
         return null;
@@ -135,8 +146,11 @@ public enum ActionModule implements ScriptModule {
 
     private ScriptValue command(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
-        Player player = Bukkit.getPlayer(ctx.playerId());
-        if (player == null) return ScriptValue.of(false);
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        if (playerOpt.isEmpty()) {
+            return ScriptValue.nil();
+        }
+        Player player = playerOpt.get();
         StringBuilder sb = new StringBuilder();
         for (ScriptValue arg : args) {
             sb.append(arg.asString());
@@ -147,7 +161,11 @@ public enum ActionModule implements ScriptModule {
 
     private ScriptValue console(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
-        Player player = Bukkit.getPlayer(ctx.playerId());
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        if (playerOpt.isEmpty()) {
+            return ScriptValue.nil();
+        }
+        Player player = playerOpt.get();
         StringBuilder sb = new StringBuilder();
         for (ScriptValue arg : args) {
             sb.append(arg.asString());
@@ -158,8 +176,11 @@ public enum ActionModule implements ScriptModule {
 
     private ScriptValue tell(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.nil();
-        Player player = Bukkit.getPlayer(ctx.playerId());
-        if (player == null) return ScriptValue.nil();
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        if (playerOpt.isEmpty()) {
+            return ScriptValue.nil();
+        }
+        Player player = playerOpt.get();
         StringBuilder sb = new StringBuilder();
         for (ScriptValue arg : args) {
             sb.append(arg.asString());
@@ -171,8 +192,11 @@ public enum ActionModule implements ScriptModule {
 
     private ScriptValue actionbar(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.nil();
-        Player player = Bukkit.getPlayer(ctx.playerId());
-        if (player == null) return ScriptValue.nil();
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        if (playerOpt.isEmpty()) {
+            return ScriptValue.nil();
+        }
+        Player player = playerOpt.get();
         StringBuilder sb = new StringBuilder();
         for (ScriptValue arg : args) {
             sb.append(arg.asString());
@@ -184,8 +208,11 @@ public enum ActionModule implements ScriptModule {
 
     private ScriptValue title(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.nil();
-        Player player = Bukkit.getPlayer(ctx.playerId());
-        if (player == null) return ScriptValue.nil();
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        if (playerOpt.isEmpty()) {
+            return ScriptValue.nil();
+        }
+        Player player = playerOpt.get();
         String title = BukkitTextProcessor.placeholder(player, args[0].asString());
         String subtitle = args.length > 1 ? BukkitTextProcessor.placeholder(player, args[1].asString()) : "";
         BukkitPlayer.byPlayer(player).sendTitle(title, subtitle, 10, 70, 20);
@@ -194,13 +221,12 @@ public enum ActionModule implements ScriptModule {
 
     private ScriptValue log(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.nil();
-        Player player = Bukkit.getPlayer(ctx.playerId());
-        if (player == null) return ScriptValue.nil();
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
         StringBuilder sb = new StringBuilder();
         for (ScriptValue arg : args) {
             sb.append(arg.asString());
         }
-        String msg = BukkitTextProcessor.placeholder(player, sb.toString());
+        String msg = BukkitTextProcessor.placeholder(playerOpt.orElse(null), sb.toString());
         IOHelper.info(msg);
         return ScriptValue.nil();
     }
@@ -208,8 +234,11 @@ public enum ActionModule implements ScriptModule {
     private ScriptValue takeMoney(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
         if (!VaultHook.INSTANCE.isEconomyHooked()) return ScriptValue.of(false);
-        Player player = Bukkit.getPlayer(ctx.playerId());
-        if (player == null) return ScriptValue.of(false);
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        if (playerOpt.isEmpty()) {
+            return ScriptValue.nil();
+        }
+        Player player = playerOpt.get();
         Economy economy = (Economy) VaultHook.INSTANCE.economy();
         double amount = args[0].asNumber();
         if (amount > 0) {
@@ -219,10 +248,17 @@ public enum ActionModule implements ScriptModule {
     }
 
     private ScriptValue giveMoney(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        if (args.length < 1) return ScriptValue.of(false);
-        if (!VaultHook.INSTANCE.isEconomyHooked()) return ScriptValue.of(false);
-        Player player = Bukkit.getPlayer(ctx.playerId());
-        if (player == null) return ScriptValue.of(false);
+        if (args.length < 1) {
+            return ScriptValue.of(false);
+        }
+        if (!VaultHook.INSTANCE.isEconomyHooked()) {
+            return ScriptValue.of(false);
+        }
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        if (playerOpt.isEmpty()) {
+            return ScriptValue.nil();
+        }
+        Player player = playerOpt.get();
         Economy economy = (Economy) VaultHook.INSTANCE.economy();
         double amount = args[0].asNumber();
         if (amount > 0) {
@@ -232,73 +268,115 @@ public enum ActionModule implements ScriptModule {
     }
 
     private ScriptValue takeLevel(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        if (args.length < 1) return ScriptValue.nil();
-        Player player = Bukkit.getPlayer(ctx.playerId());
-        if (player == null) return ScriptValue.nil();
+        if (args.length < 1) {
+            return ScriptValue.nil();
+        }
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        if (playerOpt.isEmpty()) {
+            return ScriptValue.nil();
+        }
+        Player player = playerOpt.get();
         int amount = (int) args[0].asNumber();
         player.setLevel(Math.max(0, player.getLevel() - amount));
         return ScriptValue.of(player.getLevel());
     }
 
     private ScriptValue giveLevel(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        if (args.length < 1) return ScriptValue.nil();
-        Player player = Bukkit.getPlayer(ctx.playerId());
-        if (player == null) return ScriptValue.nil();
+        if (args.length < 1) {
+            return ScriptValue.nil();
+        }
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        if (playerOpt.isEmpty()) {
+            return ScriptValue.nil();
+        }
+        Player player = playerOpt.get();
         int amount = (int) args[0].asNumber();
         player.setLevel(player.getLevel() + amount);
         return ScriptValue.of(player.getLevel());
     }
 
     private ScriptValue giveExp(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        if (args.length < 1) return ScriptValue.nil();
-        Player player = Bukkit.getPlayer(ctx.playerId());
-        if (player == null) return ScriptValue.nil();
+        if (args.length < 1) {
+            return ScriptValue.nil();
+        }
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        if (playerOpt.isEmpty()) {
+            return ScriptValue.nil();
+        }
+        Player player = playerOpt.get();
         int amount = (int) args[0].asNumber();
         player.giveExp(Math.max(0, amount));
         return ScriptValue.of(player.getLevel());
     }
 
     private ScriptValue takePoints(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        if (args.length < 1) return ScriptValue.of(false);
-        if (!PlayerPointsHook.INSTANCE.isPlayerPointsHooked()) return ScriptValue.of(false);
+        if (args.length < 1) {
+            return ScriptValue.of(false);
+        }
+        if (!PlayerPointsHook.INSTANCE.isPlayerPointsHooked()) {
+            return ScriptValue.of(false);
+        }
         PlayerPointsAPI api = ((PlayerPoints) PlayerPointsHook.INSTANCE.playerPoints()).getAPI();
         int amount = (int) args[0].asNumber();
         if (amount > 0) {
-            api.take(ctx.playerId(), amount);
+            Optional<UUID> playerIdOpt = ctx.playerIdOpt();
+            if (playerIdOpt.isEmpty()) {
+                return ScriptValue.of(false);
+            } else {
+                api.take(playerIdOpt.get(), amount);
+            }
         }
         return ScriptValue.of(true);
     }
 
     private ScriptValue givePoints(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        if (args.length < 1) return ScriptValue.of(false);
-        if (!PlayerPointsHook.INSTANCE.isPlayerPointsHooked()) return ScriptValue.of(false);
+        if (args.length < 1) {
+            return ScriptValue.of(false);
+        }
+        if (!PlayerPointsHook.INSTANCE.isPlayerPointsHooked()) {
+            return ScriptValue.of(false);
+        }
         PlayerPointsAPI api = ((PlayerPoints) PlayerPointsHook.INSTANCE.playerPoints()).getAPI();
         int amount = (int) args[0].asNumber();
         if (amount > 0) {
-            api.give(ctx.playerId(), amount);
+            Optional<UUID> playerIdOpt = ctx.playerIdOpt();
+            if (playerIdOpt.isEmpty()) {
+                return ScriptValue.of(false);
+            } else {
+                api.give(playerIdOpt.get(), amount);
+            }
         }
         return ScriptValue.of(true);
     }
 
     private ScriptValue close(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        Player player = Bukkit.getPlayer(ctx.playerId());
-        if (player == null) return ScriptValue.nil();
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        if (playerOpt.isEmpty()) {
+            return ScriptValue.nil();
+        }
+        Player player = playerOpt.get();
         player.closeInventory();
         return ScriptValue.nil();
     }
 
     private ScriptValue discoverRecipe(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
-        Player player = Bukkit.getPlayer(ctx.playerId());
-        if (player == null) return ScriptValue.of(false);
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        if (playerOpt.isEmpty()) {
+            return ScriptValue.nil();
+        }
+        Player player = playerOpt.get();
         NamespacedKey recipeKey = NamespacedKey.fromString(args[0].asString());
         return ScriptValue.of(player.discoverRecipe(Objects.requireNonNull(recipeKey)));
     }
 
     private ScriptValue undiscoverRecipe(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
-        Player player = Bukkit.getPlayer(ctx.playerId());
-        if (player == null) return ScriptValue.of(false);
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        if (playerOpt.isEmpty()) {
+            return ScriptValue.nil();
+        }
+        Player player = playerOpt.get();
         NamespacedKey recipeKey = NamespacedKey.fromString(args[0].asString());
         return ScriptValue.of(player.undiscoverRecipe(Objects.requireNonNull(recipeKey)));
     }
@@ -311,8 +389,11 @@ public enum ActionModule implements ScriptModule {
      */
     private ScriptValue sound(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.nil();
-        Player player = Bukkit.getPlayer(ctx.playerId());
-        if (player == null) return ScriptValue.nil();
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        if (playerOpt.isEmpty()) {
+            return ScriptValue.nil();
+        }
+        Player player = playerOpt.get();
         String soundName = args[0].asString();
         float volume = args.length > 1 ? (float) args[1].asNumber() : 1.0f;
         float pitch = args.length > 2 ? (float) args[2].asNumber() : 1.0f;

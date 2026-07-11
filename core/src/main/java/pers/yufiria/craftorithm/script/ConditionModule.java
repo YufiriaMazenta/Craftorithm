@@ -15,6 +15,10 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import pers.yufiria.craftorithm.hook.PlayerPointsHook;
 import pers.yufiria.craftorithm.hook.VaultHook;
+import pers.yufiria.craftorithm.util.PlayerUtils;
+
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * 内置条件函数模块
@@ -55,16 +59,22 @@ public enum ConditionModule implements ScriptModule {
     private ScriptValue perm(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
         String perm = args[0].asString();
-        Player player = Bukkit.getPlayer(ctx.playerId());
-        if (player == null) return ScriptValue.of(false);
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        if (playerOpt.isEmpty()) {
+            return ScriptValue.nil();
+        }
+        Player player = playerOpt.get();
         perm = BukkitTextProcessor.placeholder(player, perm);
         return ScriptValue.of(player.hasPermission(perm));
     }
 
     private ScriptValue papi(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.nil();
-        Player player = Bukkit.getPlayer(ctx.playerId());
-        if (player == null) return ScriptValue.nil();
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        if (playerOpt.isEmpty()) {
+            return ScriptValue.nil();
+        }
+        Player player = playerOpt.get();
         String placeholder = args[0].asString();
         String resolved = BukkitTextProcessor.placeholder(player, placeholder);
         try {
@@ -75,8 +85,11 @@ public enum ConditionModule implements ScriptModule {
     }
 
     private ScriptValue level(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        Player player = Bukkit.getPlayer(ctx.playerId());
-        if (player == null) return ScriptValue.of(0);
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        if (playerOpt.isEmpty()) {
+            return ScriptValue.nil();
+        }
+        Player player = playerOpt.get();
         return ScriptValue.of(player.getLevel());
     }
 
@@ -84,8 +97,11 @@ public enum ConditionModule implements ScriptModule {
         if (!VaultHook.INSTANCE.isEconomyHooked()) {
             return ScriptValue.of(0);
         }
-        Player player = Bukkit.getPlayer(ctx.playerId());
-        if (player == null) return ScriptValue.of(0);
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        if (playerOpt.isEmpty()) {
+            return ScriptValue.nil();
+        }
+        Player player = playerOpt.get();
         Economy economy = (Economy) VaultHook.INSTANCE.economy();
         return ScriptValue.of(economy.getBalance(player));
     }
@@ -95,59 +111,91 @@ public enum ConditionModule implements ScriptModule {
             return ScriptValue.of(0);
         }
         PlayerPointsAPI api = ((PlayerPoints) PlayerPointsHook.INSTANCE.playerPoints()).getAPI();
-        return ScriptValue.of(api.look(ctx.playerId()));
+        Optional<UUID> playerIdOpt = ctx.playerIdOpt();
+        if (playerIdOpt.isPresent()) {
+            return ScriptValue.of(api.look(playerIdOpt.get()));
+        }
+        return ScriptValue.of(0);
     }
 
     private ScriptValue world(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        Player player = Bukkit.getPlayer(ctx.playerId());
-        if (player == null) return ScriptValue.nil();
-        if (args.length == 0) return ScriptValue.of(player.getWorld().getName());
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        if (playerOpt.isEmpty()) {
+            return ScriptValue.nil();
+        }
+        Player player = playerOpt.get();
+        if (args.length == 0) {
+            return ScriptValue.of(player.getWorld().getName());
+        }
         String expected = args[0].asString();
         return ScriptValue.of(player.getWorld().getName().equals(expected));
     }
 
     private ScriptValue gameMode(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        Player player = Bukkit.getPlayer(ctx.playerId());
-        if (player == null) return ScriptValue.nil();
-        if (args.length == 0) return ScriptValue.of(player.getGameMode().name());
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        if (playerOpt.isEmpty()) {
+            return ScriptValue.nil();
+        }
+        Player player = playerOpt.get();
+        if (args.length == 0) {
+            return ScriptValue.of(player.getGameMode().name());
+        }
         String expected = args[0].asString();
         return ScriptValue.of(player.getGameMode().name().equalsIgnoreCase(expected));
     }
 
     private ScriptValue biome(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        Player player = Bukkit.getPlayer(ctx.playerId());
-        if (player == null) return ScriptValue.of(false);
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        if (playerOpt.isEmpty()) {
+            return ScriptValue.nil();
+        }
+        Player player = playerOpt.get();
         String playerBiome = player.getLocation().getBlock().getBiome().getKey().toString();
-        if (args.length < 1) return ScriptValue.of(playerBiome);
+        if (args.length < 1) {
+            return ScriptValue.of(playerBiome);
+        }
         String expected = args[0].asString();
         return ScriptValue.of(playerBiome.equalsIgnoreCase(expected));
     }
 
     private ScriptValue inWater(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        Player player = Bukkit.getPlayer(ctx.playerId());
-        if (player == null) return ScriptValue.of(false);
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        if (playerOpt.isEmpty()) {
+            return ScriptValue.nil();
+        }
+        Player player = playerOpt.get();
         Block block = player.getLocation().getBlock();
         return ScriptValue.of(block.getType() == Material.WATER);
     }
 
     private ScriptValue inRain(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        Player player = Bukkit.getPlayer(ctx.playerId());
-        if (player == null) return ScriptValue.of(false);
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        if (playerOpt.isEmpty()) {
+            return ScriptValue.nil();
+        }
+        Player player = playerOpt.get();
         return ScriptValue.of(player.getLocation().getBlock().getBiome().name().contains("RAIN")
             || player.getWorld().hasStorm());
     }
 
     private ScriptValue lightLevel(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        Player player = Bukkit.getPlayer(ctx.playerId());
-        if (player == null) return ScriptValue.of(0);
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        if (playerOpt.isEmpty()) {
+            return ScriptValue.nil();
+        }
+        Player player = playerOpt.get();
         int level = player.getLocation().getBlock().getLightLevel();
         return ScriptValue.of(level);
     }
 
     private ScriptValue item(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        if (args.length < 1) return ScriptValue.of(false);
+        if (args.length < 1) {
+            return ScriptValue.of(false);
+        }
         ScriptValue eventItem = ctx.getVariable("item");
-        if (eventItem == null) return ScriptValue.of(false);
+        if (eventItem == null) {
+            return ScriptValue.of(false);
+        }
         String itemId = eventItem.asString();
         String expectedId = args[0].asString();
         return ScriptValue.of(itemId.equals(expectedId));
