@@ -50,7 +50,7 @@ public abstract class RecipeEditorMenu extends StoredMenu implements BackableMen
     @Override
     public String parsedMenuTitle() {
         String title = this.display.title();
-        Player player = this.player();
+        Player player = this.player().orElse(null);
         title = LangManager.INSTANCE.replaceLang(title, player);
         title = title.replace("<recipe_key>", recipeKey.getKey());
         title = title.replace("<recipe_id>", recipeId);

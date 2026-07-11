@@ -81,7 +81,7 @@ public enum ActionModule implements ScriptModule {
     }
 
     private ScriptValue setInvItem(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId().orElse(null));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -107,7 +107,7 @@ public enum ActionModule implements ScriptModule {
     }
 
     private ScriptValue back(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId().orElse(null));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -134,7 +134,7 @@ public enum ActionModule implements ScriptModule {
         if (args.length < 1) {
             return ScriptValue.of(false);
         }
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId().orElse(null));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -146,7 +146,7 @@ public enum ActionModule implements ScriptModule {
 
     private ScriptValue command(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId().orElse(null));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -161,7 +161,7 @@ public enum ActionModule implements ScriptModule {
 
     private ScriptValue console(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId().orElse(null));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -176,7 +176,7 @@ public enum ActionModule implements ScriptModule {
 
     private ScriptValue tell(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.nil();
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId().orElse(null));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -192,7 +192,7 @@ public enum ActionModule implements ScriptModule {
 
     private ScriptValue actionbar(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.nil();
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId().orElse(null));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -208,7 +208,7 @@ public enum ActionModule implements ScriptModule {
 
     private ScriptValue title(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.nil();
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId().orElse(null));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -221,7 +221,7 @@ public enum ActionModule implements ScriptModule {
 
     private ScriptValue log(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.nil();
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId().orElse(null));
         StringBuilder sb = new StringBuilder();
         for (ScriptValue arg : args) {
             sb.append(arg.asString());
@@ -234,7 +234,7 @@ public enum ActionModule implements ScriptModule {
     private ScriptValue takeMoney(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
         if (!VaultHook.INSTANCE.isEconomyHooked()) return ScriptValue.of(false);
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId().orElse(null));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -254,7 +254,7 @@ public enum ActionModule implements ScriptModule {
         if (!VaultHook.INSTANCE.isEconomyHooked()) {
             return ScriptValue.of(false);
         }
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId().orElse(null));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -271,7 +271,7 @@ public enum ActionModule implements ScriptModule {
         if (args.length < 1) {
             return ScriptValue.nil();
         }
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId().orElse(null));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -285,7 +285,7 @@ public enum ActionModule implements ScriptModule {
         if (args.length < 1) {
             return ScriptValue.nil();
         }
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId().orElse(null));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -299,7 +299,7 @@ public enum ActionModule implements ScriptModule {
         if (args.length < 1) {
             return ScriptValue.nil();
         }
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId().orElse(null));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -319,11 +319,11 @@ public enum ActionModule implements ScriptModule {
         PlayerPointsAPI api = ((PlayerPoints) PlayerPointsHook.INSTANCE.playerPoints()).getAPI();
         int amount = (int) args[0].asNumber();
         if (amount > 0) {
-            Optional<UUID> playerIdOpt = ctx.playerIdOpt();
-            if (playerIdOpt.isEmpty()) {
+            Optional<UUID> playerId = ctx.playerId();
+            if (playerId.isEmpty()) {
                 return ScriptValue.of(false);
             } else {
-                api.take(playerIdOpt.get(), amount);
+                api.take(playerId.get(), amount);
             }
         }
         return ScriptValue.of(true);
@@ -339,18 +339,18 @@ public enum ActionModule implements ScriptModule {
         PlayerPointsAPI api = ((PlayerPoints) PlayerPointsHook.INSTANCE.playerPoints()).getAPI();
         int amount = (int) args[0].asNumber();
         if (amount > 0) {
-            Optional<UUID> playerIdOpt = ctx.playerIdOpt();
-            if (playerIdOpt.isEmpty()) {
+            Optional<UUID> playerId = ctx.playerId();
+            if (playerId.isEmpty()) {
                 return ScriptValue.of(false);
             } else {
-                api.give(playerIdOpt.get(), amount);
+                api.give(playerId.get(), amount);
             }
         }
         return ScriptValue.of(true);
     }
 
     private ScriptValue close(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId().orElse(null));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -361,7 +361,7 @@ public enum ActionModule implements ScriptModule {
 
     private ScriptValue discoverRecipe(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId().orElse(null));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -372,7 +372,7 @@ public enum ActionModule implements ScriptModule {
 
     private ScriptValue undiscoverRecipe(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId().orElse(null));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -389,7 +389,7 @@ public enum ActionModule implements ScriptModule {
      */
     private ScriptValue sound(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.nil();
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId().orElse(null));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }

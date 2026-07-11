@@ -113,7 +113,7 @@ public abstract class RecipeCreator extends StoredMenu {
     @Override
     public String parsedMenuTitle() {
         String title = this.display.title();
-        Player player = this.player();
+        Player player = this.player().orElse(null);
         title = LangManager.INSTANCE.replaceLang(title, player);
         return BukkitTextProcessor.color(BukkitTextProcessor.placeholder(player, title));
     }

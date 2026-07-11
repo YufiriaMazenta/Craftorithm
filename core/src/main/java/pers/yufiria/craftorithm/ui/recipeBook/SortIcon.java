@@ -12,7 +12,6 @@ import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.ui.icon.ActionIcon;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 class SortIcon extends ActionIcon {
@@ -29,11 +28,14 @@ class SortIcon extends ActionIcon {
 
     @Override
     public String parseIconText(String originText) {
-        Player iconParsePlayer = this.parsePlayer();
-        return super.parseIconText(originText.replace(
+        Player iconParsePlayer = this.parsePlayer().orElse(null);
+        textReplaceMap.put(
             "<sort_mode>",
-            sortMode != null ? sortMode.nameLang().value(Objects.requireNonNull(iconParsePlayer)) : ""
-        ));
+            sortMode != null
+                ? iconParsePlayer != null ? sortMode.nameLang().value(iconParsePlayer) : sortMode.nameLang().value()
+                : ""
+        );
+        return super.parseIconText(originText);
     }
 
     @Override

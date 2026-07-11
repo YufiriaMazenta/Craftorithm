@@ -129,7 +129,7 @@ public class VanillaShapelessCreator extends RecipeCreator {
 
                 // 5. 获取配方书分类
                 CraftingBookCategory category = CraftingBookCategory.MISC;
-                RecipeBookCategoryIcon categoryIcon = (RecipeBookCategoryIcon) VanillaShapelessCreator.this.getIcon(40);
+                RecipeBookCategoryIcon categoryIcon = (RecipeBookCategoryIcon) VanillaShapelessCreator.this.getIcon(40).orElse(null);
                 if (categoryIcon != null) {
                     category = categoryIcon.category();
                 }

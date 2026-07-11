@@ -26,7 +26,7 @@ public abstract class TranslatableMenu extends Menu {
     @Override
     public String parsedMenuTitle() {
         String title = this.display.title();
-        Player player = this.player();
+        Player player = this.player().orElse(null);
         title = LangManager.INSTANCE.replaceLang(title, player);
         return BukkitTextProcessor.color(BukkitTextProcessor.placeholder(player, title));
     }

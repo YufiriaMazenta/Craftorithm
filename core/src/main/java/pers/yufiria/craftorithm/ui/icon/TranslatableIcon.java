@@ -21,7 +21,7 @@ public class TranslatableIcon extends Icon {
 
     @Override
     public String parseIconText(String originText) {
-        Player iconParsePlayer = this.parsePlayer();
+        Player iconParsePlayer = this.parsePlayer().orElse(null);
         String text = LangManager.INSTANCE.replaceLang(originText, iconParsePlayer);
         for (Map.Entry<String, String> entry : textReplaceMap.entrySet()) {
             String key = entry.getKey();

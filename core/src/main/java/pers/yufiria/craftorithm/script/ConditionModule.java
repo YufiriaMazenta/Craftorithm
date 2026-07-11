@@ -59,7 +59,7 @@ public enum ConditionModule implements ScriptModule {
     private ScriptValue perm(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
         String perm = args[0].asString();
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId().orElse(null));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -70,7 +70,7 @@ public enum ConditionModule implements ScriptModule {
 
     private ScriptValue papi(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.nil();
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId().orElse(null));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -85,7 +85,7 @@ public enum ConditionModule implements ScriptModule {
     }
 
     private ScriptValue level(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId().orElse(null));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -97,7 +97,7 @@ public enum ConditionModule implements ScriptModule {
         if (!VaultHook.INSTANCE.isEconomyHooked()) {
             return ScriptValue.of(0);
         }
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId().orElse(null));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -111,7 +111,7 @@ public enum ConditionModule implements ScriptModule {
             return ScriptValue.of(0);
         }
         PlayerPointsAPI api = ((PlayerPoints) PlayerPointsHook.INSTANCE.playerPoints()).getAPI();
-        Optional<UUID> playerIdOpt = ctx.playerIdOpt();
+        Optional<UUID> playerIdOpt = ctx.playerId();
         if (playerIdOpt.isPresent()) {
             return ScriptValue.of(api.look(playerIdOpt.get()));
         }
@@ -119,7 +119,7 @@ public enum ConditionModule implements ScriptModule {
     }
 
     private ScriptValue world(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId().orElse(null));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -132,7 +132,7 @@ public enum ConditionModule implements ScriptModule {
     }
 
     private ScriptValue gameMode(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId().orElse(null));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -145,7 +145,7 @@ public enum ConditionModule implements ScriptModule {
     }
 
     private ScriptValue biome(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId().orElse(null));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -159,7 +159,7 @@ public enum ConditionModule implements ScriptModule {
     }
 
     private ScriptValue inWater(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId().orElse(null));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -169,7 +169,7 @@ public enum ConditionModule implements ScriptModule {
     }
 
     private ScriptValue inRain(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId().orElse(null));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -179,7 +179,7 @@ public enum ConditionModule implements ScriptModule {
     }
 
     private ScriptValue lightLevel(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId());
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId().orElse(null));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }

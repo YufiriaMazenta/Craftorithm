@@ -2,6 +2,7 @@ package pers.yufiria.craftorithm.ui.recipeBook;
 
 import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.lang.LangManager;
+import crypticlib.lang.entry.StringLangEntry;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.display.MenuLayout;
@@ -141,7 +142,7 @@ public class RecipeListMenu extends Menu implements BackableMenu, Multipage {
     @Override
     public String parsedMenuTitle() {
         String title = this.display.title();
-        Player player = player();
+        Player player = player().orElse(null);
         title = LangManager.INSTANCE.replaceLang(title, player);
         String typeName = recipeType != null ? recipeType.getLocalizedName() : Languages.MENU_RECIPE_BOOK_ALL_RECIPES.value(player);
         title = title.replace("<page>", String.valueOf(page + 1))
@@ -171,12 +172,8 @@ public class RecipeListMenu extends Menu implements BackableMenu, Multipage {
     }
 
     private String getSortModeName(SortMode mode) {
-        return switch (mode) {
-            case NAME_ASC -> Languages.MENU_RECIPE_BOOK_SORT_MODE_NAME_ASC.value(player());
-            case NAME_DESC -> Languages.MENU_RECIPE_BOOK_SORT_MODE_NAME_DESC.value(player());
-            case TIME_ASC -> Languages.MENU_RECIPE_BOOK_SORT_MODE_TIME_ASC.value(player());
-            case TIME_DESC -> Languages.MENU_RECIPE_BOOK_SORT_MODE_TIME_DESC.value(player());
-        };
+        Player player = player().orElse(null);
+        return player != null ? mode.nameLang().value(player) : mode.nameLang().value();
     }
 
     public List<NamespacedKey> getCurrentPageRecipes() {

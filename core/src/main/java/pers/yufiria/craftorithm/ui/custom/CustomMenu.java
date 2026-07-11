@@ -23,7 +23,7 @@ public class CustomMenu extends TranslatableMenu implements BackableMenu {
 
     @Override
     public void onOpen(InventoryOpenEvent event) {
-        Player player = player();
+        Player player = player().orElse(null);
         String menuPerm = menuInfo.permission();
         if (menuPerm != null) {
             if (player != null && !player.hasPermission(menuPerm)) {
@@ -41,7 +41,7 @@ public class CustomMenu extends TranslatableMenu implements BackableMenu {
 
     @Override
     public void onClose(InventoryCloseEvent event) {
-        Player player = player();
+        Player player = player().orElse(null);
         CompiledScript closeAction = menuInfo.closeAction();
         if (closeAction != null) {
             if (player != null) {
