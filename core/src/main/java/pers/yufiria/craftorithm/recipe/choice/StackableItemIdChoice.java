@@ -3,6 +3,7 @@ package pers.yufiria.craftorithm.recipe.choice;
 import crypticlib.util.ItemHelper;
 import crypticlib.util.MaterialHelper;
 import org.bukkit.Material;
+import org.bukkit.Registry;
 import org.bukkit.Tag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
@@ -12,6 +13,7 @@ import pers.yufiria.craftorithm.item.ItemPack;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
+import pers.yufiria.craftorithm.util.RecipeUtils;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -60,20 +62,23 @@ public class StackableItemIdChoice implements RecipeChoice {
                 this.itemIds = List.of(NamespacedItemIdStack.fromString(choiceStr));
                 break;
             case "tag":
-                String tagStr = choiceStr.substring(4).toUpperCase(Locale.ROOT);
-                Tag<Material> materialTag;
-                try {
-                    Field field = Tag.class.getField(tagStr);
-                    materialTag = (Tag<Material>) field.get(null);
-                } catch (NoSuchFieldException | IllegalAccessException e) {
-                    throw new RecipeLoadException(e);
-                }
-
-                int spaceIndex = tagStr.lastIndexOf(' ');
+                String tagKeyStr = choiceStr.substring(4);
+                int spaceIndex = tagKeyStr.lastIndexOf(' ');
                 if (spaceIndex == -1) {
+                    Optional<Tag<Material>> tagOpt = RecipeUtils.getTag(tagKeyStr);
+                    if (tagOpt.isEmpty()) {
+                        throw new RecipeLoadException(tagKeyStr + " is not a valid tag");
+                    }
+                    Tag<Material> materialTag = tagOpt.get();
                     this.itemIds = materialTag.getValues().stream().map(it -> new NamespacedItemIdStack(NamespacedItemId.fromMaterial(it))).toList();
                 } else {
-                    int amount = Integer.parseInt(tagStr.substring(spaceIndex + 1));
+                    int amount = Integer.parseInt(tagKeyStr.substring(spaceIndex + 1));
+                    tagKeyStr = tagKeyStr.substring(spaceIndex);
+                    Optional<Tag<Material>> tagOpt = RecipeUtils.getTag(tagKeyStr);
+                    if (tagOpt.isEmpty()) {
+                        throw new RecipeLoadException(tagKeyStr + " is not a valid tag");
+                    }
+                    Tag<Material> materialTag = tagOpt.get();
                     this.itemIds = materialTag.getValues().stream().map(it -> new NamespacedItemIdStack(NamespacedItemId.fromMaterial(it), amount)).toList();
                 }
                 break;

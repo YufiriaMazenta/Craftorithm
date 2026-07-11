@@ -9,9 +9,11 @@ import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.ItemPack;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
+import pers.yufiria.craftorithm.util.RecipeUtils;
 
 import java.lang.reflect.Field;
 import java.util.Locale;
+import java.util.Optional;
 
 public class BukkitRecipeChoiceParser {
 
@@ -37,14 +39,12 @@ public class BukkitRecipeChoiceParser {
                 }
                 return new RecipeChoice.MaterialChoice(material);
             case "tag":
-                String tagStr = choiceStr.substring(4).toUpperCase(Locale.ROOT);
-                Tag<Material> materialTag;
-                try {
-                    Field field = Tag.class.getField(tagStr);
-                    materialTag = (Tag<Material>) field.get(null);
-                } catch (NoSuchFieldException | IllegalAccessException e) {
-                    throw new RecipeLoadException(e);
+                String tagKeyStr = choiceStr.substring(4);
+                Optional<Tag<Material>> tagOpt = RecipeUtils.getTag(tagKeyStr);
+                if (tagOpt.isEmpty()) {
+                    throw new RecipeLoadException(tagKeyStr + " is not a valid tag");
                 }
+                Tag<Material> materialTag = tagOpt.get();
                 return new RecipeChoice.MaterialChoice(materialTag);
             case "item_pack":
                 //是物品组

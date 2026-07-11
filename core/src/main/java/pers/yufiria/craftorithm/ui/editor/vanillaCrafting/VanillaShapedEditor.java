@@ -25,7 +25,7 @@ import pers.yufiria.craftorithm.ui.editor.EditorIconParser;
 import pers.yufiria.craftorithm.ui.editor.RecipeEditorMenu;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
 import pers.yufiria.craftorithm.util.LangUtils;
-import pers.yufiria.craftorithm.util.RecipeShapeUtils;
+import pers.yufiria.craftorithm.util.RecipeUtils;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -174,8 +174,8 @@ public final class VanillaShapedEditor extends RecipeEditorMenu {
                     shape.add(new String(shapeChars, row * 3, 3));
                 }
 
-                RecipeShapeUtils.removeEmptyRow(shape);
-                RecipeShapeUtils.removeEmptyColumn(shape);
+                RecipeUtils.removeEmptyRow(shape);
+                RecipeUtils.removeEmptyColumn(shape);
 
                 if (shape.isEmpty()) {
                     LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_RESULT);
