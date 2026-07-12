@@ -44,6 +44,11 @@ public final class RemoveRecipeCommand extends CommandNode {
     }
 
     @Override
+    public void executeNoPerm(@NotNull CommandInvoker invoker, @NotNull List<String> args) {
+        LangUtils.sendLang(invoker, Languages.COMMAND_NO_PERM);
+    }
+
+    @Override
     public List<String> tab(@NotNull CommandInvoker invoker, List<String> args) {
         if (args.size() <= 1) {
             return RecipeManager.INSTANCE.craftorithmRecipes().keySet().stream().map(NamespacedKey::getKey).toList();

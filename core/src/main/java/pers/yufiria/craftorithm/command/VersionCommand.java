@@ -24,4 +24,9 @@ public final class VersionCommand extends CommandNode {
         LangUtils.sendLang(CommandUtils.invoker2Sender(invoker), Languages.COMMAND_VERSION);
     }
 
+    @Override
+    public void executeNoPerm(@NotNull CommandInvoker invoker, @NotNull List<String> args) {
+        LangUtils.sendLang(invoker, Languages.COMMAND_NO_PERM);
+    }
+
 }

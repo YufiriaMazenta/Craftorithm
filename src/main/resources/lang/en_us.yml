@@ -54,7 +54,6 @@ command:
     recipe_not_found: '<prefix> &cRecipe not found.'
     success: '<prefix> &aRecipe <recipe_file_name> (<recipe_id>) edited successfully.'
   recipebook:
-    success: '<prefix> &aRecipe book opened.'
     type_not_found: '<prefix> &cRecipe type <recipe_type> does not exist.'
 recipe_type_name:
   vanilla_shaped: Shaped Recipe

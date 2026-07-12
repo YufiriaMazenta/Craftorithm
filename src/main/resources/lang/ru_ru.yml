@@ -54,7 +54,6 @@ command:
     recipe_not_found: '<prefix> &cРецепт не найден.'
     success: '<prefix> &aРецепт <recipe_file_name> (<recipe_id>) успешно изменён.'
   recipebook:
-    success: '<prefix> &aКнига рецептов открыта.'
     type_not_found: '<prefix> &cТип рецепта <recipe_type> не существует'
 recipe_type_name:
   vanilla_shaped: Формованный рецепт

@@ -39,7 +39,7 @@ public class OpenMenuCommand extends CommandNode {
             sendDescriptions(invoker);
             return;
         }
-        String menuName = args.get(0);
+        String menuName = args.getFirst();
         Optional<Function<Player, Menu>> menuOpenerOpt = CustomMenuManager.INSTANCE.getMenuOpenerOpt(menuName);
         if (menuOpenerOpt.isEmpty()) {
             LangUtils.sendLang(invoker, Languages.COMMAND_OPENMENU_UNKNOWN_MENU, Map.of("<menu_name>", menuName));
@@ -62,6 +62,11 @@ public class OpenMenuCommand extends CommandNode {
             target = (Player) invoker.asPlayer().getPlatformPlayer();
         }
         menuOpener.apply(target);
+    }
+
+    @Override
+    public void executeNoPerm(@NotNull CommandInvoker invoker, @NotNull List<String> args) {
+        LangUtils.sendLang(invoker, Languages.COMMAND_NO_PERM);
     }
 
     @Override

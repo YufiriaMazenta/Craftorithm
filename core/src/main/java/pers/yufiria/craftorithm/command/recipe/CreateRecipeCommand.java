@@ -98,6 +98,11 @@ public final class CreateRecipeCommand extends CommandNode implements LifeCycleT
     }
 
     @Override
+    public void executeNoPerm(@NotNull CommandInvoker invoker, @NotNull List<String> args) {
+        LangUtils.sendLang(invoker, Languages.COMMAND_NO_PERM);
+    }
+
+    @Override
     public List<String> tab(@NotNull CommandInvoker invoker, List<String> args) {
         if (args.size() <= 1) {
             return recipeCreatorMap.keySet().stream().map(RecipeType::typeKey).toList();

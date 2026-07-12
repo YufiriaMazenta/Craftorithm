@@ -54,7 +54,6 @@ command:
     recipe_not_found: '<prefix> &cレシピが見つかりません。'
     success: '<prefix> &aレシピ <recipe_file_name> (<recipe_id>) を編集しました。'
   recipebook:
-    success: '<prefix> &aレシピブックを開きました。'
     type_not_found: '<prefix> &cレシピタイプ <recipe_type> は存在しません'
 recipe_type_name:
   vanilla_shaped: 定形レシピ

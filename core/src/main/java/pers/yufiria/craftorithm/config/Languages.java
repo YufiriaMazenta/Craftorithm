@@ -45,7 +45,6 @@ public class Languages {
     public static final StringLangEntry COMMAND_EDIT_INVALID_RECIPE_ID = new StringLangEntry("command.edit.invalid_recipe_id");
     public static final StringLangEntry COMMAND_EDIT_RECIPE_NOT_FOUND = new StringLangEntry("command.edit.recipe_not_found");
     public static final StringLangEntry COMMAND_EDIT_SUCCESS = new StringLangEntry("command.edit.success");
-    public static final StringLangEntry COMMAND_RECIPEBOOK_SUCCESS = new StringLangEntry("command.recipebook.success");
     public static final StringLangEntry COMMAND_RECIPEBOOK_TYPE_NOT_FOUND = new StringLangEntry("command.recipebook.type_not_found");
 
     public static final StringLangEntry LOAD_FINISH = new StringLangEntry("load_finish");

@@ -55,7 +55,6 @@ command:
     recipe_not_found: '<prefix> &c找不到该配方'
     success: '<prefix> &a配方 <recipe_file_name> (<recipe_id>) 编辑成功'
   recipebook:
-    success: '<prefix> &a配方书已打开'
     type_not_found: '<prefix> &c配方类型 <recipe_type> 不存在'
 recipe_type_name:
   vanilla_shaped: 有序配方

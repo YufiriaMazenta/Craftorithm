@@ -82,6 +82,11 @@ public class RecipeBookCommand extends CommandNode {
     }
 
     @Override
+    public void executeNoPerm(@NotNull CommandInvoker invoker, @NotNull List<String> args) {
+        LangUtils.sendLang(invoker, Languages.COMMAND_NO_PERM);
+    }
+
+    @Override
     public @Nullable List<String> tab(@NotNull CommandInvoker invoker, List<String> args) {
         if (args.size() <= 1) {
             return Arrays.asList(FLAG_PLAYER, FLAG_TYPE);

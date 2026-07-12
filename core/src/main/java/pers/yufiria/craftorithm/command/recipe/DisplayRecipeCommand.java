@@ -71,6 +71,11 @@ public class DisplayRecipeCommand extends CommandNode {
     }
 
     @Override
+    public void executeNoPerm(@NotNull CommandInvoker invoker, @NotNull List<String> args) {
+        LangUtils.sendLang(invoker, Languages.COMMAND_NO_PERM);
+    }
+
+    @Override
     public @Nullable List<String> tab(@NotNull CommandInvoker invoker, List<String> args) {
         if (args.size() <= 1) {
             Set<NamespacedKey> recipes = new LinkedHashSet<>(RecipeManager.INSTANCE.craftorithmRecipes().keySet());
@@ -81,7 +86,5 @@ public class DisplayRecipeCommand extends CommandNode {
         }
         return Collections.singletonList("");
     }
-
-
 
 }

@@ -43,4 +43,10 @@ public class ScriptCommand extends CommandNode {
         LangUtils.sendLang(player, Languages.COMMAND_SCRIPT_OPERATION_TIME, Map.of("<time>", executeTime + ""));
         IOHelper.info("Player \"" + (player != null ? player.getName() : "null") + "\" execute script line: " + scriptLine);
     }
+
+    @Override
+    public void executeNoPerm(@NotNull CommandInvoker invoker, @NotNull List<String> args) {
+        LangUtils.sendLang(invoker, Languages.COMMAND_NO_PERM);
+    }
+
 }

@@ -54,7 +54,6 @@ command:
     recipe_not_found: '<prefix> &cTarif bulunamadı.'
     success: '<prefix> &aTarif <recipe_file_name> (<recipe_id>) başarıyla düzenlendi.'
   recipebook:
-    success: '<prefix> &aTarif kitabı açıldı.'
     type_not_found: '<prefix> &cTarif tipi <recipe_type> mevcut değil'
 recipe_type_name:
   vanilla_shaped: Şekilli tarif

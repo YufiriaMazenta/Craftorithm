@@ -72,6 +72,11 @@ public final class EditCommand extends CommandNode {
     }
 
     @Override
+    public void executeNoPerm(@NotNull CommandInvoker invoker, @NotNull List<String> args) {
+        LangUtils.sendLang(invoker, Languages.COMMAND_NO_PERM);
+    }
+
+    @Override
     public @NotNull List<String> tab(@NotNull CommandInvoker invoker, @NotNull List<String> args) {
         if (args.size() <= 1) {
             return new ArrayList<>(RecipeManager.INSTANCE.craftorithmRecipes().keySet().stream()
