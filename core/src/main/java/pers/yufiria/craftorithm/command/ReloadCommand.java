@@ -36,7 +36,7 @@ public final class ReloadCommand extends CommandNode {
     }
 
     @Override
-    public void executeNoPerm(@NotNull CommandInvoker invoker, @NotNull List<String> args) {
+    public void onNoPerm(@NotNull CommandInvoker invoker, @NotNull List<String> args) {
         LangUtils.sendLang(invoker, Languages.COMMAND_NO_PERM);
     }
 

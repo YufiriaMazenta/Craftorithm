@@ -40,7 +40,7 @@ public class RemoveFuelCommand extends CommandNode {
     }
 
     @Override
-    public List<String> tab(@NotNull CommandInvoker invoker, List<String> args) {
+    public List<String> tabComplete(@NotNull CommandInvoker invoker, List<String> args) {
         if (args.size() <= 1) {
             return new ArrayList<>(ItemManager.INSTANCE.customCookingFuelMap().keySet().stream().map(NamespacedItemId::toString).toList());
         }

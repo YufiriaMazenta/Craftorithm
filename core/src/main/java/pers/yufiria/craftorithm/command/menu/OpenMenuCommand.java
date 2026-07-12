@@ -65,12 +65,12 @@ public class OpenMenuCommand extends CommandNode {
     }
 
     @Override
-    public void executeNoPerm(@NotNull CommandInvoker invoker, @NotNull List<String> args) {
+    public void onNoPerm(@NotNull CommandInvoker invoker, @NotNull List<String> args) {
         LangUtils.sendLang(invoker, Languages.COMMAND_NO_PERM);
     }
 
     @Override
-    public @Nullable List<String> tab(@NotNull CommandInvoker invoker, @NotNull List<String> args) {
+    public @Nullable List<String> tabComplete(@NotNull CommandInvoker invoker, @NotNull List<String> args) {
         return CustomMenuManager.INSTANCE.menuOpeners().keySet().stream().toList();
     }
 }

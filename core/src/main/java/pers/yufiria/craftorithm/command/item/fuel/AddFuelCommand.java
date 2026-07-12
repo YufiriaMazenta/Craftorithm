@@ -49,7 +49,7 @@ public class AddFuelCommand extends CommandNode {
     }
 
     @Override
-    public List<String> tab(@NotNull CommandInvoker invoker, List<String> args) {
+    public List<String> tabComplete(@NotNull CommandInvoker invoker, List<String> args) {
         if (args.size() <= 1) {
             return new ArrayList<>(Arrays.asList("50", "67", "100", "150", "200", "300", "800", "1200", "1600", "2400", "4001", "16000", "20000"));
         }

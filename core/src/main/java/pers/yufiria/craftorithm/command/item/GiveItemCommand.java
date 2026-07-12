@@ -80,7 +80,7 @@ public class GiveItemCommand extends CommandNode {
     }
 
     @Override
-    public List<String> tab(@NotNull CommandInvoker invoker, List<String> args) {
+    public List<String> tabComplete(@NotNull CommandInvoker invoker, List<String> args) {
         if (args.size() < 2) {
             return new ArrayList<>(CraftorithmItemProvider.INSTANCE.itemMap().keySet());
         }
