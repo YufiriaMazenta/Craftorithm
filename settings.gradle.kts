@@ -13,5 +13,7 @@ include(
     "hook:oraxen",
     "hook:sx-item",
     "hook:packetevents",
-    "hook:protocollib"
+    "hook:protocollib",
+    "hook:vault",
+    "hook:playerpoints"
 )

@@ -6,19 +6,12 @@ import crypticlib.script.ScriptValue;
 import crypticlib.script.func.ScriptFunctionRegistry;
 import crypticlib.script.func.ScriptModule;
 import crypticlib.script.vm.ScriptVM;
-import net.milkbowl.vault.economy.Economy;
-import org.black_ixx.playerpoints.PlayerPoints;
-import org.black_ixx.playerpoints.PlayerPointsAPI;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import pers.yufiria.craftorithm.hook.PlayerPointsHook;
-import pers.yufiria.craftorithm.hook.VaultHook;
 import pers.yufiria.craftorithm.util.PlayerUtils;
 
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * 内置条件函数模块
@@ -45,8 +38,6 @@ public enum ConditionModule implements ScriptModule {
         registry.register(moduleName, "perm", this::perm);
         registry.register(moduleName, "papi", this::papi);
         registry.register(moduleName, "level", this::level);
-        registry.register(moduleName, "money", this::money);
-        registry.register(moduleName, "points", this::points);
         registry.register(moduleName, "world", this::world);
         registry.register(moduleName, "gamemode", this::gameMode);
         registry.register(moduleName, "item", this::item);
@@ -91,31 +82,6 @@ public enum ConditionModule implements ScriptModule {
         }
         Player player = playerOpt.get();
         return ScriptValue.of(player.getLevel());
-    }
-
-    private ScriptValue money(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        if (!VaultHook.INSTANCE.isEconomyHooked()) {
-            return ScriptValue.of(0);
-        }
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId().orElse(null));
-        if (playerOpt.isEmpty()) {
-            return ScriptValue.nil();
-        }
-        Player player = playerOpt.get();
-        Economy economy = (Economy) VaultHook.INSTANCE.economy();
-        return ScriptValue.of(economy.getBalance(player));
-    }
-
-    private ScriptValue points(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        if (!PlayerPointsHook.INSTANCE.isPlayerPointsHooked()) {
-            return ScriptValue.of(0);
-        }
-        PlayerPointsAPI api = ((PlayerPoints) PlayerPointsHook.INSTANCE.playerPoints()).getAPI();
-        Optional<UUID> playerIdOpt = ctx.playerId();
-        if (playerIdOpt.isPresent()) {
-            return ScriptValue.of(api.look(playerIdOpt.get()));
-        }
-        return ScriptValue.of(0);
     }
 
     private ScriptValue world(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {

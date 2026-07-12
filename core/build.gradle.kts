@@ -8,8 +8,7 @@ repositories {
     //PlaceHolderAPI
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     maven("https://mvn.lumine.io/repository/maven-public/")
-    //PlayerPoints
-    maven("https://repo.rosewooddev.io/repository/public/")
+
 }
 
 dependencies {
@@ -17,11 +16,6 @@ dependencies {
     compileOnly("me.clip:placeholderapi:2.11.6")
     compileOnly("net.kyori:adventure-api:4.14.0")
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
-    compileOnly("com.github.MilkBowl:VaultAPI:1.7") {
-        exclude("org.bukkit", "bukkit")
-    }
-    compileOnly("org.black_ixx:playerpoints:3.2.5")
-    //用于拦截服务端发送的配方更新包
     compileOnly("com.crypticlib:bukkit:${rootProject.findProperty("crypticlibVer")}")
     implementation("com.crypticlib:bukkit-ui:${rootProject.findProperty("crypticlibVer")}")
     implementation("com.crypticlib:bukkit-conversation:${rootProject.findProperty("crypticlibVer")}")

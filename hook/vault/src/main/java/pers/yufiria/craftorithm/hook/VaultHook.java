@@ -4,11 +4,13 @@ import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.LifeCycleTask;
 import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
+import crypticlib.script.ScriptEngine;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.Languages;
+import pers.yufiria.craftorithm.hook.script.VaultModule;
 import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.util.Map;
@@ -42,6 +44,7 @@ public enum VaultHook implements PluginHook, LifeCycleTask {
         }
         economy = vaultRsp.getProvider();
         this.economyHooked = true;
+        ScriptEngine.INSTANCE.registerModule(VaultModule.INSTANCE);
         return true;
     }
 

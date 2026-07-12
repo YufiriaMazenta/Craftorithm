@@ -13,9 +13,6 @@ import crypticlib.ui.menu.Menu;
 import crypticlib.ui.util.MenuHelper;
 import crypticlib.util.IOHelper;
 import crypticlib.util.InventoryViewHelper;
-import net.milkbowl.vault.economy.Economy;
-import org.black_ixx.playerpoints.PlayerPoints;
-import org.black_ixx.playerpoints.PlayerPointsAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
@@ -23,8 +20,6 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import pers.yufiria.craftorithm.hook.PlayerPointsHook;
-import pers.yufiria.craftorithm.hook.VaultHook;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.ui.BackableMenu;
@@ -33,7 +28,6 @@ import pers.yufiria.craftorithm.util.PlayerUtils;
 
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * 内置动作函数模块
@@ -64,13 +58,9 @@ public enum ActionModule implements ScriptModule {
         registry.register(moduleName, "actionbar", this::actionbar);
         registry.register(moduleName, "title", this::title);
         registry.register(moduleName, "log", this::log);
-        registry.register(moduleName, "take_money", this::takeMoney);
-        registry.register(moduleName, "give_money", this::giveMoney);
         registry.register(moduleName, "take_level", this::takeLevel);
         registry.register(moduleName, "give_level", this::giveLevel);
         registry.register(moduleName, "give_exp", this::giveExp);
-        registry.register(moduleName, "take_points", this::takePoints);
-        registry.register(moduleName, "give_points", this::givePoints);
         registry.register(moduleName, "close", this::close);
         registry.register(moduleName, "back", this::back);
         registry.register(moduleName, "openmenu", this::openmenu);
@@ -231,42 +221,6 @@ public enum ActionModule implements ScriptModule {
         return ScriptValue.nil();
     }
 
-    private ScriptValue takeMoney(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        if (args.length < 1) return ScriptValue.of(false);
-        if (!VaultHook.INSTANCE.isEconomyHooked()) return ScriptValue.of(false);
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId().orElse(null));
-        if (playerOpt.isEmpty()) {
-            return ScriptValue.nil();
-        }
-        Player player = playerOpt.get();
-        Economy economy = (Economy) VaultHook.INSTANCE.economy();
-        double amount = args[0].asNumber();
-        if (amount > 0) {
-            economy.withdrawPlayer(player, amount);
-        }
-        return ScriptValue.of(true);
-    }
-
-    private ScriptValue giveMoney(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        if (args.length < 1) {
-            return ScriptValue.of(false);
-        }
-        if (!VaultHook.INSTANCE.isEconomyHooked()) {
-            return ScriptValue.of(false);
-        }
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId().orElse(null));
-        if (playerOpt.isEmpty()) {
-            return ScriptValue.nil();
-        }
-        Player player = playerOpt.get();
-        Economy economy = (Economy) VaultHook.INSTANCE.economy();
-        double amount = args[0].asNumber();
-        if (amount > 0) {
-            economy.depositPlayer(player, amount);
-        }
-        return ScriptValue.of(true);
-    }
-
     private ScriptValue takeLevel(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) {
             return ScriptValue.nil();
@@ -309,45 +263,7 @@ public enum ActionModule implements ScriptModule {
         return ScriptValue.of(player.getLevel());
     }
 
-    private ScriptValue takePoints(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        if (args.length < 1) {
-            return ScriptValue.of(false);
-        }
-        if (!PlayerPointsHook.INSTANCE.isPlayerPointsHooked()) {
-            return ScriptValue.of(false);
-        }
-        PlayerPointsAPI api = ((PlayerPoints) PlayerPointsHook.INSTANCE.playerPoints()).getAPI();
-        int amount = (int) args[0].asNumber();
-        if (amount > 0) {
-            Optional<UUID> playerId = ctx.playerId();
-            if (playerId.isEmpty()) {
-                return ScriptValue.of(false);
-            } else {
-                api.take(playerId.get(), amount);
-            }
-        }
-        return ScriptValue.of(true);
-    }
 
-    private ScriptValue givePoints(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        if (args.length < 1) {
-            return ScriptValue.of(false);
-        }
-        if (!PlayerPointsHook.INSTANCE.isPlayerPointsHooked()) {
-            return ScriptValue.of(false);
-        }
-        PlayerPointsAPI api = ((PlayerPoints) PlayerPointsHook.INSTANCE.playerPoints()).getAPI();
-        int amount = (int) args[0].asNumber();
-        if (amount > 0) {
-            Optional<UUID> playerId = ctx.playerId();
-            if (playerId.isEmpty()) {
-                return ScriptValue.of(false);
-            } else {
-                api.give(playerId.get(), amount);
-            }
-        }
-        return ScriptValue.of(true);
-    }
 
     private ScriptValue close(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.playerId().orElse(null));

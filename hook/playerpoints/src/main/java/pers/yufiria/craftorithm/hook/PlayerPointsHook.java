@@ -4,9 +4,11 @@ import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.LifeCycleTask;
 import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
+import crypticlib.script.ScriptEngine;
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.Languages;
+import pers.yufiria.craftorithm.hook.script.PlayerPointsModule;
 import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.util.Map;
@@ -30,6 +32,7 @@ public enum PlayerPointsHook implements PluginHook, LifeCycleTask {
         this.playerPointsHooked = isPluginEnabled();
         if (playerPointsHooked) {
             playerPoints = PlayerPoints.getInstance();
+            ScriptEngine.INSTANCE.registerModule(PlayerPointsModule.INSTANCE);
         }
         return playerPointsHooked;
     }
