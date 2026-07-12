@@ -1,7 +1,7 @@
 package pers.yufiria.craftorithm.command.recipe;
 
+import crypticlib.Invoker;
 import crypticlib.command.CommandInfo;
-import crypticlib.command.CommandInvoker;
 import crypticlib.command.CommandNode;
 import crypticlib.perm.PermInfo;
 import org.bukkit.Bukkit;
@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class RecipeBookCommand extends CommandNode {
@@ -41,7 +42,7 @@ public class RecipeBookCommand extends CommandNode {
     }
 
     @Override
-    public void execute(@NotNull CommandInvoker invoker, List<String> args) {
+    public void execute(@NotNull Invoker invoker, List<String> args) {
         // Resolve target player
         Player target;
         String playerName = CommandUtils.parseFlag(args, FLAG_PLAYER);
@@ -55,12 +56,12 @@ public class RecipeBookCommand extends CommandNode {
             if (!CommandUtils.checkInvokerIsPlayer(invoker)) {
                 return;
             }
-            target = (Player) invoker.asPlayer().getPlatformPlayer();
-        }
-
-        if (target == null) {
-            LangUtils.sendLang(invoker, Languages.COMMAND_UNKNOWN_PLAYER, Map.of("<player_name>", "null"));
-            return;
+            Optional<Player> targetOpt = invoker.asPlayer().getPlatformPlayer(Bukkit::getPlayer);
+            if (targetOpt.isEmpty()) {
+                LangUtils.sendLang(invoker, Languages.COMMAND_PLAYER_ONLY);
+                return;
+            }
+            target = targetOpt.get();
         }
 
         String typeKey = CommandUtils.parseFlag(args, FLAG_TYPE);
@@ -82,12 +83,12 @@ public class RecipeBookCommand extends CommandNode {
     }
 
     @Override
-    public void onNoPerm(@NotNull CommandInvoker invoker, @NotNull List<String> args) {
+    public void onNoPerm(@NotNull Invoker invoker, @NotNull List<String> args) {
         LangUtils.sendLang(invoker, Languages.COMMAND_NO_PERM);
     }
 
     @Override
-    public @Nullable List<String> tabComplete(@NotNull CommandInvoker invoker, List<String> args) {
+    public @Nullable List<String> tabComplete(@NotNull Invoker invoker, List<String> args) {
         if (args.size() <= 1) {
             return Arrays.asList(FLAG_PLAYER, FLAG_TYPE);
         }

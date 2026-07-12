@@ -1,7 +1,7 @@
 package pers.yufiria.craftorithm.command.item;
 
+import crypticlib.Invoker;
 import crypticlib.command.CommandInfo;
-import crypticlib.command.CommandInvoker;
 import crypticlib.command.CommandNode;
 import crypticlib.command.annotation.Subcommand;
 import crypticlib.perm.PermInfo;
@@ -21,7 +21,7 @@ public final class ItemCommand extends CommandNode {
     }
 
     @Override
-    public void onNoPerm(@NotNull CommandInvoker invoker, @NotNull List<String> args) {
+    public void onNoPerm(@NotNull Invoker invoker, @NotNull List<String> args) {
         LangUtils.sendLang(invoker, Languages.COMMAND_NO_PERM);
     }
 

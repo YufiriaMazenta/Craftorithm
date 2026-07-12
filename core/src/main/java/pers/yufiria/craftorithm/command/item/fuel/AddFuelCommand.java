@@ -1,9 +1,10 @@
 package pers.yufiria.craftorithm.command.item.fuel;
 
+import crypticlib.Invoker;
 import crypticlib.command.CommandInfo;
-import crypticlib.command.CommandInvoker;
 import crypticlib.command.CommandNode;
 import crypticlib.util.ItemHelper;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class AddFuelCommand extends CommandNode {
 
@@ -26,7 +28,7 @@ public class AddFuelCommand extends CommandNode {
     }
 
     @Override
-    public void execute(@NotNull CommandInvoker invoker, List<String> args) {
+    public void execute(@NotNull Invoker invoker, List<String> args) {
         if (args.isEmpty()) {
             sendDescriptions(invoker);
             return;
@@ -34,13 +36,18 @@ public class AddFuelCommand extends CommandNode {
         if (!CommandUtils.checkInvokerIsPlayer(invoker))
             return;
 
-        ItemStack item = ((Player) invoker.asPlayer().getPlatformPlayer()).getInventory().getItemInMainHand();
+        Optional<Player> playerOpt = invoker.asPlayer().getPlatformPlayer(Bukkit::getPlayer);
+        if (playerOpt.isEmpty()) {
+            LangUtils.sendLang(invoker, Languages.COMMAND_PLAYER_ONLY);
+            return;
+        }
+        ItemStack item = playerOpt.get().getInventory().getItemInMainHand();
         if (ItemHelper.isAir(item)) {
             LangUtils.sendLang(invoker, Languages.COMMAND_ITEM_FUEL_ADD_FAILED_ADD_AIR);
             return;
         }
 
-        boolean result = ItemManager.INSTANCE.addCustomFuel(item, Integer.parseInt(args.get(0)));
+        boolean result = ItemManager.INSTANCE.addCustomFuel(item, Integer.parseInt(args.getFirst()));
         if (result) {
             LangUtils.sendLang(invoker, Languages.COMMAND_ITEM_FUEL_ADD_SUCCESS);
         } else {
@@ -49,7 +56,7 @@ public class AddFuelCommand extends CommandNode {
     }
 
     @Override
-    public List<String> tabComplete(@NotNull CommandInvoker invoker, List<String> args) {
+    public List<String> tabComplete(@NotNull Invoker invoker, List<String> args) {
         if (args.size() <= 1) {
             return new ArrayList<>(Arrays.asList("50", "67", "100", "150", "200", "300", "800", "1200", "1600", "2400", "4001", "16000", "20000"));
         }

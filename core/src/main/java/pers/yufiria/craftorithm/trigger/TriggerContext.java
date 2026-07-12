@@ -1,7 +1,8 @@
 package pers.yufiria.craftorithm.trigger;
 
+import crypticlib.BukkitPlayer;
+import crypticlib.Invoker;
 import crypticlib.script.ScriptContext;
-import crypticlib.script.ScriptExecutor;
 import crypticlib.script.ScriptValue;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -57,7 +58,12 @@ public class TriggerContext {
      * 将事件变量注入为脚本可访问的变量
      */
     public ScriptContext toScriptContext() {
-        ScriptContext ctx = new ScriptContext(new ScriptExecutor(playerId, ScriptExecutor.ExecutorType.PLAYER));
+        Player player = Bukkit.getPlayer(playerId);
+        if (player == null) {
+            throw new IllegalStateException("Player " + playerId + " is not online, cannot create ScriptContext");
+        }
+        Invoker invoker = BukkitPlayer.byPlayer(player);
+        ScriptContext ctx = new ScriptContext(invoker);
 
         if (recipeKey != null) {
             ctx.setVariable("recipe", ScriptValue.of(recipeKey.toString()));

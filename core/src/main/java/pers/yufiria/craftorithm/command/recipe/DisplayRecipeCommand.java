@@ -1,7 +1,7 @@
 package pers.yufiria.craftorithm.command.recipe;
 
+import crypticlib.Invoker;
 import crypticlib.command.CommandInfo;
-import crypticlib.command.CommandInvoker;
 import crypticlib.command.CommandNode;
 import crypticlib.perm.PermInfo;
 import crypticlib.ui.menu.Menu;
@@ -36,7 +36,7 @@ public class DisplayRecipeCommand extends CommandNode {
     }
 
     @Override
-    public void execute(@NotNull CommandInvoker invoker, List<String> args) {
+    public void execute(@NotNull Invoker invoker, List<String> args) {
         if (args.isEmpty()) {
             sendDescriptions(invoker);
             return;
@@ -54,7 +54,12 @@ public class DisplayRecipeCommand extends CommandNode {
             if (!CommandUtils.checkInvokerIsPlayer(invoker)) {
                 return;
             }
-            target = (Player) invoker.asPlayer().getPlatformPlayer();
+            Optional<Player> targetOpt = invoker.asPlayer().getPlatformPlayer(Bukkit::getPlayer);
+            if (targetOpt.isEmpty()) {
+                LangUtils.sendLang(invoker, Languages.COMMAND_PLAYER_ONLY);
+                return;
+            }
+            target = targetOpt.get();
         }
         NamespacedKey recipeKey = NamespacedKey.fromString(args.get(0));
         Recipe recipe = RecipeManager.INSTANCE.getRecipe(recipeKey);
@@ -71,12 +76,12 @@ public class DisplayRecipeCommand extends CommandNode {
     }
 
     @Override
-    public void onNoPerm(@NotNull CommandInvoker invoker, @NotNull List<String> args) {
+    public void onNoPerm(@NotNull Invoker invoker, @NotNull List<String> args) {
         LangUtils.sendLang(invoker, Languages.COMMAND_NO_PERM);
     }
 
     @Override
-    public @Nullable List<String> tabComplete(@NotNull CommandInvoker invoker, List<String> args) {
+    public @Nullable List<String> tabComplete(@NotNull Invoker invoker, List<String> args) {
         if (args.size() <= 1) {
             Set<NamespacedKey> recipes = new LinkedHashSet<>(RecipeManager.INSTANCE.craftorithmRecipes().keySet());
             recipes.addAll(RecipeManager.INSTANCE.craftorithmRecipes().keySet());

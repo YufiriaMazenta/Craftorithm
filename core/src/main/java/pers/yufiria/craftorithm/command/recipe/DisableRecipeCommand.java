@@ -1,7 +1,7 @@
 package pers.yufiria.craftorithm.command.recipe;
 
+import crypticlib.Invoker;
 import crypticlib.command.CommandInfo;
-import crypticlib.command.CommandInvoker;
 import crypticlib.command.CommandNode;
 import crypticlib.perm.PermInfo;
 import org.bukkit.NamespacedKey;
@@ -27,7 +27,7 @@ public final class DisableRecipeCommand extends CommandNode {
     }
 
     @Override
-    public void execute(@NotNull CommandInvoker invoker, List<String> args) {
+    public void execute(@NotNull Invoker invoker, List<String> args) {
         if (args.isEmpty()) {
             sendDescriptions(invoker);
             return;
@@ -44,12 +44,12 @@ public final class DisableRecipeCommand extends CommandNode {
     }
 
     @Override
-    public void onNoPerm(@NotNull CommandInvoker invoker, @NotNull List<String> args) {
+    public void onNoPerm(@NotNull Invoker invoker, @NotNull List<String> args) {
         LangUtils.sendLang(invoker, Languages.COMMAND_NO_PERM);
     }
 
     @Override
-    public List<String> tabComplete(@NotNull CommandInvoker invoker, List<String> args) {
+    public List<String> tabComplete(@NotNull Invoker invoker, List<String> args) {
         if (args.size() <= 1) {
             List<String> tabList = new ArrayList<>();
             for (NamespacedKey recipeKey : RecipeManager.INSTANCE.serverRecipesCache().keySet()) {

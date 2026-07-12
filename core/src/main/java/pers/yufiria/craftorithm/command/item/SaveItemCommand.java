@@ -1,10 +1,12 @@
 package pers.yufiria.craftorithm.command.item;
 
+import crypticlib.Invoker;
 import crypticlib.command.CommandInfo;
-import crypticlib.command.CommandInvoker;
 import crypticlib.command.CommandNode;
 import crypticlib.perm.PermInfo;
+import crypticlib.util.IOHelper;
 import crypticlib.util.ItemHelper;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -16,6 +18,7 @@ import pers.yufiria.craftorithm.util.LangUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public final class SaveItemCommand extends CommandNode {
 
@@ -32,7 +35,7 @@ public final class SaveItemCommand extends CommandNode {
     }
 
     @Override
-    public void execute(@NotNull CommandInvoker invoker, List<String> args) {
+    public void execute(@NotNull Invoker invoker, List<String> args) {
         if (!CommandUtils.checkInvokerIsPlayer(invoker))
             return;
         if (args.size() < 2) {
@@ -40,7 +43,12 @@ public final class SaveItemCommand extends CommandNode {
             return;
         }
 
-        ItemStack item = ((Player) invoker.asPlayer().getPlatformPlayer()).getInventory().getItemInMainHand();
+        Optional<Player> playerOpt = invoker.asPlayer().getPlatformPlayer(Bukkit::getPlayer);
+        if (playerOpt.isEmpty()) {
+            LangUtils.sendLang(invoker, Languages.COMMAND_PLAYER_ONLY);
+            return;
+        }
+        ItemStack item = playerOpt.get().getInventory().getItemInMainHand();
         if (ItemHelper.isAir(item)) {
             LangUtils.sendLang(invoker, Languages.COMMAND_ITEM_SAVE_FAILED_SAVE_AIR);
             return;
@@ -51,7 +59,7 @@ public final class SaveItemCommand extends CommandNode {
     }
 
     @Override
-    public List<String> tabComplete(@NotNull CommandInvoker invoker, List<String> args) {
+    public List<String> tabComplete(@NotNull Invoker invoker, List<String> args) {
         if (args.size() < 2) {
             return new ArrayList<>(CraftorithmItemProvider.INSTANCE.itemConfigFileMap().keySet());
         } else {

@@ -8,8 +8,8 @@ import crypticlib.script.vm.ScriptVM;
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.black_ixx.playerpoints.PlayerPointsAPI;
 import pers.yufiria.craftorithm.hook.PlayerPointsHook;
+import pers.yufiria.craftorithm.util.PlayerUtils;
 
-import java.util.Optional;
 import java.util.UUID;
 
 public enum PlayerPointsModule implements ScriptModule {
@@ -31,9 +31,9 @@ public enum PlayerPointsModule implements ScriptModule {
 
     private ScriptValue points(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         PlayerPointsAPI api = ((PlayerPoints) PlayerPointsHook.INSTANCE.playerPoints()).getAPI();
-        Optional<UUID> playerIdOpt = ctx.executor().executorId();
-        if (playerIdOpt.isPresent()) {
-            return ScriptValue.of(api.look(playerIdOpt.get()));
+        UUID playerId = PlayerUtils.getPlayerIdFromInvoker(ctx.invoker());
+        if (playerId != null) {
+            return ScriptValue.of(api.look(playerId));
         }
         return ScriptValue.of(0);
     }
@@ -45,11 +45,11 @@ public enum PlayerPointsModule implements ScriptModule {
         PlayerPointsAPI api = ((PlayerPoints) PlayerPointsHook.INSTANCE.playerPoints()).getAPI();
         int amount = (int) args[0].asNumber();
         if (amount > 0) {
-            Optional<UUID> playerId = ctx.executor().executorId();
-            if (playerId.isEmpty()) {
+            UUID playerId = PlayerUtils.getPlayerIdFromInvoker(ctx.invoker());
+            if (playerId == null) {
                 return ScriptValue.of(false);
             } else {
-                api.take(playerId.get(), amount);
+                api.take(playerId, amount);
             }
         }
         return ScriptValue.of(true);
@@ -62,11 +62,11 @@ public enum PlayerPointsModule implements ScriptModule {
         PlayerPointsAPI api = ((PlayerPoints) PlayerPointsHook.INSTANCE.playerPoints()).getAPI();
         int amount = (int) args[0].asNumber();
         if (amount > 0) {
-            Optional<UUID> playerId = ctx.executor().executorId();
-            if (playerId.isEmpty()) {
+            UUID playerId = PlayerUtils.getPlayerIdFromInvoker(ctx.invoker());
+            if (playerId == null) {
                 return ScriptValue.of(false);
             } else {
-                api.give(playerId.get(), amount);
+                api.give(playerId, amount);
             }
         }
         return ScriptValue.of(true);

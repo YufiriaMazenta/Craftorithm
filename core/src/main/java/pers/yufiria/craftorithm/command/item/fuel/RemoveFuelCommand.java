@@ -1,7 +1,7 @@
 package pers.yufiria.craftorithm.command.item.fuel;
 
+import crypticlib.Invoker;
 import crypticlib.command.CommandInfo;
-import crypticlib.command.CommandInvoker;
 import crypticlib.command.CommandNode;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.config.Languages;
@@ -23,7 +23,7 @@ public class RemoveFuelCommand extends CommandNode {
     }
 
     @Override
-    public void execute(@NotNull CommandInvoker invoker, List<String> args) {
+    public void execute(@NotNull Invoker invoker, List<String> args) {
         if (args.isEmpty()) {
             sendDescriptions(invoker);
             return;
@@ -31,7 +31,7 @@ public class RemoveFuelCommand extends CommandNode {
         if (!CommandUtils.checkInvokerIsPlayer(invoker))
             return;
 
-        boolean result = ItemManager.INSTANCE.removeCustomFuel(NamespacedItemId.fromString(args.get(0)));
+        boolean result = ItemManager.INSTANCE.removeCustomFuel(NamespacedItemId.fromString(args.getFirst()));
         if (result) {
             LangUtils.sendLang(invoker, Languages.COMMAND_ITEM_FUEL_REMOVE_SUCCESS);
         } else {
@@ -40,7 +40,7 @@ public class RemoveFuelCommand extends CommandNode {
     }
 
     @Override
-    public List<String> tabComplete(@NotNull CommandInvoker invoker, List<String> args) {
+    public List<String> tabComplete(@NotNull Invoker invoker, List<String> args) {
         if (args.size() <= 1) {
             return new ArrayList<>(ItemManager.INSTANCE.customCookingFuelMap().keySet().stream().map(NamespacedItemId::toString).toList());
         }

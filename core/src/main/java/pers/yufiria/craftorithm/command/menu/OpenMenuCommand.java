@@ -1,7 +1,7 @@
 package pers.yufiria.craftorithm.command.menu;
 
+import crypticlib.Invoker;
 import crypticlib.command.CommandInfo;
-import crypticlib.command.CommandInvoker;
 import crypticlib.command.CommandNode;
 import crypticlib.perm.PermInfo;
 import crypticlib.ui.menu.Menu;
@@ -34,7 +34,7 @@ public class OpenMenuCommand extends CommandNode {
     }
 
     @Override
-    public void execute(@NotNull CommandInvoker invoker, @NotNull List<String> args) {
+    public void execute(@NotNull Invoker invoker, @NotNull List<String> args) {
         if (args.isEmpty()) {
             sendDescriptions(invoker);
             return;
@@ -59,18 +59,23 @@ public class OpenMenuCommand extends CommandNode {
             if (!CommandUtils.checkInvokerIsPlayer(invoker)) {
                 return;
             }
-            target = (Player) invoker.asPlayer().getPlatformPlayer();
+            Optional<Player> targetOpt = invoker.asPlayer().getPlatformPlayer(Bukkit::getPlayer);
+            if (targetOpt.isEmpty()) {
+                LangUtils.sendLang(invoker, Languages.COMMAND_PLAYER_ONLY);
+                return;
+            }
+            target = targetOpt.get();
         }
         menuOpener.apply(target);
     }
 
     @Override
-    public void onNoPerm(@NotNull CommandInvoker invoker, @NotNull List<String> args) {
+    public void onNoPerm(@NotNull Invoker invoker, @NotNull List<String> args) {
         LangUtils.sendLang(invoker, Languages.COMMAND_NO_PERM);
     }
 
     @Override
-    public @Nullable List<String> tabComplete(@NotNull CommandInvoker invoker, @NotNull List<String> args) {
+    public @Nullable List<String> tabComplete(@NotNull Invoker invoker, @NotNull List<String> args) {
         return CustomMenuManager.INSTANCE.menuOpeners().keySet().stream().toList();
     }
 }

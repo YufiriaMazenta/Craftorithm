@@ -1,10 +1,11 @@
 package pers.yufiria.craftorithm.ui.icon;
 
+import crypticlib.BukkitPlayer;
 import crypticlib.script.ScriptContext;
-import crypticlib.script.ScriptExecutor;
 import crypticlib.script.compile.CompiledScript;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +37,9 @@ public class ActionIcon extends TranslatableIcon {
         ClickType click = event.getClick();
         CompiledScript actionScript = actionsMap.get(click);
         if (actionScript != null) {
-            actionScript.execute(new ScriptContext(new ScriptExecutor(event.getWhoClicked().getUniqueId(), ScriptExecutor.ExecutorType.PLAYER)));
+            if (event.getWhoClicked() instanceof Player player) {
+                actionScript.execute(new ScriptContext(BukkitPlayer.byPlayer(player)));
+            }
         }
     }
 

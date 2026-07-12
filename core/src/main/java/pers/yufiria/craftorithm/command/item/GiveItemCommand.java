@@ -1,8 +1,8 @@
 package pers.yufiria.craftorithm.command.item;
 
 import crypticlib.CrypticLibBukkit;
+import crypticlib.Invoker;
 import crypticlib.command.CommandInfo;
-import crypticlib.command.CommandInvoker;
 import crypticlib.command.CommandNode;
 import crypticlib.perm.PermInfo;
 import org.bukkit.Bukkit;
@@ -18,6 +18,7 @@ import pers.yufiria.craftorithm.util.LangUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 public class GiveItemCommand extends CommandNode {
 
@@ -34,7 +35,7 @@ public class GiveItemCommand extends CommandNode {
     }
 
     @Override
-    public void execute(@NotNull CommandInvoker invoker, List<String> args) {
+    public void execute(@NotNull Invoker invoker, List<String> args) {
         if (args.isEmpty()) {
             sendDescriptions(invoker);
             return;
@@ -49,7 +50,12 @@ public class GiveItemCommand extends CommandNode {
             }
         } else {
             if (CommandUtils.checkInvokerIsPlayer(invoker)) {
-                player = (Player) invoker.asPlayer().getPlatformPlayer();
+                Optional<Player> playerOpt = invoker.asPlayer().getPlatformPlayer(Bukkit::getPlayer);
+                if (playerOpt.isEmpty()) {
+                    LangUtils.sendLang(invoker, Languages.COMMAND_PLAYER_ONLY);
+                    return;
+                }
+                player = playerOpt.get();
             } else {
                 return;
             }
@@ -80,7 +86,7 @@ public class GiveItemCommand extends CommandNode {
     }
 
     @Override
-    public List<String> tabComplete(@NotNull CommandInvoker invoker, List<String> args) {
+    public List<String> tabComplete(@NotNull Invoker invoker, List<String> args) {
         if (args.size() < 2) {
             return new ArrayList<>(CraftorithmItemProvider.INSTANCE.itemMap().keySet());
         }

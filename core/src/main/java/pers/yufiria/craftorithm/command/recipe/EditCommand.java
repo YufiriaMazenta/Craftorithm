@@ -1,11 +1,12 @@
 package pers.yufiria.craftorithm.command.recipe;
 
+import crypticlib.Invoker;
 import crypticlib.command.CommandInfo;
-import crypticlib.command.CommandInvoker;
 import crypticlib.command.CommandNode;
 import crypticlib.perm.PermInfo;
 import crypticlib.ui.menu.Menu;
 import crypticlib.util.TriFunction;
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Recipe;
@@ -36,7 +37,7 @@ public final class EditCommand extends CommandNode {
     }
 
     @Override
-    public void execute(@NotNull CommandInvoker invoker, @NotNull List<String> args) {
+    public void execute(@NotNull Invoker invoker, @NotNull List<String> args) {
         if (args.isEmpty()) {
             sendDescriptions(invoker);
             return;
@@ -67,17 +68,20 @@ public final class EditCommand extends CommandNode {
             return;
         }
 
-        Player player = (Player) invoker.asPlayer().getPlatformPlayer();
-        editorOpt.get().apply(player, recipeKey, recipe);
+        Optional<Player> playerOpt = invoker.asPlayer().getPlatformPlayer(Bukkit::getPlayer);
+        if (playerOpt.isEmpty()) {
+            return;
+        }
+        editorOpt.get().apply(playerOpt.get(), recipeKey, recipe);
     }
 
     @Override
-    public void onNoPerm(@NotNull CommandInvoker invoker, @NotNull List<String> args) {
+    public void onNoPerm(@NotNull Invoker invoker, @NotNull List<String> args) {
         LangUtils.sendLang(invoker, Languages.COMMAND_NO_PERM);
     }
 
     @Override
-    public @NotNull List<String> tabComplete(@NotNull CommandInvoker invoker, @NotNull List<String> args) {
+    public @NotNull List<String> tabComplete(@NotNull Invoker invoker, @NotNull List<String> args) {
         if (args.size() <= 1) {
             return new ArrayList<>(RecipeManager.INSTANCE.craftorithmRecipes().keySet().stream()
                 .map(NamespacedKey::toString)

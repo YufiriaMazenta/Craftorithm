@@ -1,6 +1,6 @@
 package pers.yufiria.craftorithm.util;
 
-import crypticlib.command.CommandInvoker;
+import crypticlib.Invoker;
 import crypticlib.lang.entry.StringLangEntry;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class LangUtils {
 
-    public static void sendLang(CommandInvoker invoker, StringLangEntry message) {
+    public static void sendLang(Invoker invoker, StringLangEntry message) {
         sendLang(CommandUtils.invoker2Sender(invoker), message);
     }
 
@@ -21,7 +21,7 @@ public class LangUtils {
         sendLang(receiver, message, new HashMap<>());
     }
 
-    public static void sendLang(CommandInvoker invoker, StringLangEntry message, Map<String, String> formatMap) {
+    public static void sendLang(Invoker invoker, StringLangEntry message, Map<String, String> formatMap) {
         sendLang(CommandUtils.invoker2Sender(invoker), message, formatMap);
     }
 

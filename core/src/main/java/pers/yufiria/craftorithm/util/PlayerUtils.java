@@ -1,9 +1,11 @@
 package pers.yufiria.craftorithm.util;
 
+import crypticlib.Invoker;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -32,6 +34,26 @@ public class PlayerUtils {
             return Optional.empty();
         }
         return Optional.ofNullable(Bukkit.getPlayer(playerName));
+    }
+
+    /**
+     * 从Invoker中提取Player，如果Invoker不是玩家则返回null
+     */
+    public static @Nullable Player getPlayerFromInvoker(Invoker invoker) {
+        if (invoker.isPlayer()) {
+            return invoker.asPlayer().getPlatformPlayer(Bukkit::getPlayer).orElse(null);
+        }
+        return null;
+    }
+
+    /**
+     * 从Invoker中提取Player的UUID，如果Invoker不是玩家则返回null
+     */
+    public static @Nullable UUID getPlayerIdFromInvoker(Invoker invoker) {
+        if (invoker.isPlayer()) {
+            return invoker.asPlayer().getUniqueId();
+        }
+        return null;
     }
 
 }

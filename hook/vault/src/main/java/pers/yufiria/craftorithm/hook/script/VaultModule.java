@@ -30,7 +30,7 @@ public enum VaultModule implements ScriptModule {
     }
 
     private ScriptValue money(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.executor().executorId().orElse(null));
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(PlayerUtils.getPlayerIdFromInvoker(ctx.invoker()));
         if (playerOpt.isEmpty()) {
             return ScriptValue.of(false);
         }
@@ -41,7 +41,7 @@ public enum VaultModule implements ScriptModule {
 
     private ScriptValue takeMoney(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.executor().executorId().orElse(null));
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(PlayerUtils.getPlayerIdFromInvoker(ctx.invoker()));
         if (playerOpt.isEmpty()) {
             return ScriptValue.of(false);
         }
@@ -58,7 +58,7 @@ public enum VaultModule implements ScriptModule {
         if (args.length < 1) {
             return ScriptValue.of(false);
         }
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.executor().executorId().orElse(null));
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(PlayerUtils.getPlayerIdFromInvoker(ctx.invoker()));
         if (playerOpt.isEmpty()) {
             return ScriptValue.of(false);
         }

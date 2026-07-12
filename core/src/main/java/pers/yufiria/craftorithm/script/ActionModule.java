@@ -2,6 +2,7 @@ package pers.yufiria.craftorithm.script;
 
 import crypticlib.BukkitPlayer;
 import crypticlib.CrypticLib;
+import crypticlib.Invoker;
 import crypticlib.MinecraftVersion;
 import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.script.ScriptContext;
@@ -71,7 +72,7 @@ public enum ActionModule implements ScriptModule {
     }
 
     private ScriptValue setInvItem(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.executor().executorId().orElse(null));
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(PlayerUtils.getPlayerIdFromInvoker(ctx.invoker()));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -97,7 +98,7 @@ public enum ActionModule implements ScriptModule {
     }
 
     private ScriptValue back(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.executor().executorId().orElse(null));
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(PlayerUtils.getPlayerIdFromInvoker(ctx.invoker()));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -124,7 +125,7 @@ public enum ActionModule implements ScriptModule {
         if (args.length < 1) {
             return ScriptValue.of(false);
         }
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.executor().executorId().orElse(null));
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(PlayerUtils.getPlayerIdFromInvoker(ctx.invoker()));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -136,53 +137,59 @@ public enum ActionModule implements ScriptModule {
 
     private ScriptValue command(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.executor().executorId().orElse(null));
-        if (playerOpt.isEmpty()) {
-            return ScriptValue.nil();
-        }
-        Player player = playerOpt.get();
+        Invoker invoker = ctx.invoker();
         StringBuilder sb = new StringBuilder();
         for (ScriptValue arg : args) {
             sb.append(arg.asString());
         }
-        String cmd = BukkitTextProcessor.placeholder(player, sb.toString());
-        return ScriptValue.of(Bukkit.dispatchCommand(player, cmd));
+        String cmd = sb.toString();
+        if (invoker.isPlayer()) {
+            String finalCmd = cmd;
+            cmd = invoker.asPlayer().getPlatformPlayer(Bukkit::getPlayer)
+                .map(player -> BukkitTextProcessor.placeholder(player, finalCmd))
+                .orElse(cmd);
+        }
+        return ScriptValue.of(Bukkit.dispatchCommand((org.bukkit.command.CommandSender) invoker.getPlatformInvoker(), cmd));
     }
 
     private ScriptValue console(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.executor().executorId().orElse(null));
-        if (playerOpt.isEmpty()) {
-            return ScriptValue.nil();
-        }
-        Player player = playerOpt.get();
+        Invoker invoker = ctx.invoker();
         StringBuilder sb = new StringBuilder();
         for (ScriptValue arg : args) {
             sb.append(arg.asString());
         }
-        String cmd = BukkitTextProcessor.placeholder(player, sb.toString());
+        String cmd = sb.toString();
+        if (invoker.isPlayer()) {
+            String finalCmd = cmd;
+            cmd = invoker.asPlayer().getPlatformPlayer(Bukkit::getPlayer)
+                .map(player -> BukkitTextProcessor.placeholder(player, finalCmd))
+                .orElse(cmd);
+        }
         return ScriptValue.of(Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd));
     }
 
     private ScriptValue tell(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.nil();
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.executor().executorId().orElse(null));
-        if (playerOpt.isEmpty()) {
-            return ScriptValue.nil();
-        }
-        Player player = playerOpt.get();
+        Invoker invoker = ctx.invoker();
         StringBuilder sb = new StringBuilder();
         for (ScriptValue arg : args) {
             sb.append(arg.asString());
         }
-        String msg = BukkitTextProcessor.placeholder(player, sb.toString());
-        BukkitPlayer.byPlayer(player).sendMsg(msg);
+        String msg = sb.toString();
+        if (invoker.isPlayer()) {
+            String finalMsg = msg;
+            msg = invoker.asPlayer().getPlatformPlayer(Bukkit::getPlayer)
+                .map(player -> BukkitTextProcessor.placeholder(player, finalMsg))
+                .orElse(msg);
+        }
+        invoker.sendMsg(msg);
         return ScriptValue.nil();
     }
 
     private ScriptValue actionbar(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.nil();
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.executor().executorId().orElse(null));
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(PlayerUtils.getPlayerIdFromInvoker(ctx.invoker()));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -198,7 +205,7 @@ public enum ActionModule implements ScriptModule {
 
     private ScriptValue title(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.nil();
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.executor().executorId().orElse(null));
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(PlayerUtils.getPlayerIdFromInvoker(ctx.invoker()));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -211,7 +218,7 @@ public enum ActionModule implements ScriptModule {
 
     private ScriptValue log(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.nil();
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.executor().executorId().orElse(null));
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(PlayerUtils.getPlayerIdFromInvoker(ctx.invoker()));
         StringBuilder sb = new StringBuilder();
         for (ScriptValue arg : args) {
             sb.append(arg.asString());
@@ -225,7 +232,7 @@ public enum ActionModule implements ScriptModule {
         if (args.length < 1) {
             return ScriptValue.nil();
         }
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.executor().executorId().orElse(null));
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(PlayerUtils.getPlayerIdFromInvoker(ctx.invoker()));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -239,7 +246,7 @@ public enum ActionModule implements ScriptModule {
         if (args.length < 1) {
             return ScriptValue.nil();
         }
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.executor().executorId().orElse(null));
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(PlayerUtils.getPlayerIdFromInvoker(ctx.invoker()));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -253,7 +260,7 @@ public enum ActionModule implements ScriptModule {
         if (args.length < 1) {
             return ScriptValue.nil();
         }
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.executor().executorId().orElse(null));
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(PlayerUtils.getPlayerIdFromInvoker(ctx.invoker()));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -266,7 +273,7 @@ public enum ActionModule implements ScriptModule {
 
 
     private ScriptValue close(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.executor().executorId().orElse(null));
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(PlayerUtils.getPlayerIdFromInvoker(ctx.invoker()));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -277,7 +284,7 @@ public enum ActionModule implements ScriptModule {
 
     private ScriptValue discoverRecipe(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.executor().executorId().orElse(null));
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(PlayerUtils.getPlayerIdFromInvoker(ctx.invoker()));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -288,7 +295,7 @@ public enum ActionModule implements ScriptModule {
 
     private ScriptValue undiscoverRecipe(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.executor().executorId().orElse(null));
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(PlayerUtils.getPlayerIdFromInvoker(ctx.invoker()));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
@@ -305,7 +312,7 @@ public enum ActionModule implements ScriptModule {
      */
     private ScriptValue sound(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.nil();
-        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.executor().executorId().orElse(null));
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(PlayerUtils.getPlayerIdFromInvoker(ctx.invoker()));
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }

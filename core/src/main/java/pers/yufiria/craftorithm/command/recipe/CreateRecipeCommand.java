@@ -1,13 +1,14 @@
 package pers.yufiria.craftorithm.command.recipe;
 
+import crypticlib.Invoker;
 import crypticlib.command.CommandInfo;
-import crypticlib.command.CommandInvoker;
 import crypticlib.command.CommandNode;
 import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.LifeCycleTask;
 import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
 import crypticlib.perm.PermInfo;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,6 +33,7 @@ import pers.yufiria.craftorithm.util.LangUtils;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -56,7 +58,7 @@ public final class CreateRecipeCommand extends CommandNode implements LifeCycleT
     }
 
     @Override
-    public void execute(@NotNull CommandInvoker invoker, List<String> args) {
+    public void execute(@NotNull Invoker invoker, List<String> args) {
         if (!CommandUtils.checkInvokerIsPlayer(invoker))
             return;
         if (args.isEmpty()) {
@@ -93,17 +95,21 @@ public final class CreateRecipeCommand extends CommandNode implements LifeCycleT
             LangUtils.sendLang(invoker, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
             return;
         }
-        Player player = (Player) invoker.asPlayer().getPlatformPlayer();
-        creatorFactory.create(player, recipeId, recipeFileName);
+        Optional<Player> playerOpt = invoker.asPlayer().getPlatformPlayer(Bukkit::getPlayer);
+        if (playerOpt.isEmpty()) {
+            LangUtils.sendLang(invoker, Languages.COMMAND_PLAYER_ONLY);
+            return;
+        }
+        creatorFactory.create(playerOpt.get(), recipeId, recipeFileName);
     }
 
     @Override
-    public void onNoPerm(@NotNull CommandInvoker invoker, @NotNull List<String> args) {
+    public void onNoPerm(@NotNull Invoker invoker, @NotNull List<String> args) {
         LangUtils.sendLang(invoker, Languages.COMMAND_NO_PERM);
     }
 
     @Override
-    public List<String> tabComplete(@NotNull CommandInvoker invoker, List<String> args) {
+    public List<String> tabComplete(@NotNull Invoker invoker, List<String> args) {
         if (args.size() <= 1) {
             return recipeCreatorMap.keySet().stream().map(RecipeType::typeKey).toList();
         }

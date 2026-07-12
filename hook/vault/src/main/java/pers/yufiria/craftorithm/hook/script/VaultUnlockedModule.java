@@ -10,9 +10,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.hook.VaultHook;
+import pers.yufiria.craftorithm.util.PlayerUtils;
 
 import java.math.BigDecimal;
-import java.util.Optional;
 import java.util.UUID;
 
 public enum VaultUnlockedModule implements ScriptModule {
@@ -33,25 +33,25 @@ public enum VaultUnlockedModule implements ScriptModule {
     }
 
     private ScriptValue money(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        Optional<UUID> playerIdOpt = ctx.executor().executorId();
-        if (playerIdOpt.isEmpty()) {
+        UUID playerId = PlayerUtils.getPlayerIdFromInvoker(ctx.invoker());
+        if (playerId == null) {
             return ScriptValue.of(false);
         }
         Economy economy = (Economy) VaultHook.INSTANCE.economy();
         BigDecimal balance;
         if (args.length < 1) {
-            balance = economy.balance(Craftorithm.instance().pluginName(), playerIdOpt.get());
+            balance = economy.balance(Craftorithm.instance().pluginName(), playerId);
         } else {
             String currency = args[0].asString();
-            balance = economy.balance(Craftorithm.instance().pluginName(), playerIdOpt.get(), currency);
+            balance = economy.balance(Craftorithm.instance().pluginName(), playerId, currency);
         }
         return ScriptValue.of(balance);
     }
 
     private ScriptValue takeMoney(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
-        Optional<UUID> playerIdOpt = ctx.executor().executorId();
-        if (playerIdOpt.isEmpty()) {
+        UUID playerId = PlayerUtils.getPlayerIdFromInvoker(ctx.invoker());
+        if (playerId == null) {
             return ScriptValue.of(false);
         }
         Economy economy = (Economy) VaultHook.INSTANCE.economy();
@@ -61,23 +61,22 @@ public enum VaultUnlockedModule implements ScriptModule {
         }
         if (args.length >= 2) {
             String currency = args[1].asString();
-            UUID accountID = playerIdOpt.get();
-            Player player = Bukkit.getPlayer(accountID);
+            Player player = Bukkit.getPlayer(playerId);
             if (player == null) {
                 return ScriptValue.of(false);
             }
-            economy.withdraw(Craftorithm.instance().pluginName(), accountID, player.getWorld().getName(), currency, amount);
+            economy.withdraw(Craftorithm.instance().pluginName(), playerId, player.getWorld().getName(), currency, amount);
             return ScriptValue.of(true);
         } else {
-            economy.withdraw(Craftorithm.instance().pluginName(), playerIdOpt.get(), amount);
+            economy.withdraw(Craftorithm.instance().pluginName(), playerId, amount);
             return ScriptValue.of(true);
         }
     }
 
     private ScriptValue giveMoney(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
-        Optional<UUID> playerIdOpt = ctx.executor().executorId();
-        if (playerIdOpt.isEmpty()) {
+        UUID playerId = PlayerUtils.getPlayerIdFromInvoker(ctx.invoker());
+        if (playerId == null) {
             return ScriptValue.of(false);
         }
         Economy economy = (Economy) VaultHook.INSTANCE.economy();
@@ -87,15 +86,14 @@ public enum VaultUnlockedModule implements ScriptModule {
         }
         if (args.length >= 2) {
             String currency = args[1].asString();
-            UUID accountID = playerIdOpt.get();
-            Player player = Bukkit.getPlayer(accountID);
+            Player player = Bukkit.getPlayer(playerId);
             if (player == null) {
                 return ScriptValue.of(false);
             }
-            economy.deposit(Craftorithm.instance().pluginName(), accountID, player.getWorld().getName(), currency, amount);
+            economy.deposit(Craftorithm.instance().pluginName(), playerId, player.getWorld().getName(), currency, amount);
             return ScriptValue.of(true);
         } else {
-            economy.deposit(Craftorithm.instance().pluginName(), playerIdOpt.get(), amount);
+            economy.deposit(Craftorithm.instance().pluginName(), playerId, amount);
             return ScriptValue.of(true);
         }
     }

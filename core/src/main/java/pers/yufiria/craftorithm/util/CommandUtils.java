@@ -1,6 +1,6 @@
 package pers.yufiria.craftorithm.util;
 
-import crypticlib.command.CommandInvoker;
+import crypticlib.Invoker;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.Languages;
@@ -9,7 +9,7 @@ import java.util.List;
 
 public class CommandUtils {
 
-    public static boolean checkInvokerIsPlayer(CommandInvoker invoker) {
+    public static boolean checkInvokerIsPlayer(Invoker invoker) {
         if (invoker.isPlayer()) {
             return true;
         } else {
@@ -18,7 +18,7 @@ public class CommandUtils {
         }
     }
 
-    public static CommandSender invoker2Sender(CommandInvoker invoker) {
+    public static CommandSender invoker2Sender(Invoker invoker) {
         return (CommandSender) invoker.getPlatformInvoker();
     }
 
