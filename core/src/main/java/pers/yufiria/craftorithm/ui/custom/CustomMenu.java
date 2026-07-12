@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.ui.custom;
 
 import crypticlib.script.ScriptContext;
+import crypticlib.script.ScriptExecutor;
 import crypticlib.script.compile.CompiledScript;
 import crypticlib.ui.menu.Menu;
 import org.bukkit.entity.Player;
@@ -34,7 +35,7 @@ public class CustomMenu extends TranslatableMenu implements BackableMenu {
         CompiledScript openAction = menuInfo.openAction();
         if (openAction != null) {
             if (player != null) {
-                openAction.execute(new ScriptContext(player.getUniqueId()));
+                openAction.execute(new ScriptContext(new ScriptExecutor(player.getUniqueId(), ScriptExecutor.ExecutorType.PLAYER)));
             }
         }
     }
@@ -45,7 +46,7 @@ public class CustomMenu extends TranslatableMenu implements BackableMenu {
         CompiledScript closeAction = menuInfo.closeAction();
         if (closeAction != null) {
             if (player != null) {
-                closeAction.execute(new ScriptContext(player.getUniqueId()));
+                closeAction.execute(new ScriptContext(new ScriptExecutor(player.getUniqueId(), ScriptExecutor.ExecutorType.PLAYER)));
             }
         }
     }

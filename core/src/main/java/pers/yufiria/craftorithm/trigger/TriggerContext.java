@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.trigger;
 
 import crypticlib.script.ScriptContext;
+import crypticlib.script.ScriptExecutor;
 import crypticlib.script.ScriptValue;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -56,7 +57,7 @@ public class TriggerContext {
      * 将事件变量注入为脚本可访问的变量
      */
     public ScriptContext toScriptContext() {
-        ScriptContext ctx = new ScriptContext(playerId);
+        ScriptContext ctx = new ScriptContext(new ScriptExecutor(playerId, ScriptExecutor.ExecutorType.PLAYER));
 
         if (recipeKey != null) {
             ctx.setVariable("recipe", ScriptValue.of(recipeKey.toString()));

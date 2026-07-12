@@ -34,7 +34,7 @@ public enum PlayerPointsModule implements ScriptModule {
             return ScriptValue.of(0);
         }
         PlayerPointsAPI api = ((PlayerPoints) PlayerPointsHook.INSTANCE.playerPoints()).getAPI();
-        Optional<UUID> playerIdOpt = ctx.playerId();
+        Optional<UUID> playerIdOpt = ctx.executor().executorId();
         if (playerIdOpt.isPresent()) {
             return ScriptValue.of(api.look(playerIdOpt.get()));
         }
@@ -51,7 +51,7 @@ public enum PlayerPointsModule implements ScriptModule {
         PlayerPointsAPI api = ((PlayerPoints) PlayerPointsHook.INSTANCE.playerPoints()).getAPI();
         int amount = (int) args[0].asNumber();
         if (amount > 0) {
-            Optional<UUID> playerId = ctx.playerId();
+            Optional<UUID> playerId = ctx.executor().executorId();
             if (playerId.isEmpty()) {
                 return ScriptValue.of(false);
             } else {
@@ -71,7 +71,7 @@ public enum PlayerPointsModule implements ScriptModule {
         PlayerPointsAPI api = ((PlayerPoints) PlayerPointsHook.INSTANCE.playerPoints()).getAPI();
         int amount = (int) args[0].asNumber();
         if (amount > 0) {
-            Optional<UUID> playerId = ctx.playerId();
+            Optional<UUID> playerId = ctx.executor().executorId();
             if (playerId.isEmpty()) {
                 return ScriptValue.of(false);
             } else {

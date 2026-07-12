@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.ui.icon;
 
 import crypticlib.script.ScriptContext;
+import crypticlib.script.ScriptExecutor;
 import crypticlib.script.compile.CompiledScript;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
@@ -35,7 +36,7 @@ public class ActionIcon extends TranslatableIcon {
         ClickType click = event.getClick();
         CompiledScript actionScript = actionsMap.get(click);
         if (actionScript != null) {
-            actionScript.execute(new ScriptContext(event.getWhoClicked().getUniqueId()));
+            actionScript.execute(new ScriptContext(new ScriptExecutor(event.getWhoClicked().getUniqueId(), ScriptExecutor.ExecutorType.PLAYER)));
         }
     }
 

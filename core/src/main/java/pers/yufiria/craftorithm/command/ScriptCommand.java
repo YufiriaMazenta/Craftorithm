@@ -6,6 +6,7 @@ import crypticlib.command.annotation.Command;
 import crypticlib.perm.PermInfo;
 import crypticlib.script.ScriptContext;
 import crypticlib.script.ScriptEngine;
+import crypticlib.script.ScriptExecutor;
 import crypticlib.util.FunctionExecutor;
 import crypticlib.util.IOHelper;
 import org.bukkit.entity.Player;
@@ -38,7 +39,10 @@ public class ScriptCommand extends CommandNode {
         }
         String scriptLine = String.join(" ", args);
         long executeTime = FunctionExecutor.execute(() -> {
-            ScriptEngine.INSTANCE.execute(scriptLine, new ScriptContext(Objects.requireNonNull(player).getUniqueId()));
+            ScriptEngine.INSTANCE.execute(scriptLine, new ScriptContext(new ScriptExecutor(
+                Objects.requireNonNull(player).getUniqueId(),
+                ScriptExecutor.ExecutorType.PLAYER
+            )));
         });
         LangUtils.sendLang(player, Languages.COMMAND_SCRIPT_OPERATION_TIME, Map.of("<time>", executeTime + ""));
         IOHelper.info("Player \"" + (player != null ? player.getName() : "null") + "\" execute script line: " + scriptLine);
