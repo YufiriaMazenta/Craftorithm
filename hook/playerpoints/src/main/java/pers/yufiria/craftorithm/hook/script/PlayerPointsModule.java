@@ -30,9 +30,6 @@ public enum PlayerPointsModule implements ScriptModule {
     }
 
     private ScriptValue points(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        if (!PlayerPointsHook.INSTANCE.isPlayerPointsHooked()) {
-            return ScriptValue.of(0);
-        }
         PlayerPointsAPI api = ((PlayerPoints) PlayerPointsHook.INSTANCE.playerPoints()).getAPI();
         Optional<UUID> playerIdOpt = ctx.executor().executorId();
         if (playerIdOpt.isPresent()) {
@@ -43,9 +40,6 @@ public enum PlayerPointsModule implements ScriptModule {
 
     private ScriptValue takePoints(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) {
-            return ScriptValue.of(false);
-        }
-        if (!PlayerPointsHook.INSTANCE.isPlayerPointsHooked()) {
             return ScriptValue.of(false);
         }
         PlayerPointsAPI api = ((PlayerPoints) PlayerPointsHook.INSTANCE.playerPoints()).getAPI();
@@ -63,9 +57,6 @@ public enum PlayerPointsModule implements ScriptModule {
 
     private ScriptValue givePoints(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) {
-            return ScriptValue.of(false);
-        }
-        if (!PlayerPointsHook.INSTANCE.isPlayerPointsHooked()) {
             return ScriptValue.of(false);
         }
         PlayerPointsAPI api = ((PlayerPoints) PlayerPointsHook.INSTANCE.playerPoints()).getAPI();

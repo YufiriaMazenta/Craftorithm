@@ -30,6 +30,8 @@ dependencies {
     implementation(project(":hook:sx-item"))
     implementation(project(":hook:packetevents"))
     implementation(project(":hook:protocollib"))
+    implementation(project(":hook:vault"))
+    implementation(project(":hook:playerpoints"))
     implementation("com.crypticlib:bukkit:${rootProject.findProperty("crypticlibVer")}")
 }
 

@@ -15,7 +15,9 @@ import org.bukkit.inventory.ItemStack;
 import pers.yufiria.craftorithm.item.ItemManager;
 
 @EventListener
-public class CustomFuelHandler implements Listener {
+public enum CustomFuelHandler implements Listener {
+
+    INSTANCE;
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void putFuelOnClick(InventoryClickEvent event) {

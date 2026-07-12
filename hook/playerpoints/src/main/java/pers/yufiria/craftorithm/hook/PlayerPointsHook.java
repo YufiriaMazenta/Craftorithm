@@ -44,14 +44,6 @@ public enum PlayerPointsHook implements PluginHook, LifeCycleTask {
         return playerPoints;
     }
 
-    /**
-     * 点券插件是否挂钩成功
-     * @return 挂钩结果
-     */
-    public Boolean isPlayerPointsHooked() {
-        return playerPointsHooked;
-    }
-
     @Override
     public void lifecycle(Object plugin, LifeCycle lifeCycle) {
         if (hook()) {

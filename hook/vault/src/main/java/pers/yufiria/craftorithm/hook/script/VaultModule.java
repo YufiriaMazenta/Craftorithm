@@ -30,12 +30,9 @@ public enum VaultModule implements ScriptModule {
     }
 
     private ScriptValue money(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        if (!VaultHook.INSTANCE.isEconomyHooked()) {
-            return ScriptValue.of(0);
-        }
         Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.executor().executorId().orElse(null));
         if (playerOpt.isEmpty()) {
-            return ScriptValue.nil();
+            return ScriptValue.of(false);
         }
         Player player = playerOpt.get();
         Economy economy = (Economy) VaultHook.INSTANCE.economy();
@@ -44,10 +41,9 @@ public enum VaultModule implements ScriptModule {
 
     private ScriptValue takeMoney(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
-        if (!VaultHook.INSTANCE.isEconomyHooked()) return ScriptValue.of(false);
         Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.executor().executorId().orElse(null));
         if (playerOpt.isEmpty()) {
-            return ScriptValue.nil();
+            return ScriptValue.of(false);
         }
         Player player = playerOpt.get();
         Economy economy = (Economy) VaultHook.INSTANCE.economy();
@@ -62,12 +58,9 @@ public enum VaultModule implements ScriptModule {
         if (args.length < 1) {
             return ScriptValue.of(false);
         }
-        if (!VaultHook.INSTANCE.isEconomyHooked()) {
-            return ScriptValue.of(false);
-        }
         Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(ctx.executor().executorId().orElse(null));
         if (playerOpt.isEmpty()) {
-            return ScriptValue.nil();
+            return ScriptValue.of(false);
         }
         Player player = playerOpt.get();
         Economy economy = (Economy) VaultHook.INSTANCE.economy();

@@ -23,6 +23,8 @@ import java.nio.charset.StandardCharsets;
 @EventListener
 public class UpdateChecker implements Listener {
 
+    public static final UpdateChecker INSTANCE = new UpdateChecker();
+
     private static final String MODRINTH_API_URL = "https://api.modrinth.com/v2/project/craftorithm/version?limit=1&game_versions=";
 
     @EventHandler

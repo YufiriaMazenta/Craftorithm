@@ -5,12 +5,14 @@ import crypticlib.lifecycle.LifeCycleTask;
 import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
 import crypticlib.script.ScriptEngine;
+import crypticlib.util.IOHelper;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.hook.script.VaultModule;
+import pers.yufiria.craftorithm.hook.script.VaultUnlockedModule;
 import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.util.Map;
@@ -23,10 +25,22 @@ public enum VaultHook implements PluginHook, LifeCycleTask {
     INSTANCE;
 
     private Object economy = null;
-    private Boolean economyHooked;
+    private boolean isEconomyUnlocked;
+
+    VaultHook() {
+        try {
+            Class.forName("net.milkbowl.vault2.economy.Economy");
+            isEconomyUnlocked = true;
+        } catch (ClassNotFoundException e) {
+            isEconomyUnlocked = false;
+        }
+    }
 
     @Override
     public String pluginName() {
+        if (isEconomyUnlocked) {
+            return "VaultUnlocked";
+        }
         return "Vault";
     }
 
@@ -34,17 +48,28 @@ public enum VaultHook implements PluginHook, LifeCycleTask {
     public boolean hook() {
         boolean vaultEnabled = Bukkit.getPluginManager().isPluginEnabled("Vault");
         if (!vaultEnabled) {
-            this.economyHooked = false;
             return false;
         }
-        RegisteredServiceProvider<Economy> vaultRsp = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
-        if (vaultRsp == null) {
-            this.economyHooked = false;
-            return false;
+
+        if (isEconomyUnlocked) {
+            RegisteredServiceProvider<net.milkbowl.vault2.economy.Economy> vaultRsp = Bukkit
+                .getServer()
+                .getServicesManager()
+                .getRegistration(net.milkbowl.vault2.economy.Economy.class);
+            if (vaultRsp == null) {
+                return false;
+            }
+            economy = vaultRsp.getProvider();
+            ScriptEngine.INSTANCE.registerModule(VaultUnlockedModule.INSTANCE);
+        } else {
+            RegisteredServiceProvider<Economy> vaultRsp = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
+            if (vaultRsp == null) {
+                return false;
+            }
+            economy = vaultRsp.getProvider();
+            ScriptEngine.INSTANCE.registerModule(VaultModule.INSTANCE);
         }
-        economy = vaultRsp.getProvider();
-        this.economyHooked = true;
-        ScriptEngine.INSTANCE.registerModule(VaultModule.INSTANCE);
+
         return true;
     }
 
@@ -57,14 +82,6 @@ public enum VaultHook implements PluginHook, LifeCycleTask {
      */
     public @Nullable Object economy() {
         return economy;
-    }
-
-    /**
-     * 经济插件是否挂钩成功
-     * @return 挂钩结果
-     */
-    public boolean isEconomyHooked() {
-        return economyHooked;
     }
 
     @Override
