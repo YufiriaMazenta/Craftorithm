@@ -1,10 +1,13 @@
 package pers.yufiria.craftorithm.recipe.parser;
 
+import crypticlib.MinecraftVersion;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.SmithingRecipe;
 import org.bukkit.inventory.SmithingTrimRecipe;
+import org.bukkit.inventory.meta.trim.TrimPattern;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.recipe.RecipeParser;
@@ -17,6 +20,7 @@ public enum SmithingTrimRecipeParser implements RecipeParser<SmithingRecipe> {
     INSTANCE;
 
     @Override
+    @SuppressWarnings({"removal", "deprecation"})
     public @NotNull SmithingRecipe parse(String recipeName, ConfigurationSection recipeConfig) {
         try {
             NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeName);
@@ -29,7 +33,23 @@ public enum SmithingTrimRecipeParser implements RecipeParser<SmithingRecipe> {
             if (recipeConfig.isList("copy_components_rules")) {
                 CopyComponentsManager.INSTANCE.addRecipeCopyNbtRules(recipeKey, recipeConfig.getStringList("copy_components_rules"));
             }
-            return new SmithingTrimRecipe(recipeKey, template, base, addition, true);
+            if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_21_5)) {
+                String trimPatternKeyStr = recipeConfig.getString("trim_pattern");
+                if (trimPatternKeyStr == null) {
+                    throw new RecipeLoadException("Unable to find trim pattern from " + recipeName);
+                }
+                NamespacedKey trimPatternKey = NamespacedKey.fromString(trimPatternKeyStr);
+                if (trimPatternKey == null) {
+                    throw new RecipeLoadException("Trim pattern key is invalid: " + trimPatternKeyStr);
+                }
+                TrimPattern trimPattern = Registry.TRIM_PATTERN.get(trimPatternKey);
+                if (trimPattern == null) {
+                    throw new RecipeLoadException("Unknown trim pattern: " + trimPatternKeyStr);
+                }
+                return new SmithingTrimRecipe(recipeKey, template, base, addition, trimPattern);
+            } else {
+                return new SmithingTrimRecipe(recipeKey, template, base, addition);
+            }
         } catch (RecipeLoadException e) {
             throw e;
         } catch (Throwable throwable) {

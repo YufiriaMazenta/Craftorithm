@@ -36,15 +36,9 @@ public enum SmithingTransformRecipeParser implements RecipeParser<SmithingRecipe
                 List<String> keepNbtRules = recipeConfig.getStringList("copy_components_rules");
                 CopyComponentsManager.INSTANCE.addRecipeCopyNbtRules(recipeKey, keepNbtRules);
             }
-            SmithingRecipe recipe;
-            if (MinecraftVersion.current().before(MinecraftVersion.V1_20)) {
-                recipe = new SmithingRecipe(recipeKey, result, base, addition);
-            } else {
-                String templateId = recipeConfig.getString("template");
-                RecipeChoice template = BukkitRecipeChoiceParser.parseChoice(templateId);
-                recipe = new SmithingTransformRecipe(recipeKey, result, template, base, addition);
-            }
-            return recipe;
+            String templateId = recipeConfig.getString("template");
+            RecipeChoice template = BukkitRecipeChoiceParser.parseChoice(templateId);
+            return new SmithingTransformRecipe(recipeKey, result, template, base, addition);
         } catch (RecipeLoadException e) {
             throw e;
         } catch (Throwable throwable) {

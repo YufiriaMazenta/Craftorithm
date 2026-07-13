@@ -1,0 +1,5 @@
+type: vanilla_smithing_trim
+template: 'minecraft:command_block'
+base: 'minecraft:diamond_helmet'
+addition: 'minecraft:diamond'
+trim_pattern: 'minecraft:eye' #1.21.5以上,必须设定trim_pattern, 否则无法注册配方

@@ -2,6 +2,9 @@ package pers.yufiria.craftorithm.listener;
 
 import crypticlib.MinecraftVersion;
 import crypticlib.listener.EventListener;
+import crypticlib.util.ItemHelper;
+import pers.yufiria.craftorithm.recipe.RecipeType;
+import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.util.EventUtils;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.EventHandler;
@@ -34,12 +37,20 @@ public enum SmithingHandler implements Listener {
         Recipe recipe = event.getInventory().getRecipe();
         if (recipe == null)
             return;
+        RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipe);
+        if (recipeType.equals(SimpleRecipeTypes.VANILLA_SMITHING_TRIM)) {
+            return;
+        }
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
         if (!recipeKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
             return;
         }
 
         ItemStack result = event.getInventory().getRecipe().getResult();
+        if (ItemHelper.isAir(result)) {
+            //Trim类型的锻造配方, 他的结果是air,如果接着往下设置,会报错
+            return;
+        }
         ItemManager.INSTANCE.matchItemId(result, true)
             .flatMap(id -> EventUtils.getViewer(event)
                 .flatMap(player -> ItemManager.INSTANCE.matchItem(id, player))
