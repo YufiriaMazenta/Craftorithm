@@ -37,7 +37,6 @@ public enum CraftingHandler implements Listener {
         if (fingerRecipeKey != null) {
             Recipe fingerRecipe = RecipeManager.INSTANCE.getRecipe(fingerRecipeKey);
             if (fingerRecipe != null) {
-                event.getInventory().setResult(fingerRecipe.getResult().clone());
                 refreshResultItem(event, fingerRecipe.getResult());
             }
         }
