@@ -17,3 +17,6 @@ include(
     "hook:vault",
     "hook:playerpoints"
 )
+include(
+    "nms:v1_20_1"
+)
