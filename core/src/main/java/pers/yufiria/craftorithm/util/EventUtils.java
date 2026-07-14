@@ -11,11 +11,14 @@ import org.bukkit.event.block.BlockCookEvent;
 import org.bukkit.event.block.CampfireStartEvent;
 import org.bukkit.event.block.CrafterCraftEvent;
 import org.bukkit.event.inventory.*;
+import org.bukkit.inventory.CraftingInventory;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.Nullable;
+import pers.yufiria.craftorithm.api.event.recipe.CraftItemByFingerEvent;
 import pers.yufiria.craftorithm.config.PluginConfigs;
-import pers.yufiria.craftorithm.recipe.RecipeFingerManager;
+import pers.yufiria.craftorithm.recipe.finger.RecipeFingerManager;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.extra.AnvilRecipe;
 import pers.yufiria.craftorithm.recipe.extra.AnvilRecipeHandler;
@@ -48,9 +51,6 @@ public class EventUtils {
         switch (event) {
             case CraftItemEvent craftItemEvent -> {
                 recipe = craftItemEvent.getRecipe();
-                if (recipe == null) {
-                    return RecipeFingerManager.INSTANCE.findRecipeByGrid(craftItemEvent.getInventory().getMatrix());
-                }
             }
             case PrepareItemCraftEvent prepareItemCraftEvent -> {
                 recipe = prepareItemCraftEvent.getRecipe();
@@ -72,6 +72,19 @@ public class EventUtils {
 
                 AnvilRecipe anvilRecipe = AnvilRecipeHandler.INSTANCE.matchAnvilRecipe(base, addition);
                 return anvilRecipe != null ? anvilRecipe.getKey() : null;
+            }
+            case InventoryClickEvent inventoryClickEvent -> {
+                Inventory inventory = inventoryClickEvent.getInventory();
+                if (!(inventory instanceof CraftingInventory craftingInventory)) {
+                    return null;
+                }
+                if (craftingInventory.getRecipe() != null) {
+                    recipe = craftingInventory.getRecipe();
+                } else {
+                    ItemStack[] matrix = craftingInventory.getMatrix();
+                    return RecipeFingerManager.INSTANCE.findRecipeByGrid(matrix);
+                }
+
             }
             case null -> {
                 return null;

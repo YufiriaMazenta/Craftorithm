@@ -1,6 +1,13 @@
 package pers.yufiria.craftorithm.listener;
 
 import crypticlib.listener.EventListener;
+import crypticlib.util.IOHelper;
+import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.CraftingInventory;
+import org.bukkit.inventory.Inventory;
+import pers.yufiria.craftorithm.api.event.recipe.CraftItemByFingerEvent;
+import pers.yufiria.craftorithm.api.event.recipe.PrepareItemCraftByFingerEvent;
 import pers.yufiria.craftorithm.util.EventUtils;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.EventHandler;
@@ -10,7 +17,7 @@ import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import pers.yufiria.craftorithm.item.ItemManager;
-import pers.yufiria.craftorithm.recipe.RecipeFingerManager;
+import pers.yufiria.craftorithm.recipe.finger.RecipeFingerManager;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 
 @EventListener
@@ -39,8 +46,34 @@ public enum CraftingHandler implements Listener {
             if (fingerRecipe != null) {
                 event.getInventory().setResult(fingerRecipe.getResult().clone());
                 refreshResultItem(event, event.getInventory().getResult());
+                new PrepareItemCraftByFingerEvent(event, fingerRecipeKey).call();
             }
         }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void callFingerCraftEvent(InventoryClickEvent event) {
+        Inventory inventory = event.getInventory();
+        if (!(inventory instanceof CraftingInventory craftingInventory)) {
+            return;
+        }
+        if (craftingInventory.getRecipe() != null) {
+            return;
+        }
+        int slot = event.getSlot();
+        if (slot != 0) {
+            return;
+        }
+        ItemStack[] matrix = craftingInventory.getMatrix();
+        NamespacedKey fingerRecipeKey = RecipeFingerManager.INSTANCE.findRecipeByGrid(matrix);
+        if (fingerRecipeKey != null) {
+            new CraftItemByFingerEvent(craftingInventory, fingerRecipeKey, event).call();
+        }
+    }
+
+    @EventHandler
+    public void onCraft(CraftItemEvent event) {
+        IOHelper.info("1");
     }
 
     private void refreshResultItem(PrepareItemCraftEvent event, ItemStack item) {

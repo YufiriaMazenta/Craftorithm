@@ -1,17 +1,19 @@
-package pers.yufiria.craftorithm.recipe;
+package pers.yufiria.craftorithm.recipe.finger;
 
 import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.LifeCycleTask;
 import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
+import crypticlib.util.ItemHelper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
+import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
-import pers.yufiria.craftorithm.recipe.util.RecipeFingerGenerator;
+import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.util.CollectionsUtils;
 
 import java.util.ArrayList;
@@ -30,7 +32,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @LifeCycleTaskSettings(
     rules = {
         @TaskRule(lifeCycle = LifeCycle.ENABLE, priority = 3),
-        @TaskRule(lifeCycle = LifeCycle.RELOAD, priority = 3)
+        @TaskRule(lifeCycle = LifeCycle.RELOAD, priority = 3),
+        @TaskRule(lifeCycle = LifeCycle.DISABLE)
     }
 )
 public enum RecipeFingerManager implements LifeCycleTask {
@@ -168,7 +171,7 @@ public enum RecipeFingerManager implements LifeCycleTask {
 
     private List<List<String>> toConcreteIdGrid(ItemStack[] matrix) {
         int cols = (int) Math.sqrt(matrix.length);
-        if (cols <= 0 || cols * cols != matrix.length) {
+        if (cols == 0 || cols * cols != matrix.length) {
             return List.of();
         }
 
@@ -177,7 +180,7 @@ public enum RecipeFingerManager implements LifeCycleTask {
             List<String> rowList = new ArrayList<>();
             for (int col = 0; col < cols; col++) {
                 ItemStack item = matrix[row * cols + col];
-                if (item == null || item.getType().isAir()) {
+                if (ItemHelper.isAir(item)) {
                     rowList.add(null);
                     continue;
                 }

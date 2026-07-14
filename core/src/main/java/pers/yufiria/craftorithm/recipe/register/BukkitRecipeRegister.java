@@ -8,7 +8,7 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.jetbrains.annotations.Nullable;
-import pers.yufiria.craftorithm.recipe.RecipeFingerManager;
+import pers.yufiria.craftorithm.recipe.finger.RecipeFingerManager;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeRegister;
 import pers.yufiria.craftorithm.util.ServerUtils;

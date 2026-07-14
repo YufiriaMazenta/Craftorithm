@@ -3,6 +3,7 @@ package pers.yufiria.craftorithm.api.event;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +15,7 @@ import java.util.Objects;
  * 当从Craftorithm/recipes文件夹读取配方文件并注册时触发
  * 如果被取消则该配方不会注册
  */
-public class RecipeLoadFromConfigEvent extends AbstractEvent implements Cancellable {
+public class RecipeLoadFromConfigEvent extends Event implements EventCaller, Cancellable {
 
     private static final HandlerList HANDLER_LIST = new HandlerList();
 

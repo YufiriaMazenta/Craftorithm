@@ -7,6 +7,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
+import pers.yufiria.craftorithm.api.event.recipe.CraftItemByFingerEvent;
+import pers.yufiria.craftorithm.api.event.recipe.PrepareItemCraftByFingerEvent;
 import pers.yufiria.craftorithm.trigger.CraftTriggerTypes;
 import pers.yufiria.craftorithm.trigger.TriggerContext;
 import pers.yufiria.craftorithm.trigger.TriggerManager;
@@ -15,7 +17,7 @@ import pers.yufiria.craftorithm.trigger.TriggerManager;
  * 合成触发器监听器
  */
 @EventListener
-public enum CraftTriggerHandler implements Listener {
+public enum CraftingTriggerHandler implements Listener {
 
     INSTANCE;
 
@@ -35,7 +37,7 @@ public enum CraftTriggerHandler implements Listener {
     /**
      * 实际阶段：执行 actions
      */
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onCraft(CraftItemEvent event) {
         TriggerContext ctx = CraftTriggerTypes.CRAFTING.extractContext(event);
         if (ctx == null) return;
@@ -43,5 +45,22 @@ public enum CraftTriggerHandler implements Listener {
         TriggerManager.INSTANCE.fire(CraftTriggerTypes.CRAFTING.typeKey(), ctx);
     }
 
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onPrepareCraftByFinger(PrepareItemCraftByFingerEvent event) {
+        TriggerContext ctx = CraftTriggerTypes.CRAFTING.extractPrepareContext(event);
+        if (ctx == null) return;
+        int denied = TriggerManager.INSTANCE.firePrepare(CraftTriggerTypes.CRAFTING.typeKey(), ctx);
+        if (denied > 0) {
+            event.originBukkitEvent().getInventory().setItem(0, null);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onCraftItemByFinger(CraftItemByFingerEvent event) {
+        TriggerContext ctx = CraftTriggerTypes.CRAFTING.extractContext(event);
+        if (ctx == null) return;
+        if (!(event.originBukkitEvent().getWhoClicked() instanceof Player)) return;
+        TriggerManager.INSTANCE.fire(CraftTriggerTypes.CRAFTING.typeKey(), ctx);
+    }
 
 }

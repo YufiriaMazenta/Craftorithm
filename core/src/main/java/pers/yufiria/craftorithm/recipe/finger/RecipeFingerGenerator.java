@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.recipe.util;
+package pers.yufiria.craftorithm.recipe.finger;
 
 import org.bukkit.Material;
 import org.bukkit.Tag;

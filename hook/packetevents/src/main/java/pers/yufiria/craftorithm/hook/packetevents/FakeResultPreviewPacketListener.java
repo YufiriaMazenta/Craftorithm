@@ -8,6 +8,9 @@ import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerSe
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerWindowItems;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import crypticlib.util.IOHelper;
+import pers.yufiria.craftorithm.api.event.recipe.PrepareItemCraftByFingerEvent;
+import pers.yufiria.craftorithm.recipe.finger.RecipeFingerManager;
 import pers.yufiria.craftorithm.util.EventUtils;
 import crypticlib.util.ItemHelper;
 import io.github.retrooper.packetevents.util.SpigotConversionUtil;
@@ -34,6 +37,7 @@ import pers.yufiria.craftorithm.recipe.extra.AnvilRecipeHandler;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public enum FakeResultPreviewPacketListener implements PacketListener, Listener {
@@ -47,6 +51,13 @@ public enum FakeResultPreviewPacketListener implements PacketListener, Listener 
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void refreshCraftingRecipeCache(PrepareItemCraftEvent event) {
+        //如果通过指纹匹配到了配方,就不在这里进行处理
+        ItemStack[] matrix = event.getInventory().getMatrix();
+        NamespacedKey fingerRecipeKey = RecipeFingerManager.INSTANCE.findRecipeByGrid(matrix);
+        if (fingerRecipeKey != null) {
+            return;
+        }
+
         UUID playerId = EventUtils.getViewer(event).map(HumanEntity::getUniqueId).orElse(null);
         if (playerId == null) return;
         if (ItemHelper.isAir(event.getInventory().getResult())) {
@@ -60,6 +71,35 @@ public enum FakeResultPreviewPacketListener implements PacketListener, Listener 
             PLAYER_PREPARING_RECIPE.invalidate(playerId);
             return;
         }
+        NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
+        if (recipeKey == null) {
+            //当玩家预览配方为null时，去除缓存
+            PLAYER_PREPARING_RECIPE.invalidate(playerId);
+            return;
+        }
+        PLAYER_PREPARING_RECIPE.put(playerId, new CacheRecipeData(
+            recipeKey,
+            0
+        ));
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void refreshFingerCraftingRecipeCache(PrepareItemCraftByFingerEvent event) {
+        PrepareItemCraftEvent originBukkitEvent = event.originBukkitEvent();
+        UUID playerId = EventUtils.getViewer(originBukkitEvent).map(HumanEntity::getUniqueId).orElse(null);
+        if (playerId == null) return;
+        if (ItemHelper.isAir(originBukkitEvent.getInventory().getResult())) {
+            //当玩家预览配方为null时，去除缓存
+            PLAYER_PREPARING_RECIPE.invalidate(playerId);
+            return;
+        }
+        Optional<Recipe> recipeOpt = event.recipe();
+        if (recipeOpt.isEmpty()){
+            //当玩家预览配方为null时，去除缓存
+            PLAYER_PREPARING_RECIPE.invalidate(playerId);
+            return;
+        }
+        Recipe recipe = recipeOpt.get();
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
         if (recipeKey == null) {
             //当玩家预览配方为null时，去除缓存

@@ -1,9 +1,9 @@
 package pers.yufiria.craftorithm.trigger;
 
 import crypticlib.script.ScriptValue;
+import pers.yufiria.craftorithm.api.event.recipe.CraftItemByFingerEvent;
+import pers.yufiria.craftorithm.api.event.recipe.PrepareItemCraftByFingerEvent;
 import pers.yufiria.craftorithm.util.EventUtils;
-import crypticlib.util.ItemHelper;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -13,19 +13,19 @@ import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.Nullable;
-import pers.yufiria.craftorithm.recipe.RecipeFingerManager;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.extra.AnvilRecipe;
 import pers.yufiria.craftorithm.recipe.extra.AnvilRecipeHandler;
-import pers.yufiria.craftorithm.trigger.listener.CraftTriggerHandler;
+import pers.yufiria.craftorithm.trigger.listener.CraftingTriggerHandler;
 import pers.yufiria.craftorithm.trigger.listener.SmithingTriggerHandler;
 import pers.yufiria.craftorithm.util.CollectionsUtils;
 import pers.yufiria.craftorithm.util.ItemUtils;
+import pers.yufiria.craftorithm.util.RecipeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 /**
  * 内置触发器类型
@@ -40,33 +40,42 @@ public enum CraftTriggerTypes implements TriggerType {
 
         @Override
         public Listener listener() {
-            return CraftTriggerHandler.INSTANCE;
+            return CraftingTriggerHandler.INSTANCE;
         }
 
         @Override
         public @Nullable TriggerContext extractContext(Event event) {
-            CraftItemEvent craftItemEvent = (CraftItemEvent) event;
-            if (!(craftItemEvent.getWhoClicked() instanceof Player player)) return null;
-            @Nullable ItemStack[] matrix = craftItemEvent.getInventory().getMatrix();
-            Recipe recipe = craftItemEvent.getRecipe();
-            NamespacedKey recipeKey;
-            RecipeType recipeType;
-            if (recipe != null) {
-                recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
-                recipeType = RecipeManager.INSTANCE.getRecipeType(recipe);
-            } else {
-                recipeKey = matrix != null ? RecipeFingerManager.INSTANCE.findRecipeByGrid(matrix) : null;
-                if (recipeKey == null) return null;
-                Recipe fingerRecipe = RecipeManager.INSTANCE.getRecipe(recipeKey);
-                recipeType = fingerRecipe != null ? RecipeManager.INSTANCE.getRecipeType(fingerRecipe) : null;
-            }
-            TriggerContext ctx = new TriggerContext(player.getUniqueId(), recipeKey, recipeType);
-            if (matrix != null) {
+            if (event instanceof CraftItemEvent craftItemEvent) {
+                if (!(craftItemEvent.getWhoClicked() instanceof Player player)) return null;
+                Recipe recipe = craftItemEvent.getRecipe();
+                NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
+                RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipe);
+                TriggerContext ctx = new TriggerContext(player.getUniqueId(), recipeKey, recipeType);
+                @Nullable ItemStack[] matrix = craftItemEvent.getInventory().getMatrix();
+                if (matrix != null) {
+                    addIngredientsFromMatrix(ctx, matrix);
+                }
+                ItemStack result = craftItemEvent.getInventory().getResult();
+                ctx.setVariable("craft_num", ScriptValue.of(RecipeUtils.calculateVanillaCraftNum(craftItemEvent.getClick(), matrix, result, player)));
+                return ctx;
+            } else if (event instanceof CraftItemByFingerEvent craftItemByFingerEvent) {
+                InventoryClickEvent originBukkitEvent = craftItemByFingerEvent.originBukkitEvent();
+                if (!(originBukkitEvent.getWhoClicked() instanceof Player player)) return null;
+                Optional<Recipe> recipeOpt = craftItemByFingerEvent.recipe();
+                if (recipeOpt.isEmpty()) {
+                    return null;
+                }
+                Recipe recipe = recipeOpt.get();
+                NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
+                RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipe);
+                TriggerContext ctx = new TriggerContext(player.getUniqueId(), recipeKey, recipeType);
+                @Nullable ItemStack[] matrix = craftItemByFingerEvent.inventory().getMatrix();
                 addIngredientsFromMatrix(ctx, matrix);
+                ItemStack result = craftItemByFingerEvent.inventory().getResult();
+                ctx.setVariable("craft_num", ScriptValue.of(RecipeUtils.calculateVanillaCraftNum(originBukkitEvent.getClick(), matrix, result, player)));
+                return ctx;
             }
-            ItemStack result = craftItemEvent.getInventory().getResult();
-            ctx.setVariable("craft_num", ScriptValue.of(calculateCraftNum(craftItemEvent.getClick(), matrix, result, player)));
-            return ctx;
+            return null;
         }
 
         @Override
@@ -76,26 +85,43 @@ public enum CraftTriggerTypes implements TriggerType {
 
         @Override
         public @Nullable TriggerContext extractPrepareContext(Event event) {
-            PrepareItemCraftEvent prepareItemCraftEvent = (PrepareItemCraftEvent) event;
-            if (!(prepareItemCraftEvent.getInventory().getHolder() instanceof Player player)) return null;
-            @Nullable ItemStack[] matrix = prepareItemCraftEvent.getInventory().getMatrix();
-            Recipe recipe = prepareItemCraftEvent.getRecipe();
-            NamespacedKey recipeKey;
-            RecipeType recipeType;
-            if (recipe != null) {
-                recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
-                recipeType = RecipeManager.INSTANCE.getRecipeType(recipe);
-            } else {
-                recipeKey = matrix != null ? RecipeFingerManager.INSTANCE.findRecipeByGrid(matrix) : null;
-                if (recipeKey == null) return null;
-                Recipe fingerRecipe = RecipeManager.INSTANCE.getRecipe(recipeKey);
-                recipeType = fingerRecipe != null ? RecipeManager.INSTANCE.getRecipeType(fingerRecipe) : null;
+            if (event instanceof PrepareItemCraftEvent prepareItemCraftEvent) {
+                if (prepareItemCraftEvent.getRecipe() == null) return null;
+                Optional<Player> viewer = EventUtils.getViewer(prepareItemCraftEvent);
+                if (viewer.isEmpty()) {
+                    return null;
+                }
+                Player player = viewer.get();
+                NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(prepareItemCraftEvent.getRecipe());
+                RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(prepareItemCraftEvent.getRecipe());
+                TriggerContext ctx = new TriggerContext(player.getUniqueId(), recipeKey, recipeType);
+                @Nullable ItemStack[] matrix = prepareItemCraftEvent.getInventory().getMatrix();
+                if (matrix != null) {
+                    addIngredientsFromMatrix(ctx, matrix);
+                }
+                return ctx;
+            } else if (event instanceof PrepareItemCraftByFingerEvent prepareItemCraftByFingerEvent) {
+                PrepareItemCraftEvent originBukkitEvent = prepareItemCraftByFingerEvent.originBukkitEvent();
+                Optional<Player> viewer = EventUtils.getViewer(originBukkitEvent);
+                if (viewer.isEmpty()) {
+                    return null;
+                }
+                Player player = viewer.get();
+                Optional<Recipe> recipeOpt = prepareItemCraftByFingerEvent.recipe();
+                if (recipeOpt.isEmpty()) {
+                    return null;
+                }
+                Recipe recipe = recipeOpt.get();
+                NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
+                RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipe);
+                TriggerContext ctx = new TriggerContext(player.getUniqueId(), recipeKey, recipeType);
+                @Nullable ItemStack[] matrix = originBukkitEvent.getInventory().getMatrix();
+                if (matrix != null) {
+                    addIngredientsFromMatrix(ctx, matrix);
+                }
+                return ctx;
             }
-            TriggerContext ctx = new TriggerContext(player.getUniqueId(), recipeKey, recipeType);
-            if (matrix != null) {
-                addIngredientsFromMatrix(ctx, matrix);
-            }
-            return ctx;
+            return null;
         }
 
         private static void addIngredientsFromMatrix(TriggerContext ctx, ItemStack[] matrix) {
@@ -153,7 +179,7 @@ public enum CraftTriggerTypes implements TriggerType {
                 baseItem,
                 additionItem
             };
-            ctx.setVariable("craft_num", ScriptValue.of(calculateCraftNum(smithItemEvent.getClick(), matrix, result, player)));
+            ctx.setVariable("craft_num", ScriptValue.of(RecipeUtils.calculateVanillaCraftNum(smithItemEvent.getClick(), matrix, result, player)));
             return ctx;
         }
 
@@ -257,52 +283,6 @@ public enum CraftTriggerTypes implements TriggerType {
         if (item == null || item.isEmpty()) return;
         ctx.setVariable(slotName, ItemUtils.resolveItemId(item));
         ctx.setVariable(slotName + "_amount", ItemUtils.resolveItemAmount(item));
-    }
-
-    private static int calculateCraftNum(ClickType click, ItemStack[] matrix, ItemStack result, Player player) {
-        // 普通点击只合成1个
-        if (click != ClickType.SHIFT_LEFT
-            && click != ClickType.SHIFT_RIGHT
-            && click != ClickType.CONTROL_DROP) {
-            return 1;
-        }
-        if (matrix == null) return 0;
-        int minIngredientAmount = Integer.MAX_VALUE;
-        for (ItemStack item : matrix) {
-            if (item == null || item.isEmpty()) continue;
-            minIngredientAmount = Math.min(minIngredientAmount, item.getAmount());
-        }
-        if (minIngredientAmount == Integer.MAX_VALUE) return 1;
-        // Ctrl+丢弃：合成最大数量，不受背包空间限制
-        if (click == ClickType.CONTROL_DROP) {
-            return minIngredientAmount;
-        }
-        if (ItemHelper.isAir(result)) return 1;
-        int resultAmount = result.getAmount();
-        // 计算背包能装下多少个结果物品（向上取整，适配原版行为）
-        int maxNeeded = minIngredientAmount * resultAmount;
-        int canFit = calculateCanFit(player, result, maxNeeded);
-        int canFitTimes = (canFit + resultAmount - 1) / resultAmount;
-        return Math.max(1, Math.min(minIngredientAmount, canFitTimes));
-    }
-
-    private static int calculateCanFit(Player player, ItemStack result, int maxNeeded) {
-        if (ItemHelper.isAir(result)) return 0;
-        int maxStack = result.getType().getMaxStackSize();
-        int space = 0;
-        Material resultType = result.getType();
-        for (ItemStack item : player.getInventory().getStorageContents()) {
-            if (item == null || item.isEmpty()) {
-                space += maxStack;
-            } else if (item.getType() == resultType && item.isSimilar(result)) {
-                space += maxStack - item.getAmount();
-            }
-            // 提前退出：空间已经足够
-            if (space >= maxNeeded) {
-                return space;
-            }
-        }
-        return space;
     }
 
 }
