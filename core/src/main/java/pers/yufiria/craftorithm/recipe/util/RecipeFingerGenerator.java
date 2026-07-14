@@ -206,8 +206,8 @@ public class RecipeFingerGenerator {
                 return choiceStr;
 
             default:
-                // 自定义物品 (itemsadder:ruby 等)，保持原样
-                return choiceStr.toLowerCase(Locale.ROOT);
+                // 自定义物品 (itemsadder:ruby 等)，保持原样，不改变大小写
+                return choiceStr;
         }
     }
 
