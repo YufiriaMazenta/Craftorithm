@@ -23,14 +23,15 @@ public enum CraftingHandler implements Listener {
         // 先尝试 Bukkit 原生匹配
         Recipe recipe = event.getRecipe();
         if (recipe != null) {
+            // Bukkit 匹配到了配方，Craftorithm 配方需要 refresh
             NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
             if (recipeKey != null && recipeKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
                 refreshResultItem(event, recipe.getResult());
-                return;
             }
+            return;
         }
 
-        // Bukkit 未匹配到 Craftorithm 配方，通过指纹查找
+        // Bukkit 未匹配到任何配方，通过指纹查找
         ItemStack[] matrix = event.getInventory().getMatrix();
         NamespacedKey fingerRecipeKey = RecipeFingerManager.INSTANCE.findRecipeByGrid(matrix);
         if (fingerRecipeKey != null) {

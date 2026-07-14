@@ -258,20 +258,20 @@ public enum RecipeFingerManager implements LifeCycleTask {
         int cols = grid.isEmpty() ? 0 : grid.getFirst().size();
 
         while (true) {
-            // 构建当前组合的指纹
-            StringBuilder sb = new StringBuilder();
+            // 收集当前组合的规范形式，同时生成有序和无序指纹
+            List<String> currentCanonicals = new ArrayList<>();
+            StringBuilder shapedSb = new StringBuilder();
             boolean first = true;
             int multiIdx = 0;
             for (int slotIdx : nonEmptyIndices) {
                 if (!first) {
-                    sb.append('|');
+                    shapedSb.append('|');
                 }
                 first = false;
                 int row = slotIdx / cols;
                 int col = slotIdx % cols;
-                sb.append('<').append(row).append(',').append(col).append(',');
+                shapedSb.append('<').append(row).append(',').append(col).append(',');
 
-                // 确定这个格子用哪个规范形式
                 boolean isMulti = multiIndices.contains(slotIdx);
                 String canonical;
                 if (isMulti) {
@@ -279,13 +279,24 @@ public enum RecipeFingerManager implements LifeCycleTask {
                 } else {
                     canonical = perSlotCanonicals.get(slotIdx).getFirst();
                 }
-                sb.append(canonical).append('>');
+                shapedSb.append(canonical).append('>');
+                currentCanonicals.add(canonical);
                 if (isMulti) {
                     multiIdx++;
                 }
             }
 
-            NamespacedKey key = fingerToRecipeKey.get(sb.toString());
+            // 尝试有序指纹
+            NamespacedKey key = fingerToRecipeKey.get(shapedSb.toString());
+            if (key != null) {
+                return key;
+            }
+
+            // 尝试无序指纹
+            List<String> sorted = new ArrayList<>(currentCanonicals);
+            sorted.sort(null);
+            String shapelessFinger = String.join("|", sorted);
+            key = fingerToRecipeKey.get(shapelessFinger);
             if (key != null) {
                 return key;
             }
