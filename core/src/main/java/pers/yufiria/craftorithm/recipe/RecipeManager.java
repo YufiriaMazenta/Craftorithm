@@ -263,8 +263,6 @@ public enum RecipeManager implements LifeCycleTask {
             recipeKeyToFileNameMap.put(recipeKey, recipeFileName);
             File recipeFile = recipeConfigWrapper.configFile();
             recipeCreateTimeMap.put(recipeKey, recipeFile.exists() ? recipeFile.lastModified() : System.currentTimeMillis());
-            // 注册配方指纹
-            RecipeFingerManager.INSTANCE.registerRecipeFinger(recipeKey, recipeConfig);
             if (recipeConfig.contains("group")) {
                 String groupId = recipeConfig.getString("group");
                 if (recipeGroupMap.containsKey(groupId)) {
@@ -387,8 +385,6 @@ public enum RecipeManager implements LifeCycleTask {
         if (result) {
             craftorithmRecipes.remove(recipeKey);
             recipeCreateTimeMap.remove(recipeKey);
-            // 注销配方指纹
-            RecipeFingerManager.INSTANCE.unregisterRecipeFinger(recipeKey);
             String removedFileName = recipeKeyToFileNameMap.remove(recipeKey);
             if (removedFileName != null) {
                 recipeFileNameToKeyMap.remove(removedFileName);

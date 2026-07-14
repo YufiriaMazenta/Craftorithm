@@ -313,19 +313,10 @@ public enum RecipeFingerManager implements LifeCycleTask {
 
     @Override
     public void lifecycle(Object plugin, LifeCycle lifeCycle) {
-        // 清空所有映射
+        // 清空所有映射，由 BukkitRecipeRegister 在配方注册时自然重建
         fingerToRecipeKey.clear();
         recipeKeyToFingers.clear();
         concreteToCanonical.clear();
-
-        // 遍历所有已注册的 Craftorithm 配方，重新构建指纹
-        RecipeManager recipeManager = RecipeManager.INSTANCE;
-        for (NamespacedKey recipeKey : recipeManager.craftorithmRecipes().keySet()) {
-            YamlConfiguration config = recipeManager.getRecipeConfig(recipeKey);
-            if (config != null) {
-                registerRecipeFinger(recipeKey, config);
-            }
-        }
     }
 
 }
