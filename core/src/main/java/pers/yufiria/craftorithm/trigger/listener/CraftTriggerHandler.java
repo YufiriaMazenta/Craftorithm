@@ -22,7 +22,7 @@ public enum CraftTriggerHandler implements Listener {
     /**
      * Prepare 阶段：检查 deny 条件，清空结果槽拒绝合成
      */
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOW)
     public void onPrepareCraft(PrepareItemCraftEvent event) {
         TriggerContext ctx = CraftTriggerTypes.CRAFTING.extractPrepareContext(event);
         if (ctx == null) return;

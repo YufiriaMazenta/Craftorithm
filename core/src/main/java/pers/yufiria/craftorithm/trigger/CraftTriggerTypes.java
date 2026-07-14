@@ -13,6 +13,7 @@ import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.Nullable;
+import pers.yufiria.craftorithm.recipe.RecipeFingerManager;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.extra.AnvilRecipe;
@@ -46,11 +47,20 @@ public enum CraftTriggerTypes implements TriggerType {
         public @Nullable TriggerContext extractContext(Event event) {
             CraftItemEvent craftItemEvent = (CraftItemEvent) event;
             if (!(craftItemEvent.getWhoClicked() instanceof Player player)) return null;
-            Recipe recipe = craftItemEvent.getRecipe();
-            NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
-            RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipe);
-            TriggerContext ctx = new TriggerContext(player.getUniqueId(), recipeKey, recipeType);
             @Nullable ItemStack[] matrix = craftItemEvent.getInventory().getMatrix();
+            Recipe recipe = craftItemEvent.getRecipe();
+            NamespacedKey recipeKey;
+            RecipeType recipeType;
+            if (recipe != null) {
+                recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
+                recipeType = RecipeManager.INSTANCE.getRecipeType(recipe);
+            } else {
+                recipeKey = matrix != null ? RecipeFingerManager.INSTANCE.findRecipeByGrid(matrix) : null;
+                if (recipeKey == null) return null;
+                Recipe fingerRecipe = RecipeManager.INSTANCE.getRecipe(recipeKey);
+                recipeType = fingerRecipe != null ? RecipeManager.INSTANCE.getRecipeType(fingerRecipe) : null;
+            }
+            TriggerContext ctx = new TriggerContext(player.getUniqueId(), recipeKey, recipeType);
             if (matrix != null) {
                 addIngredientsFromMatrix(ctx, matrix);
             }
@@ -67,12 +77,21 @@ public enum CraftTriggerTypes implements TriggerType {
         @Override
         public @Nullable TriggerContext extractPrepareContext(Event event) {
             PrepareItemCraftEvent prepareItemCraftEvent = (PrepareItemCraftEvent) event;
-            if (prepareItemCraftEvent.getRecipe() == null) return null;
             if (!(prepareItemCraftEvent.getInventory().getHolder() instanceof Player player)) return null;
-            NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(prepareItemCraftEvent.getRecipe());
-            RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(prepareItemCraftEvent.getRecipe());
-            TriggerContext ctx = new TriggerContext(player.getUniqueId(), recipeKey, recipeType);
             @Nullable ItemStack[] matrix = prepareItemCraftEvent.getInventory().getMatrix();
+            Recipe recipe = prepareItemCraftEvent.getRecipe();
+            NamespacedKey recipeKey;
+            RecipeType recipeType;
+            if (recipe != null) {
+                recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
+                recipeType = RecipeManager.INSTANCE.getRecipeType(recipe);
+            } else {
+                recipeKey = matrix != null ? RecipeFingerManager.INSTANCE.findRecipeByGrid(matrix) : null;
+                if (recipeKey == null) return null;
+                Recipe fingerRecipe = RecipeManager.INSTANCE.getRecipe(recipeKey);
+                recipeType = fingerRecipe != null ? RecipeManager.INSTANCE.getRecipeType(fingerRecipe) : null;
+            }
+            TriggerContext ctx = new TriggerContext(player.getUniqueId(), recipeKey, recipeType);
             if (matrix != null) {
                 addIngredientsFromMatrix(ctx, matrix);
             }

@@ -12,8 +12,14 @@ import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.util.RecipeFingerGenerator;
+import pers.yufiria.craftorithm.util.CollectionsUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -31,15 +37,23 @@ public enum RecipeFingerManager implements LifeCycleTask {
 
     INSTANCE;
 
-    /** 规范指纹 → 配方 Key（主查询表） */
-    private final Map<String, NamespacedKey> fingerToRecipeKey = new ConcurrentHashMap<>();
+    private static final int MAX_CANDIDATE_COMBINATIONS = 4096;
+
+    /** 规范指纹 → 按注册顺序保存的配方 Key（后注册优先） */
+    private final Map<String, List<NamespacedKey>> fingerToRecipeKeys = new ConcurrentHashMap<>();
 
     /** 配方 Key → 它注册的所有规范指纹（卸载时清理用） */
     private final Map<NamespacedKey, List<String>> recipeKeyToFingers = new ConcurrentHashMap<>();
 
+    /** 配方 Key → 它持有的 canonical 反查映射 */
+    private final Map<NamespacedKey, Set<RecipeFingerGenerator.CanonicalMapping>> recipeKeyToCanonicalMappings = new ConcurrentHashMap<>();
+
+    /** canonical 反查映射引用计数，避免移除一个配方时影响其他配方 */
+    private final Map<RecipeFingerGenerator.CanonicalMapping, Integer> canonicalMappingReferenceCounts = new ConcurrentHashMap<>();
+
     /**
-     * 具体物品 ID → 它所属的规范形式（反查表）。<p>
-     * 一个物品可能同时属于多个 tag，所以 value 是 Set。
+     * 具体物品 ID → 它所属的规范形式。<p>
+     * 一个物品可能同时属于多个 tag / itempack，所以 value 是 Set。
      */
     private final Map<String, Set<String>> concreteToCanonical = new ConcurrentHashMap<>();
 
@@ -48,50 +62,82 @@ public enum RecipeFingerManager implements LifeCycleTask {
     /**
      * 根据配方配置构建并注册指纹。
      *
-     * @param recipeKey  配方 NamespacedKey
+     * @param recipeKey 配方 NamespacedKey
      * @param recipeConfig 配方 YAML 配置
      */
     public void registerRecipeFinger(NamespacedKey recipeKey, YamlConfiguration recipeConfig) {
-        List<String> fingers = RecipeFingerGenerator.generateFingers(recipeConfig);
+        unregisterRecipeFinger(recipeKey);
+
+        RecipeFingerGenerator.GenerationResult generationResult = RecipeFingerGenerator.generate(recipeConfig);
+        List<String> fingers = generationResult.fingers().stream()
+            .distinct()
+            .toList();
         if (fingers.isEmpty()) {
             return;
         }
+
+        Set<RecipeFingerGenerator.CanonicalMapping> canonicalMappings = generationResult.canonicalMappings();
+        for (RecipeFingerGenerator.CanonicalMapping canonicalMapping : canonicalMappings) {
+            registerCanonicalMapping(canonicalMapping);
+        }
+        recipeKeyToCanonicalMappings.put(recipeKey, canonicalMappings);
+
         for (String finger : fingers) {
-            fingerToRecipeKey.put(finger, recipeKey);
+            registerFinger(finger, recipeKey);
         }
         recipeKeyToFingers.put(recipeKey, fingers);
     }
 
+    private void registerFinger(String finger, NamespacedKey recipeKey) {
+        fingerToRecipeKeys.compute(finger, (ignored, recipeKeys) -> {
+            List<NamespacedKey> updated = recipeKeys == null ? new ArrayList<>() : new ArrayList<>(recipeKeys);
+            updated.remove(recipeKey);
+            updated.add(recipeKey);
+            return List.copyOf(updated);
+        });
+    }
+
     /**
-     * 注销一个配方的所有指纹。
+     * 注销一个配方的所有指纹和 canonical 反查映射。
      */
     public void unregisterRecipeFinger(NamespacedKey recipeKey) {
         List<String> fingers = recipeKeyToFingers.remove(recipeKey);
         if (fingers != null) {
-            fingers.forEach(fingerToRecipeKey::remove);
+            for (String finger : fingers) {
+                fingerToRecipeKeys.computeIfPresent(finger, (ignored, recipeKeys) -> {
+                    List<NamespacedKey> updated = new ArrayList<>(recipeKeys);
+                    updated.remove(recipeKey);
+                    return updated.isEmpty() ? null : List.copyOf(updated);
+                });
+            }
+        }
+
+        Set<RecipeFingerGenerator.CanonicalMapping> canonicalMappings = recipeKeyToCanonicalMappings.remove(recipeKey);
+        if (canonicalMappings != null) {
+            canonicalMappings.forEach(this::unregisterCanonicalMapping);
         }
     }
 
     // ====================== 反查表 ======================
 
-    /**
-     * 注册一个具体物品到规范形式的反查映射。<p>
-     * 在解析 tag / itempack 配方材料时调用。
-     *
-     * @param concreteId    具体物品 ID，如 "minecraft:oak_planks"
-     * @param canonicalForm 规范形式，如 "tag:minecraft:planks"
-     */
-    public void registerCanonicalMapping(String concreteId, String canonicalForm) {
-        concreteToCanonical.computeIfAbsent(concreteId, k -> ConcurrentHashMap.newKeySet())
-            .add(canonicalForm);
+    private void registerCanonicalMapping(RecipeFingerGenerator.CanonicalMapping canonicalMapping) {
+        canonicalMappingReferenceCounts.merge(canonicalMapping, 1, Integer::sum);
+        concreteToCanonical.computeIfAbsent(canonicalMapping.concreteId(), ignored -> ConcurrentHashMap.newKeySet())
+            .add(canonicalMapping.canonicalForm());
     }
 
-    /**
-     * 获取一个具体物品 ID 对应的所有规范形式。<p>
-     * 如果没有注册过反查映射，返回空集合。
-     */
-    public Set<String> getCanonicalForms(String concreteId) {
-        return concreteToCanonical.getOrDefault(concreteId, Collections.emptySet());
+    private void unregisterCanonicalMapping(RecipeFingerGenerator.CanonicalMapping canonicalMapping) {
+        canonicalMappingReferenceCounts.computeIfPresent(canonicalMapping, (ignored, referenceCount) -> {
+            if (referenceCount > 1) {
+                return referenceCount - 1;
+            }
+
+            concreteToCanonical.computeIfPresent(canonicalMapping.concreteId(), (concreteId, canonicalForms) -> {
+                canonicalForms.remove(canonicalMapping.canonicalForm());
+                return canonicalForms.isEmpty() ? null : canonicalForms;
+            });
+            return null;
+        });
     }
 
     // ====================== 查询 ======================
@@ -99,85 +145,71 @@ public enum RecipeFingerManager implements LifeCycleTask {
     /**
      * 根据合成网格物品查找配方 Key。
      *
-     * @param matrix 合成网格（3x3，可能包含 null）
+     * @param matrix 合成网格（2x2 或 3x3，可能包含 null）
      * @return 匹配到的配方 Key，未匹配返回 null
      */
     public @Nullable NamespacedKey findRecipeByGrid(ItemStack[] matrix) {
-        // 转为二维列表
-        List<List<String>> grid = new ArrayList<>();
+        if (matrix == null || matrix.length == 0) {
+            return null;
+        }
+
+        List<List<String>> grid = toConcreteIdGrid(matrix);
+        if (grid.isEmpty()) {
+            return null;
+        }
+
+        CollectionsUtils.trimEmptyBorders(grid, Objects::isNull);
+        if (grid.isEmpty()) {
+            return null;
+        }
+
+        return findWithCandidateExpansion(grid);
+    }
+
+    private List<List<String>> toConcreteIdGrid(ItemStack[] matrix) {
         int cols = (int) Math.sqrt(matrix.length);
+        if (cols <= 0 || cols * cols != matrix.length) {
+            return List.of();
+        }
+
+        List<List<String>> grid = new ArrayList<>();
         for (int row = 0; row < cols; row++) {
             List<String> rowList = new ArrayList<>();
             for (int col = 0; col < cols; col++) {
                 ItemStack item = matrix[row * cols + col];
                 if (item == null || item.getType().isAir()) {
                     rowList.add(null);
-                } else {
-                    NamespacedItemIdStack idStack = ItemManager.INSTANCE.matchItemId(item, true);
-                    String concreteId;
-                    if (idStack != null) {
-                        concreteId = idStack.itemId().toString();
-                    } else {
-                        concreteId = NamespacedItemId.fromMaterial(item.getType()).toString();
-                    }
-                    rowList.add(concreteId);
+                    continue;
                 }
+
+                NamespacedItemIdStack idStack = ItemManager.INSTANCE.matchItemId(item, true).orElse(null);
+                String concreteId = idStack != null
+                    ? idStack.itemId().toString()
+                    : NamespacedItemId.fromMaterial(item.getType()).toString();
+                rowList.add(concreteId);
             }
             grid.add(rowList);
         }
+        return grid;
+    }
 
-        // 裁剪空行空列
-        pers.yufiria.craftorithm.util.CollectionsUtils.trimEmptyBorders(grid, Objects::isNull);
-
-        if (grid.isEmpty()) {
+    /**
+     * 对每个非空格子尝试“具体 ID + 所有规范形式”。<p>
+     * 具体 ID 永远先于 tag / itempack，避免更具体配方被宽泛材料覆盖。
+     */
+    private @Nullable NamespacedKey findWithCandidateExpansion(List<List<String>> grid) {
+        List<SlotCandidate> slots = collectSlotCandidates(grid);
+        if (slots.isEmpty()) {
             return null;
         }
 
-        // 尝试有序配方指纹（带坐标）
-        String finger = buildCanonicalFinger(grid);
-        NamespacedKey key = fingerToRecipeKey.get(finger);
-        if (key != null) {
-            return key;
-        }
-
-        // 尝试无序配方指纹（排序，无坐标）
-        String shapelessFinger = buildShapelessFinger(grid);
-        key = fingerToRecipeKey.get(shapelessFinger);
-        if (key != null) {
-            return key;
-        }
-
-        // fallback: 尝试每个格子的所有规范形式组合
-        return findWithCanonicalExpansion(grid);
+        String[] choices = new String[slots.size()];
+        int[] checkedCombinations = {0};
+        return findWithCandidateExpansion(slots, choices, 0, checkedCombinations);
     }
 
-    /**
-     * 用裁剪后的 grid 生成无序配方规范指纹（排序，无坐标）。
-     */
-    private String buildShapelessFinger(List<List<String>> grid) {
-        List<String> canonicals = new ArrayList<>();
-        for (List<String> row : grid) {
-            for (String concreteId : row) {
-                if (concreteId == null) {
-                    continue;
-                }
-                canonicals.add(toCanonicalForm(concreteId));
-            }
-        }
-        if (canonicals.isEmpty()) {
-            return "";
-        }
-        canonicals.sort(null);
-        return String.join("|", canonicals);
-    }
-
-    /**
-     * 用裁剪后的 grid 生成规范指纹（有序配方格式：带坐标）。
-     * 每个格子取第一个可用的规范形式。
-     */
-    private String buildCanonicalFinger(List<List<String>> grid) {
-        StringBuilder sb = new StringBuilder();
-        boolean first = true;
+    private List<SlotCandidate> collectSlotCandidates(List<List<String>> grid) {
+        List<SlotCandidate> slots = new ArrayList<>();
         for (int row = 0; row < grid.size(); row++) {
             List<String> rowList = grid.get(row);
             for (int col = 0; col < rowList.size(); col++) {
@@ -185,148 +217,104 @@ public enum RecipeFingerManager implements LifeCycleTask {
                 if (concreteId == null) {
                     continue;
                 }
-                if (!first) {
-                    sb.append('|');
-                }
-                first = false;
-                sb.append('<').append(row).append(',').append(col).append(',');
-                sb.append(toCanonicalForm(concreteId));
-                sb.append('>');
+                slots.add(new SlotCandidate(row, col, candidateForms(concreteId)));
             }
+        }
+        return slots;
+    }
+
+    private List<String> candidateForms(String concreteId) {
+        LinkedHashSet<String> forms = new LinkedHashSet<>();
+        forms.add(concreteId);
+
+        Set<String> canonicals = concreteToCanonical.get(concreteId);
+        if (canonicals != null && !canonicals.isEmpty()) {
+            canonicals.stream()
+                .sorted()
+                .forEach(forms::add);
+        }
+        return List.copyOf(forms);
+    }
+
+    private @Nullable NamespacedKey findWithCandidateExpansion(
+        List<SlotCandidate> slots,
+        String[] choices,
+        int slotIndex,
+        int[] checkedCombinations
+    ) {
+        if (checkedCombinations[0] >= MAX_CANDIDATE_COMBINATIONS) {
+            return null;
+        }
+
+        if (slotIndex >= slots.size()) {
+            checkedCombinations[0]++;
+            NamespacedKey key = findRecipeKey(buildShapedFinger(slots, choices));
+            if (key != null) {
+                return key;
+            }
+            return findRecipeKey(buildShapelessFinger(choices));
+        }
+
+        for (String candidate : slots.get(slotIndex).candidates()) {
+            choices[slotIndex] = candidate;
+            NamespacedKey key = findWithCandidateExpansion(slots, choices, slotIndex + 1, checkedCombinations);
+            if (key != null) {
+                return key;
+            }
+        }
+        return null;
+    }
+
+    private String buildShapedFinger(List<SlotCandidate> slots, String[] choices) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < slots.size(); i++) {
+            if (i > 0) {
+                sb.append('|');
+            }
+            SlotCandidate slot = slots.get(i);
+            sb.append('<')
+                .append(slot.row())
+                .append(',')
+                .append(slot.col())
+                .append(',')
+                .append(choices[i])
+                .append('>');
         }
         return sb.toString();
     }
 
-    /**
-     * 将具体物品 ID 转为规范形式。<p>
-     * 优先使用反查表中第一个匹配的规范形式，否则返回原 ID。
-     */
-    private String toCanonicalForm(String concreteId) {
-        Set<String> canonicals = concreteToCanonical.get(concreteId);
-        if (canonicals != null && !canonicals.isEmpty()) {
-            return canonicals.iterator().next();
-        }
-        return concreteId;
+    private String buildShapelessFinger(String[] choices) {
+        List<String> sorted = new ArrayList<>(List.of(choices));
+        sorted.sort(null);
+        return String.join("|", sorted);
     }
 
-    /**
-     * 当直接匹配失败时，尝试每个格子的所有规范形式组合。<p>
-     * 用于处理一个物品同时属于多个 tag 的边界情况。
-     */
-    private @Nullable NamespacedKey findWithCanonicalExpansion(List<List<String>> grid) {
-        // 收集每个格子的所有可能规范形式
-        List<List<String>> perSlotCanonicals = new ArrayList<>();
-        for (List<String> row : grid) {
-            for (String concreteId : row) {
-                if (concreteId == null) {
-                    perSlotCanonicals.add(List.of());
-                } else {
-                    Set<String> canonicals = concreteToCanonical.get(concreteId);
-                    if (canonicals != null && !canonicals.isEmpty()) {
-                        perSlotCanonicals.add(new ArrayList<>(canonicals));
-                    } else {
-                        perSlotCanonicals.add(List.of(concreteId));
-                    }
-                }
-            }
-        }
-
-        // 收集所有非空格子的索引
-        List<Integer> nonEmptyIndices = new ArrayList<>();
-        for (int i = 0; i < perSlotCanonicals.size(); i++) {
-            if (!perSlotCanonicals.get(i).isEmpty()) {
-                nonEmptyIndices.add(i);
-            }
-        }
-
-        if (nonEmptyIndices.isEmpty()) {
+    private @Nullable NamespacedKey findRecipeKey(String finger) {
+        List<NamespacedKey> recipeKeys = fingerToRecipeKeys.get(finger);
+        if (recipeKeys == null || recipeKeys.isEmpty()) {
             return null;
         }
 
-        // 找到有多个规范形式的格子（需要尝试组合的）
-        List<Integer> multiIndices = nonEmptyIndices.stream()
-            .filter(i -> perSlotCanonicals.get(i).size() > 1)
-            .toList();
-
-        // 如果没有多选格子，说明之前已经匹配过了，直接返回 null
-        if (multiIndices.isEmpty()) {
-            return null;
-        }
-
-        // 回溯尝试所有多选格子的组合
-        int[] choices = new int[multiIndices.size()];
-        int cols = grid.isEmpty() ? 0 : grid.getFirst().size();
-
-        while (true) {
-            // 收集当前组合的规范形式，同时生成有序和无序指纹
-            List<String> currentCanonicals = new ArrayList<>();
-            StringBuilder shapedSb = new StringBuilder();
-            boolean first = true;
-            int multiIdx = 0;
-            for (int slotIdx : nonEmptyIndices) {
-                if (!first) {
-                    shapedSb.append('|');
-                }
-                first = false;
-                int row = slotIdx / cols;
-                int col = slotIdx % cols;
-                shapedSb.append('<').append(row).append(',').append(col).append(',');
-
-                boolean isMulti = multiIndices.contains(slotIdx);
-                String canonical;
-                if (isMulti) {
-                    canonical = perSlotCanonicals.get(slotIdx).get(choices[multiIdx]);
-                } else {
-                    canonical = perSlotCanonicals.get(slotIdx).getFirst();
-                }
-                shapedSb.append(canonical).append('>');
-                currentCanonicals.add(canonical);
-                if (isMulti) {
-                    multiIdx++;
-                }
-            }
-
-            // 尝试有序指纹
-            NamespacedKey key = fingerToRecipeKey.get(shapedSb.toString());
-            if (key != null) {
-                return key;
-            }
-
-            // 尝试无序指纹
-            List<String> sorted = new ArrayList<>(currentCanonicals);
-            sorted.sort(null);
-            String shapelessFinger = String.join("|", sorted);
-            key = fingerToRecipeKey.get(shapelessFinger);
-            if (key != null) {
-                return key;
-            }
-
-            // 递增选择
-            boolean overflow = true;
-            for (int i = 0; i < choices.length; i++) {
-                int maxChoice = perSlotCanonicals.get(multiIndices.get(i)).size();
-                choices[i]++;
-                if (choices[i] < maxChoice) {
-                    overflow = false;
-                    break;
-                }
-                choices[i] = 0;
-            }
-            if (overflow) {
-                break;
+        for (int i = recipeKeys.size() - 1; i >= 0; i--) {
+            NamespacedKey recipeKey = recipeKeys.get(i);
+            if (RecipeManager.INSTANCE.getRecipe(recipeKey) != null) {
+                return recipeKey;
             }
         }
-
         return null;
     }
+
+    private record SlotCandidate(int row, int col, List<String> candidates) {}
 
     // ====================== 生命周期 ======================
 
     @Override
     public void lifecycle(Object plugin, LifeCycle lifeCycle) {
         // 清空所有映射，由 BukkitRecipeRegister 在配方注册时自然重建
-        fingerToRecipeKey.clear();
+        fingerToRecipeKeys.clear();
         recipeKeyToFingers.clear();
+        recipeKeyToCanonicalMappings.clear();
+        canonicalMappingReferenceCounts.clear();
         concreteToCanonical.clear();
     }
 

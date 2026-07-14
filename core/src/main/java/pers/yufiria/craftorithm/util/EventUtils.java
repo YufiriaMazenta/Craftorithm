@@ -13,7 +13,9 @@ import org.bukkit.event.block.CrafterCraftEvent;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
+import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.PluginConfigs;
+import pers.yufiria.craftorithm.recipe.RecipeFingerManager;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.extra.AnvilRecipe;
 import pers.yufiria.craftorithm.recipe.extra.AnvilRecipeHandler;
@@ -38,27 +40,41 @@ public class EventUtils {
     }
 
     public static boolean isCraftorithmRecipeEvent(Event event) {
+        return getCraftorithmRecipeKey(event) != null;
+    }
+
+    public static @Nullable NamespacedKey getCraftorithmRecipeKey(Event event) {
         Recipe recipe = null;
         switch (event) {
-            case CraftItemEvent craftItemEvent -> recipe = craftItemEvent.getRecipe();
-            case PrepareItemCraftEvent prepareItemCraftEvent -> recipe = prepareItemCraftEvent.getRecipe();
+            case CraftItemEvent craftItemEvent -> {
+                recipe = craftItemEvent.getRecipe();
+                if (recipe == null) {
+                    return RecipeFingerManager.INSTANCE.findRecipeByGrid(craftItemEvent.getInventory().getMatrix());
+                }
+            }
+            case PrepareItemCraftEvent prepareItemCraftEvent -> {
+                recipe = prepareItemCraftEvent.getRecipe();
+                if (recipe == null) {
+                    return RecipeFingerManager.INSTANCE.findRecipeByGrid(prepareItemCraftEvent.getInventory().getMatrix());
+                }
+            }
             case PrepareSmithingEvent prepareSmithingEvent -> recipe = prepareSmithingEvent.getInventory().getRecipe();
             case SmithItemEvent smithItemEvent -> recipe = smithItemEvent.getInventory().getRecipe();
             case FurnaceSmeltEvent furnaceSmeltEvent -> recipe = furnaceSmeltEvent.getRecipe();
             case BlockCookEvent blockCookEvent -> recipe = blockCookEvent.getRecipe();
             case PrepareAnvilEvent prepareAnvilEvent -> {
                 if (!PluginConfigs.ENABLE_ANVIL_RECIPE.value())
-                    return false;
+                    return null;
                 ItemStack base = prepareAnvilEvent.getInventory().getItem(0);
                 ItemStack addition = prepareAnvilEvent.getInventory().getItem(1);
                 if (ItemHelper.isAir(base) || ItemHelper.isAir(addition))
-                    return false;
+                    return null;
 
                 AnvilRecipe anvilRecipe = AnvilRecipeHandler.INSTANCE.matchAnvilRecipe(base, addition);
-                return anvilRecipe != null;
+                return anvilRecipe != null ? anvilRecipe.getKey() : null;
             }
             case null -> {
-                return false;
+                return null;
             }
             default -> {
                 if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_17_1)) {
@@ -80,10 +96,18 @@ public class EventUtils {
                 }
             }
         }
+        return getCraftorithmRecipeKey(recipe);
+    }
+
+    public static @Nullable NamespacedKey getCraftorithmRecipeKey(@Nullable Recipe recipe) {
         if (recipe == null) {
-            return false;
+            return null;
         }
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
+        return isCraftorithmRecipeKey(recipeKey) ? recipeKey : null;
+    }
+
+    public static boolean isCraftorithmRecipeKey(@Nullable NamespacedKey recipeKey) {
         return recipeKey != null && recipeKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE);
     }
 
