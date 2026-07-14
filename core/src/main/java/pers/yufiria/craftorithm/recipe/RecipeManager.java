@@ -255,7 +255,7 @@ public enum RecipeManager implements LifeCycleTask {
         if (recipeLoadFromConfigEvent.isCancelled()) {
             return false;
         }
-        boolean result = recipeLoadFromConfigEvent.recipeRegister().registerRecipe(recipeLoadFromConfigEvent.recipe());
+        boolean result = recipeLoadFromConfigEvent.recipeRegister().registerRecipe(recipeLoadFromConfigEvent.recipe(), recipeConfig);
         if (result) {
             craftorithmRecipes.put(recipeKey, recipe);
             recipeConfigWrapperMap.put(recipeKey, recipeConfigWrapper);
