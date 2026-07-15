@@ -1,8 +1,6 @@
 package pers.yufiria.craftorithm.listener;
 
 import crypticlib.listener.EventListener;
-import crypticlib.util.IOHelper;
-import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
@@ -17,6 +15,7 @@ import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import pers.yufiria.craftorithm.item.ItemManager;
+import pers.yufiria.craftorithm.nms.CraftingMenuCurrentRecipeSetters;
 import pers.yufiria.craftorithm.recipe.finger.RecipeFingerManager;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 
@@ -44,6 +43,7 @@ public enum CraftingHandler implements Listener {
         if (fingerRecipeKey != null) {
             Recipe fingerRecipe = RecipeManager.INSTANCE.getRecipe(fingerRecipeKey);
             if (fingerRecipe != null) {
+                CraftingMenuCurrentRecipeSetters.INSTANCE.setCurrentRecipe(event.getInventory(), fingerRecipeKey, fingerRecipe);
                 event.getInventory().setResult(fingerRecipe.getResult().clone());
                 refreshResultItem(event, event.getInventory().getResult());
                 new PrepareItemCraftByFingerEvent(event, fingerRecipeKey).call();
@@ -69,11 +69,6 @@ public enum CraftingHandler implements Listener {
         if (fingerRecipeKey != null) {
             new CraftItemByFingerEvent(craftingInventory, fingerRecipeKey, event).call();
         }
-    }
-
-    @EventHandler
-    public void onCraft(CraftItemEvent event) {
-        IOHelper.info("1");
     }
 
     private void refreshResultItem(PrepareItemCraftEvent event, ItemStack item) {

@@ -18,6 +18,7 @@ import pers.yufiria.craftorithm.bstat.Metrics;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.exception.UnsupportedVersionException;
+import pers.yufiria.craftorithm.nms.CraftingMenuCurrentRecipeSetters;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.script.ActionModule;
@@ -50,6 +51,7 @@ public final class Craftorithm extends BukkitPlugin implements LifeCycleTask {
             BukkitMsgSender.INSTANCE.info("&cUnsupported Version");
             throw new UnsupportedVersionException();
         }
+        CraftingMenuCurrentRecipeSetters.INSTANCE.load();
     }
 
     @Override
