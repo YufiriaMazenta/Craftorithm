@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.CustomRecipe;
-import pers.yufiria.craftorithm.recipe.choice.StackableItemIdChoice;
+import pers.yufiria.craftorithm.api.recipe.choice.StackableItemIdChoice;
 
 public class AnvilRecipe implements CustomRecipe {
 

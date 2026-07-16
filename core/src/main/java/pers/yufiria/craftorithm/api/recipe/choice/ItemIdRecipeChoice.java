@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.recipe.choice;
+package pers.yufiria.craftorithm.api.recipe.choice;
 
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
@@ -47,11 +47,11 @@ public class ItemIdRecipeChoice implements CustomRecipeChoice {
 
     @Override
     public boolean test(@NotNull ItemStack itemStack) {
-        Optional<NamespacedItemIdStack> itemIdStackOpt = ItemManager.INSTANCE.matchItemId(itemStack, true);
-        if (itemIdStackOpt.isEmpty()) {
+        Optional<NamespacedItemIdStack> inputItemIdStackOpt = ItemManager.INSTANCE.matchItemIdOrVanilla(itemStack, true);
+        if (inputItemIdStackOpt.isEmpty()) {
             return false;
         }
-        NamespacedItemIdStack itemIdStack = itemIdStackOpt.get();
+        NamespacedItemIdStack itemIdStack = inputItemIdStackOpt.get();
         return ingredients.contains(itemIdStack.itemId());
     }
 

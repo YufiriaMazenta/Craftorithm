@@ -9,7 +9,10 @@ import org.bukkit.Tag;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.RecipeChoice;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
+import pers.yufiria.craftorithm.api.recipe.choice.CustomRecipeChoice;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -107,6 +110,47 @@ public class RecipeUtils {
         return null;
     }
 
+    /**
+     * 回溯匹配
+     * 用于无序配方判断材料是否足够
+     * @param items
+     * @param choices
+     * @return
+     */
+    @ApiStatus.Internal
+    public static boolean matchItemsToChoices(
+        List<ItemStack> items,
+        List<RecipeChoice> choices
+    ) {
+        // 使用一个 boolean 数组标记成分是否已被使用
+        boolean[] used = new boolean[choices.size()];
+        return backtrack(items, choices, used, 0);
+    }
+
+    private static boolean backtrack(
+        List<ItemStack> items,
+        List<RecipeChoice> choices,
+        boolean[] used,
+        int itemIndex
+    ) {
+        // 所有物品都已匹配成功
+        if (itemIndex == items.size()) {
+            return true;
+        }
+        org.bukkit.inventory.ItemStack currentItem = items.get(itemIndex);
+        // 尝试将当前物品匹配到任意一个未使用的成分
+        for (int i = 0; i < choices.size(); i++) {
+            if (!used[i] && choices.get(i).test(currentItem)) {
+                used[i] = true;
+                if (backtrack(items, choices, used, itemIndex + 1)) {
+                    return true;
+                }
+                used[i] = false; // 回溯
+            }
+        }
+        return false;
+    }
+
     public static int calculateVanillaCraftNum(ClickType click, ItemStack[] matrix, ItemStack result, Player player) {
         // 普通点击只合成1个
         if (click != ClickType.SHIFT_LEFT
@@ -153,4 +197,15 @@ public class RecipeUtils {
         return space;
     }
 
+    public static RecipeChoice getBukkitChoice(RecipeChoice recipeChoice) {
+        if (recipeChoice instanceof CustomRecipeChoice customRecipeChoice) {
+            return customRecipeChoice.bukkitChoice();
+        }
+        return recipeChoice;
+    }
+
+    public static boolean testOptionalChoice(Optional<RecipeChoice> choice, ItemStack inputItem) {
+        Optional<Boolean> result = choice.map(ingredient -> ingredient.test(inputItem));
+        return result.orElseGet(() -> ItemHelper.isAir(inputItem));
+    }
 }

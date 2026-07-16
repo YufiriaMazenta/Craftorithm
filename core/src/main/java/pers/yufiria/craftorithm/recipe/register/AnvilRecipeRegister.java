@@ -2,6 +2,7 @@ package pers.yufiria.craftorithm.recipe.register;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.Recipe;
+import pers.yufiria.craftorithm.api.recipe.NmsRecipeRegister;
 import pers.yufiria.craftorithm.recipe.RecipeRegister;
 import pers.yufiria.craftorithm.recipe.extra.AnvilRecipe;
 import pers.yufiria.craftorithm.recipe.extra.AnvilRecipeHandler;

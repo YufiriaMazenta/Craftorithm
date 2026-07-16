@@ -5,6 +5,8 @@ import net.minecraft.world.item.crafting.CraftingInput;
 import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
+import pers.yufiria.craftorithm.api.recipe.CustomShapedRecipePattern;
+import pers.yufiria.craftorithm.util.RecipeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +32,7 @@ public final class ShapedRecipePattern12107 extends CustomShapedRecipePattern<Cr
             width = Math.max(line.length(), width);
         }
         List<Optional<RecipeChoice>> ingredients = new ArrayList<>(width * height);
-        shrink(shape);
+        shrink(shape, width);
         for (String line : shape) {
             for (int i = 0; i < line.length(); i++) {
                 char c = line.charAt(i);
@@ -63,8 +65,8 @@ public final class ShapedRecipePattern12107 extends CustomShapedRecipePattern<Cr
     }
 
     public boolean matches(CraftingInput craftingInput, boolean symmetrical) {
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
+        for (int i = 0; i < this.height; ++i) {
+            for (int j = 0; j < this.width; ++j) {
                 Optional<RecipeChoice> ingredient;
                 if (symmetrical) {
                     ingredient = this.ingredients.get(this.width - j - 1 + i * this.width);
@@ -73,15 +75,11 @@ public final class ShapedRecipePattern12107 extends CustomShapedRecipePattern<Cr
                 }
 
                 ItemStack nmsInputItem = craftingInput.a(j, i);
-                if (ingredient.isEmpty()) {
-                    return true;
-                }
-                RecipeChoice recipeChoice = ingredient.get();
-                org.bukkit.inventory.ItemStack bukkitCopy = CraftItemStack.asBukkitCopy(nmsInputItem);
-                if (!recipeChoice.test(bukkitCopy)) {
+                org.bukkit.inventory.ItemStack bukkitInputItem = CraftItemStack.asCraftMirror(nmsInputItem);
+
+                if (!RecipeUtils.testOptionalChoice(ingredient, bukkitInputItem)) {
                     return false;
                 }
-
             }
         }
         return true;

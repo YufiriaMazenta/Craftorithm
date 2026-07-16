@@ -9,12 +9,10 @@ import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.ItemPack;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
-import pers.yufiria.craftorithm.recipe.choice.ItemIdRecipeChoice;
+import pers.yufiria.craftorithm.api.recipe.choice.ItemIdRecipeChoice;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 import pers.yufiria.craftorithm.util.RecipeUtils;
 
-import java.lang.reflect.Field;
-import java.util.Locale;
 import java.util.Optional;
 
 public class BukkitRecipeChoiceParser {

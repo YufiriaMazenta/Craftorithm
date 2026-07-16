@@ -1,9 +1,8 @@
-package pers.yufiria.craftorithm.recipe.choice;
+package pers.yufiria.craftorithm.api.recipe.choice;
 
 import crypticlib.util.ItemHelper;
 import crypticlib.util.MaterialHelper;
 import org.bukkit.Material;
-import org.bukkit.Registry;
 import org.bukkit.Tag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
@@ -15,9 +14,7 @@ import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 import pers.yufiria.craftorithm.util.RecipeUtils;
 
-import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.Random;
 

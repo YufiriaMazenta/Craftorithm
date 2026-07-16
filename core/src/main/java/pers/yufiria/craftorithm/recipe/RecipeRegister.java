@@ -4,6 +4,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.Nullable;
+import pers.yufiria.craftorithm.api.recipe.NmsRecipeRegister;
 
 public interface RecipeRegister {
 

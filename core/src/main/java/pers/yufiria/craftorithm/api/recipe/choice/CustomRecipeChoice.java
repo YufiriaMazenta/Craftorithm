@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.recipe.choice;
+package pers.yufiria.craftorithm.api.recipe.choice;
 
 import org.bukkit.inventory.RecipeChoice;
 

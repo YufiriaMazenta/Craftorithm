@@ -13,6 +13,7 @@ import pers.yufiria.craftorithm.recipe.RecipeParser;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 import pers.yufiria.craftorithm.recipe.extra.BrewingRecipe;
 import pers.yufiria.craftorithm.recipe.util.BukkitRecipeChoiceParser;
+import pers.yufiria.craftorithm.util.RecipeUtils;
 import pers.yufiria.craftorithm.util.ServerUtils;
 
 public enum BrewingRecipeParser implements RecipeParser<BrewingRecipe> {
@@ -32,7 +33,12 @@ public enum BrewingRecipeParser implements RecipeParser<BrewingRecipe> {
             RecipeChoice input = BukkitRecipeChoiceParser.parseChoice(inputId);
             String ingredientId = recipeConfig.getString("ingredient");
             RecipeChoice ingredient = BukkitRecipeChoiceParser.parseChoice(ingredientId);
-            PotionMix potionMix = new PotionMix(recipeKey, result, input, ingredient);
+            PotionMix potionMix = new PotionMix(
+                recipeKey,
+                result,
+                RecipeUtils.getBukkitChoice(input),
+                RecipeUtils.getBukkitChoice(ingredient)
+            );
             return new BrewingRecipe(potionMix);
         } catch (RecipeLoadException e) {
             throw e;

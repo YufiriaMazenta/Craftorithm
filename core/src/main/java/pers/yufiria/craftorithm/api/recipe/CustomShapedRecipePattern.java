@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.recipe.nms;
+package pers.yufiria.craftorithm.api.recipe;
 
 import org.bukkit.inventory.RecipeChoice;
 
@@ -40,25 +40,39 @@ public abstract class CustomShapedRecipePattern<Input> {
         return true;
     }
 
-    protected static void shrink(String[] array) {
+    protected static void shrink(String[] array, int maxLength) {
         if (array == null || array.length == 0) return;
-
-        int maxLen = 0;
-        for (String s : array) {
-            int len = (s == null) ? 0 : s.length();
-            if (len > maxLen) maxLen = len;
-        }
 
         for (int i = 0; i < array.length; i++) {
             String s = array[i];
             if (s == null) {
-                array[i] = " ".repeat(maxLen);  // Java 11+ 支持 repeat
-            } else if (s.length() < maxLen) {
+                array[i] = " ".repeat(maxLength);  // Java 11+ 支持 repeat
+            } else if (s.length() < maxLength) {
                 // 右侧填充空格（左对齐）
-                array[i] = s + " ".repeat(maxLen - s.length());
+                array[i] = s + " ".repeat(maxLength - s.length());
                 // 如果右对齐，改成： " ".repeat(maxLen - s.length()) + s
             }
         }
+    }
+
+    public int width() {
+        return width;
+    }
+
+    public int height() {
+        return height;
+    }
+
+    public int ingredientCount() {
+        return ingredientCount;
+    }
+
+    public List<Optional<RecipeChoice>> ingredients() {
+        return ingredients;
+    }
+
+    public boolean symmetrical() {
+        return symmetrical;
     }
 
     public abstract boolean matches(Input input);

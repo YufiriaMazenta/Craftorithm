@@ -10,14 +10,17 @@ import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftShapedRecipe;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
-import pers.yufiria.craftorithm.recipe.choice.CustomRecipeChoice;
+import pers.yufiria.craftorithm.api.recipe.choice.CustomRecipeChoice;
+import pers.yufiria.craftorithm.util.RecipeUtils;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 public final class ShapedRecipe12107 extends ShapedRecipes {
 
     private final ShapedRecipePattern12107 customPattern;
+    private final ItemStack result;
 
     ShapedRecipe12107(
         String group,
@@ -27,6 +30,7 @@ public final class ShapedRecipe12107 extends ShapedRecipes {
         ShapedRecipePattern12107 customPattern
     ) {
         super(group, category, pattern, result);
+        this.result = result;
         this.customPattern = customPattern;
     }
 
@@ -43,13 +47,11 @@ public final class ShapedRecipe12107 extends ShapedRecipes {
         Map<Character, RecipeChoice> bukkitIngredients = craftRecipe.getChoiceMap();
         String[] shape = replaceUndefinedIngredientsWithEmpty(craftRecipe.getShape(), bukkitIngredients);
         bukkitIngredients.values().removeIf(Objects::isNull);
-        Map<Character, RecipeItemStack> nmsIngredients = Maps.transformValues(bukkitIngredients, (recipeChoice) -> {
-            if (recipeChoice instanceof CustomRecipeChoice customRecipeChoice) {
-                return craftRecipe.toNMS(customRecipeChoice.bukkitChoice(), false);
-            } else {
-                return craftRecipe.toNMS(recipeChoice, false);
-            }
-        });
+        Map<Character, RecipeItemStack> nmsIngredients = Maps.transformValues(
+            bukkitIngredients,
+            (recipeChoice) ->
+                craftRecipe.toNMS(RecipeUtils.getBukkitChoice(recipeChoice), false)
+        );
         net.minecraft.world.item.crafting.ShapedRecipePattern pattern = net.minecraft.world.item.crafting.ShapedRecipePattern.a(nmsIngredients, shape);
         ShapedRecipePattern12107 customPattern = ShapedRecipePattern12107.fromBukkitRecipe(shapedRecipe);
 
@@ -78,5 +80,45 @@ public final class ShapedRecipe12107 extends ShapedRecipes {
         return shape;
     }
 
+    @Override
+    public ShapedRecipe toBukkitRecipe(NamespacedKey id) {
+        CraftShapedRecipe recipe;
+        CraftItemStack result = CraftItemStack.asCraftMirror(this.result);
+        recipe = new CraftShapedRecipe(id, result, this);
+        recipe.setGroup(this.j());
+        recipe.setCategory(CraftRecipe.getCategory(this.c()));
+        switch (this.customPattern.height()) {
+            case 1:
+                switch (this.customPattern.width()) {
+                    case 1 -> recipe.shape("a");
+                    case 2 -> recipe.shape("ab");
+                    case 3 -> recipe.shape("abc");
+                    default -> { }
+                }
+            case 2:
+                switch (this.customPattern.width()) {
+                    case 1 -> recipe.shape("a", "b");
+                    case 2 -> recipe.shape("ab", "cd");
+                    case 3 -> recipe.shape("abc", "def");
+                    default -> { }
+                }
+            case 3:
+                switch (this.customPattern.width()) {
+                    case 1 -> recipe.shape("a", "b", "c");
+                    case 2 -> recipe.shape("ab", "cd", "ef");
+                    case 3 -> recipe.shape("abc", "def", "ghi");
+                }
+        }
 
+        char c = 'a';
+
+        for (Optional<RecipeChoice> ingredient : this.customPattern.ingredients()) {
+            if (ingredient.isPresent()) {
+                recipe.setIngredient(c, ingredient.get());
+            }
+            ++ c;
+        }
+
+        return recipe;
+    }
 }

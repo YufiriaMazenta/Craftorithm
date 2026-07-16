@@ -19,6 +19,7 @@ import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.api.event.RecipeLoadFromConfigEvent;
+import pers.yufiria.craftorithm.api.recipe.NmsRecipeRegister;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsManager;
