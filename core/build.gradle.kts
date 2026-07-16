@@ -23,5 +23,6 @@ dependencies {
 //    implementation("com.crypticlib:bukkit-action:${rootProject.findProperty("crypticlibVer")}")
     implementation("com.crypticlib:common-compat:${rootProject.findProperty("crypticlibVer")}")
     implementation("com.crypticlib:common-database:${rootProject.findProperty("crypticlibVer")}")
+    implementation("com.crypticlib:common-compat:${rootProject.findProperty("crypticlibVer")}")
     implementation("com.crypticlib:common-script:${rootProject.findProperty("crypticlibVer")}")
 }

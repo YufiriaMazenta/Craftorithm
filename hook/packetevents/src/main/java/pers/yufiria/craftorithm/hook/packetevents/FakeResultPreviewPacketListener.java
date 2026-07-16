@@ -47,6 +47,7 @@ public enum FakeResultPreviewPacketListener implements PacketListener, Listener 
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void refreshCraftingRecipeCache(PrepareItemCraftEvent event) {
+        //如果通过指纹匹配到了配方,就不在这里进行处理
         UUID playerId = EventUtils.getViewer(event).map(HumanEntity::getUniqueId).orElse(null);
         if (playerId == null) return;
         if (ItemHelper.isAir(event.getInventory().getResult())) {

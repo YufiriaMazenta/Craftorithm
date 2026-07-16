@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.listener;
 
 import crypticlib.listener.EventListener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import pers.yufiria.craftorithm.util.EventUtils;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.EventHandler;
@@ -19,17 +20,51 @@ public enum CraftingHandler implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void refreshDynamicResult(PrepareItemCraftEvent event) {
-        if (event.getRecipe() == null)
-            return;
+        // 先尝试 Bukkit 原生匹配
         Recipe recipe = event.getRecipe();
-        NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
-        if (recipeKey == null) {
-            throw new RuntimeException("Can not get recipe key");
-        }
-        if (!recipeKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
+        if (recipe != null) {
+            // Bukkit 匹配到了配方，Craftorithm 配方需要 refresh
+            NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
+            if (recipeKey != null && recipeKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
+                refreshResultItem(event, recipe.getResult());
+            }
             return;
         }
-        ItemStack item = event.getRecipe().getResult();
+
+//        // Bukkit 未匹配到任何配方，通过指纹查找
+//        ItemStack[] matrix = event.getInventory().getMatrix();
+//        NamespacedKey fingerRecipeKey = RecipeFingerManager.INSTANCE.findRecipeByGrid(matrix);
+//        if (fingerRecipeKey != null) {
+//            Recipe fingerRecipe = RecipeManager.INSTANCE.getRecipe(fingerRecipeKey);
+//            if (fingerRecipe != null) {
+//                event.getInventory().setResult(fingerRecipe.getResult().clone());
+//                refreshResultItem(event, event.getInventory().getResult());
+//                new PrepareItemCraftByFingerEvent(event, fingerRecipeKey).call();
+//            }
+//        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void callFingerCraftEvent(InventoryClickEvent event) {
+//        Inventory inventory = event.getInventory();
+//        if (!(inventory instanceof CraftingInventory craftingInventory)) {
+//            return;
+//        }
+//        if (craftingInventory.getRecipe() != null) {
+//            return;
+//        }
+//        int slot = event.getSlot();
+//        if (slot != 0) {
+//            return;
+//        }
+//        ItemStack[] matrix = craftingInventory.getMatrix();
+//        NamespacedKey fingerRecipeKey = RecipeFingerManager.INSTANCE.findRecipeByGrid(matrix);
+//        if (fingerRecipeKey != null) {
+//            new CraftItemByFingerEvent(craftingInventory, fingerRecipeKey, event).call();
+//        }
+    }
+
+    private void refreshResultItem(PrepareItemCraftEvent event, ItemStack item) {
         ItemManager.INSTANCE.matchItemId(item, true)
             .flatMap(id -> EventUtils.getViewer(event)
                 .flatMap(player -> ItemManager.INSTANCE.matchItem(id, player))

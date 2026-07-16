@@ -15,14 +15,14 @@ import pers.yufiria.craftorithm.trigger.TriggerManager;
  * 合成触发器监听器
  */
 @EventListener
-public enum CraftTriggerHandler implements Listener {
+public enum CraftingTriggerHandler implements Listener {
 
     INSTANCE;
 
     /**
      * Prepare 阶段：检查 deny 条件，清空结果槽拒绝合成
      */
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOW)
     public void onPrepareCraft(PrepareItemCraftEvent event) {
         TriggerContext ctx = CraftTriggerTypes.CRAFTING.extractPrepareContext(event);
         if (ctx == null) return;
@@ -35,13 +35,12 @@ public enum CraftTriggerHandler implements Listener {
     /**
      * 实际阶段：执行 actions
      */
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onCraft(CraftItemEvent event) {
         TriggerContext ctx = CraftTriggerTypes.CRAFTING.extractContext(event);
         if (ctx == null) return;
         if (!(event.getWhoClicked() instanceof Player)) return;
         TriggerManager.INSTANCE.fire(CraftTriggerTypes.CRAFTING.typeKey(), ctx);
     }
-
 
 }

@@ -22,6 +22,7 @@ import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.script.ActionModule;
 import pers.yufiria.craftorithm.script.ConditionModule;
+import pers.yufiria.craftorithm.test.TestHook;
 import pers.yufiria.craftorithm.util.LangUtils;
 import pers.yufiria.craftorithm.util.UpdateChecker;
 
@@ -53,6 +54,7 @@ public final class Craftorithm extends BukkitPlugin implements LifeCycleTask {
 
     @Override
     public void whenEnable() {
+        api().registerItemPluginHook(TestHook.INSTANCE);
         ScriptEngine.INSTANCE.registerModule(ActionModule.INSTANCE);
         ScriptEngine.INSTANCE.registerModule(ConditionModule.INSTANCE);
         UpdateChecker.pullUpdateCheckRequest(Bukkit.getConsoleSender());

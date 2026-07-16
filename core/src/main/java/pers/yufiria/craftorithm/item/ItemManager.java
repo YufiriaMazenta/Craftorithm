@@ -127,6 +127,33 @@ public enum ItemManager implements LifeCycleTask {
     }
 
     /**
+     * 获取一个物品的完整id,包含命名空间和id
+     * 如果无法在已经挂钩的其他插件里找到这个物品，但它又不为空气，那么将会返回原版物品id
+     * @param item 传入的物品
+     * @return 传入的物品id
+     */
+    public Optional<NamespacedItemIdStack> matchItemIdOrVanilla(ItemStack item, boolean ignoreAmount) {
+        if (ItemHelper.isAir(item))
+            return Optional.empty();
+
+        for (Map.Entry<String, ItemProvider> itemProviderEntry : itemProviderMap.entrySet()) {
+            NamespacedItemIdStack namespacedItemIdStack = itemProviderEntry.getValue().matchItemId(item, ignoreAmount);
+            if (namespacedItemIdStack != null) {
+                return Optional.of(namespacedItemIdStack);
+            }
+        }
+
+        NamespacedItemIdStack namespacedItemIdStack = new NamespacedItemIdStack(
+            Objects.requireNonNull(NamespacedItemId.fromString(item.getType().getKey().toString()))
+        );
+        if (ignoreAmount) {
+            return Optional.of(namespacedItemIdStack);
+        }
+        namespacedItemIdStack.setAmount(item.getAmount());
+        return Optional.of(namespacedItemIdStack);
+    }
+
+    /**
      * 获取一个物品的完整ID,包含命名空间与id,如果物品未找到,会将此物品保存
      * @param item 传入的物品
      * @return 传入的物品id

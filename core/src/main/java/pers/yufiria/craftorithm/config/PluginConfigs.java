@@ -19,6 +19,7 @@ public class PluginConfigs {
     public final static BooleanConfig DEBUG = new BooleanConfig("debug", false);
     public final static IntConfig MAX_REG_RECIPE_PER_TICK = new IntConfig("max_reg_recipe_per_tick", 12);
     public final static StringListConfig CANNOT_CRAFT_ITEMS = new StringListConfig("cannot_craft_items", Collections.emptyList());
+    public final static BooleanConfig USE_NMS_RECIPE_REGISTER = new BooleanConfig("use_nms_recipe_register", false);
     public final static StringListConfig ITEM_PLUGIN_HOOK_PRIORITY = new StringListConfig(
         "item_plugin_hook_priority",
         List.of(
