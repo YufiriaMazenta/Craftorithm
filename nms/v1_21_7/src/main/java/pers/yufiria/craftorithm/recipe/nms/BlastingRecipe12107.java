@@ -9,14 +9,13 @@ import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftBlastingRecipe;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.api.recipe.choice.CustomRecipeChoice;
 import pers.yufiria.craftorithm.util.RecipeUtils;
 
 public class BlastingRecipe12107 extends RecipeBlasting {
 
     private final RecipeChoice ingredient;
 
-    public BlastingRecipe12107(
+    BlastingRecipe12107(
         String group,
         CookingBookCategory cookingbookcategory,
         RecipeItemStack recipeitemstack,

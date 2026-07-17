@@ -8,6 +8,7 @@ import crypticlib.lifecycle.TaskRule;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.crafting.*;
 import org.bukkit.NamespacedKey;
+import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftStonecuttingRecipe;
 import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftTransmuteRecipe;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.FurnaceRecipe;
@@ -16,6 +17,7 @@ import org.bukkit.inventory.SmithingTrimRecipe;
 import org.bukkit.inventory.TransmuteRecipe;
 import pers.yufiria.craftorithm.api.recipe.NmsRecipeRegister;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.util.RecipeUtils;
 
 @LifeCycleTaskSettings(
     rules = {
@@ -56,7 +58,10 @@ public enum NmsRecipeRegister12107 implements NmsRecipeRegister, LifeCycleTask {
                 recipeHolder = SmithingTrimRecipe12107.fromBukkit(recipeKey, smithingTrimRecipe);
             }
             case StonecuttingRecipe stonecuttingRecipe -> {
-                recipeHolder = StonecuttingRecipe12107.fromBukkit(recipeKey, stonecuttingRecipe);
+                //切石机配方自定义匹配逻辑存在问题，暂时还是按照原版的来
+                stonecuttingRecipe.setInputChoice(RecipeUtils.getBukkitChoice(stonecuttingRecipe.getInputChoice()));
+                CraftStonecuttingRecipe.fromBukkitRecipe(stonecuttingRecipe).addToCraftingManager();
+                return RegisterResult.SUCCESS;
             }
             case TransmuteRecipe transmuteRecipe -> {
                 CraftTransmuteRecipe.fromBukkitRecipe(transmuteRecipe).addToCraftingManager();

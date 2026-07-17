@@ -2,13 +2,17 @@ package pers.yufiria.craftorithm.recipe;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Recipe;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.yufiria.craftorithm.recipe.choice.RecipeChoiceParser;
 
 /**
  *
  * @param <R> 配方的类型
  */
 public interface RecipeParser<R extends Recipe> {
+
+    @NotNull RecipeChoiceParser choiceParser();
 
     /**
      * 从配置文件里解析配方

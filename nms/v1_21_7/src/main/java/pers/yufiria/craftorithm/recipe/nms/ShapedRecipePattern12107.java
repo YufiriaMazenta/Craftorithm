@@ -5,7 +5,6 @@ import net.minecraft.world.item.crafting.CraftingInput;
 import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
-import pers.yufiria.craftorithm.api.recipe.CustomShapedRecipePattern;
 import pers.yufiria.craftorithm.util.RecipeUtils;
 
 import java.util.ArrayList;

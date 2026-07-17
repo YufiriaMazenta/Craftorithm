@@ -3,15 +3,15 @@ package pers.yufiria.craftorithm.recipe;
 import crypticlib.MinecraftVersion;
 import crypticlib.lang.entry.StringLangEntry;
 import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 import pers.yufiria.craftorithm.config.Languages;
-import pers.yufiria.craftorithm.recipe.extra.AnvilRecipe;
-import pers.yufiria.craftorithm.recipe.extra.AnvilRecipeParser;
-import pers.yufiria.craftorithm.recipe.extra.BrewingRecipe;
+import pers.yufiria.craftorithm.recipe.choice.RecipeChoiceParser;
+import pers.yufiria.craftorithm.recipe.parser.AnvilRecipeParser;
 import pers.yufiria.craftorithm.recipe.parser.*;
 import pers.yufiria.craftorithm.recipe.register.AnvilRecipeRegister;
 import pers.yufiria.craftorithm.recipe.register.BrewingRecipeRegister;
@@ -24,7 +24,17 @@ public enum SimpleRecipeTypes implements RecipeType {
 
     UNKNOWN(
         "unknown",
-        (recipeName, recipeConfig) -> null,
+        new RecipeParser<>() {
+            @Override
+            public @NotNull RecipeChoiceParser choiceParser() {
+                return choiceStr -> null;
+            }
+
+            @Override
+            public @Nullable Recipe parse(String recipeName, ConfigurationSection recipeConfig) {
+                return null;
+            }
+        },
         new RecipeRegister() {
             @Override
             public boolean registerRecipe(Recipe recipe) {

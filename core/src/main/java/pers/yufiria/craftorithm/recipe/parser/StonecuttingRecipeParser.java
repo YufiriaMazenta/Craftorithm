@@ -11,11 +11,11 @@ import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeParser;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
-import pers.yufiria.craftorithm.recipe.util.BukkitRecipeChoiceParser;
+import pers.yufiria.craftorithm.recipe.choice.BukkitRecipeChoiceParser;
 
 import java.util.Objects;
 
-public enum StonecuttingRecipeParser implements RecipeParser<StonecuttingRecipe> {
+public enum StonecuttingRecipeParser implements VanillaRecipeParser<StonecuttingRecipe> {
 
     INSTANCE;
 
@@ -26,7 +26,7 @@ public enum StonecuttingRecipeParser implements RecipeParser<StonecuttingRecipe>
             ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId)).orElseThrow();
             NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeName);
             String ingredientId = recipeConfig.getString("ingredient");
-            RecipeChoice ingredient = BukkitRecipeChoiceParser.parseChoice(ingredientId);
+            RecipeChoice ingredient = choiceParser().parse(ingredientId);
             StonecuttingRecipe recipe = new StonecuttingRecipe(recipeKey, result, ingredient);
             if (recipeConfig.contains("group")) {
                 recipe.setGroup(Objects.requireNonNull(recipeConfig.getString("group")));

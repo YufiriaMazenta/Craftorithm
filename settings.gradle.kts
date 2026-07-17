@@ -18,6 +18,16 @@ include(
     "hook:playerpoints"
 )
 include(
+    "nms:v1_20",
+    "nms:v1_20_2",
+    "nms:v1_20_3",
+    "nms:v1_20_5",
+    "nms:v1_20_6",
+    "nms:v1_21",
+    "nms:v1_21_1",
+    "nms:v1_21_3",
+    "nms:v1_21_5",
+    "nms:v1_21_7",
+    "nms:v1_21_10",
     "nms:v26_1",
-    "nms:v1_21_7"
 )

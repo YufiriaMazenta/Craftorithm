@@ -17,7 +17,7 @@ public class SmokingRecipe12107 extends RecipeSmoking {
 
     private final RecipeChoice ingredient;
 
-    public SmokingRecipe12107(
+    SmokingRecipe12107(
         String group,
         CookingBookCategory cookingbookcategory,
         RecipeItemStack recipeitemstack,

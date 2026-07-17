@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.recipe.util;
+package pers.yufiria.craftorithm.recipe.choice;
 
 import crypticlib.util.MaterialHelper;
 import org.bukkit.Material;
@@ -15,9 +15,12 @@ import pers.yufiria.craftorithm.util.RecipeUtils;
 
 import java.util.Optional;
 
-public class BukkitRecipeChoiceParser {
+public enum BukkitRecipeChoiceParser implements RecipeChoiceParser {
 
-    public static RecipeChoice parseChoice(String choiceStr) {
+    INSTANCE;
+
+    @Override
+    public RecipeChoice parse(String choiceStr) {
         RecipeChoice bukkitChoice;
         if (choiceStr == null || choiceStr.isEmpty()) {
             throw new RecipeLoadException(choiceStr + " is not a valid ingredient ID.");
@@ -76,11 +79,6 @@ public class BukkitRecipeChoiceParser {
                     break;
             }
         }
-        if (PluginConfigs.USE_NMS_RECIPE_REGISTER.value()) {
-            return new ItemIdRecipeChoice(bukkitChoice);
-        } else {
-            return bukkitChoice;
-        }
+        return bukkitChoice;
     }
-    
 }

@@ -1,10 +1,13 @@
-package pers.yufiria.craftorithm.recipe.extra;
+package pers.yufiria.craftorithm.recipe.handler;
 
 import crypticlib.MinecraftVersion;
 import crypticlib.chat.BukkitMsgSender;
 import crypticlib.listener.EventListener;
 import crypticlib.script.ScriptValue;
 import crypticlib.util.InventoryHelper;
+import pers.yufiria.craftorithm.recipe.AnvilRecipe;
+import pers.yufiria.craftorithm.api.event.CraftorithmPrepareAnvilEvent;
+import pers.yufiria.craftorithm.recipe.choice.StackableItemIdChoice;
 import pers.yufiria.craftorithm.util.EventUtils;
 import crypticlib.util.ItemHelper;
 import org.bukkit.Bukkit;
@@ -25,7 +28,6 @@ import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
-import pers.yufiria.craftorithm.api.recipe.choice.StackableItemIdChoice;
 import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsManager;
 import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsRules;
 import pers.yufiria.craftorithm.trigger.CraftTriggerTypes;
@@ -149,7 +151,7 @@ public enum AnvilRecipeHandler implements Listener {
             view.setItem(2, result);
             view.setProperty(InventoryView.Property.REPAIR_COST, anvilRecipe.costLevel());
         }
-        Bukkit.getPluginManager().callEvent(new CraftorithmPrepareAnvilEvent(event, anvilRecipe));
+        new CraftorithmPrepareAnvilEvent(event, anvilRecipe).callEvent();
     }
 
     @SuppressWarnings({"removal"})

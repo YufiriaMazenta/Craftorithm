@@ -16,8 +16,8 @@ import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
-import pers.yufiria.craftorithm.recipe.extra.AnvilRecipe;
-import pers.yufiria.craftorithm.recipe.extra.AnvilRecipeHandler;
+import pers.yufiria.craftorithm.recipe.AnvilRecipe;
+import pers.yufiria.craftorithm.recipe.handler.AnvilRecipeHandler;
 
 import java.util.Optional;
 

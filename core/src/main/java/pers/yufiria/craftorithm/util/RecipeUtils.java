@@ -199,7 +199,8 @@ public class RecipeUtils {
 
     public static RecipeChoice getBukkitChoice(RecipeChoice recipeChoice) {
         if (recipeChoice instanceof CustomRecipeChoice customRecipeChoice) {
-            return customRecipeChoice.bukkitChoice();
+            RecipeChoice bukkitChoice = customRecipeChoice.bukkitChoice();
+            return RecipeUtils.getBukkitChoice(bukkitChoice);
         }
         return recipeChoice;
     }

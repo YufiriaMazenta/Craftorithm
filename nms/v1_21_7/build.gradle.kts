@@ -12,5 +12,4 @@ dependencies {
     compileOnly("com.google.guava:guava:33.2.0-jre")
     compileOnly("com.crypticlib:bukkit:${rootProject.findProperty("crypticlibVer")}")
     compileOnly("com.crypticlib:common-compat:${rootProject.findProperty("crypticlibVer")}")
-    testImplementation("ink.ptms.core:v12107:12107:mapped")
 }

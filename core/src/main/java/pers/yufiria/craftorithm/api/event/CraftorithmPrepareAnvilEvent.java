@@ -1,11 +1,12 @@
-package pers.yufiria.craftorithm.recipe.extra;
+package pers.yufiria.craftorithm.api.event;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.jetbrains.annotations.NotNull;
+import pers.yufiria.craftorithm.recipe.AnvilRecipe;
 
-public class CraftorithmPrepareAnvilEvent extends Event {
+public class CraftorithmPrepareAnvilEvent extends Event implements EventCaller {
 
     private static final HandlerList handlers = new HandlerList();
 

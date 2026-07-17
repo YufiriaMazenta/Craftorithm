@@ -18,7 +18,7 @@ public class StonecuttingRecipe12107 extends RecipeStonecutting {
 
     private final RecipeChoice ingredient;
 
-    public StonecuttingRecipe12107(
+    StonecuttingRecipe12107(
         String group,
         RecipeItemStack nmsIngredient,
         RecipeChoice ingredient,
@@ -47,7 +47,8 @@ public class StonecuttingRecipe12107 extends RecipeStonecutting {
             CraftRecipe.toMinecraft(recipeKey),
             new RecipeStonecutting(craftRecipe.getGroup(),
                 craftRecipe.toNMS(
-                    RecipeUtils.getBukkitChoice(craftRecipe.getInputChoice()), true),
+                    RecipeUtils.getBukkitChoice(craftRecipe.getInputChoice()), true
+                ),
                 CraftItemStack.asNMSCopy(craftRecipe.getResult())
             )
         );

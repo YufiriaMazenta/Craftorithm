@@ -16,7 +16,7 @@ public class CampfireRecipe12107 extends RecipeCampfire {
     
     private final RecipeChoice ingredient;
 
-    public CampfireRecipe12107(
+    CampfireRecipe12107(
         String group,
         CookingBookCategory cookingbookcategory,
         RecipeItemStack recipeitemstack,

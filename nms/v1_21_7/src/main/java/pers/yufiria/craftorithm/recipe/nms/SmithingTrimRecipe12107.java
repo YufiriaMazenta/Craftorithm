@@ -24,7 +24,7 @@ public class SmithingTrimRecipe12107 extends SmithingTrimRecipe {
     private final Holder<TrimPattern> trimPattern;
     private PlacementInfo placementInfo;
 
-    public SmithingTrimRecipe12107(
+    SmithingTrimRecipe12107(
         RecipeItemStack nmsTemplate,
         RecipeChoice template,
         RecipeItemStack nmsBase,

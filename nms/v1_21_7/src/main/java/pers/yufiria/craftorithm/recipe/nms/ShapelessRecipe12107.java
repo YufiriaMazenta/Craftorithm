@@ -21,7 +21,7 @@ public class ShapelessRecipe12107 extends ShapelessRecipes {
     private final List<RecipeChoice> customIngredients;
     private final ItemStack result;
 
-    public ShapelessRecipe12107(
+    ShapelessRecipe12107(
         String group,
         CraftingBookCategory category,
         ItemStack result,

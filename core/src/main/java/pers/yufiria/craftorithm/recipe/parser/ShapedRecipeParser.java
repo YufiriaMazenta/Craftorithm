@@ -6,16 +6,16 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.recipe.CraftingBookCategory;
+import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
-import pers.yufiria.craftorithm.recipe.RecipeParser;
+import pers.yufiria.craftorithm.recipe.choice.RecipeChoiceParser;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
-import pers.yufiria.craftorithm.recipe.util.BukkitRecipeChoiceParser;
 
 import java.util.Objects;
 
-public enum ShapedRecipeParser implements RecipeParser<ShapedRecipe> {
+public enum ShapedRecipeParser implements VanillaRecipeParser<ShapedRecipe> {
 
     INSTANCE;
 
@@ -29,7 +29,7 @@ public enum ShapedRecipeParser implements RecipeParser<ShapedRecipe> {
             recipe.shape(recipeConfig.getStringList("shape").toArray(new String[0]));
             ConfigurationSection ingredientsConfig = recipeConfig.getConfigurationSection("ingredients");
             for (String ingredientKey : Objects.requireNonNull(ingredientsConfig).getKeys(false)) {
-                recipe.setIngredient(ingredientKey.charAt(0), BukkitRecipeChoiceParser.parseChoice(Objects.requireNonNull(ingredientsConfig.getString(ingredientKey))));
+                recipe.setIngredient(ingredientKey.charAt(0), choiceParser().parse(Objects.requireNonNull(ingredientsConfig.getString(ingredientKey))));
             }
             String group = recipeConfig.getString("group");
             if (group != null) {

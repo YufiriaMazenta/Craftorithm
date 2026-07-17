@@ -13,9 +13,9 @@ import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.recipe.RecipeParser;
 import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsManager;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
-import pers.yufiria.craftorithm.recipe.util.BukkitRecipeChoiceParser;
+import pers.yufiria.craftorithm.recipe.choice.BukkitRecipeChoiceParser;
 
-public enum SmithingTrimRecipeParser implements RecipeParser<SmithingRecipe> {
+public enum SmithingTrimRecipeParser implements VanillaRecipeParser<SmithingRecipe> {
 
     INSTANCE;
 
@@ -25,11 +25,11 @@ public enum SmithingTrimRecipeParser implements RecipeParser<SmithingRecipe> {
         try {
             NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeName);
             String baseId = recipeConfig.getString("base");
-            RecipeChoice base = BukkitRecipeChoiceParser.parseChoice(baseId);
+            RecipeChoice base = choiceParser().parse(baseId);
             String additionId = recipeConfig.getString("addition");
-            RecipeChoice addition = BukkitRecipeChoiceParser.parseChoice(additionId);
+            RecipeChoice addition = choiceParser().parse(additionId);
             String templateId = recipeConfig.getString("template");
-            RecipeChoice template = BukkitRecipeChoiceParser.parseChoice(templateId);
+            RecipeChoice template = choiceParser().parse(templateId);
             if (recipeConfig.isList("copy_components_rules")) {
                 CopyComponentsManager.INSTANCE.addRecipeCopyNbtRules(recipeKey, recipeConfig.getStringList("copy_components_rules"));
             }

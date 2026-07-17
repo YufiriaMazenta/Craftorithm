@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.recipe.parser;
 
-import crypticlib.MinecraftVersion;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
@@ -14,11 +13,11 @@ import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeParser;
 import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsManager;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
-import pers.yufiria.craftorithm.recipe.util.BukkitRecipeChoiceParser;
+import pers.yufiria.craftorithm.recipe.choice.BukkitRecipeChoiceParser;
 
 import java.util.List;
 
-public enum SmithingTransformRecipeParser implements RecipeParser<SmithingRecipe> {
+public enum SmithingTransformRecipeParser implements VanillaRecipeParser<SmithingRecipe> {
 
     INSTANCE;
 
@@ -29,15 +28,15 @@ public enum SmithingTransformRecipeParser implements RecipeParser<SmithingRecipe
             ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId)).orElseThrow();
             NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeName);
             String baseId = recipeConfig.getString("base");
-            RecipeChoice base = BukkitRecipeChoiceParser.parseChoice(baseId);
+            RecipeChoice base = choiceParser().parse(baseId);
             String additionId = recipeConfig.getString("addition");
-            RecipeChoice addition = BukkitRecipeChoiceParser.parseChoice(additionId);
+            RecipeChoice addition = choiceParser().parse(additionId);
             if (recipeConfig.isList("copy_components_rules")) {
                 List<String> keepNbtRules = recipeConfig.getStringList("copy_components_rules");
                 CopyComponentsManager.INSTANCE.addRecipeCopyNbtRules(recipeKey, keepNbtRules);
             }
             String templateId = recipeConfig.getString("template");
-            RecipeChoice template = BukkitRecipeChoiceParser.parseChoice(templateId);
+            RecipeChoice template = choiceParser().parse(templateId);
             return new SmithingTransformRecipe(recipeKey, result, template, base, addition);
         } catch (RecipeLoadException e) {
             throw e;

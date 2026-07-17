@@ -4,7 +4,6 @@ import crypticlib.MinecraftVersion;
 import crypticlib.compat.Compat;
 import crypticlib.util.IOHelper;
 import org.bukkit.inventory.Recipe;
-import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 
 import java.util.Optional;
 

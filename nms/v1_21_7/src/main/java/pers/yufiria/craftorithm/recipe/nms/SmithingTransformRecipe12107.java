@@ -21,7 +21,7 @@ public class SmithingTransformRecipe12107 extends SmithingTransformRecipe {
     private final TransmuteResult result;
     private PlacementInfo placementInfo;
 
-    public SmithingTransformRecipe12107(
+    SmithingTransformRecipe12107(
         Optional<RecipeItemStack> nmsTemplate,
         Optional<RecipeChoice> template,
         RecipeItemStack nmsBase,

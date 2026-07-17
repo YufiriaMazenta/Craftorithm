@@ -14,11 +14,11 @@ import pers.yufiria.craftorithm.recipe.RecipeParser;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
-import pers.yufiria.craftorithm.recipe.util.BukkitRecipeChoiceParser;
+import pers.yufiria.craftorithm.recipe.choice.BukkitRecipeChoiceParser;
 
 import java.util.Objects;
 
-public enum SmeltingRecipeParser implements RecipeParser<CookingRecipe<?>> {
+public enum SmeltingRecipeParser implements VanillaRecipeParser<CookingRecipe<?>> {
 
     INSTANCE;
 
@@ -33,7 +33,7 @@ public enum SmeltingRecipeParser implements RecipeParser<CookingRecipe<?>> {
             String resultId = recipeConfig.getString("result");
             ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId)).orElseThrow();
             String ingredientId = recipeConfig.getString("ingredient");
-            RecipeChoice ingredient = BukkitRecipeChoiceParser.parseChoice(ingredientId);
+            RecipeChoice ingredient = choiceParser().parse(ingredientId);
             NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeName);
             float exp = (float) recipeConfig.getDouble("exp", 0);
             int time;

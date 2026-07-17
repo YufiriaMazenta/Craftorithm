@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.api.recipe;
+package pers.yufiria.craftorithm.recipe.nms;
 
 import org.bukkit.inventory.RecipeChoice;
 
@@ -13,7 +13,7 @@ public abstract class CustomShapedRecipePattern<Input> {
     protected final List<Optional<RecipeChoice>> ingredients;
     protected final boolean symmetrical;
 
-    public CustomShapedRecipePattern(int width, int height, List<Optional<RecipeChoice>> ingredients) {
+    protected CustomShapedRecipePattern(int width, int height, List<Optional<RecipeChoice>> ingredients) {
         this.width = width;
         this.height = height;
         this.ingredientCount = (int) ingredients.stream().flatMap(Optional::stream).count();
