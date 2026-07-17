@@ -1,18 +1,18 @@
 package pers.yufiria.craftorithm.recipe.nms;
 
 import net.minecraft.core.NonNullList;
-import net.minecraft.resources.MinecraftKey;
 import net.minecraft.world.inventory.InventoryCrafting;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeItemStack;
 import net.minecraft.world.item.crafting.ShapedRecipes;
 import net.minecraft.world.level.World;
 import org.bukkit.NamespacedKey;
-import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftRecipe;
-import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftShapedRecipe;
-import org.bukkit.craftbukkit.v1_20_R1.util.CraftNamespacedKey;
+import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftRecipe;
+import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftShapedRecipe;
+import org.bukkit.craftbukkit.v1_20_R2.util.CraftNamespacedKey;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import pers.yufiria.craftorithm.util.RecipeUtils;
@@ -21,22 +21,21 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-public final class ShapedRecipe12000 extends ShapedRecipes {
+public final class ShapedRecipe12002 extends ShapedRecipes {
 
-    private final ShapedRecipePattern12000 customPattern;
+    private final ShapedRecipePattern12002 customPattern;
     private final ItemStack result;
 
-    ShapedRecipe12000(
-        MinecraftKey minecraftkey,
+    ShapedRecipe12002(
         String group,
         CraftingBookCategory craftingbookcategory,
         int width,
         int height,
         NonNullList<RecipeItemStack> nmsIngredients,
         ItemStack result,
-        ShapedRecipePattern12000 customPattern
+        ShapedRecipePattern12002 customPattern
     ) {
-        super(minecraftkey, group, craftingbookcategory, width, height, nmsIngredients, result);
+        super(group, craftingbookcategory, width, height, nmsIngredients, result);
         this.customPattern = customPattern;
         this.result = result;
     }
@@ -49,12 +48,12 @@ public final class ShapedRecipe12000 extends ShapedRecipes {
         return this.customPattern.matches(inventorycrafting);
     }
 
-    public static ShapedRecipes fromBukkit(NamespacedKey recipeKey, ShapedRecipe shapedRecipe) {
+    public static RecipeHolder<ShapedRecipes> fromBukkit(NamespacedKey recipeKey, ShapedRecipe shapedRecipe) {
         CraftShapedRecipe craftRecipe = CraftShapedRecipe.fromBukkitRecipe(shapedRecipe);
         Map<Character, RecipeChoice> bukkitIngredients = craftRecipe.getChoiceMap();
         String[] shape = replaceUndefinedIngredientsWithEmpty(craftRecipe.getShape(), bukkitIngredients);
         bukkitIngredients.values().removeIf(Objects::isNull);
-        ShapedRecipePattern12000 customPattern = ShapedRecipePattern12000.fromBukkitRecipe(shapedRecipe);
+        ShapedRecipePattern12002 customPattern = ShapedRecipePattern12002.fromBukkitRecipe(shapedRecipe);
 
         NonNullList<RecipeItemStack> nmsIngredients = NonNullList.a(shape.length * customPattern.width, RecipeItemStack.a);
 
@@ -69,15 +68,17 @@ public final class ShapedRecipe12000 extends ShapedRecipes {
             }
         }
 
-        return new ShapedRecipe12000(
+        return new RecipeHolder<>(
             CraftNamespacedKey.toMinecraft(recipeKey),
-            craftRecipe.getGroup(),
-            CraftRecipe.getCategory(craftRecipe.getCategory()),
-            customPattern.width,
-            customPattern.height,
-            nmsIngredients,
-            CraftItemStack.asNMSCopy(shapedRecipe.getResult()),
-            customPattern
+            new ShapedRecipe12002(
+                craftRecipe.getGroup(),
+                CraftRecipe.getCategory(craftRecipe.getCategory()),
+                customPattern.width,
+                customPattern.height,
+                nmsIngredients,
+                CraftItemStack.asNMSCopy(shapedRecipe.getResult()),
+                customPattern
+            )
         );
     }
 
@@ -97,10 +98,10 @@ public final class ShapedRecipe12000 extends ShapedRecipes {
     }
 
     @Override
-    public ShapedRecipe toBukkitRecipe() {
+    public ShapedRecipe toBukkitRecipe(NamespacedKey recipeKey) {
         CraftShapedRecipe recipe;
         CraftItemStack result = CraftItemStack.asCraftMirror(this.result);
-        recipe = new CraftShapedRecipe(result, this);
+        recipe = new CraftShapedRecipe(recipeKey, result, this);
         recipe.setGroup(this.c());
         recipe.setCategory(CraftRecipe.getCategory(this.d()));
         switch (this.customPattern.height()) {

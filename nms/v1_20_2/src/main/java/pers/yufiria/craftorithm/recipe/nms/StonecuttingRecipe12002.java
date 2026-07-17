@@ -1,23 +1,26 @@
 package pers.yufiria.craftorithm.recipe.nms;
 
+import net.minecraft.resources.MinecraftKey;
+import net.minecraft.world.IInventory;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeItemStack;
+import net.minecraft.world.item.crafting.RecipeStonecutting;
 import net.minecraft.world.level.World;
 import org.bukkit.NamespacedKey;
-import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftRecipe;
-import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftStonecuttingRecipe;
+import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftStonecuttingRecipe;
+import org.bukkit.craftbukkit.v1_20_R2.util.CraftNamespacedKey;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.StonecuttingRecipe;
 import pers.yufiria.craftorithm.util.RecipeUtils;
 
-//受限于原版的改动，1.21.7下行为存在诸多问题，不再使用
-public class StonecuttingRecipe12107 extends RecipeStonecutting {
+public class StonecuttingRecipe12002 extends RecipeStonecutting {
 
     private final RecipeChoice ingredient;
 
-    StonecuttingRecipe12107(
+    StonecuttingRecipe12002(
         String group,
         RecipeItemStack nmsIngredient,
         RecipeChoice ingredient,
@@ -28,26 +31,28 @@ public class StonecuttingRecipe12107 extends RecipeStonecutting {
     }
 
     @Override
-    public boolean a(SingleRecipeInput input, World world) {
-        return ingredient.test(CraftItemStack.asCraftMirror(input.c()));
+    public boolean a(IInventory input, World world) {
+        return ingredient.test(CraftItemStack.asCraftMirror(input.a(0)));
     }
 
     @Override
-    public Recipe toBukkitRecipe(NamespacedKey id) {
-        CraftItemStack result = CraftItemStack.asCraftMirror(this.l());
-        CraftStonecuttingRecipe recipe = new CraftStonecuttingRecipe(id, result, ingredient);
-        recipe.setGroup(this.j());
+    public Recipe toBukkitRecipe(NamespacedKey recipeKey) {
+        CraftItemStack result = CraftItemStack.asCraftMirror(this.b);
+        CraftStonecuttingRecipe recipe = new CraftStonecuttingRecipe(recipeKey, result, ingredient);
+        recipe.setGroup(this.c());
         return recipe;
     }
 
     public static RecipeHolder<RecipeStonecutting> fromBukkit(NamespacedKey recipeKey, StonecuttingRecipe bukkitRecipe) {
         CraftStonecuttingRecipe craftRecipe = CraftStonecuttingRecipe.fromBukkitRecipe(bukkitRecipe);
         return new RecipeHolder<>(
-            CraftRecipe.toMinecraft(recipeKey),
-            new RecipeStonecutting(craftRecipe.getGroup(),
+            CraftNamespacedKey.toMinecraft(recipeKey),
+            new StonecuttingRecipe12002(
+                craftRecipe.getGroup(),
                 craftRecipe.toNMS(
                     RecipeUtils.getBukkitChoice(craftRecipe.getInputChoice()), true
                 ),
+                craftRecipe.getInputChoice(),
                 CraftItemStack.asNMSCopy(craftRecipe.getResult())
             )
         );
