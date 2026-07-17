@@ -53,7 +53,7 @@ public final class ShapedRecipePattern12000 extends CustomShapedRecipePattern<In
                     }
                 }
 
-                ItemStack nmsInput = craftingInput.a(k + l + craftingInput.f());
+                ItemStack nmsInput = craftingInput.a(k + l * craftingInput.f());
                 if (!RecipeUtils.testOptionalChoice(ingredient, CraftItemStack.asCraftMirror(nmsInput))) {
                     return false;
                 }

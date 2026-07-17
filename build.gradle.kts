@@ -32,6 +32,7 @@ dependencies {
     implementation(project(":hook:protocollib"))
     implementation(project(":hook:vault"))
     implementation(project(":hook:playerpoints"))
+    implementation(project(":nms:v1_20"))
     implementation(project(":nms:v1_21_7"))
     implementation("com.crypticlib:bukkit:${rootProject.findProperty("crypticlibVer")}")
 }

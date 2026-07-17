@@ -30,38 +30,6 @@ public enum CraftingHandler implements Listener {
             }
             return;
         }
-
-//        // Bukkit 未匹配到任何配方，通过指纹查找
-//        ItemStack[] matrix = event.getInventory().getMatrix();
-//        NamespacedKey fingerRecipeKey = RecipeFingerManager.INSTANCE.findRecipeByGrid(matrix);
-//        if (fingerRecipeKey != null) {
-//            Recipe fingerRecipe = RecipeManager.INSTANCE.getRecipe(fingerRecipeKey);
-//            if (fingerRecipe != null) {
-//                event.getInventory().setResult(fingerRecipe.getResult().clone());
-//                refreshResultItem(event, event.getInventory().getResult());
-//                new PrepareItemCraftByFingerEvent(event, fingerRecipeKey).call();
-//            }
-//        }
-    }
-
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void callFingerCraftEvent(InventoryClickEvent event) {
-//        Inventory inventory = event.getInventory();
-//        if (!(inventory instanceof CraftingInventory craftingInventory)) {
-//            return;
-//        }
-//        if (craftingInventory.getRecipe() != null) {
-//            return;
-//        }
-//        int slot = event.getSlot();
-//        if (slot != 0) {
-//            return;
-//        }
-//        ItemStack[] matrix = craftingInventory.getMatrix();
-//        NamespacedKey fingerRecipeKey = RecipeFingerManager.INSTANCE.findRecipeByGrid(matrix);
-//        if (fingerRecipeKey != null) {
-//            new CraftItemByFingerEvent(craftingInventory, fingerRecipeKey, event).call();
-//        }
     }
 
     private void refreshResultItem(PrepareItemCraftEvent event, ItemStack item) {

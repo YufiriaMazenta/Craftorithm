@@ -52,9 +52,7 @@ public enum NmsRecipeRegister12000 implements NmsRecipeRegister, LifeCycleTask {
             }
             case StonecuttingRecipe stonecuttingRecipe -> {
                 //切石机配方自定义匹配逻辑存在问题，暂时还是按照原版的来
-                stonecuttingRecipe.setInputChoice(RecipeUtils.getBukkitChoice(stonecuttingRecipe.getInputChoice()));
-                CraftStonecuttingRecipe.fromBukkitRecipe(stonecuttingRecipe).addToCraftingManager();
-                return RegisterResult.SUCCESS;
+                nms = StonecuttingRecipe12000.fromBukkit(recipeKey, stonecuttingRecipe);
             }
             default -> {
                 return RegisterResult.UNSUPPORTED_RECIPE_TYPE;
