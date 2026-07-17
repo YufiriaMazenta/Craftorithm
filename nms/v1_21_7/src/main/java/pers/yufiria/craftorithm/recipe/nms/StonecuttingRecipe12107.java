@@ -5,7 +5,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.World;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftRecipe;
@@ -14,9 +13,6 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.StonecuttingRecipe;
 import pers.yufiria.craftorithm.util.RecipeUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class StonecuttingRecipe12107 extends RecipeStonecutting {
 
@@ -37,16 +33,6 @@ public class StonecuttingRecipe12107 extends RecipeStonecutting {
         return ingredient.test(CraftItemStack.asCraftMirror(input.c()));
     }
 
-
-
-    @Override
-    public ItemStack a(SingleRecipeInput input, HolderLookup.a var1) {
-        if (ingredient.test(CraftItemStack.asCraftMirror(input.c()))) {
-            return super.a(input, var1);
-        }
-        return ItemStack.l;
-    }
-
     @Override
     public Recipe toBukkitRecipe(NamespacedKey id) {
         CraftItemStack result = CraftItemStack.asCraftMirror(this.l());
@@ -57,20 +43,11 @@ public class StonecuttingRecipe12107 extends RecipeStonecutting {
 
     public static RecipeHolder<RecipeStonecutting> fromBukkit(NamespacedKey recipeKey, StonecuttingRecipe bukkitRecipe) {
         CraftStonecuttingRecipe craftRecipe = CraftStonecuttingRecipe.fromBukkitRecipe(bukkitRecipe);
-        RecipeChoice inputChoice = craftRecipe.getInputChoice();
-        RecipeChoice bukkitChoice = RecipeUtils.getBukkitChoice(inputChoice);
-        if (bukkitChoice instanceof RecipeChoice.ExactChoice exactChoice) {
-            List<Material> choices = new ArrayList<>();
-            for (org.bukkit.inventory.ItemStack itemStack : exactChoice.getChoices()) {
-                choices.add(itemStack.getType());
-            }
-            bukkitChoice = new RecipeChoice.MaterialChoice(choices);
-        }
         return new RecipeHolder<>(
             CraftRecipe.toMinecraft(recipeKey),
-            new StonecuttingRecipe12107(craftRecipe.getGroup(),
-                craftRecipe.toNMS(bukkitChoice, true),
-                inputChoice,
+            new RecipeStonecutting(craftRecipe.getGroup(),
+                craftRecipe.toNMS(
+                    RecipeUtils.getBukkitChoice(craftRecipe.getInputChoice()), true),
                 CraftItemStack.asNMSCopy(craftRecipe.getResult())
             )
         );
