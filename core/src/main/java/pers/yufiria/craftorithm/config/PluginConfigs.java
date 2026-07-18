@@ -47,12 +47,12 @@ public class PluginConfigs {
         Collections.emptyList(),
         "无法被用作配方材料的物品"
     );
-    public final static BooleanConfig USE_EXPERIMENTAL_RECIPE_REGISTER = new BooleanConfig(
-        "use_experimental_recipe_register",
+    public final static BooleanConfig USE_EXPERIMENTAL_RECIPE_REGISTRY = new BooleanConfig(
+        "use_experimental_recipe_registry",
         false,
         List.of(
             "是否启用实验性的配方注册器",
-            "启用后，配方材料的识别将不会受到数据值变更的影响，但可能在配方书等场景下出现一些问题"
+            "启用后，配方和卸载的性能将在玩家较多时显著提升，且配方材料的识别将不会受到数据值变更的影响，但可能在配方书等场景下出现一些问题"
         )
     );
     public final static StringListConfig ITEM_PLUGIN_HOOK_PRIORITY = new StringListConfig(

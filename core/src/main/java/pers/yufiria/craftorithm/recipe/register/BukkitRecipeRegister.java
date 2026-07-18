@@ -15,7 +15,7 @@ public enum BukkitRecipeRegister implements RecipeRegister {
 
     @Override
     public boolean registerRecipe(Recipe recipe, boolean updateRecipes) {
-        if (PluginConfigs.USE_EXPERIMENTAL_RECIPE_REGISTER.value()) {
+        if (PluginConfigs.USE_EXPERIMENTAL_RECIPE_REGISTRY.value()) {
             return CraftorithmRecipeRegistry.findImpl().registerRecipe(recipe, updateRecipes) == CraftorithmRecipeRegistry.RegisterResult.SUCCESS;
         }
 
@@ -29,7 +29,7 @@ public enum BukkitRecipeRegister implements RecipeRegister {
 
     @Override
     public boolean unregisterRecipe(NamespacedKey recipeKey, boolean updateRecipes) {
-        if (PluginConfigs.USE_EXPERIMENTAL_RECIPE_REGISTER.value()) {
+        if (PluginConfigs.USE_EXPERIMENTAL_RECIPE_REGISTRY.value()) {
             return CraftorithmRecipeRegistry.findImpl().unregisterRecipe(recipeKey, updateRecipes);
         }
 
