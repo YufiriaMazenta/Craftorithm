@@ -7,10 +7,10 @@ import org.bukkit.inventory.Recipe;
 
 import java.util.Optional;
 
-public interface NmsRecipeRegister {
+public interface CraftorithmRecipeRegister {
 
-    Compat<NmsRecipeRegister> NMS_REGISTER_COMPAT = new Compat<>(
-        NmsRecipeRegister.class,
+    Compat<CraftorithmRecipeRegister> REGISTER_COMPAT = new Compat<>(
+        CraftorithmRecipeRegister.class,
         (ver1, ver2) -> {
             MinecraftVersion ver1Obj = MinecraftVersion.valueOf(ver1.toUpperCase());
             MinecraftVersion ver2Obj = MinecraftVersion.valueOf(ver2.toUpperCase());
@@ -24,9 +24,9 @@ public interface NmsRecipeRegister {
         }
     );
 
-    static NmsRecipeRegister findImpl() {
+    static CraftorithmRecipeRegister findImpl() {
         String currentVersionStr = MinecraftVersion.current().name();
-        Optional<NmsRecipeRegister> nmsRegisterOpt = NMS_REGISTER_COMPAT.findImplementation(currentVersionStr);
+        Optional<CraftorithmRecipeRegister> nmsRegisterOpt = REGISTER_COMPAT.findImplementation(currentVersionStr);
         if (nmsRegisterOpt.isEmpty()) {
             IOHelper.info("&eCan not find nms recipe register for version " + MinecraftVersion.current().versionStr());
         }

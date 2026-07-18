@@ -12,7 +12,7 @@ public interface VanillaRecipeParser<R extends Recipe> extends RecipeParser<R> {
 
     @Override
     default @NotNull RecipeChoiceParser choiceParser() {
-        if (PluginConfigs.USE_NMS_RECIPE_REGISTER.value()) {
+        if (PluginConfigs.USE_EXPERIMENTAL_RECIPE_REGISTER.value()) {
             return ItemIdRecipeChoiceParser.INSTANCE;
         } else {
             return BukkitRecipeChoiceParser.INSTANCE;

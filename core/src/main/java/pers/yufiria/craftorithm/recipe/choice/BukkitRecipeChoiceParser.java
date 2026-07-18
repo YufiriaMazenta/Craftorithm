@@ -73,7 +73,9 @@ public enum BukkitRecipeChoiceParser implements RecipeChoiceParser {
                     }
                     break;
                 default:
-                    ItemStack item = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(choiceStr)).orElseThrow().clone();
+                    ItemStack item = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(choiceStr))
+                        .orElseThrow(() -> new RecipeLoadException("Cannot parse item by choice name: " + choiceStr))
+                        .clone();
                     item.setAmount(1);
                     bukkitChoice = new RecipeChoice.ExactChoice(item);
                     break;

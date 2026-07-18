@@ -8,19 +8,17 @@ import crypticlib.lifecycle.TaskRule;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.crafting.*;
 import org.bukkit.NamespacedKey;
-import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftStonecuttingRecipe;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.SmithingTransformRecipe;
 import org.bukkit.inventory.SmithingTrimRecipe;
-import pers.yufiria.craftorithm.api.recipe.NmsRecipeRegister;
+import pers.yufiria.craftorithm.api.recipe.CraftorithmRecipeRegister;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
-import pers.yufiria.craftorithm.util.RecipeUtils;
 
 @LifeCycleTaskSettings(rules = {
     @TaskRule(lifeCycle = LifeCycle.LOAD)
 })
-public enum NmsRecipeRegister12100 implements NmsRecipeRegister, LifeCycleTask {
+public enum CraftorithmRecipeRegister12100 implements CraftorithmRecipeRegister, LifeCycleTask {
 
     INSTANCE;
 
@@ -67,7 +65,7 @@ public enum NmsRecipeRegister12100 implements NmsRecipeRegister, LifeCycleTask {
 
     @Override
     public void lifecycle(Object plugin, LifeCycle lifeCycle) {
-        NMS_REGISTER_COMPAT.register(
+        REGISTER_COMPAT.register(
             MinecraftVersion.V1_21.name(),
             () -> this
         );

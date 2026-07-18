@@ -134,6 +134,7 @@ public enum ConditionModule implements ScriptModule {
         return ScriptValue.of(block.getType() == Material.WATER);
     }
 
+    @SuppressWarnings("all")
     private ScriptValue inRain(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(PlayerUtils.getPlayerIdFromInvoker(ctx.invoker()));
         if (playerOpt.isEmpty()) {

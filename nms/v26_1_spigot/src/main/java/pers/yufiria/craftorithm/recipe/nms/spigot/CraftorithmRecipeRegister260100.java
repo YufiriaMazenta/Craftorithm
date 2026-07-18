@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.recipe.nms.paper;
+package pers.yufiria.craftorithm.recipe.nms.spigot;
 
 import crypticlib.CrypticLibBukkit;
 import crypticlib.MinecraftVersion;
@@ -20,14 +20,14 @@ import org.bukkit.inventory.SmithingTransformRecipe;
 import org.bukkit.inventory.SmithingTrimRecipe;
 import org.bukkit.inventory.SmokingRecipe;
 import org.bukkit.inventory.TransmuteRecipe;
-import pers.yufiria.craftorithm.api.recipe.NmsRecipeRegister;
+import pers.yufiria.craftorithm.api.recipe.CraftorithmRecipeRegister;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.util.RecipeUtils;
 
 @LifeCycleTaskSettings(rules = {
     @TaskRule(lifeCycle = LifeCycle.LOAD)
 })
-public enum NmsRecipeRegister260100 implements NmsRecipeRegister, LifeCycleTask {
+public enum CraftorithmRecipeRegister260100 implements CraftorithmRecipeRegister, LifeCycleTask {
 
     INSTANCE;
 
@@ -62,7 +62,7 @@ public enum NmsRecipeRegister260100 implements NmsRecipeRegister, LifeCycleTask 
             }
             case StonecuttingRecipe stonecuttingRecipe -> {
                 stonecuttingRecipe.setInputChoice(RecipeUtils.getBukkitChoice(stonecuttingRecipe.getInputChoice()));
-                CraftStonecuttingRecipe.fromBukkitRecipe(stonecuttingRecipe).addToRecipeManager();
+                CraftStonecuttingRecipe.fromBukkitRecipe(stonecuttingRecipe).addToCraftingManager();
                 return RegisterResult.SUCCESS;
             }
             case TransmuteRecipe transmuteRecipe -> {
@@ -79,8 +79,8 @@ public enum NmsRecipeRegister260100 implements NmsRecipeRegister, LifeCycleTask 
 
     @Override
     public void lifecycle(Object plugin, LifeCycle lifeCycle) {
-        if (CrypticLibBukkit.isPaper()) {
-            NMS_REGISTER_COMPAT.register(MinecraftVersion.V26_1.name(), () -> this);
+        if (!CrypticLibBukkit.isPaper()) {
+            REGISTER_COMPAT.register(MinecraftVersion.V26_1.name(), () -> this);
         }
     }
 }

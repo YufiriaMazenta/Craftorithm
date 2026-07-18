@@ -9,16 +9,16 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.crafting.IRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.bukkit.NamespacedKey;
-import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftStonecuttingRecipe;
+import org.bukkit.craftbukkit.v1_20_R4.inventory.CraftStonecuttingRecipe;
 import org.bukkit.inventory.*;
-import pers.yufiria.craftorithm.api.recipe.NmsRecipeRegister;
+import pers.yufiria.craftorithm.api.recipe.CraftorithmRecipeRegister;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.util.RecipeUtils;
 
 @LifeCycleTaskSettings(rules = {
     @TaskRule(lifeCycle = LifeCycle.LOAD)
 })
-public enum NmsRecipeRegister12003 implements NmsRecipeRegister, LifeCycleTask {
+public enum CraftorithmRecipeRegister12005 implements CraftorithmRecipeRegister, LifeCycleTask {
 
     INSTANCE;
 
@@ -28,42 +28,45 @@ public enum NmsRecipeRegister12003 implements NmsRecipeRegister, LifeCycleTask {
         RecipeHolder<? extends IRecipe<?>> nms;
         switch (bukkitRecipe) {
             case ShapedRecipe shapedRecipe -> {
-                nms = ShapedRecipe12003.fromBukkit(recipeKey, shapedRecipe);
+                nms = ShapedRecipe12005.fromBukkit(recipeKey, shapedRecipe);
             }
             case ShapelessRecipe shapelessRecipe -> {
-                nms = ShapelessRecipe12003.fromBukkit(recipeKey, shapelessRecipe);
+                nms = ShapelessRecipe12005.fromBukkit(recipeKey, shapelessRecipe);
             }
             case FurnaceRecipe furnaceRecipe -> {
-                nms = FurnaceRecipe12003.fromBukkit(recipeKey, furnaceRecipe);
+                nms = FurnaceRecipe12005.fromBukkit(recipeKey, furnaceRecipe);
             }
             case SmokingRecipe smokingRecipe -> {
-                nms = SmokingRecipe12003.fromBukkit(recipeKey, smokingRecipe);
+                nms = SmokingRecipe12005.fromBukkit(recipeKey, smokingRecipe);
             }
             case CampfireRecipe campfireRecipe -> {
-                nms = CampfireRecipe12003.fromBukkit(recipeKey, campfireRecipe);
+                nms = CampfireRecipe12005.fromBukkit(recipeKey, campfireRecipe);
             }
             case BlastingRecipe blastingRecipe -> {
-                nms = BlastingRecipe12003.fromBukkit(recipeKey, blastingRecipe);
+                nms = BlastingRecipe12005.fromBukkit(recipeKey, blastingRecipe);
             }
             case SmithingTransformRecipe smithingTransformRecipe -> {
-                nms = SmithingTransformRecipe12003.fromBukkit(recipeKey, smithingTransformRecipe);
+                nms = SmithingTransformRecipe12005.fromBukkit(recipeKey, smithingTransformRecipe);
             }
             case SmithingTrimRecipe smithingTrimRecipe -> {
-                nms = SmithingTrimRecipe12003.fromBukkit(recipeKey, smithingTrimRecipe);
+                nms = SmithingTrimRecipe12005.fromBukkit(recipeKey, smithingTrimRecipe);
             }
             case StonecuttingRecipe stonecuttingRecipe -> {
-                nms = StonecuttingRecipe12003.fromBukkit(recipeKey, stonecuttingRecipe);
+                //切石机配方自定义匹配逻辑存在问题，暂时还是按照原版的来
+                stonecuttingRecipe.setInputChoice(RecipeUtils.getBukkitChoice(stonecuttingRecipe.getInputChoice()));
+                CraftStonecuttingRecipe.fromBukkitRecipe(stonecuttingRecipe).addToCraftingManager();
+                return RegisterResult.SUCCESS;
             }
             default -> {
                 return RegisterResult.UNSUPPORTED_RECIPE_TYPE;
             }
         }
-        MinecraftServer.getServer().aG().addRecipe(nms);
+        MinecraftServer.getServer().aJ().addRecipe(nms);
         return RegisterResult.SUCCESS;
     }
 
     @Override
     public void lifecycle(Object o, LifeCycle lifeCycle) {
-        NMS_REGISTER_COMPAT.register(MinecraftVersion.V1_20_3.name(), () -> this);
+        REGISTER_COMPAT.register(MinecraftVersion.V1_20_5.name(), () -> this);
     }
 }

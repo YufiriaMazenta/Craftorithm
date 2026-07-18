@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.Recipe;
 import pers.yufiria.craftorithm.config.PluginConfigs;
-import pers.yufiria.craftorithm.api.recipe.NmsRecipeRegister;
+import pers.yufiria.craftorithm.api.recipe.CraftorithmRecipeRegister;
 import pers.yufiria.craftorithm.recipe.RecipeRegister;
 import pers.yufiria.craftorithm.util.ServerUtils;
 
@@ -15,8 +15,8 @@ public enum BukkitRecipeRegister implements RecipeRegister {
 
     @Override
     public boolean registerRecipe(Recipe recipe) {
-        if (PluginConfigs.USE_NMS_RECIPE_REGISTER.value()) {
-            return NmsRecipeRegister.findImpl().registerRecipe(recipe) == NmsRecipeRegister.RegisterResult.SUCCESS;
+        if (PluginConfigs.USE_EXPERIMENTAL_RECIPE_REGISTER.value()) {
+            return CraftorithmRecipeRegister.findImpl().registerRecipe(recipe) == CraftorithmRecipeRegister.RegisterResult.SUCCESS;
         }
 
         if (ServerUtils.after1_20Paper()) {

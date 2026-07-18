@@ -10,6 +10,7 @@ import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeParser;
+import pers.yufiria.craftorithm.recipe.choice.BrewingRecipeChoiceParser;
 import pers.yufiria.craftorithm.recipe.choice.RecipeChoiceParser;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 import pers.yufiria.craftorithm.recipe.BrewingRecipe;
@@ -23,7 +24,7 @@ public enum BrewingRecipeParser implements RecipeParser<BrewingRecipe> {
 
     @Override
     public @NotNull RecipeChoiceParser choiceParser() {
-        return BukkitRecipeChoiceParser.INSTANCE;
+        return BrewingRecipeChoiceParser.INSTANCE;
     }
 
     @Override
