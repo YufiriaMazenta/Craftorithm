@@ -92,15 +92,6 @@ menu:
     back_lore: '&7Cliquez pour retourner à la liste'
     category_prefix: '&aCatégorie:'
     category_lore: '&7Cliquez pour changer de catégorie'
-    crafting_category:
-      misc: '&eObjets'
-      building: '&eBlocs de construction'
-      redstone: '&eRedstone'
-      tools: '&eOutils'
-    cooking_category:
-      food: '&eNourriture'
-      blocks: '&eBlocs'
-      misc: '&eDivers'
     smelting:
       time: '&aTemps de cuisson: &e<time> &7(tick)'
       time_lore: '&7Cliquez pour entrer le temps'
@@ -116,6 +107,16 @@ menu:
     result_frame_icon_name: '&aPlacez le résultat de la recette ici'
     confirm_icon_name: '&6&lConfirmer la création de la recette'
     result_frame: '&aRésultat'
+    category_prefix: '&aCatégorie:'
+    category_lore: '&7Cliquez pour changer de catégorie'
+    smelting:
+      time: '&aTemps de cuisson: &e<time> &7(tick)'
+      time_lore: '&7Cliquez pour entrer le temps'
+      exp: '&aXP de récompense: &e<exp>'
+      exp_lore: '&7Cliquez pour entrer l''XP'
+    anvil:
+      cost_level: '&aNiveau requis: &e<level>'
+      cost_level_lore: '&7Cliquez pour entrer le niveau'
     frame_lore:
       crafting: '&7Placez les matériaux dans la grille 3x3'
       smelting: '&7Placez le matériau à gauche'
@@ -161,3 +162,12 @@ menu:
     click_to_view: '&7Cliquez pour voir'
     confirm_edit: '&a&lConfirmer'
     confirm_create: '&a&lCréer'
+crafting_category_name:
+  misc: '&eObjets'
+  building: '&eBlocs de construction'
+  redstone: '&eRedstone'
+  tools: '&eOutils'
+cooking_category_name:
+  food: '&eNourriture'
+  blocks: '&eBlocs'
+  misc: '&eDivers'

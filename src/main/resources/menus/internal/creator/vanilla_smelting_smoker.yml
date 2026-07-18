@@ -1,4 +1,4 @@
-﻿title: <translate:lang:recipe_type_name.vanilla_smelting_smoker><translate:lang:menu.recipe_creator.name>
+title: <translate:lang:recipe_type_name.vanilla_smelting_smoker><translate:lang:menu.recipe_creator.name>
 frame_icon:
   material: minecraft:cyan_stained_glass_pane
   name: '&b<translate:lang:recipe_type_name.vanilla_smelting_smoker>'
@@ -21,34 +21,34 @@ confirm_icon:
     - '<translate:lang:menu.recipe_creator.confirm_lore.smoking>'
 exp_icon:
   material: minecraft:experience_bottle
-  name: '<translate:lang:menu.recipe_editor.smelting.exp>'
+  name: '<translate:lang:menu.recipe_creator.smelting.exp>'
   lore:
     - ''
-    - '<translate:lang:menu.recipe_editor.smelting.exp_lore>'
+    - '<translate:lang:menu.recipe_creator.smelting.exp_lore>'
 time_icon:
   material: minecraft:clock
-  name: '<translate:lang:menu.recipe_editor.smelting.time>'
+  name: '<translate:lang:menu.recipe_creator.smelting.time>'
   lore:
     - ''
-    - '<translate:lang:menu.recipe_editor.smelting.time_lore>'
+    - '<translate:lang:menu.recipe_creator.smelting.time_lore>'
 category_icon:
   food:
     material: minecraft:cooked_beef
-    name: '<translate:lang:menu.recipe_editor.smelting.category_food>'
+    name: '<translate:lang:menu.recipe_creator.category_prefix> <translate:lang:cooking_category_name.food>'
     lore:
       - ''
-      - '<translate:lang:menu.recipe_editor.category_lore>'
+      - '<translate:lang:menu.recipe_creator.category_lore>'
   blocks:
     material: minecraft:stone
-    name: '<translate:lang:menu.recipe_editor.smelting.category_blocks>'
+    name: '<translate:lang:menu.recipe_creator.category_prefix> <translate:lang:cooking_category_name.blocks>'
     lore:
       - ''
-      - '<translate:lang:menu.recipe_editor.category_lore>'
+      - '<translate:lang:menu.recipe_creator.category_lore>'
   misc:
     material: minecraft:stick
-    name: '<translate:lang:menu.recipe_editor.smelting.category_misc>'
+    name: '<translate:lang:menu.recipe_creator.category_prefix> <translate:lang:cooking_category_name.misc>'
     lore:
       - ''
-      - '<translate:lang:menu.recipe_editor.category_lore>'
+      - '<translate:lang:menu.recipe_creator.category_lore>'
 default_exp: 1
 default_time: 100

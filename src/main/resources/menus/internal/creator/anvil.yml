@@ -1,4 +1,4 @@
-﻿title: <translate:lang:recipe_type_name.anvil><translate:lang:menu.recipe_creator.name>
+title: <translate:lang:recipe_type_name.anvil><translate:lang:menu.recipe_creator.name>
 frame_icon:
   material: minecraft:cyan_stained_glass_pane
   name: '&b<translate:lang:recipe_type_name.anvil>'
@@ -15,8 +15,8 @@ confirm_icon:
     - '<translate:lang:menu.recipe_creator.confirm_lore.anvil>'
 cost_level_icon:
   material: minecraft:experience_bottle
-  name: '<translate:lang:menu.recipe_editor.anvil.cost_level>'
+  name: '<translate:lang:menu.recipe_creator.anvil.cost_level>'
   lore:
     - ''
-    - '<translate:lang:menu.recipe_editor.anvil.cost_level_lore>'
+    - '<translate:lang:menu.recipe_creator.anvil.cost_level_lore>'
 default_cost_level: 1

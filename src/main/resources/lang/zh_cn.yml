@@ -94,15 +94,6 @@ menu:
     back_lore: '&7点击返回配方列表'
     category_prefix: '&a配方类型:'
     category_lore: '&7点击切换分类'
-    crafting_category:
-      misc: '&e物品'
-      building: '&e建筑方块'
-      redstone: '&e红石物品'
-      tools: '&e工具'
-    cooking_category:
-      food: '&e食物'
-      blocks: '&e方块'
-      misc: '&e杂项'
     smelting:
       time: '&a熔炼时间: &e<time> &7(tick)'
       time_lore: '&7点击输入熔炼时间'
@@ -118,6 +109,16 @@ menu:
     result_frame_icon_name: '&a此处放置配方结果'
     confirm_icon_name: '&6&l确认创建配方'
     result_frame: '&a结果物品'
+    category_prefix: '&a配方类型:'
+    category_lore: '&7点击切换分类'
+    smelting:
+      time: '&a熔炼时间: &e<time> &7(tick)'
+      time_lore: '&7点击输入熔炼时间'
+      exp: '&a奖励经验: &e<exp>'
+      exp_lore: '&7点击输入奖励经验'
+    anvil:
+      cost_level: '&a所需经验等级: &e<level>'
+      cost_level_lore: '&7点击输入所需经验等级'
     frame_lore:
       crafting: '&7将材料放入左侧 3x3 网格'
       smelting: '&7将材料放入左侧'
@@ -163,3 +164,12 @@ menu:
     click_to_view: '&7点击查看'
     confirm_edit: '&a&l确认编辑'
     confirm_create: '&a&l确认创建'
+crafting_category_name:
+  misc: '&e物品'
+  building: '&e建筑方块'
+  redstone: '&e红石物品'
+  tools: '&e工具'
+cooking_category_name:
+  food: '&e食物'
+  blocks: '&e方块'
+  misc: '&e杂项'

@@ -92,15 +92,6 @@ menu:
     back_lore: '&7Listeye dönmek için tıkla'
     category_prefix: '&aKategori:'
     category_lore: '&7Kategori değiştirmek için tıkla'
-    crafting_category:
-      misc: '&eEşyalar'
-      building: '&eİnşaat blokları'
-      redstone: '&eRedstone'
-      tools: '&eAletler'
-    cooking_category:
-      food: '&eYemek'
-      blocks: '&eBloklar'
-      misc: '&eÇeşitli'
     smelting:
       time: '&aEritme süresi: &e<time> &7(tick)'
       time_lore: '&7Süre girmek için tıkla'
@@ -116,6 +107,16 @@ menu:
     result_frame_icon_name: '&aTarif sonucunu buraya yerleştirin'
     confirm_icon_name: '&6&lTarif Oluşturmayı Onayla'
     result_frame: '&aSonuç'
+    category_prefix: '&aKategori:'
+    category_lore: '&7Kategori değiştirmek için tıkla'
+    smelting:
+      time: '&aEritme süresi: &e<time> &7(tick)'
+      time_lore: '&7Süre girmek için tıkla'
+      exp: '&aDeneyim ödülü: &e<exp>'
+      exp_lore: '&7Deneyim girmek için tıkla'
+    anvil:
+      cost_level: '&aGerekli seviye: &e<level>'
+      cost_level_lore: '&7Seviye girmek için tıkla'
     frame_lore:
       crafting: '&7Malzemeleri 3x3 ızgaraya yerleştir'
       smelting: '&7Malzemeyi sol tarafa yerleştir'
@@ -161,3 +162,12 @@ menu:
     click_to_view: '&7Görmek için tıkla'
     confirm_edit: '&a&lOnayla'
     confirm_create: '&a&lOluştur'
+crafting_category_name:
+  misc: '&eEşyalar'
+  building: '&eİnşaat blokları'
+  redstone: '&eRedstone'
+  tools: '&eAletler'
+cooking_category_name:
+  food: '&eYemek'
+  blocks: '&eBloklar'
+  misc: '&eÇeşitli'

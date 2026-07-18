@@ -28,7 +28,7 @@ public interface CraftorithmRecipeRegister {
         String currentVersionStr = MinecraftVersion.current().name();
         Optional<CraftorithmRecipeRegister> nmsRegisterOpt = REGISTER_COMPAT.findImplementation(currentVersionStr);
         if (nmsRegisterOpt.isEmpty()) {
-            IOHelper.info("&eCan not find nms recipe register for version " + MinecraftVersion.current().versionStr());
+            IOHelper.info("&eCan not find craftorithm recipe register impl for version " + MinecraftVersion.current().versionStr());
         }
         return nmsRegisterOpt.orElseGet(() -> bukkitRecipe -> RegisterResult.UNSUPPORTED_VERSION);
     }

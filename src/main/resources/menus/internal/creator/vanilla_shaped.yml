@@ -1,4 +1,4 @@
-﻿title: <translate:lang:recipe_type_name.vanilla_shaped><translate:lang:menu.recipe_creator.name>
+title: <translate:lang:recipe_type_name.vanilla_shaped><translate:lang:menu.recipe_creator.name>
 frame_icon:
   material: minecraft:cyan_stained_glass_pane
   name: '&b<translate:lang:recipe_type_name.vanilla_shaped>'
@@ -22,25 +22,25 @@ confirm_icon:
 category_icon:
   misc:
     material: minecraft:apple
-    name: '<translate:lang:menu.recipe_editor.category_prefix> <translate:lang:menu.recipe_editor.crafting_category.misc>'
+    name: '<translate:lang:menu.recipe_creator.category_prefix> <translate:lang:crafting_category_name.misc>'
     lore:
       - ''
-      - '<translate:lang:menu.recipe_editor.category_lore>'
+      - '<translate:lang:menu.recipe_creator.category_lore>'
   building:
     material: minecraft:bricks
-    name: '<translate:lang:menu.recipe_editor.category_prefix> <translate:lang:menu.recipe_editor.crafting_category.building>'
+    name: '<translate:lang:menu.recipe_creator.category_prefix> <translate:lang:crafting_category_name.building>'
     lore:
       - ''
-      - '<translate:lang:menu.recipe_editor.category_lore>'
+      - '<translate:lang:menu.recipe_creator.category_lore>'
   redstone:
     material: minecraft:redstone
-    name: '<translate:lang:menu.recipe_editor.category_prefix> <translate:lang:menu.recipe_editor.crafting_category.redstone>'
+    name: '<translate:lang:menu.recipe_creator.category_prefix> <translate:lang:crafting_category_name.redstone>'
     lore:
       - ''
-      - '<translate:lang:menu.recipe_editor.category_lore>'
+      - '<translate:lang:menu.recipe_creator.category_lore>'
   equipment:
     material: minecraft:iron_axe
-    name: '<translate:lang:menu.recipe_editor.category_prefix> <translate:lang:menu.recipe_editor.crafting_category.tools>'
+    name: '<translate:lang:menu.recipe_creator.category_prefix> <translate:lang:crafting_category_name.tools>'
     lore:
       - ''
-      - '<translate:lang:menu.recipe_editor.category_lore>'
+      - '<translate:lang:menu.recipe_creator.category_lore>'

@@ -92,15 +92,6 @@ menu:
     back_lore: '&7Click to return to recipe list'
     category_prefix: '&aCategory:'
     category_lore: '&7Click to switch category'
-    crafting_category:
-      misc: '&eItems'
-      building: '&eBuilding Blocks'
-      redstone: '&eRedstone'
-      tools: '&eTools'
-    cooking_category:
-      food: '&eFood'
-      blocks: '&eBlocks'
-      misc: '&eMiscellaneous'
     smelting:
       time: '&aCooking Time: &e<time> &7(ticks)'
       time_lore: '&7Click to set cooking time'
@@ -116,6 +107,16 @@ menu:
     result_frame_icon_name: '&aPlace recipe result here'
     confirm_icon_name: '&6&lConfirm Recipe Creation'
     result_frame: '&aResult Item'
+    category_prefix: '&aCategory:'
+    category_lore: '&7Click to switch category'
+    smelting:
+      time: '&aCooking Time: &e<time> &7(ticks)'
+      time_lore: '&7Click to set cooking time'
+      exp: '&aReward XP: &e<exp>'
+      exp_lore: '&7Click to set reward XP'
+    anvil:
+      cost_level: '&aRequired Level: &e<level>'
+      cost_level_lore: '&7Click to set required level'
     frame_lore:
       crafting: '&7Place ingredients in the 3x3 grid'
       smelting: '&7Place ingredient on the left'
@@ -161,3 +162,12 @@ menu:
     click_to_view: '&7Click to view'
     confirm_edit: '&a&lConfirm Edit'
     confirm_create: '&a&lCreate'
+crafting_category_name:
+  misc: '&eItems'
+  building: '&eBuilding Blocks'
+  redstone: '&eRedstone'
+  tools: '&eTools'
+cooking_category_name:
+  food: '&eFood'
+  blocks: '&eBlocks'
+  misc: '&eMiscellaneous'

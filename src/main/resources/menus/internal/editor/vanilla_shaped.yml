@@ -1,4 +1,4 @@
-﻿title: <translate:lang:recipe_type_name.vanilla_shaped> - <recipe_key> - <translate:lang:menu.recipe_editor.name>
+title: <translate:lang:recipe_type_name.vanilla_shaped> - <recipe_key> - <translate:lang:menu.recipe_editor.name>
 frame_icon:
   material: minecraft:gray_stained_glass_pane
   name: '&7<translate:lang:recipe_type_name.vanilla_shaped>'
@@ -18,25 +18,25 @@ back_icon:
 category_icon:
   misc:
     material: minecraft:apple
-    name: '<translate:lang:menu.recipe_editor.category_prefix> <translate:lang:menu.recipe_editor.crafting_category.misc>'
+    name: '<translate:lang:menu.recipe_editor.category_prefix> <translate:lang:crafting_category_name.misc>'
     lore:
       - ''
       - '<translate:lang:menu.recipe_editor.category_lore>'
   building:
     material: minecraft:bricks
-    name: '<translate:lang:menu.recipe_editor.category_prefix> <translate:lang:menu.recipe_editor.crafting_category.building>'
+    name: '<translate:lang:menu.recipe_editor.category_prefix> <translate:lang:crafting_category_name.building>'
     lore:
       - ''
       - '<translate:lang:menu.recipe_editor.category_lore>'
   redstone:
     material: minecraft:redstone
-    name: '<translate:lang:menu.recipe_editor.category_prefix> <translate:lang:menu.recipe_editor.crafting_category.redstone>'
+    name: '<translate:lang:menu.recipe_editor.category_prefix> <translate:lang:crafting_category_name.redstone>'
     lore:
       - ''
       - '<translate:lang:menu.recipe_editor.category_lore>'
   equipment:
     material: minecraft:iron_axe
-    name: '<translate:lang:menu.recipe_editor.category_prefix> <translate:lang:menu.recipe_editor.crafting_category.tools>'
+    name: '<translate:lang:menu.recipe_editor.category_prefix> <translate:lang:crafting_category_name.tools>'
     lore:
       - ''
       - '<translate:lang:menu.recipe_editor.category_lore>'

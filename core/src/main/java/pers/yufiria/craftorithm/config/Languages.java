@@ -102,14 +102,14 @@ public class Languages {
     public static final StringLangEntry MENU_RECIPE_EDITOR_CATEGORY_PREFIX = new StringLangEntry("menu.recipe_editor.category_prefix");
     public static final StringLangEntry MENU_RECIPE_EDITOR_CATEGORY_LORE = new StringLangEntry("menu.recipe_editor.category_lore");
 
-    public static final StringLangEntry MENU_RECIPE_EDITOR_CRAFTING_CATEGORY_MISC = new StringLangEntry("menu.recipe_editor.crafting_category.misc");
-    public static final StringLangEntry MENU_RECIPE_EDITOR_CRAFTING_CATEGORY_BUILDING = new StringLangEntry("menu.recipe_editor.crafting_category.building");
-    public static final StringLangEntry MENU_RECIPE_EDITOR_CRAFTING_CATEGORY_REDSTONE = new StringLangEntry("menu.recipe_editor.crafting_category.redstone");
-    public static final StringLangEntry MENU_RECIPE_EDITOR_CRAFTING_CATEGORY_TOOLS = new StringLangEntry("menu.recipe_editor.crafting_category.tools");
+    public static final StringLangEntry CRAFTING_CATEGORY_NAME_MISC = new StringLangEntry("crafting_category_name.misc");
+    public static final StringLangEntry CRAFTING_CATEGORY_NAME_BUILDING = new StringLangEntry("crafting_category_name.building");
+    public static final StringLangEntry CRAFTING_CATEGORY_NAME_REDSTONE = new StringLangEntry("crafting_category_name.redstone");
+    public static final StringLangEntry CRAFTING_CATEGORY_NAME_TOOLS = new StringLangEntry("crafting_category_name.tools");
 
-    public static final StringLangEntry MENU_RECIPE_EDITOR_COOKING_CATEGORY_FOOD = new StringLangEntry("menu.recipe_editor.cooking_category.food");
-    public static final StringLangEntry MENU_RECIPE_EDITOR_COOKING_CATEGORY_BLOCKS = new StringLangEntry("menu.recipe_editor.cooking_category.blocks");
-    public static final StringLangEntry MENU_RECIPE_EDITOR_COOKING_CATEGORY_MISC = new StringLangEntry("menu.recipe_editor.cooking_category.misc");
+    public static final StringLangEntry COOKING_CATEGORY_NAME_FOOD = new StringLangEntry("cooking_category_name.food");
+    public static final StringLangEntry COOKING_CATEGORY_NAME_BLOCKS = new StringLangEntry("cooking_category_name.blocks");
+    public static final StringLangEntry COOKING_CATEGORY_NAME_MISC = new StringLangEntry("cooking_category_name.misc");
 
     public static final StringLangEntry MENU_RECIPE_EDITOR_SMELTING_TIME = new StringLangEntry("menu.recipe_editor.smelting.time");
     public static final StringLangEntry MENU_RECIPE_EDITOR_SMELTING_TIME_LORE = new StringLangEntry("menu.recipe_editor.smelting.time_lore");
@@ -120,6 +120,14 @@ public class Languages {
     public static final StringLangEntry MENU_RECIPE_EDITOR_ANVIL_COST_LEVEL_LORE = new StringLangEntry("menu.recipe_editor.anvil.cost_level_lore");
 
     public static final StringLangEntry MENU_RECIPE_CREATOR_RESULT_FRAME = new StringLangEntry("menu.recipe_creator.result_frame");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_CATEGORY_PREFIX = new StringLangEntry("menu.recipe_creator.category_prefix");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_CATEGORY_LORE = new StringLangEntry("menu.recipe_creator.category_lore");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_SMELTING_TIME = new StringLangEntry("menu.recipe_creator.smelting.time");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_SMELTING_TIME_LORE = new StringLangEntry("menu.recipe_creator.smelting.time_lore");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_SMELTING_EXP = new StringLangEntry("menu.recipe_creator.smelting.exp");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_SMELTING_EXP_LORE = new StringLangEntry("menu.recipe_creator.smelting.exp_lore");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_ANVIL_COST_LEVEL = new StringLangEntry("menu.recipe_creator.anvil.cost_level");
+    public static final StringLangEntry MENU_RECIPE_CREATOR_ANVIL_COST_LEVEL_LORE = new StringLangEntry("menu.recipe_creator.anvil.cost_level_lore");
     public static final StringLangEntry MENU_RECIPE_CREATOR_FRAME_LORE_CRAFTING = new StringLangEntry("menu.recipe_creator.frame_lore.crafting");
     public static final StringLangEntry MENU_RECIPE_CREATOR_FRAME_LORE_SMELTING = new StringLangEntry("menu.recipe_creator.frame_lore.smelting");
     public static final StringLangEntry MENU_RECIPE_CREATOR_FRAME_LORE_BREWING_INPUT = new StringLangEntry("menu.recipe_creator.frame_lore.brewing_input");

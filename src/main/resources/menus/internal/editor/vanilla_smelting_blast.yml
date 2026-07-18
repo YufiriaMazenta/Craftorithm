@@ -1,4 +1,4 @@
-﻿title: <translate:lang:recipe_type_name.vanilla_smelting_blast> - <recipe_key> - <translate:lang:menu.recipe_editor.name>
+title: <translate:lang:recipe_type_name.vanilla_smelting_blast> - <recipe_key> - <translate:lang:menu.recipe_editor.name>
 frame_icon:
   material: minecraft:gray_stained_glass_pane
   name: '&7<translate:lang:recipe_type_name.vanilla_smelting_blast>'
@@ -28,19 +28,19 @@ back_icon:
 category_icon:
   food:
     material: minecraft:cooked_beef
-    name: '<translate:lang:menu.recipe_editor.smelting.category_food>'
+    name: '<translate:lang:menu.recipe_editor.category_prefix> <translate:lang:cooking_category_name.food>'
     lore:
       - ''
       - '<translate:lang:menu.recipe_editor.category_lore>'
   blocks:
     material: minecraft:stone
-    name: '<translate:lang:menu.recipe_editor.smelting.category_blocks>'
+    name: '<translate:lang:menu.recipe_editor.category_prefix> <translate:lang:cooking_category_name.blocks>'
     lore:
       - ''
       - '<translate:lang:menu.recipe_editor.category_lore>'
   misc:
     material: minecraft:stick
-    name: '<translate:lang:menu.recipe_editor.smelting.category_misc>'
+    name: '<translate:lang:menu.recipe_editor.category_prefix> <translate:lang:cooking_category_name.misc>'
     lore:
       - ''
       - '<translate:lang:menu.recipe_editor.category_lore>'

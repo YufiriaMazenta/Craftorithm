@@ -12,6 +12,7 @@ import crypticlib.util.ItemHelper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -123,6 +124,11 @@ public abstract class RecipeEditorMenu extends StoredMenu implements BackableMen
      */
     protected @Nullable BukkitConfigWrapper getRecipeConfigWrapper() {
         return RecipeManager.INSTANCE.getRecipeConfigWrapper(recipeKey);
+    }
+
+    @Override
+    public void onClose(InventoryCloseEvent event) {
+        setReturnStoredItems(false);
     }
 
 }

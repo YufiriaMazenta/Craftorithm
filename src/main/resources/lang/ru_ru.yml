@@ -92,15 +92,6 @@ menu:
     back_lore: '&7Нажмите для возврата к списку'
     category_prefix: '&aКатегория:'
     category_lore: '&7Нажмите для переключения'
-    crafting_category:
-      misc: '&eПредметы'
-      building: '&eСтроительные блоки'
-      redstone: '&eРедстоун'
-      tools: '&eИнструменты'
-    cooking_category:
-      food: '&eЕда'
-      blocks: '&eБлоки'
-      misc: '&eРазное'
     smelting:
       time: '&aВремя плавки: &e<time> &7(tick)'
       time_lore: '&7Нажмите для ввода времени'
@@ -116,6 +107,16 @@ menu:
     result_frame_icon_name: '&aПоместите результат рецепта сюда'
     confirm_icon_name: '&6&lПодтвердить создание рецепта'
     result_frame: '&aРезультат'
+    category_prefix: '&aКатегория:'
+    category_lore: '&7Нажмите для переключения'
+    smelting:
+      time: '&aВремя плавки: &e<time> &7(tick)'
+      time_lore: '&7Нажмите для ввода времени'
+      exp: '&aОпыт: &e<exp>'
+      exp_lore: '&7Нажмите для ввода опыта'
+    anvil:
+      cost_level: '&aНеобходимый уровень: &e<level>'
+      cost_level_lore: '&7Нажмите для ввода уровня'
     frame_lore:
       crafting: '&7Разместите материалы в сетке 3x3'
       smelting: '&7Разместите материал слева'
@@ -161,3 +162,12 @@ menu:
     click_to_view: '&7Нажмите для просмотра'
     confirm_edit: '&a&lПодтвердить'
     confirm_create: '&a&lСоздать'
+crafting_category_name:
+  misc: '&eПредметы'
+  building: '&eСтроительные блоки'
+  redstone: '&eРедстоун'
+  tools: '&eИнструменты'
+cooking_category_name:
+  food: '&eЕда'
+  blocks: '&eБлоки'
+  misc: '&eРазное'
