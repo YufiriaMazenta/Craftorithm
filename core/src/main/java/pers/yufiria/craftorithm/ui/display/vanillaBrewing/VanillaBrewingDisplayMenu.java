@@ -4,7 +4,7 @@ import crypticlib.ui.display.Icon;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.config.menu.display.VanillaBrewingDisplay;
-import pers.yufiria.craftorithm.recipe.extra.BrewingRecipe;
+import pers.yufiria.craftorithm.recipe.BrewingRecipe;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayMenu;
 import pers.yufiria.craftorithm.ui.display.RecipeResultIcon;
 import pers.yufiria.craftorithm.ui.icon.IconParser;

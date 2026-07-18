@@ -29,7 +29,7 @@ import pers.yufiria.craftorithm.fakeResult.FakeResultDataHandler;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
-import pers.yufiria.craftorithm.recipe.extra.AnvilRecipeHandler;
+import pers.yufiria.craftorithm.recipe.handler.AnvilRecipeHandler;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
@@ -47,6 +47,7 @@ public enum FakeResultPreviewPacketListener implements PacketListener, Listener 
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void refreshCraftingRecipeCache(PrepareItemCraftEvent event) {
+        //如果通过指纹匹配到了配方,就不在这里进行处理
         UUID playerId = EventUtils.getViewer(event).map(HumanEntity::getUniqueId).orElse(null);
         if (playerId == null) return;
         if (ItemHelper.isAir(event.getInventory().getResult())) {

@@ -46,6 +46,9 @@ public class NamespacedItemIdStack {
 
     public boolean isSimilar(NamespacedItemIdStack that) {
         if (this.equals(that)) return true;
+        if (that == null) {
+            return false;
+        }
         return this.itemId.equals(that.itemId);
     }
 

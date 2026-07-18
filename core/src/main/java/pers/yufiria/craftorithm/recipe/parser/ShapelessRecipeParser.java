@@ -11,12 +11,12 @@ import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeParser;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
-import pers.yufiria.craftorithm.recipe.util.BukkitRecipeChoiceParser;
+import pers.yufiria.craftorithm.recipe.choice.BukkitRecipeChoiceParser;
 
 import java.util.List;
 import java.util.Objects;
 
-public enum ShapelessRecipeParser implements RecipeParser<ShapelessRecipe> {
+public enum ShapelessRecipeParser implements VanillaRecipeParser<ShapelessRecipe> {
 
     INSTANCE;
 
@@ -32,7 +32,7 @@ public enum ShapelessRecipeParser implements RecipeParser<ShapelessRecipe> {
                 throw new RecipeLoadException("No ingredients found for " + recipeName);
             }
             for (String ingredientKey : ingredientKeys) {
-                recipe.addIngredient(BukkitRecipeChoiceParser.parseChoice(ingredientKey));
+                recipe.addIngredient(choiceParser().parse(ingredientKey));
             }
             String group = recipeConfig.getString("group");
             if (group != null) {

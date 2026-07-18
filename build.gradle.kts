@@ -32,6 +32,18 @@ dependencies {
     implementation(project(":hook:protocollib"))
     implementation(project(":hook:vault"))
     implementation(project(":hook:playerpoints"))
+    implementation(project(":nms:v1_20"))
+    implementation(project(":nms:v1_20_2"))
+    implementation(project(":nms:v1_20_3"))
+    implementation(project(":nms:v1_20_5"))
+    implementation(project(":nms:v1_21"))
+    implementation(project(":nms:v1_21_3"))
+    implementation(project(":nms:v1_21_5"))
+    implementation(project(":nms:v1_21_7"))
+    implementation(project(":nms:v1_21_10_spigot"))
+    implementation(project(":nms:v1_21_10_paper"))
+    implementation(project(":nms:v26_1_spigot"))
+    implementation(project(":nms:v26_1_paper"))
     implementation("com.crypticlib:bukkit:${rootProject.findProperty("crypticlibVer")}")
 }
 

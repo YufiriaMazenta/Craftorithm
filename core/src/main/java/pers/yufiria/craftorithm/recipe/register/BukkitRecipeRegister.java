@@ -3,6 +3,8 @@ package pers.yufiria.craftorithm.recipe.register;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.Recipe;
+import pers.yufiria.craftorithm.config.PluginConfigs;
+import pers.yufiria.craftorithm.api.recipe.CraftorithmRecipeRegister;
 import pers.yufiria.craftorithm.recipe.RecipeRegister;
 import pers.yufiria.craftorithm.util.ServerUtils;
 
@@ -10,8 +12,13 @@ public enum BukkitRecipeRegister implements RecipeRegister {
 
     INSTANCE;
 
+
     @Override
     public boolean registerRecipe(Recipe recipe) {
+        if (PluginConfigs.USE_EXPERIMENTAL_RECIPE_REGISTER.value()) {
+            return CraftorithmRecipeRegister.findImpl().registerRecipe(recipe) == CraftorithmRecipeRegister.RegisterResult.SUCCESS;
+        }
+
         if (ServerUtils.after1_20Paper()) {
             //1.20.1以上paper端在添加配方时不对玩家进行更新,等加载完毕后统一更新
             return Bukkit.addRecipe(recipe, false);
