@@ -146,7 +146,7 @@ public class VanillaShapelessCreator extends RecipeCreator {
                 recipeConfig.reloadConfig();
 
                 // 7. 加载配方到RecipeManager
-                boolean loadResult = RecipeManager.INSTANCE.loadRecipeFromConfig(recipeFileName, recipeConfig);
+                boolean loadResult = RecipeManager.INSTANCE.loadRecipeFromConfig(recipeFileName, recipeConfig, true);
                 if (loadResult) {
                     LangUtils.sendLang(
                         event.getWhoClicked(),

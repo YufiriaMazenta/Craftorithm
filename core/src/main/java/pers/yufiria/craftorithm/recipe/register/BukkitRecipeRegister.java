@@ -1,12 +1,12 @@
 package pers.yufiria.craftorithm.recipe.register;
 
+import crypticlib.CrypticLibBukkit;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.Recipe;
 import pers.yufiria.craftorithm.config.PluginConfigs;
-import pers.yufiria.craftorithm.api.recipe.CraftorithmRecipeRegister;
+import pers.yufiria.craftorithm.api.recipe.CraftorithmRecipeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeRegister;
-import pers.yufiria.craftorithm.util.ServerUtils;
 
 public enum BukkitRecipeRegister implements RecipeRegister {
 
@@ -14,24 +14,28 @@ public enum BukkitRecipeRegister implements RecipeRegister {
 
 
     @Override
-    public boolean registerRecipe(Recipe recipe) {
+    public boolean registerRecipe(Recipe recipe, boolean updateRecipes) {
         if (PluginConfigs.USE_EXPERIMENTAL_RECIPE_REGISTER.value()) {
-            return CraftorithmRecipeRegister.findImpl().registerRecipe(recipe) == CraftorithmRecipeRegister.RegisterResult.SUCCESS;
+            return CraftorithmRecipeRegistry.findImpl().registerRecipe(recipe, updateRecipes) == CraftorithmRecipeRegistry.RegisterResult.SUCCESS;
         }
 
-        if (ServerUtils.after1_20Paper()) {
-            //1.20.1以上paper端在添加配方时不对玩家进行更新,等加载完毕后统一更新
-            return Bukkit.addRecipe(recipe, false);
+        if (CrypticLibBukkit.isPaper()) {
+            //其实这里的调用根本没用，paper去掉了这个参数的作用，自我安慰罢了
+            return Bukkit.addRecipe(recipe, updateRecipes);
         } else {
             return Bukkit.addRecipe(recipe);
         }
     }
 
     @Override
-    public boolean unregisterRecipe(NamespacedKey recipeKey) {
-        if (ServerUtils.after1_20Paper()) {
-            //1.20.1以上paper端在删除配方时不对玩家进行更新,等加载完毕后统一更新
-            return Bukkit.removeRecipe(recipeKey, false);
+    public boolean unregisterRecipe(NamespacedKey recipeKey, boolean updateRecipes) {
+        if (PluginConfigs.USE_EXPERIMENTAL_RECIPE_REGISTER.value()) {
+            return CraftorithmRecipeRegistry.findImpl().unregisterRecipe(recipeKey, updateRecipes);
+        }
+
+        if (CrypticLibBukkit.isPaper()) {
+            //其实这里的调用根本没用，paper去掉了这个参数的作用，自我安慰罢了
+            return Bukkit.removeRecipe(recipeKey, updateRecipes);
         } else {
             return Bukkit.removeRecipe(recipeKey);
         }

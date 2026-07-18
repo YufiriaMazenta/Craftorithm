@@ -14,7 +14,7 @@ public enum BrewingRecipeRegister implements RecipeRegister {
     INSTANCE;
 
     @Override
-    public boolean registerRecipe(Recipe recipe) {
+    public boolean registerRecipe(Recipe recipe, boolean updateRecipes) {
         if (!ServerUtils.supportPotionMix()) {
             IOHelper.info("&cThe server does not support brewing recipes");
             return false;
@@ -28,7 +28,7 @@ public enum BrewingRecipeRegister implements RecipeRegister {
     }
 
     @Override
-    public boolean unregisterRecipe(NamespacedKey recipeKey) {
+    public boolean unregisterRecipe(NamespacedKey recipeKey, boolean updateRecipes) {
         if (!ServerUtils.supportPotionMix()) {
             IOHelper.info("&cThe server does not support brewing recipes");
             return false;

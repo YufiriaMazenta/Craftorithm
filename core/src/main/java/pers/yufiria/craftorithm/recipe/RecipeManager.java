@@ -16,6 +16,7 @@ import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.Recipe;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.api.event.RecipeLoadFromConfigEvent;
@@ -136,7 +137,7 @@ public enum RecipeManager implements LifeCycleTask {
         //删除所有由插件添加的配方
         craftorithmRecipes.forEach((recipeKey, recipe) -> {
             RecipeType recipeType = getRecipeType(recipe);
-            recipeType.recipeRegister().unregisterRecipe(recipeKey);
+            recipeType.recipeRegister().unregisterRecipe(recipeKey, false);
         });
         craftorithmRecipes.clear();
         recipeCreateTimeMap.clear();
@@ -149,7 +150,7 @@ public enum RecipeManager implements LifeCycleTask {
         //还原被禁用的配方
         for (Recipe recipe : disabledRecipesCache) {
             RecipeType recipeType = getRecipeType(recipe);
-            recipeType.recipeRegister().registerRecipe(recipe);
+            recipeType.recipeRegister().registerRecipe(recipe, false);
         }
         disabledRecipesCache.clear();
     }
@@ -167,7 +168,7 @@ public enum RecipeManager implements LifeCycleTask {
             entries,
             entry -> {
                 RecipeType recipeType = getRecipeType(entry.getValue());
-                recipeType.recipeRegister().unregisterRecipe(entry.getKey());
+                recipeType.recipeRegister().unregisterRecipe(entry.getKey(), false);
                 return null;
             },
             maxPerTick,
@@ -191,7 +192,7 @@ public enum RecipeManager implements LifeCycleTask {
             disabled,
             recipe -> {
                 RecipeType recipeType = getRecipeType(recipe);
-                recipeType.recipeRegister().registerRecipe(recipe);
+                recipeType.recipeRegister().registerRecipe(recipe, false);
                 return null;
             },
             maxPerTick,
@@ -216,11 +217,13 @@ public enum RecipeManager implements LifeCycleTask {
 
     /**
      * 从配置文件里加载并注册一个配方
-     * @param recipeFileName 配方文件的名字,当配方文件里不存在recipe_id这个配置时,会尝试使用文件名字作为配方id
-     * @param recipeConfigWrapper
+     *
+     * @param recipeFileName      配方文件的名字,当配方文件里不存在recipe_id这个配置时,会尝试使用文件名字作为配方id
+     * @param recipeConfigWrapper 配方的配置文件
+     * @param updateRecipes 是否向玩家更新配方列表
      * @return
      */
-    public boolean loadRecipeFromConfig(String recipeFileName, BukkitConfigWrapper recipeConfigWrapper) {
+    public boolean loadRecipeFromConfig(String recipeFileName, BukkitConfigWrapper recipeConfigWrapper, boolean updateRecipes) {
         YamlConfiguration recipeConfig = recipeConfigWrapper.config();
         String recipeId;
         if (recipeConfig.contains("recipe_id")) {
@@ -255,7 +258,7 @@ public enum RecipeManager implements LifeCycleTask {
         if (recipeLoadFromConfigEvent.isCancelled()) {
             return false;
         }
-        boolean result = recipeLoadFromConfigEvent.recipeRegister().registerRecipe(recipeLoadFromConfigEvent.recipe(), recipeConfig);
+        boolean result = recipeLoadFromConfigEvent.recipeRegister().registerRecipe(recipeLoadFromConfigEvent.recipe(), updateRecipes, recipeConfig);
         if (result) {
             craftorithmRecipes.put(recipeKey, recipe);
             recipeConfigWrapperMap.put(recipeKey, recipeConfigWrapper);
@@ -321,6 +324,7 @@ public enum RecipeManager implements LifeCycleTask {
         return recipe;
     }
 
+    @Contract("null -> null")
     public @Nullable NamespacedKey getRecipeKey(Recipe recipe) {
         if (recipe == null) {
             return null;
@@ -376,7 +380,7 @@ public enum RecipeManager implements LifeCycleTask {
     public boolean removeRecipe(NamespacedKey recipeKey) {
         Recipe recipe = getRecipe(recipeKey);
         RecipeType recipeType = getRecipeType(recipe);
-        return recipeType.recipeRegister().unregisterRecipe(recipeKey);
+        return recipeType.recipeRegister().unregisterRecipe(recipeKey, true);
     }
 
     public boolean removeCraftorithmRecipe(String recipeId, boolean deleteFile) {
@@ -578,7 +582,7 @@ public enum RecipeManager implements LifeCycleTask {
                 recipeName = recipeName.substring(0, lastDotIndex).toLowerCase();
                 BukkitConfigWrapper recipeConfigWrapper = new BukkitConfigWrapper(file);
                 try {
-                    boolean result = loadRecipeFromConfig(recipeName, recipeConfigWrapper);
+                    boolean result = loadRecipeFromConfig(recipeName, recipeConfigWrapper, false);
                     if (result) {
                         recipeNum ++;
                     }
