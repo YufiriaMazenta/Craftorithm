@@ -106,16 +106,13 @@ public class VanillaShapelessCreator extends RecipeCreator {
                 List<String> ingredientIds = new ArrayList<>();
                 for (int slot : INGREDIENT_SLOTS) {
                     ItemStack source = storedItems.get(slot);
-                    if (ItemHelper.isAir(source)) {
-                        ingredientIds.add(null);
-                        continue;
+                    if (!ItemHelper.isAir(source)) {
+                        ingredientIds.add(resolveIngredientId(source));
                     }
-                    String id = resolveIngredientId(source);
-                    ingredientIds.add(id);
                 }
 
                 // 3. 检查是否所有材料为空
-                if (ingredientIds.stream().allMatch(Objects::isNull)) {
+                if (ingredientIds.isEmpty() || ingredientIds.stream().allMatch(Objects::isNull)) {
                     LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_INGREDIENTS);
                     return this;
                 }
