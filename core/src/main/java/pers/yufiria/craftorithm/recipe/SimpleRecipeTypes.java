@@ -37,12 +37,12 @@ public enum SimpleRecipeTypes implements RecipeType {
         },
         new RecipeRegister() {
             @Override
-            public boolean registerRecipe(Recipe recipe) {
+            public boolean registerRecipe(Recipe recipe, boolean updateRecipes) {
                 return false;
             }
 
             @Override
-            public boolean unregisterRecipe(NamespacedKey recipeKey) {
+            public boolean unregisterRecipe(NamespacedKey recipeKey, boolean updateRecipes) {
                 return false;
             }
         },

@@ -11,19 +11,19 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.v1_20_R4.inventory.CraftStonecuttingRecipe;
 import org.bukkit.inventory.*;
-import pers.yufiria.craftorithm.api.recipe.CraftorithmRecipeRegister;
+import pers.yufiria.craftorithm.api.recipe.CraftorithmRecipeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.util.RecipeUtils;
 
 @LifeCycleTaskSettings(rules = {
     @TaskRule(lifeCycle = LifeCycle.LOAD)
 })
-public enum CraftorithmRecipeRegister12005 implements CraftorithmRecipeRegister, LifeCycleTask {
+public enum CraftorithmRecipeRegistry12005 implements CraftorithmRecipeRegistry, LifeCycleTask {
 
     INSTANCE;
 
     @Override
-    public RegisterResult registerRecipe(Recipe bukkitRecipe) {
+    public RegisterResult registerRecipe(Recipe bukkitRecipe, boolean updateRecipes) {
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(bukkitRecipe);
         RecipeHolder<? extends IRecipe<?>> nms;
         switch (bukkitRecipe) {
@@ -52,10 +52,7 @@ public enum CraftorithmRecipeRegister12005 implements CraftorithmRecipeRegister,
                 nms = SmithingTrimRecipe12005.fromBukkit(recipeKey, smithingTrimRecipe);
             }
             case StonecuttingRecipe stonecuttingRecipe -> {
-                //切石机配方自定义匹配逻辑存在问题，暂时还是按照原版的来
-                stonecuttingRecipe.setInputChoice(RecipeUtils.getBukkitChoice(stonecuttingRecipe.getInputChoice()));
-                CraftStonecuttingRecipe.fromBukkitRecipe(stonecuttingRecipe).addToCraftingManager();
-                return RegisterResult.SUCCESS;
+                nms = StonecuttingRecipe12005.fromBukkit(recipeKey, stonecuttingRecipe);
             }
             default -> {
                 return RegisterResult.UNSUPPORTED_RECIPE_TYPE;
@@ -67,6 +64,6 @@ public enum CraftorithmRecipeRegister12005 implements CraftorithmRecipeRegister,
 
     @Override
     public void lifecycle(Object o, LifeCycle lifeCycle) {
-        REGISTER_COMPAT.register(MinecraftVersion.V1_20_5.name(), () -> this);
+        REGISTRY_COMPAT.register(MinecraftVersion.V1_20_5.name(), () -> this);
     }
 }

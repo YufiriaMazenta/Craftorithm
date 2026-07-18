@@ -7,73 +7,67 @@ import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.crafting.*;
-import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
-import org.bukkit.craftbukkit.v1_21_R2.inventory.CraftStonecuttingRecipe;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.SmithingTransformRecipe;
 import org.bukkit.inventory.SmithingTrimRecipe;
-import org.bukkit.inventory.TransmuteRecipe;
-import pers.yufiria.craftorithm.api.recipe.CraftorithmRecipeRegister;
+import pers.yufiria.craftorithm.api.recipe.CraftorithmRecipeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
-import pers.yufiria.craftorithm.util.RecipeUtils;
 
 @LifeCycleTaskSettings(rules = {
     @TaskRule(lifeCycle = LifeCycle.LOAD)
 })
-public enum CraftorithmRecipeRegister12103 implements CraftorithmRecipeRegister, LifeCycleTask {
+public enum CraftorithmRecipeRegistry12100 implements CraftorithmRecipeRegistry, LifeCycleTask {
 
     INSTANCE;
 
     @Override
-    public RegisterResult registerRecipe(Recipe bukkitRecipe) {
+    public RegisterResult registerRecipe(Recipe bukkitRecipe, boolean updateRecipes) {
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(bukkitRecipe);
         RecipeHolder<? extends IRecipe<?>> recipeHolder;
         switch (bukkitRecipe) {
             case ShapedRecipe shapedRecipe -> {
-                recipeHolder = ShapedRecipe12103.fromBukkit(recipeKey, shapedRecipe);
+                recipeHolder = ShapedRecipe12100.fromBukkit(recipeKey, shapedRecipe);
             }
             case ShapelessRecipe shapelessRecipe -> {
-                recipeHolder = ShapelessRecipe12103.fromBukkit(recipeKey, shapelessRecipe);
+                recipeHolder = ShapelessRecipe12100.fromBukkit(recipeKey, shapelessRecipe);
             }
             case FurnaceRecipe furnaceRecipe -> {
-                recipeHolder = FurnaceRecipe12103.fromBukkit(recipeKey, furnaceRecipe);
+                recipeHolder = FurnaceRecipe12100.fromBukkit(recipeKey, furnaceRecipe);
             }
             case SmokingRecipe smokingRecipe -> {
-                recipeHolder = SmokingRecipe12103.fromBukkit(recipeKey, smokingRecipe);
+                recipeHolder = SmokingRecipe12100.fromBukkit(recipeKey, smokingRecipe);
             }
             case CampfireRecipe campfireRecipe -> {
-                recipeHolder = CampfireRecipe12103.fromBukkit(recipeKey, campfireRecipe);
+                recipeHolder = CampfireRecipe12100.fromBukkit(recipeKey, campfireRecipe);
             }
             case BlastingRecipe blastingRecipe -> {
-                recipeHolder = BlastingRecipe12103.fromBukkit(recipeKey, blastingRecipe);
+                recipeHolder = BlastingRecipe12100.fromBukkit(recipeKey, blastingRecipe);
             }
             case SmithingTransformRecipe smithingTransformRecipe -> {
-                recipeHolder = SmithingTransformRecipe12103.fromBukkit(recipeKey, smithingTransformRecipe);
+                recipeHolder = SmithingTransformRecipe12100.fromBukkit(recipeKey, smithingTransformRecipe);
             }
             case SmithingTrimRecipe smithingTrimRecipe -> {
-                recipeHolder = SmithingTrimRecipe12103.fromBukkit(recipeKey, smithingTrimRecipe);
+                recipeHolder = SmithingTrimRecipe12100.fromBukkit(recipeKey, smithingTrimRecipe);
             }
             case StonecuttingRecipe stonecuttingRecipe -> {
-                stonecuttingRecipe.setInputChoice(RecipeUtils.getBukkitChoice(stonecuttingRecipe.getInputChoice()));
-                CraftStonecuttingRecipe.fromBukkitRecipe(stonecuttingRecipe).addToCraftingManager();
-                return RegisterResult.SUCCESS;
-            }
-            case TransmuteRecipe transmuteRecipe -> {
-                Bukkit.addRecipe(transmuteRecipe);
-                return RegisterResult.SUCCESS;
+                recipeHolder = StonecuttingRecipe12100.fromBukkit(recipeKey, stonecuttingRecipe);
             }
             default -> {
                 return RegisterResult.UNSUPPORTED_RECIPE_TYPE;
             }
         }
-        MinecraftServer.getServer().aI().addRecipe(recipeHolder);
+        MinecraftServer.getServer().aJ().addRecipe(recipeHolder);
         return RegisterResult.SUCCESS;
     }
 
     @Override
     public void lifecycle(Object plugin, LifeCycle lifeCycle) {
-        REGISTER_COMPAT.register(MinecraftVersion.V1_21_3.name(), () -> this);
+        REGISTRY_COMPAT.register(
+            MinecraftVersion.V1_21.name(),
+            () -> this
+        );
     }
+
 }

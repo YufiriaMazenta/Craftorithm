@@ -111,7 +111,7 @@ public abstract class RecipeEditorMenu extends StoredMenu implements BackableMen
         String recipeId = recipeKey.getKey();
         RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeId, false);
         CrypticLibBukkit.scheduler().syncLater(() -> {
-            RecipeManager.INSTANCE.loadRecipeFromConfig(recipeId, configWrapper);
+            RecipeManager.INSTANCE.loadRecipeFromConfig(recipeId, configWrapper, true);
             if (callback != null) {
                 callback.run();
             }

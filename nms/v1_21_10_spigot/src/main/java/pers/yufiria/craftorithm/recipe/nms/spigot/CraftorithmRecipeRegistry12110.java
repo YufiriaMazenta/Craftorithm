@@ -8,27 +8,30 @@ import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.crafting.*;
-import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
+import org.bukkit.craftbukkit.v1_21_R6.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_21_R6.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.v1_21_R6.inventory.CraftStonecuttingRecipe;
+import org.bukkit.craftbukkit.v1_21_R6.inventory.CraftTransmuteRecipe;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.SmithingTransformRecipe;
 import org.bukkit.inventory.SmithingTrimRecipe;
 import org.bukkit.inventory.TransmuteRecipe;
-import pers.yufiria.craftorithm.api.recipe.CraftorithmRecipeRegister;
+import org.spigotmc.AsyncCatcher;
+import pers.yufiria.craftorithm.api.recipe.CraftorithmRecipeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.util.RecipeUtils;
 
 @LifeCycleTaskSettings(rules = {
     @TaskRule(lifeCycle = LifeCycle.LOAD)
 })
-public enum CraftorithmRecipeRegister12110 implements CraftorithmRecipeRegister, LifeCycleTask {
+public enum CraftorithmRecipeRegistry12110 implements CraftorithmRecipeRegistry, LifeCycleTask {
 
     INSTANCE;
 
     @Override
-    public RegisterResult registerRecipe(Recipe bukkitRecipe) {
+    public RegisterResult registerRecipe(Recipe bukkitRecipe, boolean updateRecipes) {
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(bukkitRecipe);
         RecipeHolder<? extends IRecipe<?>> recipeHolder;
         switch (bukkitRecipe) {
@@ -57,26 +60,55 @@ public enum CraftorithmRecipeRegister12110 implements CraftorithmRecipeRegister,
                 recipeHolder = SmithingTrimRecipe12110.fromBukkit(recipeKey, smithingTrimRecipe);
             }
             case StonecuttingRecipe stonecuttingRecipe -> {
-                stonecuttingRecipe.setInputChoice(RecipeUtils.getBukkitChoice(stonecuttingRecipe.getInputChoice()));
-                CraftStonecuttingRecipe.fromBukkitRecipe(stonecuttingRecipe).addToCraftingManager();
-                return RegisterResult.SUCCESS;
+                CraftStonecuttingRecipe craftStonecuttingRecipe = CraftStonecuttingRecipe.fromBukkitRecipe(stonecuttingRecipe);
+                recipeHolder = new RecipeHolder<>(
+                    CraftRecipe.toMinecraft(craftStonecuttingRecipe.getKey()),
+                    new RecipeStonecutting(
+                        craftStonecuttingRecipe.getGroup(),
+                        craftStonecuttingRecipe.toNMS(RecipeUtils.getBukkitChoice(stonecuttingRecipe.getInputChoice()), true),
+                        CraftItemStack.asNMSCopy(craftStonecuttingRecipe.getResult())
+                    )
+                );
             }
             case TransmuteRecipe transmuteRecipe -> {
-                Bukkit.addRecipe(transmuteRecipe);
-                return RegisterResult.SUCCESS;
+                CraftTransmuteRecipe craftTransmuteRecipe = CraftTransmuteRecipe.fromBukkitRecipe(transmuteRecipe);
+                recipeHolder = new RecipeHolder<>(
+                    CraftRecipe.toMinecraft(craftTransmuteRecipe.getKey()),
+                    new net.minecraft.world.item.crafting.TransmuteRecipe(
+                        craftTransmuteRecipe.getGroup(),
+                        CraftRecipe.getCategory(craftTransmuteRecipe.getCategory()),
+                        craftTransmuteRecipe.toNMS(craftTransmuteRecipe.getInput(), true),
+                        craftTransmuteRecipe.toNMS(craftTransmuteRecipe.getMaterial(), true),
+                        craftTransmuteRecipe.toNMS(craftTransmuteRecipe.getResult())
+                    )
+                );
             }
             default -> {
                 return RegisterResult.UNSUPPORTED_RECIPE_TYPE;
             }
         }
-        MinecraftServer.getServer().aN().addRecipe(recipeHolder);
+        if (updateRecipes) {
+            MinecraftServer.getServer().aN().addRecipe(recipeHolder);
+        } else {
+            AsyncCatcher.catchOp("Recipe Add");
+            MinecraftServer.getServer().aN().e.addRecipe(recipeHolder);
+        }
         return RegisterResult.SUCCESS;
+    }
+
+    @Override
+    public boolean unregisterRecipe(NamespacedKey recipeKey, boolean updateRecipes) {
+        if (updateRecipes) {
+            return CraftorithmRecipeRegistry.super.unregisterRecipe(recipeKey, true);
+        } else {
+            return MinecraftServer.getServer().aN().e.removeRecipe(CraftRecipe.toMinecraft(recipeKey));
+        }
     }
 
     @Override
     public void lifecycle(Object plugin, LifeCycle lifeCycle) {
         if (!CrypticLibBukkit.isPaper()) {
-            REGISTER_COMPAT.register(MinecraftVersion.V1_21_9.name(), () -> this);
+            REGISTRY_COMPAT.register(MinecraftVersion.V1_21_9.name(), () -> this);
         }
     }
 }

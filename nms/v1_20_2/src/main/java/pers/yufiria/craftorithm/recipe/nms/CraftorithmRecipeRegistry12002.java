@@ -10,58 +10,58 @@ import net.minecraft.world.item.crafting.IRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.*;
-import pers.yufiria.craftorithm.api.recipe.CraftorithmRecipeRegister;
+import pers.yufiria.craftorithm.api.recipe.CraftorithmRecipeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 
 @LifeCycleTaskSettings(rules = {
     @TaskRule(lifeCycle = LifeCycle.LOAD)
 })
-public enum CraftorithmRecipeRegister12003 implements CraftorithmRecipeRegister, LifeCycleTask {
+public enum CraftorithmRecipeRegistry12002 implements CraftorithmRecipeRegistry, LifeCycleTask {
 
     INSTANCE;
 
     @Override
-    public RegisterResult registerRecipe(Recipe bukkitRecipe) {
+    public RegisterResult registerRecipe(Recipe bukkitRecipe, boolean updateRecipes) {
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(bukkitRecipe);
         RecipeHolder<? extends IRecipe<?>> nms;
         switch (bukkitRecipe) {
             case ShapedRecipe shapedRecipe -> {
-                nms = ShapedRecipe12003.fromBukkit(recipeKey, shapedRecipe);
+                nms = ShapedRecipe12002.fromBukkit(recipeKey, shapedRecipe);
             }
             case ShapelessRecipe shapelessRecipe -> {
-                nms = ShapelessRecipe12003.fromBukkit(recipeKey, shapelessRecipe);
+                nms = ShapelessRecipe12002.fromBukkit(recipeKey, shapelessRecipe);
             }
             case FurnaceRecipe furnaceRecipe -> {
-                nms = FurnaceRecipe12003.fromBukkit(recipeKey, furnaceRecipe);
+                nms = FurnaceRecipe12002.fromBukkit(recipeKey, furnaceRecipe);
             }
             case SmokingRecipe smokingRecipe -> {
-                nms = SmokingRecipe12003.fromBukkit(recipeKey, smokingRecipe);
+                nms = SmokingRecipe12002.fromBukkit(recipeKey, smokingRecipe);
             }
             case CampfireRecipe campfireRecipe -> {
-                nms = CampfireRecipe12003.fromBukkit(recipeKey, campfireRecipe);
+                nms = CampfireRecipe12002.fromBukkit(recipeKey, campfireRecipe);
             }
             case BlastingRecipe blastingRecipe -> {
-                nms = BlastingRecipe12003.fromBukkit(recipeKey, blastingRecipe);
+                nms = BlastingRecipe12002.fromBukkit(recipeKey, blastingRecipe);
             }
             case SmithingTransformRecipe smithingTransformRecipe -> {
-                nms = SmithingTransformRecipe12003.fromBukkit(recipeKey, smithingTransformRecipe);
+                nms = SmithingTransformRecipe12002.fromBukkit(recipeKey, smithingTransformRecipe);
             }
             case SmithingTrimRecipe smithingTrimRecipe -> {
-                nms = SmithingTrimRecipe12003.fromBukkit(recipeKey, smithingTrimRecipe);
+                nms = SmithingTrimRecipe12002.fromBukkit(recipeKey, smithingTrimRecipe);
             }
             case StonecuttingRecipe stonecuttingRecipe -> {
-                nms = StonecuttingRecipe12003.fromBukkit(recipeKey, stonecuttingRecipe);
+                nms = StonecuttingRecipe12002.fromBukkit(recipeKey, stonecuttingRecipe);
             }
             default -> {
                 return RegisterResult.UNSUPPORTED_RECIPE_TYPE;
             }
         }
-        MinecraftServer.getServer().aG().addRecipe(nms);
+        MinecraftServer.getServer().aE().addRecipe(nms);
         return RegisterResult.SUCCESS;
     }
 
     @Override
     public void lifecycle(Object o, LifeCycle lifeCycle) {
-        REGISTER_COMPAT.register(MinecraftVersion.V1_20_3.name(), () -> this);
+        REGISTRY_COMPAT.register(MinecraftVersion.V1_20_2.name(), () -> this);
     }
 }

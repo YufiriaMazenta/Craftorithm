@@ -190,7 +190,7 @@ public final class VanillaShapedCreator extends RecipeCreator {
                 recipeConfig.reloadConfig();
 
                 // 11. 加载配方到RecipeManager
-                boolean loadResult = RecipeManager.INSTANCE.loadRecipeFromConfig(recipeFileName, recipeConfig);
+                boolean loadResult = RecipeManager.INSTANCE.loadRecipeFromConfig(recipeFileName, recipeConfig, true);
                 if (loadResult) {
                     LangUtils.sendLang(
                         event.getWhoClicked(),
