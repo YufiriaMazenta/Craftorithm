@@ -1,4 +1,3 @@
-
 repositories {
     maven("https://repo.tabooproject.org/repository/releases/")
     //CrypticLib
@@ -9,7 +8,7 @@ repositories {
 
 dependencies {
     compileOnly(project(":core"))
-    compileOnly("ink.ptms.core:v12004:12004:universal")
+    compileOnly("ink.ptms.core:v260100:260100-minimize-java21")
     compileOnly("com.google.guava:guava:33.2.0-jre")
     compileOnly("com.crypticlib:bukkit:${rootProject.findProperty("crypticlibVer")}")
     compileOnly("com.crypticlib:common-compat:${rootProject.findProperty("crypticlibVer")}")

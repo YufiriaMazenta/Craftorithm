@@ -1,4 +1,5 @@
 rootProject.name = "Craftorithm"
+
 include("core")
 include(
     "hook:azureflow",
@@ -22,12 +23,13 @@ include(
     "nms:v1_20_2",
     "nms:v1_20_3",
     "nms:v1_20_5",
-    "nms:v1_20_6",
     "nms:v1_21",
-    "nms:v1_21_1",
     "nms:v1_21_3",
     "nms:v1_21_5",
     "nms:v1_21_7",
-    "nms:v1_21_10",
-    "nms:v26_1",
+    "nms:v1_21_10_spigot",
+    "nms:v1_21_10_paper",
+    "nms:v1_21_11_spigot",
+    "nms:v26_1_spigot",
+    "nms:v26_1_paper",
 )
