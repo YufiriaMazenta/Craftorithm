@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.recipe.nms;
 
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.World;
 import org.bukkit.NamespacedKey;

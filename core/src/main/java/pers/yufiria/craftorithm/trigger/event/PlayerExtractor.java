@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.trigger.event;
 
-import pers.yufiria.craftorithm.util.EventUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -11,8 +10,7 @@ import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.event.player.PlayerEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.UUID;
+import pers.yufiria.craftorithm.util.EventUtils;
 
 /**
  * 从 Bukkit 事件中提取玩家的策略接口

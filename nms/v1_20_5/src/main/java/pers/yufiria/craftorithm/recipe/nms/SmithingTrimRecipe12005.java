@@ -8,7 +8,6 @@ import net.minecraft.world.item.crafting.SmithingTrimRecipe;
 import net.minecraft.world.level.World;
 import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.v1_20_R4.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_20_R4.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.v1_20_R4.inventory.CraftSmithingTrimRecipe;
 import org.bukkit.craftbukkit.v1_20_R4.util.CraftNamespacedKey;
 import org.bukkit.inventory.Recipe;

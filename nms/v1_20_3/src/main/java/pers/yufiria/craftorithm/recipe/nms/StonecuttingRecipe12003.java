@@ -8,7 +8,6 @@ import net.minecraft.world.item.crafting.RecipeStonecutting;
 import net.minecraft.world.level.World;
 import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftStonecuttingRecipe;
 import org.bukkit.craftbukkit.v1_20_R3.util.CraftNamespacedKey;
 import org.bukkit.inventory.Recipe;

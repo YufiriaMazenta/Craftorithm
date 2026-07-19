@@ -1,8 +1,5 @@
 package pers.yufiria.craftorithm.util;
 
-import crypticlib.CrypticLibBukkit;
-import crypticlib.MinecraftVersion;
-
 public class ServerUtils {
 
     private static Boolean supportPotionMix;

@@ -10,10 +10,8 @@ import org.bukkit.inventory.SmithingTrimRecipe;
 import org.bukkit.inventory.meta.trim.TrimPattern;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.Craftorithm;
-import pers.yufiria.craftorithm.recipe.RecipeParser;
 import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsManager;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
-import pers.yufiria.craftorithm.recipe.choice.BukkitRecipeChoiceParser;
 
 public enum SmithingTrimRecipeParser implements VanillaRecipeParser<SmithingRecipe> {
 

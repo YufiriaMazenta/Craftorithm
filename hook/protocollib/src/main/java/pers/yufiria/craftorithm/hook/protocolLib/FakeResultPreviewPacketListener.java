@@ -6,7 +6,6 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.injector.temporary.TemporaryPlayer;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import pers.yufiria.craftorithm.util.EventUtils;
 import crypticlib.util.ItemHelper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.HumanEntity;
@@ -29,6 +28,7 @@ import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.handler.AnvilRecipeHandler;
+import pers.yufiria.craftorithm.util.EventUtils;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;

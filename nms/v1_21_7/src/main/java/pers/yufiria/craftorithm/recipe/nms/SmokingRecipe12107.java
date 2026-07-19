@@ -4,13 +4,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.World;
 import org.bukkit.NamespacedKey;
-import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftFurnaceRecipe;
 import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftSmokingRecipe;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.api.recipe.choice.CustomRecipeChoice;
 import pers.yufiria.craftorithm.util.RecipeUtils;
 
 public class SmokingRecipe12107 extends RecipeSmoking {

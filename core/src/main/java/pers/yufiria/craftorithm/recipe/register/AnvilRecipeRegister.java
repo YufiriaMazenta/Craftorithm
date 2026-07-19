@@ -2,8 +2,8 @@ package pers.yufiria.craftorithm.recipe.register;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.Recipe;
-import pers.yufiria.craftorithm.recipe.RecipeRegister;
 import pers.yufiria.craftorithm.recipe.AnvilRecipe;
+import pers.yufiria.craftorithm.recipe.RecipeRegister;
 import pers.yufiria.craftorithm.recipe.handler.AnvilRecipeHandler;
 
 public enum AnvilRecipeRegister implements RecipeRegister {

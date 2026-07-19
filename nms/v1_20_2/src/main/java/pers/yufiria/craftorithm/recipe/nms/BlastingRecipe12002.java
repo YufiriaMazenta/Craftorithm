@@ -2,7 +2,10 @@ package pers.yufiria.craftorithm.recipe.nms;
 
 import net.minecraft.world.IInventory;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.CookingBookCategory;
+import net.minecraft.world.item.crafting.RecipeBlasting;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeItemStack;
 import net.minecraft.world.level.World;
 import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftBlastingRecipe;

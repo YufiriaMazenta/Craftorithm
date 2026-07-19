@@ -10,7 +10,6 @@ import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftShapedRecipe;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
-import pers.yufiria.craftorithm.api.recipe.choice.CustomRecipeChoice;
 import pers.yufiria.craftorithm.util.RecipeUtils;
 
 import java.util.Map;

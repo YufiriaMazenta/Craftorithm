@@ -11,7 +11,6 @@ import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftShapedRecipe;
 import org.bukkit.craftbukkit.v1_21_R1.util.CraftNamespacedKey;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
-import pers.yufiria.craftorithm.api.recipe.choice.CustomRecipeChoice;
 import pers.yufiria.craftorithm.util.RecipeUtils;
 
 import java.util.Map;

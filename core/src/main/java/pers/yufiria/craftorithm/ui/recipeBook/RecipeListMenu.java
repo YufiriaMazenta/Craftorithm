@@ -2,7 +2,6 @@ package pers.yufiria.craftorithm.ui.recipeBook;
 
 import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.lang.LangManager;
-import crypticlib.lang.entry.StringLangEntry;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.display.MenuLayout;

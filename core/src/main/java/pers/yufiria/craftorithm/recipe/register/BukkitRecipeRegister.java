@@ -4,8 +4,8 @@ import crypticlib.CrypticLibBukkit;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.Recipe;
-import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.api.recipe.CraftorithmRecipeRegistry;
+import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.recipe.RecipeRegister;
 
 public enum BukkitRecipeRegister implements RecipeRegister {

@@ -1,7 +1,6 @@
 package pers.yufiria.craftorithm.trigger;
 
 import crypticlib.script.ScriptValue;
-import pers.yufiria.craftorithm.util.EventUtils;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -11,13 +10,14 @@ import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.Nullable;
+import pers.yufiria.craftorithm.recipe.AnvilRecipe;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
-import pers.yufiria.craftorithm.recipe.AnvilRecipe;
 import pers.yufiria.craftorithm.recipe.handler.AnvilRecipeHandler;
 import pers.yufiria.craftorithm.trigger.listener.CraftingTriggerHandler;
 import pers.yufiria.craftorithm.trigger.listener.SmithingTriggerHandler;
 import pers.yufiria.craftorithm.util.CollectionsUtils;
+import pers.yufiria.craftorithm.util.EventUtils;
 import pers.yufiria.craftorithm.util.ItemUtils;
 import pers.yufiria.craftorithm.util.RecipeUtils;
 

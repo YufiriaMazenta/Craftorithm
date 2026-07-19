@@ -10,11 +10,9 @@ import net.minecraft.world.item.crafting.IRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.v1_20_R4.inventory.CraftRecipe;
-import org.bukkit.craftbukkit.v1_20_R4.inventory.CraftStonecuttingRecipe;
 import org.bukkit.inventory.*;
 import pers.yufiria.craftorithm.api.recipe.CraftorithmRecipeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
-import pers.yufiria.craftorithm.util.RecipeUtils;
 
 @LifeCycleTaskSettings(rules = {
     @TaskRule(lifeCycle = LifeCycle.LOAD)

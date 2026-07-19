@@ -1,11 +1,13 @@
 package pers.yufiria.craftorithm.recipe.nms;
 
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeItemStack;
+import net.minecraft.world.item.crafting.SmithingRecipeInput;
+import net.minecraft.world.item.crafting.SmithingTrimRecipe;
 import net.minecraft.world.level.World;
 import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftSmithingTrimRecipe;
 import org.bukkit.craftbukkit.v1_21_R1.util.CraftNamespacedKey;
 import org.bukkit.inventory.Recipe;

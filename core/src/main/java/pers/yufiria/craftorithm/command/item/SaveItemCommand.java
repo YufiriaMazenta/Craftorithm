@@ -4,7 +4,6 @@ import crypticlib.Invoker;
 import crypticlib.command.CommandInfo;
 import crypticlib.command.CommandNode;
 import crypticlib.perm.PermInfo;
-import crypticlib.util.IOHelper;
 import crypticlib.util.ItemHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

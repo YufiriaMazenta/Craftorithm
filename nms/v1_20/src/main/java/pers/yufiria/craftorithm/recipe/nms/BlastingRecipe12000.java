@@ -9,7 +9,6 @@ import net.minecraft.world.item.crafting.RecipeItemStack;
 import net.minecraft.world.level.World;
 import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftBlastingRecipe;
-import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftFurnaceRecipe;
 import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.v1_20_R1.util.CraftNamespacedKey;

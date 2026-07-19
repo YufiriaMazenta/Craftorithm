@@ -8,7 +8,6 @@ import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerSe
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerWindowItems;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import pers.yufiria.craftorithm.util.EventUtils;
 import crypticlib.util.ItemHelper;
 import io.github.retrooper.packetevents.util.SpigotConversionUtil;
 import org.bukkit.NamespacedKey;
@@ -30,6 +29,7 @@ import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.handler.AnvilRecipeHandler;
+import pers.yufiria.craftorithm.util.EventUtils;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;

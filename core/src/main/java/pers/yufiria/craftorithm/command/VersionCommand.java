@@ -6,7 +6,6 @@ import crypticlib.command.CommandNode;
 import crypticlib.perm.PermInfo;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.config.Languages;
-import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.util.List;
