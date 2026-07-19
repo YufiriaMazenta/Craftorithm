@@ -95,6 +95,10 @@ public enum CraftorithmRecipeRegistry260100 implements CraftorithmRecipeRegistry
                     )
                 );
             }
+            case CraftRecipe craftRecipe -> {
+                craftRecipe.addToCraftingManager();
+                return RegisterResult.SUCCESS;
+            }
             default -> {
                 return RegisterResult.UNSUPPORTED_RECIPE_TYPE;
             }

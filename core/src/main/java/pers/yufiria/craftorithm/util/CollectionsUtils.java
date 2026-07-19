@@ -20,14 +20,6 @@ public class CollectionsUtils {
         return hashMap;
     }
 
-    public static String list2ArcencielBlock(List<String> list) {
-        StringJoiner blockJoiner = new StringJoiner(" ");
-        for (String s : list) {
-            blockJoiner.add(s);
-        }
-        return blockJoiner.toString();
-    }
-
     /**
      * 将一个map中所有符合条件的键值对插入另外一个map
      * @param map 被插入的map

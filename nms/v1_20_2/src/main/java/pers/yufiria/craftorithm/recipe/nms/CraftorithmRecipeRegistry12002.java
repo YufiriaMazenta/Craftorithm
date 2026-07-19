@@ -9,6 +9,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.crafting.IRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.bukkit.NamespacedKey;
+import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftRecipe;
 import org.bukkit.inventory.*;
 import pers.yufiria.craftorithm.api.recipe.CraftorithmRecipeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
@@ -51,6 +52,10 @@ public enum CraftorithmRecipeRegistry12002 implements CraftorithmRecipeRegistry,
             }
             case StonecuttingRecipe stonecuttingRecipe -> {
                 nms = StonecuttingRecipe12002.fromBukkit(recipeKey, stonecuttingRecipe);
+            }
+            case CraftRecipe craftRecipe -> {
+                craftRecipe.addToCraftingManager();
+                return RegisterResult.SUCCESS;
             }
             default -> {
                 return RegisterResult.UNSUPPORTED_RECIPE_TYPE;

@@ -10,20 +10,6 @@ import pers.yufiria.craftorithm.item.ItemManager;
 
 public class ItemUtils {
 
-    public static void toggleItemGlowing(ItemStack item) {
-        if (item.containsEnchantment(Enchantment.MENDING)) {
-            item.removeEnchantment(Enchantment.MENDING);
-            ItemMeta itemMeta = item.getItemMeta();
-            itemMeta.removeItemFlags(ItemFlag.HIDE_ENCHANTS);
-            item.setItemMeta(itemMeta);
-        } else {
-            item.addUnsafeEnchantment(Enchantment.MENDING, 1);
-            ItemMeta itemMeta = item.getItemMeta();
-            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-            item.setItemMeta(itemMeta);
-        }
-    }
-
     public static ScriptValue resolveItemId(@Nullable ItemStack item) {
         if (item == null) return ScriptValue.nil();
         return ItemManager.INSTANCE.matchItemId(item, false)

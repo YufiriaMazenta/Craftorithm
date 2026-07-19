@@ -8,6 +8,7 @@ import crypticlib.lifecycle.TaskRule;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.crafting.*;
 import org.bukkit.NamespacedKey;
+import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftRecipe;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.SmithingTransformRecipe;
@@ -53,6 +54,10 @@ public enum CraftorithmRecipeRegistry12100 implements CraftorithmRecipeRegistry,
             }
             case StonecuttingRecipe stonecuttingRecipe -> {
                 recipeHolder = StonecuttingRecipe12100.fromBukkit(recipeKey, stonecuttingRecipe);
+            }
+            case CraftRecipe craftRecipe -> {
+                craftRecipe.addToCraftingManager();
+                return RegisterResult.SUCCESS;
             }
             default -> {
                 return RegisterResult.UNSUPPORTED_RECIPE_TYPE;
