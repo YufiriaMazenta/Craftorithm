@@ -2,7 +2,7 @@ repositories {
     //Oraxen
     maven("https://repo.oraxen.com/releases")
     //CrypticLib
-    maven("http://110.42.10.241:8082/repository/maven-public/") {
+    maven("https://repo.crypticlib.incrafttime.top/repository/maven-public/") {
         isAllowInsecureProtocol = true
     }
 }

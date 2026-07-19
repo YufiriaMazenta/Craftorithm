@@ -2,7 +2,7 @@
 repositories {
     maven("https://repo.tabooproject.org/repository/releases/")
     //CrypticLib
-    maven("http://110.42.10.241:8082/repository/maven-public/") {
+    maven("https://repo.crypticlib.incrafttime.top/repository/maven-public/") {
         isAllowInsecureProtocol = true
     }
 }

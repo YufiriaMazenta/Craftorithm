@@ -2,7 +2,7 @@ repositories {
     //Eco
     maven("https://repo.auxilor.io/repository/maven-public/")
     //CrypticLib
-    maven("http://110.42.10.241:8082/repository/maven-public/") {
+    maven("https://repo.crypticlib.incrafttime.top/repository/maven-public/") {
         isAllowInsecureProtocol = true
     }
 }
