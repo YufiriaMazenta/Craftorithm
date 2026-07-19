@@ -47,17 +47,18 @@ public class PluginConfigs {
         Collections.emptyList(),
         "无法被用作配方材料的物品"
     );
-    public final static BooleanConfig USE_EXPERIMENTAL_RECIPE_REGISTRY = new BooleanConfig(
-        "use_experimental_recipe_registry",
-        false,
+    public final static BooleanConfig USE_EXPERIMENTAL_RECIPE_INGREDIENTS = new BooleanConfig(
+        "use_experimental_recipe_ingredients",
+        true,
         List.of(
-            "是否启用实验性的配方注册器",
-            "启用后，配方和卸载的性能将在玩家较多时显著提升，且配方材料的识别将不会受到数据值变更的影响，但可能在配方书等场景下出现一些问题"
+            "是否启用实验性配方材料功能",
+            "启用后，除1.21.3及以上的切石机配方外，合成材料的识别将不会受到NBT/组件变更的影响，但可能在配方书等场景下出现一些问题"
         )
     );
     public final static StringListConfig ITEM_PLUGIN_HOOK_PRIORITY = new StringListConfig(
         "item_plugin_hook_priority",
         List.of(
+            "CraftEngine",
             "Nexo",
             "AzureFlow",
             "NeigeItems",
