@@ -9,20 +9,18 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Predicate;
 
 /**
- * 可以用于注册到原版配方系统的配方材料，只有当启用nms配方注册时才能用于配方中
+ * 可以用于注册到原版配方系统的配方材料，通过传入Predicate来实现自定义的材料识别逻辑
  * @param predicate
  * @param bukkitChoice
  */
-@ApiStatus.Internal
 public record PredicateChoice(
     Predicate<ItemStack> predicate,
     RecipeChoice bukkitChoice
 ) implements CustomRecipeChoice {
 
     /**
-     * @param predicate    The predicate to test the crafting inputs to. Mutating
-     *                     the ItemStack in the predicate is not supported.
-     * @param bukkitChoice used to register into nms
+     * @param predicate 配方材料的识别方式
+     * @param bukkitChoice 用于原版配方的占位符，主要作用在配方书显示等方面，必须是{@link org.bukkit.inventory.RecipeChoice.MaterialChoice}或{@link org.bukkit.inventory.RecipeChoice.ExactChoice}
      */
     public PredicateChoice {
         Preconditions.checkArgument(predicate != null, "The item predicate cannot be null");
