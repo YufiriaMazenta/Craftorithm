@@ -9,6 +9,7 @@ import org.bukkit.inventory.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
+import pers.yufiria.craftorithm.api.recipe.CraftorithmRecipeRegistry;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.recipe.choice.RecipeChoiceParser;
 import pers.yufiria.craftorithm.recipe.parser.*;
@@ -37,12 +38,12 @@ public enum SimpleRecipeTypes implements RecipeType {
         new RecipeRegister() {
             @Override
             public boolean registerRecipe(Recipe recipe, boolean updateRecipes) {
-                return false;
+                return CraftorithmRecipeRegistry.findImpl().registerRecipe(recipe, updateRecipes) == CraftorithmRecipeRegistry.RegisterResult.SUCCESS;
             }
 
             @Override
             public boolean unregisterRecipe(NamespacedKey recipeKey, boolean updateRecipes) {
-                return false;
+                return CraftorithmRecipeRegistry.findImpl().unregisterRecipe(recipeKey, updateRecipes);
             }
         },
         recipe -> false,
