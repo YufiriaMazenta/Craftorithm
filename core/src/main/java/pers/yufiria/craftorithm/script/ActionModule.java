@@ -1,9 +1,6 @@
 package pers.yufiria.craftorithm.script;
 
-import crypticlib.BukkitPlayer;
-import crypticlib.CrypticLib;
-import crypticlib.Invoker;
-import crypticlib.MinecraftVersion;
+import crypticlib.*;
 import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.script.ScriptContext;
 import crypticlib.script.ScriptValue;
@@ -18,6 +15,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.Sound;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -149,7 +148,21 @@ public enum ActionModule implements ScriptModule {
                 .map(player -> BukkitTextProcessor.placeholder(player, finalCmd))
                 .orElse(cmd);
         }
-        return ScriptValue.of(Bukkit.dispatchCommand((org.bukkit.command.CommandSender) invoker.getPlatformInvoker(), cmd));
+
+        CommandSender commandSender = (CommandSender) invoker.getPlatformInvoker();
+        if (!CrypticLibBukkit.isFolia()) {
+            return ScriptValue.of(Bukkit.dispatchCommand(commandSender, cmd));
+        } else {
+            //垃圾folia
+            String finalCmd = cmd;
+            Runnable task = () -> Bukkit.dispatchCommand(commandSender, finalCmd);
+            if (commandSender instanceof Entity entity) {
+                CrypticLibBukkit.scheduler().runOnEntity(entity, task, task);
+            } else {
+                CrypticLibBukkit.scheduler().sync(task);
+            }
+            return ScriptValue.of(true);
+        }
     }
 
     private ScriptValue console(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
@@ -166,7 +179,14 @@ public enum ActionModule implements ScriptModule {
                 .map(player -> BukkitTextProcessor.placeholder(player, finalCmd))
                 .orElse(cmd);
         }
-        return ScriptValue.of(Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd));
+
+        if (!CrypticLibBukkit.isFolia()) {
+            return ScriptValue.of(Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd));
+        } else {
+            String finalCmd1 = cmd;
+            CrypticLibBukkit.scheduler().sync(() -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalCmd1));
+            return ScriptValue.of(true);
+        }
     }
 
     private ScriptValue tell(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
