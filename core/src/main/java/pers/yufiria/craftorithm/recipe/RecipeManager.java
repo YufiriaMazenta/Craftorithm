@@ -8,7 +8,6 @@ import crypticlib.lifecycle.LifeCycle;
 import crypticlib.lifecycle.LifeCycleTask;
 import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
-import crypticlib.scheduler.BatchTask;
 import crypticlib.scheduler.CrypticLibRunnable;
 import crypticlib.util.IOHelper;
 import org.bukkit.Bukkit;
@@ -52,7 +51,7 @@ public enum RecipeManager implements LifeCycleTask {
     private final Map<NamespacedKey, String> recipeKeyToFileNameMap = new ConcurrentHashMap<>();
     private final Map<NamespacedKey, Long> recipeCreateTimeMap = new ConcurrentHashMap<>();
     private final List<Recipe> disabledRecipesCache = new CopyOnWriteArrayList<>();
-    private final Map<NamespacedKey, Recipe> serverRecipesCache = new ConcurrentHashMap<>();
+    private final Set<NamespacedKey> serverRecipeKeys = ConcurrentHashMap.newKeySet();
     private final Map<String, RecipeGroup> recipeGroupMap = new ConcurrentHashMap<>();
     private Boolean supportPotionMix;
     private final AtomicBoolean isReloadingRecipeManager = new AtomicBoolean(false);
@@ -115,16 +114,15 @@ public enum RecipeManager implements LifeCycleTask {
             return;
         }
         isReloadingRecipeManager.set(true);
-        resetRecipesBatched(() -> {
-            loadRecipesFromConfig(() -> {
-                loadServerRecipeCache();
-                reloadDisabledRecipes();
-                CrypticLibBukkit.scheduler().syncLater(() -> {
-                    isReloadingRecipeManager.set(false);
-                    //所有操作进行完毕后，为玩家更新配方信息
-                    Bukkit.updateRecipes();
-                }, 2L);
-            });
+        resetRecipes();
+        loadRecipesFromConfig(() -> {
+            loadServerRecipeKeys();
+            reloadDisabledRecipes();
+            CrypticLibBukkit.scheduler().syncLater(() -> {
+                isReloadingRecipeManager.set(false);
+                //所有操作进行完毕后，为玩家更新配方信息
+                Bukkit.updateRecipes();
+            }, 2L);
         });
     }
 
@@ -140,6 +138,7 @@ public enum RecipeManager implements LifeCycleTask {
             recipeType.recipeRegister().unregisterRecipe(recipeKey, false);
         });
         craftorithmRecipes.clear();
+        serverRecipeKeys.clear();
         recipeCreateTimeMap.clear();
         recipeFileNameToKeyMap.clear();
         recipeKeyToFileNameMap.clear();
@@ -153,57 +152,6 @@ public enum RecipeManager implements LifeCycleTask {
             recipeType.recipeRegister().registerRecipe(recipe, false);
         }
         disabledRecipesCache.clear();
-    }
-
-    /**
-     * 分片重置配方，使用 BatchTask 分片执行
-     * 先分片注销插件配方，再分片还原被禁用配方，完成后调用 callback
-     */
-    public void resetRecipesBatched(Runnable callback) {
-        int maxPerTick = PluginConfigs.MAX_REG_RECIPE_PER_TICK.value();
-        List<Map.Entry<NamespacedKey, Recipe>> entries = new ArrayList<>(craftorithmRecipes.entrySet());
-
-        // Phase 1: 分片注销插件配方
-        new BatchTask<Map.Entry<NamespacedKey, Recipe>, Void>(
-            entries,
-            entry -> {
-                RecipeType recipeType = getRecipeType(entry.getValue());
-                recipeType.recipeRegister().unregisterRecipe(entry.getKey(), false);
-                return null;
-            },
-            maxPerTick,
-            (results, batch) -> {
-                craftorithmRecipes.clear();
-                recipeCreateTimeMap.clear();
-                recipeFileNameToKeyMap.clear();
-                recipeKeyToFileNameMap.clear();
-                CopyComponentsManager.INSTANCE.resetRecipeCopyNbtRules();
-                // Phase 2: 还原被禁用配方
-                restoreDisabledRecipes(callback);
-            }
-        ).start();
-    }
-
-    private void restoreDisabledRecipes(Runnable callback) {
-        int maxPerTick = PluginConfigs.MAX_REG_RECIPE_PER_TICK.value();
-        List<Recipe> disabled = new ArrayList<>(disabledRecipesCache);
-
-        new BatchTask<Recipe, Void>(
-            disabled,
-            recipe -> {
-                RecipeType recipeType = getRecipeType(recipe);
-                recipeType.recipeRegister().registerRecipe(recipe, false);
-                return null;
-            },
-            maxPerTick,
-            (results, batch) -> {
-                disabledRecipesCache.clear();
-                IOHelper.info("Recipe system reset complete");
-                if (callback != null) {
-                    callback.run();
-                }
-            }
-        ).start();
     }
 
     private void loadRecipesFromConfig(Runnable callback) {
@@ -261,6 +209,7 @@ public enum RecipeManager implements LifeCycleTask {
         boolean result = recipeLoadFromConfigEvent.recipeRegister().registerRecipe(recipeLoadFromConfigEvent.recipe(), updateRecipes, recipeConfig);
         if (result) {
             craftorithmRecipes.put(recipeKey, recipe);
+            serverRecipeKeys.add(recipeKey);
             recipeConfigWrapperMap.put(recipeKey, recipeConfigWrapper);
             recipeFileNameToKeyMap.put(recipeFileName, recipeKey);
             recipeKeyToFileNameMap.put(recipeKey, recipeFileName);
@@ -282,14 +231,14 @@ public enum RecipeManager implements LifeCycleTask {
         return result;
     }
 
-    public void loadServerRecipeCache() {
+    public void loadServerRecipeKeys() {
         Iterator<Recipe> recipeIterator = Bukkit.recipeIterator();
-        serverRecipesCache.clear();
+        serverRecipeKeys.clear();
         while (recipeIterator.hasNext()) {
             Recipe recipe = recipeIterator.next();
             NamespacedKey recipeKey = getRecipeKey(recipe);
             if (recipeKey != null)
-                serverRecipesCache.put(recipeKey, recipe);
+                serverRecipeKeys.add(recipeKey);
         }
     }
 
@@ -297,13 +246,13 @@ public enum RecipeManager implements LifeCycleTask {
         disabledRecipesConfigWrapper.reloadConfig();
         List<String> disabledRecipes = disabledRecipesConfigWrapper.config().getStringList("recipes");
         if (PluginConfigs.REMOVE_ALL_VANILLA_RECIPE.value()) {
-            serverRecipesCache.forEach((recipeKey, recipe) -> {
+            for (NamespacedKey recipeKey : serverRecipeKeys) {
                 if (recipeKey.getNamespace().equals("minecraft")) {
                     if (disabledRecipes.contains(recipeKey.toString()))
                         return;
                     disabledRecipes.add(recipeKey.toString());
                 }
-            });
+            }
         }
         for (String recipeKeyStr : disabledRecipes) {
             NamespacedKey recipeKey = NamespacedKey.fromString(recipeKeyStr);
@@ -319,7 +268,7 @@ public enum RecipeManager implements LifeCycleTask {
     public @Nullable Recipe getRecipe(NamespacedKey recipeKey) {
         Recipe recipe = craftorithmRecipes.get(recipeKey);
         if (recipe == null) {
-            return serverRecipesCache.get(recipeKey);
+            return Bukkit.getRecipe(recipeKey);
         }
         return recipe;
     }
@@ -348,6 +297,7 @@ public enum RecipeManager implements LifeCycleTask {
         boolean result = removeRecipe(recipeKey);
         if (result) {
             addDisabledRecipeCache(recipeKey);
+            serverRecipeKeys.remove(recipeKey);
         }
         return result;
     }
@@ -388,6 +338,7 @@ public enum RecipeManager implements LifeCycleTask {
         boolean result = removeRecipe(recipeKey);
         if (result) {
             craftorithmRecipes.remove(recipeKey);
+            serverRecipeKeys.remove(recipeKey);
             recipeCreateTimeMap.remove(recipeKey);
             String removedFileName = recipeKeyToFileNameMap.remove(recipeKey);
             if (removedFileName != null) {
@@ -420,7 +371,7 @@ public enum RecipeManager implements LifeCycleTask {
         if (craftorithmRecipes.containsKey(recipeKey)) {
             return true;
         }
-        return serverRecipesCache.containsKey(recipeKey);
+        return Bukkit.getRecipe(recipeKey) != null;
     }
 
     public @Nullable RecipeGroup getRecipeGroup(String groupId) {
@@ -497,8 +448,8 @@ public enum RecipeManager implements LifeCycleTask {
         return recipeGroupMap.keySet().stream().toList();
     }
 
-    public Map<NamespacedKey, Recipe> serverRecipesCache() {
-        return serverRecipesCache;
+    public Set<NamespacedKey> serverRecipeKeys() {
+        return serverRecipeKeys;
     }
 
     public boolean supportPotionMix() {

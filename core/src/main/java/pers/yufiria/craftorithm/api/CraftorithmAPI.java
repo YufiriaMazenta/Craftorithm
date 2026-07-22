@@ -21,6 +21,7 @@ import pers.yufiria.craftorithm.trigger.TriggerManager;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 import java.util.Optional;
 
 public enum CraftorithmAPI {
@@ -122,11 +123,11 @@ public enum CraftorithmAPI {
     }
 
     /**
-     * 获取服务器配方缓存
-     * @return 配方映射副本
+     * 获取服务器配方Key缓存
+     * @return 配方Key集合副本
      */
-    public @NotNull Map<NamespacedKey, Recipe> getServerRecipes() {
-        return Collections.unmodifiableMap(RecipeManager.INSTANCE.serverRecipesCache());
+    public @NotNull Set<NamespacedKey> getServerRecipeKeys() {
+        return Collections.unmodifiableSet(RecipeManager.INSTANCE.serverRecipeKeys());
     }
 
     /**

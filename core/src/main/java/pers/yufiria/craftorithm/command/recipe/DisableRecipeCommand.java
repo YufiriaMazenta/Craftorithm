@@ -33,7 +33,7 @@ public final class DisableRecipeCommand extends CommandNode {
             return;
         }
         NamespacedKey recipeKey = NamespacedKey.fromString(args.get(0));
-        if (!RecipeManager.INSTANCE.serverRecipesCache().containsKey(recipeKey)) {
+        if (!RecipeManager.INSTANCE.serverRecipeKeys().contains(recipeKey)) {
             LangUtils.sendLang(invoker, Languages.COMMAND_DISABLE_NOT_EXIST);
             return;
         }
@@ -52,7 +52,7 @@ public final class DisableRecipeCommand extends CommandNode {
     public List<String> tabComplete(@NotNull Invoker invoker, List<String> args) {
         if (args.size() <= 1) {
             List<String> tabList = new ArrayList<>();
-            for (NamespacedKey recipeKey : RecipeManager.INSTANCE.serverRecipesCache().keySet()) {
+            for (NamespacedKey recipeKey : RecipeManager.INSTANCE.serverRecipeKeys()) {
                 String str = recipeKey.toString();
                 if (str.contains(args.get(0)))
                     tabList.add(recipeKey.toString());
