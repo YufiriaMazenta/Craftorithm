@@ -5,6 +5,7 @@ import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.menu.Menu;
 import crypticlib.ui.util.MenuHelper;
+import crypticlib.util.ItemHelper;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -56,6 +57,9 @@ public class RecipeDisplayIcon extends ActionIcon {
     public ItemStack display() {
         if (recipe != null) {
             ItemStack displayItem = recipe.getResult().clone();
+            if (ItemHelper.isAir(displayItem)) {
+                return displayItem;
+            }
             ItemMeta itemMeta = displayItem.getItemMeta();
             List<String> lore = itemMeta.getLore();
             if (lore != null) {

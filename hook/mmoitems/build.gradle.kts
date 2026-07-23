@@ -1,9 +1,7 @@
 repositories {
     maven("https://nexus.phoenixdevt.fr/repository/maven-public/")
     //CrypticLib
-    maven("https://repo.crypticlib.incrafttime.top/repository/maven-public/") {
-        isAllowInsecureProtocol = true
-    }
+    maven("https://repo.crypticlib.incrafttime.top/repository/maven-public/")
 }
 dependencies {
     compileOnly(project(":core"))

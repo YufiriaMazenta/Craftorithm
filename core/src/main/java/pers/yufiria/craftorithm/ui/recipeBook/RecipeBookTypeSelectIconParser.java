@@ -24,7 +24,7 @@ public enum RecipeBookTypeSelectIconParser implements IconParser {
             case "recipe_list" -> {
                 String recipeTypeKey = config.getString("recipe_type");
                 Objects.requireNonNull(recipeTypeKey, "recipe_list icon must have recipe_type");
-                RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipeTypeKey);
+                RecipeType recipeType = RecipeManager.INSTANCE.getRecipeTypeByKey(recipeTypeKey);
                 Objects.requireNonNull(recipeType, "Unknown recipe type: " + recipeTypeKey);
                 IconDisplay iconDisplay = parseIconDisplay(config);
                 Map<ClickType, CompiledScript> actions = parseActions(config.getConfigurationSection("actions"));

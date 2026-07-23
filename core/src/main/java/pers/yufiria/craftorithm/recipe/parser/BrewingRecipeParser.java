@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.recipe.parser;
 
-import io.papermc.paper.potion.PotionMix;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
@@ -11,10 +10,9 @@ import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.BrewingRecipe;
 import pers.yufiria.craftorithm.recipe.RecipeParser;
-import pers.yufiria.craftorithm.recipe.choice.BrewingRecipeChoiceParser;
+import pers.yufiria.craftorithm.recipe.choice.ItemIdRecipeChoiceParser;
 import pers.yufiria.craftorithm.recipe.choice.RecipeChoiceParser;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
-import pers.yufiria.craftorithm.util.RecipeUtils;
 import pers.yufiria.craftorithm.util.ServerUtils;
 
 public enum BrewingRecipeParser implements RecipeParser<BrewingRecipe> {
@@ -23,7 +21,7 @@ public enum BrewingRecipeParser implements RecipeParser<BrewingRecipe> {
 
     @Override
     public @NotNull RecipeChoiceParser choiceParser() {
-        return BrewingRecipeChoiceParser.INSTANCE;
+        return ItemIdRecipeChoiceParser.INSTANCE;
     }
 
     @Override
@@ -39,13 +37,12 @@ public enum BrewingRecipeParser implements RecipeParser<BrewingRecipe> {
             RecipeChoice input = choiceParser().parse(inputId);
             String ingredientId = recipeConfig.getString("ingredient");
             RecipeChoice ingredient = choiceParser().parse(ingredientId);
-            PotionMix potionMix = new PotionMix(
+            return new BrewingRecipe(
                 recipeKey,
-                result,
-                RecipeUtils.getBukkitChoice(input),
-                RecipeUtils.getBukkitChoice(ingredient)
+                input,
+                ingredient,
+                result
             );
-            return new BrewingRecipe(potionMix);
         } catch (RecipeLoadException e) {
             throw e;
         } catch (Throwable throwable) {

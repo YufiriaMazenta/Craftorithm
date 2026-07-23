@@ -24,7 +24,7 @@ public enum SmeltingRecipeParser implements VanillaRecipeParser<CookingRecipe<?>
     public @NotNull CookingRecipe<?> parse(String recipeName, ConfigurationSection recipeConfig) {
         try {
             String recipeTypeId = recipeConfig.getString("type");
-            RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipeTypeId);
+            RecipeType recipeType = RecipeManager.INSTANCE.getRecipeTypeByKey(recipeTypeId);
             if (recipeType == null) {
                 throw new RecipeLoadException(recipeTypeId + " is not a smelting recipe type.");
             }

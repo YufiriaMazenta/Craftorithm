@@ -2,9 +2,7 @@ repositories {
     //Nexo
     maven("https://repo.nexomc.com/releases")
     //CrypticLib
-    maven("https://repo.crypticlib.incrafttime.top/repository/maven-public/") {
-        isAllowInsecureProtocol = true
-    }
+    maven("https://repo.crypticlib.incrafttime.top/repository/maven-public/")
 }
 
 dependencies {

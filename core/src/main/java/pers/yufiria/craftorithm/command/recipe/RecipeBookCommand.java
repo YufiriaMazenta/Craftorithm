@@ -67,7 +67,7 @@ public class RecipeBookCommand extends CommandNode {
                 new RecipeListMenu(target, null, SortMode.NAME_ASC).openMenu();
                 return;
             }
-            RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(typeKey);
+            RecipeType recipeType = RecipeManager.INSTANCE.getRecipeTypeByKey(typeKey);
             if (recipeType == null) {
                 LangUtils.sendLang(invoker, Languages.COMMAND_RECIPEBOOK_TYPE_NOT_FOUND, Map.of("<recipe_type>", typeKey));
                 return;

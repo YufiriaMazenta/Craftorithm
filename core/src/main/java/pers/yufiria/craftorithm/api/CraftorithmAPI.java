@@ -145,7 +145,7 @@ public enum CraftorithmAPI {
      * @return 配方类型，不存在返回null
      */
     public @Nullable RecipeType getRecipeType(@NotNull String typeId) {
-        return RecipeManager.INSTANCE.getRecipeType(typeId);
+        return RecipeManager.INSTANCE.getRecipeTypeByKey(typeId);
     }
 
     /**

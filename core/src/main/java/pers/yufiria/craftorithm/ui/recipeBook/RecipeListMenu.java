@@ -19,6 +19,7 @@ import pers.yufiria.craftorithm.config.menu.recipeBook.RecipeListConfig;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.ui.BackableMenu;
+import pers.yufiria.craftorithm.ui.display.RecipeDisplayManager;
 import pers.yufiria.craftorithm.ui.icon.RecipeDisplayIcon;
 
 import java.util.*;
@@ -56,6 +57,7 @@ public class RecipeListMenu extends Menu implements BackableMenu, Multipage {
         if (type == null) {
             // type为null时加载所有Craftorithm配方
             recipes = new ArrayList<>(RecipeManager.INSTANCE.craftorithmRecipes().entrySet());
+            recipes.removeIf(recipeHoler -> RecipeDisplayManager.INSTANCE.getRecipeDisplay(RecipeManager.INSTANCE.getRecipeType(recipeHoler.getValue())).isEmpty());
         } else {
             recipes = new ArrayList<>(RecipeManager.INSTANCE.getRecipesByType(type));
         }

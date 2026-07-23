@@ -1,8 +1,6 @@
 repositories {
     //CrypticLib
-    maven("https://repo.crypticlib.incrafttime.top/repository/maven-public/") {
-        isAllowInsecureProtocol = true
-    }
+    maven("https://repo.crypticlib.incrafttime.top/repository/maven-public/")
     //packetevents
     maven("https://repo.codemc.io/repository/maven-releases/")
 }

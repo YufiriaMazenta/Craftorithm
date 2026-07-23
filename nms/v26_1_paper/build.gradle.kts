@@ -1,7 +1,5 @@
 repositories {
-    maven("https://repo.crypticlib.incrafttime.top/repository/maven-public/") {
-        isAllowInsecureProtocol = true
-    }
+    maven("https://repo.crypticlib.incrafttime.top/repository/maven-public/")
 }
 
 java {

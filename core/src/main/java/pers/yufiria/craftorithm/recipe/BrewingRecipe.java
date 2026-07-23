@@ -8,37 +8,42 @@ import org.jetbrains.annotations.NotNull;
 
 public class BrewingRecipe implements CustomRecipe {
 
-    private PotionMix potionMix;
+    private NamespacedKey recipeKey;
+    private RecipeChoice input, ingredient;
+    private ItemStack result;
 
-    public BrewingRecipe(PotionMix potionMix) {
-        this.potionMix = potionMix;
+    public BrewingRecipe(NamespacedKey recipeKey, RecipeChoice input, RecipeChoice ingredient, ItemStack result) {
+        this.recipeKey = recipeKey;
+        this.input = input;
+        this.ingredient = ingredient;
+        this.result = result;
     }
 
-    public PotionMix potionMix() {
-        return potionMix;
-    }
-
-    public BrewingRecipe setPotionMix(PotionMix potionMix) {
-        this.potionMix = potionMix;
-        return this;
+    public PotionMix toPotionMix() {
+        return new PotionMix(
+            recipeKey,
+            result,
+            PotionMix.createPredicateChoice(input),
+            PotionMix.createPredicateChoice(ingredient)
+        );
     }
 
     @Override
     public @NotNull NamespacedKey getKey() {
-        return potionMix.getKey();
+        return recipeKey;
     }
 
     @Override
     public @NotNull ItemStack getResult() {
-        return potionMix.getResult();
+        return result;
     }
 
     public @NotNull RecipeChoice input() {
-        return potionMix.getInput();
+        return input;
     }
 
     public @NotNull RecipeChoice ingredient() {
-        return potionMix.getIngredient();
+        return ingredient;
     }
 
 }

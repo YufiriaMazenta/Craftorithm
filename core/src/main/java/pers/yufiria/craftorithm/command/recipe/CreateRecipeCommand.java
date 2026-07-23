@@ -85,7 +85,7 @@ public final class CreateRecipeCommand extends CommandNode implements LifeCycleT
             recipeFileName = args.get(2);
         }
 
-        RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipeTypeStr);
+        RecipeType recipeType = RecipeManager.INSTANCE.getRecipeTypeByKey(recipeTypeStr);
         if (recipeType == null) {
             LangUtils.sendLang(invoker, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
             return;

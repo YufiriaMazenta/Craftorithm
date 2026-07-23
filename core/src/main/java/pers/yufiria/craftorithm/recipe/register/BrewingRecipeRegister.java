@@ -23,7 +23,7 @@ public enum BrewingRecipeRegister implements RecipeRegister {
             return false;
         }
         PotionBrewer potionBrewer = Bukkit.getPotionBrewer();
-        potionBrewer.addPotionMix(((BrewingRecipe) recipe).potionMix());
+        potionBrewer.addPotionMix(((BrewingRecipe) recipe).toPotionMix());
         return true;
     }
 

@@ -420,7 +420,7 @@ public enum RecipeManager implements LifeCycleTask {
         return craftorithmRecipes;
     }
 
-    public @Nullable RecipeType getRecipeType(String typeId) {
+    public @Nullable RecipeType getRecipeTypeByKey(String typeId) {
         return recipeTypes.get(typeId);
     }
 

@@ -1,9 +1,7 @@
 repositories {
     maven("https://r.irepo.space/maven/")
     //CrypticLib
-    maven("https://repo.crypticlib.incrafttime.top/repository/maven-public/") {
-        isAllowInsecureProtocol = true
-    }
+    maven("https://repo.crypticlib.incrafttime.top/repository/maven-public/")
 }
 dependencies {
     compileOnly(project(":core"))
