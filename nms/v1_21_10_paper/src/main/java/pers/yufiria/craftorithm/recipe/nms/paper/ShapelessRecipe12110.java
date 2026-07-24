@@ -27,18 +27,17 @@ public class ShapelessRecipe12110 extends ShapelessRecipe {
 
     @Override
     public boolean matches(CraftingInput craftinginput, Level level) {
-        if (craftinginput.ingredientCount() != this.customIngredients.size()) return false;
-        if (craftinginput.ingredientCount() == 1 && customIngredients.size() == 1) {
-            org.bukkit.inventory.ItemStack bukkitCopy = CraftItemStack.asCraftMirror(craftinginput.getItem(0));
-            return customIngredients.getFirst().test(bukkitCopy);
+        List<ItemStack> inputItems = craftinginput.items();
+        List<org.bukkit.inventory.ItemStack> inputBukkitItems = new ArrayList<>();
+        for (ItemStack nmsInputItem : inputItems) {
+            org.bukkit.inventory.ItemStack bukkitCopy = CraftItemStack.asCraftMirror(nmsInputItem);
+            if (!ItemHelper.isAir(bukkitCopy)) inputBukkitItems.add(bukkitCopy);
         }
-        List<org.bukkit.inventory.ItemStack> inputItems = new ArrayList<>();
-        for (int i = 0; i < craftinginput.ingredientCount(); i++) {
-            ItemStack nmsStack = craftinginput.getItem(i);
-            org.bukkit.inventory.ItemStack bukkitCopy = CraftItemStack.asCraftMirror(nmsStack);
-            if (!ItemHelper.isAir(bukkitCopy)) inputItems.add(bukkitCopy);
+        if (inputBukkitItems.size() != this.customIngredients.size()) return false;
+        if (inputBukkitItems.size() == 1) {
+            return customIngredients.getFirst().test(inputBukkitItems.getFirst());
         }
-        return RecipeUtils.matchItemsToChoices(inputItems, customIngredients);
+        return RecipeUtils.matchItemsToChoices(inputBukkitItems, customIngredients);
     }
 
     @Override

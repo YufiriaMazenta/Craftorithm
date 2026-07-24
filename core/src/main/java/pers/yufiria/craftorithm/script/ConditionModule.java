@@ -150,6 +150,7 @@ public enum ConditionModule implements ScriptModule {
         if (playerOpt.isEmpty()) {
             return ScriptValue.nil();
         }
+
         Player player = playerOpt.get();
         int level = player.getLocation().getBlock().getLightLevel();
         return ScriptValue.of(level);
