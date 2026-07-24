@@ -454,7 +454,12 @@ public enum RecipeManager implements LifeCycleTask {
 
     public boolean supportPotionMix() {
         if (supportPotionMix == null) {
-            supportPotionMix = CrypticLibBukkit.isPaper();
+            try {
+                Class.forName("io.papermc.paper.potion.PotionMix");
+                supportPotionMix = true;
+            } catch (Throwable throwable) {
+                supportPotionMix = false;
+            }
         }
         return supportPotionMix;
     }
