@@ -10,7 +10,9 @@ import crypticlib.script.vm.ScriptVM;
 import crypticlib.ui.menu.Menu;
 import crypticlib.ui.util.MenuHelper;
 import crypticlib.util.IOHelper;
+import crypticlib.util.InventoryHelper;
 import crypticlib.util.InventoryViewHelper;
+import crypticlib.util.ItemHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
@@ -24,6 +26,7 @@ import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.ui.BackableMenu;
 import pers.yufiria.craftorithm.ui.custom.CustomMenuManager;
+import pers.yufiria.craftorithm.util.ItemUtils;
 import pers.yufiria.craftorithm.util.PlayerUtils;
 
 import java.util.Objects;
@@ -91,7 +94,13 @@ public enum ActionModule implements ScriptModule {
             return ScriptValue.of(false);
         }
         CrypticLib.scheduler().sync(() -> {
-            topInventory.setItem(slot, itemStackOpt.get());
+            ItemStack slotItem = topInventory.getItem(slot);
+            if (ItemHelper.isAir(slotItem)) {
+                topInventory.setItem(slot, itemStackOpt.get());
+            } else {
+                //对应位置已经有物品了,那我们就尝试放入,如果不能放入就丢在地上
+                InventoryHelper.addItemOrDrop(topInventory, itemStackOpt.get());
+            }
         });
         return ScriptValue.of(true);
     }
