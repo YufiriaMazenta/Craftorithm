@@ -11,6 +11,7 @@ dependencies {
     compileOnly(project(":core"))
     compileOnly("com.crypticlib:bukkit:${rootProject.findProperty("crypticlibVer")}")
     compileOnly("com.crypticlib:bukkit-i18n:${rootProject.findProperty("crypticlibVer")}")
+    compileOnly("com.crypticlib:common-script:${rootProject.findProperty("crypticlibVer")}")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7") {
         exclude("org.bukkit", "bukkit")
     }
