@@ -1,9 +1,11 @@
 package pers.yufiria.craftorithm.recipe.handler;
 
+import crypticlib.CrypticLibBukkit;
 import crypticlib.MinecraftVersion;
 import crypticlib.chat.BukkitMsgSender;
 import crypticlib.listener.EventListener;
 import crypticlib.script.ScriptValue;
+import crypticlib.util.IOHelper;
 import crypticlib.util.InventoryHelper;
 import crypticlib.util.ItemHelper;
 import org.bukkit.Bukkit;
@@ -123,12 +125,17 @@ public enum AnvilRecipeHandler implements Listener {
             return;
 
         ItemStack result = anvilRecipe.getResult();
-        EventUtils.getViewer(event).ifPresent(player -> {
-            NamespacedItemIdStack resultId = ItemManager.INSTANCE.matchItemId(result, false).orElse(null);
-            if (resultId != null) {
-                ItemManager.INSTANCE.matchItem(resultId, player).ifPresent(refreshItem -> result.setItemMeta(refreshItem.getItemMeta()));
-            }
-        });
+        Optional<Player> playerOpt = EventUtils.getViewer(event);
+
+        if (playerOpt.isEmpty()) {
+            return;
+        }
+
+        Player player = playerOpt.get();
+        NamespacedItemIdStack resultId = ItemManager.INSTANCE.matchItemId(result, false).orElse(null);
+        if (resultId != null) {
+            ItemManager.INSTANCE.matchItem(resultId, player).ifPresent(refreshItem -> result.setItemMeta(refreshItem.getItemMeta()));
+        }
 
         //处理NBT保留操作
         Optional<CopyComponentsRules> recipeCopyNbtRules = CopyComponentsManager.INSTANCE.getRecipeCopyNbtRules(anvilRecipe.getKey());
@@ -151,6 +158,7 @@ public enum AnvilRecipeHandler implements Listener {
             view.setItem(2, result);
             view.setProperty(InventoryView.Property.REPAIR_COST, anvilRecipe.costLevel());
         }
+        player.updateInventory();
         new CraftorithmPrepareAnvilEvent(event, anvilRecipe).callEvent();
     }
 
