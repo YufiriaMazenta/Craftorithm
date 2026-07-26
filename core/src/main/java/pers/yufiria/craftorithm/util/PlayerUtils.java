@@ -50,7 +50,7 @@ public class PlayerUtils {
      */
     public static @Nullable UUID getPlayerIdFromInvoker(Invoker invoker) {
         if (invoker.isPlayer()) {
-            return invoker.asPlayer().getUniqueId();
+            return invoker.asPlayer().uniqueId();
         }
         return null;
     }

@@ -19,7 +19,7 @@ public class CommandUtils {
     }
 
     public static CommandSender invoker2Sender(Invoker invoker) {
-        return (CommandSender) invoker.getPlatformInvoker();
+        return (CommandSender) invoker.platformInvoker();
     }
 
     /**

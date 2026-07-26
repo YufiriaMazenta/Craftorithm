@@ -34,7 +34,7 @@ public class ScriptCommand extends CommandNode {
             ScriptEngine.INSTANCE.execute(scriptLine, new ScriptContext(invoker));
         });
         LangUtils.sendLang(invoker, Languages.COMMAND_SCRIPT_OPERATION_TIME, Map.of("<time>", executeTime + ""));
-        IOHelper.info("Invoker \"" + invoker.getName() + "\" execute script line: " + scriptLine);
+        IOHelper.info("Invoker \"" + invoker.name() + "\" execute script line: " + scriptLine);
     }
 
     @Override

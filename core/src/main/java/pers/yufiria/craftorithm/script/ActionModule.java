@@ -158,7 +158,7 @@ public enum ActionModule implements ScriptModule {
                 .orElse(cmd);
         }
 
-        CommandSender commandSender = (CommandSender) invoker.getPlatformInvoker();
+        CommandSender commandSender = (CommandSender) invoker.platformInvoker();
         if (!CrypticLibBukkit.isFolia()) {
             return ScriptValue.of(Bukkit.dispatchCommand(commandSender, cmd));
         } else {
