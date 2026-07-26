@@ -1,8 +1,6 @@
 
 repositories {
     maven("https://repo.tabooproject.org/repository/releases/")
-    //CrypticLib
-    maven("https://repo.crypticlib.incrafttime.top/repository/maven-public/")
 }
 
 dependencies {

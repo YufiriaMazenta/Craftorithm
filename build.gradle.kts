@@ -15,33 +15,10 @@ repositories {
 
 dependencies {
     implementation(project(":core"))
-    implementation(project(":hook:azureflow"))
-    implementation(project(":hook:craftengine"))
-    implementation(project(":hook:ecoitems"))
-    implementation(project(":hook:executableitems"))
-    implementation(project(":hook:itemsadder"))
-    implementation(project(":hook:mmoitems"))
-    implementation(project(":hook:mythicmobs"))
-    implementation(project(":hook:neigeitems"))
-    implementation(project(":hook:nexo"))
-    implementation(project(":hook:oraxen"))
-    implementation(project(":hook:sx-item"))
-    implementation(project(":hook:packetevents"))
-    implementation(project(":hook:protocollib"))
-    implementation(project(":hook:vault"))
-    implementation(project(":hook:playerpoints"))
-    implementation(project(":nms:v1_20"))
-    implementation(project(":nms:v1_20_2"))
-    implementation(project(":nms:v1_20_3"))
-    implementation(project(":nms:v1_20_5"))
-    implementation(project(":nms:v1_21"))
-    implementation(project(":nms:v1_21_3"))
-    implementation(project(":nms:v1_21_5"))
-    implementation(project(":nms:v1_21_7"))
-    implementation(project(":nms:v1_21_10_spigot"))
-    implementation(project(":nms:v1_21_10_paper"))
-    implementation(project(":nms:v26_1_spigot"))
-    implementation(project(":nms:v26_1_paper"))
+    //hook与nms模块全部打入最终jar, 新nms模块只需include进settings.gradle.kts
+    rootProject.subprojects
+        .filter { it.path == ":hook" || it.path.startsWith(":nms:") }
+        .forEach { implementation(project(it.path)) }
     implementation("com.crypticlib:bukkit:${rootProject.findProperty("crypticlibVer")}")
 }
 
@@ -90,6 +67,8 @@ subprojects {
     repositories {
         mavenLocal()
         maven("https://repo.papermc.io/repository/maven-public/")
+        //CrypticLib
+        maven("https://repo.crypticlib.incrafttime.top/repository/maven-public/")
     }
     dependencies {
         compileOnly("org.jetbrains:annotations:24.0.1")
