@@ -15,10 +15,8 @@ import pers.yufiria.craftorithm.ui.editor.anvil.AnvilEditor;
 import pers.yufiria.craftorithm.ui.editor.vanillaBrewing.VanillaBrewingEditor;
 import pers.yufiria.craftorithm.ui.editor.vanillaCrafting.VanillaShapedEditor;
 import pers.yufiria.craftorithm.ui.editor.vanillaCrafting.VanillaShapelessEditor;
-import pers.yufiria.craftorithm.ui.editor.vanillaSmelting.VanillaSmeltingBlastEditor;
-import pers.yufiria.craftorithm.ui.editor.vanillaSmelting.VanillaSmeltingCampfireEditor;
-import pers.yufiria.craftorithm.ui.editor.vanillaSmelting.VanillaSmeltingFurnaceEditor;
-import pers.yufiria.craftorithm.ui.editor.vanillaSmelting.VanillaSmeltingSmokerEditor;
+import pers.yufiria.craftorithm.ui.SmeltingMenuType;
+import pers.yufiria.craftorithm.ui.editor.vanillaSmelting.SmeltingEditor;
 import pers.yufiria.craftorithm.ui.editor.vanillaSmithing.VanillaSmithingTransformEditor;
 import pers.yufiria.craftorithm.ui.editor.vanillaStonecutting.VanillaStonecuttingEditor;
 
@@ -69,26 +67,13 @@ public enum RecipeEditorManager implements LifeCycleTask {
             return editor;
         });
 
-        registerEditor(SimpleRecipeTypes.VANILLA_SMELTING_FURNACE, (player, recipeKey, recipe) -> {
-            VanillaSmeltingFurnaceEditor editor = new VanillaSmeltingFurnaceEditor(player, recipeKey, (CookingRecipe<?>) recipe);
-            editor.openMenu();
-            return editor;
-        });
-        registerEditor(SimpleRecipeTypes.VANILLA_SMELTING_BLAST, (player, recipeKey, recipe) -> {
-            VanillaSmeltingBlastEditor editor = new VanillaSmeltingBlastEditor(player, recipeKey, (CookingRecipe<?>) recipe);
-            editor.openMenu();
-            return editor;
-        });
-        registerEditor(SimpleRecipeTypes.VANILLA_SMELTING_SMOKER, (player, recipeKey, recipe) -> {
-            VanillaSmeltingSmokerEditor editor = new VanillaSmeltingSmokerEditor(player, recipeKey, (CookingRecipe<?>) recipe);
-            editor.openMenu();
-            return editor;
-        });
-        registerEditor(SimpleRecipeTypes.VANILLA_SMELTING_CAMPFIRE, (player, recipeKey, recipe) -> {
-            VanillaSmeltingCampfireEditor editor = new VanillaSmeltingCampfireEditor(player, recipeKey, (CookingRecipe<?>) recipe);
-            editor.openMenu();
-            return editor;
-        });
+        for (SmeltingMenuType smeltingType : SmeltingMenuType.values()) {
+            registerEditor(smeltingType.recipeType(), (player, recipeKey, recipe) -> {
+                SmeltingEditor editor = new SmeltingEditor(player, recipeKey, (CookingRecipe<?>) recipe, smeltingType);
+                editor.openMenu();
+                return editor;
+            });
+        }
 
         registerEditor(SimpleRecipeTypes.VANILLA_SMITHING_TRANSFORM, (player, recipeKey, recipe) -> {
             VanillaSmithingTransformEditor editor = new VanillaSmithingTransformEditor(player, recipeKey, (org.bukkit.inventory.SmithingRecipe) recipe);

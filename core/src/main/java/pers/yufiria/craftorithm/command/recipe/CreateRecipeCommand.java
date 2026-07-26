@@ -21,10 +21,8 @@ import pers.yufiria.craftorithm.ui.creator.anvil.AnvilCreator;
 import pers.yufiria.craftorithm.ui.creator.vanillaBrewing.VanillaBrewingCreator;
 import pers.yufiria.craftorithm.ui.creator.vanillaCrafting.VanillaShapedCreator;
 import pers.yufiria.craftorithm.ui.creator.vanillaCrafting.VanillaShapelessCreator;
-import pers.yufiria.craftorithm.ui.creator.vanillaSmelting.VanillaSmeltingBlastCreator;
-import pers.yufiria.craftorithm.ui.creator.vanillaSmelting.VanillaSmeltingCampfireCreator;
-import pers.yufiria.craftorithm.ui.creator.vanillaSmelting.VanillaSmeltingFurnaceCreator;
-import pers.yufiria.craftorithm.ui.creator.vanillaSmelting.VanillaSmeltingSmokerCreator;
+import pers.yufiria.craftorithm.ui.SmeltingMenuType;
+import pers.yufiria.craftorithm.ui.creator.vanillaSmelting.SmeltingCreator;
 import pers.yufiria.craftorithm.ui.creator.vanillaSmithing.VanillaSmithingTransformCreator;
 import pers.yufiria.craftorithm.ui.creator.vanillaStonecutting.VanillaStonecuttingCreator;
 import pers.yufiria.craftorithm.util.CommandUtils;
@@ -127,18 +125,11 @@ public final class CreateRecipeCommand extends CommandNode implements LifeCycleT
             new VanillaShapelessCreator(player, recipeId, recipeFileName).openMenu();
         });
         // 熔炉配方 (furnace, blast, smoker, campfire)
-        addRecipeCreator(SimpleRecipeTypes.VANILLA_SMELTING_FURNACE, (player, recipeId, recipeFileName) -> {
-            new VanillaSmeltingFurnaceCreator(player, recipeId, recipeFileName).openMenu();
-        });
-        addRecipeCreator(SimpleRecipeTypes.VANILLA_SMELTING_BLAST, (player, recipeId, recipeFileName) -> {
-            new VanillaSmeltingBlastCreator(player, recipeId, recipeFileName).openMenu();
-        });
-        addRecipeCreator(SimpleRecipeTypes.VANILLA_SMELTING_SMOKER, (player, recipeId, recipeFileName) -> {
-            new VanillaSmeltingSmokerCreator(player, recipeId, recipeFileName).openMenu();
-        });
-        addRecipeCreator(SimpleRecipeTypes.VANILLA_SMELTING_CAMPFIRE, (player, recipeId, recipeFileName) -> {
-            new VanillaSmeltingCampfireCreator(player, recipeId, recipeFileName).openMenu();
-        });
+        for (SmeltingMenuType smeltingType : SmeltingMenuType.values()) {
+            addRecipeCreator(smeltingType.recipeType(), (player, recipeId, recipeFileName) -> {
+                new SmeltingCreator(player, recipeId, recipeFileName, smeltingType).openMenu();
+            });
+        }
         // 锻造台配方
         addRecipeCreator(SimpleRecipeTypes.VANILLA_SMITHING_TRANSFORM, (player, recipeId, recipeFileName) -> {
             new VanillaSmithingTransformCreator(player, recipeId, recipeFileName).openMenu();

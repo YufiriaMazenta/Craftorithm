@@ -3,8 +3,6 @@ package pers.yufiria.craftorithm.ui.creator.vanillaSmelting;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.config.BukkitConfigWrapper;
-import crypticlib.config.node.impl.bukkit.ConfigSectionConfig;
-import crypticlib.config.node.impl.bukkit.StringConfig;
 import crypticlib.conversation.Conversation;
 import crypticlib.conversation.NumberPrompt;
 import crypticlib.conversation.Prompt;
@@ -25,6 +23,8 @@ import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
+import pers.yufiria.craftorithm.ui.SmeltingMenuType;
 import pers.yufiria.craftorithm.ui.creator.CreatorIconParser;
 import pers.yufiria.craftorithm.ui.creator.RecipeCreator;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
@@ -37,27 +37,35 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
- * 熔炼配方创建器基类
- * 提供熔炉/高炉/烟熏炉/营火配方创建的通用逻辑
+ * 熔炼配方创建器
+ * 熔炉/高炉/烟熏炉/营火共用此类, 差异部分由SmeltingMenuType提供
  */
-public abstract class AbstractSmeltingCreator extends RecipeCreator {
+public class SmeltingCreator extends RecipeCreator {
 
     private static final int INGREDIENT_SLOT = 20;
     private static final int RESULT_SLOT = 24;
 
+    protected final SmeltingMenuType smeltingType;
     protected float exp;
     protected int time;
     protected CookingRecipeBookCategoryIcon categoryIcon;
 
-    public AbstractSmeltingCreator(@NotNull Player player, @Nullable String recipeId, @Nullable String recipeFileName) {
+    public SmeltingCreator(
+        @NotNull Player player,
+        @Nullable String recipeId,
+        @Nullable String recipeFileName,
+        @NotNull SmeltingMenuType smeltingType
+    ) {
         super(player, recipeId, recipeFileName);
-        this.exp = defaultExp();
-        this.time = defaultTime();
+        this.smeltingType = smeltingType;
+        SmeltingMenuType.CreatorConfigs configs = smeltingType.creatorConfigs();
+        this.exp = configs.defaultExp().value();
+        this.time = configs.defaultTime().value();
         this.categoryIcon = new CookingRecipeBookCategoryIcon(
-            categoryIconFoodConfig(), categoryIconBlocksConfig(), categoryIconMiscConfig()
+            configs.categoryIconFood(), configs.categoryIconBlocks(), configs.categoryIconMisc()
         );
         this.display = new MenuDisplay(
-            title().value(),
+            configs.title().value(),
             new MenuLayout(Arrays.asList(
                 "#########",
                 "#####FFF#",
@@ -77,31 +85,23 @@ public abstract class AbstractSmeltingCreator extends RecipeCreator {
         );
     }
 
-    // ---- 抽象方法：子类提供配置 ----
-    protected abstract StringConfig title();
-    protected abstract ConfigSectionConfig frameIconConfig();
-    protected abstract ConfigSectionConfig resultFrameIconConfig();
-    protected abstract ConfigSectionConfig confirmIconConfig();
-    protected abstract ConfigSectionConfig expIconConfig();
-    protected abstract ConfigSectionConfig timeIconConfig();
-    protected abstract ConfigSectionConfig categoryIconFoodConfig();
-    protected abstract ConfigSectionConfig categoryIconBlocksConfig();
-    protected abstract ConfigSectionConfig categoryIconMiscConfig();
-    protected abstract int defaultExp();
-    protected abstract int defaultTime();
+    @Override
+    protected SimpleRecipeTypes recipeType() {
+        return smeltingType.recipeType();
+    }
 
     @Override
     protected Icon getFrameIcon() {
-        return CreatorIconParser.INSTANCE.parse(frameIconConfig().value()).get();
+        return CreatorIconParser.INSTANCE.parse(smeltingType.creatorConfigs().frameIcon().value()).get();
     }
 
     @Override
     protected Icon getResultFrameIcon() {
-        return CreatorIconParser.INSTANCE.parse(resultFrameIconConfig().value()).get();
+        return CreatorIconParser.INSTANCE.parse(smeltingType.creatorConfigs().resultFrameIcon().value()).get();
     }
 
     private Icon getExpIcon() {
-        IconDisplay iconDisplay = CreatorIconParser.INSTANCE.parseIconDisplay(expIconConfig().value());
+        IconDisplay iconDisplay = CreatorIconParser.INSTANCE.parseIconDisplay(smeltingType.creatorConfigs().expIcon().value());
         return new TranslatableIcon(iconDisplay) {
             @Override
             public ItemStack display() {
@@ -144,7 +144,7 @@ public abstract class AbstractSmeltingCreator extends RecipeCreator {
     }
 
     private Icon getTimeIcon() {
-        IconDisplay iconDisplay = CreatorIconParser.INSTANCE.parseIconDisplay(timeIconConfig().value());
+        IconDisplay iconDisplay = CreatorIconParser.INSTANCE.parseIconDisplay(smeltingType.creatorConfigs().timeIcon().value());
         return new TranslatableIcon(iconDisplay) {
             @Override
             public ItemStack display() {
@@ -187,7 +187,7 @@ public abstract class AbstractSmeltingCreator extends RecipeCreator {
     }
 
     private Icon getConfirmIcon() {
-        IconDisplay iconDisplay = CreatorIconParser.INSTANCE.parseIconDisplay(confirmIconConfig().value());
+        IconDisplay iconDisplay = CreatorIconParser.INSTANCE.parseIconDisplay(smeltingType.creatorConfigs().confirmIcon().value());
         return new TranslatableIcon(iconDisplay) {
             @Override
             public Icon onClick(InventoryClickEvent event) {
