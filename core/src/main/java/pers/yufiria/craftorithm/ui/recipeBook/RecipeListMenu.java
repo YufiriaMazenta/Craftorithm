@@ -234,7 +234,9 @@ public class RecipeListMenu extends Menu implements BackableMenu, Multipage {
     public void page(int i) {
         int maxPage = maxPage();
         if (i >= 0 && i <= maxPage) {
-            updateMenu();
+            page = i;
+            updateCurrentPageRecipes();
+            this.updateMenu();
         }
     }
 

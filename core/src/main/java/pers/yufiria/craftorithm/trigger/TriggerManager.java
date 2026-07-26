@@ -61,11 +61,7 @@ public enum TriggerManager implements LifeCycleTask {
     public void removeTriggerType(String typeKey) {
         triggerTypes.remove(typeKey);
         triggers.remove(typeKey);
-        triggerById.entrySet().removeIf(e -> {
-            String id = e.getKey();
-            // id 格式为 "filename:triggerId"，触发器的 typeKey 存储在 Trigger 对象中
-            return e.getValue().typeKey().equals(typeKey);
-        });
+        triggerById.values().removeIf(trigger -> trigger.typeKey().equals(typeKey));
     }
 
     /**

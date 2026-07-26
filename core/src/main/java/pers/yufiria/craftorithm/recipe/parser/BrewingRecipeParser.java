@@ -9,11 +9,11 @@ import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.BrewingRecipe;
+import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeParser;
 import pers.yufiria.craftorithm.recipe.choice.ItemIdRecipeChoiceParser;
 import pers.yufiria.craftorithm.recipe.choice.RecipeChoiceParser;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
-import pers.yufiria.craftorithm.util.ServerUtils;
 
 public enum BrewingRecipeParser implements RecipeParser<BrewingRecipe> {
 
@@ -26,7 +26,7 @@ public enum BrewingRecipeParser implements RecipeParser<BrewingRecipe> {
 
     @Override
     public @NotNull BrewingRecipe parse(String recipeName, ConfigurationSection recipeConfig) {
-        if (!ServerUtils.supportPotionMix()) {
+        if (!RecipeManager.INSTANCE.supportPotionMix()) {
             throw new RecipeLoadException("&cThe server does not support brewing recipes");
         }
         try {

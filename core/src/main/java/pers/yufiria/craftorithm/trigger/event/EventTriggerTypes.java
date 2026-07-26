@@ -260,6 +260,8 @@ public enum EventTriggerTypes {
     private void registerEventListener(GenericEventTriggerType type, boolean async) {
         EventExecutor executor = (listener, event) -> {
             if (!type.eventClass().isInstance(event)) return;
+            //该类型没有任何触发器时, 跳过上下文提取, 避免高频事件的无谓开销
+            if (TriggerManager.INSTANCE.getTriggers(type.typeKey()).isEmpty()) return;
             TriggerContext ctx = type.extractContext(event);
             if (ctx == null) return;
             if (async) {
@@ -271,10 +273,10 @@ public enum EventTriggerTypes {
         Bukkit.getPluginManager().registerEvent(
             type.eventClass(),
             new Listener() {},
-            EventPriority.MONITOR,
+            EventPriority.HIGHEST,
             executor,
             Craftorithm.instance(),
-            false
+            true
         );
     }
 

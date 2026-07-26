@@ -21,7 +21,6 @@ import pers.yufiria.craftorithm.ui.editor.vanillaSmelting.VanillaSmeltingFurnace
 import pers.yufiria.craftorithm.ui.editor.vanillaSmelting.VanillaSmeltingSmokerEditor;
 import pers.yufiria.craftorithm.ui.editor.vanillaSmithing.VanillaSmithingTransformEditor;
 import pers.yufiria.craftorithm.ui.editor.vanillaStonecutting.VanillaStonecuttingEditor;
-import pers.yufiria.craftorithm.util.ServerUtils;
 
 import java.util.Optional;
 
@@ -103,7 +102,7 @@ public enum RecipeEditorManager implements LifeCycleTask {
             return editor;
         });
 
-        if (ServerUtils.supportPotionMix()) {
+        if (RecipeManager.INSTANCE.supportPotionMix()) {
             registerEditor(SimpleRecipeTypes.VANILLA_BREWING, (player, recipeKey, recipe) -> {
                 VanillaBrewingEditor editor = new VanillaBrewingEditor(player, recipeKey, (BrewingRecipe) recipe);
                 editor.openMenu();

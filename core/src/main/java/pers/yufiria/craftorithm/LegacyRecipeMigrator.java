@@ -100,17 +100,6 @@ public enum LegacyRecipeMigrator implements LifeCycleTask {
         return config.contains("source");
     }
 
-    private boolean isNewFormatType(String type) {
-        return switch (type) {
-            case "vanilla_shaped", "vanilla_shapeless",
-                 "vanilla_smelting_furnace", "vanilla_smelting_blast",
-                 "vanilla_smelting_smoker", "vanilla_smelting_campfire",
-                 "vanilla_smithing_transform", "vanilla_smithing_trim",
-                 "vanilla_stonecutting", "vanilla_brewing", "anvil" -> true;
-            default -> false;
-        };
-    }
-
     /**
      * 迁移单个旧版配方文件
      */
@@ -494,59 +483,6 @@ public enum LegacyRecipeMigrator implements LifeCycleTask {
         }
 
         if (sortId > 0) recipe.put("sort_id", sortId);
-        return recipe;
-    }
-
-    /**
-     * 转换旧版 smithing 配方条目
-     */
-    private Map<String, Object> convertSmithingEntry(ConfigurationSection sourceSection, String resultValue, YamlConfiguration config) {
-        Map<String, Object> recipe = new LinkedHashMap<>();
-        String smithingType = sourceSection.getString("type", "");
-        boolean isTrim = "trim".equalsIgnoreCase(smithingType);
-
-        recipe.put("type", isTrim ? "vanilla_smithing_trim" : "vanilla_smithing_transform");
-        if (!isTrim) {
-            recipe.put("result", resultValue);
-        }
-        recipe.put("base", sourceSection.getString("base", ""));
-        recipe.put("addition", sourceSection.getString("addition", ""));
-
-        if (sourceSection.contains("template")) {
-            recipe.put("template", sourceSection.getString("template"));
-        }
-
-        // 旧版 copy_nbt -> 新版 copy_components_rules
-        if (sourceSection.contains("copy_nbt") && sourceSection.getBoolean("copy_nbt")) {
-            List<String> rules = new ArrayList<>();
-            rules.add("all");
-            recipe.put("copy_components_rules", rules);
-        }
-
-        return recipe;
-    }
-
-    /**
-     * 转换旧版 anvil 配方条目
-     */
-    private Map<String, Object> convertAnvilEntry(ConfigurationSection sourceSection, String resultValue, YamlConfiguration config) {
-        Map<String, Object> recipe = new LinkedHashMap<>();
-        recipe.put("type", "anvil");
-        recipe.put("result", resultValue);
-        recipe.put("base", sourceSection.getString("base", ""));
-        recipe.put("addition", sourceSection.getString("addition", ""));
-
-        if (sourceSection.contains("cost_level")) {
-            recipe.put("cost_level", sourceSection.getInt("cost_level"));
-        }
-
-        // 旧版 copy_nbt -> 新版 copy_components_rules
-        if (sourceSection.contains("copy_nbt") && sourceSection.getBoolean("copy_nbt")) {
-            List<String> rules = new ArrayList<>();
-            rules.add("all");
-            recipe.put("copy_components_rules", rules);
-        }
-
         return recipe;
     }
 

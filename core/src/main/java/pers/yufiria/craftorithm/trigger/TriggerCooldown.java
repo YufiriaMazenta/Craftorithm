@@ -53,6 +53,14 @@ public class TriggerCooldown {
         cooldownMap.entrySet().removeIf(entry -> entry.getValue() < now);
     }
 
+    /**
+     * 清理指定玩家的冷却记录
+     */
+    public void cleanupPlayer(UUID playerUniqueId) {
+        String suffix = ":" + playerUniqueId;
+        cooldownMap.keySet().removeIf(key -> key.endsWith(suffix));
+    }
+
     public void clear() {
         cooldownMap.clear();
     }

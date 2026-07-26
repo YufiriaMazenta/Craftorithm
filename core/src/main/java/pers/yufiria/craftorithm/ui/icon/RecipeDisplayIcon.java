@@ -101,7 +101,6 @@ public class RecipeDisplayIcon extends ActionIcon {
             if (!whoClicked.hasPermission("craftorithm.edit_recipe")) {
                 return this;
             }
-            runActions(event, this.actions);
             RecipeEditorManager.INSTANCE.getEditor(recipeType).ifPresent(editorFunc -> {
                 editorFunc.apply(whoClicked, recipeKey, recipe);
             });

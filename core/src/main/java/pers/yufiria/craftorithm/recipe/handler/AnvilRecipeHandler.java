@@ -346,7 +346,7 @@ public enum AnvilRecipeHandler implements Listener {
                 Class<PrepareAnvilEvent> prepareAnvilEventClass = PrepareAnvilEvent.class;
                 Constructor<PrepareAnvilEvent> constructor = prepareAnvilEventClass
                     .getConstructor(InventoryView.class, ItemStack.class);
-                prepareAnvilEvent = constructor.newInstance(event.getView(), afterClickRecipe.getResult());
+                prepareAnvilEvent = constructor.newInstance(event.getView(), afterResult);
             } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
                      InvocationTargetException e) {
                 throw new RuntimeException(e);

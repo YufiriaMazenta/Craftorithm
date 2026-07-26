@@ -5,7 +5,6 @@ import crypticlib.lifecycle.LifeCycleTask;
 import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
 import crypticlib.ui.menu.Menu;
-import crypticlib.util.IOHelper;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
 import pers.yufiria.craftorithm.config.PluginConfigs;
@@ -17,7 +16,6 @@ import pers.yufiria.craftorithm.ui.display.vanillaShapeless.VanillaShapelessDisp
 import pers.yufiria.craftorithm.ui.display.vanillaSmelting.VanillaSmeltingDisplayMenu;
 import pers.yufiria.craftorithm.ui.display.vanillaSmithing.VanillaSmithingDisplayMenu;
 import pers.yufiria.craftorithm.ui.display.vanillaStonecutting.VanillaStonecuttingDisplayMenu;
-import pers.yufiria.craftorithm.util.ServerUtils;
 
 import java.util.Map;
 import java.util.Optional;
@@ -81,8 +79,7 @@ public enum RecipeDisplayManager implements LifeCycleTask {
             stonecuttingDisplayMenu.openMenu();
             return stonecuttingDisplayMenu;
         });
-        IOHelper.info("Support potion mix: " + ServerUtils.supportPotionMix());
-        if (ServerUtils.supportPotionMix()) {
+        if (RecipeManager.INSTANCE.supportPotionMix()) {
             addRecipeDisplay(SimpleRecipeTypes.VANILLA_BREWING, (player, recipe) -> {
                 VanillaBrewingDisplayMenu vanillaBrewingDisplay = new VanillaBrewingDisplayMenu(player, (BrewingRecipe) recipe);
                 vanillaBrewingDisplay.openMenu();

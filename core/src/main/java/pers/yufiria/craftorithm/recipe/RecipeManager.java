@@ -249,7 +249,7 @@ public enum RecipeManager implements LifeCycleTask {
             for (NamespacedKey recipeKey : serverRecipeKeys) {
                 if (recipeKey.getNamespace().equals("minecraft")) {
                     if (disabledRecipes.contains(recipeKey.toString()))
-                        return;
+                        continue;
                     disabledRecipes.add(recipeKey.toString());
                 }
             }

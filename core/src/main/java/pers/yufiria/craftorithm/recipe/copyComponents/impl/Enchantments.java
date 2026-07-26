@@ -23,7 +23,7 @@ public enum Enchantments implements CopyComponentsRule {
                         return;
                     }
                     resultMeta.removeEnchant(enchant);
-                    resultMeta.addEnchant(enchant, resultEnchantLevel, true);
+                    resultMeta.addEnchant(enchant, level, true);
                 } else {
                     resultMeta.addEnchant(enchant, level, true);
                 }

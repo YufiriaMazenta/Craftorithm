@@ -76,7 +76,7 @@ public enum AnvilRecipeParser implements RecipeParser<AnvilRecipe> {
                         choices = materialTag.getValues().stream().map(it -> new NamespacedItemIdStack(NamespacedItemId.fromMaterial(it))).toList();
                     } else {
                         int amount = Integer.parseInt(tagKeyStr.substring(spaceIndex + 1));
-                        tagKeyStr = tagKeyStr.substring(spaceIndex);
+                        tagKeyStr = tagKeyStr.substring(0, spaceIndex);
                         Optional<Tag<Material>> tagOpt = RecipeUtils.getTag(tagKeyStr);
                         if (tagOpt.isEmpty()) {
                             throw new RecipeLoadException(tagKeyStr + " is not a valid tag");
