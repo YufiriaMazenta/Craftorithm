@@ -38,6 +38,8 @@ public enum ItemManager implements LifeCycleTask {
     INSTANCE;
 
     private final Map<String, ItemProvider> itemProviderMap = new LinkedHashMap<>();
+    //记录已抛出过异常的物品提供源, 避免每次匹配都重复打印堆栈
+    private final Set<String> erroredProviders = ConcurrentHashMap.newKeySet();
     private final Map<NamespacedItemId, Integer> customCookingFuelMap = new ConcurrentHashMap<>();
     private BukkitConfigWrapper customFuelConfig;
     private final String BURN_TIME_KEY = "burn_time";
@@ -96,14 +98,30 @@ public enum ItemManager implements LifeCycleTask {
             return matchVanillaItem(itemId, amount);
         }
 
-        if (player != null)
-            item = provider.matchItem(itemId.itemId(), player);
-        else
-            item = provider.matchItem(itemId.itemId());
+        try {
+            if (player != null)
+                item = provider.matchItem(itemId.itemId(), player);
+            else
+                item = provider.matchItem(itemId.itemId());
+        } catch (Throwable t) {
+            logProviderError(itemId.namespace(), t);
+            return Optional.empty();
+        }
         if (item == null)
             return Optional.empty();
-        item.setAmount(amount);
+        if (item.getAmount() != amount) {
+            //克隆后再改数量, 避免污染提供源可能返回的缓存物品实例
+            item = item.clone();
+            item.setAmount(amount);
+        }
         return Optional.of(item);
+    }
+
+    private void logProviderError(String providerNamespace, Throwable throwable) {
+        if (erroredProviders.add(providerNamespace)) {
+            IOHelper.info("&cItem provider '" + providerNamespace + "' threw an exception, it may be incompatible with the installed plugin version");
+            throwable.printStackTrace();
+        }
     }
 
     /**
@@ -117,7 +135,13 @@ public enum ItemManager implements LifeCycleTask {
             return Optional.empty();
 
         for (Map.Entry<String, ItemProvider> itemProviderEntry : itemProviderMap.entrySet()) {
-            NamespacedItemIdStack namespacedItemIdStack = itemProviderEntry.getValue().matchItemId(item, ignoreAmount);
+            NamespacedItemIdStack namespacedItemIdStack;
+            try {
+                namespacedItemIdStack = itemProviderEntry.getValue().matchItemId(item, ignoreAmount);
+            } catch (Throwable t) {
+                logProviderError(itemProviderEntry.getKey(), t);
+                continue;
+            }
             if (namespacedItemIdStack != null) {
                 return Optional.of(namespacedItemIdStack);
             }
@@ -137,7 +161,13 @@ public enum ItemManager implements LifeCycleTask {
             return Optional.empty();
 
         for (Map.Entry<String, ItemProvider> itemProviderEntry : itemProviderMap.entrySet()) {
-            NamespacedItemIdStack namespacedItemIdStack = itemProviderEntry.getValue().matchItemId(item, ignoreAmount);
+            NamespacedItemIdStack namespacedItemIdStack;
+            try {
+                namespacedItemIdStack = itemProviderEntry.getValue().matchItemId(item, ignoreAmount);
+            } catch (Throwable t) {
+                logProviderError(itemProviderEntry.getKey(), t);
+                continue;
+            }
             if (namespacedItemIdStack != null) {
                 return Optional.of(namespacedItemIdStack);
             }

@@ -17,6 +17,7 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.RegisteredListener;
 import org.bukkit.plugin.TimedRegisteredListener;
+import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.util.EventUtils;
@@ -38,7 +39,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public enum OtherPluginsListenerManager implements LifeCycleTask {
 
     INSTANCE;
-    private final Field executorField = ReflectionHelper.getDeclaredField(RegisteredListener.class, "executor");
+    private final Field executorField = findExecutorField();
     private final List<ConvertedRegisteredListener> convertedListenerList = new ArrayList<>();
     //用于记录一个Listener类被转换了多少次
     private final Map<String, Integer> listenerConvertedCountMap = new ConcurrentHashMap<>();
@@ -59,29 +60,36 @@ public enum OtherPluginsListenerManager implements LifeCycleTask {
                     continue;
                 }
 
+                EventExecutor executor = getRegisteredListenerExecutor(originRegisteredListener);
+                if (executor == null) {
+                    //拿不到原监听器的executor时不能转换,否则包装监听器会在事件触发时抛NPE
+                    IOHelper.info("&cCannot get executor of listener " + listenerClassName + ", skip converting it");
+                    continue;
+                }
                 RegisteredListener convertedRegisteredListener;
                 try {
                     if (originRegisteredListener instanceof TimedRegisteredListener) {
                         convertedRegisteredListener = new RecipeCheckTimedRegisteredListener(
-                            originRegisteredListener.getListener(),
-                            getRegisteredListenerExecutor(originRegisteredListener),
+                            listener,
+                            executor,
                             originRegisteredListener.getPriority(),
                             originRegisteredListener.getPlugin(),
                             originRegisteredListener.isIgnoringCancelled()
                         );
                     } else {
                         convertedRegisteredListener = new RecipeCheckRegisteredListener(
-                            originRegisteredListener.getListener(),
-                            getRegisteredListenerExecutor(originRegisteredListener),
+                            listener,
+                            executor,
                             originRegisteredListener.getPriority(),
                             originRegisteredListener.getPlugin(),
                             originRegisteredListener.isIgnoringCancelled()
                         );
                     }
-                } catch (Throwable ignore) {
+                } catch (Throwable t) {
+                    IOHelper.info("&eFailed to convert timed listener " + listenerClassName + ", fallback to non-timed wrapper: " + t);
                     convertedRegisteredListener = new RecipeCheckRegisteredListener(
-                        originRegisteredListener.getListener(),
-                        getRegisteredListenerExecutor(originRegisteredListener),
+                        listener,
+                        executor,
                         originRegisteredListener.getPriority(),
                         originRegisteredListener.getPlugin(),
                         originRegisteredListener.isIgnoringCancelled()
@@ -148,8 +156,24 @@ public enum OtherPluginsListenerManager implements LifeCycleTask {
         return hasSameListenerClass;
     }
 
-    private EventExecutor getRegisteredListenerExecutor(RegisteredListener registeredListener) {
-        return ReflectionHelper.getDeclaredFieldObj(executorField, registeredListener);
+    private @Nullable EventExecutor getRegisteredListenerExecutor(RegisteredListener registeredListener) {
+        if (executorField == null) {
+            return null;
+        }
+        try {
+            return ReflectionHelper.getDeclaredFieldObj(executorField, registeredListener);
+        } catch (Throwable t) {
+            return null;
+        }
+    }
+
+    private static @Nullable Field findExecutorField() {
+        try {
+            return ReflectionHelper.getDeclaredField(RegisteredListener.class, "executor");
+        } catch (Throwable t) {
+            IOHelper.info("&cCannot find executor field of RegisteredListener, other plugins' craft listeners will not be converted");
+            return null;
+        }
     }
 
     private List<HandlerList> getCraftEventHandlerLists() {

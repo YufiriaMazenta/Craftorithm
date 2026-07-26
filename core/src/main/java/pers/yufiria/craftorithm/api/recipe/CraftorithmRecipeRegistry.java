@@ -8,6 +8,8 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.Recipe;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 public interface CraftorithmRecipeRegistry {
 
@@ -26,13 +28,24 @@ public interface CraftorithmRecipeRegistry {
         }
     );
 
+    AtomicReference<CraftorithmRecipeRegistry> IMPL_CACHE = new AtomicReference<>();
+    AtomicBoolean UNSUPPORTED_VERSION_WARNED = new AtomicBoolean(false);
+
     static CraftorithmRecipeRegistry findImpl() {
+        CraftorithmRecipeRegistry cachedImpl = IMPL_CACHE.get();
+        if (cachedImpl != null) {
+            return cachedImpl;
+        }
         String currentVersionStr = MinecraftVersion.current().name();
         Optional<CraftorithmRecipeRegistry> registryOpt = REGISTRY_COMPAT.findImplementation(currentVersionStr);
-        if (registryOpt.isEmpty()) {
-            IOHelper.info("&eCan not find craftorithm recipe register impl for version " + MinecraftVersion.current().versionStr());
+        if (registryOpt.isPresent()) {
+            IMPL_CACHE.set(registryOpt.get());
+            return registryOpt.get();
         }
-        return registryOpt.orElseGet(() -> (bukkitRecipe, send2Player) -> RegisterResult.UNSUPPORTED_VERSION);
+        if (UNSUPPORTED_VERSION_WARNED.compareAndSet(false, true)) {
+            IOHelper.info("&cCan not find craftorithm recipe register impl for version " + MinecraftVersion.current().versionStr() + ", custom recipes will not be registered!");
+        }
+        return (bukkitRecipe, send2Player) -> RegisterResult.UNSUPPORTED_VERSION;
     }
 
     /**

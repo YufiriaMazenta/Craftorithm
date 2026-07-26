@@ -61,7 +61,7 @@ public enum LegacyRecipeMigrator implements LifeCycleTask {
                     legacyFiles.add(file);
                 }
             } catch (Exception e) {
-                // 跳过无法读取的文件
+                logger.warning("[Craftorithm] Failed to read recipe file " + file.getName() + " when detecting legacy format, skipped: " + e);
             }
         }
 
