@@ -69,3 +69,7 @@ dependencies {
     }
     compileOnly("net.milkbowl.vault:VaultUnlockedAPI:2.16")
 }
+
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(25))
+}
