@@ -8,20 +8,18 @@ import pers.yufiria.craftorithm.item.ItemProvider;
 @LifeCycleTaskSettings(rules = {
     @TaskRule(lifeCycle = LifeCycle.ENABLE)
 })
-public enum SXItemHook implements ItemPluginHook {
+public enum EmakiItemHook implements ItemPluginHook {
 
     INSTANCE;
 
     @Override
     public ItemProvider itemProvider() {
-        return SXItemItemProvider.INSTANCE;
+        return EmakiItemItemProvider.INSTANCE;
     }
 
     @Override
     public String pluginName() {
-        return "SX-Item";
+        return "EmakiItem";
     }
-
-
 
 }

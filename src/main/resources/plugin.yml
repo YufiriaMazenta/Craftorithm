@@ -24,6 +24,7 @@ softdepend:
   - AzureFlow
   - CraftEngine
   - SX-Item
+  - EmakiItem
 authors: [ YufiriaMazenta ]
 folia-supported: true
 website: https://github.com/YufiriaMazenta/Craftorithm
