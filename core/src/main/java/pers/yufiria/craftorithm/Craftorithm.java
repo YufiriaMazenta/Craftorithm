@@ -45,6 +45,7 @@ public final class Craftorithm extends BukkitPlugin implements LifeCycleTask {
     @Override
     public void whenLoad() {
         CrypticLib.debug = PluginConfigs.DEBUG.value();
+        ScriptEngine.INSTANCE.setBareArgsEnabled(PluginConfigs.ENABLE_SCRIPT_BARE_ARGS.value());
         IOHelper.info("&7Server Type: " + CrypticLibBukkit.serverAdapter().type() + ", Version: " + MinecraftVersion.current().version());
         if (MinecraftVersion.current().before(MinecraftVersion.V1_20)) {
             BukkitMsgSender.INSTANCE.info("&cUnsupported Version");
@@ -62,6 +63,7 @@ public final class Craftorithm extends BukkitPlugin implements LifeCycleTask {
     @Override
     public void whenReload() {
         CrypticLib.debug = PluginConfigs.DEBUG.value();
+        ScriptEngine.INSTANCE.setBareArgsEnabled(PluginConfigs.ENABLE_SCRIPT_BARE_ARGS.value());
     }
 
     @Override

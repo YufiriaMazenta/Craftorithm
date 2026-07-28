@@ -55,6 +55,15 @@ public class PluginConfigs {
             "启用后，除1.21.3及以上的切石机配方外，合成材料的识别将不会受到NBT/组件变更的影响，但可能在配方书等场景下出现一些问题"
         )
     );
+    public final static BooleanConfig ENABLE_SCRIPT_BARE_ARGS = new BooleanConfig(
+        "enable_script_bare_args",
+        false,
+        List.of(
+            "是否启用script的裸脚本语法",
+            "为false的情况下，无法使用形如`tell \"Hello world\"`这样的写法，必须使用`tell(\"hello, world\")"
+        )
+    );
+
     public final static StringListConfig ITEM_PLUGIN_HOOK_PRIORITY = new StringListConfig(
         "item_plugin_hook_priority",
         List.of(
