@@ -31,11 +31,6 @@ public class PluginConfigs {
         true,
         "是否启用铁砧配方"
     );
-    public final static BooleanConfig RELOAD_WHEN_IA_RELOAD = new BooleanConfig(
-        "reload_when_ia_reload",
-        true,
-        "是否在ItemsAdder重载时跟随一起重载"
-    );
     public final static BooleanConfig DEBUG = new BooleanConfig("debug", false);
     public final static IntConfig MAX_REG_RECIPE_PER_TICK = new IntConfig(
         "max_reg_recipe_per_tick",
