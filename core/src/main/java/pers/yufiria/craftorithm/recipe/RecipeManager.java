@@ -531,6 +531,9 @@ public enum RecipeManager implements LifeCycleTask {
             long startTime = System.currentTimeMillis();
             int recipeNum = 0;
             for (File file : files) {
+                if (!file.exists()) {
+                    continue;
+                }
                 String recipeName = file.getPath().substring(folder.getPath().length() + 1);
                 recipeName = recipeName.replace("\\", "/");
                 recipeName = recipeName.replace('-', '_');
