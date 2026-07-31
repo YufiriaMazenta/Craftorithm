@@ -32,8 +32,8 @@ import java.util.function.Supplier;
 
 public class VanillaBrewingCreator extends RecipeCreator {
 
-    private static final int INPUT_SLOT = 11;
-    private static final int INGREDIENT_SLOT = 29;
+    private static final int INPUT_SLOT = 29;
+    private static final int INGREDIENT_SLOT = 11;
     private static final int RESULT_SLOT = 24;
 
     public VanillaBrewingCreator(@NotNull Player player, @Nullable String recipeId, @Nullable String recipeFileName) {
@@ -42,9 +42,9 @@ public class VanillaBrewingCreator extends RecipeCreator {
             VanillaBrewingCreatorConfig.TITLE.value(),
             new MenuLayout(Arrays.asList(
                 "#########",
-                "##I##FFF#",
-                "####AFRF#",
                 "##G##FFF#",
+                "####AFRF#",
+                "##I##FFF#",
                 "#########"
             ), () -> {
                 Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();

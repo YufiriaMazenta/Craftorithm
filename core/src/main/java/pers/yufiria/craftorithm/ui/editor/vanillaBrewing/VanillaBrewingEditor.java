@@ -49,8 +49,8 @@ import java.util.function.Supplier;
  */
 public final class VanillaBrewingEditor extends RecipeEditorMenu {
 
-    private static final int INPUT_SLOT = 11;
-    private static final int INGREDIENT_SLOT = 29;
+    private static final int INPUT_SLOT = 29;
+    private static final int INGREDIENT_SLOT = 11;
     private static final int RESULT_SLOT = 24;
 
     private final BrewingRecipe brewingRecipe;
@@ -62,9 +62,9 @@ public final class VanillaBrewingEditor extends RecipeEditorMenu {
             VanillaBrewingEditorConfig.TITLE.value(),
             new MenuLayout(Arrays.asList(
                 "B########",
-                "##I##FFF#",
-                "####AFRF#",
                 "##G##FFF#",
+                "####AFRF#",
+                "##I##FFF#",
                 "#########"
             ), () -> {
                 Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
