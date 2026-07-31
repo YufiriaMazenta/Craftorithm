@@ -1,17 +1,24 @@
 package pers.yufiria.craftorithm.recipe.register;
 
 import crypticlib.util.IOHelper;
+import io.papermc.paper.potion.PotionMix;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.potion.PotionBrewer;
 import pers.yufiria.craftorithm.recipe.BrewingRecipe;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeRegister;
 
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+
 public enum BrewingRecipeRegister implements RecipeRegister {
 
     INSTANCE;
+    private final Map<NamespacedKey, PotionMix> potionMixMap = new ConcurrentHashMap<>();
 
     @Override
     public boolean registerRecipe(Recipe recipe, boolean updateRecipes) {
@@ -19,11 +26,13 @@ public enum BrewingRecipeRegister implements RecipeRegister {
             IOHelper.info("&cThe server does not support brewing recipes");
             return false;
         }
-        if (!(recipe instanceof BrewingRecipe)) {
+        if (!(recipe instanceof BrewingRecipe brewingRecipe)) {
             return false;
         }
         PotionBrewer potionBrewer = Bukkit.getPotionBrewer();
-        potionBrewer.addPotionMix(((BrewingRecipe) recipe).toPotionMix());
+        PotionMix potionMix = brewingRecipe.toPotionMix();
+        potionMixMap.put(brewingRecipe.getKey(), potionMix);
+        potionBrewer.addPotionMix(potionMix);
         return true;
     }
 
@@ -35,6 +44,17 @@ public enum BrewingRecipeRegister implements RecipeRegister {
         }
         PotionBrewer potionBrewer = Bukkit.getPotionBrewer();
         potionBrewer.removePotionMix(recipeKey);
+        potionMixMap.remove(recipeKey);
         return true;
     }
+
+    public Optional<PotionMix> mix(ItemStack input, ItemStack ingredient) {
+        for (PotionMix potionMix : potionMixMap.values()) {
+            if (potionMix.getInput().test(input) && potionMix.getIngredient().test(ingredient)) {
+                return Optional.of(potionMix);
+            }
+        }
+        return Optional.empty();
+    }
+
 }

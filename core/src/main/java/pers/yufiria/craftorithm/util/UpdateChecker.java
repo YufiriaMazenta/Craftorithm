@@ -49,7 +49,7 @@ public class UpdateChecker implements Listener {
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
                     JsonArray versions = JsonParser.parseReader(reader).getAsJsonArray();
                     if (versions.isEmpty()) {
-                        Craftorithm.instance().getLogger().warning("No compatible version found on Modrinth for MC " + mcVersion);
+                        Craftorithm.instance().getLogger().warning("No compatible version found on Modrinth for MC " + MinecraftVersion.current().versionStr());
                         return;
                     }
                     latestVersion = removeSuffixAfterDash(versions.get(0).getAsJsonObject().get("version_number").getAsString());

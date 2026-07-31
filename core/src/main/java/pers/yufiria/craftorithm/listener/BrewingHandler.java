@@ -1,12 +1,17 @@
 package pers.yufiria.craftorithm.listener;
 
+import crypticlib.MinecraftVersion;
 import crypticlib.listener.EventListener;
+import crypticlib.util.ItemHelper;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.BrewEvent;
+import org.bukkit.inventory.BrewerInventory;
 import org.bukkit.inventory.ItemStack;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.recipe.register.BrewingRecipeRegister;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,10 +21,32 @@ public enum BrewingHandler implements Listener {
 
     INSTANCE;
 
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void rebuildBrewResult(BrewEvent event) {
+        if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V26_1)) {
+            List<ItemStack> results = event.getResults();
+            //因为paper在26.1开始, PotionBrewing.mix方法必须有原材料有药水组件才能使用,所以需要自行匹配
+            BrewerInventory brewerInventory = event.getContents();
+            ItemStack ingredient = brewerInventory.getIngredient();
+            for (int i = 0; i < 3; i++) {
+                ItemStack input = brewerInventory.getItem(i);
+                if (ItemHelper.isAir(input)) {
+                    continue;
+                }
+                int finalI = i;
+                BrewingRecipeRegister.INSTANCE.mix(input, ingredient).ifPresent(
+                    potionMix -> {
+                        results.set(finalI, potionMix.getResult());
+                    }
+                );
+            }
+        }
+    }
+
     /**
      * 刷新酿造的结果
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void refreshBrewResult(BrewEvent event) {
         if (!RecipeManager.INSTANCE.supportPotionMix()) {
             //如果服务器根本不支持酿造配方,那么也就没有必要处理酿造的结果
