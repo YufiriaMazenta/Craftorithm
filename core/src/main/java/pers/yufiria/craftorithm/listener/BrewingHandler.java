@@ -33,9 +33,10 @@ public enum BrewingHandler implements Listener {
                 .flatMap(ItemManager.INSTANCE::matchItem)
                 .orElse(null);
             if (refreshItem == null || result.isSimilar(refreshItem)) {
-                return;
+                continue;
             }
-            results.set(i, refreshItem);
+            result.setItemMeta(refreshItem.getItemMeta());
+            results.set(i, result);
         }
     }
 
