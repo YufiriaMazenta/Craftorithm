@@ -256,6 +256,7 @@ public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
     private class KeyIterator implements Iterator<K> {
         private int cursor = 0;      // 下一个要检查的位置
         private int nextIndex = -1;  // 找到的下一个有效索引
+        private int lastRet = -1;
 
         @Override
         public boolean hasNext() {
@@ -280,16 +281,16 @@ public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
         @SuppressWarnings("unchecked")
         public K next() {
             if (!hasNext()) throw new NoSuchElementException();
-            K result = (K) keys[nextIndex];
+            lastRet = nextIndex;
             nextIndex = -1;
-            return result;
+            return (K) keys[lastRet];
         }
 
         @Override
         public void remove() {
-            if (nextIndex == -1) throw new IllegalStateException();
-            RecipeTypeMap.this.remove(keys[nextIndex]);
-            nextIndex = -1;
+            if (lastRet == -1) throw new IllegalStateException();
+            RecipeTypeMap.this.remove(keys[lastRet]);
+            lastRet = -1;
         }
     }
 
@@ -297,6 +298,7 @@ public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
     private class ValuesIterator implements Iterator<V> {
         private int cursor = 0;
         private int nextIndex = -1;
+        private int lastRet = -1;
 
         @Override
         public boolean hasNext() {
@@ -321,7 +323,8 @@ public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
         @SuppressWarnings("unchecked")
         public V next() {
             if (!hasNext()) throw new NoSuchElementException();
-            Object value = table[nextIndex];
+            lastRet = nextIndex;
+            Object value = table[lastRet];
             V result = (value == NULL_VALUE) ? null : (V) value;
             nextIndex = -1;
             return result;
@@ -329,9 +332,9 @@ public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
 
         @Override
         public void remove() {
-            if (nextIndex == -1) throw new IllegalStateException();
-            RecipeTypeMap.this.remove(keys[nextIndex]); // 通过键删除
-            nextIndex = -1;
+            if (lastRet == -1) throw new IllegalStateException();
+            RecipeTypeMap.this.remove(keys[lastRet]); // 通过键删除
+            lastRet = -1;
         }
     }
 
@@ -339,6 +342,7 @@ public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
     private class EntryIterator implements Iterator<Entry<K, V>> {
         private int cursor = 0;
         private int nextIndex = -1;
+        private int lastRet = -1;
 
         @Override
         public boolean hasNext() {
@@ -363,8 +367,9 @@ public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
         @SuppressWarnings("unchecked")
         public Entry<K, V> next() {
             if (!hasNext()) throw new NoSuchElementException();
-            K key = (K) keys[nextIndex];
-            Object value = table[nextIndex];
+            lastRet = nextIndex;
+            K key = (K) keys[lastRet];
+            Object value = table[lastRet];
             V actualValue = (value == NULL_VALUE) ? null : (V) value;
             Entry<K, V> entry = new AbstractMap.SimpleImmutableEntry<>(key, actualValue);
             nextIndex = -1;
@@ -373,9 +378,9 @@ public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
 
         @Override
         public void remove() {
-            if (nextIndex == -1) throw new IllegalStateException();
-            RecipeTypeMap.this.remove(keys[nextIndex]);
-            nextIndex = -1;
+            if (lastRet == -1) throw new IllegalStateException();
+            RecipeTypeMap.this.remove(keys[lastRet]);
+            lastRet = -1;
         }
     }
 }

@@ -350,7 +350,11 @@ public enum ActionModule implements ScriptModule {
         float volume = args.length > 1 ? (float) args[1].asNumber() : 1.0f;
         float pitch = args.length > 2 ? (float) args[2].asNumber() : 1.0f;
         if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_21_4)) {
-            Sound sound = Registry.SOUNDS.get(Objects.requireNonNull(NamespacedKey.fromString(soundName)));
+            NamespacedKey soundKey = NamespacedKey.fromString(soundName);
+            if (soundKey == null) {
+                return ScriptValue.nil();
+            }
+            Sound sound = Registry.SOUNDS.get(soundKey);
             if (sound == null) {
                 return ScriptValue.nil();
             }
