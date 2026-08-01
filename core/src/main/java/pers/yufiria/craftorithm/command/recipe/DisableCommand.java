@@ -13,11 +13,11 @@ import pers.yufiria.craftorithm.util.LangUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class DisableRecipeCommand extends CommandNode {
+public final class DisableCommand extends CommandNode {
 
-    public static final DisableRecipeCommand INSTANCE = new DisableRecipeCommand();
+    public static final DisableCommand INSTANCE = new DisableCommand();
 
-    private DisableRecipeCommand() {
+    private DisableCommand() {
         super(CommandInfo
             .builder("disable")
             .permission(new PermInfo("craftorithm.command.disable"))

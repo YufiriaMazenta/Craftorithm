@@ -40,13 +40,13 @@ import java.util.regex.Pattern;
         @TaskRule(lifeCycle = LifeCycle.ACTIVE)
     }
 )
-public final class CreateRecipeCommand extends CommandNode implements LifeCycleTask {
+public final class CreateCommand extends CommandNode implements LifeCycleTask {
 
-    public static final CreateRecipeCommand INSTANCE = new CreateRecipeCommand();
+    public static final CreateCommand INSTANCE = new CreateCommand();
     private final Pattern RECIPE_ID_PATTERN = Pattern.compile("^[a-z0-9._-]+$");
     private final Map<RecipeType, RecipeCreatorFactory> recipeCreatorMap = new RecipeTypeMap<>();
 
-    private CreateRecipeCommand() {
+    private CreateCommand() {
         super(CommandInfo
             .builder("create")
             .permission(new PermInfo("craftorithm.command.create"))

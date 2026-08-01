@@ -14,11 +14,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class RemoveFuelCommand extends CommandNode {
+public class RemoveCommand extends CommandNode {
 
-    public static final RemoveFuelCommand INSTANCE = new RemoveFuelCommand();
+    public static final RemoveCommand INSTANCE = new RemoveCommand();
 
-    protected RemoveFuelCommand() {
+    protected RemoveCommand() {
         super(CommandInfo.builder("remove").build());
     }
 

@@ -15,11 +15,11 @@ import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.util.*;
 
-public class AddFuelCommand extends CommandNode {
+public class AddCommand extends CommandNode {
 
-    public static final AddFuelCommand INSTANCE = new AddFuelCommand();
+    public static final AddCommand INSTANCE = new AddCommand();
 
-    protected AddFuelCommand() {
+    protected AddCommand() {
         super(CommandInfo.builder("add").build());
     }
 

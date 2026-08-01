@@ -19,11 +19,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public final class SaveItemCommand extends CommandNode {
+public final class SaveCommand extends CommandNode {
 
-    public static final SaveItemCommand INSTANCE = new SaveItemCommand();
+    public static final SaveCommand INSTANCE = new SaveCommand();
 
-    private SaveItemCommand() {
+    private SaveCommand() {
         super(
             CommandInfo
                 .builder("save")

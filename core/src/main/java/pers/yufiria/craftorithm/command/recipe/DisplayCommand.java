@@ -21,11 +21,11 @@ import pers.yufiria.craftorithm.util.LangUtils;
 import java.util.*;
 import java.util.function.BiFunction;
 
-public class DisplayRecipeCommand extends CommandNode {
+public class DisplayCommand extends CommandNode {
 
-    public static final DisplayRecipeCommand INSTANCE = new DisplayRecipeCommand();
+    public static final DisplayCommand INSTANCE = new DisplayCommand();
 
-    protected DisplayRecipeCommand() {
+    protected DisplayCommand() {
         super(
             CommandInfo
                 .builder("display")

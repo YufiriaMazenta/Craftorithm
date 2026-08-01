@@ -16,11 +16,11 @@ import java.util.List;
 /**
  * 重构为只能删除本身插件的配方，取消其他插件配方移动到disable命令
  */
-public final class RemoveRecipeCommand extends CommandNode {
+public final class RemoveCommand extends CommandNode {
 
-    public static final RemoveRecipeCommand INSTANCE = new RemoveRecipeCommand();
+    public static final RemoveCommand INSTANCE = new RemoveCommand();
 
-    private RemoveRecipeCommand() {
+    private RemoveCommand() {
         super(CommandInfo
             .builder("remove")
             .permission(new PermInfo("craftorithm.recipe.remove"))

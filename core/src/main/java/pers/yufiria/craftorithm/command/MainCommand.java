@@ -34,19 +34,19 @@ public class MainCommand extends CommandTree {
     CommandNode version = VersionCommand.INSTANCE;
 
     @Subcommand
-    CommandNode remove = RemoveRecipeCommand.INSTANCE;
+    CommandNode remove = RemoveCommand.INSTANCE;
 
     @Subcommand
-    CommandNode disable = DisableRecipeCommand.INSTANCE;
+    CommandNode disable = DisableCommand.INSTANCE;
 
     @Subcommand
     CommandNode item = ItemCommand.INSTANCE;
 
     @Subcommand
-    CommandNode create = CreateRecipeCommand.INSTANCE;
+    CommandNode create = CreateCommand.INSTANCE;
 
     @Subcommand
-    CommandNode display = DisplayRecipeCommand.INSTANCE;
+    CommandNode display = DisplayCommand.INSTANCE;
 
     @Subcommand
     CommandNode openMenu = OpenMenuCommand.INSTANCE;

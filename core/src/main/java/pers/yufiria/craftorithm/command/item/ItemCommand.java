@@ -26,10 +26,10 @@ public final class ItemCommand extends CommandNode {
     }
 
     @Subcommand
-    CommandNode save = SaveItemCommand.INSTANCE;
+    CommandNode save = SaveCommand.INSTANCE;
 
     @Subcommand
-    CommandNode give = GiveItemCommand.INSTANCE;
+    CommandNode give = GiveCommand.INSTANCE;
 
     @Subcommand
     CommandNode fuel = FuelCommand.INSTANCE;

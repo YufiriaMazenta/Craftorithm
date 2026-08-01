@@ -14,9 +14,9 @@ public class FuelCommand extends CommandNode {
     }
 
     @Subcommand
-    CommandNode add = AddFuelCommand.INSTANCE;
+    CommandNode add = AddCommand.INSTANCE;
 
     @Subcommand
-    CommandNode remove = RemoveFuelCommand.INSTANCE;
+    CommandNode remove = RemoveCommand.INSTANCE;
 
 }

@@ -20,11 +20,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-public class GiveItemCommand extends CommandNode {
+public class GiveCommand extends CommandNode {
 
-    public static final GiveItemCommand INSTANCE = new GiveItemCommand();
+    public static final GiveCommand INSTANCE = new GiveCommand();
 
-    private GiveItemCommand() {
+    private GiveCommand() {
         super(
             CommandInfo
                 .builder("give")
