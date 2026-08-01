@@ -22,27 +22,10 @@ public class TriggerCooldown {
         return expireTime != null && System.currentTimeMillis() < expireTime;
     }
 
-    public boolean isOnCooldown(Trigger trigger, @Nullable Player player) {
-        if (player == null) return false;
-        return isOnCooldown(trigger, player.getUniqueId());
-    }
-
     public void setCooldown(Trigger trigger, UUID playerUniqueId) {
         if (trigger.cooldownMillis() <= 0) return;
         String key = buildKey(trigger, playerUniqueId);
         cooldownMap.put(key, System.currentTimeMillis() + trigger.cooldownMillis());
-    }
-
-    public void setCooldown(Trigger trigger, @Nullable Player player) {
-        if (player == null) return;
-        setCooldown(trigger, player.getUniqueId());
-    }
-
-    public long getRemainingMillis(Trigger trigger, UUID playerUniqueId) {
-        String key = buildKey(trigger, playerUniqueId);
-        Long expireTime = cooldownMap.get(key);
-        if (expireTime == null) return 0;
-        return Math.max(0, expireTime - System.currentTimeMillis());
     }
 
     /**
