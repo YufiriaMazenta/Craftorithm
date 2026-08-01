@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.trigger;
 
 import crypticlib.script.ScriptValue;
+import crypticlib.script.object.ReflectPropertyResolver;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -55,6 +56,10 @@ public enum CraftTriggerTypes implements TriggerType {
                 }
                 ItemStack result = craftItemEvent.getInventory().getResult();
                 ctx.setVariable("craft_num", ScriptValue.of(RecipeUtils.calculateVanillaCraftNum(craftItemEvent.getClick(), matrix, result, player)));
+                ctx.setVariable("event", ScriptValue.of(
+                    event,
+                    ReflectPropertyResolver.INSTANCE
+                ));
                 return ctx;
             }
             return null;
@@ -77,6 +82,10 @@ public enum CraftTriggerTypes implements TriggerType {
                 NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(prepareItemCraftEvent.getRecipe());
                 RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(prepareItemCraftEvent.getRecipe());
                 TriggerContext ctx = new TriggerContext(player.getUniqueId(), recipeKey, recipeType);
+                ctx.setVariable("event", ScriptValue.of(
+                    event,
+                    ReflectPropertyResolver.INSTANCE
+                ));
                 @Nullable ItemStack[] matrix = prepareItemCraftEvent.getInventory().getMatrix();
                 if (matrix != null) {
                     addIngredientsFromMatrix(ctx, matrix);
@@ -142,6 +151,10 @@ public enum CraftTriggerTypes implements TriggerType {
                 additionItem
             };
             ctx.setVariable("craft_num", ScriptValue.of(RecipeUtils.calculateVanillaCraftNum(smithItemEvent.getClick(), matrix, result, player)));
+            ctx.setVariable("event", ScriptValue.of(
+                event,
+                ReflectPropertyResolver.INSTANCE
+            ));
             return ctx;
         }
 
@@ -162,6 +175,10 @@ public enum CraftTriggerTypes implements TriggerType {
             addSlotVariable(ctx, "template", e.getInventory().getItem(0));
             addSlotVariable(ctx, "base", e.getInventory().getItem(1));
             addSlotVariable(ctx, "addition", e.getInventory().getItem(2));
+            ctx.setVariable("event", ScriptValue.of(
+                event,
+                ReflectPropertyResolver.INSTANCE
+            ));
             return ctx;
         }
     },
@@ -194,6 +211,10 @@ public enum CraftTriggerTypes implements TriggerType {
             TriggerContext ctx = new TriggerContext(player, recipeKey, recipeType);
             addSlotVariable(ctx, "base", base);
             addSlotVariable(ctx, "addition", addition);
+            ctx.setVariable("event", ScriptValue.of(
+                event,
+                ReflectPropertyResolver.INSTANCE
+            ));
             return ctx;
         }
 
@@ -218,6 +239,10 @@ public enum CraftTriggerTypes implements TriggerType {
                 TriggerContext ctx = new TriggerContext(player, recipeKey, recipeType);
                 addSlotVariable(ctx, "base", base);
                 addSlotVariable(ctx, "addition", addition);
+                ctx.setVariable("event", ScriptValue.of(
+                    event,
+                    ReflectPropertyResolver.INSTANCE
+                ));
                 return ctx;
             }).orElse(null);
         }

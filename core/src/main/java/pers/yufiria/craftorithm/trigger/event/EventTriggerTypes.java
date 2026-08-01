@@ -2,6 +2,7 @@ package pers.yufiria.craftorithm.trigger.event;
 
 import crypticlib.CrypticLibBukkit;
 import crypticlib.script.ScriptValue;
+import crypticlib.script.object.ReflectPropertyResolver;
 import crypticlib.util.BukkitEventHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -42,115 +43,195 @@ public enum EventTriggerTypes {
         initialized = true;
 
         // PlayerEvent 子类
-        register("player_join", PlayerJoinEvent.class, PlayerExtractor.PLAYER, Map.of());
-        register("player_quit", PlayerQuitEvent.class, PlayerExtractor.PLAYER, Map.of());
+        register("player_join", PlayerJoinEvent.class, PlayerExtractor.PLAYER, Map.of(
+            "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+        ));
+        register("player_quit", PlayerQuitEvent.class, PlayerExtractor.PLAYER, Map.of(
+            "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+        ));
         register("player_death", PlayerDeathEvent.class, PlayerExtractor.PLAYER,
             Map.of(
                 "killer_name", event -> {
                     Player killer = ((PlayerDeathEvent) event).getEntity().getKiller();
                     return killer != null ? ScriptValue.of(killer.getName()) : ScriptValue.nil();
-                }
+                },
+                "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
             )
         );
-        register("player_respawn", PlayerRespawnEvent.class, PlayerExtractor.PLAYER, Map.of());
+        register("player_respawn", PlayerRespawnEvent.class, PlayerExtractor.PLAYER, Map.of(
+            "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+        ));
         register("player_interact", PlayerInteractEvent.class, PlayerExtractor.PLAYER,
-            Map.of("action", event -> ScriptValue.of(((PlayerInteractEvent) event).getAction().name()))
+            Map.of(
+                "action", event -> ScriptValue.of(((PlayerInteractEvent) event).getAction().name()),
+                "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+            )
         );
         register("player_interact_entity", PlayerInteractEntityEvent.class, PlayerExtractor.PLAYER,
-            Map.of("entity_type", event -> ScriptValue.of(((PlayerInteractEntityEvent) event).getRightClicked().getType().name()))
+            Map.of(
+                "entity_type", event -> ScriptValue.of(((PlayerInteractEntityEvent) event).getRightClicked().getType().name()),
+                "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+            )
         );
-        register("player_interact_at_entity", PlayerInteractAtEntityEvent.class, PlayerExtractor.PLAYER, Map.of());
+        register("player_interact_at_entity", PlayerInteractAtEntityEvent.class, PlayerExtractor.PLAYER, Map.of(
+            "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+        ));
         register("player_advancement", PlayerAdvancementDoneEvent.class, PlayerExtractor.PLAYER,
-            Map.of("advancement", event -> ScriptValue.of(((PlayerAdvancementDoneEvent) event).getAdvancement().getKey().toString()))
+            Map.of(
+                "advancement", event -> ScriptValue.of(((PlayerAdvancementDoneEvent) event).getAdvancement().getKey().toString()),
+                "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+            )
         );
         register("player_level_change", PlayerLevelChangeEvent.class, PlayerExtractor.PLAYER,
             Map.of(
                 "old_level", event -> ScriptValue.of(((PlayerLevelChangeEvent) event).getOldLevel()),
-                "new_level", event -> ScriptValue.of(((PlayerLevelChangeEvent) event).getNewLevel())
+                "new_level", event -> ScriptValue.of(((PlayerLevelChangeEvent) event).getNewLevel()),
+                "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
             )
         );
         register("player_exp_change", PlayerExpChangeEvent.class, PlayerExtractor.PLAYER,
-            Map.of("amount", event -> ScriptValue.of(((PlayerExpChangeEvent) event).getAmount()))
+            Map.of(
+                "amount", event -> ScriptValue.of(((PlayerExpChangeEvent) event).getAmount()),
+                "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+            )
         );
         register("player_toggle_sneak", PlayerToggleSneakEvent.class, PlayerExtractor.PLAYER,
-            Map.of("sneaking", event -> ScriptValue.of(((PlayerToggleSneakEvent) event).isSneaking()))
+            Map.of(
+                "sneaking", event -> ScriptValue.of(((PlayerToggleSneakEvent) event).isSneaking()),
+                "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+            )
         );
         register("player_toggle_sprint", PlayerToggleSprintEvent.class, PlayerExtractor.PLAYER,
-            Map.of("sprinting", event -> ScriptValue.of(((PlayerToggleSprintEvent) event).isSprinting()))
+            Map.of(
+                "sprinting", event -> ScriptValue.of(((PlayerToggleSprintEvent) event).isSprinting()),
+                "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+            )
         );
         register("player_item_consume", PlayerItemConsumeEvent.class, PlayerExtractor.PLAYER,
             Map.of(
                 "item", event -> ItemUtils.resolveItemId(((PlayerItemConsumeEvent) event).getItem()),
-                "amount", event -> ItemUtils.resolveItemAmount(((PlayerItemConsumeEvent) event).getItem())
+                "amount", event -> ItemUtils.resolveItemAmount(((PlayerItemConsumeEvent) event).getItem()),
+                "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
             )
         );
         register("player_item_held", PlayerItemHeldEvent.class, PlayerExtractor.PLAYER,
             Map.of(
                 "previous_slot", event -> ScriptValue.of(((PlayerItemHeldEvent) event).getPreviousSlot()),
-                "new_slot", event -> ScriptValue.of(((PlayerItemHeldEvent) event).getNewSlot())
+                "new_slot", event -> ScriptValue.of(((PlayerItemHeldEvent) event).getNewSlot()),
+                "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
             )
         );
         register("player_animation", PlayerAnimationEvent.class, PlayerExtractor.PLAYER,
-            Map.of("animation", event -> ScriptValue.of(((PlayerAnimationEvent) event).getAnimationType().name()))
+            Map.of(
+                "animation", event -> ScriptValue.of(((PlayerAnimationEvent) event).getAnimationType().name()),
+                "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+            )
         );
-        register("player_bed_enter", PlayerBedEnterEvent.class, PlayerExtractor.PLAYER, Map.of());
-        register("player_bed_leave", PlayerBedLeaveEvent.class, PlayerExtractor.PLAYER, Map.of());
-        register("player_bucket_fill", PlayerBucketFillEvent.class, PlayerExtractor.PLAYER, Map.of());
-        register("player_bucket_empty", PlayerBucketEmptyEvent.class, PlayerExtractor.PLAYER, Map.of());
+        register("player_bed_enter", PlayerBedEnterEvent.class, PlayerExtractor.PLAYER, Map.of(
+            "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+        ));
+        register("player_bed_leave", PlayerBedLeaveEvent.class, PlayerExtractor.PLAYER, Map.of(
+            "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+        ));
+        register("player_bucket_fill", PlayerBucketFillEvent.class, PlayerExtractor.PLAYER, Map.of(
+            "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+        ));
+        register("player_bucket_empty", PlayerBucketEmptyEvent.class, PlayerExtractor.PLAYER, Map.of(
+            "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+        ));
         register("player_changed_world", PlayerChangedWorldEvent.class, PlayerExtractor.PLAYER,
-            Map.of("from", event -> ScriptValue.of(((PlayerChangedWorldEvent) event).getFrom().getName()))
+            Map.of(
+                "from", event -> ScriptValue.of(((PlayerChangedWorldEvent) event).getFrom().getName()),
+                "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+            )
         );
-        register("player_portal", PlayerPortalEvent.class, PlayerExtractor.PLAYER, Map.of());
+        register("player_portal", PlayerPortalEvent.class, PlayerExtractor.PLAYER, Map.of(
+            "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+        ));
         register("player_teleport", PlayerTeleportEvent.class, PlayerExtractor.PLAYER,
-            Map.of("cause", event -> ScriptValue.of(((PlayerTeleportEvent) event).getCause().name()))
+            Map.of(
+                "cause", event -> ScriptValue.of(((PlayerTeleportEvent) event).getCause().name()),
+                "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+            )
         );
         register("player_fish", PlayerFishEvent.class, PlayerExtractor.PLAYER,
-            Map.of("state", event -> ScriptValue.of(((PlayerFishEvent) event).getState().name()))
+            Map.of(
+                "state", event -> ScriptValue.of(((PlayerFishEvent) event).getState().name()),
+                "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+            )
         );
-        register("player_shear_entity", PlayerShearEntityEvent.class, PlayerExtractor.PLAYER, Map.of());
-        register("player_unleash_entity", PlayerUnleashEntityEvent.class, PlayerExtractor.PLAYER, Map.of());
-        register("player_edit_book", PlayerEditBookEvent.class, PlayerExtractor.PLAYER, Map.of());
+        register("player_shear_entity", PlayerShearEntityEvent.class, PlayerExtractor.PLAYER, Map.of(
+            "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+        ));
+        register("player_unleash_entity", PlayerUnleashEntityEvent.class, PlayerExtractor.PLAYER, Map.of(
+            "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+        ));
+        register("player_edit_book", PlayerEditBookEvent.class, PlayerExtractor.PLAYER, Map.of(
+            "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+        ));
         register("player_statistic", PlayerStatisticIncrementEvent.class, PlayerExtractor.PLAYER,
-            Map.of("statistic", event -> ScriptValue.of(((PlayerStatisticIncrementEvent) event).getStatistic().name()))
+            Map.of(
+                "statistic", event -> ScriptValue.of(((PlayerStatisticIncrementEvent) event).getStatistic().name()),
+                "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+            )
         );
-        register("player_swap_hand_items", PlayerSwapHandItemsEvent.class, PlayerExtractor.PLAYER, Map.of());
+        register("player_swap_hand_items", PlayerSwapHandItemsEvent.class, PlayerExtractor.PLAYER, Map.of(
+            "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+        ));
         register("player_drop_item", PlayerDropItemEvent.class, PlayerExtractor.PLAYER,
             Map.of(
                 "item", event -> ItemUtils.resolveItemId(((PlayerDropItemEvent) event).getItemDrop().getItemStack()),
-                "amount", event -> ItemUtils.resolveItemAmount(((PlayerDropItemEvent) event).getItemDrop().getItemStack())
+                "amount", event -> ItemUtils.resolveItemAmount(((PlayerDropItemEvent) event).getItemDrop().getItemStack()),
+                "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
             )
         );
         register("player_pickup_item", PlayerPickupItemEvent.class, PlayerExtractor.PLAYER,
             Map.of(
                 "item", event -> ItemUtils.resolveItemId(((PlayerPickupItemEvent) event).getItem().getItemStack()),
-                "amount", event -> ItemUtils.resolveItemAmount(((PlayerPickupItemEvent) event).getItem().getItemStack())
+                "amount", event -> ItemUtils.resolveItemAmount(((PlayerPickupItemEvent) event).getItem().getItemStack()),
+                "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
             )
         );
-        register("player_velocity", PlayerVelocityEvent.class, PlayerExtractor.PLAYER, Map.of());
+        register("player_velocity", PlayerVelocityEvent.class, PlayerExtractor.PLAYER, Map.of(
+            "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+        ));
         register("player_game_mode_change", PlayerGameModeChangeEvent.class, PlayerExtractor.PLAYER,
-            Map.of("new_game_mode", event -> ScriptValue.of(((PlayerGameModeChangeEvent) event).getNewGameMode().name()))
+            Map.of(
+                "new_game_mode", event -> ScriptValue.of(((PlayerGameModeChangeEvent) event).getNewGameMode().name()),
+                "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+            )
         );
         register("player_resource_pack_status", PlayerResourcePackStatusEvent.class, PlayerExtractor.PLAYER,
-            Map.of("status", event -> ScriptValue.of(((PlayerResourcePackStatusEvent) event).getStatus().name()))
+            Map.of(
+                "status", event -> ScriptValue.of(((PlayerResourcePackStatusEvent) event).getStatus().name()),
+                "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+            )
         );
         register("player_item_damage", PlayerItemDamageEvent.class, PlayerExtractor.PLAYER,
             Map.of(
                 "item", event -> ItemUtils.resolveItemId(((PlayerItemDamageEvent) event).getItem()),
                 "amount", event -> ItemUtils.resolveItemAmount(((PlayerItemDamageEvent) event).getItem()),
-                "damage", event -> ScriptValue.of(((PlayerItemDamageEvent) event).getDamage())
+                "damage", event -> ScriptValue.of(((PlayerItemDamageEvent) event).getDamage()),
+                "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
             )
         );
         register("player_item_mend", PlayerItemMendEvent.class, PlayerExtractor.PLAYER,
             Map.of(
                 "item", event -> ItemUtils.resolveItemId(((PlayerItemMendEvent) event).getItem()),
                 "amount", event -> ItemUtils.resolveItemAmount(((PlayerItemMendEvent) event).getItem()),
-                "repair_amount", event -> ScriptValue.of(((PlayerItemMendEvent) event).getRepairAmount())
+                "repair_amount", event -> ScriptValue.of(((PlayerItemMendEvent) event).getRepairAmount()),
+                "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
             )
         );
         register("player_recipe_discover", PlayerRecipeDiscoverEvent.class, PlayerExtractor.PLAYER,
-            Map.of("recipe", event -> ScriptValue.of(((PlayerRecipeDiscoverEvent) event).getRecipe().toString()))
+            Map.of(
+                "recipe", event -> ScriptValue.of(((PlayerRecipeDiscoverEvent) event).getRecipe().toString()),
+                "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+            )
         );
-        register("player_take_campfire", PlayerTakeLecternBookEvent.class, PlayerExtractor.PLAYER, Map.of());
+        register("player_take_campfire", PlayerTakeLecternBookEvent.class, PlayerExtractor.PLAYER, Map.of(
+            "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+        ));
 
         // EntityEvent 子类（涉及玩家）
         register("damage_entity", EntityDamageByEntityEvent.class, PlayerExtractor.DAMAGER_OR_KILLER,
@@ -163,7 +244,8 @@ public enum EventTriggerTypes {
                 "entity_name", event -> {
                     EntityDamageByEntityEvent damageEvent = (EntityDamageByEntityEvent) event;
                     return ScriptValue.of(damageEvent.getEntity().getName());
-                }
+                },
+                "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
             )
         );
         register("kill_entity", EntityDeathEvent.class, PlayerExtractor.DAMAGER_OR_KILLER,
@@ -175,21 +257,32 @@ public enum EventTriggerTypes {
                 "entity_name", event -> {
                     EntityDeathEvent deathEvent = (EntityDeathEvent) event;
                     return ScriptValue.of(deathEvent.getEntity().getName());
-                }
+                },
+                "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
             )
         );
         register("entity_shoot_bow", EntityShootBowEvent.class, PlayerExtractor.ENTITY,
-            Map.of("force", event -> ScriptValue.of(((EntityShootBowEvent) event).getForce()))
+            Map.of(
+                "force", event -> ScriptValue.of(((EntityShootBowEvent) event).getForce()),
+                "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+            )
         );
-        register("entity_breed", EntityBreedEvent.class, PlayerExtractor.ENTITY, Map.of());
-        register("entity_tame", EntityTameEvent.class, PlayerExtractor.ENTITY, Map.of());
-        register("entity_potion_effect", EntityPotionEffectEvent.class, PlayerExtractor.ENTITY, Map.of());
+        register("entity_breed", EntityBreedEvent.class, PlayerExtractor.ENTITY, Map.of(
+            "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+        ));
+        register("entity_tame", EntityTameEvent.class, PlayerExtractor.ENTITY, Map.of(
+            "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+        ));
+        register("entity_potion_effect", EntityPotionEffectEvent.class, PlayerExtractor.ENTITY, Map.of(
+            "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+        ));
 
         // InventoryEvent 子类
         register("inventory_click", InventoryClickEvent.class, PlayerExtractor.WHO_CLICKED,
             Map.of(
                 "slot", event -> ScriptValue.of(((InventoryClickEvent) event).getSlot()),
-                "click_type", event -> ScriptValue.of(((InventoryClickEvent) event).getClick().name())
+                "click_type", event -> ScriptValue.of(((InventoryClickEvent) event).getClick().name()),
+                "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
             )
         );
         register("inventory_close", InventoryCloseEvent.class, (event) -> {
@@ -197,20 +290,30 @@ public enum EventTriggerTypes {
                 return null;
             }
             return (Player) closeEvent.getPlayer();
-        }, Map.of());
+        }, Map.of(
+            "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+        ));
         register("inventory_open", InventoryOpenEvent.class, (event) -> {
             if (!(event instanceof InventoryOpenEvent openEvent)) {
                 return null;
             }
             return (Player) openEvent.getPlayer();
-        }, Map.of());
+        }, Map.of(
+            "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+        ));
 
         // BlockEvent 子类（涉及玩家）
         register("block_break", BlockBreakEvent.class, PlayerExtractor.PLAYER,
-            Map.of("block_type", event -> ScriptValue.of(((BlockBreakEvent) event).getBlock().getType().name()))
+            Map.of(
+                "block_type", event -> ScriptValue.of(((BlockBreakEvent) event).getBlock().getType().name()),
+                "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+            )
         );
         register("block_place", BlockPlaceEvent.class, PlayerExtractor.PLAYER,
-            Map.of("block_type", event -> ScriptValue.of(((BlockPlaceEvent) event).getBlock().getType().name()))
+            Map.of(
+                "block_type", event -> ScriptValue.of(((BlockPlaceEvent) event).getBlock().getType().name()),
+                "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+            )
         );
 
         // 其他
@@ -218,13 +321,17 @@ public enum EventTriggerTypes {
             Map.of("message", event -> {
                 String message = ((AsyncPlayerChatEvent) event).getMessage();
                 return ScriptValue.of(ChatColor.stripColor(message));
-            })
+            },
+                "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+            )
         );
         register("player_command_preprocess", PlayerCommandPreprocessEvent.class, PlayerExtractor.PLAYER,
             Map.of("message", event -> {
                 String message = ((PlayerCommandPreprocessEvent) event).getMessage();
                 return ScriptValue.of(ChatColor.stripColor(message));
-            })
+            },
+                "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+            )
         );
         register("player_move", PlayerMoveEvent.class,
             event -> {
@@ -232,7 +339,10 @@ public enum EventTriggerTypes {
                 if (!BukkitEventHelper.isMove(moveEvent)) return null;
                 return moveEvent.getPlayer();
             },
-            Map.of());
+            Map.of(
+                "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+            )
+        );
     }
 
     private void register(
