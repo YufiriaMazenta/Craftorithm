@@ -53,7 +53,7 @@ public enum CopyComponentsManager {
 
     /**
      * 添加对于某个配方的组件保留策略
-     * @param key 配方的key
+     * @param recipeKey 配方的key
      * @param ruleStrList 所需的组件保留策略
      */
     public void addRecipeCopyNbtRules(NamespacedKey recipeKey, List<String> ruleStrList) {

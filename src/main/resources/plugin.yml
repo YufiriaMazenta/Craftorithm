@@ -25,6 +25,7 @@ softdepend:
   - CraftEngine
   - SX-Item
   - EmakiItem
+  - AdvancedEnchantments
 authors: [ YufiriaMazenta ]
 folia-supported: true
 website: https://github.com/YufiriaMazenta/Craftorithm

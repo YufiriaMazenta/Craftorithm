@@ -119,8 +119,7 @@ public enum SimpleCopyComponentsRules implements CopyComponentsRule {
             resultMeta.setItemModel(baseMeta.getItemModel());
         }
         return resultMeta;
-    }),
-    ;
+    });
 
     private final String ruleName;
     private final MinecraftVersion minVersion;

@@ -68,6 +68,7 @@ dependencies {
         exclude("org.bukkit", "bukkit")
     }
     compileOnly("net.milkbowl.vault:VaultUnlockedAPI:2.16")
+    compileOnly("net.advancedplugins:AdvancedEnchantments-API:8.7.4")
 }
 
 java {
