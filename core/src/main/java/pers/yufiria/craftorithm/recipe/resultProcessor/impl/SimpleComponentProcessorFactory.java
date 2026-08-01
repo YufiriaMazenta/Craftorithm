@@ -1,29 +1,23 @@
 package pers.yufiria.craftorithm.recipe.resultProcessor.impl;
 
 import crypticlib.MinecraftVersion;
-import crypticlib.util.IOHelper;
 import org.bukkit.NamespacedKey;
-import org.bukkit.Registry;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.EquipmentSlotGroup;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ArmorMeta;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.recipe.resultProcessor.ComponentProcessorFactory;
 import pers.yufiria.craftorithm.recipe.resultProcessor.ProcessingStrategy;
 import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessor;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.BiConsumer;
+import static pers.yufiria.craftorithm.recipe.resultProcessor.impl.ProcessorUtils.processor;
+import static pers.yufiria.craftorithm.recipe.resultProcessor.impl.ProcessorUtils.processorRequireSource;
+import static pers.yufiria.craftorithm.recipe.resultProcessor.impl.ProcessorUtils.unsupported;
 
+/**
+ * 简单组件的处理器工厂。
+ * 逻辑复杂的组件（enchantments/attributes/item_flag/lore）见各自独立的工厂类。
+ */
 public enum SimpleComponentProcessorFactory implements ComponentProcessorFactory {
 
     ALL("all", null) {
@@ -63,219 +57,6 @@ public enum SimpleComponentProcessorFactory implements ComponentProcessorFactory
                     resultItem.setItemMeta(resultMeta);
                 });
                 default -> unsupported("display_name", strategy);
-            };
-        }
-    },
-    ENCHANTMENTS("enchantments", null) {
-        @Override
-        public ResultProcessor createProcessor(ProcessingStrategy strategy, @Nullable ConfigurationSection data) {
-            return switch (strategy) {
-                case COPY_FROM_SOURCE -> processorRequireSource("enchantments", (sourceItem, resultItem) -> {
-                    ItemMeta sourceMeta = sourceItem.getItemMeta();
-                    ItemMeta resultMeta = resultItem.getItemMeta();
-                    if (sourceMeta.hasEnchants()) {
-                        sourceMeta.getEnchants().forEach((enchant, level) -> {
-                            if (resultMeta.hasEnchant(enchant)) {
-                                if (resultMeta.getEnchantLevel(enchant) > level) {
-                                    return;
-                                }
-                                resultMeta.removeEnchant(enchant);
-                            }
-                            resultMeta.addEnchant(enchant, level, true);
-                        });
-                    }
-                    resultItem.setItemMeta(resultMeta);
-                });
-                case ADD -> {
-                    List<EnchantmentEntry> enchants = parseEnchantments(data);
-                    yield processor("enchantments", (sourceItem, resultItem) -> {
-                        ItemMeta resultMeta = resultItem.getItemMeta();
-                        enchants.forEach(e -> resultMeta.addEnchant(e.enchantment(), e.level(), true));
-                        resultItem.setItemMeta(resultMeta);
-                    });
-                }
-                case MERGE_SOURCE -> processorRequireSource("enchantments", (sourceItem, resultItem) -> {
-                    ItemMeta sourceMeta = sourceItem.getItemMeta();
-                    ItemMeta resultMeta = resultItem.getItemMeta();
-                    if (sourceMeta.hasEnchants()) {
-                        sourceMeta.getEnchants().forEach((enchant, level) -> {
-                            if (resultMeta.hasEnchant(enchant)) {
-                                if (resultMeta.getEnchantLevel(enchant) >= level) {
-                                    return;
-                                }
-                                resultMeta.removeEnchant(enchant);
-                            }
-                            resultMeta.addEnchant(enchant, level, true);
-                        });
-                    }
-                    resultItem.setItemMeta(resultMeta);
-                });
-                case REMOVE -> processor("enchantments", (sourceItem, resultItem) -> {
-                    ItemMeta resultMeta = resultItem.getItemMeta();
-                    if (data == null || data.getKeys(false).isEmpty()) {
-                        for (Enchantment ench : new ArrayList<>(resultMeta.getEnchants().keySet())) {
-                            resultMeta.removeEnchant(ench);
-                        }
-                    } else {
-                        List<String> removeList = data.getStringList("value");
-                        if (removeList.isEmpty()) {
-                            removeList = List.copyOf(data.getKeys(false));
-                        }
-                        for (String enchName : removeList) {
-                            Enchantment ench = Registry.ENCHANTMENT.get(NamespacedKey.fromString(enchName));
-                            if (ench != null && resultMeta.hasEnchant(ench)) {
-                                resultMeta.removeEnchant(ench);
-                            }
-                        }
-                    }
-                    resultItem.setItemMeta(resultMeta);
-                });
-            };
-        }
-    },
-    ATTRIBUTES("attributes", null) {
-        @Override
-        public ResultProcessor createProcessor(ProcessingStrategy strategy, @Nullable ConfigurationSection data) {
-            return switch (strategy) {
-                case COPY_FROM_SOURCE -> processorRequireSource("attributes", (sourceItem, resultItem) -> {
-                    ItemMeta sourceMeta = sourceItem.getItemMeta();
-                    ItemMeta resultMeta = resultItem.getItemMeta();
-                    if (sourceMeta.hasAttributeModifiers()) {
-                        resultMeta.setAttributeModifiers(sourceMeta.getAttributeModifiers());
-                    }
-                    resultItem.setItemMeta(resultMeta);
-                });
-                case ADD -> {
-                    List<Map<?, ?>> attrList = data != null ? data.getMapList("value") : List.of();
-                    yield processor("attributes", (sourceItem, resultItem) -> {
-                        ItemMeta resultMeta = resultItem.getItemMeta();
-                        applyAttributeModifiers(resultMeta, attrList);
-                        resultItem.setItemMeta(resultMeta);
-                    });
-                }
-                case MERGE_SOURCE -> processorRequireSource("attributes", (sourceItem, resultItem) -> {
-                    ItemMeta sourceMeta = sourceItem.getItemMeta();
-                    ItemMeta resultMeta = resultItem.getItemMeta();
-                    if (sourceMeta.hasAttributeModifiers()) {
-                        sourceMeta.getAttributeModifiers().entries().forEach(entry -> {
-                            resultMeta.addAttributeModifier(entry.getKey(), entry.getValue());
-                        });
-                    }
-                    resultItem.setItemMeta(resultMeta);
-                });
-                case REMOVE -> processor("attributes", (sourceItem, resultItem) -> {
-                    ItemMeta resultMeta = resultItem.getItemMeta();
-                    if (data == null || data.getKeys(false).isEmpty()) {
-                        resultMeta.setAttributeModifiers(null);
-                    } else {
-                        List<String> removeList = data.getStringList("value");
-                        for (String attrName : removeList) {
-                            Attribute attr = Registry.ATTRIBUTE.get(NamespacedKey.fromString(attrName));
-                            if (attr != null) {
-                                resultMeta.removeAttributeModifier(attr);
-                            }
-                        }
-                    }
-                    resultItem.setItemMeta(resultMeta);
-                });
-            };
-        }
-    },
-    ITEM_FLAG("item_flag", null) {
-        @Override
-        public ResultProcessor createProcessor(ProcessingStrategy strategy, @Nullable ConfigurationSection data) {
-            return switch (strategy) {
-                case COPY_FROM_SOURCE -> processorRequireSource("item_flag", (sourceItem, resultItem) -> {
-                    ItemMeta sourceMeta = sourceItem.getItemMeta();
-                    ItemMeta resultMeta = resultItem.getItemMeta();
-                    resultMeta.removeItemFlags(ItemFlag.values());
-                    sourceMeta.getItemFlags().forEach(resultMeta::addItemFlags);
-                    resultItem.setItemMeta(resultMeta);
-                });
-                case ADD -> {
-                    List<String> flagNames = data.getStringList("value");
-                    yield processor("item_flag", (sourceItem, resultItem) -> {
-                        ItemMeta resultMeta = resultItem.getItemMeta();
-                        for (String flagName : flagNames) {
-                            try {
-                                resultMeta.addItemFlags(ItemFlag.valueOf(flagName.toUpperCase()));
-                            } catch (IllegalArgumentException e) {
-                                IOHelper.info("&eUnknown ItemFlag: " + flagName);
-                            }
-                        }
-                        resultItem.setItemMeta(resultMeta);
-                    });
-                }
-                case MERGE_SOURCE -> processorRequireSource("item_flag", (sourceItem, resultItem) -> {
-                    ItemMeta sourceMeta = sourceItem.getItemMeta();
-                    ItemMeta resultMeta = resultItem.getItemMeta();
-                    sourceMeta.getItemFlags().forEach(resultMeta::addItemFlags);
-                    resultItem.setItemMeta(resultMeta);
-                });
-                case REMOVE -> processor("item_flag", (sourceItem, resultItem) -> {
-                    ItemMeta resultMeta = resultItem.getItemMeta();
-                    if (data == null || data.getKeys(false).isEmpty()) {
-                        resultMeta.removeItemFlags(ItemFlag.values());
-                    } else {
-                        List<String> removeList = data.getStringList("value");
-                        for (String flagName : removeList) {
-                            resultMeta.removeItemFlags(ItemFlag.valueOf(flagName.toUpperCase()));
-                        }
-                    }
-                    resultItem.setItemMeta(resultMeta);
-                });
-            };
-        }
-    },
-    LORE("lore", null) {
-        @Override
-        public ResultProcessor createProcessor(ProcessingStrategy strategy, @Nullable ConfigurationSection data) {
-            return switch (strategy) {
-                case COPY_FROM_SOURCE -> processorRequireSource("lore", (sourceItem, resultItem) -> {
-                    ItemMeta sourceMeta = sourceItem.getItemMeta();
-                    ItemMeta resultMeta = resultItem.getItemMeta();
-                    if (sourceMeta.hasLore()) {
-                        resultMeta.setLore(sourceMeta.getLore());
-                    }
-                    resultItem.setItemMeta(resultMeta);
-                });
-                case ADD -> {
-                    List<String> lines = data.getStringList("value");
-                    yield processor("lore", (sourceItem, resultItem) -> {
-                        ItemMeta resultMeta = resultItem.getItemMeta();
-                        resultMeta.setLore(lines);
-                        resultItem.setItemMeta(resultMeta);
-                    });
-                }
-                case MERGE_SOURCE -> processorRequireSource("lore", (sourceItem, resultItem) -> {
-                    ItemMeta sourceMeta = sourceItem.getItemMeta();
-                    ItemMeta resultMeta = resultItem.getItemMeta();
-                    if (sourceMeta.hasLore()) {
-                        List<String> sourceLore = sourceMeta.getLore();
-                        if (resultMeta.hasLore()) {
-                            List<String> merged = new ArrayList<>(resultMeta.getLore());
-                            merged.addAll(sourceLore);
-                            resultMeta.setLore(merged);
-                        } else {
-                            resultMeta.setLore(sourceLore);
-                        }
-                    }
-                    resultItem.setItemMeta(resultMeta);
-                });
-                case REMOVE -> processor("lore", (sourceItem, resultItem) -> {
-                    ItemMeta resultMeta = resultItem.getItemMeta();
-                    if (data == null || data.getKeys(false).isEmpty()) {
-                        resultMeta.setLore(null);
-                    } else {
-                        List<String> removeList = data.getStringList("value");
-                        if (resultMeta.hasLore()) {
-                            List<String> current = new ArrayList<>(resultMeta.getLore());
-                            current.removeAll(removeList);
-                            resultMeta.setLore(current.isEmpty() ? null : current);
-                        }
-                    }
-                    resultItem.setItemMeta(resultMeta);
-                });
             };
         }
     },
@@ -599,80 +380,6 @@ public enum SimpleComponentProcessorFactory implements ComponentProcessorFactory
     @Override
     public String componentName() {
         return componentName;
-    }
-
-    private static ResultProcessor processor(String name, BiConsumer<ItemStack, ItemStack> action) {
-        return new ResultProcessor() {
-            @Override
-            public String processorName() {
-                return name;
-            }
-
-            @Override
-            public void processItem(@Nullable ItemStack sourceItem, @NotNull ItemStack resultItem) {
-                action.accept(sourceItem, resultItem);
-            }
-        };
-    }
-
-    /**
-     * 创建需要 sourceItem 不为 null 的 processor。
-     * 当 sourceItem 为 null 时（如工作台配方），直接跳过，不抛异常。
-     */
-    private static ResultProcessor processorRequireSource(String name, BiConsumer<ItemStack, ItemStack> action) {
-        return new ResultProcessor() {
-            @Override
-            public String processorName() {
-                return name;
-            }
-
-            @Override
-            public void processItem(@Nullable ItemStack sourceItem, @NotNull ItemStack resultItem) {
-                if (sourceItem == null) return;
-                action.accept(sourceItem, resultItem);
-            }
-        };
-    }
-
-    private static ResultProcessor unsupported(String component, ProcessingStrategy strategy) {
-        throw new UnsupportedOperationException(component + " does not support " + strategy);
-    }
-
-    private record EnchantmentEntry(Enchantment enchantment, int level) {}
-
-    private static List<EnchantmentEntry> parseEnchantments(@Nullable ConfigurationSection data) {
-        if (data == null) return List.of();
-        List<EnchantmentEntry> result = new ArrayList<>();
-        for (String key : data.getKeys(false)) {
-            Enchantment ench = Registry.ENCHANTMENT.get(NamespacedKey.fromString(key));
-            if (ench != null) {
-                int level = data.getInt(key);
-                result.add(new EnchantmentEntry(ench, level));
-            }
-        }
-        return result;
-    }
-
-    private static void applyAttributeModifiers(ItemMeta meta, List<Map<?, ?>> attrList) {
-        for (Map<?, ?> attrEntry : attrList) {
-            String attrName = (String) attrEntry.get("attribute");
-            if (attrName == null) continue;
-            Attribute attr = Registry.ATTRIBUTE.get(NamespacedKey.fromString(attrName));
-            if (attr == null) continue;
-            String slotStr = (String) attrEntry.get("slot");
-            EquipmentSlotGroup slotGroup = slotStr != null
-                ? EquipmentSlotGroup.getByName(slotStr.toLowerCase())
-                : EquipmentSlotGroup.ANY;
-            String opStr = (String) attrEntry.get("operation");
-            AttributeModifier.Operation op = opStr != null
-                ? AttributeModifier.Operation.valueOf(opStr.toUpperCase())
-                : AttributeModifier.Operation.ADD_NUMBER;
-            Object amountObj = attrEntry.get("amount");
-            double amount = amountObj instanceof Number n ? n.doubleValue() : 0.0;
-            NamespacedKey key = new NamespacedKey("craftorithm", attrName.toLowerCase().replace(":", "_"));
-            AttributeModifier modifier = new AttributeModifier(key, amount, op, slotGroup);
-            meta.addAttributeModifier(attr, modifier);
-        }
     }
 
 }
