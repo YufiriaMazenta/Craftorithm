@@ -10,7 +10,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessorManager;
+import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessors;
 import pers.yufiria.craftorithm.util.EventUtils;
+
+import java.util.Optional;
 
 @EventListener
 public enum CraftingHandler implements Listener {
@@ -18,30 +22,34 @@ public enum CraftingHandler implements Listener {
     INSTANCE;
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void refreshDynamicResult(PrepareItemCraftEvent event) {
+    public void processResult(PrepareItemCraftEvent event) {
         // 先尝试 Bukkit 原生匹配
         Recipe recipe = event.getRecipe();
         if (recipe != null) {
             // Bukkit 匹配到了配方，Craftorithm 配方需要 refresh
             NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
             if (recipeKey != null && recipeKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
-                refreshResultItem(event, recipe.getResult());
+                refreshResultItem(event, recipe.getResult(), recipeKey);
             }
-            return;
         }
     }
 
-    private void refreshResultItem(PrepareItemCraftEvent event, ItemStack item) {
-        ItemManager.INSTANCE.matchItemId(item, true)
+    private void refreshResultItem(PrepareItemCraftEvent event, ItemStack item, NamespacedKey recipeKey) {
+        // clone 避免直接修改 Bukkit Recipe 内部缓存的共享对象
+        ItemStack result = item.clone();
+        ItemManager.INSTANCE.matchItemId(result, true)
             .flatMap(id -> EventUtils.getViewer(event)
                 .flatMap(player -> ItemManager.INSTANCE.matchItem(id, player))
             )
             .ifPresent(refreshItem -> {
-                if (!item.isSimilar(refreshItem)) {
-                    item.setItemMeta(refreshItem.getItemMeta());
-                    event.getInventory().setResult(item);
+                if (!result.isSimilar(refreshItem)) {
+                    result.setItemMeta(refreshItem.getItemMeta());
                 }
             });
+        // 处理结果处理器（工作台配方没有sourceItem）
+        Optional<ResultProcessors> processors = ResultProcessorManager.INSTANCE.getRecipeProcessors(recipeKey);
+        processors.ifPresent(p -> p.processItem(null, result));
+        event.getInventory().setResult(result);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

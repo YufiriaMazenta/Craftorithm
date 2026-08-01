@@ -10,10 +10,8 @@ import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
-import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsManager;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
-
-import java.util.List;
+import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessorManager;
 
 public enum SmithingTransformRecipeParser implements VanillaRecipeParser<SmithingRecipe> {
 
@@ -29,9 +27,11 @@ public enum SmithingTransformRecipeParser implements VanillaRecipeParser<Smithin
             RecipeChoice base = choiceParser().parse(baseId);
             String additionId = recipeConfig.getString("addition");
             RecipeChoice addition = choiceParser().parse(additionId);
-            if (recipeConfig.isList("copy_components_rules")) {
-                List<String> keepNbtRules = recipeConfig.getStringList("copy_components_rules");
-                CopyComponentsManager.INSTANCE.addRecipeCopyNbtRules(recipeKey, keepNbtRules);
+            if (recipeConfig.isConfigurationSection("result_processors")) {
+                ConfigurationSection section = recipeConfig.getConfigurationSection("result_processors");
+                ResultProcessorManager.INSTANCE.addRecipeProcessors(recipeKey, section);
+            } else if (recipeConfig.isList("copy_components_rules")) {
+                ResultProcessorManager.INSTANCE.addRecipeProcessorsLegacy(recipeKey, recipeConfig.getStringList("copy_components_rules"));
             }
             String templateId = recipeConfig.getString("template");
             RecipeChoice template = choiceParser().parse(templateId);

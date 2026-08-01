@@ -13,6 +13,7 @@ import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
+import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessorManager;
 
 import java.util.Objects;
 
@@ -65,6 +66,10 @@ public enum SmeltingRecipeParser implements VanillaRecipeParser<CookingRecipe<?>
                     CookingBookCategory category = CookingBookCategory.valueOf(categoryStr);
                     recipe.setCategory(category);
                 }
+            }
+            if (recipeConfig.isConfigurationSection("result_processors")) {
+                ConfigurationSection section = recipeConfig.getConfigurationSection("result_processors");
+                ResultProcessorManager.INSTANCE.addRecipeProcessors(recipeKey, section);
             }
             return recipe;
         } catch (RecipeLoadException e) {

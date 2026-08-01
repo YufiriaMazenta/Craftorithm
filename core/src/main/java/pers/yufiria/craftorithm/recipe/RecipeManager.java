@@ -19,10 +19,11 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.api.event.RecipeLoadFromConfigEvent;
+import pers.yufiria.craftorithm.api.recipe.CraftorithmRecipeRegistry;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.PluginConfigs;
-import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsManager;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
+import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessorManager;
 import pers.yufiria.craftorithm.util.CollectionsUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
 
@@ -121,7 +122,7 @@ public enum RecipeManager implements LifeCycleTask {
             CrypticLibBukkit.scheduler().syncLater(() -> {
                 isReloadingRecipeManager.set(false);
                 //所有操作进行完毕后，为玩家更新配方信息
-                Bukkit.updateRecipes();
+                CraftorithmRecipeRegistry.findImpl().updateRecipes();
             }, 2L);
         });
     }
@@ -144,7 +145,7 @@ public enum RecipeManager implements LifeCycleTask {
         recipeKeyToFileNameMap.clear();
 
         //重置所有配方的Nbt保留规则
-        CopyComponentsManager.INSTANCE.resetRecipeCopyNbtRules();
+        ResultProcessorManager.INSTANCE.resetRecipeProcessors();
 
         //还原被禁用的配方
         for (Recipe recipe : disabledRecipesCache) {

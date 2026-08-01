@@ -1,7 +1,7 @@
 package pers.yufiria.craftorithm.hook;
 
-import pers.yufiria.craftorithm.hook.recipe.copyComponents.AdvancedEnchantmentsEnchantments;
-import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsManager;
+import pers.yufiria.craftorithm.hook.recipe.resultProcessor.AdvancedEnchantmentsFactory;
+import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessorManager;
 
 public enum AdvancedEnchantmentsHook implements PluginHook {
 
@@ -18,18 +18,14 @@ public enum AdvancedEnchantmentsHook implements PluginHook {
     public boolean hook() {
         boolean pluginEnabled = isPluginEnabled();
         if (pluginEnabled) {
-            CopyComponentsManager.INSTANCE.registerCopyNbtRuleCreator(
-                RULE_NAME,
-                arg -> AdvancedEnchantmentsEnchantments.INSTANCE
-            );
+            ResultProcessorManager.INSTANCE.registerFactory(AdvancedEnchantmentsFactory.INSTANCE);
         }
         return pluginEnabled;
     }
 
-
     @Override
     public void unhook() {
-        CopyComponentsManager.INSTANCE.unregisterCopyNbtRule(RULE_NAME);
+        ResultProcessorManager.INSTANCE.unregisterFactory(RULE_NAME);
     }
 
 }

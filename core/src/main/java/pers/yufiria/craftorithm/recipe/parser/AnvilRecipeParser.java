@@ -15,8 +15,8 @@ import pers.yufiria.craftorithm.recipe.AnvilRecipe;
 import pers.yufiria.craftorithm.recipe.RecipeParser;
 import pers.yufiria.craftorithm.recipe.choice.RecipeChoiceParser;
 import pers.yufiria.craftorithm.recipe.choice.StackableItemIdChoice;
-import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsManager;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
+import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessorManager;
 import pers.yufiria.craftorithm.util.RecipeUtils;
 
 import java.util.List;
@@ -113,8 +113,11 @@ public enum AnvilRecipeParser implements RecipeParser<AnvilRecipe> {
             String additionId = recipeConfig.getString("addition");
             StackableItemIdChoice addition = (StackableItemIdChoice) choiceParser().parse(additionId);
             int costLevel = recipeConfig.getInt("cost_level", 0);
-            if (recipeConfig.isList("copy_components_rules")) {
-                CopyComponentsManager.INSTANCE.addRecipeCopyNbtRules(recipeKey, recipeConfig.getStringList("copy_components_rules"));
+            if (recipeConfig.isConfigurationSection("result_processors")) {
+                ConfigurationSection section = recipeConfig.getConfigurationSection("result_processors");
+                ResultProcessorManager.INSTANCE.addRecipeProcessors(recipeKey, section);
+            } else if (recipeConfig.isList("copy_components_rules")) {
+                ResultProcessorManager.INSTANCE.addRecipeProcessorsLegacy(recipeKey, recipeConfig.getStringList("copy_components_rules"));
             }
             AnvilRecipe anvilRecipe = new AnvilRecipe(recipeKey, result, base, addition);
             anvilRecipe.setCostLevel(costLevel);

@@ -16,8 +16,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessorManager;
+import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessors;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @EventListener
@@ -42,7 +45,7 @@ public enum SmeltResultRefreshHandler implements Listener {
     }
 
     @EventHandler
-    public void refreshSmeltResult(FurnaceSmeltEvent event) {
+    public void processSmeltResult(FurnaceSmeltEvent event) {
         Recipe recipe;
         if (CrypticLibBukkit.isPaper()) {
             //Paper及其衍生端直接通过事件获取
@@ -59,8 +62,14 @@ public enum SmeltResultRefreshHandler implements Listener {
             .flatMap(ItemManager.INSTANCE::matchItem)
             .ifPresent(refreshItem -> {
                 result.setItemMeta(refreshItem.getItemMeta());
-                event.setResult(result);
             });
+        // 处理结果处理器（烧炼配方的source是输入物品）
+        NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
+        if (recipeKey != null) {
+            Optional<ResultProcessors> processors = ResultProcessorManager.INSTANCE.getRecipeProcessors(recipeKey);
+            processors.ifPresent(p -> p.processItem(event.getSource(), result));
+        }
+        event.setResult(result);
     }
 
     @EventHandler
@@ -78,7 +87,7 @@ public enum SmeltResultRefreshHandler implements Listener {
     }
 
     @EventHandler
-    public void refreshBlockCookResult(BlockCookEvent event) {
+    public void processBlockCookResult(BlockCookEvent event) {
         Recipe recipe;
         if (CrypticLibBukkit.isPaper()) {
             //Paper及其衍生端直接通过事件获取
@@ -95,8 +104,14 @@ public enum SmeltResultRefreshHandler implements Listener {
             .flatMap(ItemManager.INSTANCE::matchItem)
             .ifPresent(refreshItem -> {
                 result.setItemMeta(refreshItem.getItemMeta());
-                event.setResult(result);
             });
+        // 处理结果处理器
+        NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
+        if (recipeKey != null) {
+            Optional<ResultProcessors> processors = ResultProcessorManager.INSTANCE.getRecipeProcessors(recipeKey);
+            processors.ifPresent(p -> p.processItem(null, result));
+        }
+        event.setResult(result);
     }
 
     private void putRecipeCache(Block block, CookingRecipe<?> recipe) {

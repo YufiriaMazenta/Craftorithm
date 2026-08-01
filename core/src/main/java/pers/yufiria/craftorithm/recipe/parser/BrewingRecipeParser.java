@@ -14,6 +14,7 @@ import pers.yufiria.craftorithm.recipe.RecipeParser;
 import pers.yufiria.craftorithm.recipe.choice.ItemIdRecipeChoiceParser;
 import pers.yufiria.craftorithm.recipe.choice.RecipeChoiceParser;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
+import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessorManager;
 
 public enum BrewingRecipeParser implements RecipeParser<BrewingRecipe> {
 
@@ -37,6 +38,10 @@ public enum BrewingRecipeParser implements RecipeParser<BrewingRecipe> {
             RecipeChoice input = choiceParser().parse(inputId);
             String ingredientId = recipeConfig.getString("ingredient");
             RecipeChoice ingredient = choiceParser().parse(ingredientId);
+            if (recipeConfig.isConfigurationSection("result_processors")) {
+                ConfigurationSection section = recipeConfig.getConfigurationSection("result_processors");
+                ResultProcessorManager.INSTANCE.addRecipeProcessors(recipeKey, section);
+            }
             return new BrewingRecipe(
                 recipeKey,
                 input,

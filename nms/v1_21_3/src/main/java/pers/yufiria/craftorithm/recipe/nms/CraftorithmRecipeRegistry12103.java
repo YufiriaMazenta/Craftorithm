@@ -7,6 +7,7 @@ import crypticlib.lifecycle.LifeCycleTaskSettings;
 import crypticlib.lifecycle.TaskRule;
 import net.minecraft.core.Holder;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.item.crafting.CraftingManager;
 import net.minecraft.world.item.crafting.IRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeStonecutting;
@@ -17,6 +18,8 @@ import org.spigotmc.AsyncCatcher;
 import pers.yufiria.craftorithm.api.recipe.CraftorithmRecipeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.util.RecipeUtils;
+
+import java.lang.reflect.Field;
 
 @LifeCycleTaskSettings(rules = {
     @TaskRule(lifeCycle = LifeCycle.LOAD)
@@ -104,6 +107,10 @@ public enum CraftorithmRecipeRegistry12103 implements CraftorithmRecipeRegistry,
         }
     }
 
+    @Override
+    public void updateRecipes() {
+        MinecraftServer.getServer().aI().finalizeRecipeLoading();
+    }
 
     @Override
     public void lifecycle(Object plugin, LifeCycle lifeCycle) {

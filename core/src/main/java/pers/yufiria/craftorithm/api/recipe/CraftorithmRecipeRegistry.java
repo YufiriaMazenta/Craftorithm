@@ -34,12 +34,14 @@ public interface CraftorithmRecipeRegistry {
     static CraftorithmRecipeRegistry findImpl() {
         CraftorithmRecipeRegistry cachedImpl = IMPL_CACHE.get();
         if (cachedImpl != null) {
+            IOHelper.info(cachedImpl.getClass().getName());
             return cachedImpl;
         }
         String currentVersionStr = MinecraftVersion.current().name();
         Optional<CraftorithmRecipeRegistry> registryOpt = REGISTRY_COMPAT.findImplementation(currentVersionStr);
         if (registryOpt.isPresent()) {
             IMPL_CACHE.set(registryOpt.get());
+            IOHelper.info(registryOpt.get().getClass().getName());
             return registryOpt.get();
         }
         if (UNSUPPORTED_VERSION_WARNED.compareAndSet(false, true)) {
@@ -65,6 +67,13 @@ public interface CraftorithmRecipeRegistry {
      */
     default boolean unregisterRecipe(NamespacedKey recipeKey, boolean updateRecipes) {
         return Bukkit.removeRecipe(recipeKey);
+    }
+
+    /**
+     * 用于给玩家更新配方列表
+     */
+    default void updateRecipes() {
+        Bukkit.updateRecipes();
     }
 
     enum RegisterResult {

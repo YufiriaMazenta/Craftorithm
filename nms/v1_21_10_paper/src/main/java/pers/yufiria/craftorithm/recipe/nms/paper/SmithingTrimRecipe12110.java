@@ -43,7 +43,7 @@ public class SmithingTrimRecipe12110 extends SmithingTrimRecipe {
         if (placementInfo == null) {
             placementInfo = PlacementInfo.createFromOptionals(List.of(Optional.empty()));
         }
-        return super.placementInfo();
+        return placementInfo;
     }
 
     @Override

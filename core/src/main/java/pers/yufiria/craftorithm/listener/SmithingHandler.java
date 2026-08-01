@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.listener;
 
-import crypticlib.MinecraftVersion;
 import crypticlib.listener.EventListener;
 import crypticlib.util.ItemHelper;
 import org.bukkit.NamespacedKey;
@@ -10,17 +9,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareSmithingEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.meta.ItemMeta;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
-import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsManager;
-import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsRules;
+import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessorManager;
+import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessors;
 import pers.yufiria.craftorithm.util.EventUtils;
 
-import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 @EventListener
 public enum SmithingHandler implements Listener {
@@ -28,61 +26,50 @@ public enum SmithingHandler implements Listener {
     INSTANCE;
 
     /**
-     * 预处理配方结果
+     * 处理配方结果
      */
     @EventHandler(priority = EventPriority.MONITOR)
-    public void preprocessResult(PrepareSmithingEvent event) {
+    public void processResult(PrepareSmithingEvent event) {
         if (event.getResult() == null)
             return;
         Recipe recipe = event.getInventory().getRecipe();
         if (recipe == null)
             return;
-        RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipe);
-        if (recipeType.equals(SimpleRecipeTypes.VANILLA_SMITHING_TRIM)) {
-            return;
-        }
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
         if (!recipeKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
             return;
         }
 
-        ItemStack result = event.getInventory().getRecipe().getResult();
-        if (ItemHelper.isAir(result)) {
-            //Trim类型的锻造配方, 他的结果是air,如果接着往下设置,会报错
+
+        AtomicReference<ItemStack> result = new AtomicReference<>(event.getResult());
+        if (ItemHelper.isAir(result.get())) {
+            //如果结果是air,如果接着往下设置,会报错
             return;
         }
-        ItemManager.INSTANCE.matchItemId(result, true)
+        ItemManager.INSTANCE.matchItemId(result.get(), true)
             .flatMap(id -> EventUtils.getViewer(event)
                 .flatMap(player -> ItemManager.INSTANCE.matchItem(id, player))
             )
             .ifPresent(refreshItem -> {
-                if (!result.isSimilar(refreshItem)) {
-                    result.setItemMeta(refreshItem.getItemMeta());
+                if (!result.get().isSimilar(refreshItem)) {
+                    result.get().setItemMeta(refreshItem.getItemMeta());
                 }
             });
 
-        //处理NBT保留操作
-        Optional<CopyComponentsRules> recipeCopyNbtRules = CopyComponentsManager.INSTANCE.getRecipeCopyNbtRules(recipeKey);
-        recipeCopyNbtRules.ifPresentOrElse(
+        //处理结果处理器
+        Optional<ResultProcessors> recipeProcessors = ResultProcessorManager.INSTANCE.getRecipeProcessors(recipeKey);
+        recipeProcessors.ifPresentOrElse(
             rules -> {
-                ItemMeta resultMeta = result.getItemMeta();
-                ItemStack base;
-                if (MinecraftVersion.CURRENT.before(MinecraftVersion.V1_20)) {
-                    base = event.getInventory().getItem(0);
-                } else {
-                    base = event.getInventory().getItem(1);
-                }
-                ItemMeta baseMeta = Objects.requireNonNull(base).getItemMeta();
-                resultMeta = rules.processItemMeta(baseMeta, resultMeta);
-                result.setItemMeta(resultMeta);
+                ItemStack base = event.getInventory().getItem(1);
+                rules.processItem(base, result.get());
             },
             () -> {
-                result.setItemMeta(recipe.getResult().getItemMeta());
+                result.get().setItemMeta(recipe.getResult().getItemMeta());
             }
         );
 
-        event.setResult(result);
-        event.getInventory().setResult(result);
+        event.setResult(result.get());
+        event.getInventory().setResult(result.get());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

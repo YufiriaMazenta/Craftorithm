@@ -121,6 +121,11 @@ public enum CraftorithmRecipeRegistry12110 implements CraftorithmRecipeRegistry,
     }
 
     @Override
+    public void updateRecipes() {
+        MinecraftServer.getServer().getRecipeManager().finalizeRecipeLoading();
+    }
+
+    @Override
     public void lifecycle(Object plugin, LifeCycle lifeCycle) {
         //这个版本兼容1.21.9-1.21.11
         if (CrypticLibBukkit.isPaper()) {

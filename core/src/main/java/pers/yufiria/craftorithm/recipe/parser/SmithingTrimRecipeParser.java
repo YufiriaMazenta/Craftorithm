@@ -10,8 +10,8 @@ import org.bukkit.inventory.SmithingTrimRecipe;
 import org.bukkit.inventory.meta.trim.TrimPattern;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.Craftorithm;
-import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsManager;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
+import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessorManager;
 
 public enum SmithingTrimRecipeParser implements VanillaRecipeParser<SmithingRecipe> {
 
@@ -28,8 +28,11 @@ public enum SmithingTrimRecipeParser implements VanillaRecipeParser<SmithingReci
             RecipeChoice addition = choiceParser().parse(additionId);
             String templateId = recipeConfig.getString("template");
             RecipeChoice template = choiceParser().parse(templateId);
-            if (recipeConfig.isList("copy_components_rules")) {
-                CopyComponentsManager.INSTANCE.addRecipeCopyNbtRules(recipeKey, recipeConfig.getStringList("copy_components_rules"));
+            if (recipeConfig.isConfigurationSection("result_processors")) {
+                ConfigurationSection section = recipeConfig.getConfigurationSection("result_processors");
+                ResultProcessorManager.INSTANCE.addRecipeProcessors(recipeKey, section);
+            } else if (recipeConfig.isList("copy_components_rules")) {
+                ResultProcessorManager.INSTANCE.addRecipeProcessorsLegacy(recipeKey, recipeConfig.getStringList("copy_components_rules"));
             }
             if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_21_5)) {
                 String trimPatternKeyStr = recipeConfig.getString("trim_pattern");
