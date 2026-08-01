@@ -34,7 +34,7 @@ public class SmithingTransformRecipe12110 extends SmithingTransformRecipe {
         if (placementInfo == null) {
             placementInfo = PlacementInfo.createFromOptionals(List.of(Optional.empty()));
         }
-        return super.placementInfo();
+        return placementInfo;
     }
 
     @Override

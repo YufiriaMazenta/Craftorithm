@@ -117,6 +117,11 @@ public enum CraftorithmRecipeRegistry260100 implements CraftorithmRecipeRegistry
     }
 
     @Override
+    public void updateRecipes() {
+        MinecraftServer.getServer().getRecipeManager().finalizeRecipeLoading();
+    }
+
+    @Override
     public void lifecycle(Object plugin, LifeCycle lifeCycle) {
         if (CrypticLibBukkit.isPaper()) {
             REGISTRY_COMPAT.register(MinecraftVersion.V26_1.name(), () -> this);

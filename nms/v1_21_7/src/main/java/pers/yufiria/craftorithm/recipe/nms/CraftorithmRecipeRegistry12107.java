@@ -109,6 +109,11 @@ public enum CraftorithmRecipeRegistry12107 implements CraftorithmRecipeRegistry,
     }
 
     @Override
+    public void updateRecipes() {
+        MinecraftServer.getServer().aI().finalizeRecipeLoading();
+    }
+
+    @Override
     public void lifecycle(Object plugin, LifeCycle lifeCycle) {
         REGISTRY_COMPAT.register(
             MinecraftVersion.V1_21_7.name(),
