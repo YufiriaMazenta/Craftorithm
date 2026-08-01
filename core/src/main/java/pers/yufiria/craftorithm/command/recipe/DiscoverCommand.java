@@ -61,20 +61,14 @@ public class DiscoverCommand extends CommandNode {
                 pattern = null;
             }
 
-
-            List<NamespacedKey> discoverRecipes = new ArrayList<>();
-            for (NamespacedKey recipeKey : RecipeManager.INSTANCE.serverRecipeKeys()) {
-                String keyStr = recipeKey.toString();
-                boolean matched;
-                if (pattern != null) {
-                    matched = pattern.matcher(keyStr).matches();
+            final Pattern finalPattern = pattern;
+            List<NamespacedKey> discoverRecipes = RecipeManager.INSTANCE.serverRecipeKeys().stream().filter(key -> {
+                if (finalPattern != null) {
+                    return finalPattern.matcher(key.toString()).matches();
                 } else {
-                    matched = keyStr.equals(patternStr);
+                    return key.toString().equals(patternStr);
                 }
-                if (matched) {
-                    discoverRecipes.add(recipeKey);
-                }
-            }
+            }).toList();
 
             CrypticLibBukkit.scheduler().runOnEntity(target, () -> {
                 int count = target.discoverRecipes(discoverRecipes);
