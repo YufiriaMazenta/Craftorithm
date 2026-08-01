@@ -35,19 +35,21 @@ public enum CraftingHandler implements Listener {
     }
 
     private void refreshResultItem(PrepareItemCraftEvent event, ItemStack item, NamespacedKey recipeKey) {
-        ItemManager.INSTANCE.matchItemId(item, true)
+        // clone 避免直接修改 Bukkit Recipe 内部缓存的共享对象
+        ItemStack result = item.clone();
+        ItemManager.INSTANCE.matchItemId(result, true)
             .flatMap(id -> EventUtils.getViewer(event)
                 .flatMap(player -> ItemManager.INSTANCE.matchItem(id, player))
             )
             .ifPresent(refreshItem -> {
-                if (!item.isSimilar(refreshItem)) {
-                    item.setItemMeta(refreshItem.getItemMeta());
+                if (!result.isSimilar(refreshItem)) {
+                    result.setItemMeta(refreshItem.getItemMeta());
                 }
             });
         // 处理结果处理器（工作台配方没有sourceItem）
         Optional<ResultProcessors> processors = ResultProcessorManager.INSTANCE.getRecipeProcessors(recipeKey);
-        processors.ifPresent(p -> p.processItem(null, item));
-        event.getInventory().setResult(item);
+        processors.ifPresent(p -> p.processItem(null, result));
+        event.getInventory().setResult(result);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

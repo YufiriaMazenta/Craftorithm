@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.recipe.resultProcessor.impl;
 
+import crypticlib.util.IOHelper;
 import crypticlib.util.ReflectionHelper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
@@ -13,6 +14,7 @@ import pers.yufiria.craftorithm.recipe.resultProcessor.ComponentProcessorFactory
 import pers.yufiria.craftorithm.recipe.resultProcessor.ProcessingStrategy;
 import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessor;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 public class CustomPersistentDataProcessorFactory implements ComponentProcessorFactory {
@@ -27,14 +29,14 @@ public class CustomPersistentDataProcessorFactory implements ComponentProcessorF
     @Override
     public ResultProcessor createProcessor(ProcessingStrategy strategy, @Nullable ConfigurationSection data) {
         return switch (strategy) {
-            case COPY_FROM_SOURCE -> createCopyFromBase(data);
+            case COPY_FROM_SOURCE -> createCopyFromSource(data);
             case ADD -> createAdd(data);
-            case MERGE_SOURCE -> createMergeBase(data);
+            case MERGE_SOURCE -> createMergeSource(data);
             case REMOVE -> createRemove(data);
         };
     }
 
-    private ResultProcessor createCopyFromBase(@Nullable ConfigurationSection data) {
+    private ResultProcessor createCopyFromSource(@Nullable ConfigurationSection data) {
         NamespacedKey key = parseKey(data);
         PersistentDataType<?, ?> type = parseType(data);
         return new ResultProcessor() {
@@ -45,6 +47,7 @@ public class CustomPersistentDataProcessorFactory implements ComponentProcessorF
 
             @Override
             public void processItem(@Nullable ItemStack sourceItem, @NotNull ItemStack resultItem) {
+                if (sourceItem == null) return;
                 ItemMeta sourceMeta = sourceItem.getItemMeta();
                 ItemMeta resultMeta = resultItem.getItemMeta();
                 PersistentDataContainer sourcePdc = sourceMeta.getPersistentDataContainer();
@@ -102,7 +105,7 @@ public class CustomPersistentDataProcessorFactory implements ComponentProcessorF
         };
     }
 
-    private ResultProcessor createMergeBase(@Nullable ConfigurationSection data) {
+    private ResultProcessor createMergeSource(@Nullable ConfigurationSection data) {
         NamespacedKey key = parseKey(data);
         PersistentDataType<?, ?> type = parseType(data);
         return new ResultProcessor() {
@@ -113,6 +116,7 @@ public class CustomPersistentDataProcessorFactory implements ComponentProcessorF
 
             @Override
             public void processItem(@Nullable ItemStack sourceItem, @NotNull ItemStack resultItem) {
+                if (sourceItem == null) return;
                 ItemMeta sourceMeta = sourceItem.getItemMeta();
                 ItemMeta resultMeta = resultItem.getItemMeta();
                 PersistentDataContainer sourcePdc = sourceMeta.getPersistentDataContainer();
@@ -204,7 +208,16 @@ public class CustomPersistentDataProcessorFactory implements ComponentProcessorF
     private static PersistentDataType<?, ?> parseDataType(String typeStr) {
         String upperTypeStr = typeStr.toUpperCase();
         Class<PersistentDataType> dataTypeClass = PersistentDataType.class;
-        Object dataType = ReflectionHelper.getFieldObj(ReflectionHelper.getField(dataTypeClass, upperTypeStr), null);
+        Field field = ReflectionHelper.getField(dataTypeClass, upperTypeStr);
+        if (field == null) {
+            IOHelper.info("&eUnknown PersistentDataType: " + typeStr);
+            return null;
+        }
+        Object dataType = ReflectionHelper.getFieldObj(field, null);
+        if (dataType == null) {
+            IOHelper.info("&eUnknown PersistentDataType: " + typeStr);
+            return null;
+        }
         return (PersistentDataType<?, ?>) dataType;
     }
 

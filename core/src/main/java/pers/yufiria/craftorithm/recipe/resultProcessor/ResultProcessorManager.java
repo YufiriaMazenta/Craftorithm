@@ -54,7 +54,13 @@ public enum ResultProcessorManager {
                 IOHelper.info("&eMissing 'type' for result_processor: " + componentName);
                 continue;
             }
-            ProcessingStrategy strategy = ProcessingStrategy.fromString(strategyStr);
+            ProcessingStrategy strategy;
+            try {
+                strategy = ProcessingStrategy.fromString(strategyStr);
+            } catch (IllegalArgumentException e) {
+                IOHelper.info("&eUnknown processing strategy '" + strategyStr + "' for result_processor: " + componentName);
+                continue;
+            }
             ConfigurationSection data = entry.getConfigurationSection("data");
             ComponentProcessorFactory factory = factoryMap.get(componentName);
             if (factory == null) {
@@ -67,7 +73,7 @@ public enum ResultProcessorManager {
     }
 
     /**
-     * 旧格式兼容: copy_components_rules 列表自动转为 copy_from_base
+     * 旧格式兼容: copy_components_rules 列表自动转为 copy_from_source
      */
     public void addRecipeProcessorsLegacy(NamespacedKey recipeKey, List<String> ruleStrList) {
         List<ResultProcessor> processors = new ArrayList<>();

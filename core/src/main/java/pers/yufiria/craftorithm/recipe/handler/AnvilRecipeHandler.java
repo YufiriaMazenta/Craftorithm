@@ -83,10 +83,8 @@ public enum AnvilRecipeHandler implements Listener {
             StackableItemIdChoice recipeAdditionId = anvilRecipe.addition();
             if (!recipeBaseId.test(base))
                 continue;
-            BukkitMsgSender.INSTANCE.debug("matched base");
             if (!recipeAdditionId.test(addition))
                 continue;
-            BukkitMsgSender.INSTANCE.debug("matched addition");
             return anvilRecipe;
         }
         return null;
@@ -261,7 +259,7 @@ public enum AnvilRecipeHandler implements Listener {
                 int costAmount1 = needBaseNum * canCraftNum;
                 int costAmount2 = needAdditionNum * canCraftNum;
                 int finalCostLevel = costLevel * canCraftNum;
-                if (!PlayerUtils.isCreativeOrSpectator(player) && player.getLevel() < costLevel) {
+                if (!PlayerUtils.isCreativeOrSpectator(player) && player.getLevel() < finalCostLevel) {
                     break;
                 }
                 base.setAmount(baseNum - costAmount1);

@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.recipe.resultProcessor.impl;
 
 import crypticlib.MinecraftVersion;
+import crypticlib.util.IOHelper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.attribute.Attribute;
@@ -20,6 +21,7 @@ import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 
 public enum SimpleComponentProcessorFactory implements ComponentProcessorFactory {
@@ -28,7 +30,7 @@ public enum SimpleComponentProcessorFactory implements ComponentProcessorFactory
         @Override
         public ResultProcessor createProcessor(ProcessingStrategy strategy, @Nullable ConfigurationSection data) {
             return switch (strategy) {
-                case COPY_FROM_SOURCE -> processor("all", (sourceItem, resultItem) -> {
+                case COPY_FROM_SOURCE -> processorRequireSource("all", (sourceItem, resultItem) -> {
                     resultItem.setItemMeta(sourceItem.getItemMeta());
                 });
                 default -> unsupported("all", strategy);
@@ -39,7 +41,7 @@ public enum SimpleComponentProcessorFactory implements ComponentProcessorFactory
         @Override
         public ResultProcessor createProcessor(ProcessingStrategy strategy, @Nullable ConfigurationSection data) {
             return switch (strategy) {
-                case COPY_FROM_SOURCE -> processor("display_name", (sourceItem, resultItem) -> {
+                case COPY_FROM_SOURCE -> processorRequireSource("display_name", (sourceItem, resultItem) -> {
                     ItemMeta sourceMeta = sourceItem.getItemMeta();
                     ItemMeta resultMeta = resultItem.getItemMeta();
                     if (sourceMeta.hasDisplayName()) {
@@ -68,7 +70,7 @@ public enum SimpleComponentProcessorFactory implements ComponentProcessorFactory
         @Override
         public ResultProcessor createProcessor(ProcessingStrategy strategy, @Nullable ConfigurationSection data) {
             return switch (strategy) {
-                case COPY_FROM_SOURCE -> processor("enchantments", (sourceItem, resultItem) -> {
+                case COPY_FROM_SOURCE -> processorRequireSource("enchantments", (sourceItem, resultItem) -> {
                     ItemMeta sourceMeta = sourceItem.getItemMeta();
                     ItemMeta resultMeta = resultItem.getItemMeta();
                     if (sourceMeta.hasEnchants()) {
@@ -92,7 +94,7 @@ public enum SimpleComponentProcessorFactory implements ComponentProcessorFactory
                         resultItem.setItemMeta(resultMeta);
                     });
                 }
-                case MERGE_SOURCE -> processor("enchantments", (sourceItem, resultItem) -> {
+                case MERGE_SOURCE -> processorRequireSource("enchantments", (sourceItem, resultItem) -> {
                     ItemMeta sourceMeta = sourceItem.getItemMeta();
                     ItemMeta resultMeta = resultItem.getItemMeta();
                     if (sourceMeta.hasEnchants()) {
@@ -135,7 +137,7 @@ public enum SimpleComponentProcessorFactory implements ComponentProcessorFactory
         @Override
         public ResultProcessor createProcessor(ProcessingStrategy strategy, @Nullable ConfigurationSection data) {
             return switch (strategy) {
-                case COPY_FROM_SOURCE -> processor("attributes", (sourceItem, resultItem) -> {
+                case COPY_FROM_SOURCE -> processorRequireSource("attributes", (sourceItem, resultItem) -> {
                     ItemMeta sourceMeta = sourceItem.getItemMeta();
                     ItemMeta resultMeta = resultItem.getItemMeta();
                     if (sourceMeta.hasAttributeModifiers()) {
@@ -144,17 +146,14 @@ public enum SimpleComponentProcessorFactory implements ComponentProcessorFactory
                     resultItem.setItemMeta(resultMeta);
                 });
                 case ADD -> {
-                    List<ConfigurationSection> attrList = data != null ? data.getMapList("value").stream()
-                        .filter(m -> m instanceof ConfigurationSection)
-                        .map(m -> (ConfigurationSection) m)
-                        .toList() : List.of();
+                    List<Map<?, ?>> attrList = data != null ? data.getMapList("value") : List.of();
                     yield processor("attributes", (sourceItem, resultItem) -> {
                         ItemMeta resultMeta = resultItem.getItemMeta();
                         applyAttributeModifiers(resultMeta, attrList);
                         resultItem.setItemMeta(resultMeta);
                     });
                 }
-                case MERGE_SOURCE -> processor("attributes", (sourceItem, resultItem) -> {
+                case MERGE_SOURCE -> processorRequireSource("attributes", (sourceItem, resultItem) -> {
                     ItemMeta sourceMeta = sourceItem.getItemMeta();
                     ItemMeta resultMeta = resultItem.getItemMeta();
                     if (sourceMeta.hasAttributeModifiers()) {
@@ -186,7 +185,7 @@ public enum SimpleComponentProcessorFactory implements ComponentProcessorFactory
         @Override
         public ResultProcessor createProcessor(ProcessingStrategy strategy, @Nullable ConfigurationSection data) {
             return switch (strategy) {
-                case COPY_FROM_SOURCE -> processor("item_flag", (sourceItem, resultItem) -> {
+                case COPY_FROM_SOURCE -> processorRequireSource("item_flag", (sourceItem, resultItem) -> {
                     ItemMeta sourceMeta = sourceItem.getItemMeta();
                     ItemMeta resultMeta = resultItem.getItemMeta();
                     resultMeta.removeItemFlags(ItemFlag.values());
@@ -198,12 +197,16 @@ public enum SimpleComponentProcessorFactory implements ComponentProcessorFactory
                     yield processor("item_flag", (sourceItem, resultItem) -> {
                         ItemMeta resultMeta = resultItem.getItemMeta();
                         for (String flagName : flagNames) {
-                            resultMeta.addItemFlags(ItemFlag.valueOf(flagName.toUpperCase()));
+                            try {
+                                resultMeta.addItemFlags(ItemFlag.valueOf(flagName.toUpperCase()));
+                            } catch (IllegalArgumentException e) {
+                                IOHelper.info("&eUnknown ItemFlag: " + flagName);
+                            }
                         }
                         resultItem.setItemMeta(resultMeta);
                     });
                 }
-                case MERGE_SOURCE -> processor("item_flag", (sourceItem, resultItem) -> {
+                case MERGE_SOURCE -> processorRequireSource("item_flag", (sourceItem, resultItem) -> {
                     ItemMeta sourceMeta = sourceItem.getItemMeta();
                     ItemMeta resultMeta = resultItem.getItemMeta();
                     sourceMeta.getItemFlags().forEach(resultMeta::addItemFlags);
@@ -228,7 +231,7 @@ public enum SimpleComponentProcessorFactory implements ComponentProcessorFactory
         @Override
         public ResultProcessor createProcessor(ProcessingStrategy strategy, @Nullable ConfigurationSection data) {
             return switch (strategy) {
-                case COPY_FROM_SOURCE -> processor("lore", (sourceItem, resultItem) -> {
+                case COPY_FROM_SOURCE -> processorRequireSource("lore", (sourceItem, resultItem) -> {
                     ItemMeta sourceMeta = sourceItem.getItemMeta();
                     ItemMeta resultMeta = resultItem.getItemMeta();
                     if (sourceMeta.hasLore()) {
@@ -244,17 +247,17 @@ public enum SimpleComponentProcessorFactory implements ComponentProcessorFactory
                         resultItem.setItemMeta(resultMeta);
                     });
                 }
-                case MERGE_SOURCE -> processor("lore", (sourceItem, resultItem) -> {
+                case MERGE_SOURCE -> processorRequireSource("lore", (sourceItem, resultItem) -> {
                     ItemMeta sourceMeta = sourceItem.getItemMeta();
                     ItemMeta resultMeta = resultItem.getItemMeta();
                     if (sourceMeta.hasLore()) {
-                        List<String> baseLore = sourceMeta.getLore();
+                        List<String> sourceLore = sourceMeta.getLore();
                         if (resultMeta.hasLore()) {
                             List<String> merged = new ArrayList<>(resultMeta.getLore());
-                            merged.addAll(baseLore);
+                            merged.addAll(sourceLore);
                             resultMeta.setLore(merged);
                         } else {
-                            resultMeta.setLore(baseLore);
+                            resultMeta.setLore(sourceLore);
                         }
                     }
                     resultItem.setItemMeta(resultMeta);
@@ -280,13 +283,13 @@ public enum SimpleComponentProcessorFactory implements ComponentProcessorFactory
         @Override
         public ResultProcessor createProcessor(ProcessingStrategy strategy, @Nullable ConfigurationSection data) {
             return switch (strategy) {
-                case COPY_FROM_SOURCE -> processor("trim", (sourceItem, resultItem) -> {
+                case COPY_FROM_SOURCE -> processorRequireSource("trim", (sourceItem, resultItem) -> {
                     ItemMeta sourceMeta = sourceItem.getItemMeta();
                     ItemMeta resultMeta = resultItem.getItemMeta();
-                    if (sourceMeta instanceof ArmorMeta baseArmorMeta
+                    if (sourceMeta instanceof ArmorMeta sourceArmorMeta
                         && resultMeta instanceof ArmorMeta resultArmorMeta
-                        && baseArmorMeta.hasTrim()) {
-                        resultArmorMeta.setTrim(baseArmorMeta.getTrim());
+                        && sourceArmorMeta.hasTrim()) {
+                        resultArmorMeta.setTrim(sourceArmorMeta.getTrim());
                     }
                     resultItem.setItemMeta(resultMeta);
                 });
@@ -305,7 +308,7 @@ public enum SimpleComponentProcessorFactory implements ComponentProcessorFactory
         @Override
         public ResultProcessor createProcessor(ProcessingStrategy strategy, @Nullable ConfigurationSection data) {
             return switch (strategy) {
-                case COPY_FROM_SOURCE -> processor("unbreakable", (sourceItem, resultItem) -> {
+                case COPY_FROM_SOURCE -> processorRequireSource("unbreakable", (sourceItem, resultItem) -> {
                     ItemMeta sourceMeta = sourceItem.getItemMeta();
                     ItemMeta resultMeta = resultItem.getItemMeta();
                     resultMeta.setUnbreakable(sourceMeta.isUnbreakable());
@@ -332,7 +335,7 @@ public enum SimpleComponentProcessorFactory implements ComponentProcessorFactory
         @Override
         public ResultProcessor createProcessor(ProcessingStrategy strategy, @Nullable ConfigurationSection data) {
             return switch (strategy) {
-                case COPY_FROM_SOURCE -> processor("custom_model_data", (sourceItem, resultItem) -> {
+                case COPY_FROM_SOURCE -> processorRequireSource("custom_model_data", (sourceItem, resultItem) -> {
                     ItemMeta sourceMeta = sourceItem.getItemMeta();
                     ItemMeta resultMeta = resultItem.getItemMeta();
                     if (sourceMeta.hasCustomModelData()) {
@@ -361,7 +364,7 @@ public enum SimpleComponentProcessorFactory implements ComponentProcessorFactory
         @Override
         public ResultProcessor createProcessor(ProcessingStrategy strategy, @Nullable ConfigurationSection data) {
             return switch (strategy) {
-                case COPY_FROM_SOURCE -> processor("food", (sourceItem, resultItem) -> {
+                case COPY_FROM_SOURCE -> processorRequireSource("food", (sourceItem, resultItem) -> {
                     ItemMeta sourceMeta = sourceItem.getItemMeta();
                     ItemMeta resultMeta = resultItem.getItemMeta();
                     if (sourceMeta.hasFood()) {
@@ -382,7 +385,7 @@ public enum SimpleComponentProcessorFactory implements ComponentProcessorFactory
         @Override
         public ResultProcessor createProcessor(ProcessingStrategy strategy, @Nullable ConfigurationSection data) {
             return switch (strategy) {
-                case COPY_FROM_SOURCE -> processor("hide_tooltip", (sourceItem, resultItem) -> {
+                case COPY_FROM_SOURCE -> processorRequireSource("hide_tooltip", (sourceItem, resultItem) -> {
                     ItemMeta sourceMeta = sourceItem.getItemMeta();
                     ItemMeta resultMeta = resultItem.getItemMeta();
                     resultMeta.setHideTooltip(sourceMeta.isHideTooltip());
@@ -409,7 +412,7 @@ public enum SimpleComponentProcessorFactory implements ComponentProcessorFactory
         @Override
         public ResultProcessor createProcessor(ProcessingStrategy strategy, @Nullable ConfigurationSection data) {
             return switch (strategy) {
-                case COPY_FROM_SOURCE -> processor("item_name", (sourceItem, resultItem) -> {
+                case COPY_FROM_SOURCE -> processorRequireSource("item_name", (sourceItem, resultItem) -> {
                     ItemMeta sourceMeta = sourceItem.getItemMeta();
                     ItemMeta resultMeta = resultItem.getItemMeta();
                     if (sourceMeta.hasItemName()) {
@@ -438,7 +441,7 @@ public enum SimpleComponentProcessorFactory implements ComponentProcessorFactory
         @Override
         public ResultProcessor createProcessor(ProcessingStrategy strategy, @Nullable ConfigurationSection data) {
             return switch (strategy) {
-                case COPY_FROM_SOURCE -> processor("max_stack_size", (sourceItem, resultItem) -> {
+                case COPY_FROM_SOURCE -> processorRequireSource("max_stack_size", (sourceItem, resultItem) -> {
                     ItemMeta sourceMeta = sourceItem.getItemMeta();
                     ItemMeta resultMeta = resultItem.getItemMeta();
                     if (sourceMeta.hasMaxStackSize()) {
@@ -467,7 +470,7 @@ public enum SimpleComponentProcessorFactory implements ComponentProcessorFactory
         @Override
         public ResultProcessor createProcessor(ProcessingStrategy strategy, @Nullable ConfigurationSection data) {
             return switch (strategy) {
-                case COPY_FROM_SOURCE -> processor("rarity", (sourceItem, resultItem) -> {
+                case COPY_FROM_SOURCE -> processorRequireSource("rarity", (sourceItem, resultItem) -> {
                     ItemMeta sourceMeta = sourceItem.getItemMeta();
                     ItemMeta resultMeta = resultItem.getItemMeta();
                     if (sourceMeta.hasRarity()) {
@@ -488,7 +491,7 @@ public enum SimpleComponentProcessorFactory implements ComponentProcessorFactory
         @Override
         public ResultProcessor createProcessor(ProcessingStrategy strategy, @Nullable ConfigurationSection data) {
             return switch (strategy) {
-                case COPY_FROM_SOURCE -> processor("tool", (sourceItem, resultItem) -> {
+                case COPY_FROM_SOURCE -> processorRequireSource("tool", (sourceItem, resultItem) -> {
                     ItemMeta sourceMeta = sourceItem.getItemMeta();
                     ItemMeta resultMeta = resultItem.getItemMeta();
                     if (sourceMeta.hasTool()) {
@@ -509,7 +512,7 @@ public enum SimpleComponentProcessorFactory implements ComponentProcessorFactory
         @Override
         public ResultProcessor createProcessor(ProcessingStrategy strategy, @Nullable ConfigurationSection data) {
             return switch (strategy) {
-                case COPY_FROM_SOURCE -> processor("fire_resistance", (sourceItem, resultItem) -> {
+                case COPY_FROM_SOURCE -> processorRequireSource("fire_resistance", (sourceItem, resultItem) -> {
                     ItemMeta sourceMeta = sourceItem.getItemMeta();
                     ItemMeta resultMeta = resultItem.getItemMeta();
                     resultMeta.setFireResistant(sourceMeta.isFireResistant());
@@ -536,7 +539,7 @@ public enum SimpleComponentProcessorFactory implements ComponentProcessorFactory
         @Override
         public ResultProcessor createProcessor(ProcessingStrategy strategy, @Nullable ConfigurationSection data) {
             return switch (strategy) {
-                case COPY_FROM_SOURCE -> processor("custom_model_data_component", (sourceItem, resultItem) -> {
+                case COPY_FROM_SOURCE -> processorRequireSource("custom_model_data_component", (sourceItem, resultItem) -> {
                     ItemMeta sourceMeta = sourceItem.getItemMeta();
                     ItemMeta resultMeta = resultItem.getItemMeta();
                     resultMeta.setCustomModelDataComponent(sourceMeta.getCustomModelDataComponent());
@@ -555,7 +558,7 @@ public enum SimpleComponentProcessorFactory implements ComponentProcessorFactory
         @Override
         public ResultProcessor createProcessor(ProcessingStrategy strategy, @Nullable ConfigurationSection data) {
             return switch (strategy) {
-                case COPY_FROM_SOURCE -> processor("item_model", (sourceItem, resultItem) -> {
+                case COPY_FROM_SOURCE -> processorRequireSource("item_model", (sourceItem, resultItem) -> {
                     ItemMeta sourceMeta = sourceItem.getItemMeta();
                     ItemMeta resultMeta = resultItem.getItemMeta();
                     if (sourceMeta.hasItemModel()) {
@@ -612,6 +615,25 @@ public enum SimpleComponentProcessorFactory implements ComponentProcessorFactory
         };
     }
 
+    /**
+     * 创建需要 sourceItem 不为 null 的 processor。
+     * 当 sourceItem 为 null 时（如工作台配方），直接跳过，不抛异常。
+     */
+    private static ResultProcessor processorRequireSource(String name, BiConsumer<ItemStack, ItemStack> action) {
+        return new ResultProcessor() {
+            @Override
+            public String processorName() {
+                return name;
+            }
+
+            @Override
+            public void processItem(@Nullable ItemStack sourceItem, @NotNull ItemStack resultItem) {
+                if (sourceItem == null) return;
+                action.accept(sourceItem, resultItem);
+            }
+        };
+    }
+
     private static ResultProcessor unsupported(String component, ProcessingStrategy strategy) {
         throw new UnsupportedOperationException(component + " does not support " + strategy);
     }
@@ -631,21 +653,22 @@ public enum SimpleComponentProcessorFactory implements ComponentProcessorFactory
         return result;
     }
 
-    private static void applyAttributeModifiers(ItemMeta meta, List<ConfigurationSection> attrList) {
-        for (ConfigurationSection attrEntry : attrList) {
-            String attrName = attrEntry.getString("attribute");
+    private static void applyAttributeModifiers(ItemMeta meta, List<Map<?, ?>> attrList) {
+        for (Map<?, ?> attrEntry : attrList) {
+            String attrName = (String) attrEntry.get("attribute");
             if (attrName == null) continue;
             Attribute attr = Registry.ATTRIBUTE.get(NamespacedKey.fromString(attrName));
             if (attr == null) continue;
-            String slotStr = attrEntry.getString("slot");
+            String slotStr = (String) attrEntry.get("slot");
             EquipmentSlotGroup slotGroup = slotStr != null
                 ? EquipmentSlotGroup.getByName(slotStr.toLowerCase())
                 : EquipmentSlotGroup.ANY;
-            String opStr = attrEntry.getString("operation");
+            String opStr = (String) attrEntry.get("operation");
             AttributeModifier.Operation op = opStr != null
                 ? AttributeModifier.Operation.valueOf(opStr.toUpperCase())
                 : AttributeModifier.Operation.ADD_NUMBER;
-            double amount = attrEntry.getDouble("amount");
+            Object amountObj = attrEntry.get("amount");
+            double amount = amountObj instanceof Number n ? n.doubleValue() : 0.0;
             NamespacedKey key = new NamespacedKey("craftorithm", attrName.toLowerCase().replace(":", "_"));
             AttributeModifier modifier = new AttributeModifier(key, amount, op, slotGroup);
             meta.addAttributeModifier(attr, modifier);
