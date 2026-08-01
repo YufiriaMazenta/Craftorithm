@@ -55,6 +55,12 @@ command:
     success: '<prefix> &aRecipe <recipe_file_name> (<recipe_id>) edited successfully.'
   recipebook:
     type_not_found: '<prefix> &cRecipe type <recipe_type> does not exist.'
+  discover:
+    success: '<prefix> &aDiscovered <count> recipe(s) for player <player_name>.'
+    no_match: '<prefix> &cNo recipes matched the given pattern.'
+  undiscover:
+    success: '<prefix> &aUndiscovered <count> recipe(s) for player <player_name>.'
+    no_match: '<prefix> &cNo recipes matched the given pattern.'
 recipe_type_name:
   vanilla_shaped: Shaped Recipe
   vanilla_shapeless: Shapeless Recipe

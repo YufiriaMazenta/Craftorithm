@@ -46,6 +46,10 @@ public class Languages {
     public static final StringLangEntry COMMAND_EDIT_RECIPE_NOT_FOUND = new StringLangEntry("command.edit.recipe_not_found");
     public static final StringLangEntry COMMAND_EDIT_SUCCESS = new StringLangEntry("command.edit.success");
     public static final StringLangEntry COMMAND_RECIPEBOOK_TYPE_NOT_FOUND = new StringLangEntry("command.recipebook.type_not_found");
+    public static final StringLangEntry COMMAND_DISCOVER_SUCCESS = new StringLangEntry("command.discover.success");
+    public static final StringLangEntry COMMAND_DISCOVER_NO_MATCH = new StringLangEntry("command.discover.no_match");
+    public static final StringLangEntry COMMAND_UNDISCOVER_SUCCESS = new StringLangEntry("command.undiscover.success");
+    public static final StringLangEntry COMMAND_UNDISCOVER_NO_MATCH = new StringLangEntry("command.undiscover.no_match");
 
     public static final StringLangEntry LOAD_FINISH = new StringLangEntry("load_finish");
     public static final StringLangEntry RECIPE_LOAD_EXCEPTION = new StringLangEntry("recipe_load_exception");

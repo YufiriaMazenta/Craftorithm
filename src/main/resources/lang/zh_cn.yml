@@ -56,6 +56,12 @@ command:
     success: '<prefix> &a配方 <recipe_file_name> (<recipe_id>) 编辑成功'
   recipebook:
     type_not_found: '<prefix> &c配方类型 <recipe_type> 不存在'
+  discover:
+    success: '<prefix> &a已为玩家 <player_name> 解锁 <count> 个配方'
+    no_match: '<prefix> &c没有匹配到任何配方'
+  undiscover:
+    success: '<prefix> &a已为玩家 <player_name> 取消解锁 <count> 个配方'
+    no_match: '<prefix> &c没有匹配到任何配方'
 recipe_type_name:
   vanilla_shaped: 有序配方
   vanilla_shapeless: 无序配方

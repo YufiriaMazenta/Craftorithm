@@ -55,6 +55,12 @@ command:
     success: '<prefix> &aРецепт <recipe_file_name> (<recipe_id>) успешно изменён.'
   recipebook:
     type_not_found: '<prefix> &cТип рецепта <recipe_type> не существует'
+  discover:
+    success: '<prefix> &aОткрыто <count> рецепт(ов) для игрока <player_name>.'
+    no_match: '<prefix> &cНет рецептов, соответствующих шаблону.'
+  undiscover:
+    success: '<prefix> &aСкрыто <count> рецепт(ов) для игрока <player_name>.'
+    no_match: '<prefix> &cНет рецептов, соответствующих шаблону.'
 recipe_type_name:
   vanilla_shaped: Формованный рецепт
   vanilla_shapeless: Беспорядочный рецепт

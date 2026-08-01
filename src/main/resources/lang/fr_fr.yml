@@ -55,6 +55,12 @@ command:
     success: '<prefix> &aRecette <recipe_file_name> (<recipe_id>) modifiée avec succès.'
   recipebook:
     type_not_found: '<prefix> &cLe type de recette <recipe_type> n''existe pas'
+  discover:
+    success: '<prefix> &a<count> recette(s) découverte(s) pour le joueur <player_name>.'
+    no_match: '<prefix> &cAucune recette ne correspond au motif donné.'
+  undiscover:
+    success: '<prefix> &a<count> recette(s) masquée(s) pour le joueur <player_name>.'
+    no_match: '<prefix> &cAucune recette ne correspond au motif donné.'
 recipe_type_name:
   vanilla_shaped: Recette avec forme
   vanilla_shapeless: Recette sans forme

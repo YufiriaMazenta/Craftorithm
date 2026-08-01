@@ -55,6 +55,12 @@ command:
     success: '<prefix> &aTarif <recipe_file_name> (<recipe_id>) başarıyla düzenlendi.'
   recipebook:
     type_not_found: '<prefix> &cTarif tipi <recipe_type> mevcut değil'
+  discover:
+    success: '<prefix> &a<player_name> oyuncusu için <count> tarif keşfedildi.'
+    no_match: '<prefix> &cEşleşen tarif bulunamadı.'
+  undiscover:
+    success: '<prefix> &a<player_name> oyuncusu için <count> tarif keşfedilmedi.'
+    no_match: '<prefix> &cEşleşen tarif bulunamadı.'
 recipe_type_name:
   vanilla_shaped: Şekilli tarif
   vanilla_shapeless: Şekilsiz tarif

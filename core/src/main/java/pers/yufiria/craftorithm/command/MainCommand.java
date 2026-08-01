@@ -60,4 +60,10 @@ public class MainCommand extends CommandTree {
     @Subcommand
     CommandNode recipebook = RecipeBookCommand.INSTANCE;
 
+    @Subcommand
+    CommandNode discover = DiscoverCommand.INSTANCE;
+
+    @Subcommand
+    CommandNode undiscover = UndiscoverCommand.INSTANCE;
+
 }

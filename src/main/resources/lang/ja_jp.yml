@@ -55,6 +55,12 @@ command:
     success: '<prefix> &aレシピ <recipe_file_name> (<recipe_id>) を編集しました。'
   recipebook:
     type_not_found: '<prefix> &cレシピタイプ <recipe_type> は存在しません'
+  discover:
+    success: '<prefix> &aプレイヤー <player_name> のレシピを <count> 件解除しました'
+    no_match: '<prefix> &c一致するレシピが見つかりません'
+  undiscover:
+    success: '<prefix> &aプレイヤー <player_name> のレシピを <count> 件未解除にしました'
+    no_match: '<prefix> &c一致するレシピが見つかりません'
 recipe_type_name:
   vanilla_shaped: 定形レシピ
   vanilla_shapeless: 不定形レシピ
