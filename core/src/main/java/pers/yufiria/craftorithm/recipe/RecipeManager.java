@@ -144,7 +144,7 @@ public enum RecipeManager implements LifeCycleTask {
         recipeFileNameToKeyMap.clear();
         recipeKeyToFileNameMap.clear();
 
-        //重置所有配方的Nbt保留规则
+        //重置所有配方的结果处理器
         ResultProcessorManager.INSTANCE.resetRecipeProcessors();
 
         //还原被禁用的配方
