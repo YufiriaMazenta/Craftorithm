@@ -84,7 +84,7 @@ public class DisplayCommand extends CommandNode {
     public @Nullable List<String> tabComplete(@NotNull Invoker invoker, List<String> args) {
         if (args.size() <= 1) {
             Set<NamespacedKey> recipes = new LinkedHashSet<>(RecipeManager.INSTANCE.craftorithmRecipes().keySet());
-            recipes.addAll(RecipeManager.INSTANCE.craftorithmRecipes().keySet());
+            recipes.addAll(RecipeManager.INSTANCE.serverRecipeKeys());
             return recipes.stream().map(NamespacedKey::toString).toList();
         } else if (args.size() == 2) {
             return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
