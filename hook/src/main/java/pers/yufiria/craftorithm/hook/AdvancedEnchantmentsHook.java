@@ -7,7 +7,7 @@ public enum AdvancedEnchantmentsHook implements PluginHook {
 
     INSTANCE;
 
-    public static final String RULE_NAME = "advancedenchantments_enchantments";
+    public static final String RULE_NAME = "ae_enchantments";
 
     @Override
     public String pluginName() {
