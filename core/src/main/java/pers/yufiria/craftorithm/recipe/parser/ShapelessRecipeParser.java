@@ -10,6 +10,7 @@ import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
+import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessorManager;
 
 import java.util.List;
 import java.util.Objects;
@@ -42,6 +43,10 @@ public enum ShapelessRecipeParser implements VanillaRecipeParser<ShapelessRecipe
                     CraftingBookCategory category = CraftingBookCategory.valueOf(categoryStr);
                     recipe.setCategory(category);
                 }
+            }
+            if (recipeConfig.isConfigurationSection("result_processors")) {
+                ConfigurationSection section = recipeConfig.getConfigurationSection("result_processors");
+                ResultProcessorManager.INSTANCE.addRecipeProcessors(recipeKey, section);
             }
             return recipe;
         } catch (RecipeLoadException e) {

@@ -1,11 +1,9 @@
 package pers.yufiria.craftorithm.recipe.handler;
 
-import crypticlib.CrypticLibBukkit;
 import crypticlib.MinecraftVersion;
 import crypticlib.chat.BukkitMsgSender;
 import crypticlib.listener.EventListener;
 import crypticlib.script.ScriptValue;
-import crypticlib.util.IOHelper;
 import crypticlib.util.InventoryHelper;
 import crypticlib.util.ItemHelper;
 import org.bukkit.Bukkit;
@@ -19,7 +17,6 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.view.AnvilView;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.api.event.CraftorithmPrepareAnvilEvent;
@@ -29,8 +26,8 @@ import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.AnvilRecipe;
 import pers.yufiria.craftorithm.recipe.choice.StackableItemIdChoice;
-import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsManager;
-import pers.yufiria.craftorithm.recipe.copyComponents.CopyComponentsRules;
+import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessorManager;
+import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessors;
 import pers.yufiria.craftorithm.trigger.CraftTriggerTypes;
 import pers.yufiria.craftorithm.trigger.TriggerContext;
 import pers.yufiria.craftorithm.trigger.TriggerManager;
@@ -40,9 +37,9 @@ import pers.yufiria.craftorithm.util.PlayerUtils;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 @EventListener
 public enum AnvilRecipeHandler implements Listener {
@@ -124,7 +121,7 @@ public enum AnvilRecipeHandler implements Listener {
         if (anvilRecipe == null)
             return;
 
-        ItemStack result = anvilRecipe.getResult();
+        AtomicReference<ItemStack> result = new AtomicReference<>(anvilRecipe.getResult());
         Optional<Player> playerOpt = EventUtils.getViewer(event);
 
         if (playerOpt.isEmpty()) {
@@ -132,30 +129,27 @@ public enum AnvilRecipeHandler implements Listener {
         }
 
         Player player = playerOpt.get();
-        NamespacedItemIdStack resultId = ItemManager.INSTANCE.matchItemId(result, false).orElse(null);
+        NamespacedItemIdStack resultId = ItemManager.INSTANCE.matchItemId(result.get(), false).orElse(null);
         if (resultId != null) {
-            ItemManager.INSTANCE.matchItem(resultId, player).ifPresent(refreshItem -> result.setItemMeta(refreshItem.getItemMeta()));
+            ItemManager.INSTANCE.matchItem(resultId, player).ifPresent(refreshItem -> result.get().setItemMeta(refreshItem.getItemMeta()));
         }
 
-        //处理NBT保留操作
-        Optional<CopyComponentsRules> recipeCopyNbtRules = CopyComponentsManager.INSTANCE.getRecipeCopyNbtRules(anvilRecipe.getKey());
-        recipeCopyNbtRules.ifPresent(
+        //处理结果处理器
+        Optional<ResultProcessors> recipeProcessors = ResultProcessorManager.INSTANCE.getRecipeProcessors(anvilRecipe.getKey());
+        recipeProcessors.ifPresent(
             rules -> {
-                ItemMeta resultMeta = result.getItemMeta();
-                ItemMeta baseMeta = Objects.requireNonNull(base).getItemMeta();
-                resultMeta = rules.processItemMeta(baseMeta, resultMeta);
-                result.setItemMeta(resultMeta);
+                rules.processItem(base, result.get());
             }
         );
 
-        event.setResult(result);
+        event.setResult(result.get());
         if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_21)) {
             AnvilView view = event.getView();
             view.setRepairCost(anvilRecipe.costLevel());
-            view.setItem(2, result);
+            view.setItem(2, result.get());
         } else {
             InventoryView view = ((InventoryEvent) event).getView();
-            view.setItem(2, result);
+            view.setItem(2, result.get());
             view.setProperty(InventoryView.Property.REPAIR_COST, anvilRecipe.costLevel());
         }
         player.updateInventory();
@@ -178,13 +172,13 @@ public enum AnvilRecipeHandler implements Listener {
             return;
         }
 
-        ItemStack result = anvilInventory.getItem(2);
-        if (ItemHelper.isAir(base) || ItemHelper.isAir(addition) || ItemHelper.isAir(result))
+        AtomicReference<ItemStack> result = new AtomicReference<>(anvilInventory.getItem(2));
+        if (ItemHelper.isAir(base) || ItemHelper.isAir(addition) || ItemHelper.isAir(result.get()))
             return;
 
         if (!(event.getClickedInventory() instanceof AnvilInventory)) {
             //如果点击的不是铁砧的页面，那么需要拦截双击收集所有物品这个操作
-            if (result.isSimilar(event.getCurrentItem())) {
+            if (result.get().isSimilar(event.getCurrentItem())) {
                 if (event.getAction().equals(InventoryAction.PICKUP_ALL) || event.getAction().equals(InventoryAction.COLLECT_TO_CURSOR)) {
                     event.setCancelled(true);
                 }
@@ -208,14 +202,11 @@ public enum AnvilRecipeHandler implements Listener {
             .orElseGet(() -> new NamespacedItemIdStack(NamespacedItemId.fromMaterial(addition.getType()), addition.getAmount()));
         Player player = (Player) event.getWhoClicked();
 
-        //处理NBT保留操作
-        Optional<CopyComponentsRules> recipeCopyNbtRules = CopyComponentsManager.INSTANCE.getRecipeCopyNbtRules(anvilRecipe.getKey());
-        recipeCopyNbtRules.ifPresent(
+        //处理结果处理器
+        Optional<ResultProcessors> recipeProcessors = ResultProcessorManager.INSTANCE.getRecipeProcessors(anvilRecipe.getKey());
+        recipeProcessors.ifPresent(
             rules -> {
-                ItemMeta resultMeta = result.getItemMeta();
-                ItemMeta baseMeta = Objects.requireNonNull(base).getItemMeta();
-                resultMeta = rules.processItemMeta(baseMeta, resultMeta);
-                result.setItemMeta(resultMeta);
+                rules.processItem(base, result.get());
             }
         );
 
@@ -223,7 +214,7 @@ public enum AnvilRecipeHandler implements Listener {
         int needBaseNum = anvilRecipe.base().getUseAmount(baseId.itemId()), needAdditionNum = anvilRecipe.addition().getUseAmount(additionId.itemId());
         int costLevel = anvilRecipe.costLevel();
         int canCraftNum = Math.min(baseNum / needBaseNum, additionNum / needAdditionNum);
-        canCraftNum = Math.min(result.getMaxStackSize(), canCraftNum);
+        canCraftNum = Math.min(result.get().getMaxStackSize(), canCraftNum);
 
         if (!(event.getClickedInventory() instanceof AnvilInventory)) {
             return;
@@ -245,16 +236,16 @@ public enum AnvilRecipeHandler implements Listener {
                 if (ItemHelper.isAir(cursor)) {
                     base.setAmount(baseNum - needBaseNum);
                     addition.setAmount(additionNum - needAdditionNum);
-                    event.setCursor(result);
+                    event.setCursor(result.get());
                     if (PlayerUtils.isSurvivalOrAdventure(player)) {
                         player.setLevel(player.getLevel() - costLevel);
                     }
                 } else {
-                    if (!result.isSimilar(cursor)) {
+                    if (!result.get().isSimilar(cursor)) {
                         break;
                     }
-                    int resultCursor = cursor.getAmount() + result.getAmount();
-                    if (resultCursor > result.getMaxStackSize())
+                    int resultCursor = cursor.getAmount() + result.get().getAmount();
+                    if (resultCursor > result.get().getMaxStackSize())
                         break;
                     base.setAmount(baseNum - needBaseNum);
                     addition.setAmount(additionNum - needAdditionNum);
@@ -275,8 +266,8 @@ public enum AnvilRecipeHandler implements Listener {
                 }
                 base.setAmount(baseNum - costAmount1);
                 addition.setAmount(additionNum - costAmount2);
-                result.setAmount(canCraftNum * result.getAmount());
-                InventoryHelper.addItemOrDrop(event.getWhoClicked().getInventory(), result);
+                result.get().setAmount(canCraftNum * result.get().getAmount());
+                InventoryHelper.addItemOrDrop(event.getWhoClicked().getInventory(), result.get());
                 if (PlayerUtils.isSurvivalOrAdventure(player)) {
                     player.setLevel(player.getLevel() - finalCostLevel);
                 }
@@ -290,7 +281,7 @@ public enum AnvilRecipeHandler implements Listener {
                 if (PlayerUtils.isSurvivalOrAdventure(player)) {
                     player.setLevel(player.getLevel() - costLevel);
                 }
-                player.getWorld().dropItem(event.getWhoClicked().getLocation(), result);
+                player.getWorld().dropItem(event.getWhoClicked().getLocation(), result.get());
                 craftResult = true;
                 break;
             case CONTROL_DROP:
@@ -301,11 +292,11 @@ public enum AnvilRecipeHandler implements Listener {
                     break;
                 base.setAmount(baseNum - costAmount11);
                 addition.setAmount(additionNum - costAmount22);
-                result.setAmount(canCraftNum * result.getAmount());
+                result.get().setAmount(canCraftNum * result.get().getAmount());
                 if (PlayerUtils.isSurvivalOrAdventure(player)) {
                     player.setLevel(player.getLevel() - finalCostLevel2);
                 }
-                player.getWorld().dropItem(event.getWhoClicked().getLocation(), result);
+                player.getWorld().dropItem(event.getWhoClicked().getLocation(), result.get());
                 craftResult = true;
                 break;
             default:

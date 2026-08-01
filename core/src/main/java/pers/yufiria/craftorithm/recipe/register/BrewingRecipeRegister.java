@@ -57,4 +57,13 @@ public enum BrewingRecipeRegister implements RecipeRegister {
         return Optional.empty();
     }
 
+    public Optional<NamespacedKey> mixKey(ItemStack input, ItemStack ingredient) {
+        for (Map.Entry<NamespacedKey, PotionMix> entry : potionMixMap.entrySet()) {
+            if (entry.getValue().getInput().test(input) && entry.getValue().getIngredient().test(ingredient)) {
+                return Optional.of(entry.getKey());
+            }
+        }
+        return Optional.empty();
+    }
+
 }

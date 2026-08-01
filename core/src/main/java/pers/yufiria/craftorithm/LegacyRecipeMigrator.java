@@ -547,12 +547,14 @@ public enum LegacyRecipeMigrator implements LifeCycleTask {
             recipe.put("template", Objects.toString(sourceMap.get("template"), ""));
         }
 
-        // 旧版 copy_nbt -> 新版 copy_components_rules
+        // 旧版 copy_nbt -> 新版 result_processors
         Object copyNbt = sourceMap.get("copy_nbt");
         if (copyNbt instanceof Boolean b && b) {
-            List<String> rules = new ArrayList<>();
-            rules.add("all");
-            recipe.put("copy_components_rules", rules);
+            Map<String, Object> processors = new LinkedHashMap<>();
+            Map<String, Object> allEntry = new LinkedHashMap<>();
+            allEntry.put("type", "copy_from_source");
+            processors.put("all", allEntry);
+            recipe.put("result_processors", processors);
         }
 
         return recipe;
@@ -575,12 +577,14 @@ public enum LegacyRecipeMigrator implements LifeCycleTask {
             }
         }
 
-        // 旧版 copy_nbt -> 新版 copy_components_rules
+        // 旧版 copy_nbt -> 新版 result_processors
         Object copyNbt = sourceMap.get("copy_nbt");
         if (copyNbt instanceof Boolean b && b) {
-            List<String> rules = new ArrayList<>();
-            rules.add("all");
-            recipe.put("copy_components_rules", rules);
+            Map<String, Object> processors = new LinkedHashMap<>();
+            Map<String, Object> allEntry = new LinkedHashMap<>();
+            allEntry.put("type", "copy_from_source");
+            processors.put("all", allEntry);
+            recipe.put("result_processors", processors);
         }
 
         return recipe;

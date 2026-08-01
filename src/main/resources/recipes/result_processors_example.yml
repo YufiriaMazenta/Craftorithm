@@ -1,0 +1,218 @@
+# ============================================================
+# Craftorithm 结果处理器 (result_processors) 完整写法示例
+# ============================================================
+# 四种处理策略:
+#   copy_from_source  - 从源物品(source)复制组件到结果(result)
+#   add               - 直接为结果物品添加指定值
+#   merge_source      - 将源物品的组件与结果物品的组件智能合并
+#   remove            - 移除结果物品的组件(无data移除全部,有data移除特定项)
+#
+# sourceItem 含义:
+#   铁砧/锻造台 → base物品 | 烧炼/切石/酿造 → 输入物品 | 工作台 → null
+#
+# 旧写法 copy_from_base / merge_base 仍然兼容
+# ============================================================
+
+type: anvil
+result: 'minecraft:diamond_sword'
+base: 'minecraft:netherite_sword'
+addition: 'minecraft:nether_star'
+cost_level: 10
+
+result_processors:
+
+  # --- all: 复制全部ItemMeta (仅支持 copy_from_source) ---
+  all:
+    type: copy_from_source
+
+  # --- display_name ---
+  display_name:
+    type: copy_from_source        # 从source复制
+    # type: add                   # 直接设置
+    #   data:
+    #     value: "&6自定义名称"
+    # type: remove                # 移除
+
+  # --- lore ---
+  lore:
+    type: copy_from_source        # 从source复制
+    # type: add                   # 直接设置
+    #   data:
+    #     value:
+    #       - "&7第一行"
+    #       - "&a第二行"
+    # type: merge_source          # 将source的lore追加到result后面
+    # type: remove                # 移除全部lore
+    # type: remove                # 移除特定lore行
+    #   data:
+    #     value:
+    #       - "&7要移除的行"
+
+  # --- enchantments ---
+  enchantments:
+    type: add
+    data:
+      minecraft:sharpness: 5
+      minecraft:mending: 1
+      minecraft:unbreaking: 3
+    # type: copy_from_source     # 从source复制附魔
+    # type: merge_source         # 取source和result中每个附魔的较高等级
+    # type: remove               # 移除全部附魔
+    # type: remove               # 移除指定附魔
+    #   data:
+    #     value:
+    #       - "minecraft:sharpness"
+    #       - "minecraft:mending"
+
+  # --- attributes ---
+  attributes:
+    type: merge_source            # 与source的属性修饰器合并
+    # type: copy_from_source     # 从source复制
+    # type: add                  # 直接添加属性
+    #   data:
+    #     value:
+    #       - attribute: "minecraft:generic.attack_damage"
+    #         operation: "add_number"
+    #         amount: 5.0
+    #         slot: "mainhand"
+    #       - attribute: "minecraft:generic.attack_speed"
+    #         operation: "multiply_base"
+    #         amount: 0.1
+    # type: remove               # 移除全部属性
+    # type: remove               # 移除指定属性
+    #   data:
+    #     value:
+    #       - "minecraft:generic.attack_damage"
+
+  # --- item_flag ---
+  item_flag:
+    type: add
+    data:
+      value:
+        - "HIDE_ENCHANTS"
+        - "HIDE_ATTRIBUTES"
+    # type: copy_from_source     # 从source复制
+    # type: merge_source         # 合并source的flags到result
+    # type: remove               # 移除全部flags
+    # type: remove               # 移除指定flags
+    #   data:
+    #     value:
+    #       - "HIDE_ENCHANTS"
+
+  # --- trim (仅 copy_from_source 和 remove) ---
+  trim:
+    type: copy_from_source
+    # type: remove               # 移除护甲修饰
+
+  # --- unbreakable ---
+  unbreakable:
+    type: add
+    data:
+      value: true
+    # type: copy_from_source     # 从source复制
+    # type: remove               # 设为false
+
+  # --- custom_model_data ---
+  custom_model_data:
+    type: add
+    data:
+      value: 1001
+    # type: copy_from_source     # 从source复制
+    # type: remove               # 重置为0
+
+  # --- food (1.20.5+) ---
+  food:
+    type: copy_from_source
+    # type: remove               # 移除食物属性
+
+  # --- hide_tooltip (1.20.5+) ---
+  hide_tooltip:
+    type: add
+    data:
+      value: true
+    # type: copy_from_source     # 从source复制
+    # type: remove               # 设为false
+
+  # --- item_name (1.20.5+) ---
+  item_name:
+    type: add
+    data:
+      value: "custom:item_name_key"
+    # type: copy_from_source     # 从source复制
+    # type: remove               # 移除
+
+  # --- max_stack_size (1.20.5+) ---
+  max_stack_size:
+    type: add
+    data:
+      value: 64
+    # type: copy_from_source     # 从source复制
+    # type: remove               # 移除限制
+
+  # --- rarity (1.20.5+) ---
+  rarity:
+    type: copy_from_source
+    # type: remove               # 移除稀有度
+
+  # --- tool (1.21+) ---
+  tool:
+    type: copy_from_source
+    # type: remove               # 移除工具属性
+
+  # --- fire_resistance (1.20.5+) ---
+  fire_resistance:
+    type: add
+    data:
+      value: true
+    # type: copy_from_source     # 从source复制
+    # type: remove               # 设为false
+
+  # --- custom_model_data_component (1.21.4+) ---
+  custom_model_data_component:
+    type: copy_from_source
+    # type: remove               # 移除
+
+  # --- item_model (1.21.4+) ---
+  item_model:
+    type: add
+    data:
+      value: "minecraft:diamond_sword"
+    # type: copy_from_source     # 从source复制
+    # type: remove               # 移除
+
+  # --- custom_persistent_data (PDC) ---
+  custom_persistent_data:
+    # copy_from_source: 复制全部PDC
+    type: copy_from_source
+
+    # copy_from_source + data: 只复制指定key
+    # type: copy_from_source
+    # data:
+    #   key: "myns:mykey"
+    #   type: STRING
+
+    # add: 直接设置PDC键值
+    # type: add
+    # data:
+    #   myns:key1: "string_value"
+    #   myns:key2: 42
+    #   myns:key3: true
+
+    # merge_source: 合并source的PDC到result(result中没有的key才复制)
+    # type: merge_source
+
+    # remove: 清空全部PDC
+    # type: remove
+
+    # remove + data: 移除指定key
+    # type: remove
+    # data:
+    #   keys:
+    #     - "myns:key1"
+    #     - "myns:key2"
+
+  # --- ae_enchantments (AdvancedEnchantments hook) ---
+  # ae_enchantments:
+  #   type: copy_from_source
+  #   type: merge_source
+  #   type: remove
