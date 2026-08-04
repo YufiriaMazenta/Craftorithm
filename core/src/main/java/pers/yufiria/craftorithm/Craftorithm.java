@@ -1,14 +1,11 @@
 package pers.yufiria.craftorithm;
 
-import crypticlib.BukkitPlugin;
-import crypticlib.CrypticLib;
-import crypticlib.CrypticLibBukkit;
-import crypticlib.MinecraftVersion;
+import crypticlib.*;
 import crypticlib.chat.BukkitMsgSender;
-import crypticlib.lifecycle.LifeCycle;
-import crypticlib.lifecycle.LifeCycleTask;
-import crypticlib.lifecycle.LifeCycleTaskSettings;
-import crypticlib.lifecycle.TaskRule;
+import crypticlib.lifecycle.Lifecycle;
+import crypticlib.lifecycle.LifecycleRule;
+import crypticlib.lifecycle.LifecycleTask;
+import crypticlib.lifecycle.LifecycleTaskSettings;
 import crypticlib.script.ScriptEngine;
 import crypticlib.util.IOHelper;
 import org.bukkit.Bukkit;
@@ -28,12 +25,12 @@ import pers.yufiria.craftorithm.util.UpdateChecker;
 import java.util.HashMap;
 import java.util.Map;
 
-@LifeCycleTaskSettings(
+@LifecycleTaskSettings(
     rules = {
-        @TaskRule(lifeCycle = LifeCycle.ACTIVE, priority = 2),
+        @LifecycleRule(lifeCycle = Lifecycle.ACTIVE, priority = 2),
     }
 )
-public final class Craftorithm extends BukkitPlugin implements LifeCycleTask {
+public final class Craftorithm extends BukkitPlugin implements LifecycleTask {
 
     private static Craftorithm INSTANCE;
 
@@ -93,7 +90,7 @@ public final class Craftorithm extends BukkitPlugin implements LifeCycleTask {
     }
 
     @Override
-    public void lifecycle(Object plugin, LifeCycle lifeCycle) {
+    public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
         CrypticLibBukkit.scheduler().sync(() -> {
             RecipeManager.INSTANCE.reloadRecipeManager();
             LangUtils.info(Languages.LOAD_FINISH);

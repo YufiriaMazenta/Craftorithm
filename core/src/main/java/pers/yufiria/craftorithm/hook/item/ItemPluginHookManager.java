@@ -1,9 +1,10 @@
 package pers.yufiria.craftorithm.hook.item;
 
-import crypticlib.lifecycle.LifeCycle;
-import crypticlib.lifecycle.LifeCycleTask;
-import crypticlib.lifecycle.LifeCycleTaskSettings;
-import crypticlib.lifecycle.TaskRule;
+import crypticlib.CrypticLibPlugin;
+import crypticlib.lifecycle.Lifecycle;
+import crypticlib.lifecycle.LifecycleRule;
+import crypticlib.lifecycle.LifecycleTask;
+import crypticlib.lifecycle.LifecycleTaskSettings;
 import crypticlib.util.IOHelper;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.PluginConfigs;
@@ -17,17 +18,17 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 进行物品插件挂钩的管理器
  */
-@LifeCycleTaskSettings(rules = {
-    @TaskRule(lifeCycle = LifeCycle.ACTIVE),
-    @TaskRule(lifeCycle = LifeCycle.RELOAD)
+@LifecycleTaskSettings(rules = {
+    @LifecycleRule(lifeCycle = Lifecycle.ACTIVE),
+    @LifecycleRule(lifeCycle = Lifecycle.RELOAD)
 })
-public enum ItemPluginHookManager implements LifeCycleTask {
+public enum ItemPluginHookManager implements LifecycleTask {
 
     INSTANCE;
     private final Map<String, ItemPluginHook> itemPluginHookMap = new ConcurrentHashMap<>();
 
     @Override
-    public void lifecycle(Object plugin, LifeCycle lifeCycle) {
+    public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
         for (ItemPluginHook itemPluginHook : itemPluginHookMap.values()) {
             itemPluginHook.unhook();
         }

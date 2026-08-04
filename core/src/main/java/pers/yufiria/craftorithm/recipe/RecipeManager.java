@@ -1,13 +1,14 @@
 package pers.yufiria.craftorithm.recipe;
 
 import crypticlib.CrypticLibBukkit;
+import crypticlib.CrypticLibPlugin;
 import crypticlib.MinecraftVersion;
 import crypticlib.chat.BukkitMsgSender;
 import crypticlib.config.BukkitConfigWrapper;
-import crypticlib.lifecycle.LifeCycle;
-import crypticlib.lifecycle.LifeCycleTask;
-import crypticlib.lifecycle.LifeCycleTaskSettings;
-import crypticlib.lifecycle.TaskRule;
+import crypticlib.lifecycle.Lifecycle;
+import crypticlib.lifecycle.LifecycleRule;
+import crypticlib.lifecycle.LifecycleTask;
+import crypticlib.lifecycle.LifecycleTaskSettings;
 import crypticlib.scheduler.CrypticLibRunnable;
 import crypticlib.util.IOHelper;
 import org.bukkit.Bukkit;
@@ -33,13 +34,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-@LifeCycleTaskSettings(
+@LifecycleTaskSettings(
     rules = {
-        @TaskRule(lifeCycle = LifeCycle.ENABLE),
-        @TaskRule(lifeCycle = LifeCycle.RELOAD, priority = 2)
+        @LifecycleRule(lifeCycle = Lifecycle.ENABLE),
+        @LifecycleRule(lifeCycle = Lifecycle.RELOAD, priority = 2)
     }
 )
-public enum RecipeManager implements LifeCycleTask {
+public enum RecipeManager implements LifecycleTask {
 
     INSTANCE;
     public final File RECIPE_FILE_FOLDER = new File(Craftorithm.instance().getDataFolder().getPath(), "recipes");
@@ -470,7 +471,7 @@ public enum RecipeManager implements LifeCycleTask {
     }
 
     @Override
-    public void lifecycle(Object plugin, LifeCycle lifeCycle) {
+    public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
         switch (lifeCycle) {
             case ENABLE -> {
                 //注册各内置配方类型

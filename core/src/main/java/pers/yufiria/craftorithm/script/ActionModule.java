@@ -1,6 +1,9 @@
 package pers.yufiria.craftorithm.script;
 
-import crypticlib.*;
+import crypticlib.BukkitPlayer;
+import crypticlib.CrypticLibBukkit;
+import crypticlib.Invoker;
+import crypticlib.MinecraftVersion;
 import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.script.ScriptContext;
 import crypticlib.script.ScriptValue;
@@ -26,7 +29,6 @@ import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.ui.BackableMenu;
 import pers.yufiria.craftorithm.ui.custom.CustomMenuManager;
-import pers.yufiria.craftorithm.util.ItemUtils;
 import pers.yufiria.craftorithm.util.PlayerUtils;
 
 import java.util.Objects;
@@ -93,7 +95,7 @@ public enum ActionModule implements ScriptModule {
         if (itemStackOpt.isEmpty()) {
             return ScriptValue.of(false);
         }
-        CrypticLib.scheduler().sync(() -> {
+        CrypticLibBukkit.scheduler().runOnEntity(player, () -> {
             ItemStack slotItem = topInventory.getItem(slot);
             if (ItemHelper.isAir(slotItem)) {
                 topInventory.setItem(slot, itemStackOpt.get());
@@ -101,7 +103,7 @@ public enum ActionModule implements ScriptModule {
                 //对应位置已经有物品了,那我们就尝试放入,如果不能放入就丢在地上
                 InventoryHelper.addItemOrDrop(topInventory, itemStackOpt.get());
             }
-        });
+        }, () -> {});
         return ScriptValue.of(true);
     }
 

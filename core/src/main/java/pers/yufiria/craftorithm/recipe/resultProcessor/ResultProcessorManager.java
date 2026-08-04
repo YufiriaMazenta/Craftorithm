@@ -4,15 +4,9 @@ import crypticlib.util.IOHelper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.Nullable;
-import pers.yufiria.craftorithm.recipe.resultProcessor.impl.AttributesProcessorFactory;
-import pers.yufiria.craftorithm.recipe.resultProcessor.impl.CustomPersistentDataProcessorFactory;
-import pers.yufiria.craftorithm.recipe.resultProcessor.impl.EnchantmentsProcessorFactory;
-import pers.yufiria.craftorithm.recipe.resultProcessor.impl.ItemFlagProcessorFactory;
-import pers.yufiria.craftorithm.recipe.resultProcessor.impl.LoreProcessorFactory;
-import pers.yufiria.craftorithm.recipe.resultProcessor.impl.SimpleComponentProcessorFactory;
+import pers.yufiria.craftorithm.recipe.resultProcessor.impl.*;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;

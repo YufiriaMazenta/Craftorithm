@@ -1,8 +1,5 @@
 package pers.yufiria.craftorithm.trigger;
 
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;

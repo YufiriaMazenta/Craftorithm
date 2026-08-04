@@ -1,9 +1,10 @@
 package pers.yufiria.craftorithm.hook;
 
-import crypticlib.lifecycle.LifeCycle;
-import crypticlib.lifecycle.LifeCycleTask;
-import crypticlib.lifecycle.LifeCycleTaskSettings;
-import crypticlib.lifecycle.TaskRule;
+import crypticlib.CrypticLibPlugin;
+import crypticlib.lifecycle.Lifecycle;
+import crypticlib.lifecycle.LifecycleRule;
+import crypticlib.lifecycle.LifecycleTask;
+import crypticlib.lifecycle.LifecycleTaskSettings;
 import crypticlib.script.ScriptEngine;
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.jetbrains.annotations.Nullable;
@@ -13,10 +14,10 @@ import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.util.Map;
 
-@LifeCycleTaskSettings(
-    rules = @TaskRule(lifeCycle = LifeCycle.ACTIVE)
+@LifecycleTaskSettings(
+    rules = @LifecycleRule(lifeCycle = Lifecycle.ACTIVE)
 )
-public enum PlayerPointsHook implements PluginHook, LifeCycleTask {
+public enum PlayerPointsHook implements PluginHook, LifecycleTask {
 
     INSTANCE;
     private Object playerPoints;
@@ -45,7 +46,7 @@ public enum PlayerPointsHook implements PluginHook, LifeCycleTask {
     }
 
     @Override
-    public void lifecycle(Object plugin, LifeCycle lifeCycle) {
+    public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
         if (hook()) {
             LangUtils.info(Languages.LOAD_HOOK_PLUGIN_SUCCESS, Map.of("<plugin>", pluginName()));
         }

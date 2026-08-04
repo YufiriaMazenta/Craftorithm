@@ -1,12 +1,12 @@
 package pers.yufiria.craftorithm.hook.item;
 
-import crypticlib.lifecycle.LifeCycle;
-import crypticlib.lifecycle.LifeCycleTaskSettings;
-import crypticlib.lifecycle.TaskRule;
+import crypticlib.lifecycle.Lifecycle;
+import crypticlib.lifecycle.LifecycleRule;
+import crypticlib.lifecycle.LifecycleTaskSettings;
 import pers.yufiria.craftorithm.item.ItemProvider;
 
-@LifeCycleTaskSettings(rules = {
-    @TaskRule(lifeCycle = LifeCycle.ENABLE)
+@LifecycleTaskSettings(rules = {
+    @LifecycleRule(lifeCycle = Lifecycle.ENABLE)
 })
 public enum ItemsAdderHook implements ItemPluginHook {
 

@@ -4,10 +4,11 @@ import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.EventManager;
 import com.github.retrooper.packetevents.event.PacketListenerCommon;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
-import crypticlib.lifecycle.LifeCycle;
-import crypticlib.lifecycle.LifeCycleTask;
-import crypticlib.lifecycle.LifeCycleTaskSettings;
-import crypticlib.lifecycle.TaskRule;
+import crypticlib.CrypticLibPlugin;
+import crypticlib.lifecycle.Lifecycle;
+import crypticlib.lifecycle.LifecycleRule;
+import crypticlib.lifecycle.LifecycleTask;
+import crypticlib.lifecycle.LifecycleTaskSettings;
 import org.bukkit.Bukkit;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.config.Languages;
@@ -16,20 +17,20 @@ import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.util.Map;
 
-@LifeCycleTaskSettings(
+@LifecycleTaskSettings(
     rules = {
-        @TaskRule(lifeCycle = LifeCycle.ACTIVE),
-        @TaskRule(lifeCycle = LifeCycle.DISABLE)
+        @LifecycleRule(lifeCycle = Lifecycle.ACTIVE),
+        @LifecycleRule(lifeCycle = Lifecycle.DISABLE)
     }
 )
-public enum PacketEventsHook implements PluginHook, LifeCycleTask {
+public enum PacketEventsHook implements PluginHook, LifecycleTask {
 
     INSTANCE;
 
     private Object recipeUpdatePacketListenerCommon = null, fakeResultPacketListenerCommon = null;
 
     @Override
-    public void lifecycle(Object plugin, LifeCycle lifeCycle) {
+    public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
         switch (lifeCycle) {
             case ACTIVE -> {
                 hook();

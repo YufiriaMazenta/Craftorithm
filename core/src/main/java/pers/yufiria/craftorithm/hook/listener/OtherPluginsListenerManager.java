@@ -1,11 +1,12 @@
 package pers.yufiria.craftorithm.hook.listener;
 
 import crypticlib.CrypticLibBukkit;
+import crypticlib.CrypticLibPlugin;
 import crypticlib.MinecraftVersion;
-import crypticlib.lifecycle.LifeCycle;
-import crypticlib.lifecycle.LifeCycleTask;
-import crypticlib.lifecycle.LifeCycleTaskSettings;
-import crypticlib.lifecycle.TaskRule;
+import crypticlib.lifecycle.Lifecycle;
+import crypticlib.lifecycle.LifecycleRule;
+import crypticlib.lifecycle.LifecycleTask;
+import crypticlib.lifecycle.LifecycleTaskSettings;
 import crypticlib.util.IOHelper;
 import crypticlib.util.ReflectionHelper;
 import org.bukkit.event.HandlerList;
@@ -29,14 +30,14 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-@LifeCycleTaskSettings(
+@LifecycleTaskSettings(
     rules = {
-        @TaskRule(lifeCycle = LifeCycle.ACTIVE),
-        @TaskRule(lifeCycle = LifeCycle.RELOAD),
-        @TaskRule(lifeCycle = LifeCycle.DISABLE)
+        @LifecycleRule(lifeCycle = Lifecycle.ACTIVE),
+        @LifecycleRule(lifeCycle = Lifecycle.RELOAD),
+        @LifecycleRule(lifeCycle = Lifecycle.DISABLE)
     }
 )
-public enum OtherPluginsListenerManager implements LifeCycleTask {
+public enum OtherPluginsListenerManager implements LifecycleTask {
 
     INSTANCE;
     private final Field executorField = findExecutorField();
@@ -201,7 +202,7 @@ public enum OtherPluginsListenerManager implements LifeCycleTask {
     }
 
     @Override
-    public void lifecycle(Object plugin, LifeCycle lifeCycle) {
+    public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
         switch (lifeCycle) {
             case ACTIVE -> {
                 convertOtherPluginsListeners();

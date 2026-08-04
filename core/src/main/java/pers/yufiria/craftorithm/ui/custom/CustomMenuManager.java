@@ -1,10 +1,11 @@
 package pers.yufiria.craftorithm.ui.custom;
 
+import crypticlib.CrypticLibPlugin;
 import crypticlib.config.BukkitConfigWrapper;
-import crypticlib.lifecycle.LifeCycle;
-import crypticlib.lifecycle.LifeCycleTask;
-import crypticlib.lifecycle.LifeCycleTaskSettings;
-import crypticlib.lifecycle.TaskRule;
+import crypticlib.lifecycle.Lifecycle;
+import crypticlib.lifecycle.LifecycleRule;
+import crypticlib.lifecycle.LifecycleTask;
+import crypticlib.lifecycle.LifecycleTaskSettings;
 import crypticlib.ui.menu.Menu;
 import crypticlib.ui.util.MenuHelper;
 import crypticlib.util.IOHelper;
@@ -24,11 +25,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-@LifeCycleTaskSettings(rules = {
-    @TaskRule(lifeCycle = LifeCycle.ENABLE),
-    @TaskRule(lifeCycle = LifeCycle.RELOAD)
+@LifecycleTaskSettings(rules = {
+    @LifecycleRule(lifeCycle = Lifecycle.ENABLE),
+    @LifecycleRule(lifeCycle = Lifecycle.RELOAD)
 })
-public enum CustomMenuManager implements LifeCycleTask {
+public enum CustomMenuManager implements LifecycleTask {
 
     INSTANCE;
 
@@ -75,8 +76,8 @@ public enum CustomMenuManager implements LifeCycleTask {
     }
 
     @Override
-    public void lifecycle(Object plugin, LifeCycle lifeCycle) {
-        if (lifeCycle == LifeCycle.ENABLE) {
+    public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
+        if (lifeCycle == Lifecycle.ENABLE) {
             customMenuFolder = new File(((Plugin) plugin).getDataFolder(), "menus/custom");
         }
         reloadMenus();

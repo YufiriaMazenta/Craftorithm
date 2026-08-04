@@ -3,7 +3,6 @@ package pers.yufiria.craftorithm.api.recipe.choice;
 import com.google.common.base.Preconditions;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;

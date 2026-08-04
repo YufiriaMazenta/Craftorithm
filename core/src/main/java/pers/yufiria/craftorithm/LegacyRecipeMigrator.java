@@ -1,9 +1,10 @@
 package pers.yufiria.craftorithm;
 
-import crypticlib.lifecycle.LifeCycle;
-import crypticlib.lifecycle.LifeCycleTask;
-import crypticlib.lifecycle.LifeCycleTaskSettings;
-import crypticlib.lifecycle.TaskRule;
+import crypticlib.CrypticLibPlugin;
+import crypticlib.lifecycle.Lifecycle;
+import crypticlib.lifecycle.LifecycleRule;
+import crypticlib.lifecycle.LifecycleTask;
+import crypticlib.lifecycle.LifecycleTaskSettings;
 import crypticlib.util.IOHelper;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -20,12 +21,12 @@ import java.util.logging.Logger;
  * 旧版本配方文件格式迁移器
  * 仅在插件 ENABLE 阶段执行一次
  */
-@LifeCycleTaskSettings(
+@LifecycleTaskSettings(
     rules = {
-        @TaskRule(lifeCycle = LifeCycle.ENABLE, priority = -1)
+        @LifecycleRule(lifeCycle = Lifecycle.ENABLE, priority = -1)
     }
 )
-public enum LegacyRecipeMigrator implements LifeCycleTask {
+public enum LegacyRecipeMigrator implements LifecycleTask {
 
     INSTANCE;
 
@@ -614,7 +615,7 @@ public enum LegacyRecipeMigrator implements LifeCycleTask {
     }
 
     @Override
-    public void lifecycle(Object plugin, LifeCycle lifeCycle) {
+    public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
         migrateIfNeeded();
     }
 }

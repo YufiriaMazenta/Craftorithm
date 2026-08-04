@@ -1,11 +1,12 @@
 package pers.yufiria.craftorithm.recipe.nms.spigot;
 
 import crypticlib.CrypticLibBukkit;
+import crypticlib.CrypticLibPlugin;
 import crypticlib.MinecraftVersion;
-import crypticlib.lifecycle.LifeCycle;
-import crypticlib.lifecycle.LifeCycleTask;
-import crypticlib.lifecycle.LifeCycleTaskSettings;
-import crypticlib.lifecycle.TaskRule;
+import crypticlib.lifecycle.Lifecycle;
+import crypticlib.lifecycle.LifecycleRule;
+import crypticlib.lifecycle.LifecycleTask;
+import crypticlib.lifecycle.LifecycleTaskSettings;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.crafting.IRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -21,10 +22,10 @@ import pers.yufiria.craftorithm.api.recipe.CraftorithmRecipeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.util.RecipeUtils;
 
-@LifeCycleTaskSettings(rules = {
-    @TaskRule(lifeCycle = LifeCycle.LOAD)
+@LifecycleTaskSettings(rules = {
+    @LifecycleRule(lifeCycle = Lifecycle.LOAD)
 })
-public enum CraftorithmRecipeRegistry12110 implements CraftorithmRecipeRegistry, LifeCycleTask {
+public enum CraftorithmRecipeRegistry12110 implements CraftorithmRecipeRegistry, LifecycleTask {
 
     INSTANCE;
 
@@ -113,7 +114,7 @@ public enum CraftorithmRecipeRegistry12110 implements CraftorithmRecipeRegistry,
     }
 
     @Override
-    public void lifecycle(Object plugin, LifeCycle lifeCycle) {
+    public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
         if (!CrypticLibBukkit.isPaper()) {
             REGISTRY_COMPAT.register(MinecraftVersion.V1_21_9.name(), () -> this);
         }

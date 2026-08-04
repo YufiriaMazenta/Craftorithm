@@ -1,11 +1,12 @@
 package pers.yufiria.craftorithm.recipe.nms.paper;
 
 import crypticlib.CrypticLibBukkit;
+import crypticlib.CrypticLibPlugin;
 import crypticlib.MinecraftVersion;
-import crypticlib.lifecycle.LifeCycle;
-import crypticlib.lifecycle.LifeCycleTask;
-import crypticlib.lifecycle.LifeCycleTaskSettings;
-import crypticlib.lifecycle.TaskRule;
+import crypticlib.lifecycle.Lifecycle;
+import crypticlib.lifecycle.LifecycleRule;
+import crypticlib.lifecycle.LifecycleTask;
+import crypticlib.lifecycle.LifecycleTaskSettings;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.ItemStack;
@@ -26,10 +27,10 @@ import pers.yufiria.craftorithm.util.RecipeUtils;
 
 import java.util.Collection;
 
-@LifeCycleTaskSettings(rules = {
-    @TaskRule(lifeCycle = LifeCycle.LOAD)
+@LifecycleTaskSettings(rules = {
+    @LifecycleRule(lifeCycle = Lifecycle.LOAD)
 })
-public enum CraftorithmRecipeRegistry12110 implements CraftorithmRecipeRegistry, LifeCycleTask {
+public enum CraftorithmRecipeRegistry12110 implements CraftorithmRecipeRegistry, LifecycleTask {
 
     INSTANCE;
 
@@ -126,7 +127,7 @@ public enum CraftorithmRecipeRegistry12110 implements CraftorithmRecipeRegistry,
     }
 
     @Override
-    public void lifecycle(Object plugin, LifeCycle lifeCycle) {
+    public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
         //这个版本兼容1.21.9-1.21.11
         if (CrypticLibBukkit.isPaper()) {
             REGISTRY_COMPAT.register(MinecraftVersion.V1_21_9.name(), () -> this);

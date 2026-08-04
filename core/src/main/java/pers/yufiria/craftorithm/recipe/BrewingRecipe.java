@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.recipe;
 
-import crypticlib.CrypticLibBukkit;
 import crypticlib.MinecraftVersion;
 import io.papermc.paper.potion.PotionMix;
 import org.bukkit.NamespacedKey;

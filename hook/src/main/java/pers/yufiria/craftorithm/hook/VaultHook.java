@@ -1,9 +1,10 @@
 package pers.yufiria.craftorithm.hook;
 
-import crypticlib.lifecycle.LifeCycle;
-import crypticlib.lifecycle.LifeCycleTask;
-import crypticlib.lifecycle.LifeCycleTaskSettings;
-import crypticlib.lifecycle.TaskRule;
+import crypticlib.CrypticLibPlugin;
+import crypticlib.lifecycle.Lifecycle;
+import crypticlib.lifecycle.LifecycleRule;
+import crypticlib.lifecycle.LifecycleTask;
+import crypticlib.lifecycle.LifecycleTaskSettings;
 import crypticlib.script.ScriptEngine;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -16,10 +17,10 @@ import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.util.Map;
 
-@LifeCycleTaskSettings(
-    rules = @TaskRule(lifeCycle = LifeCycle.ACTIVE)
+@LifecycleTaskSettings(
+    rules = @LifecycleRule(lifeCycle = Lifecycle.ACTIVE)
 )
-public enum VaultHook implements PluginHook, LifeCycleTask {
+public enum VaultHook implements PluginHook, LifecycleTask {
 
     INSTANCE;
 
@@ -84,7 +85,7 @@ public enum VaultHook implements PluginHook, LifeCycleTask {
     }
 
     @Override
-    public void lifecycle(Object plugin, LifeCycle lifeCycle) {
+    public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
         if (hook()) {
             LangUtils.info(Languages.LOAD_HOOK_PLUGIN_SUCCESS, Map.of("<plugin>", pluginName()));
         }

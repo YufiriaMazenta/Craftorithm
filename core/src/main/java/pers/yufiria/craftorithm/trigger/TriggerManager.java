@@ -1,11 +1,12 @@
 package pers.yufiria.craftorithm.trigger;
 
+import crypticlib.CrypticLibPlugin;
 import crypticlib.chat.BukkitMsgSender;
 import crypticlib.config.BukkitConfigWrapper;
-import crypticlib.lifecycle.LifeCycle;
-import crypticlib.lifecycle.LifeCycleTask;
-import crypticlib.lifecycle.LifeCycleTaskSettings;
-import crypticlib.lifecycle.TaskRule;
+import crypticlib.lifecycle.Lifecycle;
+import crypticlib.lifecycle.LifecycleRule;
+import crypticlib.lifecycle.LifecycleTask;
+import crypticlib.lifecycle.LifecycleTaskSettings;
 import crypticlib.script.ScriptEngine;
 import crypticlib.script.compile.CompiledScript;
 import crypticlib.util.IOHelper;
@@ -24,11 +25,11 @@ import java.util.stream.Collectors;
  * 触发器管理器
  * 负责触发器类型注册、YAML加载、事件监听器管理和触发执行
  */
-@LifeCycleTaskSettings(rules = {
-    @TaskRule(lifeCycle = LifeCycle.ACTIVE, priority = 3),
-    @TaskRule(lifeCycle = LifeCycle.RELOAD, priority = 3)
+@LifecycleTaskSettings(rules = {
+    @LifecycleRule(lifeCycle = Lifecycle.ACTIVE, priority = 3),
+    @LifecycleRule(lifeCycle = Lifecycle.RELOAD, priority = 3)
 })
-public enum TriggerManager implements LifeCycleTask {
+public enum TriggerManager implements LifecycleTask {
 
     INSTANCE;
 
@@ -280,8 +281,8 @@ public enum TriggerManager implements LifeCycleTask {
     // ---- 生命周期 ----
 
     @Override
-    public void lifecycle(Object plugin, LifeCycle lifeCycle) {
-        if (lifeCycle == LifeCycle.ACTIVE) {
+    public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
+        if (lifeCycle == Lifecycle.ACTIVE) {
             TRIGGER_FOLDER.mkdirs();
             // 初始化动态事件注册器
             EventTriggerTypes.INSTANCE.init();

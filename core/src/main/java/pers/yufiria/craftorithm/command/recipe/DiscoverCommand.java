@@ -5,7 +5,6 @@ import crypticlib.Invoker;
 import crypticlib.command.CommandInfo;
 import crypticlib.command.CommandNode;
 import crypticlib.perm.PermInfo;
-import crypticlib.scheduler.CrypticLibRunnable;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
@@ -16,12 +15,10 @@ import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-import java.util.stream.Collectors;
 
 public class DiscoverCommand extends CommandNode {
 

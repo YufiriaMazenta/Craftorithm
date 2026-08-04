@@ -1,9 +1,10 @@
 package pers.yufiria.craftorithm.ui.display;
 
-import crypticlib.lifecycle.LifeCycle;
-import crypticlib.lifecycle.LifeCycleTask;
-import crypticlib.lifecycle.LifeCycleTaskSettings;
-import crypticlib.lifecycle.TaskRule;
+import crypticlib.CrypticLibPlugin;
+import crypticlib.lifecycle.Lifecycle;
+import crypticlib.lifecycle.LifecycleRule;
+import crypticlib.lifecycle.LifecycleTask;
+import crypticlib.lifecycle.LifecycleTaskSettings;
 import crypticlib.ui.menu.Menu;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
@@ -21,12 +22,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
-@LifeCycleTaskSettings(
+@LifecycleTaskSettings(
     rules = {
-        @TaskRule(lifeCycle = LifeCycle.ACTIVE)
+        @LifecycleRule(lifeCycle = Lifecycle.ACTIVE)
     }
 )
-public enum RecipeDisplayManager implements LifeCycleTask {
+public enum RecipeDisplayManager implements LifecycleTask {
 
     INSTANCE;
     private final Map<RecipeType, BiFunction<Player, Recipe, Menu>> recipeDisplayMap = new RecipeTypeMap<>();
@@ -44,7 +45,7 @@ public enum RecipeDisplayManager implements LifeCycleTask {
     }
 
     @Override
-    public void lifecycle(Object plugin, LifeCycle lifeCycle) {
+    public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
         registerDefRecipeDisplay();
     }
 

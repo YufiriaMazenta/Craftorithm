@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.recipe.nms.paper;
 
-import crypticlib.util.IOHelper;
 import crypticlib.util.ItemHelper;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.ItemStack;

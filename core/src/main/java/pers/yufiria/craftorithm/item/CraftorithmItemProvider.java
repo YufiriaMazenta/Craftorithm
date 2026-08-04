@@ -1,10 +1,11 @@
 package pers.yufiria.craftorithm.item;
 
+import crypticlib.CrypticLibPlugin;
 import crypticlib.config.BukkitConfigWrapper;
-import crypticlib.lifecycle.LifeCycle;
-import crypticlib.lifecycle.LifeCycleTask;
-import crypticlib.lifecycle.LifeCycleTaskSettings;
-import crypticlib.lifecycle.TaskRule;
+import crypticlib.lifecycle.Lifecycle;
+import crypticlib.lifecycle.LifecycleRule;
+import crypticlib.lifecycle.LifecycleTask;
+import crypticlib.lifecycle.LifecycleTaskSettings;
 import crypticlib.util.IOHelper;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -21,13 +22,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-@LifeCycleTaskSettings(
+@LifecycleTaskSettings(
     rules = {
-        @TaskRule(lifeCycle = LifeCycle.ENABLE),
-        @TaskRule(lifeCycle = LifeCycle.RELOAD)
+        @LifecycleRule(lifeCycle = Lifecycle.ENABLE),
+        @LifecycleRule(lifeCycle = Lifecycle.RELOAD)
     }
 )
-public enum CraftorithmItemProvider implements ItemProvider, LifeCycleTask {
+public enum CraftorithmItemProvider implements ItemProvider, LifecycleTask {
 
     INSTANCE;
     public final File ITEM_FILE_FOLDER = new File(Craftorithm.instance().getDataFolder(), "items");
@@ -142,7 +143,7 @@ public enum CraftorithmItemProvider implements ItemProvider, LifeCycleTask {
     }
 
     @Override
-    public void lifecycle(Object plugin, LifeCycle lifeCycle) {
+    public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
         loadItemFiles();
         loadItems();
     }

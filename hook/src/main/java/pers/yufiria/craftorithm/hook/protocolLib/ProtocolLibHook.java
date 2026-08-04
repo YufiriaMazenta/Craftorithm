@@ -6,11 +6,12 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
+import crypticlib.CrypticLibPlugin;
 import crypticlib.MinecraftVersion;
-import crypticlib.lifecycle.LifeCycle;
-import crypticlib.lifecycle.LifeCycleTask;
-import crypticlib.lifecycle.LifeCycleTaskSettings;
-import crypticlib.lifecycle.TaskRule;
+import crypticlib.lifecycle.Lifecycle;
+import crypticlib.lifecycle.LifecycleRule;
+import crypticlib.lifecycle.LifecycleTask;
+import crypticlib.lifecycle.LifecycleTaskSettings;
 import org.bukkit.Bukkit;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.config.Languages;
@@ -20,18 +21,18 @@ import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.util.Map;
 
-@LifeCycleTaskSettings(
+@LifecycleTaskSettings(
     rules = {
-        @TaskRule(lifeCycle = LifeCycle.ACTIVE),
-        @TaskRule(lifeCycle = LifeCycle.DISABLE)
+        @LifecycleRule(lifeCycle = Lifecycle.ACTIVE),
+        @LifecycleRule(lifeCycle = Lifecycle.DISABLE)
     }
 )
-public enum ProtocolLibHook implements PluginHook, LifeCycleTask {
+public enum ProtocolLibHook implements PluginHook, LifecycleTask {
 
     INSTANCE;
 
     @Override
-    public void lifecycle(Object plugin, LifeCycle lifeCycle) {
+    public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
         switch (lifeCycle) {
             case ACTIVE -> {
                 hook();

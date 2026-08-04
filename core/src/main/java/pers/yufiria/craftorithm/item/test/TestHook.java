@@ -1,13 +1,13 @@
 package pers.yufiria.craftorithm.item.test;
 
-import crypticlib.lifecycle.LifeCycle;
-import crypticlib.lifecycle.LifeCycleTaskSettings;
-import crypticlib.lifecycle.TaskRule;
+import crypticlib.lifecycle.Lifecycle;
+import crypticlib.lifecycle.LifecycleRule;
+import crypticlib.lifecycle.LifecycleTaskSettings;
 import pers.yufiria.craftorithm.hook.item.ItemPluginHook;
 import pers.yufiria.craftorithm.item.ItemProvider;
 
-@LifeCycleTaskSettings(
-    rules = @TaskRule(lifeCycle = LifeCycle.ENABLE)
+@LifecycleTaskSettings(
+    rules = @LifecycleRule(lifeCycle = Lifecycle.ENABLE)
 )
 public enum TestHook implements ItemPluginHook {
 

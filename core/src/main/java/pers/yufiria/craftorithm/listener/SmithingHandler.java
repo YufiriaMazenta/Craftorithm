@@ -11,8 +11,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
-import pers.yufiria.craftorithm.recipe.RecipeType;
-import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessorManager;
 import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessors;
 import pers.yufiria.craftorithm.util.EventUtils;

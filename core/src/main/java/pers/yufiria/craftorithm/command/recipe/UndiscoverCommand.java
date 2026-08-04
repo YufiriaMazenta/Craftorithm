@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.command.recipe;
 
-import crypticlib.CrypticLib;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.Invoker;
 import crypticlib.command.CommandInfo;
@@ -16,7 +15,6 @@ import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;

@@ -10,9 +10,7 @@ import pers.yufiria.craftorithm.recipe.resultProcessor.ComponentProcessorFactory
 import pers.yufiria.craftorithm.recipe.resultProcessor.ProcessingStrategy;
 import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessor;
 
-import static pers.yufiria.craftorithm.recipe.resultProcessor.impl.ProcessorUtils.processor;
-import static pers.yufiria.craftorithm.recipe.resultProcessor.impl.ProcessorUtils.processorRequireSource;
-import static pers.yufiria.craftorithm.recipe.resultProcessor.impl.ProcessorUtils.unsupported;
+import static pers.yufiria.craftorithm.recipe.resultProcessor.impl.ProcessorUtils.*;
 
 /**
  * 简单组件的处理器工厂。

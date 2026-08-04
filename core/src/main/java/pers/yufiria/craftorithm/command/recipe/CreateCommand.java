@@ -1,12 +1,13 @@
 package pers.yufiria.craftorithm.command.recipe;
 
+import crypticlib.CrypticLibPlugin;
 import crypticlib.Invoker;
 import crypticlib.command.CommandInfo;
 import crypticlib.command.CommandNode;
-import crypticlib.lifecycle.LifeCycle;
-import crypticlib.lifecycle.LifeCycleTask;
-import crypticlib.lifecycle.LifeCycleTaskSettings;
-import crypticlib.lifecycle.TaskRule;
+import crypticlib.lifecycle.Lifecycle;
+import crypticlib.lifecycle.LifecycleRule;
+import crypticlib.lifecycle.LifecycleTask;
+import crypticlib.lifecycle.LifecycleTaskSettings;
 import crypticlib.perm.PermInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -17,11 +18,11 @@ import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.RecipeTypeMap;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
+import pers.yufiria.craftorithm.ui.SmeltingMenuType;
 import pers.yufiria.craftorithm.ui.creator.anvil.AnvilCreator;
 import pers.yufiria.craftorithm.ui.creator.vanillaBrewing.VanillaBrewingCreator;
 import pers.yufiria.craftorithm.ui.creator.vanillaCrafting.VanillaShapedCreator;
 import pers.yufiria.craftorithm.ui.creator.vanillaCrafting.VanillaShapelessCreator;
-import pers.yufiria.craftorithm.ui.SmeltingMenuType;
 import pers.yufiria.craftorithm.ui.creator.vanillaSmelting.SmeltingCreator;
 import pers.yufiria.craftorithm.ui.creator.vanillaSmithing.VanillaSmithingTransformCreator;
 import pers.yufiria.craftorithm.ui.creator.vanillaStonecutting.VanillaStonecuttingCreator;
@@ -35,12 +36,12 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@LifeCycleTaskSettings(
+@LifecycleTaskSettings(
     rules = {
-        @TaskRule(lifeCycle = LifeCycle.ACTIVE)
+        @LifecycleRule(lifeCycle = Lifecycle.ACTIVE)
     }
 )
-public final class CreateCommand extends CommandNode implements LifeCycleTask {
+public final class CreateCommand extends CommandNode implements LifecycleTask {
 
     public static final CreateCommand INSTANCE = new CreateCommand();
     private final Pattern RECIPE_ID_PATTERN = Pattern.compile("^[a-z0-9._-]+$");
@@ -157,7 +158,7 @@ public final class CreateCommand extends CommandNode implements LifeCycleTask {
     }
 
     @Override
-    public void lifecycle(Object plugin, LifeCycle lifeCycle) {
+    public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
         registerDefRecipeCreators();
     }
 
