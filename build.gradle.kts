@@ -9,7 +9,7 @@ plugins {
 repositories {
     mavenLocal()
     //CrypticLib
-    maven("https://repo.crypticlib.incrafttime.top/repository/maven-public/")
+    maven("https://repo.crypticlib.com/repository/maven-public/")
     mavenCentral()
 }
 
@@ -23,7 +23,7 @@ dependencies {
 }
 
 version = "${rootProject.findProperty("pluginVer")}"
-group = "com.github.yufiriamazenta"
+group = "pers.yufiria.craftorithm"
 var pluginVersion: String = version.toString() + "-" + SimpleDateFormat("yyyyMMdd").format(System.currentTimeMillis())
 java.sourceCompatibility = JavaVersion.VERSION_21
 java.targetCompatibility = JavaVersion.VERSION_21
@@ -68,7 +68,7 @@ subprojects {
         mavenLocal()
         maven("https://repo.papermc.io/repository/maven-public/")
         //CrypticLib
-        maven("https://repo.crypticlib.incrafttime.top/repository/maven-public/")
+        maven("https://repo.crypticlib.com/repository/maven-public/")
     }
     dependencies {
         compileOnly("org.jetbrains:annotations:24.0.1")
