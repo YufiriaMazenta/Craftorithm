@@ -50,8 +50,8 @@ public enum CraftTriggerTypes implements TriggerType {
                 NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
                 RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipe);
                 TriggerContext ctx = new TriggerContext(player.getUniqueId(), recipeKey, recipeType);
-                @Nullable ItemStack[] matrix = craftItemEvent.getInventory().getMatrix();
-                if (matrix != null) {
+                ItemStack[] matrix = craftItemEvent.getInventory().getMatrix();
+                if (matrix.length > 0) {
                     addIngredientsFromMatrix(ctx, matrix);
                 }
                 ItemStack result = craftItemEvent.getInventory().getResult();
@@ -86,8 +86,8 @@ public enum CraftTriggerTypes implements TriggerType {
                     event,
                     ReflectPropertyResolver.INSTANCE
                 ));
-                @Nullable ItemStack[] matrix = prepareItemCraftEvent.getInventory().getMatrix();
-                if (matrix != null) {
+                ItemStack[] matrix = prepareItemCraftEvent.getInventory().getMatrix();
+                if (matrix.length > 0) {
                     addIngredientsFromMatrix(ctx, matrix);
                 }
                 return ctx;

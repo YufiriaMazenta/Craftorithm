@@ -1,12 +1,16 @@
 package pers.yufiria.craftorithm.trigger.listener;
 
 import crypticlib.listener.EventListener;
+import crypticlib.util.IOHelper;
+import crypticlib.util.ItemHelper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
+import org.bukkit.inventory.ItemStack;
 import pers.yufiria.craftorithm.trigger.CraftTriggerTypes;
 import pers.yufiria.craftorithm.trigger.TriggerContext;
 import pers.yufiria.craftorithm.trigger.TriggerManager;
@@ -40,6 +44,14 @@ public enum CraftingTriggerHandler implements Listener {
         TriggerContext ctx = CraftTriggerTypes.CRAFTING.extractContext(event);
         if (ctx == null) return;
         if (!(event.getWhoClicked() instanceof Player)) return;
+        ItemStack cursorItem = event.getCursor();
+        if (!ItemHelper.isAir(cursorItem)) {
+            //如果鼠标上有物品,只有shift click类型的点击类型真的能触发合成
+            ClickType click = event.getClick();
+            if (!click.isShiftClick()) {
+                return;
+            }
+        }
         TriggerManager.INSTANCE.fire(CraftTriggerTypes.CRAFTING.typeKey(), ctx);
     }
 
