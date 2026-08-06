@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.trigger.listener;
 
 import crypticlib.listener.EventListener;
+import crypticlib.util.IOHelper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -41,6 +42,7 @@ public enum SmithingTriggerHandler implements Listener {
         TriggerContext ctx = CraftTriggerTypes.SMITHING.extractContext(event);
         if (ctx == null) return;
         if (!(event.getWhoClicked() instanceof Player)) return;
+        IOHelper.info(event.getResult().name());
         TriggerManager.INSTANCE.fire(CraftTriggerTypes.SMITHING.typeKey(), ctx);
     }
 

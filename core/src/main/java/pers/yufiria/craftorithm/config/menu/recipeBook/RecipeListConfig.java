@@ -7,7 +7,7 @@ import crypticlib.config.node.impl.bukkit.StringListConfig;
 
 import java.util.List;
 
-@ConfigHandler(path = "menus/internal/recipeBook/recipe_list.yml")
+@ConfigHandler(path = "menus/internal/recipe_book/recipe_list.yml")
 public class RecipeListConfig {
 
     public static final StringConfig TITLE = new StringConfig("title", "<translate:lang:menu.recipe_book.title>");

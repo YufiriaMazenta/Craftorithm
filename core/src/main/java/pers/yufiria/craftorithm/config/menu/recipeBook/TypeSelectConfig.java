@@ -7,7 +7,7 @@ import crypticlib.config.node.impl.bukkit.StringListConfig;
 
 import java.util.List;
 
-@ConfigHandler(path = "menus/internal/recipeBook/type_select.yml")
+@ConfigHandler(path = "menus/internal/recipe_book/type_select.yml")
 public class TypeSelectConfig {
 
     public static final StringConfig TITLE = new StringConfig("title", "<translate:lang:menu.recipe_book.select_title>");
