@@ -8,6 +8,7 @@ on_craft_diamond_sword:
       - 'if event.get("view").get("player").invoke("getName") == "Yufiria_"'
       - '  tell("是插件开发者正在进行合成！")'
       - 'endif'
+      - 'return true'
   actions:
     - 'tell("&a合成成功！")'
     - 'give_level(100)'

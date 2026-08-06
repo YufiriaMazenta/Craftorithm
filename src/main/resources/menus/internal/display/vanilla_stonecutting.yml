@@ -16,5 +16,5 @@ icons:
     name: '<translate:lang:menu.recipe_display.back>'
     actions:
       left:
-        - back
+        - back()
 
