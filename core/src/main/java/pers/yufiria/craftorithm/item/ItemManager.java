@@ -340,11 +340,11 @@ public enum ItemManager implements LifecycleTask {
         itemPacks.clear();
         YamlConfiguration config = itemPacksConfig.config();
         for (String key : config.getKeys(false)) {
-            List<String> itemIds = config.getStringList(key);
-            if (itemIds.isEmpty()) {
+            List<String> itemIdStrList = config.getStringList(key);
+            if (itemIdStrList.isEmpty()) {
                 continue;
             }
-            ItemPack itemPack = new ItemPack(key, itemIds.stream().map(NamespacedItemIdStack::fromString).toList());
+            ItemPack itemPack = new ItemPack(key, itemIdStrList);
             itemPacks.put(key, itemPack);
         }
     }
