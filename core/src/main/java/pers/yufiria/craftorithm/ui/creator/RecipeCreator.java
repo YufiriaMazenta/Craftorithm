@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.ui.creator;
 
+import crypticlib.MinecraftKey;
 import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.lang.LangManager;
@@ -18,11 +19,8 @@ import pers.yufiria.craftorithm.recipe.RecipeType;
 
 import java.text.SimpleDateFormat;
 import java.util.Objects;
-import java.util.regex.Pattern;
 
 public abstract class RecipeCreator extends StoredMenu {
-
-    private static final Pattern ID_PATTERN = Pattern.compile("^[a-z0-9._-]+$");
 
     private @Nullable String recipeId;
     private @Nullable String recipeFileName;
@@ -98,7 +96,7 @@ public abstract class RecipeCreator extends StoredMenu {
         String itemIdStr = resultId.itemId()
             .replace(':', '_')
             .replace('-', '_');
-        if (!ID_PATTERN.matcher(itemIdStr).matches()) {
+        if (!MinecraftKey.isValidKey(itemIdStr)) {
             return null;
         }
         String resolved = typeKey + "_" + itemIdStr;

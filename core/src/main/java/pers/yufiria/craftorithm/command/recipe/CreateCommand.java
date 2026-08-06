@@ -2,6 +2,7 @@ package pers.yufiria.craftorithm.command.recipe;
 
 import crypticlib.CrypticLibPlugin;
 import crypticlib.Invoker;
+import crypticlib.MinecraftKey;
 import crypticlib.command.CommandInfo;
 import crypticlib.command.CommandNode;
 import crypticlib.lifecycle.Lifecycle;
@@ -33,8 +34,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @LifecycleTaskSettings(
     rules = {
@@ -44,7 +43,6 @@ import java.util.regex.Pattern;
 public final class CreateCommand extends CommandNode implements LifecycleTask {
 
     public static final CreateCommand INSTANCE = new CreateCommand();
-    private final Pattern RECIPE_ID_PATTERN = Pattern.compile("^[a-z0-9._-]+$");
     private final Map<RecipeType, RecipeCreatorFactory> recipeCreatorMap = new RecipeTypeMap<>();
 
     private CreateCommand() {
@@ -70,8 +68,7 @@ public final class CreateCommand extends CommandNode implements LifecycleTask {
 
         if (args.size() >= 2) {
             recipeId = args.get(1);
-            Matcher matcher = RECIPE_ID_PATTERN.matcher(recipeId);
-            if (!matcher.matches()) {
+            if (!MinecraftKey.isValidKey(recipeId)) {
                 LangUtils.sendLang(invoker, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_NAME);
                 return;
             }

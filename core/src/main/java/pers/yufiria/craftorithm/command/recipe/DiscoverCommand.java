@@ -54,7 +54,6 @@ public class DiscoverCommand extends CommandNode {
             try {
                 pattern = Pattern.compile(patternStr);
             } catch (PatternSyntaxException e) {
-                // Not a valid regex, try exact match
                 pattern = null;
             }
 
