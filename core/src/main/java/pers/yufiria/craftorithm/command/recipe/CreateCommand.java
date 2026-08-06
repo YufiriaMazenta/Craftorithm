@@ -2,7 +2,7 @@ package pers.yufiria.craftorithm.command.recipe;
 
 import crypticlib.CrypticLibPlugin;
 import crypticlib.Invoker;
-import crypticlib.MinecraftKey;
+import crypticlib.Key;
 import crypticlib.command.CommandInfo;
 import crypticlib.command.CommandNode;
 import crypticlib.lifecycle.Lifecycle;
@@ -68,7 +68,7 @@ public final class CreateCommand extends CommandNode implements LifecycleTask {
 
         if (args.size() >= 2) {
             recipeId = args.get(1);
-            if (!MinecraftKey.isValidKey(recipeId)) {
+            if (!Key.isValidKey(recipeId)) {
                 LangUtils.sendLang(invoker, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_NAME);
                 return;
             }

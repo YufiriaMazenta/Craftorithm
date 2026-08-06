@@ -1,6 +1,6 @@
 package pers.yufiria.craftorithm.ui.creator;
 
-import crypticlib.MinecraftKey;
+import crypticlib.Key;
 import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.lang.LangManager;
@@ -96,7 +96,7 @@ public abstract class RecipeCreator extends StoredMenu {
         String itemIdStr = resultId.itemId()
             .replace(':', '_')
             .replace('-', '_');
-        if (!MinecraftKey.isValidKey(itemIdStr)) {
+        if (!Key.isValidKey(itemIdStr)) {
             return null;
         }
         String resolved = typeKey + "_" + itemIdStr;
