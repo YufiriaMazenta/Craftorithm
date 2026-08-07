@@ -1,9 +1,11 @@
 package pers.yufiria.craftorithm.recipe.resultProcessor;
 
 import crypticlib.listener.EventListener;
+import crypticlib.util.BukkitConfigHelper;
 import crypticlib.util.IOHelper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -68,37 +70,70 @@ public enum ResultProcessorManager implements Listener {
     }
 
     /**
-     * 解析新格式 result_processors
+     * 支持单个配置或列表配置:
+     *   enchantments: { type: add, data: ... }          # 单个
+     *   enchantments:                                    # 列表
+     *     - type: copy_from_source
+     *     - type: remove
+     *       data: { value: ["minecraft:sharpness"] }
      */
     public void addRecipeProcessors(NamespacedKey recipeKey, ConfigurationSection processorsSection) {
         List<ResultProcessor> processors = new ArrayList<>();
         for (String componentName : processorsSection.getKeys(false)) {
-            ConfigurationSection entry = processorsSection.getConfigurationSection(componentName);
-            if (entry == null) {
-                IOHelper.info("&eInvalid result_processor entry: " + componentName);
-                continue;
-            }
-            String strategyStr = entry.getString("type");
-            if (strategyStr == null) {
-                IOHelper.info("&eMissing 'type' for result_processor: " + componentName);
-                continue;
-            }
-            ProcessingStrategy strategy;
-            try {
-                strategy = ProcessingStrategy.fromString(strategyStr);
-            } catch (IllegalArgumentException e) {
-                IOHelper.info("&eUnknown processing strategy '" + strategyStr + "' for result_processor: " + componentName);
-                continue;
-            }
-            ConfigurationSection data = entry.getConfigurationSection("data");
             ComponentProcessorFactory factory = factoryMap.get(componentName);
             if (factory == null) {
                 IOHelper.info("&eUnknown component: " + componentName);
                 continue;
             }
-            processors.add(factory.createProcessor(strategy, data));
+            if (processorsSection.isList(componentName)) {
+                // 列表格式: 同一组件多个处理动作
+                List<?> rawList = processorsSection.getList(componentName);
+                if (rawList == null) continue;
+                for (Object item : rawList) {
+                    ConfigurationSection entry = toConfigSection(item);
+                    if (entry != null) {
+                        parseAndAddProcessor(processors, factory, componentName, entry);
+                    }
+                }
+            } else {
+                // 单个配置格式
+                ConfigurationSection entry = processorsSection.getConfigurationSection(componentName);
+                if (entry == null) {
+                    IOHelper.info("&eInvalid result_processor entry: " + componentName);
+                    continue;
+                }
+                parseAndAddProcessor(processors, factory, componentName, entry);
+            }
         }
         recipeProcessors.put(recipeKey, new ResultProcessors(processors));
+    }
+
+    private void parseAndAddProcessor(List<ResultProcessor> processors, ComponentProcessorFactory factory, String componentName, ConfigurationSection entry) {
+        String strategyStr = entry.getString("type");
+        if (strategyStr == null) {
+            IOHelper.info("&eMissing 'type' for result_processor: " + componentName);
+            return;
+        }
+        ProcessingStrategy strategy;
+        try {
+            strategy = ProcessingStrategy.fromString(strategyStr);
+        } catch (IllegalArgumentException e) {
+            IOHelper.info("&eUnknown processing strategy '" + strategyStr + "' for result_processor: " + componentName);
+            return;
+        }
+        ConfigurationSection data = entry.getConfigurationSection("data");
+        processors.add(factory.createProcessor(strategy, data));
+    }
+
+    private static ConfigurationSection toConfigSection(Object obj) {
+        IOHelper.info(obj.getClass().getName());
+        if (obj instanceof ConfigurationSection section) {
+            return section;
+        }
+        if (obj instanceof Map<?, ?> map) {
+            return BukkitConfigHelper.map2ConfigSection(map);
+        }
+        return null;
     }
 
     /**
@@ -149,7 +184,7 @@ public enum ResultProcessorManager implements Listener {
             return null;
         }
         // 用 MemorySection 模拟一个 ConfigurationSection
-        org.bukkit.configuration.MemoryConfiguration memConfig = new org.bukkit.configuration.MemoryConfiguration();
+        MemoryConfiguration memConfig = new MemoryConfiguration();
         String[] parts = arg.split(" ");
         for (String part : parts) {
             int eqIndex = part.indexOf('=');
