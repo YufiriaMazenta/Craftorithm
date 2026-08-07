@@ -41,10 +41,6 @@ public enum ShapedRecipeParser implements VanillaRecipeParser<ShapedRecipe> {
                     recipe.setCategory(category);
                 }
             }
-            if (recipeConfig.isConfigurationSection("result_processors")) {
-                ConfigurationSection section = recipeConfig.getConfigurationSection("result_processors");
-                ResultProcessorManager.INSTANCE.addRecipeProcessors(recipeKey, section);
-            }
             return recipe;
         } catch (RecipeLoadException e) {
             throw e;

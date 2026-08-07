@@ -62,14 +62,14 @@ public enum BrewingListener implements Listener {
         for (int i = 0; i < resultsClone.size(); i++) {
             ItemStack result = resultsClone.get(i);
             ItemStack input = brewerInventory.getItem(i);
+            //重新从物品源获取物品, 刷新结果的组件
             ItemStack refreshItem = ItemManager.INSTANCE.matchItemId(result, true)
                 .flatMap(ItemManager.INSTANCE::matchItem)
                 .orElse(null);
-            if (refreshItem == null || result.isSimilar(refreshItem)) {
-                continue;
+            if (refreshItem != null && !result.isSimilar(refreshItem)) {
+                result.setItemMeta(refreshItem.getItemMeta());
             }
-            result.setItemMeta(refreshItem.getItemMeta());
-            // 处理结果处理器（酿造配方的source是输入物品）
+            // 运行结果处理器（酿造配方的source是输入物品）
             if (input != null) {
                 BrewingRecipeRegister.INSTANCE.mixKey(input, ingredient).ifPresent(recipeKey -> {
                     Optional<ResultProcessors> processors = ResultProcessorManager.INSTANCE.getRecipeProcessors(recipeKey);

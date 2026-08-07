@@ -28,12 +28,6 @@ public enum SmithingTrimRecipeParser implements VanillaRecipeParser<SmithingReci
             RecipeChoice addition = choiceParser().parse(additionId);
             String templateId = recipeConfig.getString("template");
             RecipeChoice template = choiceParser().parse(templateId);
-            if (recipeConfig.isConfigurationSection("result_processors")) {
-                ConfigurationSection section = recipeConfig.getConfigurationSection("result_processors");
-                ResultProcessorManager.INSTANCE.addRecipeProcessors(recipeKey, section);
-            } else if (recipeConfig.isList("copy_components_rules")) {
-                ResultProcessorManager.INSTANCE.addRecipeProcessorsLegacy(recipeKey, recipeConfig.getStringList("copy_components_rules"));
-            }
             if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_21_5)) {
                 String trimPatternKeyStr = recipeConfig.getString("trim_pattern");
                 if (trimPatternKeyStr == null) {

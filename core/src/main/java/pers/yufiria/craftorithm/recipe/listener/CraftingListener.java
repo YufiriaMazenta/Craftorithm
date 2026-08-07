@@ -23,20 +23,20 @@ public enum CraftingListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void processResult(PrepareItemCraftEvent event) {
-        // 先尝试 Bukkit 原生匹配
         Recipe recipe = event.getRecipe();
         if (recipe != null) {
             // Bukkit 匹配到了配方，Craftorithm 配方需要 refresh
             NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
             if (recipeKey != null && recipeKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
-                refreshResultItem(event, recipe.getResult(), recipeKey);
+                processResultItem(event, recipe.getResult(), recipeKey);
             }
         }
     }
 
-    private void refreshResultItem(PrepareItemCraftEvent event, ItemStack item, NamespacedKey recipeKey) {
+    private void processResultItem(PrepareItemCraftEvent event, ItemStack item, NamespacedKey recipeKey) {
         // clone 避免直接修改 Bukkit Recipe 内部缓存的共享对象
         ItemStack result = item.clone();
+        // 重新从物品源获取物品, 刷新结果的组件
         ItemManager.INSTANCE.matchItemId(result, true)
             .flatMap(id -> EventUtils.getViewer(event)
                 .flatMap(player -> ItemManager.INSTANCE.matchItem(id, player))

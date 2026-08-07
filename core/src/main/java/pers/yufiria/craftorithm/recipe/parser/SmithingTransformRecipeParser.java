@@ -27,12 +27,6 @@ public enum SmithingTransformRecipeParser implements VanillaRecipeParser<Smithin
             RecipeChoice base = choiceParser().parse(baseId);
             String additionId = recipeConfig.getString("addition");
             RecipeChoice addition = choiceParser().parse(additionId);
-            if (recipeConfig.isConfigurationSection("result_processors")) {
-                ConfigurationSection section = recipeConfig.getConfigurationSection("result_processors");
-                ResultProcessorManager.INSTANCE.addRecipeProcessors(recipeKey, section);
-            } else if (recipeConfig.isList("copy_components_rules")) {
-                ResultProcessorManager.INSTANCE.addRecipeProcessorsLegacy(recipeKey, recipeConfig.getStringList("copy_components_rules"));
-            }
             String templateId = recipeConfig.getString("template");
             RecipeChoice template = choiceParser().parse(templateId);
             return new SmithingTransformRecipe(recipeKey, result, template, base, addition);

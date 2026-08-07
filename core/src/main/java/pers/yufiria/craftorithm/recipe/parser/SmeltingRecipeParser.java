@@ -67,10 +67,6 @@ public enum SmeltingRecipeParser implements VanillaRecipeParser<CookingRecipe<?>
                     recipe.setCategory(category);
                 }
             }
-            if (recipeConfig.isConfigurationSection("result_processors")) {
-                ConfigurationSection section = recipeConfig.getConfigurationSection("result_processors");
-                ResultProcessorManager.INSTANCE.addRecipeProcessors(recipeKey, section);
-            }
             return recipe;
         } catch (RecipeLoadException e) {
             throw e;

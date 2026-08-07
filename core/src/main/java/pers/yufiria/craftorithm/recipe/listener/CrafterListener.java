@@ -38,6 +38,7 @@ public enum CrafterListener implements Listener {
         ItemStack result = event.getResult();
         if (ItemHelper.isAir(result))
             return;
+        //重新从物品源获取物品, 刷新结果的组件
         ItemManager.INSTANCE.matchItemId(result, true)
             .flatMap(ItemManager.INSTANCE::matchItem)
             .ifPresent(refreshItem -> {
@@ -45,14 +46,13 @@ public enum CrafterListener implements Listener {
                     result.setItemMeta(refreshItem.getItemMeta());
                 }
             });
-        // 处理结果处理器（Crafter没有sourceItem）
+
+        // 运行结果处理器（Crafter没有sourceItem）
         Recipe recipe = event.getRecipe();
-        if (recipe != null) {
-            NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
-            if (recipeKey != null) {
-                Optional<ResultProcessors> processors = ResultProcessorManager.INSTANCE.getRecipeProcessors(recipeKey);
-                processors.ifPresent(p -> p.processItem(null, result));
-            }
+        NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
+        if (recipeKey != null) {
+            Optional<ResultProcessors> processors = ResultProcessorManager.INSTANCE.getRecipeProcessors(recipeKey);
+            processors.ifPresent(p -> p.processItem(null, result));
         }
         event.setResult(result);
     }

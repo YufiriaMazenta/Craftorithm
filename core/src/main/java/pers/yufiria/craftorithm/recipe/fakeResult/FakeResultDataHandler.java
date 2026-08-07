@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.fakeResult;
+package pers.yufiria.craftorithm.recipe.fakeResult;
 
 import crypticlib.CrypticLibPlugin;
 import crypticlib.lifecycle.Lifecycle;

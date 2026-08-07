@@ -112,12 +112,6 @@ public enum AnvilRecipeParser implements RecipeParser<AnvilRecipe> {
             String additionId = recipeConfig.getString("addition");
             StackableItemIdChoice addition = (StackableItemIdChoice) choiceParser().parse(additionId);
             int costLevel = recipeConfig.getInt("cost_level", 0);
-            if (recipeConfig.isConfigurationSection("result_processors")) {
-                ConfigurationSection section = recipeConfig.getConfigurationSection("result_processors");
-                ResultProcessorManager.INSTANCE.addRecipeProcessors(recipeKey, section);
-            } else if (recipeConfig.isList("copy_components_rules")) {
-                ResultProcessorManager.INSTANCE.addRecipeProcessorsLegacy(recipeKey, recipeConfig.getStringList("copy_components_rules"));
-            }
             AnvilRecipe anvilRecipe = new AnvilRecipe(recipeKey, result, base, addition);
             anvilRecipe.setCostLevel(costLevel);
             return anvilRecipe;

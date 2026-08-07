@@ -57,13 +57,15 @@ public enum SmeltingListener implements Listener {
         if (recipe == null) {
             return;
         }
+
         ItemStack result = event.getResult();
+        // 重新从物品源获取物品, 刷新结果的组件
         ItemManager.INSTANCE.matchItemId(result, true)
             .flatMap(ItemManager.INSTANCE::matchItem)
             .ifPresent(refreshItem -> {
                 result.setItemMeta(refreshItem.getItemMeta());
             });
-        // 处理结果处理器（烧炼配方的source是输入物品）
+        // 运行结果处理器（烧炼配方的source是输入物品）
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
         if (recipeKey != null) {
             Optional<ResultProcessors> processors = ResultProcessorManager.INSTANCE.getRecipeProcessors(recipeKey);

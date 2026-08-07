@@ -37,10 +37,6 @@ public enum BrewingRecipeParser implements RecipeParser<BrewingRecipe> {
             RecipeChoice input = choiceParser().parse(inputId);
             String ingredientId = recipeConfig.getString("ingredient");
             RecipeChoice ingredient = choiceParser().parse(ingredientId);
-            if (recipeConfig.isConfigurationSection("result_processors")) {
-                ConfigurationSection section = recipeConfig.getConfigurationSection("result_processors");
-                ResultProcessorManager.INSTANCE.addRecipeProcessors(recipeKey, section);
-            }
             return new BrewingRecipe(
                 recipeKey,
                 input,

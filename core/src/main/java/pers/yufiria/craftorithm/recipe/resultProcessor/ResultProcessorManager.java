@@ -1,23 +1,34 @@
 package pers.yufiria.craftorithm.recipe.resultProcessor;
 
+import crypticlib.listener.EventListener;
 import crypticlib.util.IOHelper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.jetbrains.annotations.Nullable;
+import pers.yufiria.craftorithm.api.event.RecipeLoadFromConfigEvent;
+import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.recipe.RecipeType;
+import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.recipe.resultProcessor.impl.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public enum ResultProcessorManager {
+@EventListener
+public enum ResultProcessorManager implements Listener {
 
     INSTANCE;
 
     private final Map<String, ComponentProcessorFactory> factoryMap = new ConcurrentHashMap<>();
     private final Map<NamespacedKey, ResultProcessors> recipeProcessors = new ConcurrentHashMap<>();
+    private final Set<RecipeType> SUPPORT_LEGACY_RECIPE_TYPES = Set.of(
+        SimpleRecipeTypes.ANVIL,
+        SimpleRecipeTypes.VANILLA_SMITHING_TRANSFORM,
+        SimpleRecipeTypes.VANILLA_SMITHING_TRIM
+    );
 
     ResultProcessorManager() {
         for (SimpleComponentProcessorFactory factory : SimpleComponentProcessorFactory.values()) {
@@ -38,6 +49,22 @@ public enum ResultProcessorManager {
 
     public void unregisterFactory(String componentName) {
         factoryMap.remove(componentName);
+    }
+
+    @EventHandler
+    public void loadFromRecipeConfigWhenLoad(RecipeLoadFromConfigEvent event) {
+        NamespacedKey recipeKey = event.recipeKey();
+        YamlConfiguration recipeConfig = event.recipeConfig();
+        if (recipeConfig.isConfigurationSection("result_processors")) {
+            ConfigurationSection section = recipeConfig.getConfigurationSection("result_processors");
+            addRecipeProcessors(recipeKey, section);
+        } else if (recipeConfig.isList("copy_components_rules")) {
+            RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(event.recipe());
+            if (SUPPORT_LEGACY_RECIPE_TYPES.contains(recipeType)) {
+                //只允许原本支持的配方加载copy_components_rules
+                addRecipeProcessorsLegacy(recipeKey, recipeConfig.getStringList("copy_components_rules"));
+            }
+        }
     }
 
     /**

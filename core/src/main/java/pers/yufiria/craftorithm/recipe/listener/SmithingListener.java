@@ -44,6 +44,7 @@ public enum SmithingListener implements Listener {
             //如果结果是air,如果接着往下设置,会报错
             return;
         }
+
         ItemManager.INSTANCE.matchItemId(result.get(), true)
             .flatMap(id -> EventUtils.getViewer(event)
                 .flatMap(player -> ItemManager.INSTANCE.matchItem(id, player))
@@ -54,15 +55,12 @@ public enum SmithingListener implements Listener {
                 }
             });
 
-        //处理结果处理器
+        // 运行结果处理器
         Optional<ResultProcessors> recipeProcessors = ResultProcessorManager.INSTANCE.getRecipeProcessors(recipeKey);
-        recipeProcessors.ifPresentOrElse(
+        recipeProcessors.ifPresent(
             rules -> {
                 ItemStack base = event.getInventory().getItem(1);
                 rules.processItem(base, result.get());
-            },
-            () -> {
-                result.get().setItemMeta(recipe.getResult().getItemMeta());
             }
         );
 
