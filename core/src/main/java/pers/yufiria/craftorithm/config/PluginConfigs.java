@@ -21,10 +21,15 @@ public class PluginConfigs {
         false,
         "是否卸载所有的原版配方"
     );
-    public final static BooleanConfig BSTATS = new BooleanConfig(
-        "bstats",
+    public final static BooleanConfig METRICS_BSTATS = new BooleanConfig(
+        "metrics.bstats",
         true,
         "是否允许插件通过bStats收集使用信息"
+    );
+    public final static BooleanConfig METRICS_FAST_STATS = new BooleanConfig(
+        "metrics.fast_stats",
+        true,
+        "是否允许插件通过Fast Stats收集使用信息"
     );
     public final static BooleanConfig ENABLE_ANVIL_RECIPE = new BooleanConfig(
         "enable_anvil_recipe",

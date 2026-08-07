@@ -7,9 +7,14 @@ plugins {
 }
 
 repositories {
-    mavenLocal()
+    maven("https://repo.papermc.io/repository/maven-public/")
     //CrypticLib
     maven("https://repo.crypticlib.com/repository/maven-public/")
+    maven("https://repo.faststats.dev/releases/") {
+        content {
+            includeGroup("dev.faststats.metrics")
+        }
+    }
     mavenCentral()
 }
 
@@ -34,7 +39,8 @@ publishing {
     }
 }
 
-val crypticlibRelocate = "pers.yufiria.craftorithm.crypticlib"
+val crypticlibRelocation = "pers.yufiria.craftorithm.crypticlib"
+val fastStatsRelocation = "pers.yufiria.craftorithm.metrics.faststats"
 
 tasks {
     val props = HashMap<String, String>()
@@ -53,7 +59,8 @@ tasks {
     }
     shadowJar {
         archiveFileName.set("Craftorithm-$version.jar")
-        relocate("crypticlib", crypticlibRelocate)
+        relocate("crypticlib", crypticlibRelocation)
+        relocate("dev.faststats", fastStatsRelocation)
     }
 }
 
@@ -65,7 +72,6 @@ subprojects {
     java.sourceCompatibility = JavaVersion.VERSION_21
     java.targetCompatibility = JavaVersion.VERSION_21
     repositories {
-        mavenLocal()
         maven("https://repo.papermc.io/repository/maven-public/")
         //CrypticLib
         maven("https://repo.crypticlib.com/repository/maven-public/")
@@ -83,7 +89,8 @@ subprojects {
             options.encoding = "UTF-8"
         }
         shadowJar {
-            relocate("crypticlib", crypticlibRelocate)
+            relocate("crypticlib", crypticlibRelocation)
+            relocate("dev.faststats", fastStatsRelocation)
         }
     }
 }

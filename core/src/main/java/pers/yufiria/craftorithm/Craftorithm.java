@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm;
 
+import com.google.common.base.Supplier;
 import crypticlib.*;
 import crypticlib.chat.BukkitMsgSender;
 import crypticlib.lifecycle.Lifecycle;
@@ -8,10 +9,13 @@ import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskSettings;
 import crypticlib.script.ScriptEngine;
 import crypticlib.util.IOHelper;
+import dev.faststats.Metrics;
+import dev.faststats.bukkit.BukkitContext;
+import dev.faststats.data.Metric;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Recipe;
 import pers.yufiria.craftorithm.api.CraftorithmAPI;
-import pers.yufiria.craftorithm.bstat.Metrics;
+import pers.yufiria.craftorithm.metrics.BStats;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.exception.UnsupportedVersionException;
@@ -24,6 +28,7 @@ import pers.yufiria.craftorithm.util.UpdateChecker;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 @LifecycleTaskSettings(
     rules = {
@@ -33,6 +38,7 @@ import java.util.Map;
 public final class Craftorithm extends BukkitPlugin implements LifecycleTask {
 
     private static Craftorithm INSTANCE;
+    private BukkitContext fastBStatsContext;
 
     public Craftorithm() {
         INSTANCE = this;
@@ -64,21 +70,34 @@ public final class Craftorithm extends BukkitPlugin implements LifecycleTask {
     @Override
     public void whenDisable() {
         RecipeManager.INSTANCE.resetRecipes();
+        if (fastBStatsContext != null) {
+            fastBStatsContext.shutdown();
+        }
     }
 
-    private void loadBStat() {
-        if (!PluginConfigs.BSTATS.value())
-            return;
-        Metrics metrics = new Metrics(this, 17821);
-        metrics.addCustomChart(new Metrics.SingleLineChart("recipes", () -> RecipeManager.INSTANCE.getRecipeGroups().size()));
-        metrics.addCustomChart(new Metrics.AdvancedPie("recipe_type_count", () -> {
+    private void loadMetrics() {
+        Callable<Map<String, Integer>> recipeTypeCountMapCallable = () -> {
             Map<String, Integer> map = new HashMap<>();
             for (Recipe recipe : RecipeManager.INSTANCE.craftorithmRecipes().values()) {
                 RecipeType type = RecipeManager.INSTANCE.getRecipeType(recipe);
                 map.merge(type.typeKey(), 1, Integer::sum);
             }
             return map;
-        }));
+        };
+        if (PluginConfigs.METRICS_BSTATS.value()) {
+            BStats bStats = new BStats(this, 17821);
+            bStats.addCustomChart(new BStats.SingleLineChart("recipes", () -> RecipeManager.INSTANCE.craftorithmRecipes().size()));
+            bStats.addCustomChart(new BStats.AdvancedPie("recipe_type_count", recipeTypeCountMapCallable));
+        }
+        if (PluginConfigs.METRICS_FAST_STATS.value()) {
+            fastBStatsContext = new BukkitContext.Factory(this, "ad8d52b8cd8e754987ff6a6b2590802d")
+                .metrics(factory -> factory
+                    .addMetric(Metric.number("recipes", () -> RecipeManager.INSTANCE.craftorithmRecipes().size()))
+                    .addMetric(Metric.numberMap("recipe_type_cound", recipeTypeCountMapCallable))
+                    .create())
+                .create();
+            fastBStatsContext.ready();
+        }
     }
 
     public static Craftorithm instance() {
@@ -94,7 +113,7 @@ public final class Craftorithm extends BukkitPlugin implements LifecycleTask {
         CrypticLibBukkit.scheduler().sync(() -> {
             RecipeManager.INSTANCE.reloadRecipeManager();
             LangUtils.info(Languages.LOAD_FINISH);
-            loadBStat();
+            loadMetrics();
         });
     }
 
