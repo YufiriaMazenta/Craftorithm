@@ -4,7 +4,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.jetbrains.annotations.NotNull;
-import pers.yufiria.craftorithm.recipe.AnvilRecipe;
+import pers.yufiria.craftorithm.recipe.anvil.AnvilRecipe;
 
 public class CraftorithmPrepareAnvilEvent extends Event implements EventCaller {
 

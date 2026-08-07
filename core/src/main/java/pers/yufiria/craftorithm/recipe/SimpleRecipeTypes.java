@@ -10,11 +10,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 import pers.yufiria.craftorithm.config.Languages;
+import pers.yufiria.craftorithm.recipe.anvil.AnvilRecipe;
+import pers.yufiria.craftorithm.recipe.brewing.BrewingRecipe;
 import pers.yufiria.craftorithm.recipe.choice.RecipeChoiceParser;
 import pers.yufiria.craftorithm.recipe.parser.*;
 import pers.yufiria.craftorithm.recipe.register.AnvilRecipeRegister;
 import pers.yufiria.craftorithm.recipe.register.BrewingRecipeRegister;
 import pers.yufiria.craftorithm.recipe.register.BukkitRecipeRegister;
+import pers.yufiria.craftorithm.recipe.register.RecipeRegister;
 
 import java.util.Locale;
 import java.util.function.Function;

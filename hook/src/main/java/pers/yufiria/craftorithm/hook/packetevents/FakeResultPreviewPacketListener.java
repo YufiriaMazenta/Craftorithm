@@ -28,7 +28,7 @@ import pers.yufiria.craftorithm.fakeResult.FakeResultDataHandler;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
-import pers.yufiria.craftorithm.recipe.handler.AnvilRecipeHandler;
+import pers.yufiria.craftorithm.recipe.anvil.AnvilRecipeHandler;
 import pers.yufiria.craftorithm.util.EventUtils;
 
 import java.time.Duration;

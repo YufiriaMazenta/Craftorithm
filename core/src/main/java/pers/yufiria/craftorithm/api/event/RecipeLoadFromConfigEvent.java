@@ -7,7 +7,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.NotNull;
-import pers.yufiria.craftorithm.recipe.RecipeRegister;
+import pers.yufiria.craftorithm.recipe.register.RecipeRegister;
 
 import java.util.Objects;
 

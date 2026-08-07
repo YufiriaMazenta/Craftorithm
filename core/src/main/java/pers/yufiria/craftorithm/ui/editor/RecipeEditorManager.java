@@ -12,6 +12,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.recipe.*;
+import pers.yufiria.craftorithm.recipe.anvil.AnvilRecipe;
+import pers.yufiria.craftorithm.recipe.brewing.BrewingRecipe;
 import pers.yufiria.craftorithm.ui.SmeltingMenuType;
 import pers.yufiria.craftorithm.ui.editor.anvil.AnvilEditor;
 import pers.yufiria.craftorithm.ui.editor.vanillaBrewing.VanillaBrewingEditor;

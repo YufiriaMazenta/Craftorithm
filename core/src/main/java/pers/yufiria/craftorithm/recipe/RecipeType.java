@@ -5,6 +5,8 @@ import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
+import pers.yufiria.craftorithm.recipe.parser.RecipeParser;
+import pers.yufiria.craftorithm.recipe.register.RecipeRegister;
 
 import java.util.Locale;
 

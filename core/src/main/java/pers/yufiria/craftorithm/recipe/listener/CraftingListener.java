@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.listener;
+package pers.yufiria.craftorithm.recipe.listener;
 
 import crypticlib.listener.EventListener;
 import org.bukkit.NamespacedKey;
@@ -17,7 +17,7 @@ import pers.yufiria.craftorithm.util.EventUtils;
 import java.util.Optional;
 
 @EventListener
-public enum CraftingHandler implements Listener {
+public enum CraftingListener implements Listener {
 
     INSTANCE;
 

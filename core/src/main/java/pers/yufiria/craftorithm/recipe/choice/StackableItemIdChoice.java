@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+/**
+ * 支持物品堆叠的配方材料,目前只有铁砧配方使用
+ */
 public class StackableItemIdChoice implements RecipeChoice {
 
     private final List<NamespacedItemIdStack> itemIds;

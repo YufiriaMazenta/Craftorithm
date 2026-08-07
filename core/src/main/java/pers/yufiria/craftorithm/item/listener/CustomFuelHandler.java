@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.listener;
+package pers.yufiria.craftorithm.item.listener;
 
 import crypticlib.listener.EventListener;
 import crypticlib.util.InventoryViewHelper;

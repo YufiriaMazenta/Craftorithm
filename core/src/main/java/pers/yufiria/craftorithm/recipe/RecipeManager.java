@@ -23,6 +23,8 @@ import pers.yufiria.craftorithm.api.event.RecipeLoadFromConfigEvent;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
+import pers.yufiria.craftorithm.recipe.parser.RecipeParser;
+import pers.yufiria.craftorithm.recipe.register.RecipeRegister;
 import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessorManager;
 import pers.yufiria.craftorithm.util.CollectionsUtils;
 import pers.yufiria.craftorithm.util.LangUtils;

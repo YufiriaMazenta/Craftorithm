@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.recipe.handler;
+package pers.yufiria.craftorithm.recipe.anvil;
 
 import crypticlib.MinecraftVersion;
 import crypticlib.listener.EventListener;
@@ -23,7 +23,6 @@ import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
-import pers.yufiria.craftorithm.recipe.AnvilRecipe;
 import pers.yufiria.craftorithm.recipe.choice.StackableItemIdChoice;
 import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessorManager;
 import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessors;

@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.listener;
+package pers.yufiria.craftorithm.recipe.listener;
 
 import crypticlib.CrypticLibBukkit;
 import crypticlib.listener.EventListener;
@@ -24,7 +24,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @EventListener
-public enum SmeltResultRefreshHandler implements Listener {
+public enum SmeltingListener implements Listener {
 
     INSTANCE;
 

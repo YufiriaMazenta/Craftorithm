@@ -10,6 +10,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.recipe.*;
+import pers.yufiria.craftorithm.recipe.anvil.AnvilRecipe;
+import pers.yufiria.craftorithm.recipe.brewing.BrewingRecipe;
 import pers.yufiria.craftorithm.ui.display.anvil.AnvilDisplayMenu;
 import pers.yufiria.craftorithm.ui.display.vanillaBrewing.VanillaBrewingDisplayMenu;
 import pers.yufiria.craftorithm.ui.display.vanillaShaped.VanillaShapedDisplayMenu;

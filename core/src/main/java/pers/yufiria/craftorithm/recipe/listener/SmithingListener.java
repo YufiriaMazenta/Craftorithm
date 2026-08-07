@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.listener;
+package pers.yufiria.craftorithm.recipe.listener;
 
 import crypticlib.listener.EventListener;
 import crypticlib.util.ItemHelper;
@@ -19,7 +19,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 @EventListener
-public enum SmithingHandler implements Listener {
+public enum SmithingListener implements Listener {
 
     INSTANCE;
 

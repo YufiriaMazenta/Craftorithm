@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.recipe;
+package pers.yufiria.craftorithm.recipe.parser;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Recipe;

@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.recipe;
+package pers.yufiria.craftorithm.recipe.brewing;
 
 import crypticlib.MinecraftVersion;
 import io.papermc.paper.potion.PotionMix;
@@ -6,6 +6,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.jetbrains.annotations.NotNull;
+import pers.yufiria.craftorithm.recipe.CustomRecipe;
 import pers.yufiria.craftorithm.util.RecipeUtils;
 
 public class BrewingRecipe implements CustomRecipe {

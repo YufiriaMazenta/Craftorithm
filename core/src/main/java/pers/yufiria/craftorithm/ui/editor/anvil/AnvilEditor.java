@@ -24,7 +24,7 @@ import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.menu.editor.AnvilEditorConfig;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
-import pers.yufiria.craftorithm.recipe.AnvilRecipe;
+import pers.yufiria.craftorithm.recipe.anvil.AnvilRecipe;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.ui.editor.EditorIconParser;

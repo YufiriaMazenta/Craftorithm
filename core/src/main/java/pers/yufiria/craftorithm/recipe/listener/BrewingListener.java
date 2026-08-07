@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.listener;
+package pers.yufiria.craftorithm.recipe.listener;
 
 import crypticlib.MinecraftVersion;
 import crypticlib.listener.EventListener;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @EventListener
-public enum BrewingHandler implements Listener {
+public enum BrewingListener implements Listener {
 
     INSTANCE;
 

@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.listener;
+package pers.yufiria.craftorithm.recipe.listener;
 
 import crypticlib.listener.EventListener;
 import crypticlib.util.ItemHelper;
@@ -19,7 +19,7 @@ import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessors;
 import java.util.Optional;
 
 @EventListener
-public enum CrafterHandler implements Listener {
+public enum CrafterListener implements Listener {
 
     INSTANCE;
 

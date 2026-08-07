@@ -13,7 +13,7 @@ import pers.yufiria.craftorithm.Craftorithm;
  * 只在paper端和衍生端有效
  */
 @EventListener
-public enum ServerResourcesReloadHandler implements Listener {
+public enum ServerResourcesReloadListener implements Listener {
 
     INSTANCE;
 

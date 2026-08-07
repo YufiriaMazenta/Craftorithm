@@ -4,7 +4,7 @@ import crypticlib.ui.display.Icon;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.config.menu.display.AnvilDisplay;
-import pers.yufiria.craftorithm.recipe.AnvilRecipe;
+import pers.yufiria.craftorithm.recipe.anvil.AnvilRecipe;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayMenu;
 import pers.yufiria.craftorithm.ui.display.RecipeResultIcon;
 import pers.yufiria.craftorithm.ui.icon.ActionIcon;

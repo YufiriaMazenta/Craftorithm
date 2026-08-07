@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.recipe;
+package pers.yufiria.craftorithm.recipe.register;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
