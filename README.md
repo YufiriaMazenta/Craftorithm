@@ -49,7 +49,7 @@
 /cra create vanilla_shaped
 ```
 
-Place materials and result items in the GUI, then click confirm. Recipes are automatically saved to `plugins/Craftorithm/recipes/`.
+Place ingredients and result items in the GUI, then click confirm. Recipes are automatically saved to `plugins/Craftorithm/recipes/`.
 
 ## Powerful Configuration
 
