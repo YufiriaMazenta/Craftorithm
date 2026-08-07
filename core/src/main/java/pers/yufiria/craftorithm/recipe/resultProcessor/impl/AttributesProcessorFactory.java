@@ -1,10 +1,12 @@
 package pers.yufiria.craftorithm.recipe.resultProcessor.impl;
 
+import crypticlib.MinecraftVersion;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
@@ -12,8 +14,7 @@ import pers.yufiria.craftorithm.recipe.resultProcessor.ComponentProcessorFactory
 import pers.yufiria.craftorithm.recipe.resultProcessor.ProcessingStrategy;
 import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessor;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static pers.yufiria.craftorithm.recipe.resultProcessor.impl.ProcessorUtils.processor;
 import static pers.yufiria.craftorithm.recipe.resultProcessor.impl.ProcessorUtils.processorRequireSource;
@@ -90,25 +91,36 @@ public class AttributesProcessorFactory implements ComponentProcessorFactory {
         });
     }
 
+    @SuppressWarnings("removal")
     private static void applyAttributeModifiers(ItemMeta meta, List<Map<?, ?>> attrList) {
         for (Map<?, ?> attrEntry : attrList) {
             String attrName = (String) attrEntry.get("attribute");
             if (attrName == null) continue;
             Attribute attr = Registry.ATTRIBUTE.get(NamespacedKey.fromString(attrName));
             if (attr == null) continue;
-            String slotStr = (String) attrEntry.get("slot");
-            EquipmentSlotGroup slotGroup = slotStr != null
-                ? EquipmentSlotGroup.getByName(slotStr.toLowerCase())
-                : EquipmentSlotGroup.ANY;
             String opStr = (String) attrEntry.get("operation");
             AttributeModifier.Operation op = opStr != null
                 ? AttributeModifier.Operation.valueOf(opStr.toUpperCase())
                 : AttributeModifier.Operation.ADD_NUMBER;
             Object amountObj = attrEntry.get("amount");
             double amount = amountObj instanceof Number n ? n.doubleValue() : 0.0;
-            NamespacedKey key = new NamespacedKey("craftorithm", attrName.toLowerCase().replace(":", "_"));
-            AttributeModifier modifier = new AttributeModifier(key, amount, op, slotGroup);
-            meta.addAttributeModifier(attr, modifier);
+            if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_20_5)) {
+                String slotStr = (String) attrEntry.get("slot");
+                EquipmentSlotGroup slotGroup = slotStr != null
+                    ? EquipmentSlotGroup.getByName(slotStr.toLowerCase())
+                    : EquipmentSlotGroup.ANY;
+                NamespacedKey key = new NamespacedKey("craftorithm", attrName.toLowerCase().replace(":", "_"));
+                AttributeModifier modifier = new AttributeModifier(key, amount, op, Objects.requireNonNull(slotGroup));
+                meta.addAttributeModifier(attr, modifier);
+            } else {
+                String slotStr = (String) attrEntry.get("slot");
+                EquipmentSlot slot = slotStr != null
+                    ? EquipmentSlot.valueOf(slotStr.toUpperCase())
+                    : null;
+                AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), attrName, amount, op, slot);
+                meta.addAttributeModifier(attr, modifier);
+            }
+
         }
     }
 
