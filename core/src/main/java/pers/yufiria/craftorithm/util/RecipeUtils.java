@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
-import pers.yufiria.craftorithm.api.recipe.choice.CustomRecipeChoice;
+import pers.yufiria.craftorithm.recipe.choice.CustomRecipeChoice;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;

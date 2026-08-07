@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.api.recipe.choice;
+package pers.yufiria.craftorithm.recipe.choice;
 
 import com.google.common.base.Preconditions;
 import org.bukkit.inventory.ItemStack;

@@ -9,7 +9,6 @@ import org.bukkit.inventory.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
-import pers.yufiria.craftorithm.api.recipe.CraftorithmRecipeRegistry;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.recipe.choice.RecipeChoiceParser;
 import pers.yufiria.craftorithm.recipe.parser.*;

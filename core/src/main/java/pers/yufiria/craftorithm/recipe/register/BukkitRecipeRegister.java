@@ -2,7 +2,7 @@ package pers.yufiria.craftorithm.recipe.register;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.Recipe;
-import pers.yufiria.craftorithm.api.recipe.CraftorithmRecipeRegistry;
+import pers.yufiria.craftorithm.recipe.CraftorithmRecipeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeRegister;
 
 public enum BukkitRecipeRegister implements RecipeRegister {

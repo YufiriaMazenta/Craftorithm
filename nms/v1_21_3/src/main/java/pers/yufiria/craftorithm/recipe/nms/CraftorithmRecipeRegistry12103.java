@@ -15,7 +15,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.v1_21_R2.inventory.*;
 import org.bukkit.inventory.*;
 import org.spigotmc.AsyncCatcher;
-import pers.yufiria.craftorithm.api.recipe.CraftorithmRecipeRegistry;
+import pers.yufiria.craftorithm.recipe.CraftorithmRecipeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.util.RecipeUtils;
 

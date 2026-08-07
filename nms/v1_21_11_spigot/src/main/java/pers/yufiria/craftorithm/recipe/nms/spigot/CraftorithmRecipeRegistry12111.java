@@ -18,7 +18,7 @@ import org.bukkit.craftbukkit.v1_21_R7.inventory.CraftStonecuttingRecipe;
 import org.bukkit.craftbukkit.v1_21_R7.inventory.CraftTransmuteRecipe;
 import org.bukkit.inventory.*;
 import org.spigotmc.AsyncCatcher;
-import pers.yufiria.craftorithm.api.recipe.CraftorithmRecipeRegistry;
+import pers.yufiria.craftorithm.recipe.CraftorithmRecipeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.util.RecipeUtils;
 

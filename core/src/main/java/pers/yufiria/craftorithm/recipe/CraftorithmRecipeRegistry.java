@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.api.recipe;
+package pers.yufiria.craftorithm.recipe;
 
 import crypticlib.MinecraftVersion;
 import crypticlib.compat.Compat;
