@@ -126,7 +126,6 @@ public enum ResultProcessorManager implements Listener {
     }
 
     private static ConfigurationSection toConfigSection(Object obj) {
-        IOHelper.info(obj.getClass().getName());
         if (obj instanceof ConfigurationSection section) {
             return section;
         }
@@ -162,18 +161,6 @@ public enum ResultProcessorManager implements Listener {
         recipeProcessors.put(recipeKey, new ResultProcessors(processors));
     }
 
-    public boolean removeRecipeProcessors(NamespacedKey recipeKey) {
-        return recipeProcessors.remove(recipeKey) != null;
-    }
-
-    public Optional<ResultProcessors> getRecipeProcessors(NamespacedKey recipeKey) {
-        return Optional.ofNullable(recipeProcessors.get(recipeKey));
-    }
-
-    public void resetRecipeProcessors() {
-        recipeProcessors.clear();
-    }
-
     /**
      * 解析旧格式的参数字符串，转为 MemorySection
      * 例如: "key=ns:key type=STRING"
@@ -196,5 +183,18 @@ public enum ResultProcessorManager implements Listener {
         }
         return memConfig.getKeys(false).isEmpty() ? null : memConfig;
     }
+
+    public boolean removeRecipeProcessors(NamespacedKey recipeKey) {
+        return recipeProcessors.remove(recipeKey) != null;
+    }
+
+    public Optional<ResultProcessors> getRecipeProcessors(NamespacedKey recipeKey) {
+        return Optional.ofNullable(recipeProcessors.get(recipeKey));
+    }
+
+    public void resetRecipeProcessors() {
+        recipeProcessors.clear();
+    }
+
 
 }
