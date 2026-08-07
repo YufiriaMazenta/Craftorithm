@@ -9,6 +9,9 @@ import crypticlib.script.vm.ScriptVM;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import pers.yufiria.craftorithm.item.ItemManager;
+import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.util.PlayerUtils;
 
 import java.util.Optional;
@@ -45,6 +48,29 @@ public enum ConditionModule implements ScriptModule {
         registry.register(moduleName, "in_water", this::inWater);
         registry.register(moduleName, "in_rain", this::inRain);
         registry.register(moduleName, "light_level", this::lightLevel);
+        registry.register(moduleName, "match_item_id", this::matchItemId);
+    }
+
+    /**
+     * 获取物品的id，物品对象需要在args中
+     * 如果一个物品它不是已经定义的物品，那么将返回原版的id
+     * @return
+     */
+    private ScriptValue matchItemId(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
+        if (args.length < 1) {
+            return ScriptValue.nil();
+        }
+        ScriptValue value = args[0];
+        if (!value.isObject()) {
+            return ScriptValue.nil();
+        }
+        ScriptValue.ObjectValue objectValue = (ScriptValue.ObjectValue) value;
+        Object object = objectValue.value();
+        if (!(object instanceof ItemStack itemStack)) {
+            return ScriptValue.nil();
+        }
+        Optional<NamespacedItemIdStack> idStackOpt = ItemManager.INSTANCE.matchItemIdOrVanilla(itemStack, true);
+        return idStackOpt.map(namespacedItemIdStack -> ScriptValue.of(namespacedItemIdStack.itemId().toString())).orElseGet(ScriptValue::nil);
     }
 
     private ScriptValue perm(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {

@@ -13,9 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
 import org.bukkit.plugin.EventExecutor;
 import org.jetbrains.annotations.Nullable;
@@ -301,6 +299,21 @@ public enum EventTriggerTypes {
         }, Map.of(
             "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
         ));
+        register("prepare_grindstone",
+            PrepareGrindstoneEvent.class,
+            PlayerExtractor.VIEWER,
+            Map.of(
+                "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+            )
+        );
+        register("trade_select",
+            TradeSelectEvent.class,
+            PlayerExtractor.VIEWER,
+            Map.of(
+                "index", event -> ScriptValue.of(((TradeSelectEvent) event).getIndex()),
+                "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
+            )
+        );
 
         // BlockEvent 子类（涉及玩家）
         register("block_break", BlockBreakEvent.class, PlayerExtractor.PLAYER,
