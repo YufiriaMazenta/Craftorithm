@@ -10,6 +10,7 @@ import crypticlib.util.FunctionExecutor;
 import crypticlib.util.IOHelper;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.config.Languages;
+import pers.yufiria.craftorithm.script.RootScriptContext;
 import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.util.List;
@@ -31,7 +32,7 @@ public class ScriptCommand extends CommandNode {
         }
         String scriptLine = String.join(" ", args);
         long executeTime = FunctionExecutor.execute(() -> {
-            ScriptEngine.INSTANCE.execute(scriptLine, new ScriptContext(invoker));
+            ScriptEngine.INSTANCE.execute(scriptLine, new ScriptContext(invoker, RootScriptContext.INSTANCE));
         });
         LangUtils.sendLang(invoker, Languages.COMMAND_SCRIPT_OPERATION_TIME, Map.of("<time>", executeTime + ""));
         IOHelper.info("Invoker \"" + invoker.name() + "\" execute script line: " + scriptLine);

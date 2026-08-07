@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
+import pers.yufiria.craftorithm.script.RootScriptContext;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,7 +39,7 @@ public class ActionIcon extends TranslatableIcon {
         CompiledScript actionScript = actionsMap.get(click);
         if (actionScript != null) {
             if (event.getWhoClicked() instanceof Player player) {
-                actionScript.execute(new ScriptContext(BukkitPlayer.byPlayer(player)));
+                actionScript.execute(new ScriptContext(BukkitPlayer.byPlayer(player), RootScriptContext.INSTANCE));
             }
         }
     }

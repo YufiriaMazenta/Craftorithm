@@ -9,6 +9,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.yufiria.craftorithm.script.RootScriptContext;
 import pers.yufiria.craftorithm.ui.BackableMenu;
 import pers.yufiria.craftorithm.ui.TranslatableMenu;
 
@@ -35,7 +36,7 @@ public class CustomMenu extends TranslatableMenu implements BackableMenu {
         CompiledScript openAction = menuInfo.openAction();
         if (openAction != null) {
             if (player != null) {
-                openAction.execute(new ScriptContext(BukkitPlayer.byPlayer(player)));
+                openAction.execute(new ScriptContext(BukkitPlayer.byPlayer(player), RootScriptContext.INSTANCE));
             }
         }
     }
@@ -46,7 +47,7 @@ public class CustomMenu extends TranslatableMenu implements BackableMenu {
         CompiledScript closeAction = menuInfo.closeAction();
         if (closeAction != null) {
             if (player != null) {
-                closeAction.execute(new ScriptContext(BukkitPlayer.byPlayer(player)));
+                closeAction.execute(new ScriptContext(BukkitPlayer.byPlayer(player), RootScriptContext.INSTANCE));
             }
         }
     }

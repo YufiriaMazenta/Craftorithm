@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.recipe.RecipeType;
+import pers.yufiria.craftorithm.script.RootScriptContext;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -63,7 +64,7 @@ public class TriggerContext {
             throw new IllegalStateException("Player " + playerId + " is not online, cannot create ScriptContext");
         }
         Invoker invoker = BukkitPlayer.byPlayer(player);
-        ScriptContext ctx = new ScriptContext(invoker);
+        ScriptContext ctx = new ScriptContext(invoker, RootScriptContext.INSTANCE);
 
         if (recipeKey != null) {
             ctx.setVariable("recipe", ScriptValue.of(recipeKey.toString()));
