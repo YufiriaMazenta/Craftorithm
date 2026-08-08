@@ -48,7 +48,7 @@ command:
   openmenu:
     unknown_menu: '<prefix> &cUnbekanntes Menü: <menu_name>'
   script:
-    operation_time: '<prefix> &aAusführung der Anweisung dauerte <time> ms.'
+    operation_time: '<prefix> &aAusführung der Anweisung dauerte <time> ns.'
   edit:
     invalid_recipe_id: '<prefix> &cUngültige Rezept-ID.'
     recipe_not_found: '<prefix> &cRezept nicht gefunden.'

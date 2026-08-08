@@ -49,7 +49,8 @@ command:
   openmenu:
     unknown_menu: '<prefix> &c未知的菜单:<menu_name>'
   script:
-    operation_time: '<prefix> &a语句执行消耗<time>毫秒'
+    operation_time: '<prefix> &a语句执行消耗<time>纳秒'
+
   edit:
     invalid_recipe_id: '<prefix> &c无效的配方ID'
     recipe_not_found: '<prefix> &c找不到该配方'

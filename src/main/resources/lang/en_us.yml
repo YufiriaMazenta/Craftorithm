@@ -48,7 +48,7 @@ command:
   openmenu:
     unknown_menu: '<prefix> &cUnknown menu: <menu_name>'
   script:
-    operation_time: '<prefix> &aStatement execution took <time> ms.'
+    operation_time: '<prefix> &aStatement execution took <time> ns.'
   edit:
     invalid_recipe_id: '<prefix> &cInvalid recipe ID.'
     recipe_not_found: '<prefix> &cRecipe not found.'
