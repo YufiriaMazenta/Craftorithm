@@ -1,6 +1,6 @@
 package pers.yufiria.craftorithm.recipe.resultProcessor.impl;
 
-import crypticlib.util.IOHelper;
+import crypticlib.CrypticLib;
 import crypticlib.util.ReflectionHelper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
@@ -210,12 +210,12 @@ public class CustomPersistentDataProcessorFactory implements ComponentProcessorF
         Class<PersistentDataType> dataTypeClass = PersistentDataType.class;
         Field field = ReflectionHelper.getField(dataTypeClass, upperTypeStr);
         if (field == null) {
-            IOHelper.info("&eUnknown PersistentDataType: " + typeStr);
+            CrypticLib.info("&eUnknown PersistentDataType: " + typeStr);
             return null;
         }
         Object dataType = ReflectionHelper.getFieldObj(field, null);
         if (dataType == null) {
-            IOHelper.info("&eUnknown PersistentDataType: " + typeStr);
+            CrypticLib.info("&eUnknown PersistentDataType: " + typeStr);
             return null;
         }
         return (PersistentDataType<?, ?>) dataType;

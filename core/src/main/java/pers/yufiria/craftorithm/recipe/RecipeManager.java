@@ -10,6 +10,7 @@ import crypticlib.lifecycle.LifecycleRule;
 import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskSettings;
 import crypticlib.scheduler.CrypticLibRunnable;
+import crypticlib.CrypticLib;
 import crypticlib.util.IOHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
@@ -554,7 +555,7 @@ public enum RecipeManager implements LifecycleTask {
                 }
             }
             long thisTickUseMs = System.currentTimeMillis() - startTime;
-            IOHelper.info("Loaded " + recipeNum + " recipes in " + thisTickUseMs + " ms.");
+            CrypticLib.info("Loaded " + recipeNum + " recipes in " + thisTickUseMs + " ms.");
             useMilliseconds += thisTickUseMs;
             useTick ++;
         }

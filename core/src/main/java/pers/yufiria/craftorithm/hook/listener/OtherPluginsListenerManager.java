@@ -7,7 +7,7 @@ import crypticlib.lifecycle.Lifecycle;
 import crypticlib.lifecycle.LifecycleRule;
 import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskSettings;
-import crypticlib.util.IOHelper;
+import crypticlib.CrypticLib;
 import crypticlib.util.ReflectionHelper;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -64,7 +64,7 @@ public enum OtherPluginsListenerManager implements LifecycleTask {
                 EventExecutor executor = getRegisteredListenerExecutor(originRegisteredListener);
                 if (executor == null) {
                     //拿不到原监听器的executor时不能转换,否则包装监听器会在事件触发时抛NPE
-                    IOHelper.info("&cCannot get executor of listener " + listenerClassName + ", skip converting it");
+                    CrypticLib.info("&cCannot get executor of listener " + listenerClassName + ", skip converting it");
                     continue;
                 }
                 RegisteredListener convertedRegisteredListener;
@@ -87,7 +87,7 @@ public enum OtherPluginsListenerManager implements LifecycleTask {
                         );
                     }
                 } catch (Throwable t) {
-                    IOHelper.info("&eFailed to convert timed listener " + listenerClassName + ", fallback to non-timed wrapper: " + t);
+                    CrypticLib.info("&eFailed to convert timed listener " + listenerClassName + ", fallback to non-timed wrapper: " + t);
                     convertedRegisteredListener = new RecipeCheckRegisteredListener(
                         listener,
                         executor,
@@ -106,7 +106,7 @@ public enum OtherPluginsListenerManager implements LifecycleTask {
                     handlerList
                 ));
 
-                IOHelper.info("Converted listener: " + listenerClassName);
+                CrypticLib.info("Converted listener: " + listenerClassName);
             }
         }
         allowReregisterListenerNumMap.putAll(listenerConvertedCountMap);
@@ -172,7 +172,7 @@ public enum OtherPluginsListenerManager implements LifecycleTask {
         try {
             return ReflectionHelper.getDeclaredField(RegisteredListener.class, "executor");
         } catch (Throwable t) {
-            IOHelper.info("&cCannot find executor field of RegisteredListener, other plugins' craft listeners will not be converted");
+            CrypticLib.info("&cCannot find executor field of RegisteredListener, other plugins' craft listeners will not be converted");
             return null;
         }
     }

@@ -12,7 +12,7 @@ import crypticlib.script.func.ScriptModule;
 import crypticlib.script.vm.ScriptVM;
 import crypticlib.ui.menu.Menu;
 import crypticlib.ui.util.MenuHelper;
-import crypticlib.util.IOHelper;
+import crypticlib.CrypticLib;
 import crypticlib.util.InventoryHelper;
 import crypticlib.util.InventoryViewHelper;
 import crypticlib.util.ItemHelper;
@@ -114,7 +114,7 @@ public enum ActionModule implements ScriptModule {
         }
         Player player = playerOpt.get();
         Optional<Menu> openingMenuOpt = MenuHelper.getOpeningMenu(player);
-        IOHelper.debug("is opening menu: " + openingMenuOpt.isPresent());
+        CrypticLib.debug("is opening menu: " + openingMenuOpt.isPresent());
         if (openingMenuOpt.isPresent()) {
             Menu menu = openingMenuOpt.get();
             if (menu instanceof BackableMenu backableMenu) {
@@ -255,7 +255,7 @@ public enum ActionModule implements ScriptModule {
             sb.append(arg.asString());
         }
         String msg = BukkitTextProcessor.placeholder(playerOpt.orElse(null), sb.toString());
-        IOHelper.info(msg);
+        CrypticLib.info(msg);
         return ScriptValue.nil();
     }
 

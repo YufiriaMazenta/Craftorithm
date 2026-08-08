@@ -7,7 +7,7 @@ import crypticlib.lifecycle.LifecycleRule;
 import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskSettings;
 import crypticlib.script.ScriptEngine;
-import crypticlib.util.IOHelper;
+import crypticlib.CrypticLib;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Recipe;
 import pers.yufiria.craftorithm.api.CraftorithmAPI;
@@ -42,7 +42,7 @@ public final class Craftorithm extends BukkitPlugin implements LifecycleTask {
     @Override
     public void whenLoad() {
         CrypticLib.debug = PluginConfigs.DEBUG.value();
-        IOHelper.info("&7Server Type: " + CrypticLibBukkit.serverAdapter().type() + ", Version: " + MinecraftVersion.current().version());
+        CrypticLib.info("&7Server Type: " + CrypticLibBukkit.serverAdapter().type() + ", Version: " + MinecraftVersion.current().version());
         if (MinecraftVersion.current().before(MinecraftVersion.V1_20)) {
             BukkitMsgSender.INSTANCE.info("&cUnsupported Version");
             throw new UnsupportedVersionException();

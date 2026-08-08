@@ -7,6 +7,7 @@ import crypticlib.lifecycle.Lifecycle;
 import crypticlib.lifecycle.LifecycleRule;
 import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskSettings;
+import crypticlib.CrypticLib;
 import crypticlib.util.IOHelper;
 import crypticlib.util.ItemHelper;
 import crypticlib.util.MaterialHelper;
@@ -120,7 +121,7 @@ public enum ItemManager implements LifecycleTask {
 
     private void logProviderError(String providerNamespace, Throwable throwable) {
         if (erroredProviders.add(providerNamespace)) {
-            IOHelper.info("&cItem provider '" + providerNamespace + "' threw an exception, it may be incompatible with the installed plugin version");
+            CrypticLib.info("&cItem provider '" + providerNamespace + "' threw an exception, it may be incompatible with the installed plugin version");
             throwable.printStackTrace();
         }
     }
@@ -326,7 +327,7 @@ public enum ItemManager implements LifecycleTask {
             NamespacedItemId itemId = matchItemId(item, true)
                 .map(NamespacedItemIdStack::itemId)
                 .orElseGet(() -> NamespacedItemId.fromMaterial(item.getType()));
-            IOHelper.debug("check: " + itemId);
+            CrypticLib.debug("check: " + itemId);
             if (cannotCraftItems.contains(itemId)) {
                 result = true;
                 break;

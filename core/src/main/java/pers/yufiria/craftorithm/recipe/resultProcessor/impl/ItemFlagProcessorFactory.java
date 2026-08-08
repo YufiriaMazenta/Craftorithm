@@ -1,6 +1,6 @@
 package pers.yufiria.craftorithm.recipe.resultProcessor.impl;
 
-import crypticlib.util.IOHelper;
+import crypticlib.CrypticLib;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -97,7 +97,7 @@ public class ItemFlagProcessorFactory implements ComponentProcessorFactory {
         try {
             return ItemFlag.valueOf(flagName.toUpperCase());
         } catch (IllegalArgumentException e) {
-            IOHelper.info("&eUnknown ItemFlag: " + flagName);
+            CrypticLib.info("&eUnknown ItemFlag: " + flagName);
             return null;
         }
     }

@@ -8,6 +8,7 @@ import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskSettings;
 import crypticlib.ui.menu.Menu;
 import crypticlib.ui.util.MenuHelper;
+import crypticlib.CrypticLib;
 import crypticlib.util.IOHelper;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -102,9 +103,9 @@ public enum CustomMenuManager implements LifecycleTask {
                     customMenu.openMenu();
                     return customMenu;
                 });
-                IOHelper.info("Loaded menu: " + menuName);
+                CrypticLib.info("Loaded menu: " + menuName);
             } catch (Throwable throwable) {
-                IOHelper.info("&cLoad menu " + menuName + " failed");
+                CrypticLib.info("&cLoad menu " + menuName + " failed");
                 throwable.printStackTrace();
             }
         }

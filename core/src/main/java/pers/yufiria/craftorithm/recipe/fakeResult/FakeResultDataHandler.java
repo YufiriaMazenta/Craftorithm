@@ -6,7 +6,7 @@ import crypticlib.lifecycle.LifecycleRule;
 import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskSettings;
 import crypticlib.listener.EventListener;
-import crypticlib.util.IOHelper;
+import crypticlib.CrypticLib;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
@@ -44,7 +44,7 @@ public enum FakeResultDataHandler implements Listener, LifecycleTask {
         String fakeResultIdStr = recipeConfig.getString(FAKE_RESULT_PREVIEW_CONFIG_KEY);
         NamespacedItemIdStack fakeResultId = NamespacedItemIdStack.fromString(fakeResultIdStr);
         if (fakeResultId == null) {
-            IOHelper.info("&eFailed to resolve fake result item from: " + fakeResultIdStr);
+            CrypticLib.info("&eFailed to resolve fake result item from: " + fakeResultIdStr);
             return;
         }
         FAKE_RESULT_MAP.put(event.recipeKey(), fakeResultId);

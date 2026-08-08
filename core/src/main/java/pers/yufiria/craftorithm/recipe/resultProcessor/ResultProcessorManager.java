@@ -2,7 +2,7 @@ package pers.yufiria.craftorithm.recipe.resultProcessor;
 
 import crypticlib.listener.EventListener;
 import crypticlib.util.BukkitConfigHelper;
-import crypticlib.util.IOHelper;
+import crypticlib.CrypticLib;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
@@ -82,7 +82,7 @@ public enum ResultProcessorManager implements Listener {
         for (String componentName : processorsSection.getKeys(false)) {
             ComponentProcessorFactory factory = factoryMap.get(componentName);
             if (factory == null) {
-                IOHelper.info("&eUnknown component: " + componentName);
+                CrypticLib.info("&eUnknown component: " + componentName);
                 continue;
             }
             if (processorsSection.isList(componentName)) {
@@ -99,7 +99,7 @@ public enum ResultProcessorManager implements Listener {
                 // 单个配置格式
                 ConfigurationSection entry = processorsSection.getConfigurationSection(componentName);
                 if (entry == null) {
-                    IOHelper.info("&eInvalid result_processor entry: " + componentName);
+                    CrypticLib.info("&eInvalid result_processor entry: " + componentName);
                     continue;
                 }
                 parseAndAddProcessor(processors, factory, componentName, entry);
@@ -111,14 +111,14 @@ public enum ResultProcessorManager implements Listener {
     private void parseAndAddProcessor(List<ResultProcessor> processors, ComponentProcessorFactory factory, String componentName, ConfigurationSection entry) {
         String strategyStr = entry.getString("type");
         if (strategyStr == null) {
-            IOHelper.info("&eMissing 'type' for result_processor: " + componentName);
+            CrypticLib.info("&eMissing 'type' for result_processor: " + componentName);
             return;
         }
         ProcessingStrategy strategy;
         try {
             strategy = ProcessingStrategy.fromString(strategyStr);
         } catch (IllegalArgumentException e) {
-            IOHelper.info("&eUnknown processing strategy '" + strategyStr + "' for result_processor: " + componentName);
+            CrypticLib.info("&eUnknown processing strategy '" + strategyStr + "' for result_processor: " + componentName);
             return;
         }
         ConfigurationSection data = entry.getConfigurationSection("data");
@@ -152,7 +152,7 @@ public enum ResultProcessorManager implements Listener {
             }
             ComponentProcessorFactory factory = factoryMap.get(ruleName);
             if (factory == null) {
-                IOHelper.info("&eUnknown rule: " + ruleName);
+                CrypticLib.info("&eUnknown rule: " + ruleName);
                 continue;
             }
             ConfigurationSection data = parseLegacyArg(arg);

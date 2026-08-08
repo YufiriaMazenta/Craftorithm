@@ -5,7 +5,7 @@ import crypticlib.lifecycle.Lifecycle;
 import crypticlib.lifecycle.LifecycleRule;
 import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskSettings;
-import crypticlib.util.IOHelper;
+import crypticlib.CrypticLib;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.item.CraftorithmItemProvider;
@@ -36,7 +36,7 @@ public enum ItemPluginHookManager implements LifecycleTask {
         for (String hookPluginName : PluginConfigs.ITEM_PLUGIN_HOOK_PRIORITY.value()) {
             ItemPluginHook itemPluginHooker = getItemPluginHook(hookPluginName);
             if (itemPluginHooker == null) {
-                IOHelper.info("&eUnknown item plugin '" + hookPluginName + "'");
+                CrypticLib.info("&eUnknown item plugin '" + hookPluginName + "'");
                 continue;
             }
             if (itemPluginHooker.hook()) {

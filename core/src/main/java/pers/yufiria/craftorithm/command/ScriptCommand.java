@@ -7,7 +7,7 @@ import crypticlib.perm.PermInfo;
 import crypticlib.script.ScriptContext;
 import crypticlib.script.ScriptEngine;
 import crypticlib.util.FunctionExecutor;
-import crypticlib.util.IOHelper;
+import crypticlib.CrypticLib;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.script.RootScriptContext;
@@ -35,7 +35,7 @@ public class ScriptCommand extends CommandNode {
             ScriptEngine.INSTANCE.execute(scriptLine, new ScriptContext(invoker, RootScriptContext.INSTANCE));
         });
         LangUtils.sendLang(invoker, Languages.COMMAND_SCRIPT_OPERATION_TIME, Map.of("<time>", executeTime + ""));
-        IOHelper.info("Invoker \"" + invoker.name() + "\" execute script line: " + scriptLine);
+        CrypticLib.info("Invoker \"" + invoker.name() + "\" execute script line: " + scriptLine);
     }
 
     @Override

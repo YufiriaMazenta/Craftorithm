@@ -1,7 +1,7 @@
 package pers.yufiria.craftorithm.listener;
 
 import crypticlib.listener.EventListener;
-import crypticlib.util.IOHelper;
+import crypticlib.CrypticLib;
 import io.papermc.paper.event.server.ServerResourcesReloadedEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -19,7 +19,7 @@ public enum ServerResourcesReloadListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onServerResourceReload(ServerResourcesReloadedEvent event) {
-        IOHelper.info("Plugin reloaded automatically upon server resources reload");
+        CrypticLib.info("Plugin reloaded automatically upon server resources reload");
         Craftorithm.instance().reloadPlugin();
     }
 

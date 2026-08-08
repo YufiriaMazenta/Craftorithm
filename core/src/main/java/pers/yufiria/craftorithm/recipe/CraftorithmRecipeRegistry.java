@@ -2,7 +2,7 @@ package pers.yufiria.craftorithm.recipe;
 
 import crypticlib.MinecraftVersion;
 import crypticlib.compat.Compat;
-import crypticlib.util.IOHelper;
+import crypticlib.CrypticLib;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.Recipe;
@@ -43,7 +43,7 @@ public interface CraftorithmRecipeRegistry {
             return registryOpt.get();
         }
         if (UNSUPPORTED_VERSION_WARNED.compareAndSet(false, true)) {
-            IOHelper.info("&cCan not find craftorithm recipe register impl for version " + MinecraftVersion.current().versionStr() + ", custom recipes will not be registered!");
+            CrypticLib.info("&cCan not find craftorithm recipe register impl for version " + MinecraftVersion.current().versionStr() + ", custom recipes will not be registered!");
         }
         return (bukkitRecipe, send2Player) -> RegisterResult.UNSUPPORTED_VERSION;
     }
