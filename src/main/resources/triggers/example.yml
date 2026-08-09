@@ -5,8 +5,10 @@ on_craft_diamond_sword:
   conditions:
     mode: script
     body:
-      - 'if event.get("view").get("player").invoke("getName") == "Yufiria_"'
-      - '  tell("是插件开发者正在进行合成！")'
+      - 'var resultId = match_item_id(event.get("inventory").get("result"))'
+      - 'if !perm("craftorithm.craft.${resultId}")'
+      - '  tell("You can not craft item ${resultId}")'
+      - '  return false'
       - 'endif'
       - 'return true'
   actions:
@@ -16,3 +18,7 @@ on_craft_diamond_sword:
   enabled: true
   cooldown: 5
   per_player: true
+on_join:
+  type: player_join
+  actions:
+    - console("cra discover %player_name% craftorithm:.*")
