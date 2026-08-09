@@ -86,7 +86,7 @@ public enum TriggerManager implements LifecycleTask {
     /**
      * 从 triggers 文件夹加载所有触发器
      */
-    public void loadTriggers() {
+    public void reloadTriggers() {
         // 清理旧数据
         triggers.clear();
         triggerById.clear();
@@ -293,7 +293,7 @@ public enum TriggerManager implements LifecycleTask {
                 regTriggerType(type);
             }
         }
-        loadTriggers();
+        reloadTriggers();
     }
 
 }
