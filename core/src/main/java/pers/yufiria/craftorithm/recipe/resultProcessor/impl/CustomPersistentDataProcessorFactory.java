@@ -208,17 +208,21 @@ public class CustomPersistentDataProcessorFactory implements ComponentProcessorF
     private static PersistentDataType<?, ?> parseDataType(String typeStr) {
         String upperTypeStr = typeStr.toUpperCase();
         Class<PersistentDataType> dataTypeClass = PersistentDataType.class;
-        Field field = ReflectionHelper.getField(dataTypeClass, upperTypeStr);
-        if (field == null) {
-            CrypticLib.info("&eUnknown PersistentDataType: " + typeStr);
-            return null;
+        try {
+            Field field = ReflectionHelper.getField(dataTypeClass, upperTypeStr);
+            if (field == null) {
+                CrypticLib.info("&eUnknown PersistentDataType: " + typeStr);
+                return null;
+            }
+            Object dataType = ReflectionHelper.getFieldObj(field, null);
+            if (dataType == null) {
+                CrypticLib.info("&eUnknown PersistentDataType: " + typeStr);
+                return null;
+            }
+            return (PersistentDataType<?, ?>) dataType;
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
         }
-        Object dataType = ReflectionHelper.getFieldObj(field, null);
-        if (dataType == null) {
-            CrypticLib.info("&eUnknown PersistentDataType: " + typeStr);
-            return null;
-        }
-        return (PersistentDataType<?, ?>) dataType;
     }
 
     @SuppressWarnings("unchecked")

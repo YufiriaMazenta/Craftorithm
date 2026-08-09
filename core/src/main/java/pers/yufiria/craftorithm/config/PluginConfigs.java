@@ -57,6 +57,8 @@ public class PluginConfigs {
             "CraftEngine",
             "Nexo",
             "AzureFlow",
+            "SX-Item",
+            "EmakiItem",
             "NeigeItems",
             "ItemsAdder",
             "Oraxen",
