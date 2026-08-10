@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/YufiriaMazenta/picx-images-hosting/raw/master/banner-cn.2h90xus1ip.png" width="100%" alt="Craftorithm">
+  <img src="https://github.com/YufiriaMazenta/picx-images-hosting/raw/master/1000084925.4cllvazaxq.png" width="100%" alt="Craftorithm">
 </p>
 
 <p align="center">
