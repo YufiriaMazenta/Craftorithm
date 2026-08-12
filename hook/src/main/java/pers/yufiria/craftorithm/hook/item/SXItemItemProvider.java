@@ -24,22 +24,13 @@ public enum SXItemItemProvider implements ItemProvider {
         if (itemKey == null) {
             return null;
         }
-        if (ignoreAmount)
-            return new NamespacedItemIdStack(
-                new NamespacedItemId(
-                    namespace(),
-                    itemKey
-                )
-            );
-        else {
-            return new NamespacedItemIdStack(
-                new NamespacedItemId(
-                    namespace(),
-                    itemKey
-                ),
-                itemStack.getAmount()
-            );
-        }
+        return new NamespacedItemIdStack(
+            new NamespacedItemId(
+                namespace(),
+                itemKey
+            ),
+            ignoreAmount ? 1 : itemStack.getAmount()
+        );
     }
 
     @Override

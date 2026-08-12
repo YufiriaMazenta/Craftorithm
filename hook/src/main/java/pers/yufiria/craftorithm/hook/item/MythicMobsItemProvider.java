@@ -28,22 +28,13 @@ public enum MythicMobsItemProvider implements ItemProvider {
         if (!itemExecutor.isMythicItem(itemStack))
             return null;
         String mmItemName = itemExecutor.getMythicTypeFromItem(itemStack);
-        if (ignoreAmount)
-            return new NamespacedItemIdStack(
-                new NamespacedItemId(
-                    namespace(),
-                    mmItemName
-                )
-            );
-        else {
-            return new NamespacedItemIdStack(
-                new NamespacedItemId(
-                    namespace(),
-                    mmItemName
-                ),
-                itemStack.getAmount()
-            );
-        }
+        return new NamespacedItemIdStack(
+            new NamespacedItemId(
+                namespace(),
+                mmItemName
+            ),
+            ignoreAmount ? 1 : itemStack.getAmount()
+        );
     }
 
     @Override

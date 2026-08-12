@@ -28,22 +28,13 @@ public enum AzureFlowItemProvider implements ItemProvider {
             return null;
         }
         String itemId = azureFlowItem.getUuid();
-        if (ignoreAmount) {
-            return new NamespacedItemIdStack(
-                new NamespacedItemId(
-                    namespace(),
-                    itemId
-                )
-            );
-        } else {
-            return new NamespacedItemIdStack(
-                new NamespacedItemId(
-                    namespace(),
-                    itemId
-                ),
-                itemStack.getAmount()
-            );
-        }
+        return new NamespacedItemIdStack(
+            new NamespacedItemId(
+                namespace(),
+                itemId
+            ),
+            ignoreAmount ? 1 : itemStack.getAmount()
+        );
     }
 
     @Override

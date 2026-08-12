@@ -26,23 +26,13 @@ public enum MMOItemsItemProvider implements ItemProvider {
         String type = nbtItem.getType();
         String id = nbtItem.getString("MMOITEMS_ITEM_ID");
         String itemKey = type + ":" + id;
-        if (ignoreAmount) {
-            return new NamespacedItemIdStack(
-                new NamespacedItemId(
-                    namespace(),
-                    itemKey
-                )
-            );
-        } else {
-            return new NamespacedItemIdStack(
-                new NamespacedItemId(
-                    namespace(),
-                    itemKey
-                ),
-                itemStack.getAmount()
-            );
-        }
-
+        return new NamespacedItemIdStack(
+            new NamespacedItemId(
+                namespace(),
+                itemKey
+            ),
+            ignoreAmount ? 1 : itemStack.getAmount()
+        );
     }
 
     @Override

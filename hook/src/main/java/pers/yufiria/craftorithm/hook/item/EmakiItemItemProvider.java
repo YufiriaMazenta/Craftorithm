@@ -23,11 +23,13 @@ public enum EmakiItemItemProvider implements ItemProvider {
         if (identify == null){
             return null;
         }
-        if (ignoreAmount) {
-            return new NamespacedItemIdStack(new NamespacedItemId(namespace(), identify));
-        } else {
-            return new NamespacedItemIdStack(new NamespacedItemId(namespace(), identify), itemStack.getAmount());
-        }
+        return new NamespacedItemIdStack(
+            new NamespacedItemId(
+                namespace(),
+                identify
+            ),
+            ignoreAmount ? 1 : itemStack.getAmount()
+        );
     }
 
     @Override

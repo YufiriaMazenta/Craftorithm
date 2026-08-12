@@ -29,22 +29,13 @@ public enum ExecutableItemsItemProvider implements ItemProvider {
         if (executableItemOpt.isPresent()) {
             ExecutableItemInterface executableItem = executableItemOpt.get();
             String id = executableItem.getId();
-            if (ignoreAmount) {
-                return new NamespacedItemIdStack(
-                    new NamespacedItemId(
-                        namespace(),
-                        id
-                    )
-                );
-            } else {
-                return new NamespacedItemIdStack(
-                    new NamespacedItemId(
-                        namespace(),
-                        id
-                    ),
-                    itemStack.getAmount()
-                );
-            }
+            return new NamespacedItemIdStack(
+                new NamespacedItemId(
+                    namespace(),
+                    id
+                ),
+                ignoreAmount ? 1 : itemStack.getAmount()
+            );
         } else {
             return null;
         }

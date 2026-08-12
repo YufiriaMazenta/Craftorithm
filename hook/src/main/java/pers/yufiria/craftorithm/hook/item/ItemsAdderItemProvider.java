@@ -23,22 +23,13 @@ public enum ItemsAdderItemProvider implements ItemProvider {
         if (customStack == null)
             return null;
         String id = customStack.getNamespacedID();
-        if (ignoreAmount) {
-            return new NamespacedItemIdStack(
-                new NamespacedItemId(
-                    namespace(),
-                    id
-                )
-            );
-        } else {
-            return new NamespacedItemIdStack(
-                new NamespacedItemId(
-                    namespace(),
-                    id
-                ),
-                itemStack.getAmount()
-            );
-        }
+        return new NamespacedItemIdStack(
+            new NamespacedItemId(
+                namespace(),
+                id
+            ),
+            ignoreAmount ? 1 : itemStack.getAmount()
+        );
     }
 
     @Override

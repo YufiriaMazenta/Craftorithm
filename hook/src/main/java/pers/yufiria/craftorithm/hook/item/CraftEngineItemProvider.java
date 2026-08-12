@@ -30,17 +30,13 @@ public enum CraftEngineItemProvider implements ItemProvider {
         if (craftEngineItemId == null) {
             return null;
         }
-        NamespacedItemIdStack stack = new NamespacedItemIdStack(
+        return new NamespacedItemIdStack(
             new NamespacedItemId(
                 namespace(),
                 craftEngineItemId.asString()
-            )
+            ),
+            ignoreAmount ? 1 : itemStack.getAmount()
         );
-        if (ignoreAmount) {
-            return stack;
-        }
-        stack.setAmount(itemStack.getAmount());
-        return stack;
     }
 
     @Override

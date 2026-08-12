@@ -23,22 +23,13 @@ public enum OraxenItemProvider implements ItemProvider {
         if (!OraxenItems.exists(itemStack))
             return null;
         String itemName = OraxenItems.getIdByItem(itemStack);
-        if (ignoreAmount) {
-            return new NamespacedItemIdStack(
-                new NamespacedItemId(
-                    namespace(),
-                    itemName
-                )
-            );
-        } else {
-            return new NamespacedItemIdStack(
-                new NamespacedItemId(
-                    namespace(),
-                    itemName
-                ),
-                itemStack.getAmount()
-            );
-        }
+        return new NamespacedItemIdStack(
+            new NamespacedItemId(
+                namespace(),
+                itemName
+            ),
+            ignoreAmount ? 1 : itemStack.getAmount()
+        );
     }
 
     @Override
