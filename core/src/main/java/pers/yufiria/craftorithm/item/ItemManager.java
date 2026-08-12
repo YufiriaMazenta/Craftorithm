@@ -196,10 +196,10 @@ public enum ItemManager implements LifecycleTask {
         }
         NamespacedItemIdStack itemId;
         if (item.hasItemMeta()) {
-            itemId = ItemManager.INSTANCE.matchItemId(item, ignoreAmount).orElse(null);
+            itemId = matchItemId(item, ignoreAmount).orElse(null);
             if (itemId == null) {
                 String id = item.getType().getKey().getKey();
-                if (CraftorithmItemProvider.INSTANCE.matchItem(id) != null) {
+                if (CraftorithmItemProvider.INSTANCE.matchItem("plugin_created:" + id) != null) {
                     id += TIME_FORMAT.format(System.currentTimeMillis());
                 }
                 itemId = CraftorithmItemProvider.INSTANCE.regCraftorithmItem("plugin_created", id, item);
