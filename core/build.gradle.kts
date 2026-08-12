@@ -8,9 +8,9 @@ repositories {
 }
 
 dependencies {
-    compileOnly("net.luckperms:api:5.4")
-    compileOnly("me.clip:placeholderapi:2.11.6")
-    compileOnly("net.kyori:adventure-api:4.14.0")
+    compileOnly("net.luckperms:api:${rootProject.findProperty("luckPermsApiVer")}")
+    compileOnly("me.clip:placeholderapi:${rootProject.findProperty("placeholderApiVer")}")
+    compileOnly("net.kyori:adventure-api:${rootProject.findProperty("adventureApiVer")}")
     compileOnly("io.papermc.paper:paper-api:${rootProject.findProperty("paperApiVer")}")
     compileOnly("com.crypticlib:bukkit:${rootProject.findProperty("crypticlibVer")}")
     implementation("com.crypticlib:bukkit-ui:${rootProject.findProperty("crypticlibVer")}")

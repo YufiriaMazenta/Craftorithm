@@ -1,5 +1,5 @@
 repositories {
-    //CraftEngine
+    //CraftEngine, CustomFishing
     maven("https://repo.momirealms.net/releases/")
     //Eco
     maven("https://repo.auxilor.io/repository/maven-public/")
@@ -25,7 +25,7 @@ repositories {
 
 dependencies {
     compileOnly(project(":core"))
-    compileOnly("emaki.jiuwu.craft:emaki-item-api:2.6.1")
+    compileOnly("emaki.jiuwu.craft:emaki-item-api:${rootProject.findProperty("emakiItemApiVer")}")
     compileOnly("com.crypticlib:bukkit:${rootProject.findProperty("crypticlibVer")}")
     compileOnly("com.crypticlib:bukkit-i18n:${rootProject.findProperty("crypticlibVer")}")
     compileOnly("com.crypticlib:common-script:${rootProject.findProperty("crypticlibVer")}")
@@ -33,44 +33,44 @@ dependencies {
     //AzureFlow
     compileOnly(fileTree("libs"))
     //CraftEngine
-    compileOnly("net.momirealms:craft-engine-core:26.5")
-    compileOnly("net.momirealms:craft-engine-bukkit:26.5")
+    compileOnly("net.momirealms:craft-engine-core:${rootProject.findProperty("craftEngineVer")}")
+    compileOnly("net.momirealms:craft-engine-bukkit:${rootProject.findProperty("craftEngineVer")}")
     //CustomFishing
-    compileOnly("net.momirealms:custom-fishing:${rootProject.findProperty("customFishingApiVer")}")
+    compileOnly("net.momirealms:custom-fishing:${rootProject.findProperty("customFishingVer")}")
     //EcoItems
-    compileOnly("com.willfp:EcoEnchants:12.5.1")
-    compileOnly("com.willfp:EcoItems:5.59.0")
-    compileOnly("com.willfp:eco:6.74.2")
-    compileOnly("com.willfp:libreforge:4.71.6:all@jar")
+    compileOnly("com.willfp:EcoEnchants:${rootProject.findProperty("ecoEnchantsVer")}")
+    compileOnly("com.willfp:EcoItems:${rootProject.findProperty("ecoItemsVer")}")
+    compileOnly("com.willfp:eco:${rootProject.findProperty("ecoVer")}")
+    compileOnly("com.willfp:libreforge:${rootProject.findProperty("libreforgeVer")}:all@jar")
     //ExecutableItems
-    compileOnly("com.ssomar:SCore:5.24.10.5")
+    compileOnly("com.ssomar:SCore:${rootProject.findProperty("scoreVer")}")
     //ItemsAdder
-    compileOnly("com.github.LoneDev6:API-ItemsAdder:3.6.3-beta-14")
+    compileOnly("com.github.LoneDev6:API-ItemsAdder:${rootProject.findProperty("itemsAdderApiVer")}")
     //MMOItems
-    compileOnly("net.Indyuce:MMOItems-API:6.9.5-SNAPSHOT")
-    compileOnly("io.lumine:MythicLib-dist:1.6.2-SNAPSHOT")
+    compileOnly("net.Indyuce:MMOItems-API:${rootProject.findProperty("mmoItemsApiVer")}")
+    compileOnly("io.lumine:MythicLib-dist:${rootProject.findProperty("mythicLibDistVer")}")
     //MythicMobs
-    compileOnly("io.lumine:Mythic-Dist:5.3.5")
+    compileOnly("io.lumine:Mythic-Dist:${rootProject.findProperty("mythicDistVer")}")
     //NeigeItems
-    compileOnly("pers.neige.neigeitems:NeigeItems:1.15.113")
+    compileOnly("pers.neige.neigeitems:NeigeItems:${rootProject.findProperty("neigeItemsVer")}")
     //Nexo
-    compileOnly("com.nexomc:nexo:0.7.0")
+    compileOnly("com.nexomc:nexo:${rootProject.findProperty("nexoVer")}")
     //Oraxen
-    compileOnly("io.th0rgal:oraxen:1.191.0")
+    compileOnly("io.th0rgal:oraxen:${rootProject.findProperty("oraxenVer")}")
     //packetevents
-    compileOnly("com.github.retrooper:packetevents-spigot:2.12.2")
+    compileOnly("com.github.retrooper:packetevents-spigot:${rootProject.findProperty("packeteventsSpigotVer")}")
     //PlayerPoints
-    compileOnly("org.black_ixx:playerpoints:3.2.5")
+    compileOnly("org.black_ixx:playerpoints:${rootProject.findProperty("playerpointsVer")}")
     //ProtocolLib
-    compileOnly("net.dmulloy2:ProtocolLib:5.4.0")
+    compileOnly("net.dmulloy2:ProtocolLib:${rootProject.findProperty("protocolLibVer")}")
     //SX-Item
-    compileOnly("com.github.Saukiya:SX-Item:4.4.0")
+    compileOnly("com.github.Saukiya:SX-Item:${rootProject.findProperty("sxItemVer")}")
     //Vault
-    compileOnly("com.github.MilkBowl:VaultAPI:1.7") {
+    compileOnly("com.github.MilkBowl:VaultAPI:${rootProject.findProperty("vaultApiVer")}") {
         exclude("org.bukkit", "bukkit")
     }
-    compileOnly("net.milkbowl.vault:VaultUnlockedAPI:2.16")
-    compileOnly("net.advancedplugins:AdvancedEnchantments-API:8.7.4")
+    compileOnly("net.milkbowl.vault:VaultUnlockedAPI:${rootProject.findProperty("vaultUnlockedApiVer")}")
+    compileOnly("net.advancedplugins:AdvancedEnchantments-API:${rootProject.findProperty("advancedEnchantmentsApiVer")}")
 }
 
 java {

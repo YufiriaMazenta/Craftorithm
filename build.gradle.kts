@@ -71,7 +71,7 @@ subprojects {
         maven("https://repo.crypticlib.com/repository/maven-public/")
     }
     dependencies {
-        compileOnly("org.jetbrains:annotations:24.0.1")
+        compileOnly("org.jetbrains:annotations:${rootProject.findProperty("jetbrainsAnnotationsVer")}")
         compileOnly("com.crypticlib:bukkit:${rootProject.findProperty("crypticlibVer")}")
     }
     tasks {
