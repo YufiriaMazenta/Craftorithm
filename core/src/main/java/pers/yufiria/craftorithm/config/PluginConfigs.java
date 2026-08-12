@@ -54,6 +54,7 @@ public class PluginConfigs {
     public final static StringListConfig ITEM_PLUGIN_HOOK_PRIORITY = new StringListConfig(
         "item_plugin_hook_priority",
         List.of(
+            "CustomFishing",
             "CraftEngine",
             "Nexo",
             "AzureFlow",
