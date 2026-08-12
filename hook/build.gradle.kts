@@ -35,6 +35,8 @@ dependencies {
     //CraftEngine
     compileOnly("net.momirealms:craft-engine-core:26.5")
     compileOnly("net.momirealms:craft-engine-bukkit:26.5")
+    //CustomFishing
+    compileOnly("net.momirealms:custom-fishing:${rootProject.findProperty("customFishingApiVer")}")
     //EcoItems
     compileOnly("com.willfp:EcoEnchants:12.5.1")
     compileOnly("com.willfp:EcoItems:5.59.0")

@@ -23,6 +23,7 @@ softdepend:
   - Nexo
   - AzureFlow
   - CraftEngine
+  - CustomFishing
   - SX-Item
   - EmakiItem
   - AdvancedEnchantments
