@@ -25,6 +25,7 @@ repositories {
 
 dependencies {
     compileOnly(project(":core"))
+    compileOnly("emaki.jiuwu.craft:emaki-corelib-api:${rootProject.findProperty("emakiCoreLibApiVer")}")
     compileOnly("emaki.jiuwu.craft:emaki-item-api:${rootProject.findProperty("emakiItemApiVer")}")
     compileOnly("com.crypticlib:bukkit:${rootProject.findProperty("crypticlibVer")}")
     compileOnly("com.crypticlib:bukkit-i18n:${rootProject.findProperty("crypticlibVer")}")

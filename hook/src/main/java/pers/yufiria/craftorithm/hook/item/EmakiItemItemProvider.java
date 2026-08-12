@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.hook.item;
 
+import emaki.jiuwu.craft.corelib.api.contract.EmakiResult;
 import emaki.jiuwu.craft.item.api.EmakiItemApi;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -19,14 +20,22 @@ public enum EmakiItemItemProvider implements ItemProvider {
 
     @Override
     public @Nullable NamespacedItemIdStack matchItemId(ItemStack itemStack, boolean ignoreAmount) {
-        String identify = EmakiItemApi.identify(itemStack);
-        if (identify == null){
+        EmakiResult<String> identify = EmakiItemApi.catalog().identify(itemStack);
+        if (!identify.isSuccess()) {
             return null;
+        }
+        String id;
+        switch (identify) {
+            case EmakiResult.Success<String>(String definitionId) -> id = definitionId;
+            case EmakiResult.Partial<String>(String definitionId, String reasonKey) -> id = definitionId;
+            default -> {
+                return null;
+            }
         }
         return new NamespacedItemIdStack(
             new NamespacedItemId(
                 namespace(),
-                identify
+                id
             ),
             ignoreAmount ? 1 : itemStack.getAmount()
         );
@@ -34,6 +43,17 @@ public enum EmakiItemItemProvider implements ItemProvider {
 
     @Override
     public @Nullable ItemStack matchItem(String itemId) {
-        return EmakiItemApi.create(itemId, 1);
+        EmakiResult<ItemStack> result = EmakiItemApi.operations().create(itemId, 1);
+        switch (result) {
+            case EmakiResult.Success<ItemStack>(ItemStack stack) -> {
+                return stack;
+            }
+            case EmakiResult.Partial<ItemStack>(ItemStack stack, String ignored) -> {
+                return stack;
+            }
+            default -> {
+                return null;
+            }
+        }
     }
 }
