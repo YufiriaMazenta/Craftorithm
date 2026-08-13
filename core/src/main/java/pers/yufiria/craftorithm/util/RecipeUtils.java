@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.util;
 
+import crypticlib.MinecraftVersion;
 import crypticlib.util.ItemHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -14,17 +15,29 @@ import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.recipe.choice.CustomRecipeChoice;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class RecipeUtils {
 
     private static final Map<NamespacedKey, Tag<Material>> ITEMS_TAGS = new HashMap<>();
     private static final Map<NamespacedKey, Tag<Material>> BLOCKS_TAGS = new HashMap<>();
+    private static final Set<ClickType> quickCraftClickTypes;
 
     static {
+        //虽然原版1.21.2就可以用CTRL+Q进行快速合成，但是paper端1.21.11才有这个功能
+        if (MinecraftVersion.current().after(MinecraftVersion.V1_21_10)) {
+            quickCraftClickTypes = Set.of(
+                ClickType.SHIFT_LEFT,
+                ClickType.SHIFT_RIGHT,
+                ClickType.CONTROL_DROP
+            );
+        } else {
+            quickCraftClickTypes = Set.of(
+                ClickType.SHIFT_LEFT,
+                ClickType.SHIFT_RIGHT
+            );
+        }
+
         Iterable<Tag<Material>> blocksTags = Bukkit.getTags("blocks", Material.class);
         for (Tag<Material> blocksTag : blocksTags) {
             BLOCKS_TAGS.put(blocksTag.getKey(), blocksTag);
@@ -136,7 +149,7 @@ public class RecipeUtils {
         if (itemIndex == items.size()) {
             return true;
         }
-        org.bukkit.inventory.ItemStack currentItem = items.get(itemIndex);
+        ItemStack currentItem = items.get(itemIndex);
         // 尝试将当前物品匹配到任意一个未使用的成分
         for (int i = 0; i < choices.size(); i++) {
             if (!used[i] && choices.get(i).test(currentItem)) {
@@ -152,9 +165,7 @@ public class RecipeUtils {
 
     public static int calculateVanillaCraftNum(ClickType click, ItemStack[] matrix, ItemStack result, Player player) {
         // 普通点击只合成1个
-        if (click != ClickType.SHIFT_LEFT
-            && click != ClickType.SHIFT_RIGHT
-            && click != ClickType.CONTROL_DROP) {
+        if (!quickCraftClickTypes.contains(click)) {
             return 1;
         }
         if (matrix == null) return 0;
