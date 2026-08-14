@@ -30,8 +30,4 @@ public interface RecipeType {
 
     @Nullable String getLocalizedName(@NotNull Locale locale);
 
-    default String getLocalizedName() {
-        return getLocalizedName(Locale.getDefault());
-    }
-
 }

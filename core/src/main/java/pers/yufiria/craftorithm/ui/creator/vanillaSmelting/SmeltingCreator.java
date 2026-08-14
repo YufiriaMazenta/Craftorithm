@@ -246,7 +246,7 @@ public class SmeltingCreator extends RecipeCreator {
                         Languages.COMMAND_CREATE_SUCCESS,
                         Map.of(
                             "<recipe_type>",
-                            recipeType().getLocalizedName(),
+                            recipeType().getLocalizedName((Player) event.getWhoClicked()),
                             "<recipe_file_name>",
                             recipeFileName,
                             "<recipe_id>",

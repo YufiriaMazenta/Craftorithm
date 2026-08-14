@@ -145,7 +145,7 @@ public class RecipeListMenu extends Menu implements BackableMenu, Multipage {
         String title = this.display.title();
         Player player = player().orElse(null);
         title = LangManager.INSTANCE.replaceLang(title, player);
-        String typeName = recipeType != null ? recipeType.getLocalizedName() : Languages.MENU_RECIPE_BOOK_ALL_RECIPES.value(player);
+        String typeName = recipeType != null ? recipeType.getLocalizedName(player) : Languages.MENU_RECIPE_BOOK_ALL_RECIPES.value(player);
         title = title.replace("<page>", String.valueOf(page + 1))
             .replace("<max_page>", String.valueOf(maxPage + 1))
             .replace("<type_name>", typeName)
