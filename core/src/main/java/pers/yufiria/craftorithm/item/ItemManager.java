@@ -11,6 +11,7 @@ import crypticlib.CrypticLib;
 import crypticlib.util.IOHelper;
 import crypticlib.util.ItemHelper;
 import crypticlib.util.MaterialHelper;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
@@ -49,6 +50,8 @@ public enum ItemManager implements LifecycleTask {
     private final Map<String, ItemPack> itemPacks = new ConcurrentHashMap<>();
     //存储不能用于合成的物品列表
     private final Set<NamespacedItemId> cannotCraftItems = new HashSet<>();
+    //存储被阻止用于特定配方的Lore规则
+    private final List<LoreBlockRule> blockedLoreRules = new ArrayList<>();
     private final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("yyyyMMdd_HHmmss");
 
     /**
@@ -301,6 +304,7 @@ public enum ItemManager implements LifecycleTask {
         reloadCustomCookingFuel();
         reloadItemPacks();
         reloadCannotCraftItems();
+        reloadBlockedLoreRules();
     }
 
     private void reloadCannotCraftItems() {
@@ -334,6 +338,53 @@ public enum ItemManager implements LifecycleTask {
             }
         }
         return result;
+    }
+
+    /**
+     * 重新加载被阻止用于特定配方的Lore规则
+     */
+    private void reloadBlockedLoreRules() {
+        blockedLoreRules.clear();
+        for (ConfigurationSection section : PluginConfigs.BLOCKED_CRAFTING_LORE_RULES.value()) {
+            String lore = section.getString("lore", "");
+            if (lore.isEmpty())
+                continue;
+            List<String> patterns = section.getStringList("blocked_recipes");
+            if (patterns.isEmpty())
+                continue;
+            List<LoreBlockRule.RecipeKeyMatcher> matchers = patterns.stream()
+                .map(LoreBlockRule.RecipeKeyMatcher::of)
+                .toList();
+            blockedLoreRules.add(new LoreBlockRule(lore, matchers));
+        }
+    }
+
+    /**
+     * 物品堆中是否包含被阻止用于特定配方的Lore
+     * Lore匹配采用精确匹配，先去除Minecraft颜色代码（§x）后比较
+     * @param items 物品数组
+     * @param recipeKey 配方的NamespacedKey
+     * @return 如果任一物品的Lore匹配规则且配方被阻止，返回true
+     */
+    public boolean containsBlockedLore(ItemStack[] items, NamespacedKey recipeKey) {
+        if (blockedLoreRules.isEmpty())
+            return false;
+        String recipeKeyStr = recipeKey.toString();
+        for (ItemStack item : items) {
+            if (item == null || !item.hasItemMeta())
+                continue;
+            List<String> lore = item.getItemMeta().getLore();
+            if (lore == null || lore.isEmpty())
+                continue;
+            for (String loreLine : lore) {
+                String strippedLore = ChatColor.stripColor(loreLine);
+                for (LoreBlockRule rule : blockedLoreRules) {
+                    if (rule.matches(strippedLore, recipeKeyStr))
+                        return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void reloadItemPacks() {

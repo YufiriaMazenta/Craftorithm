@@ -38,7 +38,6 @@ public enum SmithingListener implements Listener {
             return;
         }
 
-
         AtomicReference<ItemStack> result = new AtomicReference<>(event.getResult());
         if (ItemHelper.isAir(result.get())) {
             //如果结果是air,如果接着往下设置,会报错
@@ -75,6 +74,16 @@ public enum SmithingListener implements Listener {
         if (cannotCraft) {
             event.getInventory().setResult(null);
             event.setResult(null);
+            return;
+        }
+        // 检查 blocked_crafting_lore_rules
+        Recipe recipe = event.getInventory().getRecipe();
+        if (recipe != null) {
+            NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
+            if (recipeKey != null && ItemManager.INSTANCE.containsBlockedLore(items, recipeKey)) {
+                event.getInventory().setResult(null);
+                event.setResult(null);
+            }
         }
     }
 

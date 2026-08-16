@@ -117,6 +117,11 @@ public enum AnvilRecipeHandler implements Listener {
         if (anvilRecipe == null)
             return;
 
+        // 检查 blocked_crafting_lore_rules
+        if (ItemManager.INSTANCE.containsBlockedLore(new ItemStack[]{base, addition}, anvilRecipe.getKey())) {
+            return;
+        }
+
         AtomicReference<ItemStack> result = new AtomicReference<>(anvilRecipe.getResult());
         Optional<Player> playerOpt = EventUtils.getViewer(event);
 
@@ -192,6 +197,12 @@ public enum AnvilRecipeHandler implements Listener {
         AnvilRecipe anvilRecipe = matchAnvilRecipe(base, addition);
         if (anvilRecipe == null)
             return;
+
+        // 检查 blocked_crafting_lore_rules
+        if (ItemManager.INSTANCE.containsBlockedLore(new ItemStack[]{base, addition}, anvilRecipe.getKey())) {
+            return;
+        }
+
         NamespacedItemIdStack baseId = ItemManager.INSTANCE.matchItemId(base, true)
             .orElseGet(() -> new NamespacedItemIdStack(NamespacedItemId.fromMaterial(base.getType()), base.getAmount()));
         NamespacedItemIdStack additionId = ItemManager.INSTANCE.matchItemId(addition, true)

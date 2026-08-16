@@ -2,6 +2,7 @@ package pers.yufiria.craftorithm.recipe.listener;
 
 import crypticlib.CrypticLibBukkit;
 import crypticlib.listener.EventListener;
+import crypticlib.util.ItemHelper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
@@ -59,15 +60,22 @@ public enum SmeltingListener implements Listener {
         }
 
         ItemStack result = event.getResult();
-        // 重新从物品源获取物品, 刷新结果的组件
-        ItemManager.INSTANCE.matchItemId(result, true)
-            .flatMap(ItemManager.INSTANCE::matchItem)
-            .ifPresent(refreshItem -> {
-                result.setItemMeta(refreshItem.getItemMeta());
-            });
-        // 运行结果处理器（烧炼配方的source是输入物品）
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
         if (recipeKey != null) {
+            // 检查 blocked_crafting_lore_rules
+            ItemStack source = event.getSource();
+            if (!ItemHelper.isAir(source) && ItemManager.INSTANCE.containsBlockedLore(new ItemStack[]{source}, recipeKey)) {
+                event.setCancelled(true);
+                return;
+            }
+            // lore检查通过后再刷新结果
+            ItemManager.INSTANCE.matchItemId(result, true)
+                .flatMap(ItemManager.INSTANCE::matchItem)
+                .ifPresent(refreshItem -> {
+                    result.setItemMeta(refreshItem.getItemMeta());
+                });
+
+            // 运行结果处理器（烧炼配方的source是输入物品）
             Optional<ResultProcessors> processors = ResultProcessorManager.INSTANCE.getRecipeProcessors(recipeKey);
             processors.ifPresent(p -> p.processItem(event.getSource(), result));
         }
@@ -102,14 +110,21 @@ public enum SmeltingListener implements Listener {
             return;
         }
         ItemStack result = event.getResult();
-        ItemManager.INSTANCE.matchItemId(result, true)
-            .flatMap(ItemManager.INSTANCE::matchItem)
-            .ifPresent(refreshItem -> {
-                result.setItemMeta(refreshItem.getItemMeta());
-            });
         // 处理结果处理器
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
         if (recipeKey != null) {
+            // 检查 blocked_crafting_lore_rules
+            ItemStack source = event.getSource();
+            if (!ItemHelper.isAir(source) && ItemManager.INSTANCE.containsBlockedLore(new ItemStack[]{source}, recipeKey)) {
+                event.setCancelled(true);
+                return;
+            }
+            // lore检查通过后再刷新结果
+            ItemManager.INSTANCE.matchItemId(result, true)
+                .flatMap(ItemManager.INSTANCE::matchItem)
+                .ifPresent(refreshItem -> {
+                    result.setItemMeta(refreshItem.getItemMeta());
+                });
             Optional<ResultProcessors> processors = ResultProcessorManager.INSTANCE.getRecipeProcessors(recipeKey);
             processors.ifPresent(p -> p.processItem(null, result));
         }

@@ -37,18 +37,23 @@ public enum StonecuttingListener implements Listener {
                 return;
             }
             StonecuttingRecipe recipe = event.getStonecuttingRecipe();
-            // 重新从物品源获取物品, 刷新结果的组件
+            NamespacedKey recipeKey = recipe.getKey();
+            // 检查 blocked_crafting_lore_rules
+            ItemStack base = stonecutterInventory.getInputItem();
+            if (!ItemHelper.isAir(base) && ItemManager.INSTANCE.containsBlockedLore(new ItemStack[]{base}, recipeKey)) {
+                stonecutterInventory.setResult(null);
+                return;
+            }
+            // lore检查通过后再刷新结果
             ItemManager.INSTANCE.matchItemId(result, true)
                 .flatMap(ItemManager.INSTANCE::matchItem)
                 .ifPresent(refreshItem -> {
                     result.setItemMeta(refreshItem.getItemMeta());
                 });
-            NamespacedKey recipeKey = recipe.getKey();
             //运行结果处理器
             Optional<ResultProcessors> recipeProcessors = ResultProcessorManager.INSTANCE.getRecipeProcessors(recipeKey);
             recipeProcessors.ifPresent(
                 rules -> {
-                    ItemStack base = stonecutterInventory.getInputItem();
                     rules.processItem(base, result);
                 }
             );

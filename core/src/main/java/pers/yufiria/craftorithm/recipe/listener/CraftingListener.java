@@ -58,6 +58,15 @@ public enum CraftingListener implements Listener {
         boolean cannotCraft = ItemManager.INSTANCE.containsCannotCraftItem(items);
         if (cannotCraft) {
             event.getInventory().setResult(null);
+            return;
+        }
+        // 检查 blocked_crafting_lore_rules
+        Recipe recipe = event.getRecipe();
+        if (recipe != null) {
+            NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
+            if (recipeKey != null && ItemManager.INSTANCE.containsBlockedLore(items, recipeKey)) {
+                event.getInventory().setResult(null);
+            }
         }
     }
 

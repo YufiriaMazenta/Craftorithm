@@ -1,9 +1,7 @@
 package pers.yufiria.craftorithm.config;
 
 import crypticlib.config.ConfigHandler;
-import crypticlib.config.node.impl.bukkit.BooleanConfig;
-import crypticlib.config.node.impl.bukkit.IntConfig;
-import crypticlib.config.node.impl.bukkit.StringListConfig;
+import crypticlib.config.node.impl.bukkit.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -42,6 +40,12 @@ public class PluginConfigs {
         Collections.emptyList(),
         "无法被用作配方材料的物品"
     );
+    public final static ConfigSectionListConfig BLOCKED_CRAFTING_LORE_RULES = new ConfigSectionListConfig(
+        "blocked_crafting_lore_rules",
+        Collections.emptyList(),
+        "设定某些特殊lore不能被用于某些配方的规则"
+    );
+
     public final static BooleanConfig USE_EXPERIMENTAL_RECIPE_INGREDIENTS = new BooleanConfig(
         "use_experimental_recipe_ingredients",
         true,

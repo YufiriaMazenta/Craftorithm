@@ -28,13 +28,24 @@ public enum CrafterListener implements Listener {
         BlockState blockState = event.getBlock().getState();
         if (!(blockState instanceof Crafter crafter))
             return;
-        if (ItemManager.INSTANCE.containsCannotCraftItem(crafter.getInventory().getContents())) {
+        ItemStack[] items = crafter.getInventory().getContents();
+        if (ItemManager.INSTANCE.containsCannotCraftItem(items)) {
+            event.setCancelled(true);
+            return;
+        }
+        // 检查 blocked_crafting_lore_rules
+        Recipe recipe = event.getRecipe();
+        NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
+        if (recipeKey != null && ItemManager.INSTANCE.containsBlockedLore(items, recipeKey)) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void processResult(CrafterCraftEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
         ItemStack result = event.getResult();
         if (ItemHelper.isAir(result))
             return;

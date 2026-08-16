@@ -3,6 +3,7 @@ package pers.yufiria.craftorithm.recipe.listener;
 import crypticlib.MinecraftVersion;
 import crypticlib.listener.EventListener;
 import crypticlib.util.ItemHelper;
+import org.bukkit.NamespacedKey;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -66,15 +67,22 @@ public enum BrewingListener implements Listener {
             ItemStack refreshItem = ItemManager.INSTANCE.matchItemId(result, true)
                 .flatMap(ItemManager.INSTANCE::matchItem)
                 .orElse(null);
-            if (refreshItem != null && !result.isSimilar(refreshItem)) {
-                result.setItemMeta(refreshItem.getItemMeta());
-            }
-            // 运行结果处理器（酿造配方的source是输入物品）
             if (input != null) {
-                BrewingRecipeRegister.INSTANCE.mixKey(input, ingredient).ifPresent(recipeKey -> {
+                Optional<NamespacedKey> recipeKeyOpt = BrewingRecipeRegister.INSTANCE.mixKey(input, ingredient);
+                if (recipeKeyOpt.isPresent()) {
+                    NamespacedKey recipeKey = recipeKeyOpt.get();
+                    // 检查 blocked_crafting_lore_rules
+                    if (ItemManager.INSTANCE.containsBlockedLore(new ItemStack[]{input, ingredient}, recipeKey)) {
+                        continue;
+                    }
+                    // lore检查通过后再刷新结果
+                    if (refreshItem != null && !result.isSimilar(refreshItem)) {
+                        result.setItemMeta(refreshItem.getItemMeta());
+                    }
+                    // 运行结果处理器（酿造配方的source是输入物品）
                     Optional<ResultProcessors> processors = ResultProcessorManager.INSTANCE.getRecipeProcessors(recipeKey);
                     processors.ifPresent(p -> p.processItem(input, result));
-                });
+                }
             }
             results.set(i, result);
         }
