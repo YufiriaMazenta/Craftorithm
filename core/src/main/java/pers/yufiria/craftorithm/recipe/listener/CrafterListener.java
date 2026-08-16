@@ -29,10 +29,6 @@ public enum CrafterListener implements Listener {
         if (!(blockState instanceof Crafter crafter))
             return;
         ItemStack[] items = crafter.getInventory().getContents();
-        if (ItemManager.INSTANCE.containsCannotCraftItem(items)) {
-            event.setCancelled(true);
-            return;
-        }
         // 检查 blocked_crafting_lore_rules
         Recipe recipe = event.getRecipe();
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);

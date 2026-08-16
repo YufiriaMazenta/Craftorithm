@@ -70,12 +70,6 @@ public enum SmithingListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void checkCannotCraft(PrepareSmithingEvent event) {
         ItemStack[] items = event.getInventory().getContents();
-        boolean cannotCraft = ItemManager.INSTANCE.containsCannotCraftItem(items);
-        if (cannotCraft) {
-            event.getInventory().setResult(null);
-            event.setResult(null);
-            return;
-        }
         // 检查 blocked_crafting_lore_rules
         Recipe recipe = event.getInventory().getRecipe();
         if (recipe != null) {

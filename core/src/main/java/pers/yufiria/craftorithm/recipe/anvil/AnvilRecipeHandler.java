@@ -99,12 +99,6 @@ public enum AnvilRecipeHandler implements Listener {
         if (ItemHelper.isAir(base) || ItemHelper.isAir(addition))
             return;
 
-        //如果原材料包含不能用于合成的物品，结束流程
-        boolean cannotCraft = ItemManager.INSTANCE.containsCannotCraftItem(base, addition);
-        if (cannotCraft) {
-            return;
-        }
-
         //处理trigger模块的条件判断
         TriggerContext ctx = CraftTriggerTypes.ANVIL.extractPrepareContext(event);
         if (ctx == null) return;
@@ -167,11 +161,6 @@ public enum AnvilRecipeHandler implements Listener {
 
         ItemStack base = anvilInventory.getItem(0);
         ItemStack addition = anvilInventory.getItem(1);
-        //如果原材料包含不能用于合成的物品，结束流程
-        boolean cannotCraft = ItemManager.INSTANCE.containsCannotCraftItem(base, addition);
-        if (cannotCraft) {
-            return;
-        }
 
         AtomicReference<ItemStack> result = new AtomicReference<>(anvilInventory.getItem(2));
         if (ItemHelper.isAir(base) || ItemHelper.isAir(addition) || ItemHelper.isAir(result.get()))

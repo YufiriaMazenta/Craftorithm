@@ -35,11 +35,6 @@ public class PluginConfigs {
         12,
         "每tick注册的配方数量，调低此数值可以减少服务器卡顿"
     );
-    public final static StringListConfig CANNOT_CRAFT_ITEMS = new StringListConfig(
-        "cannot_craft_items",
-        Collections.emptyList(),
-        "无法被用作配方材料的物品"
-    );
     public final static ConfigSectionListConfig BLOCKED_CRAFTING_LORE_RULES = new ConfigSectionListConfig(
         "blocked_crafting_lore_rules",
         Collections.emptyList(),

@@ -55,11 +55,6 @@ public enum CraftingListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void checkCannotCraft(PrepareItemCraftEvent event) {
         ItemStack[] items = event.getInventory().getMatrix();
-        boolean cannotCraft = ItemManager.INSTANCE.containsCannotCraftItem(items);
-        if (cannotCraft) {
-            event.getInventory().setResult(null);
-            return;
-        }
         // 检查 blocked_crafting_lore_rules
         Recipe recipe = event.getRecipe();
         if (recipe != null) {

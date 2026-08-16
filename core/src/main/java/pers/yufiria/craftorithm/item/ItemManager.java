@@ -48,8 +48,6 @@ public enum ItemManager implements LifecycleTask {
     private final String BURN_TIME_KEY = "burn_time";
     private BukkitConfigWrapper itemPacksConfig;
     private final Map<String, ItemPack> itemPacks = new ConcurrentHashMap<>();
-    //存储不能用于合成的物品列表
-    private final Set<NamespacedItemId> cannotCraftItems = new HashSet<>();
     //存储被阻止用于特定配方的Lore规则
     private final List<LoreBlockRule> blockedLoreRules = new ArrayList<>();
     private final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("yyyyMMdd_HHmmss");
@@ -303,41 +301,7 @@ public enum ItemManager implements LifecycleTask {
         }
         reloadCustomCookingFuel();
         reloadItemPacks();
-        reloadCannotCraftItems();
         reloadBlockedLoreRules();
-    }
-
-    private void reloadCannotCraftItems() {
-        cannotCraftItems.clear();
-        for (String items : PluginConfigs.CANNOT_CRAFT_ITEMS.value()) {
-            NamespacedItemId itemId = NamespacedItemId.fromString(items);
-            cannotCraftItems.add(itemId);
-        }
-    }
-
-    /**
-     * 物品堆中是否包含不能用于合成的物品
-     * @param items
-     * @return
-     */
-    public boolean containsCannotCraftItem(ItemStack... items) {
-        if (cannotCraftItems.isEmpty())
-            return false;
-        boolean result = false;
-
-        for (ItemStack item : items) {
-            if (item == null)
-                continue;
-            NamespacedItemId itemId = matchItemId(item, true)
-                .map(NamespacedItemIdStack::itemId)
-                .orElseGet(() -> NamespacedItemId.fromMaterial(item.getType()));
-            CrypticLib.debug("check: " + itemId);
-            if (cannotCraftItems.contains(itemId)) {
-                result = true;
-                break;
-            }
-        }
-        return result;
     }
 
     /**
