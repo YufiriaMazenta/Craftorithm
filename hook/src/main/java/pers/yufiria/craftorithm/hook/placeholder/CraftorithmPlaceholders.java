@@ -33,12 +33,20 @@ public class CraftorithmPlaceholders extends PlaceholderExpansion {
     public @Nullable String onPlaceholderRequest(Player player, @NotNull String params) {
         String type, argument;
         if (!params.contains("_")) {
-            return null;
+            type = params;
+            argument = null;
+        } else {
+            type = params.substring(0, params.indexOf("_"));
+            argument = params.substring(params.indexOf("_") + 1);
         }
-        type = params.substring(0, params.indexOf("_"));
-        argument = params.substring(params.indexOf("_") + 1);
         switch (type) {
             case "discovered" -> {
+                if (player == null) {
+                    return null;
+                }
+                if (argument == null) {
+                    return String.valueOf(player.getDiscoveredRecipes().size());
+                }
                 Key key = Key.key(argument);
                 if (key == null) {
                     return null;
