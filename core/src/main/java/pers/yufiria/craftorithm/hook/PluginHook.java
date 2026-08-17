@@ -14,7 +14,7 @@ public interface PluginHook {
         return isPluginEnabled();
     }
 
-    void unhook();
+    default void unhook() {}
 
     default boolean isPluginEnabled() {
         return Bukkit.getPluginManager().isPluginEnabled(pluginName());

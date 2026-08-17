@@ -21,6 +21,8 @@ repositories {
     maven("https://repo.rosewooddev.io/repository/public/")
     //VaultUnlocked
     maven("https://repo.codemc.io/repository/creatorfromhell/")
+    //PlaceHolderAPI
+    maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
 }
 
 dependencies {
@@ -72,6 +74,7 @@ dependencies {
     }
     compileOnly("net.milkbowl.vault:VaultUnlockedAPI:${rootProject.findProperty("vaultUnlockedApiVer")}")
     compileOnly("net.advancedplugins:AdvancedEnchantments-API:${rootProject.findProperty("advancedEnchantmentsApiVer")}")
+    compileOnly("me.clip:placeholderapi:${rootProject.findProperty("placeholderApiVer")}")
 }
 
 java {

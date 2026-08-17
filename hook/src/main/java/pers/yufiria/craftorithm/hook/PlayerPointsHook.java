@@ -21,7 +21,6 @@ public enum PlayerPointsHook implements PluginHook, LifecycleTask {
 
     INSTANCE;
     private Object playerPoints;
-    private Boolean playerPointsHooked;
 
     @Override
     public String pluginName() {
@@ -30,16 +29,13 @@ public enum PlayerPointsHook implements PluginHook, LifecycleTask {
 
     @Override
     public boolean hook() {
-        this.playerPointsHooked = isPluginEnabled();
+        boolean playerPointsHooked = isPluginEnabled();
         if (playerPointsHooked) {
             playerPoints = PlayerPoints.getInstance();
             ScriptEngine.INSTANCE.registerModule(PlayerPointsModule.INSTANCE);
         }
         return playerPointsHooked;
     }
-
-    @Override
-    public void unhook() {}
 
     public @Nullable Object playerPoints() {
         return playerPoints;

@@ -15,7 +15,4 @@ public interface ItemPluginHook extends PluginHook, LifecycleTask {
         ItemPluginHookManager.INSTANCE.addItemPluginHook(this);
     }
 
-    @Override
-    default void unhook() {}
-
 }
