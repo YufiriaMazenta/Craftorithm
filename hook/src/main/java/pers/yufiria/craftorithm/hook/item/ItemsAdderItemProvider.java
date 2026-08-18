@@ -41,6 +41,4 @@ public enum ItemsAdderItemProvider implements ItemProvider {
         return customStack.getItemStack();
     }
 
-
-
 }

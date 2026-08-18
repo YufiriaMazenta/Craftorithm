@@ -11,7 +11,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.StonecutterInventory;
 import org.bukkit.inventory.StonecuttingRecipe;
 import pers.yufiria.craftorithm.item.ItemManager;
-import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessorManager;
 import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessors;
 
@@ -41,7 +40,7 @@ public enum StonecuttingListener implements Listener {
             NamespacedKey recipeKey = recipe.getKey();
             // 检查 blocked_crafting_lore_rules
             ItemStack base = stonecutterInventory.getInputItem();
-            if (!ItemHelper.isAir(base) && !RecipeManager.INSTANCE.isCraftAllowed(new ItemStack[]{base}, recipeKey)) {
+            if (!ItemHelper.isAir(base) && !ItemManager.INSTANCE.canCraft(new ItemStack[]{base}, recipeKey)) {
                 stonecutterInventory.setResult(null);
                 return;
             }

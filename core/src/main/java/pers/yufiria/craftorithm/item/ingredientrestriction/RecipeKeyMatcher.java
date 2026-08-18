@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.recipe.blockrule;
+package pers.yufiria.craftorithm.item.ingredientrestriction;
 
 import java.util.List;
 import java.util.regex.Pattern;

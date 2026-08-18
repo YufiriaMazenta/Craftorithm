@@ -64,7 +64,7 @@ public enum SmeltingListener implements Listener {
         if (recipeKey != null) {
             // 检查 blocked_crafting_lore_rules
             ItemStack source = event.getSource();
-            if (!ItemHelper.isAir(source) && !RecipeManager.INSTANCE.isCraftAllowed(new ItemStack[]{source}, recipeKey)) {
+            if (!ItemHelper.isAir(source) && !ItemManager.INSTANCE.canCraft(new ItemStack[]{source}, recipeKey)) {
                 event.setCancelled(true);
                 return;
             }
@@ -115,7 +115,7 @@ public enum SmeltingListener implements Listener {
         if (recipeKey != null) {
             // 检查 blocked_crafting_lore_rules
             ItemStack source = event.getSource();
-            if (!ItemHelper.isAir(source) && !RecipeManager.INSTANCE.isCraftAllowed(new ItemStack[]{source}, recipeKey)) {
+            if (!ItemHelper.isAir(source) && !ItemManager.INSTANCE.canCraft(new ItemStack[]{source}, recipeKey)) {
                 event.setCancelled(true);
                 return;
             }

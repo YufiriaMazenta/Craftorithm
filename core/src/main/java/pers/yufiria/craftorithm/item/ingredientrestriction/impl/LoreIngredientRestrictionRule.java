@@ -1,13 +1,13 @@
-package pers.yufiria.craftorithm.recipe.blockrule.impl;
+package pers.yufiria.craftorithm.item.ingredientrestriction.impl;
 
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import pers.yufiria.craftorithm.recipe.blockrule.BlockCraftRule;
-import pers.yufiria.craftorithm.recipe.blockrule.BlockCraftRuleFactory;
-import pers.yufiria.craftorithm.recipe.blockrule.RecipeKeyMatcher;
+import pers.yufiria.craftorithm.item.ingredientrestriction.IngredientRestrictionRule;
+import pers.yufiria.craftorithm.item.ingredientrestriction.IngredientRestrictionRuleFactory;
+import pers.yufiria.craftorithm.item.ingredientrestriction.RecipeKeyMatcher;
 
 import java.util.List;
 
@@ -16,25 +16,27 @@ import java.util.List;
  * <p>
  * 匹配物品 Lore 中包含指定文本（去除颜色代码后）的物品，阻止其参与指定配方
  */
-public final class LoreBlockCraftRule implements BlockCraftRule {
+public final class LoreIngredientRestrictionRule implements IngredientRestrictionRule {
 
-    public static final BlockCraftRuleFactory FACTORY = section -> {
-        String lore = section.getString("lore", "");
-        List<String> recipes = section.getStringList("recipes");
-        return new LoreBlockCraftRule(lore, RecipeKeyMatcher.ofList(recipes));
+    public static final IngredientRestrictionRuleFactory FACTORY = new IngredientRestrictionRuleFactory() {
+        @Override
+        public @NotNull String type() {
+            return "lore";
+        }
+        @Override
+        public @NotNull IngredientRestrictionRule load(@NotNull ConfigurationSection section) {
+            String lore = section.getString("lore", "");
+            List<String> recipes = section.getStringList("recipes");
+            return new LoreIngredientRestrictionRule(lore, RecipeKeyMatcher.ofList(recipes));
+        }
     };
 
     private final String lore;
     private final List<RecipeKeyMatcher> matchers;
 
-    public LoreBlockCraftRule(String lore, List<RecipeKeyMatcher> matchers) {
+    public LoreIngredientRestrictionRule(String lore, List<RecipeKeyMatcher> matchers) {
         this.lore = lore;
         this.matchers = matchers;
-    }
-
-    @Override
-    public @NotNull String type() {
-        return "lore";
     }
 
     @Override

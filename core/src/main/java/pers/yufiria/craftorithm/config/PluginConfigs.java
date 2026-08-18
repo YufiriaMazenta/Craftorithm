@@ -35,11 +35,11 @@ public class PluginConfigs {
         12,
         "每tick注册的配方数量，调低此数值可以减少服务器卡顿"
     );
-    public final static ConfigSectionListConfig BLOCK_CRAFTING_RULES = new ConfigSectionListConfig(
-        "block_crafting_rules",
+    public final static ConfigSectionListConfig INGREDIENT_RESTRICTION_RULES = new ConfigSectionListConfig(
+        "ingredient_restriction_rules",
         Collections.emptyList(),
         List.of(
-            "设定合成限制规则",
+            "设定材料的合成限制规则",
             "支持的规则类型: lore(基于lore判断), item_id(基于物品id判断)",
             "第三方插件可注册自定义规则类型"
         )

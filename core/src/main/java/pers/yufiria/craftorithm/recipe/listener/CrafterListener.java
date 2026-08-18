@@ -32,7 +32,7 @@ public enum CrafterListener implements Listener {
         // 检查 blocked_crafting_lore_rules
         Recipe recipe = event.getRecipe();
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
-        if (recipeKey != null && !RecipeManager.INSTANCE.isCraftAllowed(items, recipeKey)) {
+        if (recipeKey != null && !ItemManager.INSTANCE.canCraft(items, recipeKey)) {
             event.setCancelled(true);
         }
     }

@@ -52,7 +52,7 @@ public enum FakeResultDataHandler implements Listener, LifecycleTask {
         }
         Optional<ItemStack> itemStack = ItemManager.INSTANCE.matchItem(fakeResultId);
         if (itemStack.isEmpty()) {
-            throw new ItemNotFoundException("&cCan not find item: " + fakeResultId);
+            throw new ItemNotFoundException("Can not find item: " + fakeResultId);
         }
         fakeResultMap.put(event.recipeKey(), itemStack.get());
     }

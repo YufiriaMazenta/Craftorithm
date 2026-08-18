@@ -59,7 +59,7 @@ public enum CraftingListener implements Listener {
         Recipe recipe = event.getRecipe();
         if (recipe != null) {
             NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
-            if (recipeKey != null && !RecipeManager.INSTANCE.isCraftAllowed(items, recipeKey)) {
+            if (recipeKey != null && !ItemManager.INSTANCE.canCraft(items, recipeKey)) {
                 event.getInventory().setResult(null);
             }
         }

@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.recipe.blockrule;
+package pers.yufiria.craftorithm.item.ingredientrestriction;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -7,14 +7,9 @@ import org.jetbrains.annotations.NotNull;
 /**
  * 合成限制规则接口
  * <p>
- * 第三方插件可通过 {@link BlockCraftRuleRegistry#register(String, BlockCraftRuleFactory)} 注册自定义规则类型
+ * 第三方插件可通过 {@link IngredientRestrictionRegistry#register(IngredientRestrictionRuleFactory)} 注册自定义规则类型
  */
-public interface BlockCraftRule {
-
-    /**
-     * 规则类型标识，对应配置中的 type 字段
-     */
-    @NotNull String type();
+public interface IngredientRestrictionRule {
 
     /**
      * 判断物品是否应被阻止参与指定配方

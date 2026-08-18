@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.recipe.blockrule.impl;
+package pers.yufiria.craftorithm.item.ingredientrestriction.impl;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
@@ -6,9 +6,9 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
-import pers.yufiria.craftorithm.recipe.blockrule.BlockCraftRule;
-import pers.yufiria.craftorithm.recipe.blockrule.BlockCraftRuleFactory;
-import pers.yufiria.craftorithm.recipe.blockrule.RecipeKeyMatcher;
+import pers.yufiria.craftorithm.item.ingredientrestriction.IngredientRestrictionRule;
+import pers.yufiria.craftorithm.item.ingredientrestriction.IngredientRestrictionRuleFactory;
+import pers.yufiria.craftorithm.item.ingredientrestriction.RecipeKeyMatcher;
 
 import java.util.List;
 
@@ -17,25 +17,27 @@ import java.util.List;
  * <p>
  * 匹配指定物品 ID 的物品，阻止其参与指定配方
  */
-public final class ItemIdBlockCraftRule implements BlockCraftRule {
+public final class ItemIdIngredientRestrictionRule implements pers.yufiria.craftorithm.item.ingredientrestriction.IngredientRestrictionRule {
 
-    public static final BlockCraftRuleFactory FACTORY = section -> {
-        String itemId = section.getString("item_id", "");
-        List<String> recipes = section.getStringList("recipes");
-        return new ItemIdBlockCraftRule(itemId, RecipeKeyMatcher.ofList(recipes));
+    public static final IngredientRestrictionRuleFactory FACTORY = new IngredientRestrictionRuleFactory() {
+        @Override
+        public @NotNull String type() {
+            return "item_id";
+        }
+        @Override
+        public @NotNull IngredientRestrictionRule load(@NotNull ConfigurationSection section) {
+            String itemId = section.getString("item_id", "");
+            List<String> recipes = section.getStringList("recipes");
+            return new ItemIdIngredientRestrictionRule(itemId, RecipeKeyMatcher.ofList(recipes));
+        }
     };
 
     private final String itemId;
     private final List<RecipeKeyMatcher> recipeMatchers;
 
-    public ItemIdBlockCraftRule(String itemId, List<RecipeKeyMatcher> recipeMatchers) {
+    public ItemIdIngredientRestrictionRule(String itemId, List<RecipeKeyMatcher> recipeMatchers) {
         this.itemId = itemId;
         this.recipeMatchers = recipeMatchers;
-    }
-
-    @Override
-    public @NotNull String type() {
-        return "item_id";
     }
 
     @Override

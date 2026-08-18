@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.recipe.blockrule;
+package pers.yufiria.craftorithm.item.ingredientrestriction;
 
 import crypticlib.CrypticLib;
 import crypticlib.CrypticLibPlugin;
@@ -21,20 +21,20 @@ import java.util.*;
  */
 @LifecycleTaskSettings(
     rules = {
-        @LifecycleRule(lifeCycle = Lifecycle.ENABLE, priority = 0)
+        @LifecycleRule(lifeCycle = Lifecycle.INIT)
     }
 )
-public enum BlockCraftRuleMigration implements LifecycleTask {
+public enum LegacyIngredientRestrictionMigration implements LifecycleTask {
 
     INSTANCE;
 
     private static final String OLD_KEY_CANNOT_CRAFT = "cannot_craft_items";
     private static final String OLD_KEY_LORE_RULES = "blocked_crafting_lore_rules";
-    private static final String NEW_KEY = "block_crafting_rules";
+    private static final String NEW_KEY = "ingredient_restriction_rules";
 
     @Override
     public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
-        BukkitConfigWrapper configWrapper = Craftorithm.instance().getConfigWrapperOrCreate("config.yml");
+        BukkitConfigWrapper configWrapper = ((Craftorithm) plugin).getConfigWrapperOrCreate("config.yml");
         YamlConfiguration config = configWrapper.config();
 
         boolean hasCannotCraft = config.contains(OLD_KEY_CANNOT_CRAFT);
@@ -91,7 +91,7 @@ public enum BlockCraftRuleMigration implements LifecycleTask {
             int before = newRules.size();
             newRules.removeIf(r -> existingSignatures.contains(ruleSignature(r)));
             if (newRules.size() < before) {
-                CrypticLib.info("Skipped " + (before - newRules.size()) + " duplicate rule(s) already in block_crafting_rules.");
+                CrypticLib.info("Skipped " + (before - newRules.size()) + " duplicate rule(s) already in ingredient restriction rules.");
             }
         }
 
@@ -112,6 +112,7 @@ public enum BlockCraftRuleMigration implements LifecycleTask {
 
         // 6. 保存
         configWrapper.saveConfig();
+        configWrapper.reloadConfig();
         CrypticLib.info("Config migration complete: " + newRules.size() + " rule(s) added to " + NEW_KEY);
     }
 
@@ -125,7 +126,7 @@ public enum BlockCraftRuleMigration implements LifecycleTask {
         return switch (type) {
             case "lore" -> "lore:" + rule.get("lore") + ":" + rule.get("recipes");
             case "item_id" -> "item_id:" + rule.get("item_id") + ":" + rule.get("recipes");
-            default -> type + ":" + rule.toString();
+            default -> type + ":" + rule;
         };
     }
 }

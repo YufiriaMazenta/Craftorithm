@@ -17,7 +17,6 @@ public enum ItemsAdderHook implements ItemPluginHook {
         return "ItemsAdder";
     }
 
-
     @Override
     public ItemProvider itemProvider() {
         return ItemsAdderItemProvider.INSTANCE;

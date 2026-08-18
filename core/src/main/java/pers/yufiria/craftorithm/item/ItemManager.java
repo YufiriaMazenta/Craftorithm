@@ -8,7 +8,6 @@ import crypticlib.lifecycle.LifecycleRule;
 import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskSettings;
 import crypticlib.CrypticLib;
-import crypticlib.util.IOHelper;
 import crypticlib.util.ItemHelper;
 import crypticlib.util.MaterialHelper;
 import org.bukkit.Material;
@@ -20,6 +19,8 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.config.PluginConfigs;
+import pers.yufiria.craftorithm.item.ingredientrestriction.IngredientRestrictionRegistry;
+import pers.yufiria.craftorithm.item.ingredientrestriction.IngredientRestrictionRule;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -48,6 +49,7 @@ public enum ItemManager implements LifecycleTask {
     private BukkitConfigWrapper itemPacksConfig;
     private final Map<String, ItemPack> itemPacks = new ConcurrentHashMap<>();
     private final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("yyyyMMdd_HHmmss");
+    private final List<IngredientRestrictionRule> ingredientRestrictionRules = new ArrayList<>();
 
     /**
      * 注册一个物品提供源
@@ -298,6 +300,7 @@ public enum ItemManager implements LifecycleTask {
         }
         reloadCustomCookingFuel();
         reloadItemPacks();
+        reloadIngredientRestrictionRules();
     }
 
     private void reloadItemPacks() {
@@ -316,6 +319,40 @@ public enum ItemManager implements LifecycleTask {
 
     public @Nullable ItemPack getItemPack(String itemId) {
         return itemPacks.get(itemId);
+    }
+
+    //合成限制规则相关
+
+    private void reloadIngredientRestrictionRules() {
+        ingredientRestrictionRules.clear();
+        for (ConfigurationSection section : PluginConfigs.INGREDIENT_RESTRICTION_RULES.value()) {
+            IngredientRestrictionRule rule = IngredientRestrictionRegistry.INSTANCE.create(section);
+            if (rule == null) {
+                CrypticLib.info("&cUnknown ingredient restriction rule type: " + section.getString("type", ""));
+                continue;
+            }
+            ingredientRestrictionRules.add(rule);
+        }
+    }
+
+    /**
+     * 检查物品是否允许参与指定配方
+     * @param items 物品数组
+     * @param recipeKey 配方的NamespacedKey
+     * @return 允许合成返回true，被规则阻止返回false
+     */
+    public boolean canCraft(ItemStack[] items, NamespacedKey recipeKey) {
+        if (ingredientRestrictionRules.isEmpty())
+            return true;
+        for (ItemStack item : items) {
+            if (ItemHelper.isAir(item))
+                continue;
+            for (IngredientRestrictionRule rule : ingredientRestrictionRules) {
+                if (rule.isBlocked(item, recipeKey))
+                    return false;
+            }
+        }
+        return true;
     }
 
 }
