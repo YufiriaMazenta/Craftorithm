@@ -27,7 +27,7 @@ public enum PacketEventsHook implements PluginHook, LifecycleTask {
 
     INSTANCE;
 
-    private Object recipeUpdatePacketListenerCommon = null, fakeResultPacketListenerCommon = null;
+    private Object fakeResultPacketListenerCommon = null;
 
     @Override
     public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
@@ -56,8 +56,6 @@ public enum PacketEventsHook implements PluginHook, LifecycleTask {
         EventManager eventManager = PacketEvents
             .getAPI()
             .getEventManager();
-        recipeUpdatePacketListenerCommon = eventManager
-            .registerListener(RecipeUpdatePacketListener.INSTANCE, PacketListenerPriority.NORMAL);
         fakeResultPacketListenerCommon = eventManager
             .registerListener(FakeResultPreviewPacketListener.INSTANCE, PacketListenerPriority.NORMAL);
         Bukkit.getPluginManager().registerEvents(FakeResultPreviewPacketListener.INSTANCE, Craftorithm.instance());
@@ -67,9 +65,6 @@ public enum PacketEventsHook implements PluginHook, LifecycleTask {
     @Override
     public void unhook() {
         EventManager eventManager = PacketEvents.getAPI().getEventManager();
-        if (recipeUpdatePacketListenerCommon != null) {
-            eventManager.unregisterListener((PacketListenerCommon) recipeUpdatePacketListenerCommon);
-        }
         if (fakeResultPacketListenerCommon != null) {
             eventManager.unregisterListener((PacketListenerCommon) fakeResultPacketListenerCommon);
         }
