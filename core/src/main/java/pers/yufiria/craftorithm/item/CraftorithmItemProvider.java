@@ -7,6 +7,7 @@ import crypticlib.lifecycle.LifecycleRule;
 import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskSettings;
 import crypticlib.util.IOHelper;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,12 +33,14 @@ public enum CraftorithmItemProvider implements ItemProvider, LifecycleTask {
 
     INSTANCE;
     public final File ITEM_FILE_FOLDER = new File(Craftorithm.instance().getDataFolder(), "items");
-    private final Map<String, ItemStack> itemMap;
+    private final Map<Material, Map<String, ItemStack>> material2IdItemMap;
+    private final Map<String, ItemStack> idItemMap;
     private final Map<String, BukkitConfigWrapper> itemConfigFileMap;
 
     CraftorithmItemProvider() {
+        idItemMap = new ConcurrentHashMap<>();
         itemConfigFileMap = new HashMap<>();
-        itemMap = new ConcurrentHashMap<>();
+        material2IdItemMap = new ConcurrentHashMap<>();
     }
 
     @Override
@@ -47,15 +50,20 @@ public enum CraftorithmItemProvider implements ItemProvider, LifecycleTask {
 
     @Override
     public @Nullable NamespacedItemIdStack matchItemId(ItemStack itemStack, boolean ignoreAmount) {
+        Material material = itemStack.getType();
+        if (!this.material2IdItemMap.containsKey(material)) {
+            return null;
+        }
+
+        Map<String, ItemStack> itemMap = this.material2IdItemMap.get(material);
         for (Map.Entry<String, ItemStack> itemStackEntry : itemMap.entrySet()) {
             ItemStack item = itemStackEntry.getValue();
-            if (item.isSimilar(itemStack)) {
+            if (item.isSimilar(itemStack)) { //TODO 使用优化的isSimilar
                 NamespacedItemId namespacedItemId = new NamespacedItemId(namespace(), itemStackEntry.getKey());
-                if (ignoreAmount) {
-                    return new NamespacedItemIdStack(namespacedItemId);
-                } else {
-                    return new NamespacedItemIdStack(namespacedItemId, itemStack.getAmount());
-                }
+                return new NamespacedItemIdStack(
+                    namespacedItemId,
+                    ignoreAmount ? 1 : itemStack.getAmount()
+                );
             }
         }
         return null;
@@ -63,13 +71,11 @@ public enum CraftorithmItemProvider implements ItemProvider, LifecycleTask {
 
     @Override
     public @Nullable ItemStack matchItem(String itemId) {
-        ItemStack item = itemMap.get(itemId);
+        ItemStack item = idItemMap.get(itemId);
         if (item == null)
             return null;
         return item.clone();
     }
-
-
 
     private void loadItemFiles() {
         itemConfigFileMap.clear();
@@ -89,7 +95,7 @@ public enum CraftorithmItemProvider implements ItemProvider, LifecycleTask {
     }
 
     private void loadItems() {
-        itemMap.clear();
+        material2IdItemMap.clear();
         for (String namespace : itemConfigFileMap.keySet()) {
             BukkitConfigWrapper itemFile = itemConfigFileMap.get(namespace);
             Set<String> itemKeySet = itemFile.config().getKeys(false);
@@ -99,7 +105,12 @@ public enum CraftorithmItemProvider implements ItemProvider, LifecycleTask {
                     if (item == null) {
                         throw new NullPointerException("Item " + itemKey + " is null");
                     }
-                    itemMap.put(namespace + ":" + itemKey, item);
+                    String namespacedItemId = namespace + ":" + itemKey;
+                    idItemMap.put(namespacedItemId, item);
+                    material2IdItemMap.computeIfAbsent(
+                        item.getType(),
+                        material -> new ConcurrentHashMap<>()
+                    ).put(namespacedItemId, item);
                 } catch (Exception e) {
                     LangUtils.info(Languages.ITEM_LOAD_EXCEPTION, CollectionsUtils.newStringHashMap("<item_name>", itemKey));
                     e.printStackTrace();
@@ -123,19 +134,27 @@ public enum CraftorithmItemProvider implements ItemProvider, LifecycleTask {
         }
         itemConfigWrapper.set(itemName, item);
         itemConfigWrapper.saveConfig();
-        String key = namespace + ":" + itemName;
-        itemMap.put(key, item);
+        String namespaceItemId = namespace + ":" + itemName;
+        idItemMap.put(namespaceItemId, item);
+        material2IdItemMap.computeIfAbsent(
+            item.getType(),
+            material -> new ConcurrentHashMap<>()
+        ).put(namespaceItemId, item);
         return new NamespacedItemIdStack(
             new NamespacedItemId(
                 namespace(),
-                key
+                namespaceItemId
             ),
             item.getAmount()
         );
     }
 
-    public Map<String, ItemStack> itemMap() {
-        return new HashMap<>(itemMap);
+    public Map<String, ItemStack> idItemMap() {
+        return new HashMap<>(idItemMap);
+    }
+
+    public Map<Material, Map<String, ItemStack>> material2IdItemMap() {
+        return material2IdItemMap;
     }
 
     public Map<String, BukkitConfigWrapper> itemConfigFileMap() {

@@ -78,7 +78,7 @@ public enum CraftorithmAPI {
      * @return 物品映射副本
      */
     public @NotNull Map<String, ItemStack> getCraftorithmItems() {
-        return CraftorithmItemProvider.INSTANCE.itemMap();
+        return CraftorithmItemProvider.INSTANCE.idItemMap();
     }
 
     // ==================== Recipe API ====================

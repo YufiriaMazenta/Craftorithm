@@ -133,8 +133,13 @@ public enum ItemManager implements LifecycleTask {
      * @return 传入的物品id，未找到返回 Optional.empty()
      */
     public Optional<NamespacedItemIdStack> matchItemId(ItemStack item, boolean ignoreAmount) {
-        if (ItemHelper.isAir(item))
+        if (ItemHelper.isAir(item)) {
             return Optional.empty();
+        }
+
+        if (!item.hasItemMeta()) {
+            return Optional.empty();
+        }
 
         for (Map.Entry<String, ItemProvider> itemProviderEntry : itemProviderMap.entrySet()) {
             NamespacedItemIdStack namespacedItemIdStack;
@@ -159,30 +164,18 @@ public enum ItemManager implements LifecycleTask {
      * @return 传入的物品id
      */
     public Optional<NamespacedItemIdStack> matchItemIdOrVanilla(ItemStack item, boolean ignoreAmount) {
-        if (ItemHelper.isAir(item))
+        if (ItemHelper.isAir(item)) {
             return Optional.empty();
-
-        for (Map.Entry<String, ItemProvider> itemProviderEntry : itemProviderMap.entrySet()) {
-            NamespacedItemIdStack namespacedItemIdStack;
-            try {
-                namespacedItemIdStack = itemProviderEntry.getValue().matchItemId(item, ignoreAmount);
-            } catch (Throwable t) {
-                logProviderError(itemProviderEntry.getKey(), t);
-                continue;
-            }
-            if (namespacedItemIdStack != null) {
-                return Optional.of(namespacedItemIdStack);
-            }
         }
 
-        NamespacedItemIdStack namespacedItemIdStack = new NamespacedItemIdStack(
-            Objects.requireNonNull(NamespacedItemId.fromString(item.getType().getKey().toString()))
-        );
-        if (ignoreAmount) {
-            return Optional.of(namespacedItemIdStack);
+        if (!item.hasItemMeta()) {
+            return Optional.of(new NamespacedItemIdStack(
+                NamespacedItemId.fromMaterial(item.getType()),
+                ignoreAmount ? 1 : item.getAmount()
+            ));
         }
-        namespacedItemIdStack.setAmount(item.getAmount());
-        return Optional.of(namespacedItemIdStack);
+
+        return matchItemId(item, ignoreAmount);
     }
 
     /**
@@ -208,9 +201,8 @@ public enum ItemManager implements LifecycleTask {
                 }
             }
         } else {
-            NamespacedKey key = item.getType().getKey();
             itemId = new NamespacedItemIdStack(
-                new NamespacedItemId(key.getNamespace(), key.getKey()),
+                NamespacedItemId.fromMaterial(item.getType()),
                 ignoreAmount ? 1 : item.getAmount()
             );
         }

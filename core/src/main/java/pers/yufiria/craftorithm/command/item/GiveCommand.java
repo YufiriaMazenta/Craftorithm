@@ -88,7 +88,7 @@ public class GiveCommand extends CommandNode {
     @Override
     public List<String> tabComplete(@NotNull Invoker invoker, List<String> args) {
         if (args.size() < 2) {
-            return new ArrayList<>(CraftorithmItemProvider.INSTANCE.itemMap().keySet());
+            return new ArrayList<>(CraftorithmItemProvider.INSTANCE.idItemMap().keySet());
         }
         else
             return getOnlinePlayerNameList();
