@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.recipe.fakeResult;
+package pers.yufiria.craftorithm.recipe.fakeresult;
 
 import crypticlib.CrypticLibPlugin;
 import crypticlib.lifecycle.Lifecycle;
@@ -58,7 +58,7 @@ public enum FakeResultDataHandler implements Listener, LifecycleTask {
     }
 
     public Optional<ItemStack> getRecipeFakeResult(NamespacedKey recipeKey) {
-        if (fakeResultMap.containsKey(recipeKey)) {
+        if (!fakeResultMap.containsKey(recipeKey)) {
             return Optional.empty();
         }
         return Optional.of(fakeResultMap.get(recipeKey).clone());
