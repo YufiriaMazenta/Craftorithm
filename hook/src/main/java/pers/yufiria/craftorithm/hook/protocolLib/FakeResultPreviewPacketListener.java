@@ -33,6 +33,7 @@ import pers.yufiria.craftorithm.util.EventUtils;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class FakeResultPreviewPacketListener extends PacketAdapter implements Listener {
@@ -154,29 +155,23 @@ public class FakeResultPreviewPacketListener extends PacketAdapter implements Li
         NamespacedKey recipeKey = cacheRecipeData.recipeKey;
 
         PacketType packetType = event.getPacketType();
-        if (packetType.equals(PacketType.Play.Server.SET_SLOT)) {
-            int slot = event.getPacket().getIntegers().read(2);
-            if (slot != cacheRecipeData.resultSlot) {
-                return;
+        Optional<ItemStack> fakeResultOpt = FakeResultDataHandler.INSTANCE.getRecipeFakeResult(recipeKey);
+        fakeResultOpt.ifPresent(fakeResult -> {
+            if (packetType.equals(PacketType.Play.Server.SET_SLOT)) {
+                int slot = event.getPacket().getIntegers().read(2);
+                if (slot != cacheRecipeData.resultSlot) {
+                    return;
+                }
+                event.getPacket().getItemModifier().write(0, fakeResult);
+            } else if (packetType.equals(PacketType.Play.Server.WINDOW_ITEMS)) {
+                List<ItemStack> items = event.getPacket().getItemListModifier().read(0);
+                if (items != null && !items.isEmpty()) {
+                    items.set(cacheRecipeData.resultSlot, fakeResult);
+                    event.getPacket().getItemListModifier().write(0, items);
+                }
             }
-            NamespacedItemIdStack recipeFakeResult = FakeResultDataHandler.INSTANCE.getRecipeFakeResult(recipeKey);
-            if (recipeFakeResult == null) {
-                return;
-            }
-            ItemStack fakeResult = ItemManager.INSTANCE.matchItem(recipeFakeResult).orElseThrow();
-            event.getPacket().getItemModifier().write(0, fakeResult);
-        } else if (packetType.equals(PacketType.Play.Server.WINDOW_ITEMS)) {
-            NamespacedItemIdStack recipeFakeResult = FakeResultDataHandler.INSTANCE.getRecipeFakeResult(recipeKey);
-            if (recipeFakeResult == null) {
-                return;
-            }
-            ItemStack fakeResult = ItemManager.INSTANCE.matchItem(recipeFakeResult).orElseThrow();
-            List<ItemStack> items = event.getPacket().getItemListModifier().read(0);
-            if (items != null && !items.isEmpty()) {
-                items.set(cacheRecipeData.resultSlot, fakeResult);
-                event.getPacket().getItemListModifier().write(0, items);
-            }
-        }
+        });
+
     }
 
     private record CacheRecipeData(

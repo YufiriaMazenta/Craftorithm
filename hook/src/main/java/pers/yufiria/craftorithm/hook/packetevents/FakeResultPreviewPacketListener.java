@@ -34,6 +34,7 @@ import pers.yufiria.craftorithm.util.EventUtils;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public enum FakeResultPreviewPacketListener implements PacketListener, Listener {
@@ -153,37 +154,31 @@ public enum FakeResultPreviewPacketListener implements PacketListener, Listener 
         }
         NamespacedKey recipeKey = cacheRecipeData.recipeKey;
 
-        switch (event.getPacketType()) {
-            case PacketType.Play.Server.SET_SLOT -> {
-                NamespacedItemIdStack recipeFakeResult = FakeResultDataHandler.INSTANCE.getRecipeFakeResult(recipeKey);
-                if (recipeFakeResult == null) {
+        final Optional<ItemStack> fakeResultOpt = FakeResultDataHandler.INSTANCE.getRecipeFakeResult(recipeKey);
+        fakeResultOpt.ifPresent(fakeResult -> {
+            switch (event.getPacketType()) {
+                case PacketType.Play.Server.SET_SLOT -> {
+                    WrapperPlayServerSetSlot packet = new WrapperPlayServerSetSlot(event);
+                    if (packet.getSlot() != cacheRecipeData.resultSlot) {
+                        return;
+                    }
+                    packet.setItem(SpigotConversionUtil.fromBukkitItemStack(fakeResult));
+                }
+                case PacketType.Play.Server.WINDOW_ITEMS -> {
+                    WrapperPlayServerWindowItems packet = new WrapperPlayServerWindowItems(event);
+                    List<com.github.retrooper.packetevents.protocol.item.ItemStack> items = packet.getItems();
+                    if (!items.isEmpty()) {
+                        items.set(cacheRecipeData.resultSlot, SpigotConversionUtil.fromBukkitItemStack(fakeResult));
+                        packet.setItems(items);
+                    }
+                }
+                default -> {
                     return;
                 }
-                ItemStack fakeResult = ItemManager.INSTANCE.matchItem(recipeFakeResult).orElseThrow();
-                WrapperPlayServerSetSlot packet = new WrapperPlayServerSetSlot(event);
-                if (packet.getSlot() != cacheRecipeData.resultSlot) {
-                    return;
-                }
-                packet.setItem(SpigotConversionUtil.fromBukkitItemStack(fakeResult));
             }
-            case PacketType.Play.Server.WINDOW_ITEMS -> {
-                NamespacedItemIdStack recipeFakeResult = FakeResultDataHandler.INSTANCE.getRecipeFakeResult(recipeKey);
-                if (recipeFakeResult == null) {
-                    return;
-                }
-                ItemStack fakeResult = ItemManager.INSTANCE.matchItem(recipeFakeResult).orElseThrow();
-                WrapperPlayServerWindowItems packet = new WrapperPlayServerWindowItems(event);
-                List<com.github.retrooper.packetevents.protocol.item.ItemStack> items = packet.getItems();
-                if (!items.isEmpty()) {
-                    items.set(cacheRecipeData.resultSlot, SpigotConversionUtil.fromBukkitItemStack(fakeResult));
-                    packet.setItems(items);
-                }
-            }
-            default -> {
-                return;
-            }
-        }
-        event.markForReEncode(true);
+            event.markForReEncode(true);
+        });
+
     }
 
     private record CacheRecipeData(

@@ -11,11 +11,14 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.jetbrains.annotations.Nullable;
+import org.bukkit.inventory.ItemStack;
 import pers.yufiria.craftorithm.api.event.RecipeLoadFromConfigEvent;
+import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
+import pers.yufiria.craftorithm.item.exception.ItemNotFoundException;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @EventListener
@@ -26,7 +29,7 @@ public enum FakeResultDataHandler implements Listener, LifecycleTask {
 
     INSTANCE;
 
-    private final Map<NamespacedKey, NamespacedItemIdStack> FAKE_RESULT_MAP = new ConcurrentHashMap<>();
+    private final Map<NamespacedKey, ItemStack> fakeResultMap = new ConcurrentHashMap<>();
     private final String FAKE_RESULT_PREVIEW_CONFIG_KEY = "fake_result_preview";
 
     @EventHandler
@@ -47,19 +50,26 @@ public enum FakeResultDataHandler implements Listener, LifecycleTask {
             CrypticLib.info("&eFailed to resolve fake result item from: " + fakeResultIdStr);
             return;
         }
-        FAKE_RESULT_MAP.put(event.recipeKey(), fakeResultId);
+        Optional<ItemStack> itemStack = ItemManager.INSTANCE.matchItem(fakeResultId);
+        if (itemStack.isEmpty()) {
+            throw new ItemNotFoundException("&cCan not find item: " + fakeResultId);
+        }
+        fakeResultMap.put(event.recipeKey(), itemStack.get());
     }
 
-    public @Nullable NamespacedItemIdStack getRecipeFakeResult(NamespacedKey recipeKey) {
-        return FAKE_RESULT_MAP.get(recipeKey);
+    public Optional<ItemStack> getRecipeFakeResult(NamespacedKey recipeKey) {
+        if (fakeResultMap.containsKey(recipeKey)) {
+            return Optional.empty();
+        }
+        return Optional.of(fakeResultMap.get(recipeKey).clone());
     }
 
     public boolean hasFakeResult(NamespacedKey recipeKey) {
-        return FAKE_RESULT_MAP.containsKey(recipeKey);
+        return fakeResultMap.containsKey(recipeKey);
     }
 
     @Override
     public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
-        this.FAKE_RESULT_MAP.clear();
+        this.fakeResultMap.clear();
     }
 }
