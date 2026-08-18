@@ -3,8 +3,8 @@ package pers.yufiria.craftorithm.item.ingredientrestriction;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.yufiria.craftorithm.item.ingredientrestriction.impl.ItemIdIngredientRestrictionRule;
-import pers.yufiria.craftorithm.item.ingredientrestriction.impl.LoreIngredientRestrictionRule;
+import pers.yufiria.craftorithm.item.ingredientrestriction.impl.ItemIdRestrictionRule;
+import pers.yufiria.craftorithm.item.ingredientrestriction.impl.LoreRestrictionRule;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,8 +21,8 @@ public enum IngredientRestrictionRegistry {
     private final Map<String, IngredientRestrictionRuleFactory> factories = new ConcurrentHashMap<>();
 
     IngredientRestrictionRegistry() {
-        register(LoreIngredientRestrictionRule.FACTORY);
-        register(ItemIdIngredientRestrictionRule.FACTORY);
+        register(LoreRestrictionRule.FACTORY);
+        register(ItemIdRestrictionRule.FACTORY);
     }
 
     /**

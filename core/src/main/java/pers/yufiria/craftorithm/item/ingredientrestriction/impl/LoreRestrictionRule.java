@@ -16,7 +16,7 @@ import java.util.List;
  * <p>
  * 匹配物品 Lore 中包含指定文本（去除颜色代码后）的物品，阻止其参与指定配方
  */
-public final class LoreIngredientRestrictionRule implements IngredientRestrictionRule {
+public final class LoreRestrictionRule implements IngredientRestrictionRule {
 
     public static final IngredientRestrictionRuleFactory FACTORY = new IngredientRestrictionRuleFactory() {
         @Override
@@ -27,14 +27,14 @@ public final class LoreIngredientRestrictionRule implements IngredientRestrictio
         public @NotNull IngredientRestrictionRule load(@NotNull ConfigurationSection section) {
             String lore = section.getString("lore", "");
             List<String> recipes = section.getStringList("recipes");
-            return new LoreIngredientRestrictionRule(lore, RecipeKeyMatcher.ofList(recipes));
+            return new LoreRestrictionRule(lore, RecipeKeyMatcher.ofList(recipes));
         }
     };
 
     private final String lore;
     private final List<RecipeKeyMatcher> matchers;
 
-    public LoreIngredientRestrictionRule(String lore, List<RecipeKeyMatcher> matchers) {
+    public LoreRestrictionRule(String lore, List<RecipeKeyMatcher> matchers) {
         this.lore = lore;
         this.matchers = matchers;
     }

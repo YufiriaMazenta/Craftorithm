@@ -17,7 +17,7 @@ import java.util.List;
  * <p>
  * 匹配指定物品 ID 的物品，阻止其参与指定配方
  */
-public final class ItemIdIngredientRestrictionRule implements pers.yufiria.craftorithm.item.ingredientrestriction.IngredientRestrictionRule {
+public final class ItemIdRestrictionRule implements IngredientRestrictionRule {
 
     public static final IngredientRestrictionRuleFactory FACTORY = new IngredientRestrictionRuleFactory() {
         @Override
@@ -28,14 +28,14 @@ public final class ItemIdIngredientRestrictionRule implements pers.yufiria.craft
         public @NotNull IngredientRestrictionRule load(@NotNull ConfigurationSection section) {
             String itemId = section.getString("item_id", "");
             List<String> recipes = section.getStringList("recipes");
-            return new ItemIdIngredientRestrictionRule(itemId, RecipeKeyMatcher.ofList(recipes));
+            return new ItemIdRestrictionRule(itemId, RecipeKeyMatcher.ofList(recipes));
         }
     };
 
     private final String itemId;
     private final List<RecipeKeyMatcher> recipeMatchers;
 
-    public ItemIdIngredientRestrictionRule(String itemId, List<RecipeKeyMatcher> recipeMatchers) {
+    public ItemIdRestrictionRule(String itemId, List<RecipeKeyMatcher> recipeMatchers) {
         this.itemId = itemId;
         this.recipeMatchers = recipeMatchers;
     }
