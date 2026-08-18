@@ -40,7 +40,7 @@ public final class ItemIdBlockCraftRule implements BlockCraftRule {
 
     @Override
     public boolean isBlocked(@NotNull ItemStack item, @NotNull NamespacedKey recipeKey) {
-        NamespacedItemIdStack itemIdStack = ItemManager.INSTANCE.matchItemId(item, true).orElse(null);
+        NamespacedItemIdStack itemIdStack = ItemManager.INSTANCE.matchItemIdOrVanilla(item, true).orElse(null);
         if (itemIdStack == null) {
             return false;
         }
