@@ -11,11 +11,14 @@ import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskSettings;
 import crypticlib.scheduler.CrypticLibRunnable;
 import crypticlib.CrypticLib;
+import crypticlib.util.ItemHelper;
 import crypticlib.util.IOHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
@@ -23,6 +26,8 @@ import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.api.event.RecipeLoadFromConfigEvent;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.PluginConfigs;
+import pers.yufiria.craftorithm.recipe.blockrule.BlockCraftRule;
+import pers.yufiria.craftorithm.recipe.blockrule.BlockCraftRuleRegistry;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 import pers.yufiria.craftorithm.recipe.parser.RecipeParser;
 import pers.yufiria.craftorithm.recipe.register.RecipeRegister;
@@ -57,6 +62,7 @@ public enum RecipeManager implements LifecycleTask {
     private final List<Recipe> disabledRecipesCache = new CopyOnWriteArrayList<>();
     private final Set<NamespacedKey> serverRecipeKeys = ConcurrentHashMap.newKeySet();
     private final Map<String, RecipeGroup> recipeGroupMap = new ConcurrentHashMap<>();
+    private final List<BlockCraftRule> blockCraftRules = new ArrayList<>();
     private Boolean supportPotionMix;
     private final AtomicBoolean isReloadingRecipeManager = new AtomicBoolean(false);
 
@@ -122,6 +128,7 @@ public enum RecipeManager implements LifecycleTask {
         loadRecipesFromConfig(() -> {
             loadServerRecipeKeys();
             reloadDisabledRecipes();
+            reloadBlockCraftRules();
             CrypticLibBukkit.scheduler().syncLater(() -> {
                 isReloadingRecipeManager.set(false);
                 //所有操作进行完毕后，为玩家更新配方信息
@@ -470,6 +477,40 @@ public enum RecipeManager implements LifecycleTask {
 
     public boolean isReloadingRecipeManager() {
         return isReloadingRecipeManager.get();
+    }
+
+    //合成限制规则相关
+
+    private void reloadBlockCraftRules() {
+        blockCraftRules.clear();
+        for (ConfigurationSection section : PluginConfigs.BLOCK_CRAFTING_RULES.value()) {
+            BlockCraftRule rule = BlockCraftRuleRegistry.INSTANCE.create(section);
+            if (rule == null) {
+                CrypticLib.info("&cUnknown block_crafting_rules type: " + section.getString("type", ""));
+                continue;
+            }
+            blockCraftRules.add(rule);
+        }
+    }
+
+    /**
+     * 检查物品是否允许参与指定配方
+     * @param items 物品数组
+     * @param recipeKey 配方的NamespacedKey
+     * @return 允许合成返回true，被规则阻止返回false
+     */
+    public boolean isCraftAllowed(ItemStack[] items, NamespacedKey recipeKey) {
+        if (blockCraftRules.isEmpty())
+            return true;
+        for (ItemStack item : items) {
+            if (ItemHelper.isAir(item))
+                continue;
+            for (BlockCraftRule rule : blockCraftRules) {
+                if (rule.isBlocked(item, recipeKey))
+                    return false;
+            }
+        }
+        return true;
     }
 
     @Override

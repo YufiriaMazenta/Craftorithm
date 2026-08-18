@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.api.event.CraftorithmPrepareAnvilEvent;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.item.ItemManager;
+import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.choice.StackableItemIdChoice;
@@ -112,7 +113,7 @@ public enum AnvilRecipeHandler implements Listener {
             return;
 
         // 检查 blocked_crafting_lore_rules
-        if (ItemManager.INSTANCE.containsBlockedLore(new ItemStack[]{base, addition}, anvilRecipe.getKey())) {
+        if (!RecipeManager.INSTANCE.isCraftAllowed(new ItemStack[]{base, addition}, anvilRecipe.getKey())) {
             return;
         }
 
@@ -188,7 +189,7 @@ public enum AnvilRecipeHandler implements Listener {
             return;
 
         // 检查 blocked_crafting_lore_rules
-        if (ItemManager.INSTANCE.containsBlockedLore(new ItemStack[]{base, addition}, anvilRecipe.getKey())) {
+        if (!RecipeManager.INSTANCE.isCraftAllowed(new ItemStack[]{base, addition}, anvilRecipe.getKey())) {
             return;
         }
 
