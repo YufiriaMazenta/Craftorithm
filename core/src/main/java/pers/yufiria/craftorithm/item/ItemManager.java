@@ -288,7 +288,6 @@ public enum ItemManager implements LifecycleTask {
         if (lifeCycle.equals(Lifecycle.ACTIVE)) {
             customFuelConfig = new BukkitConfigWrapper(Craftorithm.instance(), "custom_fuels.yml");
             itemPacksConfig = new BukkitConfigWrapper(Craftorithm.instance(), "item_packs.yml");
-            regItemProvider(CraftorithmItemProvider.INSTANCE);
         }
         reloadCustomCookingFuel();
         reloadItemPacks();
