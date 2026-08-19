@@ -9,10 +9,12 @@ public class NamespacedItemId {
 
     private final @NotNull String namespace;
     private final @NotNull String itemId;
+    private final @NotNull String toString;
 
     public NamespacedItemId(@NotNull String namespace, @NotNull String itemId) {
         this.namespace = namespace;
         this.itemId = itemId;
+        this.toString = namespace + ":" + itemId;
     }
 
     public String namespace() {
@@ -56,7 +58,7 @@ public class NamespacedItemId {
 
     @Override
     public String toString() {
-        return namespace + ":" + itemId;
+        return toString;
     }
 
 }
