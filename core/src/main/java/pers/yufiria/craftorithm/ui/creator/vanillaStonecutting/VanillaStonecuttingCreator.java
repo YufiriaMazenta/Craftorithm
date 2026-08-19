@@ -109,6 +109,8 @@ public class VanillaStonecuttingCreator extends RecipeCreator {
 
                 String recipeId = resolveRecipeId(SimpleRecipeTypes.VANILLA_STONECUTTING.typeKey(), resultId.itemId());
                 String recipeFileName = resolveRecipeFileName(resultId.itemId());
+                event.getWhoClicked().closeInventory();
+
                 // 5. 创建并保存配方配置文件
                 createRecipeConfig(recipeFileName, recipeConfig -> {
                     recipeConfig.set("type", SimpleRecipeTypes.VANILLA_STONECUTTING.typeKey());
@@ -143,9 +145,6 @@ public class VanillaStonecuttingCreator extends RecipeCreator {
                                 Map.of("<recipe_name>", recipeFileName)
                             );
                         }
-
-                        // 7. 关闭菜单
-                        event.getWhoClicked().closeInventory();
                     });
                 });
                 return this;

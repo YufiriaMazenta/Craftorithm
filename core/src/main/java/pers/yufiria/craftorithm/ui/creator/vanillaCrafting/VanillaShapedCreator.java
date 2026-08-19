@@ -179,6 +179,8 @@ public final class VanillaShapedCreator extends RecipeCreator {
 
                 String recipeId = resolveRecipeId(SimpleRecipeTypes.VANILLA_SHAPED.typeKey(), resultId.itemId());
                 String recipeFileName = resolveRecipeFileName(resultId.itemId());
+                event.getWhoClicked().closeInventory();
+
                 // 10. 创建并保存配方配置文件
                 createRecipeConfig(recipeFileName, recipeConfig -> {
                     recipeConfig.set("type", SimpleRecipeTypes.VANILLA_SHAPED.typeKey());
@@ -215,9 +217,6 @@ public final class VanillaShapedCreator extends RecipeCreator {
                                 Map.of("<recipe_name>", recipeFileName)
                             );
                         }
-
-                        // 12. 关闭菜单
-                        event.getWhoClicked().closeInventory();
                     });
                 });
                 return this;
