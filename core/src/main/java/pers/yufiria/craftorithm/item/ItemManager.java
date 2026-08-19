@@ -175,7 +175,23 @@ public enum ItemManager implements LifecycleTask {
             ));
         }
 
-        return matchItemId(item, ignoreAmount);
+        for (Map.Entry<String, ItemProvider> itemProviderEntry : itemProviderMap.entrySet()) {
+            NamespacedItemIdStack namespacedItemIdStack;
+            try {
+                namespacedItemIdStack = itemProviderEntry.getValue().matchItemId(item, ignoreAmount);
+            } catch (Throwable t) {
+                logProviderError(itemProviderEntry.getKey(), t);
+                continue;
+            }
+            if (namespacedItemIdStack != null) {
+                return Optional.of(namespacedItemIdStack);
+            }
+        }
+
+        return Optional.of(new NamespacedItemIdStack(
+            NamespacedItemId.fromMaterial(item.getType()),
+            ignoreAmount ? 1 : item.getAmount()
+        ));
     }
 
     /**
