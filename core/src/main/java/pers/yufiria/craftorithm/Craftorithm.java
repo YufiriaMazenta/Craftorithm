@@ -10,7 +10,7 @@ import crypticlib.script.ScriptEngine;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Recipe;
 import pers.yufiria.craftorithm.api.CraftorithmAPI;
-import pers.yufiria.craftorithm.bstat.Metrics;
+import pers.yufiria.craftorithm.metrics.BStats;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.exception.UnsupportedVersionException;
@@ -67,9 +67,9 @@ public final class Craftorithm extends BukkitPlugin implements LifecycleTask {
     private void loadBStat() {
         if (!PluginConfigs.BSTATS.value())
             return;
-        Metrics metrics = new Metrics(this, 17821);
-        metrics.addCustomChart(new Metrics.SingleLineChart("recipes", () -> RecipeManager.INSTANCE.getRecipeGroups().size()));
-        metrics.addCustomChart(new Metrics.AdvancedPie("recipe_type_count", () -> {
+        BStats bStats = new BStats(this, 17821);
+        bStats.addCustomChart(new BStats.SingleLineChart("recipes", () -> RecipeManager.INSTANCE.craftorithmRecipes().size()));
+        bStats.addCustomChart(new BStats.AdvancedPie("recipe_type_count", () -> {
             Map<String, Integer> map = new HashMap<>();
             for (Recipe recipe : RecipeManager.INSTANCE.craftorithmRecipes().values()) {
                 RecipeType type = RecipeManager.INSTANCE.getRecipeType(recipe);
