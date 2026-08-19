@@ -146,6 +146,8 @@ public enum RecipeManager implements LifecycleTask {
         recipeCreateTimeMap.clear();
         recipeFileNameToKeyMap.clear();
         recipeKeyToFileNameMap.clear();
+        recipeConfigWrapperMap.clear();
+        recipeGroupMap.clear();
 
         //重置所有配方的结果处理器
         ResultProcessorManager.INSTANCE.resetRecipeProcessors();
@@ -520,14 +522,20 @@ public enum RecipeManager implements LifecycleTask {
             if (isCancelled()) {
                 return;
             }
-            int maxRegRecipePerTick = PluginConfigs.MAX_REG_RECIPE_PER_TICK.value();
-            if (recipeFiles.size() <= maxRegRecipePerTick) {
-                loadRecipes(recipeFiles);
+            try {
+                int maxRegRecipePerTick = PluginConfigs.MAX_REG_RECIPE_PER_TICK.value();
+                if (recipeFiles.size() <= maxRegRecipePerTick) {
+                    loadRecipes(recipeFiles);
+                    end();
+                } else {
+                    List<File> loadFiles = recipeFiles.subList(0, maxRegRecipePerTick);
+                    recipeFiles = recipeFiles.subList(maxRegRecipePerTick, recipeFiles.size());
+                    loadRecipes(loadFiles);
+                }
+            } catch (Throwable t) {
+                CrypticLib.info("&cUnexpected error during recipe loading, aborting...");
+                t.printStackTrace();
                 end();
-            } else {
-                List<File> loadFiles = recipeFiles.subList(0, maxRegRecipePerTick);
-                recipeFiles = recipeFiles.subList(maxRegRecipePerTick, recipeFiles.size());
-                loadRecipes(loadFiles);
             }
         }
 
