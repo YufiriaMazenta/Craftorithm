@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.item;
 
 import crypticlib.CrypticLibPlugin;
+import crypticlib.MinecraftVersion;
 import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.lifecycle.Lifecycle;
 import crypticlib.lifecycle.LifecycleRule;
@@ -8,7 +9,9 @@ import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskSettings;
 import crypticlib.util.IOHelper;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
@@ -33,14 +36,14 @@ public enum CraftorithmItemProvider implements ItemProvider, LifecycleTask {
 
     INSTANCE;
     public final File ITEM_FILE_FOLDER = new File(Craftorithm.instance().getDataFolder(), "items");
-    private final Map<Material, Map<String, ItemStack>> material2IdItemMap;
+    private final Map<ItemBucketKey, Map<String, ItemStack>> itemBuckets;
     private final Map<String, ItemStack> idItemMap;
     private final Map<String, BukkitConfigWrapper> itemConfigFileMap;
 
     CraftorithmItemProvider() {
         idItemMap = new ConcurrentHashMap<>();
         itemConfigFileMap = new HashMap<>();
-        material2IdItemMap = new ConcurrentHashMap<>();
+        itemBuckets = new ConcurrentHashMap<>();
     }
 
     @Override
@@ -50,15 +53,15 @@ public enum CraftorithmItemProvider implements ItemProvider, LifecycleTask {
 
     @Override
     public @Nullable NamespacedItemIdStack matchItemId(ItemStack itemStack, boolean ignoreAmount) {
-        Material material = itemStack.getType();
-        if (!this.material2IdItemMap.containsKey(material)) {
+        ItemBucketKey bucketKey = ItemBucketKey.of(itemStack);
+        Map<String, ItemStack> itemMap = this.itemBuckets.get(bucketKey);
+        if (itemMap == null) {
             return null;
         }
 
-        Map<String, ItemStack> itemMap = this.material2IdItemMap.get(material);
         for (Map.Entry<String, ItemStack> itemStackEntry : itemMap.entrySet()) {
             ItemStack item = itemStackEntry.getValue();
-            if (item.isSimilar(itemStack)) { //TODO 使用优化的isSimilar
+            if (item.isSimilar(itemStack)) {
                 NamespacedItemId namespacedItemId = new NamespacedItemId(namespace(), itemStackEntry.getKey());
                 return new NamespacedItemIdStack(
                     namespacedItemId,
@@ -95,7 +98,7 @@ public enum CraftorithmItemProvider implements ItemProvider, LifecycleTask {
     }
 
     private void loadItems() {
-        material2IdItemMap.clear();
+        itemBuckets.clear();
         for (String namespace : itemConfigFileMap.keySet()) {
             BukkitConfigWrapper itemFile = itemConfigFileMap.get(namespace);
             Set<String> itemKeySet = itemFile.config().getKeys(false);
@@ -107,9 +110,9 @@ public enum CraftorithmItemProvider implements ItemProvider, LifecycleTask {
                     }
                     String namespacedItemId = namespace + ":" + itemKey;
                     idItemMap.put(namespacedItemId, item);
-                    material2IdItemMap.computeIfAbsent(
-                        item.getType(),
-                        material -> new ConcurrentHashMap<>()
+                    itemBuckets.computeIfAbsent(
+                        ItemBucketKey.of(item),
+                        fp -> new ConcurrentHashMap<>()
                     ).put(namespacedItemId, item);
                 } catch (Exception e) {
                     LangUtils.info(Languages.ITEM_LOAD_EXCEPTION, CollectionsUtils.newStringHashMap("<item_name>", itemKey));
@@ -136,9 +139,9 @@ public enum CraftorithmItemProvider implements ItemProvider, LifecycleTask {
         itemConfigWrapper.saveConfig();
         String namespaceItemId = namespace + ":" + itemName;
         idItemMap.put(namespaceItemId, item);
-        material2IdItemMap.computeIfAbsent(
-            item.getType(),
-            material -> new ConcurrentHashMap<>()
+        itemBuckets.computeIfAbsent(
+            ItemBucketKey.of(item),
+            fp -> new ConcurrentHashMap<>()
         ).put(namespaceItemId, item);
         return new NamespacedItemIdStack(
             new NamespacedItemId(
@@ -153,8 +156,8 @@ public enum CraftorithmItemProvider implements ItemProvider, LifecycleTask {
         return new HashMap<>(idItemMap);
     }
 
-    public Map<Material, Map<String, ItemStack>> material2IdItemMap() {
-        return material2IdItemMap;
+    public Map<ItemBucketKey, Map<String, ItemStack>> itemBuckets() {
+        return itemBuckets;
     }
 
     public Map<String, BukkitConfigWrapper> itemConfigFileMap() {
@@ -165,5 +168,50 @@ public enum CraftorithmItemProvider implements ItemProvider, LifecycleTask {
     public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
         loadItemFiles();
         loadItems();
+    }
+
+    /**
+     * 物品指纹，用于快速索引和预筛选
+     * <p>
+     * 由 Material + 版本相关的额外 key 组成，不同版本使用不同的字段：
+     * <ul>
+     *   <li>1.21.2+：item_model（NamespacedKey）</li>
+     *   <li>1.21.2 以下：custom_model_data（int）</li>
+     * </ul>
+     */
+    public record ItemBucketKey(@NotNull Material material, @Nullable Object extraKey) {
+
+        private static final boolean USE_ITEM_MODEL = MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_21_2);
+
+        public static ItemBucketKey of(@NotNull ItemStack item) {
+            return new ItemBucketKey(item.getType(), extractExtraKey(item));
+        }
+
+        private static @Nullable Object extractExtraKey(ItemStack item) {
+            if (USE_ITEM_MODEL) {
+                return extractItemModel(item);
+            }
+            return extractCustomModelData(item);
+        }
+
+        private static @Nullable NamespacedKey extractItemModel(ItemStack item) {
+            ItemMeta meta = item.getItemMeta();
+            if (meta == null) {
+                return null;
+            }
+            try {
+                return meta.getItemModel();
+            } catch (NoSuchMethodError e) {
+                return null;
+            }
+        }
+
+        private static @Nullable Integer extractCustomModelData(ItemStack item) {
+            ItemMeta meta = item.getItemMeta();
+            if (meta != null && meta.hasCustomModelData()) {
+                return meta.getCustomModelData();
+            }
+            return null;
+        }
     }
 }
