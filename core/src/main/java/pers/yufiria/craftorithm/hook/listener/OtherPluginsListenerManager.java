@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.hook.listener;
 
+import crypticlib.CrypticLib;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.CrypticLibPlugin;
 import crypticlib.MinecraftVersion;
@@ -7,7 +8,6 @@ import crypticlib.lifecycle.Lifecycle;
 import crypticlib.lifecycle.LifecycleRule;
 import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskSettings;
-import crypticlib.CrypticLib;
 import crypticlib.util.ReflectionHelper;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;

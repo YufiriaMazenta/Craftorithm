@@ -7,8 +7,8 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.potion.PotionBrewer;
-import pers.yufiria.craftorithm.recipe.brewing.BrewingRecipe;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.recipe.brewing.BrewingRecipe;
 
 import java.util.Map;
 import java.util.Optional;

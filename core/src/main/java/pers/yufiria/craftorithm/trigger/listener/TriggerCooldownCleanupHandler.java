@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.trigger.listener;
 
-import crypticlib.CrypticLibBukkit;
 import crypticlib.CrypticLibPlugin;
 import crypticlib.lifecycle.Lifecycle;
 import crypticlib.lifecycle.LifecycleRule;

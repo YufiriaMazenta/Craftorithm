@@ -1,13 +1,13 @@
 package pers.yufiria.craftorithm.item;
 
 import com.google.common.base.Preconditions;
+import crypticlib.CrypticLib;
 import crypticlib.CrypticLibPlugin;
 import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.lifecycle.Lifecycle;
 import crypticlib.lifecycle.LifecycleRule;
 import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskSettings;
-import crypticlib.CrypticLib;
 import crypticlib.util.ItemHelper;
 import crypticlib.util.MaterialHelper;
 import org.bukkit.Material;

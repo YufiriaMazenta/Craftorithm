@@ -15,7 +15,6 @@ import pers.yufiria.craftorithm.recipe.anvil.AnvilRecipe;
 import pers.yufiria.craftorithm.recipe.choice.RecipeChoiceParser;
 import pers.yufiria.craftorithm.recipe.choice.StackableItemIdChoice;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
-import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessorManager;
 import pers.yufiria.craftorithm.util.RecipeUtils;
 
 import java.util.List;

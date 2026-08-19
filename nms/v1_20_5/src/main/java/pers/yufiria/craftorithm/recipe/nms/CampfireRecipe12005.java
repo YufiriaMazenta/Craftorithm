@@ -12,6 +12,7 @@ import org.bukkit.craftbukkit.v1_20_R4.inventory.CraftCampfireRecipe;
 import org.bukkit.craftbukkit.v1_20_R4.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_20_R4.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.v1_20_R4.util.CraftNamespacedKey;
+import org.bukkit.inventory.CampfireRecipe;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
 import pers.yufiria.craftorithm.util.RecipeUtils;
@@ -19,6 +20,7 @@ import pers.yufiria.craftorithm.util.RecipeUtils;
 public class CampfireRecipe12005 extends RecipeCampfire {
 
     private final RecipeChoice ingredient;
+    private volatile Recipe cachedBukkitRecipe;
 
     CampfireRecipe12005(String group, CookingBookCategory cookingbookcategory, RecipeItemStack nmsIngredient, RecipeChoice ingredient, ItemStack result, float exp, int smeltTick) {
         super(group, cookingbookcategory, nmsIngredient, result, exp, smeltTick);
@@ -32,14 +34,19 @@ public class CampfireRecipe12005 extends RecipeCampfire {
 
     @Override
     public Recipe toBukkitRecipe(NamespacedKey recipeKey) {
+        Recipe cached = cachedBukkitRecipe;
+        if (cached != null) {
+            return cached;
+        }
         CraftItemStack result = CraftItemStack.asCraftMirror(this.g());
         CraftCampfireRecipe recipe = new CraftCampfireRecipe(recipeKey, result, ingredient, this.b(), this.d());
         recipe.setGroup(this.c());
         recipe.setCategory(CraftRecipe.getCategory(this.f()));
+        cachedBukkitRecipe = recipe;
         return recipe;
     }
 
-    public static RecipeHolder<RecipeCampfire> fromBukkit(NamespacedKey recipeKey, org.bukkit.inventory.CampfireRecipe bukkitRecipe) {
+    public static RecipeHolder<RecipeCampfire> fromBukkit(NamespacedKey recipeKey, CampfireRecipe bukkitRecipe) {
         CraftCampfireRecipe craftCampfireRecipe = CraftCampfireRecipe.fromBukkitRecipe(bukkitRecipe);
         RecipeChoice recipeChoice = bukkitRecipe.getInputChoice();
         return new RecipeHolder<>(CraftNamespacedKey.toMinecraft(recipeKey), new CampfireRecipe12005(craftCampfireRecipe.getGroup(), CraftRecipe.getCategory(craftCampfireRecipe.getCategory()), craftCampfireRecipe.toNMS(RecipeUtils.getBukkitChoice(recipeChoice), true), recipeChoice, CraftItemStack.asNMSCopy(bukkitRecipe.getResult()), bukkitRecipe.getExperience(), bukkitRecipe.getCookingTime()));

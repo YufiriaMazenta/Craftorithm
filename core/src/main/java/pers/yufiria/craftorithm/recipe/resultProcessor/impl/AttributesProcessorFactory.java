@@ -14,7 +14,10 @@ import pers.yufiria.craftorithm.recipe.resultProcessor.ComponentProcessorFactory
 import pers.yufiria.craftorithm.recipe.resultProcessor.ProcessingStrategy;
 import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessor;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 import static pers.yufiria.craftorithm.recipe.resultProcessor.impl.ProcessorUtils.processor;
 import static pers.yufiria.craftorithm.recipe.resultProcessor.impl.ProcessorUtils.processorRequireSource;

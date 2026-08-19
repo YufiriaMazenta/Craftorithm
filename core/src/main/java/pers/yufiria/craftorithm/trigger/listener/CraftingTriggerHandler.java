@@ -1,7 +1,6 @@
 package pers.yufiria.craftorithm.trigger.listener;
 
 import crypticlib.listener.EventListener;
-import crypticlib.util.IOHelper;
 import crypticlib.util.ItemHelper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

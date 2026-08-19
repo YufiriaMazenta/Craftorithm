@@ -16,6 +16,7 @@ import pers.yufiria.craftorithm.util.RecipeUtils;
 public class SmokingRecipe260100 extends SmokingRecipe {
 
     private final RecipeChoice ingredient;
+    private volatile Recipe cachedBukkitRecipe;
 
     SmokingRecipe260100(net.minecraft.world.item.crafting.Recipe.CommonInfo commonInfo, AbstractCookingRecipe.CookingBookInfo bookInfo, Ingredient nmsIngredient, RecipeChoice ingredient, ItemStackTemplate result, float exp, int smeltTick) {
         super(commonInfo, bookInfo, nmsIngredient, result, exp, smeltTick);
@@ -29,10 +30,15 @@ public class SmokingRecipe260100 extends SmokingRecipe {
 
     @Override
     public Recipe toBukkitRecipe(NamespacedKey id) {
+        Recipe cached = cachedBukkitRecipe;
+        if (cached != null) {
+            return cached;
+        }
         CraftItemStack result = CraftItemStack.asCraftMirror(this.result().create());
         CraftSmokingRecipe recipe = new CraftSmokingRecipe(id, result, ingredient, this.experience(), this.cookingTime());
         recipe.setGroup(this.group());
         recipe.setCategory(CraftRecipe.getCategory(this.category()));
+        cachedBukkitRecipe = recipe;
         return recipe;
     }
 

@@ -1,8 +1,8 @@
 package pers.yufiria.craftorithm.recipe.resultProcessor;
 
+import crypticlib.CrypticLib;
 import crypticlib.listener.EventListener;
 import crypticlib.util.BukkitConfigHelper;
-import crypticlib.CrypticLib;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;

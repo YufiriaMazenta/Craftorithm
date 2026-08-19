@@ -14,11 +14,13 @@ import org.bukkit.craftbukkit.v1_20_R4.inventory.CraftSmokingRecipe;
 import org.bukkit.craftbukkit.v1_20_R4.util.CraftNamespacedKey;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
+import org.bukkit.inventory.SmokingRecipe;
 import pers.yufiria.craftorithm.util.RecipeUtils;
 
 public class SmokingRecipe12005 extends RecipeSmoking {
 
     private final RecipeChoice ingredient;
+    private volatile Recipe cachedBukkitRecipe;
 
     SmokingRecipe12005(String group, CookingBookCategory cookingbookcategory, RecipeItemStack nmsIngredient, RecipeChoice ingredient, ItemStack result, float exp, int smeltTick) {
         super(group, cookingbookcategory, nmsIngredient, result, exp, smeltTick);
@@ -32,14 +34,19 @@ public class SmokingRecipe12005 extends RecipeSmoking {
 
     @Override
     public Recipe toBukkitRecipe(NamespacedKey recipeKey) {
+        Recipe cached = cachedBukkitRecipe;
+        if (cached != null) {
+            return cached;
+        }
         CraftItemStack result = CraftItemStack.asCraftMirror(this.g());
         CraftSmokingRecipe recipe = new CraftSmokingRecipe(recipeKey, result, ingredient, this.b(), this.d());
         recipe.setGroup(this.c());
         recipe.setCategory(CraftRecipe.getCategory(this.f()));
+        cachedBukkitRecipe = recipe;
         return recipe;
     }
 
-    public static RecipeHolder<RecipeSmoking> fromBukkit(NamespacedKey recipeKey, org.bukkit.inventory.SmokingRecipe bukkitRecipe) {
+    public static RecipeHolder<RecipeSmoking> fromBukkit(NamespacedKey recipeKey, SmokingRecipe bukkitRecipe) {
         CraftSmokingRecipe craftSmokingRecipe = CraftSmokingRecipe.fromBukkitRecipe(bukkitRecipe);
         RecipeChoice recipeChoice = bukkitRecipe.getInputChoice();
         return new RecipeHolder<>(CraftNamespacedKey.toMinecraft(recipeKey), new SmokingRecipe12005(craftSmokingRecipe.getGroup(), CraftRecipe.getCategory(craftSmokingRecipe.getCategory()), craftSmokingRecipe.toNMS(RecipeUtils.getBukkitChoice(recipeChoice), true), recipeChoice, CraftItemStack.asNMSCopy(bukkitRecipe.getResult()), bukkitRecipe.getExperience(), bukkitRecipe.getCookingTime()));

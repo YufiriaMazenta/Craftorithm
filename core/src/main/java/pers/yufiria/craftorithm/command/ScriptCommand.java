@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.command;
 
+import crypticlib.CrypticLib;
 import crypticlib.Invoker;
 import crypticlib.command.CommandNode;
 import crypticlib.command.annotation.Command;
@@ -7,7 +8,6 @@ import crypticlib.perm.PermInfo;
 import crypticlib.script.ScriptContext;
 import crypticlib.script.ScriptEngine;
 import crypticlib.util.FunctionExecutor;
-import crypticlib.CrypticLib;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.script.RootScriptContext;

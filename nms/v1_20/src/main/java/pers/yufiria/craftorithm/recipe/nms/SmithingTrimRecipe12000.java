@@ -18,6 +18,7 @@ public class SmithingTrimRecipe12000 extends SmithingTrimRecipe {
 
     private final RecipeChoice template, addition;
     private final RecipeChoice base;
+    private volatile Recipe cachedBukkitRecipe;
 
     SmithingTrimRecipe12000(
         MinecraftKey recipeKey,
@@ -58,10 +59,16 @@ public class SmithingTrimRecipe12000 extends SmithingTrimRecipe {
 
     @Override
     public Recipe toBukkitRecipe() {
-        return new CraftSmithingTrimRecipe(
+        Recipe cached = cachedBukkitRecipe;
+        if (cached != null) {
+            return cached;
+        }
+        CraftSmithingTrimRecipe recipe = new CraftSmithingTrimRecipe(
             CraftNamespacedKey.fromMinecraft(this.e()),
             template, base, addition
         );
+        cachedBukkitRecipe = recipe;
+        return recipe;
     }
 
     public static SmithingTrimRecipe fromBukkit(NamespacedKey recipeKey, org.bukkit.inventory.SmithingTrimRecipe bukkitRecipe) {

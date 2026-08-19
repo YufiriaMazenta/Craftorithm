@@ -1,9 +1,6 @@
 package pers.yufiria.craftorithm.script;
 
-import crypticlib.BukkitPlayer;
-import crypticlib.CrypticLibBukkit;
-import crypticlib.Invoker;
-import crypticlib.MinecraftVersion;
+import crypticlib.*;
 import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.script.ScriptContext;
 import crypticlib.script.ScriptValue;
@@ -12,7 +9,6 @@ import crypticlib.script.func.ScriptModule;
 import crypticlib.script.vm.ScriptVM;
 import crypticlib.ui.menu.Menu;
 import crypticlib.ui.util.MenuHelper;
-import crypticlib.CrypticLib;
 import crypticlib.util.InventoryHelper;
 import crypticlib.util.InventoryViewHelper;
 import crypticlib.util.ItemHelper;

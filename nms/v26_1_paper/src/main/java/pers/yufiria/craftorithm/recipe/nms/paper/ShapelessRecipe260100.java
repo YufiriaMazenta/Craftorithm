@@ -21,6 +21,7 @@ public class ShapelessRecipe260100 extends ShapelessRecipe {
 
     private final List<RecipeChoice> customIngredients;
     private final ItemStackTemplate result;
+    private volatile org.bukkit.inventory.Recipe cachedBukkitRecipe;
 
     ShapelessRecipe260100(Recipe.CommonInfo commonInfo, CraftingRecipe.CraftingBookInfo bookInfo, ItemStackTemplate result, List<Ingredient> nmsIngredients, List<RecipeChoice> customIngredients) {
         super(commonInfo, bookInfo, result, nmsIngredients);
@@ -45,6 +46,10 @@ public class ShapelessRecipe260100 extends ShapelessRecipe {
 
     @Override
     public org.bukkit.inventory.ShapelessRecipe toBukkitRecipe(NamespacedKey id) {
+        org.bukkit.inventory.Recipe cached = cachedBukkitRecipe;
+        if (cached != null) {
+            return (org.bukkit.inventory.ShapelessRecipe) cached;
+        }
         org.bukkit.inventory.ItemStack result = CraftItemStack.asCraftMirror(this.result.create());
         CraftShapelessRecipe recipe = new CraftShapelessRecipe(id, result, this);
         recipe.setGroup(this.group());
@@ -52,6 +57,7 @@ public class ShapelessRecipe260100 extends ShapelessRecipe {
         for (RecipeChoice choice : this.customIngredients) {
             recipe.addIngredient(choice);
         }
+        cachedBukkitRecipe = recipe;
         return recipe;
     }
 

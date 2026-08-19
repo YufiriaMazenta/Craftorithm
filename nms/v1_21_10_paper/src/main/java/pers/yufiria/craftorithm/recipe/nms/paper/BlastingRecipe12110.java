@@ -14,6 +14,7 @@ import pers.yufiria.craftorithm.util.RecipeUtils;
 public class BlastingRecipe12110 extends BlastingRecipe {
 
     private final RecipeChoice ingredient;
+    private volatile Recipe cachedBukkitRecipe;
 
     BlastingRecipe12110(String group, CookingBookCategory category, Ingredient nmsIngredient, RecipeChoice ingredient, ItemStack result, float exp, int smeltTick) {
         super(group, category, nmsIngredient, result, exp, smeltTick);
@@ -27,10 +28,15 @@ public class BlastingRecipe12110 extends BlastingRecipe {
 
     @Override
     public Recipe toBukkitRecipe(NamespacedKey id) {
+        Recipe cached = cachedBukkitRecipe;
+        if (cached != null) {
+            return cached;
+        }
         CraftItemStack result = CraftItemStack.asCraftMirror(this.result());
         CraftBlastingRecipe recipe = new CraftBlastingRecipe(id, result, ingredient, this.experience(), this.cookingTime());
         recipe.setGroup(this.group());
         recipe.setCategory(CraftRecipe.getCategory(this.category()));
+        cachedBukkitRecipe = recipe;
         return recipe;
     }
 

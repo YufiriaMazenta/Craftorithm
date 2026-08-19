@@ -14,6 +14,7 @@ import pers.yufiria.craftorithm.util.RecipeUtils;
 public class StonecutterRecipe260100 extends StonecutterRecipe {
 
     private final RecipeChoice ingredient;
+    private volatile org.bukkit.inventory.Recipe cachedBukkitRecipe;
 
     StonecutterRecipe260100(Recipe.CommonInfo commonInfo, Ingredient nmsIngredient, RecipeChoice ingredient, ItemStackTemplate result) {
         super(commonInfo, nmsIngredient, result);
@@ -27,9 +28,14 @@ public class StonecutterRecipe260100 extends StonecutterRecipe {
 
     @Override
     public org.bukkit.inventory.Recipe toBukkitRecipe(NamespacedKey id) {
+        org.bukkit.inventory.Recipe cached = cachedBukkitRecipe;
+        if (cached != null) {
+            return cached;
+        }
         CraftItemStack result = CraftItemStack.asCraftMirror(this.result());
         CraftStonecuttingRecipe recipe = new CraftStonecuttingRecipe(id, result, ingredient);
         recipe.setGroup(this.group());
+        cachedBukkitRecipe = recipe;
         return recipe;
     }
 

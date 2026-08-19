@@ -14,6 +14,7 @@ import pers.yufiria.craftorithm.util.RecipeUtils;
 public class FurnaceRecipe12110 extends FurnaceRecipe {
 
     private final RecipeChoice ingredient;
+    private volatile Recipe cachedBukkitRecipe;
 
     public FurnaceRecipe12110(String group, CookingBookCategory cookingbookcategory, RecipeItemStack recipeitemstack, RecipeChoice ingredient, ItemStack result, float exp, int smeltTick) {
         super(group, cookingbookcategory, recipeitemstack, result, exp, smeltTick);
@@ -27,10 +28,15 @@ public class FurnaceRecipe12110 extends FurnaceRecipe {
 
     @Override
     public Recipe toBukkitRecipe(NamespacedKey id) {
+        Recipe cached = cachedBukkitRecipe;
+        if (cached != null) {
+            return cached;
+        }
         CraftItemStack result = CraftItemStack.asCraftMirror(this.l());
         CraftFurnaceRecipe recipe = new CraftFurnaceRecipe(id, result, ingredient, this.c(), this.d());
         recipe.setGroup(this.j());
         recipe.setCategory(CraftRecipe.getCategory(this.e()));
+        cachedBukkitRecipe = recipe;
         return recipe;
     }
 

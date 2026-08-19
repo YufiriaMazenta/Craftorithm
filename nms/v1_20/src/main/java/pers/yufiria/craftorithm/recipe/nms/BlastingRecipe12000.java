@@ -12,6 +12,7 @@ import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftBlastingRecipe;
 import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.v1_20_R1.util.CraftNamespacedKey;
+import org.bukkit.inventory.BlastingRecipe;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
 import pers.yufiria.craftorithm.util.RecipeUtils;
@@ -20,6 +21,7 @@ public class BlastingRecipe12000 extends RecipeBlasting {
 
     private final RecipeChoice ingredient;
     private final ItemStack result;
+    private volatile Recipe cachedBukkitRecipe;
 
     BlastingRecipe12000(
         MinecraftKey recipeKey,
@@ -43,14 +45,19 @@ public class BlastingRecipe12000 extends RecipeBlasting {
 
     @Override
     public Recipe toBukkitRecipe() {
+        Recipe cached = cachedBukkitRecipe;
+        if (cached != null) {
+            return cached;
+        }
         CraftItemStack result = CraftItemStack.asCraftMirror(this.result);
         CraftBlastingRecipe recipe = new CraftBlastingRecipe(CraftNamespacedKey.fromMinecraft(this.e()), result, ingredient, this.b(), this.d());
         recipe.setGroup(this.c());
         recipe.setCategory(CraftRecipe.getCategory(this.g()));
+        cachedBukkitRecipe = recipe;
         return recipe;
     }
 
-    public static RecipeBlasting fromBukkit(NamespacedKey recipeKey, org.bukkit.inventory.BlastingRecipe bukkitRecipe) {
+    public static RecipeBlasting fromBukkit(NamespacedKey recipeKey, BlastingRecipe bukkitRecipe) {
         CraftBlastingRecipe craftFurnaceRecipe = CraftBlastingRecipe.fromBukkitRecipe(bukkitRecipe);
         RecipeChoice recipeChoice = bukkitRecipe.getInputChoice();
         return new BlastingRecipe12000(

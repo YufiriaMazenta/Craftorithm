@@ -12,6 +12,7 @@ import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftBlastingRecipe;
 import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.v1_20_R3.util.CraftNamespacedKey;
+import org.bukkit.inventory.BlastingRecipe;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
 import pers.yufiria.craftorithm.util.RecipeUtils;
@@ -19,6 +20,7 @@ import pers.yufiria.craftorithm.util.RecipeUtils;
 public class BlastingRecipe12003 extends RecipeBlasting {
 
     private final RecipeChoice ingredient;
+    private volatile Recipe cachedBukkitRecipe;
 
     BlastingRecipe12003(
         String group,
@@ -40,14 +42,19 @@ public class BlastingRecipe12003 extends RecipeBlasting {
 
     @Override
     public Recipe toBukkitRecipe(NamespacedKey recipeKey) {
+        Recipe cached = cachedBukkitRecipe;
+        if (cached != null) {
+            return cached;
+        }
         CraftItemStack result = CraftItemStack.asCraftMirror(this.g());
         CraftBlastingRecipe recipe = new CraftBlastingRecipe(recipeKey, result, ingredient, this.b(), this.d());
         recipe.setGroup(this.c());
         recipe.setCategory(CraftRecipe.getCategory(this.f()));
+        cachedBukkitRecipe = recipe;
         return recipe;
     }
 
-    public static RecipeHolder<RecipeBlasting> fromBukkit(NamespacedKey recipeKey, org.bukkit.inventory.BlastingRecipe bukkitRecipe) {
+    public static RecipeHolder<RecipeBlasting> fromBukkit(NamespacedKey recipeKey, BlastingRecipe bukkitRecipe) {
         CraftBlastingRecipe craftBlastingRecipe = CraftBlastingRecipe.fromBukkitRecipe(bukkitRecipe);
         RecipeChoice recipeChoice = bukkitRecipe.getInputChoice();
         return new RecipeHolder<>(

@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.recipe;
 
+import crypticlib.CrypticLib;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.CrypticLibPlugin;
 import crypticlib.MinecraftVersion;
@@ -10,7 +11,6 @@ import crypticlib.lifecycle.LifecycleRule;
 import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskSettings;
 import crypticlib.scheduler.CrypticLibRunnable;
-import crypticlib.CrypticLib;
 import crypticlib.util.IOHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;

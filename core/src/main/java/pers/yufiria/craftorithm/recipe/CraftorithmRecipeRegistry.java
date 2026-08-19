@@ -1,8 +1,8 @@
 package pers.yufiria.craftorithm.recipe;
 
+import crypticlib.CrypticLib;
 import crypticlib.MinecraftVersion;
 import crypticlib.compat.Compat;
-import crypticlib.CrypticLib;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.Recipe;

@@ -15,6 +15,7 @@ import pers.yufiria.craftorithm.util.RecipeUtils;
 public class SmokingRecipe12100 extends RecipeSmoking {
 
     private final RecipeChoice ingredient;
+    private volatile Recipe cachedBukkitRecipe;
 
     SmokingRecipe12100(String group, CookingBookCategory cookingbookcategory, RecipeItemStack recipeitemstack, RecipeChoice ingredient, ItemStack result, float exp, int smeltTick) {
         super(group, cookingbookcategory, recipeitemstack, result, exp, smeltTick);
@@ -28,10 +29,15 @@ public class SmokingRecipe12100 extends RecipeSmoking {
 
     @Override
     public Recipe toBukkitRecipe(NamespacedKey id) {
+        Recipe cached = cachedBukkitRecipe;
+        if (cached != null) {
+            return cached;
+        }
         CraftItemStack result = CraftItemStack.asCraftMirror(this.g());
         CraftSmokingRecipe recipe = new CraftSmokingRecipe(id, result, ingredient, this.b(), this.d());
         recipe.setGroup(this.c());
         recipe.setCategory(CraftRecipe.getCategory(this.f()));
+        cachedBukkitRecipe = recipe;
         return recipe;
     }
 

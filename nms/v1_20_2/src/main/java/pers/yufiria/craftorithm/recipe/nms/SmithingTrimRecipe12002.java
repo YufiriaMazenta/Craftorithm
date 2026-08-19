@@ -18,6 +18,7 @@ public class SmithingTrimRecipe12002 extends SmithingTrimRecipe {
 
     private final RecipeChoice template, addition;
     private final RecipeChoice base;
+    private volatile Recipe cachedBukkitRecipe;
 
     SmithingTrimRecipe12002(
         RecipeItemStack nmsTemplate,
@@ -57,10 +58,16 @@ public class SmithingTrimRecipe12002 extends SmithingTrimRecipe {
 
     @Override
     public Recipe toBukkitRecipe(NamespacedKey recipeKey) {
-        return new CraftSmithingTrimRecipe(
+        Recipe cached = cachedBukkitRecipe;
+        if (cached != null) {
+            return cached;
+        }
+        Recipe recipe = new CraftSmithingTrimRecipe(
             recipeKey,
             template, base, addition
         );
+        cachedBukkitRecipe = recipe;
+        return recipe;
     }
 
     public static RecipeHolder<SmithingTrimRecipe> fromBukkit(NamespacedKey recipeKey, org.bukkit.inventory.SmithingTrimRecipe bukkitRecipe) {

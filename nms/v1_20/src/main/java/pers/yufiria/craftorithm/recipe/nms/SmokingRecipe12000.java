@@ -14,12 +14,14 @@ import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftSmokingRecipe;
 import org.bukkit.craftbukkit.v1_20_R1.util.CraftNamespacedKey;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
+import org.bukkit.inventory.SmokingRecipe;
 import pers.yufiria.craftorithm.util.RecipeUtils;
 
 public class SmokingRecipe12000 extends RecipeSmoking {
 
     private final RecipeChoice ingredient;
     private final ItemStack result;
+    private volatile Recipe cachedBukkitRecipe;
 
     SmokingRecipe12000(
         MinecraftKey recipeKey,
@@ -43,14 +45,19 @@ public class SmokingRecipe12000 extends RecipeSmoking {
 
     @Override
     public Recipe toBukkitRecipe() {
+        Recipe cached = cachedBukkitRecipe;
+        if (cached != null) {
+            return cached;
+        }
         CraftItemStack result = CraftItemStack.asCraftMirror(this.result);
         CraftSmokingRecipe recipe = new CraftSmokingRecipe(CraftNamespacedKey.fromMinecraft(this.e()), result, ingredient, this.b(), this.d());
         recipe.setGroup(this.c());
         recipe.setCategory(CraftRecipe.getCategory(this.g()));
+        cachedBukkitRecipe = recipe;
         return recipe;
     }
 
-    public static RecipeSmoking fromBukkit(NamespacedKey recipeKey, org.bukkit.inventory.SmokingRecipe bukkitRecipe) {
+    public static RecipeSmoking fromBukkit(NamespacedKey recipeKey, SmokingRecipe bukkitRecipe) {
         CraftSmokingRecipe craftFurnaceRecipe = CraftSmokingRecipe.fromBukkitRecipe(bukkitRecipe);
         RecipeChoice recipeChoice = bukkitRecipe.getInputChoice();
         return new SmokingRecipe12000(

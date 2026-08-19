@@ -1,7 +1,7 @@
 package pers.yufiria.craftorithm.listener;
 
-import crypticlib.listener.EventListener;
 import crypticlib.CrypticLib;
+import crypticlib.listener.EventListener;
 import io.papermc.paper.event.server.ServerResourcesReloadedEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

@@ -12,6 +12,7 @@ import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftCampfireRecipe;
 import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.v1_20_R1.util.CraftNamespacedKey;
+import org.bukkit.inventory.CampfireRecipe;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
 import pers.yufiria.craftorithm.util.RecipeUtils;
@@ -20,6 +21,7 @@ public class CampfireRecipe12000 extends RecipeCampfire {
 
     private final RecipeChoice ingredient;
     private final ItemStack result;
+    private volatile Recipe cachedBukkitRecipe;
 
     CampfireRecipe12000(
         MinecraftKey recipeKey,
@@ -43,14 +45,19 @@ public class CampfireRecipe12000 extends RecipeCampfire {
 
     @Override
     public Recipe toBukkitRecipe() {
+        Recipe cached = cachedBukkitRecipe;
+        if (cached != null) {
+            return cached;
+        }
         CraftItemStack result = CraftItemStack.asCraftMirror(this.result);
         CraftCampfireRecipe recipe = new CraftCampfireRecipe(CraftNamespacedKey.fromMinecraft(this.e()), result, ingredient, this.b(), this.d());
         recipe.setGroup(this.c());
         recipe.setCategory(CraftRecipe.getCategory(this.g()));
+        cachedBukkitRecipe = recipe;
         return recipe;
     }
 
-    public static RecipeCampfire fromBukkit(NamespacedKey recipeKey, org.bukkit.inventory.CampfireRecipe bukkitRecipe) {
+    public static RecipeCampfire fromBukkit(NamespacedKey recipeKey, CampfireRecipe bukkitRecipe) {
         CraftCampfireRecipe craftFurnaceRecipe = CraftCampfireRecipe.fromBukkitRecipe(bukkitRecipe);
         RecipeChoice recipeChoice = bukkitRecipe.getInputChoice();
         return new CampfireRecipe12000(

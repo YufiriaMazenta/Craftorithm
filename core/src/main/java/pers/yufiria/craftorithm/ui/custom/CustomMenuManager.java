@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.ui.custom;
 
+import crypticlib.CrypticLib;
 import crypticlib.CrypticLibPlugin;
 import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.lifecycle.Lifecycle;
@@ -8,7 +9,6 @@ import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskSettings;
 import crypticlib.ui.menu.Menu;
 import crypticlib.ui.util.MenuHelper;
-import crypticlib.CrypticLib;
 import crypticlib.util.IOHelper;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;

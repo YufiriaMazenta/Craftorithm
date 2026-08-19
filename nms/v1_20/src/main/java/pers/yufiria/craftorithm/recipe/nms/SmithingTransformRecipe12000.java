@@ -19,6 +19,7 @@ public class SmithingTransformRecipe12000 extends SmithingTransformRecipe {
     private final RecipeChoice template, addition;
     private final RecipeChoice base;
     private final ItemStack result;
+    private volatile Recipe cachedBukkitRecipe;
 
     SmithingTransformRecipe12000(
         MinecraftKey recipeKey,
@@ -61,12 +62,18 @@ public class SmithingTransformRecipe12000 extends SmithingTransformRecipe {
 
     @Override
     public Recipe toBukkitRecipe() {
+        Recipe cached = cachedBukkitRecipe;
+        if (cached != null) {
+            return cached;
+        }
         org.bukkit.inventory.ItemStack result = CraftItemStack.asBukkitCopy(this.result);
-        return new CraftSmithingTransformRecipe(
+        CraftSmithingTransformRecipe recipe = new CraftSmithingTransformRecipe(
             CraftNamespacedKey.fromMinecraft(this.e()),
             result,
             template, base, addition
         );
+        cachedBukkitRecipe = recipe;
+        return recipe;
     }
 
     public static SmithingTransformRecipe fromBukkit(NamespacedKey recipeKey, org.bukkit.inventory.SmithingTransformRecipe bukkitRecipe) {

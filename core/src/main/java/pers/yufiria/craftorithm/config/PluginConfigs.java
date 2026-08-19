@@ -1,7 +1,10 @@
 package pers.yufiria.craftorithm.config;
 
 import crypticlib.config.ConfigHandler;
-import crypticlib.config.node.impl.bukkit.*;
+import crypticlib.config.node.impl.bukkit.BooleanConfig;
+import crypticlib.config.node.impl.bukkit.ConfigSectionListConfig;
+import crypticlib.config.node.impl.bukkit.IntConfig;
+import crypticlib.config.node.impl.bukkit.StringListConfig;
 
 import java.util.Collections;
 import java.util.List;

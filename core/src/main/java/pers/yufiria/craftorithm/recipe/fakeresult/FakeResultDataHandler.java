@@ -1,12 +1,12 @@
 package pers.yufiria.craftorithm.recipe.fakeresult;
 
+import crypticlib.CrypticLib;
 import crypticlib.CrypticLibPlugin;
 import crypticlib.lifecycle.Lifecycle;
 import crypticlib.lifecycle.LifecycleRule;
 import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskSettings;
 import crypticlib.listener.EventListener;
-import crypticlib.CrypticLib;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;

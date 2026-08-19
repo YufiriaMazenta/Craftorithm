@@ -19,6 +19,7 @@ public class SmithingTransformRecipe12005 extends SmithingTransformRecipe {
     private final RecipeChoice template, addition;
     private final RecipeChoice base;
     private final ItemStack result;
+    private volatile Recipe cachedBukkitRecipe;
 
     SmithingTransformRecipe12005(RecipeItemStack nmsTemplate, RecipeChoice template, RecipeItemStack nmsBase, RecipeChoice base, RecipeItemStack nmsAddition, RecipeChoice addition, ItemStack result) {
         super(nmsTemplate, nmsBase, nmsAddition, result);
@@ -52,8 +53,14 @@ public class SmithingTransformRecipe12005 extends SmithingTransformRecipe {
 
     @Override
     public Recipe toBukkitRecipe(NamespacedKey recipeKey) {
+        Recipe cached = cachedBukkitRecipe;
+        if (cached != null) {
+            return cached;
+        }
         org.bukkit.inventory.ItemStack result = CraftItemStack.asBukkitCopy(this.result);
-        return new CraftSmithingTransformRecipe(recipeKey, result, template, base, addition);
+        CraftSmithingTransformRecipe recipe = new CraftSmithingTransformRecipe(recipeKey, result, template, base, addition);
+        cachedBukkitRecipe = recipe;
+        return recipe;
     }
 
     public static RecipeHolder<SmithingTransformRecipe> fromBukkit(NamespacedKey recipeKey, org.bukkit.inventory.SmithingTransformRecipe bukkitRecipe) {

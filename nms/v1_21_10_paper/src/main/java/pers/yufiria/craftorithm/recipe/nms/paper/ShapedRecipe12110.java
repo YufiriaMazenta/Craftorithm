@@ -19,6 +19,7 @@ public final class ShapedRecipe12110 extends ShapedRecipe {
 
     private final ShapedRecipePattern12110 customPattern;
     private final ItemStack result;
+    private volatile org.bukkit.inventory.Recipe cachedBukkitRecipe;
 
     ShapedRecipe12110(
         String group,
@@ -63,6 +64,10 @@ public final class ShapedRecipe12110 extends ShapedRecipe {
 
     @Override
     public org.bukkit.inventory.ShapedRecipe toBukkitRecipe(NamespacedKey id) {
+        org.bukkit.inventory.Recipe cached = cachedBukkitRecipe;
+        if (cached != null) {
+            return (org.bukkit.inventory.ShapedRecipe) cached;
+        }
         CraftShapedRecipe recipe;
         org.bukkit.inventory.ItemStack result = CraftItemStack.asCraftMirror(this.result);
         recipe = new CraftShapedRecipe(id, result, this);
@@ -96,6 +101,7 @@ public final class ShapedRecipe12110 extends ShapedRecipe {
             ingredient.ifPresent(recipeChoice -> recipe.setIngredient(finalC, recipeChoice));
             ++c;
         }
+        cachedBukkitRecipe = recipe;
         return recipe;
     }
 }

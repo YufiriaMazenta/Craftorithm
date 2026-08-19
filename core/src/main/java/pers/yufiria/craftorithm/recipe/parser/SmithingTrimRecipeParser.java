@@ -11,7 +11,6 @@ import org.bukkit.inventory.meta.trim.TrimPattern;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
-import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessorManager;
 
 public enum SmithingTrimRecipeParser implements VanillaRecipeParser<SmithingRecipe> {
 

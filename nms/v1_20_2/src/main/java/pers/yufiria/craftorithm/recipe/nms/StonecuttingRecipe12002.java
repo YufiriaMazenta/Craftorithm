@@ -18,6 +18,7 @@ import pers.yufiria.craftorithm.util.RecipeUtils;
 public class StonecuttingRecipe12002 extends RecipeStonecutting {
 
     private final RecipeChoice ingredient;
+    private volatile Recipe cachedBukkitRecipe;
 
     StonecuttingRecipe12002(
         String group,
@@ -36,9 +37,14 @@ public class StonecuttingRecipe12002 extends RecipeStonecutting {
 
     @Override
     public Recipe toBukkitRecipe(NamespacedKey recipeKey) {
+        Recipe cached = cachedBukkitRecipe;
+        if (cached != null) {
+            return cached;
+        }
         CraftItemStack result = CraftItemStack.asCraftMirror(this.b);
         CraftStonecuttingRecipe recipe = new CraftStonecuttingRecipe(recipeKey, result, ingredient);
         recipe.setGroup(this.c());
+        cachedBukkitRecipe = recipe;
         return recipe;
     }
 

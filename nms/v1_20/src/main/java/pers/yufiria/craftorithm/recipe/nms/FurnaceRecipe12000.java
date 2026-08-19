@@ -20,6 +20,7 @@ public class FurnaceRecipe12000 extends FurnaceRecipe {
 
     private final RecipeChoice ingredient;
     private final ItemStack result;
+    private volatile Recipe cachedBukkitRecipe;
 
     FurnaceRecipe12000(
         MinecraftKey recipeKey,
@@ -43,10 +44,15 @@ public class FurnaceRecipe12000 extends FurnaceRecipe {
 
     @Override
     public Recipe toBukkitRecipe() {
+        Recipe cached = cachedBukkitRecipe;
+        if (cached != null) {
+            return cached;
+        }
         CraftItemStack result = CraftItemStack.asCraftMirror(this.result);
         CraftFurnaceRecipe recipe = new CraftFurnaceRecipe(CraftNamespacedKey.fromMinecraft(this.e()), result, ingredient, this.b(), this.d());
         recipe.setGroup(this.c());
         recipe.setCategory(CraftRecipe.getCategory(this.g()));
+        cachedBukkitRecipe = recipe;
         return recipe;
     }
 

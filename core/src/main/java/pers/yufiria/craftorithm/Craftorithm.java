@@ -7,7 +7,6 @@ import crypticlib.lifecycle.LifecycleRule;
 import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskSettings;
 import crypticlib.script.ScriptEngine;
-import crypticlib.CrypticLib;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Recipe;
 import pers.yufiria.craftorithm.api.CraftorithmAPI;

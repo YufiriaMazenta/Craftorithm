@@ -14,6 +14,7 @@ import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftShapelessRecipe;
 import org.bukkit.craftbukkit.v1_20_R3.util.CraftNamespacedKey;
+import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapelessRecipe;
 import pers.yufiria.craftorithm.util.RecipeUtils;
@@ -25,6 +26,7 @@ public class ShapelessRecipe12003 extends ShapelessRecipes {
 
     private final List<RecipeChoice> customIngredients;
     private final ItemStack result;
+    private volatile Recipe cachedBukkitRecipe;
 
     ShapelessRecipe12003(
         String group,
@@ -55,6 +57,10 @@ public class ShapelessRecipe12003 extends ShapelessRecipes {
 
     @Override
     public ShapelessRecipe toBukkitRecipe(NamespacedKey recipeKey) {
+        Recipe cached = cachedBukkitRecipe;
+        if (cached != null) {
+            return (ShapelessRecipe) cached;
+        }
         CraftItemStack result = CraftItemStack.asCraftMirror(this.result);
         CraftShapelessRecipe recipe = new CraftShapelessRecipe(recipeKey, result, this);
         recipe.setGroup(this.c());
@@ -64,6 +70,7 @@ public class ShapelessRecipe12003 extends ShapelessRecipes {
             recipe.addIngredient(choice);
         }
 
+        cachedBukkitRecipe = recipe;
         return recipe;
     }
 

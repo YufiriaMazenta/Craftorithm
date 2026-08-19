@@ -10,6 +10,7 @@ import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.inventory.CraftShapedRecipe;
 import org.bukkit.craftbukkit.util.CraftNamespacedKey;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import pers.yufiria.craftorithm.util.RecipeUtils;
 
@@ -21,6 +22,7 @@ public final class ShapedRecipe260100 extends ShapedRecipe {
 
     private final ShapedRecipePattern260100 customPattern;
     private final ItemStackTemplate result;
+    private volatile org.bukkit.inventory.Recipe cachedBukkitRecipe;
 
     ShapedRecipe260100(
         Recipe.CommonInfo commonInfo,
@@ -69,8 +71,12 @@ public final class ShapedRecipe260100 extends ShapedRecipe {
 
     @Override
     public org.bukkit.inventory.ShapedRecipe toBukkitRecipe(NamespacedKey id) {
+        org.bukkit.inventory.Recipe cached = cachedBukkitRecipe;
+        if (cached != null) {
+            return (org.bukkit.inventory.ShapedRecipe) cached;
+        }
         CraftShapedRecipe recipe;
-        org.bukkit.inventory.ItemStack result = CraftItemStack.asCraftMirror(this.result.create());
+        ItemStack result = CraftItemStack.asCraftMirror(this.result.create());
         recipe = new CraftShapedRecipe(id, result, this);
         recipe.setGroup(this.group());
         recipe.setCategory(CraftRecipe.getCategory(this.category()));
@@ -102,6 +108,7 @@ public final class ShapedRecipe260100 extends ShapedRecipe {
             ingredient.ifPresent(recipeChoice -> recipe.setIngredient(finalC, recipeChoice));
             ++c;
         }
+        cachedBukkitRecipe = recipe;
         return recipe;
     }
 }

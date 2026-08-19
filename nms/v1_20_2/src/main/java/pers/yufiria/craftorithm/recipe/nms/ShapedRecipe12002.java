@@ -13,6 +13,7 @@ import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftShapedRecipe;
 import org.bukkit.craftbukkit.v1_20_R2.util.CraftNamespacedKey;
+import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import pers.yufiria.craftorithm.util.RecipeUtils;
@@ -25,6 +26,7 @@ public final class ShapedRecipe12002 extends ShapedRecipes {
 
     private final ShapedRecipePattern12002 customPattern;
     private final ItemStack result;
+    private volatile Recipe cachedBukkitRecipe;
 
     ShapedRecipe12002(
         String group,
@@ -99,6 +101,10 @@ public final class ShapedRecipe12002 extends ShapedRecipes {
 
     @Override
     public ShapedRecipe toBukkitRecipe(NamespacedKey recipeKey) {
+        Recipe cached = cachedBukkitRecipe;
+        if (cached != null) {
+            return (ShapedRecipe) cached;
+        }
         CraftShapedRecipe recipe;
         CraftItemStack result = CraftItemStack.asCraftMirror(this.result);
         recipe = new CraftShapedRecipe(recipeKey, result, this);
@@ -136,6 +142,7 @@ public final class ShapedRecipe12002 extends ShapedRecipes {
             ++ c;
         }
 
+        cachedBukkitRecipe = recipe;
         return recipe;
     }
 }
