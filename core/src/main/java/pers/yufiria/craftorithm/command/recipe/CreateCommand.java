@@ -24,7 +24,7 @@ import pers.yufiria.craftorithm.ui.creator.anvil.AnvilCreator;
 import pers.yufiria.craftorithm.ui.creator.vanillaBrewing.VanillaBrewingCreator;
 import pers.yufiria.craftorithm.ui.creator.vanillaCrafting.VanillaShapedCreator;
 import pers.yufiria.craftorithm.ui.creator.vanillaCrafting.VanillaShapelessCreator;
-import pers.yufiria.craftorithm.ui.creator.vanillaSmelting.SmeltingCreator;
+import pers.yufiria.craftorithm.ui.creator.vanillaSmelting.VanillaSmeltingCreator;
 import pers.yufiria.craftorithm.ui.creator.vanillaSmithing.VanillaSmithingTransformCreator;
 import pers.yufiria.craftorithm.ui.creator.vanillaStonecutting.VanillaStonecuttingCreator;
 import pers.yufiria.craftorithm.util.CommandUtils;
@@ -125,7 +125,7 @@ public final class CreateCommand extends CommandNode implements LifecycleTask {
         // 熔炉配方 (furnace, blast, smoker, campfire)
         for (SmeltingMenuType smeltingType : SmeltingMenuType.values()) {
             addRecipeCreator(smeltingType.recipeType(), (player, recipeId, recipeFileName) -> {
-                new SmeltingCreator(player, recipeId, recipeFileName, smeltingType).openMenu();
+                new VanillaSmeltingCreator(player, recipeId, recipeFileName, smeltingType).openMenu();
             });
         }
         // 锻造台配方

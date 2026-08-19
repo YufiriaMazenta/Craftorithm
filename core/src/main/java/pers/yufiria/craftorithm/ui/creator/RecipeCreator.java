@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.ui.creator;
 
+import crypticlib.CrypticLibBukkit;
 import crypticlib.Key;
 import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.config.BukkitConfigWrapper;
@@ -19,6 +20,7 @@ import pers.yufiria.craftorithm.recipe.RecipeType;
 
 import java.text.SimpleDateFormat;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public abstract class RecipeCreator extends StoredMenu {
 
@@ -42,10 +44,12 @@ public abstract class RecipeCreator extends StoredMenu {
 
     protected abstract Icon getResultFrameIcon();
 
-    protected BukkitConfigWrapper createRecipeConfig(String recipeFileName) {
-        BukkitConfigWrapper recipeConfigWrapper = new BukkitConfigWrapper(Craftorithm.instance(), "recipes/" + recipeFileName + ".yml");
-        recipeConfigWrapper.saveDefaultConfigFile();
-        return recipeConfigWrapper;
+    protected void createRecipeConfig(String recipeFileName, Consumer<BukkitConfigWrapper> callback) {
+        CrypticLibBukkit.scheduler().async(() -> {
+            BukkitConfigWrapper recipeConfigWrapper = new BukkitConfigWrapper(Craftorithm.instance(), "recipes/" + recipeFileName + ".yml");
+            recipeConfigWrapper.saveDefaultConfigFile();
+            callback.accept(recipeConfigWrapper);
+        });
     }
 
     public RecipeCreator setRecipeFileName(@Nullable String recipeFileName) {

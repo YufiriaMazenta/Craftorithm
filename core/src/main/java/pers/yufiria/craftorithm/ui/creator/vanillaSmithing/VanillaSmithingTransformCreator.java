@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.ui.creator.vanillaSmithing;
 
+import crypticlib.CrypticLibBukkit;
 import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
@@ -127,43 +128,47 @@ public class VanillaSmithingTransformCreator extends RecipeCreator {
                 String recipeId = resolveRecipeId(SimpleRecipeTypes.VANILLA_SMITHING_TRANSFORM.typeKey(), resultId.itemId());
                 String recipeFileName = resolveRecipeFileName(resultId.itemId());
                 // 5. 创建并保存配方配置文件
-                BukkitConfigWrapper recipeConfig = createRecipeConfig(recipeFileName);
-                recipeConfig.set("type", SimpleRecipeTypes.VANILLA_SMITHING_TRANSFORM.typeKey());
-                recipeConfig.set("result", resultId.toString());
-                recipeConfig.set("template", templateId);
-                recipeConfig.set("base", baseId);
-                recipeConfig.set("addition", additionId);
-                if (recipeId != null) {
-                    recipeConfig.set("recipe_id", recipeId);
-                }
-                recipeConfig.saveConfig();
-                recipeConfig.reloadConfig();
+                createRecipeConfig(recipeFileName, recipeConfig -> {
+                    recipeConfig.set("type", SimpleRecipeTypes.VANILLA_SMITHING_TRANSFORM.typeKey());
+                    recipeConfig.set("result", resultId.toString());
+                    recipeConfig.set("template", templateId);
+                    recipeConfig.set("base", baseId);
+                    recipeConfig.set("addition", additionId);
+                    if (recipeId != null) {
+                        recipeConfig.set("recipe_id", recipeId);
+                    }
+                    recipeConfig.saveConfig();
+                    recipeConfig.reloadConfig();
 
-                // 6. 加载配方到RecipeManager
-                boolean loadResult = RecipeManager.INSTANCE.loadRecipeFromConfig(recipeFileName, recipeConfig, true);
-                if (loadResult) {
-                    LangUtils.sendLang(
-                        event.getWhoClicked(),
-                        Languages.COMMAND_CREATE_SUCCESS,
-                        Map.of(
-                            "<recipe_type>",
-                            Languages.RECIPE_TYPE_NAME_VANILLA_SMITHING_TRANSFORM.value((Player) event.getWhoClicked()),
-                            "<recipe_file_name>",
-                            recipeFileName,
-                            "<recipe_id>",
-                            recipeId != null ? recipeId : recipeFileName
-                        )
-                    );
-                } else {
-                    LangUtils.sendLang(
-                        event.getWhoClicked(),
-                        Languages.RECIPE_LOAD_EXCEPTION,
-                        Map.of("<recipe_name>", recipeFileName)
-                    );
-                }
+                    CrypticLibBukkit.scheduler().sync(() -> {
+                        // 6. 加载配方到RecipeManager
+                        boolean loadResult = RecipeManager.INSTANCE.loadRecipeFromConfig(recipeFileName, recipeConfig, true);
+                        if (loadResult) {
+                            LangUtils.sendLang(
+                                event.getWhoClicked(),
+                                Languages.COMMAND_CREATE_SUCCESS,
+                                Map.of(
+                                    "<recipe_type>",
+                                    Languages.RECIPE_TYPE_NAME_VANILLA_SMITHING_TRANSFORM.value((Player) event.getWhoClicked()),
+                                    "<recipe_file_name>",
+                                    recipeFileName,
+                                    "<recipe_id>",
+                                    recipeId != null ? recipeId : recipeFileName
+                                )
+                            );
+                        } else {
+                            LangUtils.sendLang(
+                                event.getWhoClicked(),
+                                Languages.RECIPE_LOAD_EXCEPTION,
+                                Map.of("<recipe_name>", recipeFileName)
+                            );
+                        }
 
-                // 7. 关闭菜单
-                event.getWhoClicked().closeInventory();
+                        // 7. 关闭菜单
+                        event.getWhoClicked().closeInventory();
+                    });
+                });
+
                 return this;
             }
         };

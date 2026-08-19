@@ -40,7 +40,7 @@ import java.util.function.Supplier;
  * 熔炼配方创建器
  * 熔炉/高炉/烟熏炉/营火共用此类, 差异部分由SmeltingMenuType提供
  */
-public class SmeltingCreator extends RecipeCreator {
+public class VanillaSmeltingCreator extends RecipeCreator {
 
     private static final int INGREDIENT_SLOT = 20;
     private static final int RESULT_SLOT = 24;
@@ -50,7 +50,7 @@ public class SmeltingCreator extends RecipeCreator {
     protected int time;
     protected CookingRecipeBookCategoryIcon categoryIcon;
 
-    public SmeltingCreator(
+    public VanillaSmeltingCreator(
         @NotNull Player player,
         @Nullable String recipeId,
         @Nullable String recipeFileName,
@@ -225,44 +225,48 @@ public class SmeltingCreator extends RecipeCreator {
                 String recipeId = resolveRecipeId(recipeType().typeKey(), resultId.itemId());
                 String recipeFileName = resolveRecipeFileName(resultId.itemId());
                 // 5. 创建并保存配方配置文件
-                BukkitConfigWrapper recipeConfig = createRecipeConfig(recipeFileName);
-                recipeConfig.set("type", recipeType().typeKey());
-                recipeConfig.set("result", resultId.toString());
-                recipeConfig.set("ingredient", ingredientId);
-                recipeConfig.set("exp", exp);
-                recipeConfig.set("time", time);
-                recipeConfig.set("recipe_book_category", categoryIcon.category().name().toLowerCase());
-                if (recipeId != null) {
-                    recipeConfig.set("recipe_id", recipeId);
-                }
-                recipeConfig.saveConfig();
-                recipeConfig.reloadConfig();
+                createRecipeConfig(recipeFileName, recipeConfig -> {
+                    recipeConfig.set("type", recipeType().typeKey());
+                    recipeConfig.set("result", resultId.toString());
+                    recipeConfig.set("ingredient", ingredientId);
+                    recipeConfig.set("exp", exp);
+                    recipeConfig.set("time", time);
+                    recipeConfig.set("recipe_book_category", categoryIcon.category().name().toLowerCase());
+                    if (recipeId != null) {
+                        recipeConfig.set("recipe_id", recipeId);
+                    }
+                    recipeConfig.saveConfig();
+                    recipeConfig.reloadConfig();
 
-                // 6. 加载配方到RecipeManager
-                boolean loadResult = RecipeManager.INSTANCE.loadRecipeFromConfig(recipeFileName, recipeConfig, true);
-                if (loadResult) {
-                    LangUtils.sendLang(
-                        event.getWhoClicked(),
-                        Languages.COMMAND_CREATE_SUCCESS,
-                        Map.of(
-                            "<recipe_type>",
-                            recipeType().getLocalizedName((Player) event.getWhoClicked()),
-                            "<recipe_file_name>",
-                            recipeFileName,
-                            "<recipe_id>",
-                            recipeId != null ? recipeId : recipeFileName
-                        )
-                    );
-                } else {
-                    LangUtils.sendLang(
-                        event.getWhoClicked(),
-                        Languages.RECIPE_LOAD_EXCEPTION,
-                        Map.of("<recipe_name>", recipeFileName)
-                    );
-                }
+                    CrypticLibBukkit.scheduler().sync(() -> {
+                        // 6. 加载配方到RecipeManager
+                        boolean loadResult = RecipeManager.INSTANCE.loadRecipeFromConfig(recipeFileName, recipeConfig, true);
+                        if (loadResult) {
+                            LangUtils.sendLang(
+                                event.getWhoClicked(),
+                                Languages.COMMAND_CREATE_SUCCESS,
+                                Map.of(
+                                    "<recipe_type>",
+                                    recipeType().getLocalizedName((Player) event.getWhoClicked()),
+                                    "<recipe_file_name>",
+                                    recipeFileName,
+                                    "<recipe_id>",
+                                    recipeId != null ? recipeId : recipeFileName
+                                )
+                            );
+                        } else {
+                            LangUtils.sendLang(
+                                event.getWhoClicked(),
+                                Languages.RECIPE_LOAD_EXCEPTION,
+                                Map.of("<recipe_name>", recipeFileName)
+                            );
+                        }
 
-                // 7. 关闭菜单
-                event.getWhoClicked().closeInventory();
+                        // 7. 关闭菜单
+                        event.getWhoClicked().closeInventory();
+                    });
+                });
+
                 return this;
             }
         };

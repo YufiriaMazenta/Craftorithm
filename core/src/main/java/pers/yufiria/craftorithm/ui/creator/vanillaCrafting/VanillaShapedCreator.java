@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.ui.creator.vanillaCrafting;
 
+import crypticlib.CrypticLibBukkit;
 import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
@@ -168,52 +169,57 @@ public final class VanillaShapedCreator extends RecipeCreator {
                 }
 
                 // 9. 获取配方书分类
-                CraftingBookCategory category = CraftingBookCategory.MISC;
+                CraftingBookCategory category;
                 RecipeBookCategoryIcon categoryIcon = (RecipeBookCategoryIcon) VanillaShapedCreator.this.getIcon(40).orElse(null);
                 if (categoryIcon != null) {
                     category = categoryIcon.category();
+                } else {
+                    category = CraftingBookCategory.MISC;
                 }
 
                 String recipeId = resolveRecipeId(SimpleRecipeTypes.VANILLA_SHAPED.typeKey(), resultId.itemId());
                 String recipeFileName = resolveRecipeFileName(resultId.itemId());
                 // 10. 创建并保存配方配置文件
-                BukkitConfigWrapper recipeConfig = createRecipeConfig(recipeFileName);
-                recipeConfig.set("type", SimpleRecipeTypes.VANILLA_SHAPED.typeKey());
-                recipeConfig.set("result", resultId.toString());
-                recipeConfig.set("shape", shape);
-                recipeConfig.set("ingredients", ingredientIdMap);
-                recipeConfig.set("recipe_book_category", category.name().toLowerCase());
-                if (recipeId != null) {
-                    recipeConfig.set("recipe_id", recipeId);
-                }
-                recipeConfig.saveConfig();
-                recipeConfig.reloadConfig();
+                createRecipeConfig(recipeFileName, recipeConfig -> {
+                    recipeConfig.set("type", SimpleRecipeTypes.VANILLA_SHAPED.typeKey());
+                    recipeConfig.set("result", resultId.toString());
+                    recipeConfig.set("shape", shape);
+                    recipeConfig.set("ingredients", ingredientIdMap);
+                    recipeConfig.set("recipe_book_category", category.name().toLowerCase());
+                    if (recipeId != null) {
+                        recipeConfig.set("recipe_id", recipeId);
+                    }
+                    recipeConfig.saveConfig();
+                    recipeConfig.reloadConfig();
 
-                // 11. 加载配方到RecipeManager
-                boolean loadResult = RecipeManager.INSTANCE.loadRecipeFromConfig(recipeFileName, recipeConfig, true);
-                if (loadResult) {
-                    LangUtils.sendLang(
-                        event.getWhoClicked(),
-                        Languages.COMMAND_CREATE_SUCCESS,
-                        Map.of(
-                            "<recipe_type>",
-                            Languages.RECIPE_TYPE_NAME_VANILLA_SHAPED.value((Player) event.getWhoClicked()),
-                            "<recipe_file_name>",
-                            recipeFileName,
-                            "<recipe_id>",
-                            recipeId != null ? recipeId : recipeFileName
-                        )
-                    );
-                } else {
-                    LangUtils.sendLang(
-                        event.getWhoClicked(),
-                        Languages.RECIPE_LOAD_EXCEPTION,
-                        Map.of("<recipe_name>", recipeFileName)
-                    );
-                }
+                    CrypticLibBukkit.scheduler().sync(() -> {
+                        // 11. 加载配方到RecipeManager
+                        boolean loadResult = RecipeManager.INSTANCE.loadRecipeFromConfig(recipeFileName, recipeConfig, true);
+                        if (loadResult) {
+                            LangUtils.sendLang(
+                                event.getWhoClicked(),
+                                Languages.COMMAND_CREATE_SUCCESS,
+                                Map.of(
+                                    "<recipe_type>",
+                                    Languages.RECIPE_TYPE_NAME_VANILLA_SHAPED.value((Player) event.getWhoClicked()),
+                                    "<recipe_file_name>",
+                                    recipeFileName,
+                                    "<recipe_id>",
+                                    recipeId != null ? recipeId : recipeFileName
+                                )
+                            );
+                        } else {
+                            LangUtils.sendLang(
+                                event.getWhoClicked(),
+                                Languages.RECIPE_LOAD_EXCEPTION,
+                                Map.of("<recipe_name>", recipeFileName)
+                            );
+                        }
 
-                // 12. 关闭菜单
-                event.getWhoClicked().closeInventory();
+                        // 12. 关闭菜单
+                        event.getWhoClicked().closeInventory();
+                    });
+                });
                 return this;
             }
         };

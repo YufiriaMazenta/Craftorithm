@@ -319,8 +319,10 @@ public enum RecipeManager implements LifecycleTask {
         String keyStr = recipeKey.toString();
         if (!disabledRecipes.contains(keyStr))
             disabledRecipes.add(keyStr);
-        disabledRecipesConfigWrapper.set("recipes", disabledRecipes);
-        disabledRecipesConfigWrapper.saveConfig();
+        CrypticLibBukkit.scheduler().async(() -> {
+            disabledRecipesConfigWrapper.set("recipes", disabledRecipes);
+            disabledRecipesConfigWrapper.saveConfig();
+        });
     }
 
     private void addDisabledRecipeCache(NamespacedKey recipeKey) {
@@ -352,7 +354,7 @@ public enum RecipeManager implements LifecycleTask {
             }
             if (recipeConfigWrapperMap.containsKey(recipeKey) && deleteFile) {
                 BukkitConfigWrapper removed = recipeConfigWrapperMap.remove(recipeKey);
-                removed.deleteConfigFile();
+                CrypticLibBukkit.scheduler().async(removed::deleteConfigFile);
             }
         }
         return result;

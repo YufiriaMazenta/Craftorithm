@@ -178,43 +178,47 @@ public class AnvilCreator extends RecipeCreator {
                 String recipeId = resolveRecipeId(SimpleRecipeTypes.ANVIL.typeKey(), resultId.itemId());
                 String recipeFileName = resolveRecipeFileName(resultId.itemId());
                 // 5. 创建并保存配方配置文件
-                BukkitConfigWrapper recipeConfig = createRecipeConfig(recipeFileName);
-                recipeConfig.set("type", SimpleRecipeTypes.ANVIL.typeKey());
-                recipeConfig.set("result", resultId.toString());
-                recipeConfig.set("base", baseId);
-                recipeConfig.set("addition", additionId);
-                recipeConfig.set("cost_level", costLevel);
-                if (recipeId != null) {
-                    recipeConfig.set("recipe_id", recipeId);
-                }
-                recipeConfig.saveConfig();
-                recipeConfig.reloadConfig();
+                createRecipeConfig(recipeFileName, recipeConfig -> {
+                    recipeConfig.set("type", SimpleRecipeTypes.ANVIL.typeKey());
+                    recipeConfig.set("result", resultId.toString());
+                    recipeConfig.set("base", baseId);
+                    recipeConfig.set("addition", additionId);
+                    recipeConfig.set("cost_level", costLevel);
+                    if (recipeId != null) {
+                        recipeConfig.set("recipe_id", recipeId);
+                    }
+                    recipeConfig.saveConfig();
+                    recipeConfig.reloadConfig();
 
-                // 6. 加载配方到RecipeManager
-                boolean loadResult = RecipeManager.INSTANCE.loadRecipeFromConfig(recipeFileName, recipeConfig, true);
-                if (loadResult) {
-                    LangUtils.sendLang(
-                        event.getWhoClicked(),
-                        Languages.COMMAND_CREATE_SUCCESS,
-                        Map.of(
-                            "<recipe_type>",
-                            Languages.RECIPE_TYPE_NAME_ANVIL.value((Player) event.getWhoClicked()),
-                            "<recipe_file_name>",
-                            recipeFileName,
-                            "<recipe_id>",
-                            recipeId != null ? recipeId : recipeFileName
-                        )
-                    );
-                } else {
-                    LangUtils.sendLang(
-                        event.getWhoClicked(),
-                        Languages.RECIPE_LOAD_EXCEPTION,
-                        Map.of("<recipe_name>", recipeFileName)
-                    );
-                }
+                    CrypticLibBukkit.scheduler().sync(() -> {
+                        // 6. 加载配方到RecipeManager
+                        boolean loadResult = RecipeManager.INSTANCE.loadRecipeFromConfig(recipeFileName, recipeConfig, true);
+                        if (loadResult) {
+                            LangUtils.sendLang(
+                                event.getWhoClicked(),
+                                Languages.COMMAND_CREATE_SUCCESS,
+                                Map.of(
+                                    "<recipe_type>",
+                                    Languages.RECIPE_TYPE_NAME_ANVIL.value((Player) event.getWhoClicked()),
+                                    "<recipe_file_name>",
+                                    recipeFileName,
+                                    "<recipe_id>",
+                                    recipeId != null ? recipeId : recipeFileName
+                                )
+                            );
+                        } else {
+                            LangUtils.sendLang(
+                                event.getWhoClicked(),
+                                Languages.RECIPE_LOAD_EXCEPTION,
+                                Map.of("<recipe_name>", recipeFileName)
+                            );
+                        }
 
-                // 7. 关闭菜单
-                event.getWhoClicked().closeInventory();
+                        // 7. 关闭菜单
+                        event.getWhoClicked().closeInventory();
+                    });
+
+                });
                 return this;
             }
         };

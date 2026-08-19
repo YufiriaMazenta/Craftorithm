@@ -106,16 +106,18 @@ public abstract class RecipeEditorMenu extends StoredMenu implements BackableMen
      * @param callback 配方加载完成后的回调
      */
     protected void saveRecipeEdit(BukkitConfigWrapper configWrapper, Runnable callback) {
-        configWrapper.saveConfig();
-        configWrapper.reloadConfig();
-        String recipeId = recipeKey.getKey();
-        RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeId, false);
-        CrypticLibBukkit.scheduler().syncLater(() -> {
-            RecipeManager.INSTANCE.loadRecipeFromConfig(recipeId, configWrapper, true);
-            if (callback != null) {
-                callback.run();
-            }
-        }, 2L);
+        CrypticLibBukkit.scheduler().async(() -> {
+            configWrapper.saveConfig();
+            configWrapper.reloadConfig();
+            String recipeId = recipeKey.getKey();
+            RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeId, false);
+            CrypticLibBukkit.scheduler().syncLater(() -> {
+                RecipeManager.INSTANCE.loadRecipeFromConfig(recipeId, configWrapper, true);
+                if (callback != null) {
+                    callback.run();
+                }
+            }, 2L);
+        });
     }
 
     /**
