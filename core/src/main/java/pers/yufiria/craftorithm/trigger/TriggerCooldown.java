@@ -7,7 +7,9 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 触发器冷却管理
  */
-public class TriggerCooldown {
+public enum TriggerCooldown {
+
+    INSTANCE;
 
     // key = triggerId + ":" + playerUUID (perPlayer) 或 triggerId (global)
     private final Map<String, Long> cooldownMap = new ConcurrentHashMap<>();

@@ -44,7 +44,7 @@ public enum TriggerManager implements LifecycleTask {
     // 触发器ID -> 触发器（用于快速查找）
     private final Map<String, Trigger> triggerById = new ConcurrentHashMap<>();
     // 冷却管理
-    private final TriggerCooldown cooldownManager = new TriggerCooldown();
+    private final TriggerCooldown cooldownManager = TriggerCooldown.INSTANCE;
 
     // ---- 类型注册 ----
 
