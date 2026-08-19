@@ -169,47 +169,56 @@ public enum CraftorithmItemProvider implements ItemProvider, LifecycleTask {
     }
 
     /**
-     * 物品指纹，用于快速索引和预筛选
+     * 物品分桶key，用于快速索引和预筛选
      * <p>
      * 由 Material + 版本相关的额外 key 组成，不同版本使用不同的字段：
      * <ul>
-     *   <li>1.21.2+：item_model（NamespacedKey）</li>
-     *   <li>1.21.2 以下：custom_model_data（int）</li>
+     *   <li>1.21.4+：item_model + custom_model_data_component</li>
+     *   <li>1.21.2~1.21.3：item_model + custom_model_data</li>
+     *   <li>1.21.2 以下：custom_model_data</li>
      * </ul>
      */
-    public record ItemBucketKey(@NotNull Material material, @Nullable Object extraKey) {
+    private record ItemBucketKey(
+        @NotNull Material material,
+        @Nullable Object extraKey1,
+        @Nullable Object extraKey2
+    ) {
 
-        private static final boolean USE_ITEM_MODEL = MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_21_2);
+        private ItemBucketKey {
+        }
 
         public static ItemBucketKey of(@NotNull ItemStack item) {
-            return new ItemBucketKey(item.getType(), extractExtraKey(item.getItemMeta()));
+            return of(item.getType(), item.getItemMeta());
         }
 
         public static ItemBucketKey of(@NotNull Material material, @Nullable ItemMeta meta) {
-            return new ItemBucketKey(material, extractExtraKey(meta));
-        }
-
-        private static @Nullable Object extractExtraKey(@Nullable ItemMeta meta) {
             if (meta == null) {
-                return null;
+                return new ItemBucketKey(material, null, null);
             }
-            if (USE_ITEM_MODEL) {
-                return extractItemModel(meta);
+            MinecraftVersion version = MinecraftVersion.current();
+            if (version.afterOrEquals(MinecraftVersion.V1_21_4)) {
+                return new ItemBucketKey(material, extractItemModel(meta), extractCustomModelDataComponent(meta));
             }
-            return extractCustomModelData(meta);
+            if (version.afterOrEquals(MinecraftVersion.V1_21_2)) {
+                return new ItemBucketKey(material, extractItemModel(meta), extractLegacyCustomModelData(meta));
+            }
+            return new ItemBucketKey(material, extractLegacyCustomModelData(meta), null);
         }
 
         private static @Nullable NamespacedKey extractItemModel(@NotNull ItemMeta meta) {
-            try {
-                return meta.getItemModel();
-            } catch (NoSuchMethodError e) {
-                return null;
-            }
+            return meta.getItemModel();
         }
 
-        private static @Nullable Integer extractCustomModelData(@NotNull ItemMeta meta) {
+        private static @Nullable Integer extractLegacyCustomModelData(@NotNull ItemMeta meta) {
             if (meta.hasCustomModelData()) {
                 return meta.getCustomModelData();
+            }
+            return null;
+        }
+
+        private static @Nullable Object extractCustomModelDataComponent(@NotNull ItemMeta meta) {
+            if (meta.hasCustomModelDataComponent()) {
+                return meta.getCustomModelDataComponent();
             }
             return null;
         }
