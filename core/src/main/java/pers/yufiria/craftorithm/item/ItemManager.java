@@ -141,20 +141,7 @@ public enum ItemManager implements LifecycleTask {
             return Optional.empty();
         }
 
-        for (Map.Entry<String, ItemProvider> itemProviderEntry : itemProviderMap.entrySet()) {
-            NamespacedItemIdStack namespacedItemIdStack;
-            try {
-                namespacedItemIdStack = itemProviderEntry.getValue().matchItemId(item, ignoreAmount);
-            } catch (Throwable t) {
-                logProviderError(itemProviderEntry.getKey(), t);
-                continue;
-            }
-            if (namespacedItemIdStack != null) {
-                return Optional.of(namespacedItemIdStack);
-            }
-        }
-
-        return Optional.empty();
+        return matchItemIdFromProviders(item, ignoreAmount);
     }
 
     /**
@@ -175,6 +162,17 @@ public enum ItemManager implements LifecycleTask {
             ));
         }
 
+        return matchItemIdFromProviders(item, ignoreAmount)
+            .or(() -> Optional.of(new NamespacedItemIdStack(
+                NamespacedItemId.fromMaterial(item.getType()),
+                ignoreAmount ? 1 : item.getAmount()
+            )));
+    }
+
+    /**
+     * 遍历所有物品提供源尝试匹配物品id
+     */
+    private Optional<NamespacedItemIdStack> matchItemIdFromProviders(ItemStack item, boolean ignoreAmount) {
         for (Map.Entry<String, ItemProvider> itemProviderEntry : itemProviderMap.entrySet()) {
             NamespacedItemIdStack namespacedItemIdStack;
             try {
@@ -187,11 +185,7 @@ public enum ItemManager implements LifecycleTask {
                 return Optional.of(namespacedItemIdStack);
             }
         }
-
-        return Optional.of(new NamespacedItemIdStack(
-            NamespacedItemId.fromMaterial(item.getType()),
-            ignoreAmount ? 1 : item.getAmount()
-        ));
+        return Optional.empty();
     }
 
     /**

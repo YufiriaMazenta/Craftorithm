@@ -99,8 +99,10 @@ public enum CraftorithmItemProvider implements ItemProvider, LifecycleTask {
 
     private void loadItems() {
         itemBuckets.clear();
-        for (String namespace : itemConfigFileMap.keySet()) {
-            BukkitConfigWrapper itemFile = itemConfigFileMap.get(namespace);
+        idItemMap.clear();
+        for (Map.Entry<String, BukkitConfigWrapper> entry : itemConfigFileMap.entrySet()) {
+            String namespace = entry.getKey();
+            BukkitConfigWrapper itemFile = entry.getValue();
             Set<String> itemKeySet = itemFile.config().getKeys(false);
             for (String itemKey : itemKeySet) {
                 try {
@@ -124,17 +126,13 @@ public enum CraftorithmItemProvider implements ItemProvider, LifecycleTask {
 
 
     public NamespacedItemIdStack regCraftorithmItem(String namespace, String itemName, ItemStack item) {
-        BukkitConfigWrapper itemConfigWrapper;
-        if (!itemConfigFileMap.containsKey(namespace)) {
-            File itemFile = new File(ITEM_FILE_FOLDER, namespace + ".yml");
+        BukkitConfigWrapper itemConfigWrapper = itemConfigFileMap.computeIfAbsent(namespace, ns -> {
+            File itemFile = new File(ITEM_FILE_FOLDER, ns + ".yml");
             if (!itemFile.exists()) {
                 IOHelper.createNewFile(itemFile);
             }
-            itemConfigWrapper = new BukkitConfigWrapper(itemFile);
-            itemConfigFileMap.put(namespace, itemConfigWrapper);
-        } else {
-            itemConfigWrapper = itemConfigFileMap.get(namespace);
-        }
+            return new BukkitConfigWrapper(itemFile);
+        });
         itemConfigWrapper.set(itemName, item);
         itemConfigWrapper.saveConfig();
         String namespaceItemId = namespace + ":" + itemName;
@@ -184,21 +182,24 @@ public enum CraftorithmItemProvider implements ItemProvider, LifecycleTask {
         private static final boolean USE_ITEM_MODEL = MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_21_2);
 
         public static ItemBucketKey of(@NotNull ItemStack item) {
-            return new ItemBucketKey(item.getType(), extractExtraKey(item));
+            return new ItemBucketKey(item.getType(), extractExtraKey(item.getItemMeta()));
         }
 
-        private static @Nullable Object extractExtraKey(ItemStack item) {
-            if (USE_ITEM_MODEL) {
-                return extractItemModel(item);
-            }
-            return extractCustomModelData(item);
+        public static ItemBucketKey of(@NotNull Material material, @Nullable ItemMeta meta) {
+            return new ItemBucketKey(material, extractExtraKey(meta));
         }
 
-        private static @Nullable NamespacedKey extractItemModel(ItemStack item) {
-            ItemMeta meta = item.getItemMeta();
+        private static @Nullable Object extractExtraKey(@Nullable ItemMeta meta) {
             if (meta == null) {
                 return null;
             }
+            if (USE_ITEM_MODEL) {
+                return extractItemModel(meta);
+            }
+            return extractCustomModelData(meta);
+        }
+
+        private static @Nullable NamespacedKey extractItemModel(@NotNull ItemMeta meta) {
             try {
                 return meta.getItemModel();
             } catch (NoSuchMethodError e) {
@@ -206,9 +207,8 @@ public enum CraftorithmItemProvider implements ItemProvider, LifecycleTask {
             }
         }
 
-        private static @Nullable Integer extractCustomModelData(ItemStack item) {
-            ItemMeta meta = item.getItemMeta();
-            if (meta != null && meta.hasCustomModelData()) {
+        private static @Nullable Integer extractCustomModelData(@NotNull ItemMeta meta) {
+            if (meta.hasCustomModelData()) {
                 return meta.getCustomModelData();
             }
             return null;
