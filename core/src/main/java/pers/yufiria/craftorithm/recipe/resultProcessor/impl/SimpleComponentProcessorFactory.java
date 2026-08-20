@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.recipe.resultProcessor.impl;
 
 import crypticlib.MinecraftVersion;
+import crypticlib.chat.BukkitTextProcessor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.meta.ArmorMeta;
@@ -45,7 +46,7 @@ public enum SimpleComponentProcessorFactory implements ComponentProcessorFactory
                     String value = data.getString("value");
                     yield processor("display_name", (sourceItem, resultItem) -> {
                         ItemMeta resultMeta = resultItem.getItemMeta();
-                        resultMeta.setDisplayName(value);
+                        resultMeta.setDisplayName(BukkitTextProcessor.color(value));
                         resultItem.setItemMeta(resultMeta);
                     });
                 }
@@ -203,7 +204,7 @@ public enum SimpleComponentProcessorFactory implements ComponentProcessorFactory
                     String value = data.getString("value");
                     yield processor("item_name", (sourceItem, resultItem) -> {
                         ItemMeta resultMeta = resultItem.getItemMeta();
-                        resultMeta.setItemName(value);
+                        resultMeta.setItemName(BukkitTextProcessor.color(value));
                         resultItem.setItemMeta(resultMeta);
                     });
                 }

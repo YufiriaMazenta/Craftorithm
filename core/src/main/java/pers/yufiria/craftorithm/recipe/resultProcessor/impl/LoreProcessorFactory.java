@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.recipe.resultProcessor.impl;
 
+import crypticlib.chat.BukkitTextProcessor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
@@ -67,7 +68,7 @@ public class LoreProcessorFactory implements ComponentProcessorFactory {
     }
 
     private static ResultProcessor add(@Nullable ConfigurationSection data) {
-        List<String> lines = data != null ? data.getStringList("value") : List.of();
+        List<String> lines = data != null ? data.getStringList("value").stream().map(BukkitTextProcessor::color).toList() : List.of();
         return processor(COMPONENT_NAME, (sourceItem, resultItem) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
             resultMeta.setLore(lines);
