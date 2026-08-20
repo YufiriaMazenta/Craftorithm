@@ -77,7 +77,7 @@ public enum SmeltingListener implements Listener {
 
             // 运行结果处理器（烧炼配方的source是输入物品）
             Optional<ResultProcessors> processors = ResultProcessorManager.INSTANCE.getRecipeProcessors(recipeKey);
-            processors.ifPresent(p -> p.processItem(event.getSource(), result));
+            processors.ifPresent(p -> p.processItem(event.getSource(), result, null));
         }
         event.setResult(result);
     }
@@ -126,7 +126,7 @@ public enum SmeltingListener implements Listener {
                     result.setItemMeta(refreshItem.getItemMeta());
                 });
             Optional<ResultProcessors> processors = ResultProcessorManager.INSTANCE.getRecipeProcessors(recipeKey);
-            processors.ifPresent(p -> p.processItem(null, result));
+            processors.ifPresent(p -> p.processItem(null, result, null));
         }
         event.setResult(result);
     }

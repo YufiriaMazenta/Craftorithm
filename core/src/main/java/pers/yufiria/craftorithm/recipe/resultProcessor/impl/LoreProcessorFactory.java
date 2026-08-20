@@ -36,7 +36,7 @@ public class LoreProcessorFactory implements ComponentProcessorFactory {
     }
 
     private static ResultProcessor copyFromSource() {
-        return processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem) -> {
+        return processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta sourceMeta = sourceItem.getItemMeta();
             ItemMeta resultMeta = resultItem.getItemMeta();
             if (sourceMeta.hasLore()) {
@@ -50,7 +50,7 @@ public class LoreProcessorFactory implements ComponentProcessorFactory {
      * 合并为结果 lore 在前，源 lore 追加在后
      */
     private static ResultProcessor mergeSource() {
-        return processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem) -> {
+        return processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta sourceMeta = sourceItem.getItemMeta();
             ItemMeta resultMeta = resultItem.getItemMeta();
             if (sourceMeta.hasLore()) {
@@ -68,16 +68,22 @@ public class LoreProcessorFactory implements ComponentProcessorFactory {
     }
 
     private static ResultProcessor add(@Nullable ConfigurationSection data) {
-        List<String> lines = data != null ? data.getStringList("value").stream().map(BukkitTextProcessor::color).toList() : List.of();
-        return processor(COMPONENT_NAME, (sourceItem, resultItem) -> {
+        List<String> rawLines = data != null ? data.getStringList("value") : List.of();
+        return processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
-            resultMeta.setLore(lines);
+            List<String> processed = rawLines.stream()
+                .map(line -> {
+                    String parsed = player != null ? BukkitTextProcessor.placeholder(player, line) : line;
+                    return BukkitTextProcessor.color(parsed);
+                })
+                .toList();
+            resultMeta.setLore(processed);
             resultItem.setItemMeta(resultMeta);
         });
     }
 
     private static ResultProcessor remove(@Nullable ConfigurationSection data) {
-        return processor(COMPONENT_NAME, (sourceItem, resultItem) -> {
+        return processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
             if (data == null || data.getKeys(false).isEmpty()) {
                 resultMeta.setLore(null);

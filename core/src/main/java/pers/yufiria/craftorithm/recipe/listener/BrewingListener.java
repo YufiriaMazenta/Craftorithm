@@ -81,7 +81,7 @@ public enum BrewingListener implements Listener {
                     }
                     // 运行结果处理器（酿造配方的source是输入物品）
                     Optional<ResultProcessors> processors = ResultProcessorManager.INSTANCE.getRecipeProcessors(recipeKey);
-                    processors.ifPresent(p -> p.processItem(input, result));
+                    processors.ifPresent(p -> p.processItem(input, result, null));
                 }
             }
             results.set(i, result);

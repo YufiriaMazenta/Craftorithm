@@ -2,6 +2,7 @@ package pers.yufiria.craftorithm.hook.recipe.resultProcessor;
 
 import net.advancedplugins.ae.api.AEAPI;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,7 +32,7 @@ public class AdvancedEnchantmentsFactory implements ComponentProcessorFactory {
                 }
 
                 @Override
-                public void processItem(@Nullable ItemStack sourceItem, @NotNull ItemStack resultItem) {
+                public void processItem(@Nullable ItemStack sourceItem, @NotNull ItemStack resultItem, @Nullable Player player) {
                     if (sourceItem == null) return;
                     HashMap<String, Integer> sourceEnchantments = AEAPI.getEnchantmentsOnItem(sourceItem);
                     if (sourceEnchantments.isEmpty()) return;
@@ -45,7 +46,7 @@ public class AdvancedEnchantmentsFactory implements ComponentProcessorFactory {
                 }
 
                 @Override
-                public void processItem(@Nullable ItemStack sourceItem, @NotNull ItemStack resultItem) {
+                public void processItem(@Nullable ItemStack sourceItem, @NotNull ItemStack resultItem, @Nullable Player player) {
                     if (sourceItem == null) return;
                     HashMap<String, Integer> sourceEnchantments = AEAPI.getEnchantmentsOnItem(sourceItem);
                     if (sourceEnchantments.isEmpty()) return;
@@ -65,7 +66,7 @@ public class AdvancedEnchantmentsFactory implements ComponentProcessorFactory {
                 }
 
                 @Override
-                public void processItem(@Nullable ItemStack sourceItem, @NotNull ItemStack resultItem) {
+                public void processItem(@Nullable ItemStack sourceItem, @NotNull ItemStack resultItem, @Nullable Player player) {
                     // AE API 没有 removeEnchant 方法，使用 level=0 来移除
                     HashMap<String, Integer> enchants = AEAPI.getEnchantmentsOnItem(resultItem);
                     enchants.keySet().forEach(key -> AEAPI.applyEnchant(key, 0, resultItem));

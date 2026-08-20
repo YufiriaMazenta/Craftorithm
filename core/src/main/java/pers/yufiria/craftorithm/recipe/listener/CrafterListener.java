@@ -59,7 +59,7 @@ public enum CrafterListener implements Listener {
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
         if (recipeKey != null) {
             Optional<ResultProcessors> processors = ResultProcessorManager.INSTANCE.getRecipeProcessors(recipeKey);
-            processors.ifPresent(p -> p.processItem(null, result));
+            processors.ifPresent(p -> p.processItem(null, result, null));
         }
         event.setResult(result);
     }

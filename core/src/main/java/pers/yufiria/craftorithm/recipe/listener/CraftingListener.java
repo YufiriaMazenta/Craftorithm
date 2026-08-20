@@ -2,9 +2,13 @@ package pers.yufiria.craftorithm.recipe.listener;
 
 import crypticlib.listener.EventListener;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
@@ -48,7 +52,8 @@ public enum CraftingListener implements Listener {
             });
         // 处理结果处理器（工作台配方没有sourceItem）
         Optional<ResultProcessors> processors = ResultProcessorManager.INSTANCE.getRecipeProcessors(recipeKey);
-        processors.ifPresent(p -> p.processItem(null, result));
+        Player processorPlayer = EventUtils.getViewer(event).orElse(null);
+        processors.ifPresent(p -> p.processItem(null, result, processorPlayer));
         event.getInventory().setResult(result);
     }
 

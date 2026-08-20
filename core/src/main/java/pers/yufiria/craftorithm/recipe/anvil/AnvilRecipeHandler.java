@@ -133,7 +133,7 @@ public enum AnvilRecipeHandler implements Listener {
         Optional<ResultProcessors> recipeProcessors = ResultProcessorManager.INSTANCE.getRecipeProcessors(anvilRecipe.getKey());
         recipeProcessors.ifPresent(
             rules -> {
-                rules.processItem(base, result.get());
+                rules.processItem(base, result.get(), player);
             }
         );
 
@@ -202,7 +202,7 @@ public enum AnvilRecipeHandler implements Listener {
         Optional<ResultProcessors> recipeProcessors = ResultProcessorManager.INSTANCE.getRecipeProcessors(anvilRecipe.getKey());
         recipeProcessors.ifPresent(
             rules -> {
-                rules.processItem(base, result.get());
+                rules.processItem(base, result.get(), player);
             }
         );
 

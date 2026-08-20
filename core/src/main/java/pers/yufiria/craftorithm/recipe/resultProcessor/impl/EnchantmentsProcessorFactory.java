@@ -41,7 +41,7 @@ public class EnchantmentsProcessorFactory implements ComponentProcessorFactory {
      * 复制时源等级不低于结果等级就覆盖（结果等级更高才保留）
      */
     private static ResultProcessor copyFromSource() {
-        return processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem) -> {
+        return processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta sourceMeta = sourceItem.getItemMeta();
             ItemMeta resultMeta = resultItem.getItemMeta();
             if (sourceMeta.hasEnchants()) {
@@ -63,7 +63,7 @@ public class EnchantmentsProcessorFactory implements ComponentProcessorFactory {
      * 合并时仅源等级严格更高才覆盖（等级相同保留结果）
      */
     private static ResultProcessor mergeSource() {
-        return processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem) -> {
+        return processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta sourceMeta = sourceItem.getItemMeta();
             ItemMeta resultMeta = resultItem.getItemMeta();
             if (sourceMeta.hasEnchants()) {
@@ -83,7 +83,7 @@ public class EnchantmentsProcessorFactory implements ComponentProcessorFactory {
 
     private static ResultProcessor add(@Nullable ConfigurationSection data) {
         List<EnchantmentEntry> enchants = parseEnchantments(data);
-        return processor(COMPONENT_NAME, (sourceItem, resultItem) -> {
+        return processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
             enchants.forEach(e -> resultMeta.addEnchant(e.enchantment(), e.level(), true));
             resultItem.setItemMeta(resultMeta);
@@ -91,7 +91,7 @@ public class EnchantmentsProcessorFactory implements ComponentProcessorFactory {
     }
 
     private static ResultProcessor remove(@Nullable ConfigurationSection data) {
-        return processor(COMPONENT_NAME, (sourceItem, resultItem) -> {
+        return processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
             if (data == null || data.getKeys(false).isEmpty()) {
                 for (Enchantment ench : new ArrayList<>(resultMeta.getEnchants().keySet())) {

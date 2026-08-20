@@ -44,7 +44,7 @@ public class AttributesProcessorFactory implements ComponentProcessorFactory {
     }
 
     private static ResultProcessor copyFromSource() {
-        return processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem) -> {
+        return processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta sourceMeta = sourceItem.getItemMeta();
             ItemMeta resultMeta = resultItem.getItemMeta();
             if (sourceMeta.hasAttributeModifiers()) {
@@ -55,7 +55,7 @@ public class AttributesProcessorFactory implements ComponentProcessorFactory {
     }
 
     private static ResultProcessor mergeSource() {
-        return processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem) -> {
+        return processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta sourceMeta = sourceItem.getItemMeta();
             ItemMeta resultMeta = resultItem.getItemMeta();
             if (sourceMeta.hasAttributeModifiers()) {
@@ -69,7 +69,7 @@ public class AttributesProcessorFactory implements ComponentProcessorFactory {
 
     private static ResultProcessor add(@Nullable ConfigurationSection data) {
         List<Map<?, ?>> attrList = data != null ? data.getMapList("value") : List.of();
-        return processor(COMPONENT_NAME, (sourceItem, resultItem) -> {
+        return processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
             applyAttributeModifiers(resultMeta, attrList);
             resultItem.setItemMeta(resultMeta);
@@ -77,7 +77,7 @@ public class AttributesProcessorFactory implements ComponentProcessorFactory {
     }
 
     private static ResultProcessor remove(@Nullable ConfigurationSection data) {
-        return processor(COMPONENT_NAME, (sourceItem, resultItem) -> {
+        return processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
             if (data == null || data.getKeys(false).isEmpty()) {
                 resultMeta.setAttributeModifiers(null);

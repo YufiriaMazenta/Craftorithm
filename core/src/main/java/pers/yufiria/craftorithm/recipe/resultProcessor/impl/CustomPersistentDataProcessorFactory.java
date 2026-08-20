@@ -3,6 +3,7 @@ package pers.yufiria.craftorithm.recipe.resultProcessor.impl;
 import crypticlib.CrypticLib;
 import crypticlib.util.ReflectionHelper;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -46,7 +47,7 @@ public class CustomPersistentDataProcessorFactory implements ComponentProcessorF
             }
 
             @Override
-            public void processItem(@Nullable ItemStack sourceItem, @NotNull ItemStack resultItem) {
+            public void processItem(@Nullable ItemStack sourceItem, @NotNull ItemStack resultItem, @Nullable Player player) {
                 if (sourceItem == null) return;
                 ItemMeta sourceMeta = sourceItem.getItemMeta();
                 ItemMeta resultMeta = resultItem.getItemMeta();
@@ -75,7 +76,7 @@ public class CustomPersistentDataProcessorFactory implements ComponentProcessorF
             }
 
             @Override
-            public void processItem(@Nullable ItemStack sourceItem, @NotNull ItemStack resultItem) {
+            public void processItem(@Nullable ItemStack sourceItem, @NotNull ItemStack resultItem, @Nullable Player player) {
                 ItemMeta resultMeta = resultItem.getItemMeta();
                 PersistentDataContainer resultPdc = resultMeta.getPersistentDataContainer();
                 for (String keyStr : data.getKeys(false)) {
@@ -115,7 +116,7 @@ public class CustomPersistentDataProcessorFactory implements ComponentProcessorF
             }
 
             @Override
-            public void processItem(@Nullable ItemStack sourceItem, @NotNull ItemStack resultItem) {
+            public void processItem(@Nullable ItemStack sourceItem, @NotNull ItemStack resultItem, @Nullable Player player) {
                 if (sourceItem == null) return;
                 ItemMeta sourceMeta = sourceItem.getItemMeta();
                 ItemMeta resultMeta = resultItem.getItemMeta();
@@ -146,7 +147,7 @@ public class CustomPersistentDataProcessorFactory implements ComponentProcessorF
                 }
 
                 @Override
-                public void processItem(@Nullable ItemStack sourceItem, @NotNull ItemStack resultItem) {
+                public void processItem(@Nullable ItemStack sourceItem, @NotNull ItemStack resultItem, @Nullable Player player) {
                     ItemMeta resultMeta = resultItem.getItemMeta();
                     resultMeta.getPersistentDataContainer().getKeys().forEach(
                         key -> resultMeta.getPersistentDataContainer().remove(key)
@@ -171,7 +172,7 @@ public class CustomPersistentDataProcessorFactory implements ComponentProcessorF
             }
 
             @Override
-            public void processItem(@Nullable ItemStack sourceItem, @NotNull ItemStack resultItem) {
+            public void processItem(@Nullable ItemStack sourceItem, @NotNull ItemStack resultItem, @Nullable Player player) {
                 ItemMeta resultMeta = resultItem.getItemMeta();
                 PersistentDataContainer resultPdc = resultMeta.getPersistentDataContainer();
                 for (String keyStr : finalKeyNames) {

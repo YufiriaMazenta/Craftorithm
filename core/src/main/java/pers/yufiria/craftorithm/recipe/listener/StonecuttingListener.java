@@ -5,7 +5,9 @@ import crypticlib.listener.EventListener;
 import crypticlib.util.ItemHelper;
 import io.papermc.paper.event.player.PlayerStonecutterRecipeSelectEvent;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.StonecutterInventory;
@@ -52,9 +54,10 @@ public enum StonecuttingListener implements Listener {
                 });
             //运行结果处理器
             Optional<ResultProcessors> recipeProcessors = ResultProcessorManager.INSTANCE.getRecipeProcessors(recipeKey);
+            Player processorPlayer = event.getPlayer();
             recipeProcessors.ifPresent(
                 rules -> {
-                    rules.processItem(base, result);
+                    rules.processItem(base, result, processorPlayer);
                 }
             );
             stonecutterInventory.setResult(result);

@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.recipe.resultProcessor;
 
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nullable;
@@ -13,9 +14,9 @@ public class ResultProcessors {
         this.processors = processors;
     }
 
-    public void processItem(@Nullable ItemStack sourceItem, ItemStack resultItem) {
+    public void processItem(@Nullable ItemStack sourceItem, ItemStack resultItem, @Nullable Player player) {
         for (ResultProcessor processor : processors) {
-            processor.processItem(sourceItem, resultItem);
+            processor.processItem(sourceItem, resultItem, player);
         }
     }
 

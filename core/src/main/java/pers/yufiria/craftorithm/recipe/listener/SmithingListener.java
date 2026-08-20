@@ -3,9 +3,13 @@ package pers.yufiria.craftorithm.recipe.listener;
 import crypticlib.listener.EventListener;
 import crypticlib.util.ItemHelper;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.PrepareSmithingEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
@@ -56,10 +60,11 @@ public enum SmithingListener implements Listener {
 
         // 运行结果处理器
         Optional<ResultProcessors> recipeProcessors = ResultProcessorManager.INSTANCE.getRecipeProcessors(recipeKey);
+        Player processorPlayer = EventUtils.getViewer(event).orElse(null);
         recipeProcessors.ifPresent(
             rules -> {
                 ItemStack base = event.getInventory().getItem(1);
-                rules.processItem(base, result.get());
+                rules.processItem(base, result.get(), processorPlayer);
             }
         );
 
