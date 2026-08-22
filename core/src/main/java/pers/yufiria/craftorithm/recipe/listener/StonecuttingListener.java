@@ -7,14 +7,13 @@ import io.papermc.paper.event.player.PlayerStonecutterRecipeSelectEvent;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.StonecutterInventory;
 import org.bukkit.inventory.StonecuttingRecipe;
 import pers.yufiria.craftorithm.item.ItemManager;
-import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessorManager;
-import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessors;
+import pers.yufiria.craftorithm.resultprocessor.ResultProcessorManager;
+import pers.yufiria.craftorithm.resultprocessor.ResultProcessors;
 
 import java.util.Optional;
 

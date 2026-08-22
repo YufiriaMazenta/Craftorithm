@@ -1,11 +1,11 @@
-package pers.yufiria.craftorithm.recipe.resultProcessor.impl;
+package pers.yufiria.craftorithm.resultprocessor.impl;
 
+import crypticlib.util.TriConsumer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.yufiria.craftorithm.recipe.resultProcessor.ProcessingStrategy;
-import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessor;
+import pers.yufiria.craftorithm.resultprocessor.ResultProcessor;
 
 /**
  * 结果处理器工厂的公共构建工具
@@ -13,11 +13,6 @@ import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessor;
 final class ProcessorUtils {
 
     private ProcessorUtils() {
-    }
-
-    @FunctionalInterface
-    interface TriConsumer<A, B, C> {
-        void accept(A a, B b, C c);
     }
 
     /**
@@ -56,8 +51,8 @@ final class ProcessorUtils {
         };
     }
 
-    static ResultProcessor unsupported(String component, ProcessingStrategy strategy) {
-        throw new UnsupportedOperationException(component + " does not support " + strategy);
+    static ResultProcessor unsupported(String component, String type) {
+        throw new UnsupportedOperationException(component + " does not support type: " + type);
     }
 
 }

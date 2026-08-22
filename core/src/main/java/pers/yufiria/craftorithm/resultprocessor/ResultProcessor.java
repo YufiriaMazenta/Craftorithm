@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.recipe.resultProcessor;
+package pers.yufiria.craftorithm.resultprocessor;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

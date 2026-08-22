@@ -13,8 +13,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
-import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessorManager;
-import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessors;
+import pers.yufiria.craftorithm.resultprocessor.ResultProcessorManager;
+import pers.yufiria.craftorithm.resultprocessor.ResultProcessors;
 
 import java.util.Optional;
 

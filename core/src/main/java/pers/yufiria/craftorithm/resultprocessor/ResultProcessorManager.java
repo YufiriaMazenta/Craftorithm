@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.recipe.resultProcessor;
+package pers.yufiria.craftorithm.resultprocessor;
 
 import crypticlib.CrypticLib;
 import crypticlib.listener.EventListener;
@@ -14,7 +14,7 @@ import pers.yufiria.craftorithm.api.event.RecipeLoadFromConfigEvent;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
-import pers.yufiria.craftorithm.recipe.resultProcessor.impl.*;
+import pers.yufiria.craftorithm.resultprocessor.impl.*;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -109,20 +109,17 @@ public enum ResultProcessorManager implements Listener {
     }
 
     private void parseAndAddProcessor(List<ResultProcessor> processors, ComponentProcessorFactory factory, String componentName, ConfigurationSection entry) {
-        String strategyStr = entry.getString("type");
-        if (strategyStr == null) {
+        String type = entry.getString("type");
+        if (type == null) {
             CrypticLib.info("&eMissing 'type' for result_processor: " + componentName);
             return;
         }
-        ProcessingStrategy strategy;
-        try {
-            strategy = ProcessingStrategy.fromString(strategyStr);
-        } catch (IllegalArgumentException e) {
-            CrypticLib.info("&eUnknown processing strategy '" + strategyStr + "' for result_processor: " + componentName);
-            return;
-        }
         ConfigurationSection data = entry.getConfigurationSection("data");
-        processors.add(factory.createProcessor(strategy, data));
+        try {
+            processors.add(factory.createProcessor(type, data));
+        } catch (UnsupportedOperationException e) {
+            CrypticLib.info("&e" + e.getMessage());
+        }
     }
 
     private static ConfigurationSection toConfigSection(Object obj) {
@@ -156,7 +153,11 @@ public enum ResultProcessorManager implements Listener {
                 continue;
             }
             ConfigurationSection data = parseLegacyArg(arg);
-            processors.add(factory.createProcessor(ProcessingStrategy.COPY_FROM_SOURCE, data));
+            try {
+                processors.add(factory.createProcessor("copy_from_source", data));
+            } catch (UnsupportedOperationException e) {
+                CrypticLib.info("&e" + e.getMessage());
+            }
         }
         recipeProcessors.put(recipeKey, new ResultProcessors(processors));
     }
@@ -195,6 +196,5 @@ public enum ResultProcessorManager implements Listener {
     public void resetRecipeProcessors() {
         recipeProcessors.clear();
     }
-
 
 }

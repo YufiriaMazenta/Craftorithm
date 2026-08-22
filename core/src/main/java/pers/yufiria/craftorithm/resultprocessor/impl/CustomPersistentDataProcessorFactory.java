@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.recipe.resultProcessor.impl;
+package pers.yufiria.craftorithm.resultprocessor.impl;
 
 import crypticlib.CrypticLib;
 import crypticlib.util.ReflectionHelper;
@@ -11,16 +11,27 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.yufiria.craftorithm.recipe.resultProcessor.ComponentProcessorFactory;
-import pers.yufiria.craftorithm.recipe.resultProcessor.ProcessingStrategy;
-import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessor;
+import pers.yufiria.craftorithm.resultprocessor.ComponentProcessorFactory;
+import pers.yufiria.craftorithm.resultprocessor.ResultProcessor;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 public class CustomPersistentDataProcessorFactory implements ComponentProcessorFactory {
 
     public static final String COMPONENT_NAME = "custom_persistent_data";
+
+    private final Map<String, Function<ConfigurationSection, ResultProcessor>> handlers = new HashMap<>();
+
+    public CustomPersistentDataProcessorFactory() {
+        handlers.put("copy_from_source", this::createCopyFromSource);
+        handlers.put("add", this::createAdd);
+        handlers.put("merge_source", this::createMergeSource);
+        handlers.put("remove", this::createRemove);
+    }
 
     @Override
     public String componentName() {
@@ -28,13 +39,12 @@ public class CustomPersistentDataProcessorFactory implements ComponentProcessorF
     }
 
     @Override
-    public ResultProcessor createProcessor(ProcessingStrategy strategy, @Nullable ConfigurationSection data) {
-        return switch (strategy) {
-            case COPY_FROM_SOURCE -> createCopyFromSource(data);
-            case ADD -> createAdd(data);
-            case MERGE_SOURCE -> createMergeSource(data);
-            case REMOVE -> createRemove(data);
-        };
+    public ResultProcessor createProcessor(String type, @Nullable ConfigurationSection data) {
+        Function<ConfigurationSection, ResultProcessor> handler = handlers.get(type);
+        if (handler == null) {
+            throw new UnsupportedOperationException(COMPONENT_NAME + " does not support type: " + type);
+        }
+        return handler.apply(data);
     }
 
     private ResultProcessor createCopyFromSource(@Nullable ConfigurationSection data) {

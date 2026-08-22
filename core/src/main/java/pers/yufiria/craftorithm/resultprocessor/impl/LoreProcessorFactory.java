@@ -1,18 +1,20 @@
-package pers.yufiria.craftorithm.recipe.resultProcessor.impl;
+package pers.yufiria.craftorithm.resultprocessor.impl;
 
 import crypticlib.chat.BukkitTextProcessor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
-import pers.yufiria.craftorithm.recipe.resultProcessor.ComponentProcessorFactory;
-import pers.yufiria.craftorithm.recipe.resultProcessor.ProcessingStrategy;
-import pers.yufiria.craftorithm.recipe.resultProcessor.ResultProcessor;
+import pers.yufiria.craftorithm.resultprocessor.ComponentProcessorFactory;
+import pers.yufiria.craftorithm.resultprocessor.ResultProcessor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
-import static pers.yufiria.craftorithm.recipe.resultProcessor.impl.ProcessorUtils.processor;
-import static pers.yufiria.craftorithm.recipe.resultProcessor.impl.ProcessorUtils.processorRequireSource;
+import static pers.yufiria.craftorithm.resultprocessor.impl.ProcessorUtils.processor;
+import static pers.yufiria.craftorithm.resultprocessor.impl.ProcessorUtils.processorRequireSource;
 
 public class LoreProcessorFactory implements ComponentProcessorFactory {
 
@@ -20,19 +22,27 @@ public class LoreProcessorFactory implements ComponentProcessorFactory {
 
     public static final String COMPONENT_NAME = "lore";
 
+    private static final Map<String, Function<ConfigurationSection, ResultProcessor>> HANDLERS = new HashMap<>();
+
+    static {
+        HANDLERS.put("copy_from_source", data -> copyFromSource());
+        HANDLERS.put("add", LoreProcessorFactory::add);
+        HANDLERS.put("merge_source", data -> mergeSource());
+        HANDLERS.put("remove", LoreProcessorFactory::remove);
+    }
+
     @Override
     public String componentName() {
         return COMPONENT_NAME;
     }
 
     @Override
-    public ResultProcessor createProcessor(ProcessingStrategy strategy, @Nullable ConfigurationSection data) {
-        return switch (strategy) {
-            case COPY_FROM_SOURCE -> copyFromSource();
-            case ADD -> add(data);
-            case MERGE_SOURCE -> mergeSource();
-            case REMOVE -> remove(data);
-        };
+    public ResultProcessor createProcessor(String type, @Nullable ConfigurationSection data) {
+        Function<ConfigurationSection, ResultProcessor> handler = HANDLERS.get(type);
+        if (handler == null) {
+            throw new UnsupportedOperationException(COMPONENT_NAME + " does not support type: " + type);
+        }
+        return handler.apply(data);
     }
 
     private static ResultProcessor copyFromSource() {
