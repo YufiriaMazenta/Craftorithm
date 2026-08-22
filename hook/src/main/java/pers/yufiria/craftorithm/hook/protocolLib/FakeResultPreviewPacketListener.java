@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.anvil.AnvilRecipeHandler;
-import pers.yufiria.craftorithm.recipe.fakeresult.FakeResultDataHandler;
+import pers.yufiria.craftorithm.fakeresult.FakeResultDataHandler;
 import pers.yufiria.craftorithm.util.EventUtils;
 
 import java.time.Duration;

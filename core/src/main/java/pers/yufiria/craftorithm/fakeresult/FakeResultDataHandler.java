@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.recipe.fakeresult;
+package pers.yufiria.craftorithm.fakeresult;
 
 import crypticlib.CrypticLib;
 import crypticlib.CrypticLibPlugin;
