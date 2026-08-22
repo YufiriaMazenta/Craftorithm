@@ -1,6 +1,6 @@
 package pers.yufiria.craftorithm.hook;
 
-import pers.yufiria.craftorithm.hook.recipe.resultProcessor.AdvancedEnchantmentsFactory;
+import pers.yufiria.craftorithm.hook.resultprocessor.AdvancedEnchantmentsFactory;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessorManager;
 
 public enum AdvancedEnchantmentsHook implements PluginHook {

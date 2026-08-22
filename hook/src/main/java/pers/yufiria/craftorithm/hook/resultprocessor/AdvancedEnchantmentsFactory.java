@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.hook.recipe.resultProcessor;
+package pers.yufiria.craftorithm.hook.resultprocessor;
 
 import net.advancedplugins.ae.api.AEAPI;
 import org.bukkit.configuration.ConfigurationSection;
