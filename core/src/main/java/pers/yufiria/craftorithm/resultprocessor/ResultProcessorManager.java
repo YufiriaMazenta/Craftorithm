@@ -38,7 +38,7 @@ public enum ResultProcessorManager implements Listener {
                 registerFactory(factory);
             }
         }
-        registerFactory(new CustomPersistentDataProcessorFactory());
+        registerFactory(CustomPersistentDataProcessorFactory.INSTANCE);
         registerFactory(EnchantmentsProcessorFactory.INSTANCE);
         registerFactory(AttributesProcessorFactory.INSTANCE);
         registerFactory(ItemFlagProcessorFactory.INSTANCE);

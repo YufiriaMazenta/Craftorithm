@@ -16,19 +16,19 @@ import java.util.function.Function;
 import static pers.yufiria.craftorithm.resultprocessor.impl.ProcessorUtils.processor;
 import static pers.yufiria.craftorithm.resultprocessor.impl.ProcessorUtils.processorRequireSource;
 
-public class LoreProcessorFactory implements ComponentProcessorFactory {
+public enum LoreProcessorFactory implements ComponentProcessorFactory {
 
-    public static final LoreProcessorFactory INSTANCE = new LoreProcessorFactory();
+    INSTANCE;
 
     public static final String COMPONENT_NAME = "lore";
 
-    private static final Map<String, Function<ConfigurationSection, ResultProcessor>> HANDLERS = new HashMap<>();
+    private final Map<String, Function<ConfigurationSection, ResultProcessor>> handlers = new HashMap<>();
 
-    static {
-        HANDLERS.put("copy_from_source", data -> copyFromSource());
-        HANDLERS.put("add", LoreProcessorFactory::add);
-        HANDLERS.put("merge_source", data -> mergeSource());
-        HANDLERS.put("remove", LoreProcessorFactory::remove);
+    LoreProcessorFactory() {
+        handlers.put("copy_from_source", data -> copyFromSource());
+        handlers.put("add", this::add);
+        handlers.put("merge_source", data -> mergeSource());
+        handlers.put("remove", this::remove);
     }
 
     @Override
@@ -38,14 +38,18 @@ public class LoreProcessorFactory implements ComponentProcessorFactory {
 
     @Override
     public ResultProcessor createProcessor(String type, @Nullable ConfigurationSection data) {
-        Function<ConfigurationSection, ResultProcessor> handler = HANDLERS.get(type);
+        Function<ConfigurationSection, ResultProcessor> handler = handlers.get(type);
         if (handler == null) {
             throw new UnsupportedOperationException(COMPONENT_NAME + " does not support type: " + type);
         }
         return handler.apply(data);
     }
 
-    private static ResultProcessor copyFromSource() {
+    public Map<String, Function<ConfigurationSection, ResultProcessor>> handlers() {
+        return handlers;
+    }
+
+    private ResultProcessor copyFromSource() {
         return processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta sourceMeta = sourceItem.getItemMeta();
             ItemMeta resultMeta = resultItem.getItemMeta();
@@ -59,7 +63,7 @@ public class LoreProcessorFactory implements ComponentProcessorFactory {
     /**
      * 合并为结果 lore 在前，源 lore 追加在后
      */
-    private static ResultProcessor mergeSource() {
+    private ResultProcessor mergeSource() {
         return processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta sourceMeta = sourceItem.getItemMeta();
             ItemMeta resultMeta = resultItem.getItemMeta();
@@ -77,7 +81,7 @@ public class LoreProcessorFactory implements ComponentProcessorFactory {
         });
     }
 
-    private static ResultProcessor add(@Nullable ConfigurationSection data) {
+    private ResultProcessor add(@Nullable ConfigurationSection data) {
         List<String> rawLines = data != null ? data.getStringList("value") : List.of();
         return processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
@@ -92,7 +96,7 @@ public class LoreProcessorFactory implements ComponentProcessorFactory {
         });
     }
 
-    private static ResultProcessor remove(@Nullable ConfigurationSection data) {
+    private ResultProcessor remove(@Nullable ConfigurationSection data) {
         return processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
             if (data == null || data.getKeys(false).isEmpty()) {

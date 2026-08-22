@@ -20,13 +20,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-public class CustomPersistentDataProcessorFactory implements ComponentProcessorFactory {
+public enum CustomPersistentDataProcessorFactory implements ComponentProcessorFactory {
+
+    INSTANCE;
 
     public static final String COMPONENT_NAME = "custom_persistent_data";
 
     private final Map<String, Function<ConfigurationSection, ResultProcessor>> handlers = new HashMap<>();
 
-    public CustomPersistentDataProcessorFactory() {
+    CustomPersistentDataProcessorFactory() {
         handlers.put("copy_from_source", this::createCopyFromSource);
         handlers.put("add", this::createAdd);
         handlers.put("merge_source", this::createMergeSource);
@@ -45,6 +47,10 @@ public class CustomPersistentDataProcessorFactory implements ComponentProcessorF
             throw new UnsupportedOperationException(COMPONENT_NAME + " does not support type: " + type);
         }
         return handler.apply(data);
+    }
+
+    public Map<String, Function<ConfigurationSection, ResultProcessor>> handlers() {
+        return handlers;
     }
 
     private ResultProcessor createCopyFromSource(@Nullable ConfigurationSection data) {
@@ -197,7 +203,7 @@ public class CustomPersistentDataProcessorFactory implements ComponentProcessorF
     }
 
     @Nullable
-    private static NamespacedKey parseKey(@Nullable ConfigurationSection data) {
+    private NamespacedKey parseKey(@Nullable ConfigurationSection data) {
         if (data == null) return null;
         String keyStr = data.getString("key");
         if (keyStr != null) {
@@ -207,7 +213,7 @@ public class CustomPersistentDataProcessorFactory implements ComponentProcessorF
     }
 
     @Nullable
-    private static PersistentDataType<?, ?> parseType(@Nullable ConfigurationSection data) {
+    private PersistentDataType<?, ?> parseType(@Nullable ConfigurationSection data) {
         if (data == null) return null;
         String typeStr = data.getString("type");
         if (typeStr != null) {
@@ -216,7 +222,7 @@ public class CustomPersistentDataProcessorFactory implements ComponentProcessorF
         return null;
     }
 
-    private static PersistentDataType<?, ?> parseDataType(String typeStr) {
+    private PersistentDataType<?, ?> parseDataType(String typeStr) {
         String upperTypeStr = typeStr.toUpperCase();
         Class<PersistentDataType> dataTypeClass = PersistentDataType.class;
         try {
@@ -237,14 +243,14 @@ public class CustomPersistentDataProcessorFactory implements ComponentProcessorF
     }
 
     @SuppressWarnings("unchecked")
-    private static <T, Z> void copyPdcValue(PersistentDataContainer from, PersistentDataContainer to, NamespacedKey key, PersistentDataType<T, Z> type) {
+    private <T, Z> void copyPdcValue(PersistentDataContainer from, PersistentDataContainer to, NamespacedKey key, PersistentDataType<T, Z> type) {
         Z value = from.get(key, type);
         if (value != null) {
             to.set(key, type, value);
         }
     }
 
-    private static void copyKnownValue(PersistentDataContainer from, PersistentDataContainer to, NamespacedKey key) {
+    private void copyKnownValue(PersistentDataContainer from, PersistentDataContainer to, NamespacedKey key) {
         if (from.has(key, PersistentDataType.STRING)) {
             to.set(key, PersistentDataType.STRING, from.get(key, PersistentDataType.STRING));
         } else if (from.has(key, PersistentDataType.INTEGER)) {

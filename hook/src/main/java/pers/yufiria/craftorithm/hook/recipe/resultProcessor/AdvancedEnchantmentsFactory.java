@@ -14,16 +14,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-public class AdvancedEnchantmentsFactory implements ComponentProcessorFactory {
+public enum AdvancedEnchantmentsFactory implements ComponentProcessorFactory {
 
-    public static final AdvancedEnchantmentsFactory INSTANCE = new AdvancedEnchantmentsFactory();
+    INSTANCE;
 
-    private static final Map<String, Function<ConfigurationSection, ResultProcessor>> HANDLERS = new HashMap<>();
+    private final Map<String, Function<ConfigurationSection, ResultProcessor>> handlers = new HashMap<>();
 
-    static {
-        HANDLERS.put("copy_from_source", data -> copyFromSource());
-        HANDLERS.put("merge_source", data -> mergeSource());
-        HANDLERS.put("remove", data -> remove());
+    AdvancedEnchantmentsFactory() {
+        handlers.put("copy_from_source", data -> copyFromSource());
+        handlers.put("merge_source", data -> mergeSource());
+        handlers.put("remove", data -> remove());
     }
 
     @Override
@@ -33,14 +33,18 @@ public class AdvancedEnchantmentsFactory implements ComponentProcessorFactory {
 
     @Override
     public ResultProcessor createProcessor(String type, @Nullable ConfigurationSection data) {
-        Function<ConfigurationSection, ResultProcessor> handler = HANDLERS.get(type);
+        Function<ConfigurationSection, ResultProcessor> handler = handlers.get(type);
         if (handler == null) {
             throw new UnsupportedOperationException(AdvancedEnchantmentsHook.RULE_NAME + " does not support type: " + type);
         }
         return handler.apply(data);
     }
 
-    private static ResultProcessor copyFromSource() {
+    public Map<String, Function<ConfigurationSection, ResultProcessor>> handlers() {
+        return handlers;
+    }
+
+    private ResultProcessor copyFromSource() {
         return new ResultProcessor() {
             @Override
             public String processorName() {
@@ -50,14 +54,14 @@ public class AdvancedEnchantmentsFactory implements ComponentProcessorFactory {
             @Override
             public void processItem(@Nullable ItemStack sourceItem, @NotNull ItemStack resultItem, @Nullable Player player) {
                 if (sourceItem == null) return;
-                java.util.HashMap<String, Integer> sourceEnchantments = AEAPI.getEnchantmentsOnItem(sourceItem);
+                HashMap<String, Integer> sourceEnchantments = AEAPI.getEnchantmentsOnItem(sourceItem);
                 if (sourceEnchantments.isEmpty()) return;
                 sourceEnchantments.forEach((key, level) -> AEAPI.applyEnchant(key, level, resultItem));
             }
         };
     }
 
-    private static ResultProcessor mergeSource() {
+    private ResultProcessor mergeSource() {
         return new ResultProcessor() {
             @Override
             public String processorName() {
@@ -67,9 +71,9 @@ public class AdvancedEnchantmentsFactory implements ComponentProcessorFactory {
             @Override
             public void processItem(@Nullable ItemStack sourceItem, @NotNull ItemStack resultItem, @Nullable Player player) {
                 if (sourceItem == null) return;
-                java.util.HashMap<String, Integer> sourceEnchantments = AEAPI.getEnchantmentsOnItem(sourceItem);
+                HashMap<String, Integer> sourceEnchantments = AEAPI.getEnchantmentsOnItem(sourceItem);
                 if (sourceEnchantments.isEmpty()) return;
-                java.util.HashMap<String, Integer> resultEnchantments = AEAPI.getEnchantmentsOnItem(resultItem);
+                HashMap<String, Integer> resultEnchantments = AEAPI.getEnchantmentsOnItem(resultItem);
                 sourceEnchantments.forEach((key, level) -> {
                     Integer resultLevel = resultEnchantments.get(key);
                     if (resultLevel == null || level > resultLevel) {
@@ -80,7 +84,7 @@ public class AdvancedEnchantmentsFactory implements ComponentProcessorFactory {
         };
     }
 
-    private static ResultProcessor remove() {
+    private ResultProcessor remove() {
         return new ResultProcessor() {
             @Override
             public String processorName() {
@@ -90,7 +94,7 @@ public class AdvancedEnchantmentsFactory implements ComponentProcessorFactory {
             @Override
             public void processItem(@Nullable ItemStack sourceItem, @NotNull ItemStack resultItem, @Nullable Player player) {
                 // AE API 没有 removeEnchant 方法，使用 level=0 来移除
-                java.util.HashMap<String, Integer> enchants = AEAPI.getEnchantmentsOnItem(resultItem);
+                HashMap<String, Integer> enchants = AEAPI.getEnchantmentsOnItem(resultItem);
                 enchants.keySet().forEach(key -> AEAPI.applyEnchant(key, 0, resultItem));
             }
         };

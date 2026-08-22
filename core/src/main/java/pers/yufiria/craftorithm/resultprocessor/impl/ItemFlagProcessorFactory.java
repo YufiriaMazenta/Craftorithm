@@ -16,19 +16,19 @@ import java.util.function.Function;
 import static pers.yufiria.craftorithm.resultprocessor.impl.ProcessorUtils.processor;
 import static pers.yufiria.craftorithm.resultprocessor.impl.ProcessorUtils.processorRequireSource;
 
-public class ItemFlagProcessorFactory implements ComponentProcessorFactory {
+public enum ItemFlagProcessorFactory implements ComponentProcessorFactory {
 
-    public static final ItemFlagProcessorFactory INSTANCE = new ItemFlagProcessorFactory();
+    INSTANCE;
 
     public static final String COMPONENT_NAME = "item_flag";
 
-    private static final Map<String, Function<ConfigurationSection, ResultProcessor>> HANDLERS = new HashMap<>();
+    private final Map<String, Function<ConfigurationSection, ResultProcessor>> handlers = new HashMap<>();
 
-    static {
-        HANDLERS.put("copy_from_source", data -> copyFromSource());
-        HANDLERS.put("add", ItemFlagProcessorFactory::add);
-        HANDLERS.put("merge_source", data -> mergeSource());
-        HANDLERS.put("remove", ItemFlagProcessorFactory::remove);
+    ItemFlagProcessorFactory() {
+        handlers.put("copy_from_source", data -> copyFromSource());
+        handlers.put("add", this::add);
+        handlers.put("merge_source", data -> mergeSource());
+        handlers.put("remove", this::remove);
     }
 
     @Override
@@ -38,17 +38,21 @@ public class ItemFlagProcessorFactory implements ComponentProcessorFactory {
 
     @Override
     public ResultProcessor createProcessor(String type, @Nullable ConfigurationSection data) {
-        Function<ConfigurationSection, ResultProcessor> handler = HANDLERS.get(type);
+        Function<ConfigurationSection, ResultProcessor> handler = handlers.get(type);
         if (handler == null) {
             throw new UnsupportedOperationException(COMPONENT_NAME + " does not support type: " + type);
         }
         return handler.apply(data);
     }
 
+    public Map<String, Function<ConfigurationSection, ResultProcessor>> handlers() {
+        return handlers;
+    }
+
     /**
      * 复制为完全覆盖，先清空结果已有的 flag
      */
-    private static ResultProcessor copyFromSource() {
+    private ResultProcessor copyFromSource() {
         return processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta sourceMeta = sourceItem.getItemMeta();
             ItemMeta resultMeta = resultItem.getItemMeta();
@@ -61,7 +65,7 @@ public class ItemFlagProcessorFactory implements ComponentProcessorFactory {
     /**
      * 合并保留结果已有的 flag，仅追加源的 flag
      */
-    private static ResultProcessor mergeSource() {
+    private ResultProcessor mergeSource() {
         return processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta sourceMeta = sourceItem.getItemMeta();
             ItemMeta resultMeta = resultItem.getItemMeta();
@@ -70,7 +74,7 @@ public class ItemFlagProcessorFactory implements ComponentProcessorFactory {
         });
     }
 
-    private static ResultProcessor add(@Nullable ConfigurationSection data) {
+    private ResultProcessor add(@Nullable ConfigurationSection data) {
         List<String> flagNames = data != null ? data.getStringList("value") : List.of();
         return processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
@@ -84,7 +88,7 @@ public class ItemFlagProcessorFactory implements ComponentProcessorFactory {
         });
     }
 
-    private static ResultProcessor remove(@Nullable ConfigurationSection data) {
+    private ResultProcessor remove(@Nullable ConfigurationSection data) {
         return processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
             if (data == null || data.getKeys(false).isEmpty()) {
@@ -103,7 +107,7 @@ public class ItemFlagProcessorFactory implements ComponentProcessorFactory {
     }
 
     @Nullable
-    private static ItemFlag parseItemFlag(String flagName) {
+    private ItemFlag parseItemFlag(String flagName) {
         try {
             return ItemFlag.valueOf(flagName.toUpperCase());
         } catch (IllegalArgumentException e) {

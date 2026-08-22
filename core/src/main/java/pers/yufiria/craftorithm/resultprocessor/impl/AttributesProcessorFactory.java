@@ -19,19 +19,19 @@ import java.util.function.Function;
 import static pers.yufiria.craftorithm.resultprocessor.impl.ProcessorUtils.processor;
 import static pers.yufiria.craftorithm.resultprocessor.impl.ProcessorUtils.processorRequireSource;
 
-public class AttributesProcessorFactory implements ComponentProcessorFactory {
+public enum AttributesProcessorFactory implements ComponentProcessorFactory {
 
-    public static final AttributesProcessorFactory INSTANCE = new AttributesProcessorFactory();
+    INSTANCE;
 
     public static final String COMPONENT_NAME = "attributes";
 
-    private static final Map<String, Function<ConfigurationSection, ResultProcessor>> HANDLERS = new HashMap<>();
+    private final Map<String, Function<ConfigurationSection, ResultProcessor>> handlers = new HashMap<>();
 
-    static {
-        HANDLERS.put("copy_from_source", data -> copyFromSource());
-        HANDLERS.put("add", AttributesProcessorFactory::add);
-        HANDLERS.put("merge_source", data -> mergeSource());
-        HANDLERS.put("remove", AttributesProcessorFactory::remove);
+    AttributesProcessorFactory() {
+        handlers.put("copy_from_source", data -> copyFromSource());
+        handlers.put("add", this::add);
+        handlers.put("merge_source", data -> mergeSource());
+        handlers.put("remove", this::remove);
     }
 
     @Override
@@ -41,14 +41,18 @@ public class AttributesProcessorFactory implements ComponentProcessorFactory {
 
     @Override
     public ResultProcessor createProcessor(String type, @Nullable ConfigurationSection data) {
-        Function<ConfigurationSection, ResultProcessor> handler = HANDLERS.get(type);
+        Function<ConfigurationSection, ResultProcessor> handler = handlers.get(type);
         if (handler == null) {
             throw new UnsupportedOperationException(COMPONENT_NAME + " does not support type: " + type);
         }
         return handler.apply(data);
     }
 
-    private static ResultProcessor copyFromSource() {
+    public Map<String, Function<ConfigurationSection, ResultProcessor>> handlers() {
+        return handlers;
+    }
+
+    private ResultProcessor copyFromSource() {
         return processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta sourceMeta = sourceItem.getItemMeta();
             ItemMeta resultMeta = resultItem.getItemMeta();
@@ -59,7 +63,7 @@ public class AttributesProcessorFactory implements ComponentProcessorFactory {
         });
     }
 
-    private static ResultProcessor mergeSource() {
+    private ResultProcessor mergeSource() {
         return processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta sourceMeta = sourceItem.getItemMeta();
             ItemMeta resultMeta = resultItem.getItemMeta();
@@ -72,7 +76,7 @@ public class AttributesProcessorFactory implements ComponentProcessorFactory {
         });
     }
 
-    private static ResultProcessor add(@Nullable ConfigurationSection data) {
+    private ResultProcessor add(@Nullable ConfigurationSection data) {
         List<Map<?, ?>> attrList = data != null ? data.getMapList("value") : List.of();
         return processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
@@ -81,7 +85,7 @@ public class AttributesProcessorFactory implements ComponentProcessorFactory {
         });
     }
 
-    private static ResultProcessor remove(@Nullable ConfigurationSection data) {
+    private ResultProcessor remove(@Nullable ConfigurationSection data) {
         return processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
             if (data == null || data.getKeys(false).isEmpty()) {
@@ -100,7 +104,7 @@ public class AttributesProcessorFactory implements ComponentProcessorFactory {
     }
 
     @SuppressWarnings("removal")
-    private static void applyAttributeModifiers(ItemMeta meta, List<Map<?, ?>> attrList) {
+    private void applyAttributeModifiers(ItemMeta meta, List<Map<?, ?>> attrList) {
         for (Map<?, ?> attrEntry : attrList) {
             String attrName = (String) attrEntry.get("attribute");
             if (attrName == null) continue;

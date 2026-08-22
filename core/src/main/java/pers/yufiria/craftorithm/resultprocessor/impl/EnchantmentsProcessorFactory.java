@@ -18,19 +18,19 @@ import java.util.function.Function;
 import static pers.yufiria.craftorithm.resultprocessor.impl.ProcessorUtils.processor;
 import static pers.yufiria.craftorithm.resultprocessor.impl.ProcessorUtils.processorRequireSource;
 
-public class EnchantmentsProcessorFactory implements ComponentProcessorFactory {
+public enum EnchantmentsProcessorFactory implements ComponentProcessorFactory {
 
-    public static final EnchantmentsProcessorFactory INSTANCE = new EnchantmentsProcessorFactory();
+    INSTANCE;
 
     public static final String COMPONENT_NAME = "enchantments";
 
-    private static final Map<String, Function<ConfigurationSection, ResultProcessor>> HANDLERS = new HashMap<>();
+    private final Map<String, Function<ConfigurationSection, ResultProcessor>> handlers = new HashMap<>();
 
-    static {
-        HANDLERS.put("copy_from_source", data -> copyFromSource());
-        HANDLERS.put("add", EnchantmentsProcessorFactory::add);
-        HANDLERS.put("merge_source", data -> mergeSource());
-        HANDLERS.put("remove", EnchantmentsProcessorFactory::remove);
+    EnchantmentsProcessorFactory() {
+        handlers.put("copy_from_source", data -> copyFromSource());
+        handlers.put("add", this::add);
+        handlers.put("merge_source", data -> mergeSource());
+        handlers.put("remove", this::remove);
     }
 
     @Override
@@ -40,17 +40,21 @@ public class EnchantmentsProcessorFactory implements ComponentProcessorFactory {
 
     @Override
     public ResultProcessor createProcessor(String type, @Nullable ConfigurationSection data) {
-        Function<ConfigurationSection, ResultProcessor> handler = HANDLERS.get(type);
+        Function<ConfigurationSection, ResultProcessor> handler = handlers.get(type);
         if (handler == null) {
             throw new UnsupportedOperationException(COMPONENT_NAME + " does not support type: " + type);
         }
         return handler.apply(data);
     }
 
+    public Map<String, Function<ConfigurationSection, ResultProcessor>> handlers() {
+        return handlers;
+    }
+
     /**
      * 复制时源等级不低于结果等级就覆盖（结果等级更高才保留）
      */
-    private static ResultProcessor copyFromSource() {
+    private ResultProcessor copyFromSource() {
         return processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta sourceMeta = sourceItem.getItemMeta();
             ItemMeta resultMeta = resultItem.getItemMeta();
@@ -72,7 +76,7 @@ public class EnchantmentsProcessorFactory implements ComponentProcessorFactory {
     /**
      * 合并时仅源等级严格更高才覆盖（等级相同保留结果）
      */
-    private static ResultProcessor mergeSource() {
+    private ResultProcessor mergeSource() {
         return processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta sourceMeta = sourceItem.getItemMeta();
             ItemMeta resultMeta = resultItem.getItemMeta();
@@ -91,7 +95,7 @@ public class EnchantmentsProcessorFactory implements ComponentProcessorFactory {
         });
     }
 
-    private static ResultProcessor add(@Nullable ConfigurationSection data) {
+    private ResultProcessor add(@Nullable ConfigurationSection data) {
         List<EnchantmentEntry> enchants = parseEnchantments(data);
         return processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
@@ -100,7 +104,7 @@ public class EnchantmentsProcessorFactory implements ComponentProcessorFactory {
         });
     }
 
-    private static ResultProcessor remove(@Nullable ConfigurationSection data) {
+    private ResultProcessor remove(@Nullable ConfigurationSection data) {
         return processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
             if (data == null || data.getKeys(false).isEmpty()) {
@@ -125,7 +129,7 @@ public class EnchantmentsProcessorFactory implements ComponentProcessorFactory {
 
     private record EnchantmentEntry(Enchantment enchantment, int level) {}
 
-    private static List<EnchantmentEntry> parseEnchantments(@Nullable ConfigurationSection data) {
+    private List<EnchantmentEntry> parseEnchantments(@Nullable ConfigurationSection data) {
         if (data == null) return List.of();
         List<EnchantmentEntry> result = new ArrayList<>();
         for (String key : data.getKeys(false)) {
