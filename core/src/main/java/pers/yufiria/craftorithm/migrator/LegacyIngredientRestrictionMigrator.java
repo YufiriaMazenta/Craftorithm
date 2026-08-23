@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.item.ingredientrestriction;
+package pers.yufiria.craftorithm.migrator;
 
 import crypticlib.CrypticLib;
 import crypticlib.CrypticLibPlugin;
@@ -24,7 +24,7 @@ import java.util.*;
         @LifecycleRule(lifeCycle = Lifecycle.INIT)
     }
 )
-public enum LegacyIngredientRestrictionMigration implements LifecycleTask {
+public enum LegacyIngredientRestrictionMigrator implements LifecycleTask {
 
     INSTANCE;
 

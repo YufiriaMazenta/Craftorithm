@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm;
+package pers.yufiria.craftorithm.migrator;
 
 import crypticlib.CrypticLibPlugin;
 import crypticlib.lifecycle.Lifecycle;
@@ -8,6 +8,7 @@ import crypticlib.lifecycle.LifecycleTaskSettings;
 import crypticlib.util.IOHelper;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 
 import java.io.File;
@@ -18,7 +19,7 @@ import java.util.*;
 import java.util.logging.Logger;
 
 /**
- * 旧版本配方文件格式迁移器
+ * 旧版本配方文件格式迁移器，从1.10.X的旧版本配方格式转化为1.11开始使用的新版本格式
  * 仅在插件 ENABLE 阶段执行一次
  */
 @LifecycleTaskSettings(
@@ -26,7 +27,7 @@ import java.util.logging.Logger;
         @LifecycleRule(lifeCycle = Lifecycle.ENABLE, priority = -1)
     }
 )
-public enum LegacyRecipeMigrator implements LifecycleTask {
+public enum LegacyRecipeFileMigrator implements LifecycleTask {
 
     INSTANCE;
 
