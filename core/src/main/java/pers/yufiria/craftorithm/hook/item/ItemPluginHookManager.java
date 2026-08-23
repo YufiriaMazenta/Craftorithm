@@ -44,7 +44,6 @@ public enum ItemPluginHookManager implements LifecycleTask {
                 LangUtils.info(Languages.LOAD_HOOK_PLUGIN_SUCCESS, Map.of("<plugin>", hookPluginName));
             }
         }
-        ItemManager.INSTANCE.regItemProvider(CraftorithmItemProvider.INSTANCE);
     }
 
     public void addItemPluginHook(ItemPluginHook hooker) {

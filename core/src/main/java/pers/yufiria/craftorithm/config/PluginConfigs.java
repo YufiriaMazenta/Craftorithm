@@ -72,10 +72,11 @@ public class PluginConfigs {
             "EcoItems",
             "ExecutableItems",
             "MMOItems",
-            "MythicMobs"
+            "MythicMobs",
+            "Craftorithm"
         ),
         List.of(
-            "依照上面的挂钩顺序挂钩插件可以挂钩的物品插件,插件自动识别物品ID时将会优先识别上面的插件",
+            "依照上面的挂钩顺序挂钩插件可以挂钩的物品插件,插件自动识别物品ID时将会从上到下依次判断",
             "不包含在此列表里的物品插件将不会尝试挂钩,除非该插件主动挂钩"
         )
     );

@@ -1,8 +1,10 @@
 package pers.yufiria.craftorithm.item;
 
+import crypticlib.CrypticLib;
 import crypticlib.CrypticLibPlugin;
 import crypticlib.MinecraftVersion;
 import crypticlib.config.BukkitConfigWrapper;
+import crypticlib.config.node.impl.bukkit.StringListConfig;
 import crypticlib.lifecycle.Lifecycle;
 import crypticlib.lifecycle.LifecycleRule;
 import crypticlib.lifecycle.LifecycleTask;
@@ -16,23 +18,23 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.config.Languages;
+import pers.yufiria.craftorithm.config.PluginConfigs;
+import pers.yufiria.craftorithm.hook.item.ItemPluginHook;
+import pers.yufiria.craftorithm.hook.item.ItemPluginHookManager;
 import pers.yufiria.craftorithm.util.CollectionsUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @LifecycleTaskSettings(
     rules = {
         @LifecycleRule(lifeCycle = Lifecycle.ENABLE),
-        @LifecycleRule(lifeCycle = Lifecycle.RELOAD)
+        @LifecycleRule(lifeCycle = Lifecycle.RELOAD, priority = -1)
     }
 )
-public enum CraftorithmItemProvider implements ItemProvider, LifecycleTask {
+public enum CraftorithmItemProvider implements ItemPluginHook, ItemProvider, LifecycleTask {
 
     INSTANCE;
     public final File ITEM_FILE_FOLDER = new File(Craftorithm.instance().getDataFolder(), "items");
@@ -162,8 +164,40 @@ public enum CraftorithmItemProvider implements ItemProvider, LifecycleTask {
         return new HashMap<>(itemConfigFileMap);
     }
 
+    /* ItemPluginHook 相关 */
+
+    @Override
+    public ItemProvider itemProvider() {
+        return this;
+    }
+
+    @Override
+    public String pluginName() {
+        return Craftorithm.instance().pluginName();
+    }
+
+    @Override
+    public boolean hook() {
+        return true;
+    }
+
     @Override
     public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
+        if (lifeCycle == Lifecycle.ENABLE) {
+            ItemPluginHookManager.INSTANCE.addItemPluginHook(this);
+        }
+        //检查物品源优先级的配置里是否包含Craftorithm的物品源，如果不包含则添加到末尾
+        StringListConfig itemPluginHookPriorityConfig = PluginConfigs.ITEM_PLUGIN_HOOK_PRIORITY;
+        List<String> originValue = itemPluginHookPriorityConfig.value();
+        String pluginName = Craftorithm.instance().pluginName();
+        if (!originValue.contains(pluginName)) {
+            List<String> value = new ArrayList<>(originValue);
+            value.add(pluginName);
+            itemPluginHookPriorityConfig.setValue(value);
+            itemPluginHookPriorityConfig.saveConfig();
+            CrypticLib.info("Detected that the item hook priority configuration did not include Craftorithm, Automatically added");
+        }
+
         loadItemFiles();
         loadItems();
     }
