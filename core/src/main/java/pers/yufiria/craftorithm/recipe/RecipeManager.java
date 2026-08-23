@@ -3,7 +3,6 @@ package pers.yufiria.craftorithm.recipe;
 import crypticlib.CrypticLib;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.CrypticLibPlugin;
-import crypticlib.MinecraftVersion;
 import crypticlib.chat.BukkitMsgSender;
 import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.lifecycle.Lifecycle;
@@ -91,12 +90,10 @@ public enum RecipeManager implements LifecycleTask {
         regRecipeType(SimpleRecipeTypes.VANILLA_SMELTING_SMOKER);
         regRecipeType(SimpleRecipeTypes.VANILLA_SMELTING_CAMPFIRE);
         regRecipeType(SimpleRecipeTypes.VANILLA_SMITHING_TRANSFORM);
+        regRecipeType(SimpleRecipeTypes.VANILLA_SMITHING_TRIM);
         regRecipeType(SimpleRecipeTypes.VANILLA_STONECUTTING);
         if (PluginConfigs.ENABLE_ANVIL_RECIPE.value()) {
             regRecipeType(SimpleRecipeTypes.ANVIL);
-        }
-        if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_20)) {
-            regRecipeType(SimpleRecipeTypes.VANILLA_SMITHING_TRIM);
         }
         if (supportPotionMix()) {
             regRecipeType(SimpleRecipeTypes.VANILLA_BREWING);
