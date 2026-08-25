@@ -6,7 +6,7 @@ layout:
 icons:
   '#':
     material: minecraft:green_stained_glass_pane
-    name: '&a<translate:lang:recipe_type_name.vanilla_smithing>'
+    name: '&a<translate:lang:recipe_type_name.vanilla_smithing_transform>'
   A:
     icon_type: vanilla_smithing_template
   B:

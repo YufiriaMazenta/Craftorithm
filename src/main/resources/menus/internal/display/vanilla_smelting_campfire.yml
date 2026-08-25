@@ -6,7 +6,7 @@ layout:
 icons:
   '#':
     material: minecraft:green_stained_glass_pane
-    name: '&a<translate:lang:recipe_type_name.vanilla_smelting_blast>'
+    name: '&a<translate:lang:recipe_type_name.vanilla_smelting_campfire>'
     lore:
     - <translate:lang:menu.recipe_display.vanilla_smelting.time>
     - <translate:lang:menu.recipe_display.vanilla_smelting.reward_exp>
