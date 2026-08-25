@@ -8,9 +8,12 @@ import org.bukkit.inventory.SmithingTransformRecipe;
 import org.bukkit.inventory.SmithingTrimRecipe;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.config.menu.display.VanillaSmithingDisplay;
+import pers.yufiria.craftorithm.ui.display.RecipeDisplayManager;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayMenu;
-import pers.yufiria.craftorithm.ui.display.RecipeResultIcon;
 import pers.yufiria.craftorithm.ui.icon.IconParser;
+import pers.yufiria.craftorithm.ui.icon.ItemDisplayIcon;
+
+import java.util.Optional;
 
 public class VanillaSmithingDisplayMenu extends RecipeDisplayMenu<SmithingRecipe> {
 
@@ -27,30 +30,35 @@ public class VanillaSmithingDisplayMenu extends RecipeDisplayMenu<SmithingRecipe
 
     @Override
     public void preprocessIconWhenUpdateLayout(Integer slot, @NotNull Icon icon) {
-        switch (icon) {
-            case VanillaSmithingTemplateIcon templateIcon -> {
-                if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_20)) {
-                    if (recipe instanceof SmithingTransformRecipe transformRecipe) {
-                        templateIcon.setDisplayItem(transformRecipe.getTemplate().getItemStack());
-                    } else if (recipe instanceof SmithingTrimRecipe trimRecipe) {
-                        templateIcon.setDisplayItem(trimRecipe.getTemplate().getItemStack());
-                    } else {
-                        templateIcon.setDisplayItem(null);
+        if (icon instanceof ItemDisplayIcon itemDisplayIcon) {
+            Optional<Object> iconTypeOpt = itemDisplayIcon.getData("icon_type");
+            iconTypeOpt.ifPresent(obj -> {
+                String iconType = obj.toString();
+                switch (iconType.toLowerCase()) {
+                    case VanillaSmithingDisplayIconParser.ICON_TYPE_TEMPLATE -> {
+                        if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_20)) {
+                            if (recipe instanceof SmithingTransformRecipe transformRecipe) {
+                                itemDisplayIcon.setDisplayItem(transformRecipe.getTemplate().getItemStack());
+                            } else if (recipe instanceof SmithingTrimRecipe trimRecipe) {
+                                itemDisplayIcon.setDisplayItem(trimRecipe.getTemplate().getItemStack());
+                            } else {
+                                itemDisplayIcon.setDisplayItem(null);
+                            }
+                        } else {
+                            itemDisplayIcon.setDisplayItem(null);
+                        }
                     }
-                } else {
-                    templateIcon.setDisplayItem(null);
+                    case VanillaSmithingDisplayIconParser.ICON_TYPE_BASE -> {
+                        itemDisplayIcon.setDisplayItem(recipe.getBase().getItemStack());
+                    }
+                    case VanillaSmithingDisplayIconParser.ICON_TYPE_ADDITION -> {
+                        itemDisplayIcon.setDisplayItem(recipe.getAddition().getItemStack());
+                    }
+                    case RecipeDisplayManager.ICON_TYPE_RESULT -> {
+                        itemDisplayIcon.setDisplayItem(recipe.getResult());
+                    }
                 }
-            }
-            case VanillaSmithingBaseIcon vanillaSmithingBaseIcon -> {
-                vanillaSmithingBaseIcon.setDisplayItem(recipe.getBase().getItemStack());
-            }
-            case VanillaSmithingAdditionIcon vanillaSmithingAdditionIcon -> {
-                vanillaSmithingAdditionIcon.setDisplayItem(recipe.getAddition().getItemStack());
-            }
-            case RecipeResultIcon recipeResultIcon -> {
-                recipeResultIcon.setDisplayItem(recipe.getResult());
-            }
-            default -> {}
+            });
         }
     }
 

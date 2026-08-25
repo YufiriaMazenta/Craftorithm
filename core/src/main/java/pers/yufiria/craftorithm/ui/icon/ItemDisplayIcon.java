@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-public abstract class ItemDisplayIcon extends ActionIcon {
+public class ItemDisplayIcon extends ActionIcon {
 
     private ItemStack displayItem;
 

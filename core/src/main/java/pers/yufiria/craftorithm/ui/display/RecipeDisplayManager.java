@@ -35,6 +35,7 @@ import java.util.function.BiFunction;
 public enum RecipeDisplayManager implements LifecycleTask {
 
     INSTANCE;
+    public static final String ICON_TYPE_RESULT = "result";
     private final Map<RecipeType, BiFunction<Player, Recipe, Menu>> recipeDisplayMap = new RecipeTypeMap<>();
 
     public void addRecipeDisplay(RecipeType recipeType, BiFunction<Player, Recipe, Menu> displayFunc) {
