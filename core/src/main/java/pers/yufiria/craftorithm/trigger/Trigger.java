@@ -24,7 +24,7 @@ public class Trigger {
 
     private final String id;
     private final String typeKey;
-    private final List<String> recipes;
+    private final List<NamespacedKey> recipes;
     private final CompiledScript conditionScript;  // 条件脚本（正向，成立=放行）
     private final CompiledScript actionScript;     // 动作脚本
     private final int priority;
@@ -35,7 +35,7 @@ public class Trigger {
     public Trigger(
         String id,
         String typeKey,
-        List<String> recipes,
+        List<NamespacedKey> recipes,
         CompiledScript conditionScript,
         CompiledScript actionScript,
         int priority,
@@ -56,7 +56,7 @@ public class Trigger {
 
     public String id() { return id; }
     public String typeKey() { return typeKey; }
-    public List<String> recipes() { return recipes; }
+    public List<NamespacedKey> recipes() { return recipes; }
     public int priority() { return priority; }
     public boolean enabled() { return enabled; }
     public long cooldownMillis() { return cooldownMillis; }
@@ -70,7 +70,7 @@ public class Trigger {
     public boolean matches(@Nullable NamespacedKey recipeKey) {
         if (recipes.isEmpty()) return true;
         if (recipeKey == null) return false;
-        return recipes.contains(recipeKey.toString());
+        return recipes.contains(recipeKey);
     }
 
     /**

@@ -10,10 +10,12 @@ import crypticlib.lifecycle.LifecycleTaskSettings;
 import crypticlib.script.ScriptEngine;
 import crypticlib.script.compile.CompiledScript;
 import crypticlib.util.IOHelper;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
+import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.trigger.event.EventTriggerTypes;
 
 import java.io.File;
@@ -43,6 +45,10 @@ public enum TriggerManager implements LifecycleTask {
     private final Map<String, List<Trigger>> triggers = new ConcurrentHashMap<>();
     // 触发器ID -> 触发器（用于快速查找）
     private final Map<String, Trigger> triggerById = new ConcurrentHashMap<>();
+    // 记录存在触发器的配方，对于不存在触发器的配方，不执行触发器以减少性能开销
+    private final Set<NamespacedKey> hasTriggerRecipeKeys = new HashSet<>();
+    // 记录这触发器类型是否存在匹配所有配方的触发器，如果存在的话，所有该类型配方都将执行触发器操作
+    private final Map<TriggerType, Boolean> triggerTypeMatchAllMap = new ConcurrentHashMap<>();
     // 冷却管理
     private final TriggerCooldown cooldownManager = TriggerCooldown.INSTANCE;
 
@@ -91,6 +97,8 @@ public enum TriggerManager implements LifecycleTask {
         triggers.clear();
         triggerById.clear();
         cooldownManager.clear();
+        hasTriggerRecipeKeys.clear();
+        triggerTypeMatchAllMap.clear();
 
         if (!TRIGGER_FOLDER.exists()) {
             TRIGGER_FOLDER.mkdirs();
@@ -119,6 +127,17 @@ public enum TriggerManager implements LifecycleTask {
                     Trigger trigger = parseTrigger(fullId, section);
 
                     if (trigger == null) continue;
+
+                    List<NamespacedKey> triggerMatchRecipes = trigger.recipes();
+                    if (triggerMatchRecipes.isEmpty()) {
+                        //如果该触发器是合成类型，且没有设置配方，那么标记该触发器类型会匹配所有配方
+                        TriggerType triggerType = getTriggerType(trigger.typeKey());
+                        if (triggerType instanceof CraftTriggerTypes) {
+                            triggerTypeMatchAllMap.put(triggerType, true);
+                        }
+                    } else {
+                        this.hasTriggerRecipeKeys.addAll(triggerMatchRecipes);
+                    }
 
                     if (trigger.enabled()) {
                         triggers.computeIfAbsent(trigger.typeKey(), k -> new ArrayList<>())
@@ -167,7 +186,7 @@ public enum TriggerManager implements LifecycleTask {
             return null;
         }
 
-        List<String> recipeKeys = section.getStringList("recipes");
+        List<NamespacedKey> recipeKeys = section.getStringList("recipes").stream().map(NamespacedKey::fromString).toList();
 
         // 编译 conditions 脚本
         // 旧格式（列表，默认 && 连接）:
@@ -276,6 +295,24 @@ public enum TriggerManager implements LifecycleTask {
 
     public TriggerCooldown cooldownManager() {
         return cooldownManager;
+    }
+
+    /**
+     * 获取一个触发器类型下的某个配方是否存在触发器
+     * @param triggerType
+     * @param recipeKey
+     * @return
+     */
+    public boolean hasTrigger(TriggerType triggerType, NamespacedKey recipeKey) {
+        if (recipeKey == null) {
+            return false;
+        }
+        if (triggerTypeMatchAllMap.getOrDefault(triggerType, false)) {
+            //如果这个类型的触发器有一个匹配所有配方的，且配方key不为null，那么无论如何返回true
+            return true;
+        }
+
+        return hasTriggerRecipeKeys.contains(recipeKey);
     }
 
     // ---- 生命周期 ----

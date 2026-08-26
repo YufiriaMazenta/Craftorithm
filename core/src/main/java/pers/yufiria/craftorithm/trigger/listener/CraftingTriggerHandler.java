@@ -10,6 +10,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.ItemStack;
+import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.trigger.CraftTriggerTypes;
 import pers.yufiria.craftorithm.trigger.TriggerContext;
 import pers.yufiria.craftorithm.trigger.TriggerManager;
@@ -27,6 +28,13 @@ public enum CraftingTriggerHandler implements Listener {
      */
     @EventHandler(priority = EventPriority.LOW)
     public void onPrepareCraft(PrepareItemCraftEvent event) {
+        if (!TriggerManager.INSTANCE.hasTrigger(
+            CraftTriggerTypes.CRAFTING,
+            RecipeManager.INSTANCE.getRecipeKey(event.getRecipe())
+        )) {
+            //如果没有配方对应的触发器，直接返回
+            return;
+        }
         TriggerContext ctx = CraftTriggerTypes.CRAFTING.extractPrepareContext(event);
         if (ctx == null) return;
         int denied = TriggerManager.INSTANCE.firePrepare(CraftTriggerTypes.CRAFTING.typeKey(), ctx);
@@ -40,6 +48,17 @@ public enum CraftingTriggerHandler implements Listener {
      */
     @EventHandler(priority = EventPriority.LOWEST)
     public void onCraft(CraftItemEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+        if (!TriggerManager.INSTANCE.hasTrigger(
+            CraftTriggerTypes.CRAFTING,
+            RecipeManager.INSTANCE.getRecipeKey(event.getRecipe())
+        )) {
+            //如果没有配方对应的触发器，直接返回
+            return;
+        }
+
         TriggerContext ctx = CraftTriggerTypes.CRAFTING.extractContext(event);
         if (ctx == null) return;
         if (!(event.getWhoClicked() instanceof Player)) return;

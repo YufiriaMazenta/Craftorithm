@@ -99,17 +99,20 @@ public enum AnvilRecipeHandler implements Listener {
         if (ItemHelper.isAir(base) || ItemHelper.isAir(addition))
             return;
 
-        //处理trigger模块的条件判断
-        TriggerContext ctx = CraftTriggerTypes.ANVIL.extractPrepareContext(event);
-        if (ctx == null) return;
-        int denied = TriggerManager.INSTANCE.firePrepare(CraftTriggerTypes.ANVIL.typeKey(), ctx);
-        if (denied > 0) {
-            return;
-        }
-
         AnvilRecipe anvilRecipe = matchAnvilRecipe(base, addition);
         if (anvilRecipe == null)
             return;
+
+        if (!TriggerManager.INSTANCE.hasTrigger(CraftTriggerTypes.ANVIL, anvilRecipe.getKey())) {
+            //只有存在配方对应触发器的时候，才进行触发器检查
+            TriggerContext ctx = CraftTriggerTypes.ANVIL.extractPrepareContext(event);
+            if (ctx != null) {
+                int denied = TriggerManager.INSTANCE.firePrepare(CraftTriggerTypes.ANVIL.typeKey(), ctx);
+                if (denied > 0) {
+                    return;
+                }
+            }
+        }
 
         // 检查 blocked_crafting_lore_rules
         if (!ItemManager.INSTANCE.canCraft(new ItemStack[]{base, addition}, anvilRecipe.getKey())) {
@@ -175,19 +178,23 @@ public enum AnvilRecipeHandler implements Listener {
             }
         }
 
-        //处理trigger模块的条件判断
-        TriggerContext ctx = CraftTriggerTypes.ANVIL.extractContext(event);
-        if (ctx == null) return;
-        int denied = TriggerManager.INSTANCE.firePrepare(CraftTriggerTypes.ANVIL.typeKey(), ctx);
-        if (denied > 0) {
-            return;
-        }
-
         AnvilRecipe anvilRecipe = matchAnvilRecipe(base, addition);
         if (anvilRecipe == null)
             return;
 
-        // 检查 blocked_crafting_lore_rules
+        TriggerContext ctx = null;
+        if (!TriggerManager.INSTANCE.hasTrigger(CraftTriggerTypes.ANVIL, anvilRecipe.getKey())) {
+            //只有存在配方对应触发器的时候，才进行触发器检查
+            ctx = CraftTriggerTypes.ANVIL.extractContext(event);
+            if (ctx != null) {
+                int denied = TriggerManager.INSTANCE.firePrepare(CraftTriggerTypes.ANVIL.typeKey(), ctx);
+                if (denied > 0) {
+                    return;
+                }
+            }
+        }
+
+        // 检查能否合成
         if (!ItemManager.INSTANCE.canCraft(new ItemStack[]{base, addition}, anvilRecipe.getKey())) {
             return;
         }
@@ -300,7 +307,7 @@ public enum AnvilRecipeHandler implements Listener {
         }
 
         //合成成功后执行trigger的actions
-        if (craftResult) {
+        if (craftResult && ctx != null) {
             int craftNum = (event.getClick() == ClickType.SHIFT_LEFT || event.getClick() == ClickType.SHIFT_RIGHT)
                 ? canCraftNum : 1;
             ctx.setVariable("craft_num", ScriptValue.of(craftNum));

@@ -10,6 +10,8 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.PrepareSmithingEvent;
 import org.bukkit.event.inventory.SmithItemEvent;
 import org.bukkit.inventory.ItemStack;
+import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.trigger.CraftTriggerTypes;
 import pers.yufiria.craftorithm.trigger.TriggerContext;
 import pers.yufiria.craftorithm.trigger.TriggerManager;
@@ -27,6 +29,13 @@ public enum SmithingTriggerHandler implements Listener {
      */
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPrepareSmithing(PrepareSmithingEvent event) {
+        if (!TriggerManager.INSTANCE.hasTrigger(
+            CraftTriggerTypes.SMITHING,
+            RecipeManager.INSTANCE.getRecipeKey(event.getInventory().getRecipe())
+        )) {
+            //如果没有配方对应的触发器，直接返回
+            return;
+        }
         TriggerContext ctx = CraftTriggerTypes.SMITHING.extractPrepareContext(event);
         if (ctx == null) return;
         int denied = TriggerManager.INSTANCE.firePrepare(CraftTriggerTypes.SMITHING.typeKey(), ctx);
@@ -41,6 +50,13 @@ public enum SmithingTriggerHandler implements Listener {
      */
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onSmithing(SmithItemEvent event) {
+        if (!TriggerManager.INSTANCE.hasTrigger(
+            CraftTriggerTypes.SMITHING,
+            RecipeManager.INSTANCE.getRecipeKey(event.getInventory().getRecipe())
+        )) {
+            //如果没有配方对应的触发器，直接返回
+            return;
+        }
         TriggerContext ctx = CraftTriggerTypes.SMITHING.extractContext(event);
         if (ctx == null) return;
         if (!(event.getWhoClicked() instanceof Player)) return;
