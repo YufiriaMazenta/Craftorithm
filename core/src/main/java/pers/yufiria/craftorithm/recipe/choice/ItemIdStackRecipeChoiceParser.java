@@ -11,9 +11,9 @@ import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 import pers.yufiria.craftorithm.util.RecipeUtils;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public enum ItemIdStackRecipeChoiceParser implements RecipeChoiceParser {
@@ -25,7 +25,7 @@ public enum ItemIdStackRecipeChoiceParser implements RecipeChoiceParser {
         if (choiceStr == null || choiceStr.isEmpty()) {
             throw new RecipeLoadException(choiceStr + " is not a valid ingredient ID.");
         }
-        Set<NamespacedItemIdStack> choices;
+        List<NamespacedItemIdStack> choices;
         if (!choiceStr.contains(":")) {
             Material material;
             if (choiceStr.contains(" ")) {
@@ -37,7 +37,7 @@ public enum ItemIdStackRecipeChoiceParser implements RecipeChoiceParser {
             if (material == null) {
                 throw new RecipeLoadException(choiceStr + " is not a valid material");
             }
-            choices = Set.of(NamespacedItemIdStack.fromString(choiceStr));
+            choices = List.of(NamespacedItemIdStack.fromString(choiceStr));
             return new StackableItemIdChoice(choices);
         }
         int index = choiceStr.indexOf(":");
@@ -55,7 +55,7 @@ public enum ItemIdStackRecipeChoiceParser implements RecipeChoiceParser {
                 if (material == null) {
                     throw new RecipeLoadException(choiceStr + " is not a valid material");
                 }
-                choices = Set.of(NamespacedItemIdStack.fromString(choiceStr));
+                choices = List.of(NamespacedItemIdStack.fromString(choiceStr));
                 break;
             case "tag":
                 String tagKeyStr = choiceStr.substring(4);
@@ -66,7 +66,7 @@ public enum ItemIdStackRecipeChoiceParser implements RecipeChoiceParser {
                         throw new RecipeLoadException(tagKeyStr + " is not a valid tag");
                     }
                     Tag<Material> materialTag = tagOpt.get();
-                    choices = materialTag.getValues().stream().map(it -> new NamespacedItemIdStack(NamespacedItemId.fromMaterial(it))).collect(Collectors.toSet());
+                    choices = materialTag.getValues().stream().map(it -> new NamespacedItemIdStack(NamespacedItemId.fromMaterial(it))).collect(Collectors.toList());
                 } else {
                     int amount = Integer.parseInt(tagKeyStr.substring(spaceIndex + 1));
                     tagKeyStr = tagKeyStr.substring(0, spaceIndex);
@@ -75,7 +75,7 @@ public enum ItemIdStackRecipeChoiceParser implements RecipeChoiceParser {
                         throw new RecipeLoadException(tagKeyStr + " is not a valid tag");
                     }
                     Tag<Material> materialTag = tagOpt.get();
-                    choices = materialTag.getValues().stream().map(it -> new NamespacedItemIdStack(NamespacedItemId.fromMaterial(it), amount)).collect(Collectors.toSet());
+                    choices = materialTag.getValues().stream().map(it -> new NamespacedItemIdStack(NamespacedItemId.fromMaterial(it), amount)).collect(Collectors.toList());
                 }
                 break;
             case "item_pack":
@@ -85,10 +85,10 @@ public enum ItemIdStackRecipeChoiceParser implements RecipeChoiceParser {
                 if (itemPack == null) {
                     throw new RecipeLoadException(packId + " is not a valid item pack");
                 }
-                choices = new HashSet<>(itemPack.itemIds());
+                choices = new ArrayList<>(itemPack.itemIds());
                 break;
             default:
-                choices = Set.of(NamespacedItemIdStack.fromString(choiceStr));
+                choices = List.of(NamespacedItemIdStack.fromString(choiceStr));
                 break;
         }
         return new StackableItemIdChoice(choices);

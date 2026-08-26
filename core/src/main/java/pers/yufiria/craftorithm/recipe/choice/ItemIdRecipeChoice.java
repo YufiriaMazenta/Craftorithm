@@ -7,25 +7,25 @@ import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ItemIdRecipeChoice implements CustomRecipeChoice {
 
     private final RecipeChoice bukkitChoice;
-    private Set<NamespacedItemId> ingredients;
+    private List<NamespacedItemId> ingredients;
 
     public ItemIdRecipeChoice(RecipeChoice bukkitChoice) {
         this.bukkitChoice = bukkitChoice;
         if (bukkitChoice instanceof MaterialChoice materialChoice) {
-            ingredients = materialChoice.getChoices().stream().map(NamespacedItemId::fromMaterial).collect(Collectors.toSet());
+            ingredients = materialChoice.getChoices().stream().map(NamespacedItemId::fromMaterial).collect(Collectors.toList());
         } else if (bukkitChoice instanceof ExactChoice exactChoice) {
             ingredients = exactChoice.getChoices().stream().map(item -> {
                 NamespacedItemIdStack namespacedItemIdStack = ItemManager.INSTANCE.matchItemIdOrCreate(item, true);
                 return namespacedItemIdStack.itemId();
-            }).collect(Collectors.toSet());
+            }).collect(Collectors.toList());
         }
     }
 

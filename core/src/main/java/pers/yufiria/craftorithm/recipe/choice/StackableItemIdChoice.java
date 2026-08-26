@@ -8,19 +8,19 @@ import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import java.util.Set;
 
 /**
  * 支持物品堆叠的配方材料,目前只有铁砧配方使用
  */
 public class StackableItemIdChoice implements RecipeChoice {
 
-    private final Set<NamespacedItemIdStack> itemIds;
+    private final List<NamespacedItemIdStack> itemIds;
     private final Random rand = new Random();
 
-    public StackableItemIdChoice(Set<NamespacedItemIdStack> itemIds) {
+    public StackableItemIdChoice(List<NamespacedItemIdStack> itemIds) {
         if (itemIds == null || itemIds.isEmpty())
             throw new UnsupportedOperationException("ItemIds cannot be null or empty");
         this.itemIds = itemIds;
