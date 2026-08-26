@@ -3,7 +3,7 @@ package pers.yufiria.craftorithm.item;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class NamespacedItemIdStack {
+public final class NamespacedItemIdStack {
 
     private @NotNull NamespacedItemId itemId;
     private @NotNull Integer amount;

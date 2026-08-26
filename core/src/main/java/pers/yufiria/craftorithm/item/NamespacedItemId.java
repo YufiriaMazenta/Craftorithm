@@ -5,7 +5,9 @@ import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class NamespacedItemId {
+import java.util.Objects;
+
+public final class NamespacedItemId {
 
     private final @NotNull String namespace;
     private final @NotNull String itemId;
@@ -26,18 +28,16 @@ public class NamespacedItemId {
     }
 
     @Override
-    public final boolean equals(Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof NamespacedItemId that)) return false;
 
-        return namespace.equals(that.namespace) && itemId.equals(that.itemId);
+        return toString.equals(that.toString);
     }
 
     @Override
     public int hashCode() {
-        int result = namespace.hashCode();
-        result = 31 * result + itemId.hashCode();
-        return result;
+        return Objects.hashCode(toString);
     }
 
     public static @Nullable NamespacedItemId fromString(String string) {
