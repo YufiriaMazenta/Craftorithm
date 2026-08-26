@@ -29,7 +29,7 @@ public class ShapelessRecipe12110 extends ShapelessRecipe {
     @Override
     public boolean matches(CraftingInput craftinginput, Level level) {
         List<ItemStack> inputItems = craftinginput.items();
-        List<org.bukkit.inventory.ItemStack> inputBukkitItems = new ArrayList<>();
+        List<org.bukkit.inventory.ItemStack> inputBukkitItems = new ArrayList<>(inputItems.size());
         for (ItemStack nmsInputItem : inputItems) {
             org.bukkit.inventory.ItemStack bukkitCopy = CraftItemStack.asCraftMirror(nmsInputItem);
             if (!ItemHelper.isAir(bukkitCopy)) inputBukkitItems.add(bukkitCopy);

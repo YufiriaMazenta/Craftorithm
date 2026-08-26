@@ -43,8 +43,9 @@ public class ShapelessRecipe12000 extends ShapelessRecipes {
 
     @Override
     public boolean a(InventoryCrafting craftingInput, World world) {
-        List<org.bukkit.inventory.ItemStack> inputItems = new ArrayList<>();
-        for (ItemStack nmsStack : craftingInput.h()) {
+        List<ItemStack> nmsInputItems = craftingInput.h();
+        List<org.bukkit.inventory.ItemStack> inputItems = new ArrayList<>(nmsInputItems.size());
+        for (ItemStack nmsStack : nmsInputItems) {
             org.bukkit.inventory.ItemStack bukkitCopy = CraftItemStack.asCraftMirror(nmsStack);
             if (!ItemHelper.isAir(bukkitCopy)) {
                 inputItems.add(bukkitCopy);
