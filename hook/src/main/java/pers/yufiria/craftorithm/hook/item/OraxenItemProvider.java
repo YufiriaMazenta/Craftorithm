@@ -24,7 +24,7 @@ public enum OraxenItemProvider implements ItemProvider {
             return null;
         String itemName = OraxenItems.getIdByItem(itemStack);
         return new NamespacedItemIdStack(
-            new NamespacedItemId(
+            NamespacedItemId.of(
                 namespace(),
                 itemName
             ),

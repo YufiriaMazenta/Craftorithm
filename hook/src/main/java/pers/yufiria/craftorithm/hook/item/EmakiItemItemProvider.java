@@ -33,7 +33,7 @@ public enum EmakiItemItemProvider implements ItemProvider {
             }
         }
         return new NamespacedItemIdStack(
-            new NamespacedItemId(
+            NamespacedItemId.of(
                 namespace(),
                 id
             ),

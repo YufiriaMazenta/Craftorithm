@@ -64,7 +64,7 @@ public enum CraftorithmItemProvider implements ItemPluginHook, ItemProvider, Lif
         for (Map.Entry<String, ItemStack> itemStackEntry : itemMap.entrySet()) {
             ItemStack item = itemStackEntry.getValue();
             if (item.isSimilar(itemStack)) {
-                NamespacedItemId namespacedItemId = new NamespacedItemId(namespace(), itemStackEntry.getKey());
+                NamespacedItemId namespacedItemId = NamespacedItemId.of(namespace(), itemStackEntry.getKey());
                 return new NamespacedItemIdStack(
                     namespacedItemId,
                     ignoreAmount ? 1 : itemStack.getAmount()
@@ -144,7 +144,7 @@ public enum CraftorithmItemProvider implements ItemPluginHook, ItemProvider, Lif
             fp -> new ConcurrentHashMap<>()
         ).put(namespaceItemId, item);
         return new NamespacedItemIdStack(
-            new NamespacedItemId(
+            NamespacedItemId.of(
                 namespace(),
                 namespaceItemId
             ),

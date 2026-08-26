@@ -27,7 +27,7 @@ public enum EcoItemsItemProvider implements ItemProvider {
         }
         String id = ecoItem.getID();
         return new NamespacedItemIdStack(
-            new NamespacedItemId(
+            NamespacedItemId.of(
                 namespace(),
                 id
             ),

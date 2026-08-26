@@ -29,7 +29,7 @@ public enum AzureFlowItemProvider implements ItemProvider {
         }
         String itemId = azureFlowItem.getUuid();
         return new NamespacedItemIdStack(
-            new NamespacedItemId(
+            NamespacedItemId.of(
                 namespace(),
                 itemId
             ),

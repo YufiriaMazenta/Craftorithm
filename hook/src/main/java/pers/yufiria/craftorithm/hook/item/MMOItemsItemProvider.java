@@ -27,7 +27,7 @@ public enum MMOItemsItemProvider implements ItemProvider {
         String id = nbtItem.getString("MMOITEMS_ITEM_ID");
         String itemKey = type + ":" + id;
         return new NamespacedItemIdStack(
-            new NamespacedItemId(
+            NamespacedItemId.of(
                 namespace(),
                 itemKey
             ),

@@ -30,7 +30,7 @@ public enum ExecutableItemsItemProvider implements ItemProvider {
             ExecutableItemInterface executableItem = executableItemOpt.get();
             String id = executableItem.getId();
             return new NamespacedItemIdStack(
-                new NamespacedItemId(
+                NamespacedItemId.of(
                     namespace(),
                     id
                 ),

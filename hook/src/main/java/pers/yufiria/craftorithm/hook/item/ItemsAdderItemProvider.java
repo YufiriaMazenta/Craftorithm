@@ -24,7 +24,7 @@ public enum ItemsAdderItemProvider implements ItemProvider {
             return null;
         String id = customStack.getNamespacedID();
         return new NamespacedItemIdStack(
-            new NamespacedItemId(
+            NamespacedItemId.of(
                 namespace(),
                 id
             ),

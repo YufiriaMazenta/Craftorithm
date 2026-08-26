@@ -29,7 +29,7 @@ public enum MythicMobsItemProvider implements ItemProvider {
             return null;
         String mmItemName = itemExecutor.getMythicTypeFromItem(itemStack);
         return new NamespacedItemIdStack(
-            new NamespacedItemId(
+            NamespacedItemId.of(
                 namespace(),
                 mmItemName
             ),

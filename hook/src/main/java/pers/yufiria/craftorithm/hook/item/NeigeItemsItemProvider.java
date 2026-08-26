@@ -27,7 +27,7 @@ public enum NeigeItemsItemProvider implements ItemProvider {
         }
         String id = niItemInfo.getId();
         return new NamespacedItemIdStack(
-            new NamespacedItemId(
+            NamespacedItemId.of(
                 namespace(),
                 id
             ),

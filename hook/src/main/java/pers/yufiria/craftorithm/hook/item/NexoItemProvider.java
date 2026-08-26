@@ -25,7 +25,7 @@ public enum NexoItemProvider implements ItemProvider {
             return null;
         }
         return new NamespacedItemIdStack(
-            new NamespacedItemId(
+            NamespacedItemId.of(
                 namespace(),
                 itemId
             ),

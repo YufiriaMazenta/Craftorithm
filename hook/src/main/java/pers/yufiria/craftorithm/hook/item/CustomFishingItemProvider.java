@@ -28,7 +28,7 @@ public enum CustomFishingItemProvider implements ItemProvider {
             return null;
         }
         return new NamespacedItemIdStack(
-            new NamespacedItemId(namespace(), itemId),
+            NamespacedItemId.of(namespace(), itemId),
             ignoreAmount ? 1 : itemStack.getAmount()
         );
     }

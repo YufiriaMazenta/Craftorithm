@@ -31,7 +31,7 @@ public enum CraftEngineItemProvider implements ItemProvider {
             return null;
         }
         return new NamespacedItemIdStack(
-            new NamespacedItemId(
+            NamespacedItemId.of(
                 namespace(),
                 craftEngineItemId.asString()
             ),
