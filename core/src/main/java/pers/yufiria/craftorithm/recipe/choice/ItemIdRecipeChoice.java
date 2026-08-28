@@ -1,31 +1,39 @@
 package pers.yufiria.craftorithm.recipe.choice;
 
+import crypticlib.CrypticLib;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.jetbrains.annotations.NotNull;
+import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ItemIdRecipeChoice implements CustomRecipeChoice {
 
     private final RecipeChoice bukkitChoice;
-    private List<NamespacedItemId> ingredients;
+    private Collection<NamespacedItemId> ingredients;
 
     public ItemIdRecipeChoice(RecipeChoice bukkitChoice) {
         this.bukkitChoice = bukkitChoice;
+        Collection<NamespacedItemId> ingredients;
         if (bukkitChoice instanceof MaterialChoice materialChoice) {
             ingredients = materialChoice.getChoices().stream().map(NamespacedItemId::fromMaterial).collect(Collectors.toList());
         } else if (bukkitChoice instanceof ExactChoice exactChoice) {
             ingredients = exactChoice.getChoices().stream().map(item -> {
                 NamespacedItemIdStack namespacedItemIdStack = ItemManager.INSTANCE.matchItemIdOrCreate(item, true);
-                return namespacedItemIdStack.itemId();
+                return Objects.requireNonNull(namespacedItemIdStack).itemId();
             }).collect(Collectors.toList());
+        } else {
+            throw new IllegalArgumentException("Cannot use " + bukkitChoice.getClass().getName() + " as a bukkit recipe choice");
+        }
+        if (ingredients.size() > PluginConfigs.INGREDIENT_SET_THRESHOLD.value()) {
+            this.ingredients = Set.copyOf(ingredients);
+        } else {
+            this.ingredients = List.copyOf(ingredients);
         }
     }
 

@@ -48,6 +48,12 @@ public class PluginConfigs {
         )
     );
 
+    public final static IntConfig INGREDIENT_SET_THRESHOLD = new IntConfig(
+        "ingredient_set_threshold",
+        8,
+        "配方材料数量超过此阈值时使用 Set 替代 List 进行匹配，提升大量材料时的查找性能"
+    );
+
     public final static BooleanConfig USE_EXPERIMENTAL_RECIPE_INGREDIENTS = new BooleanConfig(
         "use_experimental_recipe_ingredients",
         true,

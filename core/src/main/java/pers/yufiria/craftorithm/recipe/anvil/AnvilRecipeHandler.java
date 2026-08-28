@@ -23,7 +23,7 @@ import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
-import pers.yufiria.craftorithm.recipe.choice.StackableItemIdChoice;
+import pers.yufiria.craftorithm.recipe.choice.ItemIdStackRecipeChoice;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessorManager;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessors;
 import pers.yufiria.craftorithm.trigger.CraftTriggerTypes;
@@ -77,8 +77,8 @@ public enum AnvilRecipeHandler implements Listener {
         }
         for (Map.Entry<NamespacedKey, AnvilRecipe> anvilRecipeEntry : anvilRecipes.entrySet()) {
             AnvilRecipe anvilRecipe = anvilRecipeEntry.getValue();
-            StackableItemIdChoice recipeBaseId = anvilRecipe.base();
-            StackableItemIdChoice recipeAdditionId = anvilRecipe.addition();
+            ItemIdStackRecipeChoice recipeBaseId = anvilRecipe.base();
+            ItemIdStackRecipeChoice recipeAdditionId = anvilRecipe.addition();
             if (!recipeBaseId.test(base))
                 continue;
             if (!recipeAdditionId.test(addition))

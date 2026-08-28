@@ -38,7 +38,7 @@ public enum ItemIdStackRecipeChoiceParser implements RecipeChoiceParser {
                 throw new RecipeLoadException(choiceStr + " is not a valid material");
             }
             choices = List.of(NamespacedItemIdStack.fromString(choiceStr));
-            return new StackableItemIdChoice(choices);
+            return new ItemIdStackRecipeChoice(choices);
         }
         int index = choiceStr.indexOf(":");
         String namespace = choiceStr.substring(0, index);
@@ -91,6 +91,6 @@ public enum ItemIdStackRecipeChoiceParser implements RecipeChoiceParser {
                 choices = List.of(NamespacedItemIdStack.fromString(choiceStr));
                 break;
         }
-        return new StackableItemIdChoice(choices);
+        return new ItemIdStackRecipeChoice(choices);
     }
 }

@@ -6,17 +6,17 @@ import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.CustomRecipe;
-import pers.yufiria.craftorithm.recipe.choice.StackableItemIdChoice;
+import pers.yufiria.craftorithm.recipe.choice.ItemIdStackRecipeChoice;
 
 public class AnvilRecipe implements CustomRecipe {
 
     private NamespacedKey recipeKey;
     private NamespacedItemIdStack result;
-    private StackableItemIdChoice base;
-    private StackableItemIdChoice addition;
+    private ItemIdStackRecipeChoice base;
+    private ItemIdStackRecipeChoice addition;
     private int costLevel = 0;
 
-    public AnvilRecipe(NamespacedKey recipeKey, NamespacedItemIdStack result, StackableItemIdChoice base, StackableItemIdChoice addition) {
+    public AnvilRecipe(NamespacedKey recipeKey, NamespacedItemIdStack result, ItemIdStackRecipeChoice base, ItemIdStackRecipeChoice addition) {
         this.recipeKey = recipeKey;
         this.result = result;
         this.base = base;
@@ -33,20 +33,20 @@ public class AnvilRecipe implements CustomRecipe {
         return this;
     }
 
-    public StackableItemIdChoice base() {
+    public ItemIdStackRecipeChoice base() {
         return base;
     }
 
-    public AnvilRecipe setBase(StackableItemIdChoice base) {
+    public AnvilRecipe setBase(ItemIdStackRecipeChoice base) {
         this.base = base;
         return this;
     }
 
-    public StackableItemIdChoice addition() {
+    public ItemIdStackRecipeChoice addition() {
         return addition;
     }
 
-    public AnvilRecipe setAddition(StackableItemIdChoice addition) {
+    public AnvilRecipe setAddition(ItemIdStackRecipeChoice addition) {
         this.addition = addition;
         return this;
     }

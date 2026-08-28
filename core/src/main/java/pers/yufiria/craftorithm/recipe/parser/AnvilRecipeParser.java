@@ -8,7 +8,7 @@ import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.anvil.AnvilRecipe;
 import pers.yufiria.craftorithm.recipe.choice.ItemIdStackRecipeChoiceParser;
 import pers.yufiria.craftorithm.recipe.choice.RecipeChoiceParser;
-import pers.yufiria.craftorithm.recipe.choice.StackableItemIdChoice;
+import pers.yufiria.craftorithm.recipe.choice.ItemIdStackRecipeChoice;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 
 public enum AnvilRecipeParser implements RecipeParser<AnvilRecipe> {
@@ -27,9 +27,9 @@ public enum AnvilRecipeParser implements RecipeParser<AnvilRecipe> {
             String resultId = recipeConfig.getString("result");
             NamespacedItemIdStack result = NamespacedItemIdStack.fromString(resultId);
             String baseId = recipeConfig.getString("base");
-            StackableItemIdChoice base = (StackableItemIdChoice) choiceParser().parse(baseId);
+            ItemIdStackRecipeChoice base = (ItemIdStackRecipeChoice) choiceParser().parse(baseId);
             String additionId = recipeConfig.getString("addition");
-            StackableItemIdChoice addition = (StackableItemIdChoice) choiceParser().parse(additionId);
+            ItemIdStackRecipeChoice addition = (ItemIdStackRecipeChoice) choiceParser().parse(additionId);
             int costLevel = recipeConfig.getInt("cost_level", 0);
             AnvilRecipe anvilRecipe = new AnvilRecipe(recipeKey, result, base, addition);
             anvilRecipe.setCostLevel(costLevel);
