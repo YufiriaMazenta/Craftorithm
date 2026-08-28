@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.hook.protocolLib;
+package pers.yufiria.craftorithm.hook.protocollib;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
@@ -10,6 +10,7 @@ import crypticlib.lifecycle.LifecycleTaskSettings;
 import org.bukkit.Bukkit;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.config.Languages;
+import pers.yufiria.craftorithm.fakeresult.FakeResultDataHandler;
 import pers.yufiria.craftorithm.hook.PluginHook;
 import pers.yufiria.craftorithm.util.LangUtils;
 
@@ -48,10 +49,10 @@ public enum ProtocolLibHook implements PluginHook, LifecycleTask {
             return false;
         }
         LangUtils.info(Languages.LOAD_HOOK_PLUGIN_SUCCESS, Map.of("<plugin>", pluginName()));
-        Bukkit.getPluginManager().registerEvents(FakeResultPreviewPacketListener.INSTANCE, Craftorithm.instance());
         //注册虚假合成结果预览数据包监听器
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
         protocolManager.addPacketListener(FakeResultPreviewPacketListener.INSTANCE);
+        FakeResultDataHandler.INSTANCE.setSupportFakeResult(true);
         return true;
     }
 

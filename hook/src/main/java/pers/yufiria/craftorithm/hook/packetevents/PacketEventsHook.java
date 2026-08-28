@@ -12,6 +12,7 @@ import crypticlib.lifecycle.LifecycleTaskSettings;
 import org.bukkit.Bukkit;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.config.Languages;
+import pers.yufiria.craftorithm.fakeresult.FakeResultDataHandler;
 import pers.yufiria.craftorithm.hook.PluginHook;
 import pers.yufiria.craftorithm.util.LangUtils;
 
@@ -58,7 +59,7 @@ public enum PacketEventsHook implements PluginHook, LifecycleTask {
             .getEventManager();
         fakeResultPacketListenerCommon = eventManager
             .registerListener(FakeResultPreviewPacketListener.INSTANCE, PacketListenerPriority.NORMAL);
-        Bukkit.getPluginManager().registerEvents(FakeResultPreviewPacketListener.INSTANCE, Craftorithm.instance());
+        FakeResultDataHandler.INSTANCE.setSupportFakeResult(true);
         return true;
     }
 
