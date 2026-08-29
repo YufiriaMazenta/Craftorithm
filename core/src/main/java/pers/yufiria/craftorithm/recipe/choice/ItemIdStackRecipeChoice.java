@@ -23,7 +23,7 @@ public class ItemIdStackRecipeChoice implements RecipeChoice {
     public ItemIdStackRecipeChoice(Collection<NamespacedItemIdStack> itemIds) {
         if (itemIds == null || itemIds.isEmpty())
             throw new UnsupportedOperationException("ItemIds cannot be null or empty");
-        if (itemIds.size() >= PluginConfigs.INGREDIENT_SET_THRESHOLD.value()) {
+        if (itemIds.size() >= PluginConfigs.INGREDIENT_USE_SET_THRESHOLD.value()) {
             this.itemIds = Set.copyOf(itemIds);
         } else {
             this.itemIds = List.copyOf(itemIds);

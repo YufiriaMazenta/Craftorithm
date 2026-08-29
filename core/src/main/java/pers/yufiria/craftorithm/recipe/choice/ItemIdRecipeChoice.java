@@ -29,7 +29,7 @@ public class ItemIdRecipeChoice implements CustomRecipeChoice {
         } else {
             throw new IllegalArgumentException("Cannot use " + bukkitChoice.getClass().getName() + " as a bukkit recipe choice");
         }
-        if (ingredients.size() > PluginConfigs.INGREDIENT_SET_THRESHOLD.value()) {
+        if (ingredients.size() > PluginConfigs.INGREDIENT_USE_SET_THRESHOLD.value()) {
             this.ingredients = Set.copyOf(ingredients);
         } else {
             this.ingredients = List.copyOf(ingredients);
