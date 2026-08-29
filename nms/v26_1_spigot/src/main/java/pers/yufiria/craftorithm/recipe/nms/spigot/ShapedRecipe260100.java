@@ -10,7 +10,7 @@ import org.bukkit.craftbukkit.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.inventory.CraftShapedRecipe;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.util.RecipeUtils;
+import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.Map;
 import java.util.Objects;
@@ -44,7 +44,7 @@ public final class ShapedRecipe260100 extends ShapedRecipe {
         Map<Character, RecipeChoice> bukkitIngredients = craftRecipe.getChoiceMap();
         String[] shape = replaceUndefinedIngredientsWithEmpty(craftRecipe.getShape(), bukkitIngredients);
         bukkitIngredients.values().removeIf(Objects::isNull);
-        Map<Character, Ingredient> nmsIngredients = Maps.transformValues(bukkitIngredients, (recipeChoice) -> craftRecipe.toNMS(RecipeUtils.getBukkitChoice(recipeChoice), false));
+        Map<Character, Ingredient> nmsIngredients = Maps.transformValues(bukkitIngredients, (recipeChoice) -> craftRecipe.toNMS(IngredientUtils.getBukkitChoice(recipeChoice), false));
         ShapedRecipePattern pattern = ShapedRecipePattern.of(nmsIngredients, shape);
         ShapedRecipePattern260100 customPattern = ShapedRecipePattern260100.fromBukkitRecipe(shapedRecipe);
 

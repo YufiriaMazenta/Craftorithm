@@ -9,7 +9,7 @@ import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.inventory.CraftRecipe;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.util.RecipeUtils;
+import pers.yufiria.craftorithm.util.IngredientUtils;
 
 public class BlastingRecipe260100 extends BlastingRecipe {
 
@@ -46,6 +46,6 @@ public class BlastingRecipe260100 extends BlastingRecipe {
         ItemStackTemplate resultTemplate = ItemStackTemplate.fromNonEmptyStack(CraftItemStack.asNMSCopy(bukkitRecipe.getResult()));
         net.minecraft.world.item.crafting.Recipe.CommonInfo commonInfo = new net.minecraft.world.item.crafting.Recipe.CommonInfo(true);
         AbstractCookingRecipe.CookingBookInfo bookInfo = new AbstractCookingRecipe.CookingBookInfo(CraftRecipe.getCategory(craftBlastingRecipe.getCategory()), craftBlastingRecipe.getGroup());
-        return new RecipeHolder<>(CraftRecipe.toMinecraft(recipeKey), new BlastingRecipe260100(commonInfo, bookInfo, craftBlastingRecipe.toNMS(RecipeUtils.getBukkitChoice(recipeChoice), true), recipeChoice, resultTemplate, bukkitRecipe.getExperience(), bukkitRecipe.getCookingTime()));
+        return new RecipeHolder<>(CraftRecipe.toMinecraft(recipeKey), new BlastingRecipe260100(commonInfo, bookInfo, craftBlastingRecipe.toNMS(IngredientUtils.getBukkitChoice(recipeChoice), true), recipeChoice, resultTemplate, bukkitRecipe.getExperience(), bukkitRecipe.getCookingTime()));
     }
 }

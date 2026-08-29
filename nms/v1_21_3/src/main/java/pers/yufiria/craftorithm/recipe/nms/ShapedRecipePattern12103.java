@@ -5,7 +5,7 @@ import net.minecraft.world.item.crafting.CraftingInput;
 import org.bukkit.craftbukkit.v1_21_R2.inventory.CraftItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
-import pers.yufiria.craftorithm.util.RecipeUtils;
+import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +61,7 @@ public final class ShapedRecipePattern12103 extends CustomShapedRecipePattern<Cr
                 }
                 ItemStack nmsInputItem = craftingInput.a(j, i);
                 org.bukkit.inventory.ItemStack bukkitInputItem = CraftItemStack.asCraftMirror(nmsInputItem);
-                if (!RecipeUtils.testOptionalChoice(ingredient, bukkitInputItem)) return false;
+                if (!IngredientUtils.testOptionalChoice(ingredient, bukkitInputItem)) return false;
             }
         }
         return true;

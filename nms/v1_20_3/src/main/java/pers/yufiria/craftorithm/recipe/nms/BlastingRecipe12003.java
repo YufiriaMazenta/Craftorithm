@@ -15,7 +15,7 @@ import org.bukkit.craftbukkit.v1_20_R3.util.CraftNamespacedKey;
 import org.bukkit.inventory.BlastingRecipe;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.util.RecipeUtils;
+import pers.yufiria.craftorithm.util.IngredientUtils;
 
 public class BlastingRecipe12003 extends RecipeBlasting {
 
@@ -62,7 +62,7 @@ public class BlastingRecipe12003 extends RecipeBlasting {
             new BlastingRecipe12003(
                 craftBlastingRecipe.getGroup(),
                 CraftRecipe.getCategory(craftBlastingRecipe.getCategory()),
-                craftBlastingRecipe.toNMS(RecipeUtils.getBukkitChoice(recipeChoice), true),
+                craftBlastingRecipe.toNMS(IngredientUtils.getBukkitChoice(recipeChoice), true),
                 recipeChoice,
                 CraftItemStack.asNMSCopy(bukkitRecipe.getResult()),
                 bukkitRecipe.getExperience(),

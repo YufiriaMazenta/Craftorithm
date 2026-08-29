@@ -9,7 +9,7 @@ import org.bukkit.craftbukkit.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.inventory.CraftSmokingRecipe;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.util.RecipeUtils;
+import pers.yufiria.craftorithm.util.IngredientUtils;
 
 public class SmokingRecipe260100 extends SmokingRecipe {
 
@@ -46,6 +46,6 @@ public class SmokingRecipe260100 extends SmokingRecipe {
         ItemStackTemplate resultTemplate = ItemStackTemplate.fromNonEmptyStack(CraftItemStack.asNMSCopy(bukkitRecipe.getResult()));
         net.minecraft.world.item.crafting.Recipe.CommonInfo commonInfo = new net.minecraft.world.item.crafting.Recipe.CommonInfo(true);
         AbstractCookingRecipe.CookingBookInfo bookInfo = new AbstractCookingRecipe.CookingBookInfo(CraftRecipe.getCategory(craftSmokingRecipe.getCategory()), craftSmokingRecipe.getGroup());
-        return new RecipeHolder<>(CraftRecipe.toMinecraft(recipeKey), new SmokingRecipe260100(commonInfo, bookInfo, craftSmokingRecipe.toNMS(RecipeUtils.getBukkitChoice(recipeChoice), true), recipeChoice, resultTemplate, bukkitRecipe.getExperience(), bukkitRecipe.getCookingTime()));
+        return new RecipeHolder<>(CraftRecipe.toMinecraft(recipeKey), new SmokingRecipe260100(commonInfo, bookInfo, craftSmokingRecipe.toNMS(IngredientUtils.getBukkitChoice(recipeChoice), true), recipeChoice, resultTemplate, bukkitRecipe.getExperience(), bukkitRecipe.getCookingTime()));
     }
 }

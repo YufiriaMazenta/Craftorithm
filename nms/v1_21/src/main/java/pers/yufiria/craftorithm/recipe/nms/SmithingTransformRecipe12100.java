@@ -12,7 +12,7 @@ import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftSmithingTransformRecipe;
 import org.bukkit.craftbukkit.v1_21_R1.util.CraftNamespacedKey;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.util.RecipeUtils;
+import pers.yufiria.craftorithm.util.IngredientUtils;
 
 public class SmithingTransformRecipe12100 extends SmithingTransformRecipe {
 
@@ -77,11 +77,11 @@ public class SmithingTransformRecipe12100 extends SmithingTransformRecipe {
         return new RecipeHolder<>(
             CraftNamespacedKey.toMinecraft(recipeKey),
             new SmithingTransformRecipe12100(
-                craftRecipe.toNMS(RecipeUtils.getBukkitChoice(bukkitRecipe.getTemplate()), false),
+                craftRecipe.toNMS(IngredientUtils.getBukkitChoice(bukkitRecipe.getTemplate()), false),
                 bukkitRecipe.getTemplate(),
-                craftRecipe.toNMS(RecipeUtils.getBukkitChoice(bukkitRecipe.getBase()), false),
+                craftRecipe.toNMS(IngredientUtils.getBukkitChoice(bukkitRecipe.getBase()), false),
                 bukkitRecipe.getBase(),
-                craftRecipe.toNMS(RecipeUtils.getBukkitChoice(bukkitRecipe.getAddition()), false),
+                craftRecipe.toNMS(IngredientUtils.getBukkitChoice(bukkitRecipe.getAddition()), false),
                 bukkitRecipe.getAddition(),
                 nmsResult
             )

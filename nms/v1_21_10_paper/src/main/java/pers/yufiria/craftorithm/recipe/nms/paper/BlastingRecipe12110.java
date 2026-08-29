@@ -9,7 +9,7 @@ import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.inventory.CraftRecipe;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.util.RecipeUtils;
+import pers.yufiria.craftorithm.util.IngredientUtils;
 
 public class BlastingRecipe12110 extends BlastingRecipe {
 
@@ -43,6 +43,6 @@ public class BlastingRecipe12110 extends BlastingRecipe {
     public static RecipeHolder<BlastingRecipe> fromBukkit(NamespacedKey recipeKey, org.bukkit.inventory.BlastingRecipe bukkitRecipe) {
         CraftBlastingRecipe craftBlastingRecipe = CraftBlastingRecipe.fromBukkitRecipe(bukkitRecipe);
         RecipeChoice recipeChoice = bukkitRecipe.getInputChoice();
-        return new RecipeHolder<>(CraftRecipe.toMinecraft(recipeKey), new BlastingRecipe12110(craftBlastingRecipe.getGroup(), CraftRecipe.getCategory(craftBlastingRecipe.getCategory()), craftBlastingRecipe.toNMS(RecipeUtils.getBukkitChoice(recipeChoice), true), recipeChoice, CraftItemStack.asNMSCopy(bukkitRecipe.getResult()), bukkitRecipe.getExperience(), bukkitRecipe.getCookingTime()));
+        return new RecipeHolder<>(CraftRecipe.toMinecraft(recipeKey), new BlastingRecipe12110(craftBlastingRecipe.getGroup(), CraftRecipe.getCategory(craftBlastingRecipe.getCategory()), craftBlastingRecipe.toNMS(IngredientUtils.getBukkitChoice(recipeChoice), true), recipeChoice, CraftItemStack.asNMSCopy(bukkitRecipe.getResult()), bukkitRecipe.getExperience(), bukkitRecipe.getCookingTime()));
     }
 }

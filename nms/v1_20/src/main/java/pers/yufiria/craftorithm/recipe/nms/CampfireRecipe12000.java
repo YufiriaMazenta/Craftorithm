@@ -15,7 +15,7 @@ import org.bukkit.craftbukkit.v1_20_R1.util.CraftNamespacedKey;
 import org.bukkit.inventory.CampfireRecipe;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.util.RecipeUtils;
+import pers.yufiria.craftorithm.util.IngredientUtils;
 
 public class CampfireRecipe12000 extends RecipeCampfire {
 
@@ -64,7 +64,7 @@ public class CampfireRecipe12000 extends RecipeCampfire {
             CraftNamespacedKey.toMinecraft(recipeKey),
             craftFurnaceRecipe.getGroup(),
             CraftRecipe.getCategory(craftFurnaceRecipe.getCategory()),
-            craftFurnaceRecipe.toNMS(RecipeUtils.getBukkitChoice(recipeChoice), true),
+            craftFurnaceRecipe.toNMS(IngredientUtils.getBukkitChoice(recipeChoice), true),
             recipeChoice,
             CraftItemStack.asNMSCopy(bukkitRecipe.getResult()),
             bukkitRecipe.getExperience(),

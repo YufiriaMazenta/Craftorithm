@@ -13,7 +13,7 @@ import org.bukkit.craftbukkit.v1_20_R2.util.CraftNamespacedKey;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.StonecuttingRecipe;
-import pers.yufiria.craftorithm.util.RecipeUtils;
+import pers.yufiria.craftorithm.util.IngredientUtils;
 
 public class StonecuttingRecipe12002 extends RecipeStonecutting {
 
@@ -55,7 +55,7 @@ public class StonecuttingRecipe12002 extends RecipeStonecutting {
             new StonecuttingRecipe12002(
                 craftRecipe.getGroup(),
                 craftRecipe.toNMS(
-                    RecipeUtils.getBukkitChoice(craftRecipe.getInputChoice()), true
+                    IngredientUtils.getBukkitChoice(craftRecipe.getInputChoice()), true
                 ),
                 craftRecipe.getInputChoice(),
                 CraftItemStack.asNMSCopy(craftRecipe.getResult())

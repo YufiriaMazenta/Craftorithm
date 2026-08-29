@@ -10,7 +10,7 @@ import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.v1_21_R1.util.CraftNamespacedKey;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.util.RecipeUtils;
+import pers.yufiria.craftorithm.util.IngredientUtils;
 
 public class CampfireRecipe12100 extends RecipeCampfire {
 
@@ -44,6 +44,6 @@ public class CampfireRecipe12100 extends RecipeCampfire {
     public static RecipeHolder<RecipeCampfire> fromBukkit(NamespacedKey recipeKey, org.bukkit.inventory.CampfireRecipe bukkitRecipe) {
         CraftCampfireRecipe craftCampfireRecipe = CraftCampfireRecipe.fromBukkitRecipe(bukkitRecipe);
         RecipeChoice recipeChoice = bukkitRecipe.getInputChoice();
-        return new RecipeHolder<>(CraftNamespacedKey.toMinecraft(recipeKey), new CampfireRecipe12100(craftCampfireRecipe.getGroup(), CraftRecipe.getCategory(craftCampfireRecipe.getCategory()), craftCampfireRecipe.toNMS(RecipeUtils.getBukkitChoice(recipeChoice), true), recipeChoice, CraftItemStack.asNMSCopy(bukkitRecipe.getResult()), bukkitRecipe.getExperience(), bukkitRecipe.getCookingTime()));
+        return new RecipeHolder<>(CraftNamespacedKey.toMinecraft(recipeKey), new CampfireRecipe12100(craftCampfireRecipe.getGroup(), CraftRecipe.getCategory(craftCampfireRecipe.getCategory()), craftCampfireRecipe.toNMS(IngredientUtils.getBukkitChoice(recipeChoice), true), recipeChoice, CraftItemStack.asNMSCopy(bukkitRecipe.getResult()), bukkitRecipe.getExperience(), bukkitRecipe.getCookingTime()));
     }
 }

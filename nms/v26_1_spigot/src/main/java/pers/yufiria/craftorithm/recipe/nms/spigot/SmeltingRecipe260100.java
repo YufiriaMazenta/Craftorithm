@@ -9,7 +9,7 @@ import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.inventory.CraftRecipe;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.util.RecipeUtils;
+import pers.yufiria.craftorithm.util.IngredientUtils;
 
 public class SmeltingRecipe260100 extends SmeltingRecipe {
 
@@ -46,6 +46,6 @@ public class SmeltingRecipe260100 extends SmeltingRecipe {
         ItemStackTemplate resultTemplate = ItemStackTemplate.fromNonEmptyStack(CraftItemStack.asNMSCopy(bukkitRecipe.getResult()));
         net.minecraft.world.item.crafting.Recipe.CommonInfo commonInfo = new net.minecraft.world.item.crafting.Recipe.CommonInfo(true);
         AbstractCookingRecipe.CookingBookInfo bookInfo = new AbstractCookingRecipe.CookingBookInfo(CraftRecipe.getCategory(craftFurnaceRecipe.getCategory()), craftFurnaceRecipe.getGroup());
-        return new RecipeHolder<>(CraftRecipe.toMinecraft(recipeKey), new SmeltingRecipe260100(commonInfo, bookInfo, craftFurnaceRecipe.toNMS(RecipeUtils.getBukkitChoice(recipeChoice), true), recipeChoice, resultTemplate, bukkitRecipe.getExperience(), bukkitRecipe.getCookingTime()));
+        return new RecipeHolder<>(CraftRecipe.toMinecraft(recipeKey), new SmeltingRecipe260100(commonInfo, bookInfo, craftFurnaceRecipe.toNMS(IngredientUtils.getBukkitChoice(recipeChoice), true), recipeChoice, resultTemplate, bukkitRecipe.getExperience(), bukkitRecipe.getCookingTime()));
     }
 }

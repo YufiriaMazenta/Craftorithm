@@ -11,7 +11,7 @@ import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftShapedRecipe;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
-import pers.yufiria.craftorithm.util.RecipeUtils;
+import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.Map;
 import java.util.Objects;
@@ -51,7 +51,7 @@ public final class ShapedRecipe12107 extends ShapedRecipes {
         Map<Character, RecipeItemStack> nmsIngredients = Maps.transformValues(
             bukkitIngredients,
             (recipeChoice) ->
-                craftRecipe.toNMS(RecipeUtils.getBukkitChoice(recipeChoice), false)
+                craftRecipe.toNMS(IngredientUtils.getBukkitChoice(recipeChoice), false)
         );
         net.minecraft.world.item.crafting.ShapedRecipePattern pattern = net.minecraft.world.item.crafting.ShapedRecipePattern.a(nmsIngredients, shape);
         ShapedRecipePattern12107 customPattern = ShapedRecipePattern12107.fromBukkitRecipe(shapedRecipe);

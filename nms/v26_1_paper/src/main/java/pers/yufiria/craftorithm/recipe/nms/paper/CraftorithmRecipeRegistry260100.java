@@ -23,7 +23,7 @@ import org.bukkit.inventory.*;
 import org.spigotmc.AsyncCatcher;
 import pers.yufiria.craftorithm.recipe.CraftorithmRecipeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
-import pers.yufiria.craftorithm.util.RecipeUtils;
+import pers.yufiria.craftorithm.util.IngredientUtils;
 
 @LifecycleTaskSettings(rules = {
     @LifecycleRule(lifeCycle = Lifecycle.LOAD)
@@ -67,7 +67,7 @@ public enum CraftorithmRecipeRegistry260100 implements CraftorithmRecipeRegistry
                     CraftNamespacedKey.toResourceKey(Registries.RECIPE, recipeKey),
                     new StonecutterRecipe(
                         new net.minecraft.world.item.crafting.Recipe.CommonInfo(true),
-                        CraftRecipe.toIngredient(RecipeUtils.getBukkitChoice(stonecuttingRecipe.getInputChoice()), true),
+                        CraftRecipe.toIngredient(IngredientUtils.getBukkitChoice(stonecuttingRecipe.getInputChoice()), true),
                         CraftItemStack.asTemplate(craftStonecuttingRecipe.getResult())
                     )
                 );

@@ -11,7 +11,7 @@ import org.bukkit.craftbukkit.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.util.RecipeUtils;
+import pers.yufiria.craftorithm.util.IngredientUtils;
 
 public class BlastingRecipe260100 extends BlastingRecipe {
 
@@ -53,7 +53,7 @@ public class BlastingRecipe260100 extends BlastingRecipe {
             new BlastingRecipe260100(
                 commonInfo,
                 bookInfo,
-                CraftRecipe.toIngredient(RecipeUtils.getBukkitChoice(recipeChoice), true),
+                CraftRecipe.toIngredient(IngredientUtils.getBukkitChoice(recipeChoice), true),
                 recipeChoice,
                 resultTemplate,
                 bukkitRecipe.getExperience(),

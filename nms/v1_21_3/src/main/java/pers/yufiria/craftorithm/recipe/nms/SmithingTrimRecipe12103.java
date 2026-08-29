@@ -8,7 +8,7 @@ import org.bukkit.craftbukkit.v1_21_R2.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.v1_21_R2.inventory.CraftSmithingTrimRecipe;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.util.RecipeUtils;
+import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,9 +29,9 @@ public class SmithingTrimRecipe12103 extends SmithingTrimRecipe {
 
     @Override
     public boolean a(SmithingRecipeInput smithingInput, World world) {
-        return RecipeUtils.testOptionalChoice(template, CraftItemStack.asCraftMirror(smithingInput.c()))
-            && RecipeUtils.testOptionalChoice(base, CraftItemStack.asCraftMirror(smithingInput.d()))
-            && RecipeUtils.testOptionalChoice(addition, CraftItemStack.asCraftMirror(smithingInput.e()));
+        return IngredientUtils.testOptionalChoice(template, CraftItemStack.asCraftMirror(smithingInput.c()))
+            && IngredientUtils.testOptionalChoice(base, CraftItemStack.asCraftMirror(smithingInput.d()))
+            && IngredientUtils.testOptionalChoice(addition, CraftItemStack.asCraftMirror(smithingInput.e()));
     }
 
     @Override
@@ -56,11 +56,11 @@ public class SmithingTrimRecipe12103 extends SmithingTrimRecipe {
     public static RecipeHolder<SmithingTrimRecipe> fromBukkit(NamespacedKey recipeKey, org.bukkit.inventory.SmithingTrimRecipe bukkitRecipe) {
         CraftSmithingTrimRecipe craftRecipe = CraftSmithingTrimRecipe.fromBukkitRecipe(bukkitRecipe);
         return new RecipeHolder<>(CraftRecipe.toMinecraft(recipeKey), new SmithingTrimRecipe12103(
-            craftRecipe.toNMSOptional(RecipeUtils.getBukkitChoice(bukkitRecipe.getTemplate()), false),
+            craftRecipe.toNMSOptional(IngredientUtils.getBukkitChoice(bukkitRecipe.getTemplate()), false),
             Optional.ofNullable(bukkitRecipe.getTemplate()),
-            craftRecipe.toNMSOptional(RecipeUtils.getBukkitChoice(bukkitRecipe.getBase()), false),
+            craftRecipe.toNMSOptional(IngredientUtils.getBukkitChoice(bukkitRecipe.getBase()), false),
             Optional.ofNullable(bukkitRecipe.getBase()),
-            craftRecipe.toNMSOptional(RecipeUtils.getBukkitChoice(bukkitRecipe.getAddition()), false),
+            craftRecipe.toNMSOptional(IngredientUtils.getBukkitChoice(bukkitRecipe.getAddition()), false),
             Optional.ofNullable(bukkitRecipe.getAddition())
         ));
     }

@@ -15,7 +15,7 @@ import org.bukkit.craftbukkit.v1_20_R3.util.CraftNamespacedKey;
 import org.bukkit.inventory.CampfireRecipe;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.util.RecipeUtils;
+import pers.yufiria.craftorithm.util.IngredientUtils;
 
 public class CampfireRecipe12003 extends RecipeCampfire {
 
@@ -62,7 +62,7 @@ public class CampfireRecipe12003 extends RecipeCampfire {
             new CampfireRecipe12003(
                 craftCampfireRecipe.getGroup(),
                 CraftRecipe.getCategory(craftCampfireRecipe.getCategory()),
-                craftCampfireRecipe.toNMS(RecipeUtils.getBukkitChoice(recipeChoice), true),
+                craftCampfireRecipe.toNMS(IngredientUtils.getBukkitChoice(recipeChoice), true),
                 recipeChoice,
                 CraftItemStack.asNMSCopy(bukkitRecipe.getResult()),
                 bukkitRecipe.getExperience(),

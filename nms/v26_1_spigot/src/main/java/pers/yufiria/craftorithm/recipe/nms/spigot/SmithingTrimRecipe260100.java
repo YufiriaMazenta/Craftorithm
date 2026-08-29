@@ -10,7 +10,7 @@ import org.bukkit.craftbukkit.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.inventory.CraftSmithingTrimRecipe;
 import org.bukkit.craftbukkit.inventory.trim.CraftTrimPattern;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.util.RecipeUtils;
+import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -64,10 +64,10 @@ public class SmithingTrimRecipe260100 extends SmithingTrimRecipe {
             CraftRecipe.toMinecraft(recipeKey),
             new SmithingTrimRecipe260100(
                 commonInfo,
-                craftRecipe.toNMS(RecipeUtils.getBukkitChoice(craftRecipe.getTemplate()), false),
+                craftRecipe.toNMS(IngredientUtils.getBukkitChoice(craftRecipe.getTemplate()), false),
                 bukkitRecipe.getTemplate(),
-                craftRecipe.toNMS(RecipeUtils.getBukkitChoice(craftRecipe.getBase()), false),
-                bukkitRecipe.getBase(), craftRecipe.toNMS(RecipeUtils.getBukkitChoice(craftRecipe.getAddition()), false),
+                craftRecipe.toNMS(IngredientUtils.getBukkitChoice(craftRecipe.getBase()), false),
+                bukkitRecipe.getBase(), craftRecipe.toNMS(IngredientUtils.getBukkitChoice(craftRecipe.getAddition()), false),
                 bukkitRecipe.getAddition(),
                 CraftTrimPattern.bukkitToMinecraftHolder(org.bukkit.inventory.meta.trim.TrimPattern.BOLT)
             )

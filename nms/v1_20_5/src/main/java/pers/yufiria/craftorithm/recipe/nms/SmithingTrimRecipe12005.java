@@ -12,7 +12,7 @@ import org.bukkit.craftbukkit.v1_20_R4.inventory.CraftSmithingTrimRecipe;
 import org.bukkit.craftbukkit.v1_20_R4.util.CraftNamespacedKey;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.util.RecipeUtils;
+import pers.yufiria.craftorithm.util.IngredientUtils;
 
 public class SmithingTrimRecipe12005 extends SmithingTrimRecipe {
 
@@ -62,6 +62,6 @@ public class SmithingTrimRecipe12005 extends SmithingTrimRecipe {
 
     public static RecipeHolder<SmithingTrimRecipe> fromBukkit(NamespacedKey recipeKey, org.bukkit.inventory.SmithingTrimRecipe bukkitRecipe) {
         CraftSmithingTrimRecipe craftRecipe = CraftSmithingTrimRecipe.fromBukkitRecipe(bukkitRecipe);
-        return new RecipeHolder<>(CraftNamespacedKey.toMinecraft(recipeKey), new SmithingTrimRecipe12005(craftRecipe.toNMS(RecipeUtils.getBukkitChoice(bukkitRecipe.getTemplate()), true), bukkitRecipe.getTemplate(), craftRecipe.toNMS(RecipeUtils.getBukkitChoice(bukkitRecipe.getBase()), true), bukkitRecipe.getBase(), craftRecipe.toNMS(RecipeUtils.getBukkitChoice(bukkitRecipe.getAddition()), true), bukkitRecipe.getAddition()));
+        return new RecipeHolder<>(CraftNamespacedKey.toMinecraft(recipeKey), new SmithingTrimRecipe12005(craftRecipe.toNMS(IngredientUtils.getBukkitChoice(bukkitRecipe.getTemplate()), true), bukkitRecipe.getTemplate(), craftRecipe.toNMS(IngredientUtils.getBukkitChoice(bukkitRecipe.getBase()), true), bukkitRecipe.getBase(), craftRecipe.toNMS(IngredientUtils.getBukkitChoice(bukkitRecipe.getAddition()), true), bukkitRecipe.getAddition()));
     }
 }

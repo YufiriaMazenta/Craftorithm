@@ -10,7 +10,7 @@ import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.v1_21_R1.util.CraftNamespacedKey;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.util.RecipeUtils;
+import pers.yufiria.craftorithm.util.IngredientUtils;
 
 public class FurnaceRecipe12100 extends FurnaceRecipe {
 
@@ -49,7 +49,7 @@ public class FurnaceRecipe12100 extends FurnaceRecipe {
             new FurnaceRecipe12100(
                 craftFurnaceRecipe.getGroup(),
                 CraftRecipe.getCategory(craftFurnaceRecipe.getCategory()),
-                craftFurnaceRecipe.toNMS(RecipeUtils.getBukkitChoice(recipeChoice), true),
+                craftFurnaceRecipe.toNMS(IngredientUtils.getBukkitChoice(recipeChoice), true),
                 recipeChoice,
                 CraftItemStack.asNMSCopy(bukkitRecipe.getResult()),
                 bukkitRecipe.getExperience(),

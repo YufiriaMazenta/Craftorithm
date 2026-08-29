@@ -9,7 +9,7 @@ import org.bukkit.craftbukkit.v1_21_R6.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_21_R6.inventory.CraftRecipe;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.util.RecipeUtils;
+import pers.yufiria.craftorithm.util.IngredientUtils;
 
 public class FurnaceRecipe12110 extends FurnaceRecipe {
 
@@ -43,7 +43,7 @@ public class FurnaceRecipe12110 extends FurnaceRecipe {
     public static RecipeHolder<FurnaceRecipe> fromBukkit(NamespacedKey recipeKey, org.bukkit.inventory.FurnaceRecipe bukkitRecipe) {
         CraftFurnaceRecipe craftFurnaceRecipe = CraftFurnaceRecipe.fromBukkitRecipe(bukkitRecipe);
         RecipeChoice recipeChoice = bukkitRecipe.getInputChoice();
-        return new RecipeHolder<>(CraftRecipe.toMinecraft(recipeKey), new FurnaceRecipe12110(craftFurnaceRecipe.getGroup(), CraftRecipe.getCategory(craftFurnaceRecipe.getCategory()), craftFurnaceRecipe.toNMS(RecipeUtils.getBukkitChoice(recipeChoice), true), recipeChoice, CraftItemStack.asNMSCopy(bukkitRecipe.getResult()), bukkitRecipe.getExperience(), bukkitRecipe.getCookingTime()));
+        return new RecipeHolder<>(CraftRecipe.toMinecraft(recipeKey), new FurnaceRecipe12110(craftFurnaceRecipe.getGroup(), CraftRecipe.getCategory(craftFurnaceRecipe.getCategory()), craftFurnaceRecipe.toNMS(IngredientUtils.getBukkitChoice(recipeChoice), true), recipeChoice, CraftItemStack.asNMSCopy(bukkitRecipe.getResult()), bukkitRecipe.getExperience(), bukkitRecipe.getCookingTime()));
     }
 }
 

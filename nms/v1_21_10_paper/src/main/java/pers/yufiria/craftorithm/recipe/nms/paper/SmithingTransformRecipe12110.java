@@ -9,7 +9,7 @@ import org.bukkit.craftbukkit.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.inventory.CraftSmithingTransformRecipe;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.util.RecipeUtils;
+import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,9 +40,9 @@ public class SmithingTransformRecipe12110 extends SmithingTransformRecipe {
 
     @Override
     public boolean matches(SmithingRecipeInput smithingInput, Level level) {
-        return RecipeUtils.testOptionalChoice(template, CraftItemStack.asCraftMirror(smithingInput.template()))
+        return IngredientUtils.testOptionalChoice(template, CraftItemStack.asCraftMirror(smithingInput.template()))
             && base.test(CraftItemStack.asCraftMirror(smithingInput.base()))
-            && RecipeUtils.testOptionalChoice(addition, CraftItemStack.asCraftMirror(smithingInput.addition()));
+            && IngredientUtils.testOptionalChoice(addition, CraftItemStack.asCraftMirror(smithingInput.addition()));
     }
 
     @Override
@@ -62,6 +62,6 @@ public class SmithingTransformRecipe12110 extends SmithingTransformRecipe {
         CraftSmithingTransformRecipe craftRecipe = CraftSmithingTransformRecipe.fromBukkitRecipe(bukkitRecipe);
         ItemStack nmsResult = CraftItemStack.asNMSCopy(bukkitRecipe.getResult());
         TransmuteResult transmuteResult = new TransmuteResult(nmsResult.getItemHolder(), nmsResult.getCount(), nmsResult.getComponentsPatch());
-        return new RecipeHolder<>(CraftRecipe.toMinecraft(recipeKey), new SmithingTransformRecipe12110(craftRecipe.toNMSOptional(RecipeUtils.getBukkitChoice(bukkitRecipe.getTemplate()), false), Optional.ofNullable(bukkitRecipe.getTemplate()), craftRecipe.toNMS(RecipeUtils.getBukkitChoice(bukkitRecipe.getBase()), false), bukkitRecipe.getBase(), craftRecipe.toNMSOptional(RecipeUtils.getBukkitChoice(bukkitRecipe.getAddition()), false), Optional.ofNullable(bukkitRecipe.getAddition()), transmuteResult));
+        return new RecipeHolder<>(CraftRecipe.toMinecraft(recipeKey), new SmithingTransformRecipe12110(craftRecipe.toNMSOptional(IngredientUtils.getBukkitChoice(bukkitRecipe.getTemplate()), false), Optional.ofNullable(bukkitRecipe.getTemplate()), craftRecipe.toNMS(IngredientUtils.getBukkitChoice(bukkitRecipe.getBase()), false), bukkitRecipe.getBase(), craftRecipe.toNMSOptional(IngredientUtils.getBukkitChoice(bukkitRecipe.getAddition()), false), Optional.ofNullable(bukkitRecipe.getAddition()), transmuteResult));
     }
 }

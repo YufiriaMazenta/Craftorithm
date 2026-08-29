@@ -2,25 +2,19 @@ package pers.yufiria.craftorithm.util;
 
 import crypticlib.MinecraftVersion;
 import crypticlib.util.ItemHelper;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Tag;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.SmithItemEvent;
+import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.RecipeChoice;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Nullable;
-import pers.yufiria.craftorithm.recipe.choice.CustomRecipeChoice;
+import org.bukkit.inventory.SmithingInventory;
 
-import java.lang.reflect.Field;
 import java.util.*;
 
 public class RecipeUtils {
 
-    private static final Map<NamespacedKey, Tag<Material>> ITEMS_TAGS = new HashMap<>();
-    private static final Map<NamespacedKey, Tag<Material>> BLOCKS_TAGS = new HashMap<>();
     private static final Set<ClickType> quickCraftClickTypes;
 
     static {
@@ -36,16 +30,6 @@ public class RecipeUtils {
                 ClickType.SHIFT_LEFT,
                 ClickType.SHIFT_RIGHT
             );
-        }
-
-        Iterable<Tag<Material>> blocksTags = Bukkit.getTags("blocks", Material.class);
-        for (Tag<Material> blocksTag : blocksTags) {
-            BLOCKS_TAGS.put(blocksTag.getKey(), blocksTag);
-        }
-
-        Iterable<Tag<Material>> itemsTags = Bukkit.getTags("items", Material.class);
-        for (Tag<Material> itemsTag : itemsTags) {
-            ITEMS_TAGS.put(itemsTag.getKey(), itemsTag);
         }
     }
 
@@ -95,75 +79,52 @@ public class RecipeUtils {
         }
     }
 
-    public static Optional<Tag<Material>> getTag(String tagKeyStr) {
-        if (tagKeyStr.contains(":")) {
-            NamespacedKey tagKey = NamespacedKey.fromString(tagKeyStr);
-            return Optional.ofNullable(getTag(tagKey));
-        }
-        //兼容旧版写法, 也就是直接在Tag里反射
-        String upperTagKey = tagKeyStr.toUpperCase();
-        Tag<Material> reflectTag;
-        try {
-            Field field = Tag.class.getField(upperTagKey);
-            reflectTag = (Tag<Material>) field.get(null);
-            return Optional.ofNullable(reflectTag);
-        } catch (NoSuchFieldException | IllegalAccessException ignored) {}
-        NamespacedKey tagKey = NamespacedKey.fromString(tagKeyStr);
-        return Optional.ofNullable(getTag(tagKey));
-    }
-
-    private static @Nullable Tag<Material> getTag(NamespacedKey tagKey) {
-        if (ITEMS_TAGS.containsKey(tagKey)) {
-            return ITEMS_TAGS.get(tagKey);
-        }
-        if (BLOCKS_TAGS.containsKey(tagKey)) {
-            return BLOCKS_TAGS.get(tagKey);
-        }
-        return null;
+    /**
+     * 计算本次合成的次数
+     * 会考虑玩家背包容量
+     * @param event 合成事件
+     * @return 本次合成进行的次数
+     */
+    public static int calculateVanillaCraftNum(CraftItemEvent event) {
+        CraftingInventory inventory = event.getInventory();
+        return calculateVanillaCraftNum(
+            event.getClick(),
+            inventory.getMatrix(),
+            inventory.getResult(),
+            event.getWhoClicked()
+        );
     }
 
     /**
-     * 回溯匹配
-     * 用于无序配方判断材料是否足够
-     * @param items
-     * @param choices
-     * @return
+     * 计算本次锻造的次数
+     * 会考虑玩家背包容量
+     * @param event 锻造事件
+     * @return 本次锻造进行的次数
      */
-    @ApiStatus.Internal
-    public static boolean matchItemsToChoices(
-        List<ItemStack> items,
-        List<RecipeChoice> choices
-    ) {
-        // 使用一个 boolean 数组标记成分是否已被使用
-        boolean[] used = new boolean[choices.size()];
-        return backtrack(items, choices, used, 0);
+    public static int calculateVanillaCraftNum(SmithItemEvent event) {
+        SmithingInventory inventory = event.getInventory();
+        return calculateVanillaCraftNum(
+            event.getClick(),
+            new ItemStack[] {
+                inventory.getItem(0),
+                inventory.getItem(1),
+                inventory.getItem(2)
+            },
+            inventory.getResult(),
+            event.getWhoClicked()
+        );
     }
 
-    private static boolean backtrack(
-        List<ItemStack> items,
-        List<RecipeChoice> choices,
-        boolean[] used,
-        int itemIndex
-    ) {
-        // 所有物品都已匹配成功
-        if (itemIndex == items.size()) {
-            return true;
-        }
-        ItemStack currentItem = items.get(itemIndex);
-        // 尝试将当前物品匹配到任意一个未使用的成分
-        for (int i = 0; i < choices.size(); i++) {
-            if (!used[i] && choices.get(i).test(currentItem)) {
-                used[i] = true;
-                if (backtrack(items, choices, used, itemIndex + 1)) {
-                    return true;
-                }
-                used[i] = false; // 回溯
-            }
-        }
-        return false;
-    }
-
-    public static int calculateVanillaCraftNum(ClickType click, ItemStack[] matrix, ItemStack result, Player player) {
+    /**
+     * 计算在指定点击方式下,实际合成的次数
+     * 会计算玩家背包容量
+     * @param click 点击方式
+     * @param matrix 本次合成所用的所有物品
+     * @param result 结果物品
+     * @param player 进行合成的玩家
+     * @return 实际合成的次数
+     */
+    public static int calculateVanillaCraftNum(ClickType click, ItemStack[] matrix, ItemStack result, HumanEntity player) {
         // 普通点击只合成1个
         if (!quickCraftClickTypes.contains(click)) {
             return 1;
@@ -188,7 +149,7 @@ public class RecipeUtils {
         return Math.max(1, Math.min(minIngredientAmount, canFitTimes));
     }
 
-    private static int calculateCanFit(Player player, ItemStack result, int maxNeeded) {
+    private static int calculateCanFit(HumanEntity player, ItemStack result, int maxNeeded) {
         if (ItemHelper.isAir(result)) return 0;
         int maxStack = result.getType().getMaxStackSize();
         int space = 0;
@@ -207,16 +168,4 @@ public class RecipeUtils {
         return space;
     }
 
-    public static RecipeChoice getBukkitChoice(RecipeChoice recipeChoice) {
-        if (recipeChoice instanceof CustomRecipeChoice customRecipeChoice) {
-            RecipeChoice bukkitChoice = customRecipeChoice.bukkitChoice();
-            return RecipeUtils.getBukkitChoice(bukkitChoice);
-        }
-        return recipeChoice;
-    }
-
-    public static boolean testOptionalChoice(Optional<RecipeChoice> choice, ItemStack inputItem) {
-        Optional<Boolean> result = choice.map(ingredient -> ingredient.test(inputItem));
-        return result.orElseGet(() -> ItemHelper.isAir(inputItem));
-    }
 }

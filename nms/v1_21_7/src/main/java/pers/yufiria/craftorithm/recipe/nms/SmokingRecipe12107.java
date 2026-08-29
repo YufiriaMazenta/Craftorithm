@@ -9,7 +9,7 @@ import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftSmokingRecipe;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.util.RecipeUtils;
+import pers.yufiria.craftorithm.util.IngredientUtils;
 
 public class SmokingRecipe12107 extends RecipeSmoking {
 
@@ -56,7 +56,7 @@ public class SmokingRecipe12107 extends RecipeSmoking {
             new SmokingRecipe12107(
                 craftFurnaceRecipe.getGroup(),
                 CraftRecipe.getCategory(craftFurnaceRecipe.getCategory()),
-                craftFurnaceRecipe.toNMS(RecipeUtils.getBukkitChoice(recipeChoice), true),
+                craftFurnaceRecipe.toNMS(IngredientUtils.getBukkitChoice(recipeChoice), true),
                 recipeChoice,
                 CraftItemStack.asNMSCopy(bukkitRecipe.getResult()),
                 bukkitRecipe.getExperience(),

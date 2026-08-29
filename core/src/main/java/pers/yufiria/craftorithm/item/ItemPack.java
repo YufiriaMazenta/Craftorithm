@@ -4,7 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.inventory.ItemStack;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
-import pers.yufiria.craftorithm.util.RecipeUtils;
+import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.*;
 
@@ -26,7 +26,7 @@ public class ItemPack {
                 case "tag" -> {
                     //是一个tag,将tag的所有物品加入
                     String tagId = itemIdStack.itemId().toString();
-                    Optional<Tag<Material>> tagOpt = RecipeUtils.getTag(tagId);
+                    Optional<Tag<Material>> tagOpt = IngredientUtils.getTag(tagId);
                     if (tagOpt.isEmpty()) {
                         throw new RecipeLoadException(tagId + " is not a valid tag");
                     }

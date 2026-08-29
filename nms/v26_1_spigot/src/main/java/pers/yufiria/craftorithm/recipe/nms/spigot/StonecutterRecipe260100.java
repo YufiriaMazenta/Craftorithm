@@ -9,7 +9,7 @@ import org.bukkit.craftbukkit.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.inventory.CraftStonecuttingRecipe;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.StonecuttingRecipe;
-import pers.yufiria.craftorithm.util.RecipeUtils;
+import pers.yufiria.craftorithm.util.IngredientUtils;
 
 public class StonecutterRecipe260100 extends StonecutterRecipe {
 
@@ -43,6 +43,6 @@ public class StonecutterRecipe260100 extends StonecutterRecipe {
         CraftStonecuttingRecipe craftRecipe = CraftStonecuttingRecipe.fromBukkitRecipe(bukkitRecipe);
         ItemStackTemplate resultTemplate = ItemStackTemplate.fromNonEmptyStack(CraftItemStack.asNMSCopy(craftRecipe.getResult()));
         Recipe.CommonInfo commonInfo = new Recipe.CommonInfo(true);
-        return new RecipeHolder<>(CraftRecipe.toMinecraft(recipeKey), new StonecutterRecipe260100(commonInfo, craftRecipe.toNMS(RecipeUtils.getBukkitChoice(craftRecipe.getInputChoice()), true), craftRecipe.getInputChoice(), resultTemplate));
+        return new RecipeHolder<>(CraftRecipe.toMinecraft(recipeKey), new StonecutterRecipe260100(commonInfo, craftRecipe.toNMS(IngredientUtils.getBukkitChoice(craftRecipe.getInputChoice()), true), craftRecipe.getInputChoice(), resultTemplate));
     }
 }

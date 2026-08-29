@@ -9,7 +9,7 @@ import pers.yufiria.craftorithm.item.ItemPack;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
-import pers.yufiria.craftorithm.util.RecipeUtils;
+import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +61,7 @@ public enum ItemIdStackRecipeChoiceParser implements RecipeChoiceParser {
                 String tagKeyStr = choiceStr.substring(4);
                 int spaceIndex = tagKeyStr.lastIndexOf(' ');
                 if (spaceIndex == -1) {
-                    Optional<Tag<Material>> tagOpt = RecipeUtils.getTag(tagKeyStr);
+                    Optional<Tag<Material>> tagOpt = IngredientUtils.getTag(tagKeyStr);
                     if (tagOpt.isEmpty()) {
                         throw new RecipeLoadException(tagKeyStr + " is not a valid tag");
                     }
@@ -70,7 +70,7 @@ public enum ItemIdStackRecipeChoiceParser implements RecipeChoiceParser {
                 } else {
                     int amount = Integer.parseInt(tagKeyStr.substring(spaceIndex + 1));
                     tagKeyStr = tagKeyStr.substring(0, spaceIndex);
-                    Optional<Tag<Material>> tagOpt = RecipeUtils.getTag(tagKeyStr);
+                    Optional<Tag<Material>> tagOpt = IngredientUtils.getTag(tagKeyStr);
                     if (tagOpt.isEmpty()) {
                         throw new RecipeLoadException(tagKeyStr + " is not a valid tag");
                     }

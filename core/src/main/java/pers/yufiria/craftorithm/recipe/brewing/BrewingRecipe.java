@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.recipe.CustomRecipe;
-import pers.yufiria.craftorithm.util.RecipeUtils;
+import pers.yufiria.craftorithm.util.IngredientUtils;
 
 public class BrewingRecipe implements CustomRecipe {
 
@@ -36,8 +36,8 @@ public class BrewingRecipe implements CustomRecipe {
             return new PotionMix(
                 recipeKey,
                 result,
-                RecipeUtils.getBukkitChoice(input),
-                RecipeUtils.getBukkitChoice(ingredient)
+                IngredientUtils.getBukkitChoice(input),
+                IngredientUtils.getBukkitChoice(ingredient)
             );
         }
     }

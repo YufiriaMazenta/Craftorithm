@@ -12,7 +12,7 @@ import org.bukkit.craftbukkit.v1_20_R4.inventory.CraftSmithingTransformRecipe;
 import org.bukkit.craftbukkit.v1_20_R4.util.CraftNamespacedKey;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.util.RecipeUtils;
+import pers.yufiria.craftorithm.util.IngredientUtils;
 
 public class SmithingTransformRecipe12005 extends SmithingTransformRecipe {
 
@@ -66,6 +66,6 @@ public class SmithingTransformRecipe12005 extends SmithingTransformRecipe {
     public static RecipeHolder<SmithingTransformRecipe> fromBukkit(NamespacedKey recipeKey, org.bukkit.inventory.SmithingTransformRecipe bukkitRecipe) {
         CraftSmithingTransformRecipe craftRecipe = CraftSmithingTransformRecipe.fromBukkitRecipe(bukkitRecipe);
         ItemStack nmsResult = CraftItemStack.asNMSCopy(bukkitRecipe.getResult());
-        return new RecipeHolder<>(CraftNamespacedKey.toMinecraft(recipeKey), new SmithingTransformRecipe12005(craftRecipe.toNMS(RecipeUtils.getBukkitChoice(bukkitRecipe.getTemplate()), true), bukkitRecipe.getTemplate(), craftRecipe.toNMS(RecipeUtils.getBukkitChoice(bukkitRecipe.getBase()), true), bukkitRecipe.getBase(), craftRecipe.toNMS(RecipeUtils.getBukkitChoice(bukkitRecipe.getAddition()), true), bukkitRecipe.getAddition(), nmsResult));
+        return new RecipeHolder<>(CraftNamespacedKey.toMinecraft(recipeKey), new SmithingTransformRecipe12005(craftRecipe.toNMS(IngredientUtils.getBukkitChoice(bukkitRecipe.getTemplate()), true), bukkitRecipe.getTemplate(), craftRecipe.toNMS(IngredientUtils.getBukkitChoice(bukkitRecipe.getBase()), true), bukkitRecipe.getBase(), craftRecipe.toNMS(IngredientUtils.getBukkitChoice(bukkitRecipe.getAddition()), true), bukkitRecipe.getAddition(), nmsResult));
     }
 }

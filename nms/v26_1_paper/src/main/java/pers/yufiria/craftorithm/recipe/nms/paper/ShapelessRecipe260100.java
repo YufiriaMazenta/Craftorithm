@@ -12,7 +12,7 @@ import org.bukkit.craftbukkit.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.inventory.CraftShapelessRecipe;
 import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.util.RecipeUtils;
+import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +41,7 @@ public class ShapelessRecipe260100 extends ShapelessRecipe {
         if (inputBukkitItems.size() == 1) {
             return customIngredients.getFirst().test(inputBukkitItems.getFirst());
         }
-        return RecipeUtils.matchItemsToChoices(inputBukkitItems, customIngredients);
+        return IngredientUtils.matchItemsToChoices(inputBukkitItems, customIngredients);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class ShapelessRecipe260100 extends ShapelessRecipe {
         List<RecipeChoice> bukkitIngredients = craftRecipe.getChoiceList();
         List<Ingredient> nmsIngredients = new ArrayList<>(bukkitIngredients.size());
         for (RecipeChoice recipeChoice : bukkitIngredients) {
-            nmsIngredients.add(CraftRecipe.toIngredient(RecipeUtils.getBukkitChoice(recipeChoice), true));
+            nmsIngredients.add(CraftRecipe.toIngredient(IngredientUtils.getBukkitChoice(recipeChoice), true));
         }
         ItemStackTemplate resultTemplate = ItemStackTemplate.fromNonEmptyStack(CraftItemStack.asNMSCopy(craftRecipe.getResult()));
         Recipe.CommonInfo commonInfo = new Recipe.CommonInfo(true);

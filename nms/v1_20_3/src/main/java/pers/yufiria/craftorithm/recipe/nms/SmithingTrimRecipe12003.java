@@ -12,7 +12,7 @@ import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftSmithingTrimRecipe;
 import org.bukkit.craftbukkit.v1_20_R3.util.CraftNamespacedKey;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.util.RecipeUtils;
+import pers.yufiria.craftorithm.util.IngredientUtils;
 
 public class SmithingTrimRecipe12003 extends SmithingTrimRecipe {
 
@@ -75,11 +75,11 @@ public class SmithingTrimRecipe12003 extends SmithingTrimRecipe {
         return new RecipeHolder<>(
             CraftNamespacedKey.toMinecraft(recipeKey),
             new SmithingTrimRecipe12003(
-                craftRecipe.toNMS(RecipeUtils.getBukkitChoice(bukkitRecipe.getTemplate()), true),
+                craftRecipe.toNMS(IngredientUtils.getBukkitChoice(bukkitRecipe.getTemplate()), true),
                 bukkitRecipe.getTemplate(),
-                craftRecipe.toNMS(RecipeUtils.getBukkitChoice(bukkitRecipe.getBase()), true),
+                craftRecipe.toNMS(IngredientUtils.getBukkitChoice(bukkitRecipe.getBase()), true),
                 bukkitRecipe.getBase(),
-                craftRecipe.toNMS(RecipeUtils.getBukkitChoice(bukkitRecipe.getAddition()), true),
+                craftRecipe.toNMS(IngredientUtils.getBukkitChoice(bukkitRecipe.getAddition()), true),
                 bukkitRecipe.getAddition()
             )
         );

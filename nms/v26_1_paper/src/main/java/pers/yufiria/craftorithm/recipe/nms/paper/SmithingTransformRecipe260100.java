@@ -11,7 +11,7 @@ import org.bukkit.craftbukkit.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.inventory.CraftSmithingTransformRecipe;
 import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.util.RecipeUtils;
+import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -42,9 +42,9 @@ public class SmithingTransformRecipe260100 extends SmithingTransformRecipe {
 
     @Override
     public boolean matches(SmithingRecipeInput smithingInput, Level level) {
-        return RecipeUtils.testOptionalChoice(template, CraftItemStack.asCraftMirror(smithingInput.template()))
+        return IngredientUtils.testOptionalChoice(template, CraftItemStack.asCraftMirror(smithingInput.template()))
             && base.test(CraftItemStack.asCraftMirror(smithingInput.base()))
-            && RecipeUtils.testOptionalChoice(addition, CraftItemStack.asCraftMirror(smithingInput.addition()));
+            && IngredientUtils.testOptionalChoice(addition, CraftItemStack.asCraftMirror(smithingInput.addition()));
     }
 
     @Override
@@ -67,11 +67,11 @@ public class SmithingTransformRecipe260100 extends SmithingTransformRecipe {
             CraftNamespacedKey.toResourceKey(Registries.RECIPE, recipeKey),
             new SmithingTransformRecipe260100(
                 commonInfo,
-                CraftRecipe.toPossibleIngredient(RecipeUtils.getBukkitChoice(bukkitRecipe.getTemplate()), false),
+                CraftRecipe.toPossibleIngredient(IngredientUtils.getBukkitChoice(bukkitRecipe.getTemplate()), false),
                 Optional.ofNullable(bukkitRecipe.getTemplate()),
-                CraftRecipe.toIngredient(RecipeUtils.getBukkitChoice(bukkitRecipe.getBase()), false),
+                CraftRecipe.toIngredient(IngredientUtils.getBukkitChoice(bukkitRecipe.getBase()), false),
                 bukkitRecipe.getBase(),
-                CraftRecipe.toPossibleIngredient(RecipeUtils.getBukkitChoice(bukkitRecipe.getAddition()), false),
+                CraftRecipe.toPossibleIngredient(IngredientUtils.getBukkitChoice(bukkitRecipe.getAddition()), false),
                 Optional.ofNullable(bukkitRecipe.getAddition()),
                 resultTemplate
             )

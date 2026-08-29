@@ -9,7 +9,7 @@ import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.ItemPack;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
-import pers.yufiria.craftorithm.util.RecipeUtils;
+import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.Optional;
 
@@ -43,7 +43,7 @@ public enum BukkitRecipeChoiceParser implements RecipeChoiceParser {
                     break;
                 case "tag":
                     String tagKeyStr = choiceStr.substring(4);
-                    Optional<Tag<Material>> tagOpt = RecipeUtils.getTag(tagKeyStr);
+                    Optional<Tag<Material>> tagOpt = IngredientUtils.getTag(tagKeyStr);
                     if (tagOpt.isEmpty()) {
                         throw new RecipeLoadException(tagKeyStr + " is not a valid tag");
                     }

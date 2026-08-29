@@ -10,6 +10,7 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.SmithingInventory;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
@@ -54,8 +55,7 @@ public enum CraftTriggerTypes implements TriggerType {
                 if (matrix.length > 0) {
                     addIngredientsFromMatrix(ctx, matrix);
                 }
-                ItemStack result = craftItemEvent.getInventory().getResult();
-                ctx.setVariable("craft_num", ScriptValue.of(RecipeUtils.calculateVanillaCraftNum(craftItemEvent.getClick(), matrix, result, player)));
+                ctx.setVariable("craft_num", ScriptValue.of(RecipeUtils.calculateVanillaCraftNum(craftItemEvent)));
                 ctx.setVariable("event", ScriptValue.of(
                     event,
                     ReflectPropertyResolver.INSTANCE
@@ -134,23 +134,18 @@ public enum CraftTriggerTypes implements TriggerType {
         public @Nullable TriggerContext extractContext(Event event) {
             SmithItemEvent smithItemEvent = (SmithItemEvent) event;
             if (!(smithItemEvent.getWhoClicked() instanceof Player player)) return null;
-            Recipe recipe = smithItemEvent.getInventory().getRecipe();
+            SmithingInventory inventory = smithItemEvent.getInventory();
+            Recipe recipe = inventory.getRecipe();
             NamespacedKey recipeKey = recipe != null ? RecipeManager.INSTANCE.getRecipeKey(recipe) : null;
             RecipeType recipeType = recipe != null ? RecipeManager.INSTANCE.getRecipeType(recipe) : null;
             TriggerContext ctx = new TriggerContext(player, recipeKey, recipeType);
-            ItemStack templateItem = smithItemEvent.getInventory().getItem(0);
-            ItemStack baseItem = smithItemEvent.getInventory().getItem(1);
-            ItemStack additionItem = smithItemEvent.getInventory().getItem(2);
+            ItemStack templateItem = inventory.getItem(0);
+            ItemStack baseItem = inventory.getItem(1);
+            ItemStack additionItem = inventory.getItem(2);
             addSlotVariable(ctx, "template", templateItem);
             addSlotVariable(ctx, "base", baseItem);
             addSlotVariable(ctx, "addition", additionItem);
-            ItemStack result = smithItemEvent.getInventory().getResult();
-            ItemStack[] matrix = {
-                templateItem,
-                baseItem,
-                additionItem
-            };
-            ctx.setVariable("craft_num", ScriptValue.of(RecipeUtils.calculateVanillaCraftNum(smithItemEvent.getClick(), matrix, result, player)));
+            ctx.setVariable("craft_num", ScriptValue.of(RecipeUtils.calculateVanillaCraftNum(smithItemEvent)));
             ctx.setVariable("event", ScriptValue.of(
                 event,
                 ReflectPropertyResolver.INSTANCE

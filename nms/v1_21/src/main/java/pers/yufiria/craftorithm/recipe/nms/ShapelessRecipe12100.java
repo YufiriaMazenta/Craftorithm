@@ -13,7 +13,7 @@ import org.bukkit.craftbukkit.v1_21_R1.util.CraftNamespacedKey;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapelessRecipe;
-import pers.yufiria.craftorithm.util.RecipeUtils;
+import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class ShapelessRecipe12100 extends ShapelessRecipes {
         if (inputBukkitItems.size() == 1) {
             return customIngredients.getFirst().test(inputBukkitItems.getFirst());
         }
-        return RecipeUtils.matchItemsToChoices(inputBukkitItems, customIngredients);
+        return IngredientUtils.matchItemsToChoices(inputBukkitItems, customIngredients);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class ShapelessRecipe12100 extends ShapelessRecipes {
         List<RecipeChoice> bukkitIngredients = craftRecipe.getChoiceList();
         NonNullList<RecipeItemStack> nmsIngredients = NonNullList.a(bukkitIngredients.size(), RecipeItemStack.a);
         for (int i = 0; i < bukkitIngredients.size(); i++) {
-            nmsIngredients.set(i, craftRecipe.toNMS(RecipeUtils.getBukkitChoice(bukkitIngredients.get(i)), true));
+            nmsIngredients.set(i, craftRecipe.toNMS(IngredientUtils.getBukkitChoice(bukkitIngredients.get(i)), true));
         }
         ShapelessRecipes nmsRecipe = new ShapelessRecipe12100(
             craftRecipe.getGroup(),

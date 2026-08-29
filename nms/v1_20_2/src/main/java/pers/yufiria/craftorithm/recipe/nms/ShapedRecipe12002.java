@@ -16,7 +16,7 @@ import org.bukkit.craftbukkit.v1_20_R2.util.CraftNamespacedKey;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
-import pers.yufiria.craftorithm.util.RecipeUtils;
+import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.Map;
 import java.util.Objects;
@@ -65,7 +65,7 @@ public final class ShapedRecipe12002 extends ShapedRecipes {
             for(int j = 0; j < row.length(); ++j) {
                 nmsIngredients.set(
                     i * customPattern.width + j,
-                    craftRecipe.toNMS(RecipeUtils.getBukkitChoice(bukkitIngredients.get(row.charAt(j))), false)
+                    craftRecipe.toNMS(IngredientUtils.getBukkitChoice(bukkitIngredients.get(row.charAt(j))), false)
                 );
             }
         }
