@@ -3,7 +3,6 @@ package pers.yufiria.craftorithm.hook.listener;
 import crypticlib.CrypticLib;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.CrypticLibPlugin;
-import crypticlib.MinecraftVersion;
 import crypticlib.lifecycle.Lifecycle;
 import crypticlib.lifecycle.LifecycleRule;
 import crypticlib.lifecycle.LifecycleTask;
@@ -185,15 +184,10 @@ public enum OtherPluginsListenerManager implements LifecycleTask {
         handlersLists.add(SmithItemEvent.getHandlerList());
         handlersLists.add(FurnaceSmeltEvent.getHandlerList());
         handlersLists.add(BlockCookEvent.getHandlerList());
+        handlersLists.add(FurnaceStartSmeltEvent.getHandlerList());
+        handlersLists.add(CampfireStartEvent.getHandlerList());
         if (CrypticLibBukkit.isPaper() && PluginConfigs.ENABLE_ANVIL_RECIPE.value()) {
             handlersLists.add(PrepareAnvilEvent.getHandlerList());
-        }
-        MinecraftVersion currentVersion = MinecraftVersion.current();
-        if (currentVersion.afterOrEquals(MinecraftVersion.V1_17_1)) {
-            handlersLists.add(FurnaceStartSmeltEvent.getHandlerList());
-        }
-        if (currentVersion.afterOrEquals(MinecraftVersion.V1_19_3)) {
-            handlersLists.add(CampfireStartEvent.getHandlerList());
         }
         if (EventUtils.hasCrafterCraftEvent) {
             handlersLists.add(CrafterCraftEvent.getHandlerList());

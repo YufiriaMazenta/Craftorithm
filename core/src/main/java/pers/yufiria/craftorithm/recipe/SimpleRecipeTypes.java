@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.recipe;
 
-import crypticlib.MinecraftVersion;
 import crypticlib.lang.entry.StringLangEntry;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
@@ -98,9 +97,6 @@ public enum SimpleRecipeTypes implements RecipeType {
         SmithingTransformRecipeParser.INSTANCE,
         BukkitRecipeRegister.INSTANCE,
         recipe -> {
-            if (MinecraftVersion.current().before(MinecraftVersion.V1_20)) {
-                return recipe instanceof SmithingRecipe;
-            }
             return recipe instanceof SmithingTransformRecipe;
         },
         Languages.RECIPE_TYPE_NAME_VANILLA_SMITHING_TRANSFORM,
@@ -110,9 +106,6 @@ public enum SimpleRecipeTypes implements RecipeType {
         SmithingTrimRecipeParser.INSTANCE,
         BukkitRecipeRegister.INSTANCE,
         recipe -> {
-            if (MinecraftVersion.current().before(MinecraftVersion.V1_20)) {
-                return false;
-            }
             return recipe instanceof SmithingTrimRecipe;
         },
         Languages.RECIPE_TYPE_NAME_VANILLA_SMITHING_TRIM,

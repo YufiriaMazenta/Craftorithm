@@ -8,7 +8,6 @@ import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskSettings;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.PluginConfigs;
-import pers.yufiria.craftorithm.item.CraftorithmItemProvider;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.util.LangUtils;
 

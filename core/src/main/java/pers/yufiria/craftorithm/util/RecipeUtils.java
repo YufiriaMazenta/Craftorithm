@@ -11,7 +11,8 @@ import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.SmithingInventory;
 
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 
 public class RecipeUtils {
 

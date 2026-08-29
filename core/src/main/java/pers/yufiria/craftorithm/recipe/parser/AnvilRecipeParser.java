@@ -6,9 +6,9 @@ import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.anvil.AnvilRecipe;
+import pers.yufiria.craftorithm.recipe.choice.ItemIdStackRecipeChoice;
 import pers.yufiria.craftorithm.recipe.choice.ItemIdStackRecipeChoiceParser;
 import pers.yufiria.craftorithm.recipe.choice.RecipeChoiceParser;
-import pers.yufiria.craftorithm.recipe.choice.ItemIdStackRecipeChoice;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 
 public enum AnvilRecipeParser implements RecipeParser<AnvilRecipe> {

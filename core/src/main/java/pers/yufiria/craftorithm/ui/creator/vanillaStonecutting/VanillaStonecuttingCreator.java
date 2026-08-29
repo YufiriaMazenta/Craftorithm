@@ -1,7 +1,6 @@
 package pers.yufiria.craftorithm.ui.creator.vanillaStonecutting;
 
 import crypticlib.CrypticLibBukkit;
-import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.display.MenuDisplay;

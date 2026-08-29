@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.recipe.choice;
 
-import crypticlib.CrypticLib;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.jetbrains.annotations.NotNull;

@@ -2,7 +2,6 @@ package pers.yufiria.craftorithm.ui.creator.anvil;
 
 import crypticlib.CrypticLibBukkit;
 import crypticlib.chat.BukkitTextProcessor;
-import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.conversation.Conversation;
 import crypticlib.conversation.NumberPrompt;
 import crypticlib.conversation.Prompt;

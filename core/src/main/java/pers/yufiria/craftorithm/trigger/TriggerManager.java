@@ -15,7 +15,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
-import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.trigger.event.EventTriggerTypes;
 
 import java.io.File;

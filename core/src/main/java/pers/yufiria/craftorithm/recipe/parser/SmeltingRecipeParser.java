@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.recipe.parser;
 
-import crypticlib.MinecraftVersion;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.*;
@@ -59,12 +58,10 @@ public enum SmeltingRecipeParser implements VanillaRecipeParser<CookingRecipe<?>
             if (group != null) {
                 recipe.setGroup(group);
             }
-            if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_19_3)) {
-                if (recipeConfig.contains("recipe_book_category")) {
-                    String categoryStr = Objects.requireNonNull(recipeConfig.getString("recipe_book_category")).toUpperCase();
-                    CookingBookCategory category = CookingBookCategory.valueOf(categoryStr);
-                    recipe.setCategory(category);
-                }
+            if (recipeConfig.contains("recipe_book_category")) {
+                String categoryStr = Objects.requireNonNull(recipeConfig.getString("recipe_book_category")).toUpperCase();
+                CookingBookCategory category = CookingBookCategory.valueOf(categoryStr);
+                recipe.setCategory(category);
             }
             return recipe;
         } catch (RecipeLoadException e) {

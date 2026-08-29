@@ -6,7 +6,6 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.injector.temporary.TemporaryPlayer;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.fakeresult.FakeResultDataHandler;

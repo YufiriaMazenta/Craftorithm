@@ -1,6 +1,6 @@
 package pers.yufiria.craftorithm.util;
 
-import crypticlib.MinecraftVersion;
+import crypticlib.CrypticLibBukkit;
 import crypticlib.util.InventoryViewHelper;
 import crypticlib.util.ItemHelper;
 import org.bukkit.NamespacedKey;
@@ -11,8 +11,7 @@ import org.bukkit.event.block.BlockCookEvent;
 import org.bukkit.event.block.CampfireStartEvent;
 import org.bukkit.event.block.CrafterCraftEvent;
 import org.bukkit.event.inventory.*;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.*;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
@@ -53,8 +52,39 @@ public class EventUtils {
             }
             case PrepareSmithingEvent prepareSmithingEvent -> recipe = prepareSmithingEvent.getInventory().getRecipe();
             case SmithItemEvent smithItemEvent -> recipe = smithItemEvent.getInventory().getRecipe();
-            case FurnaceSmeltEvent furnaceSmeltEvent -> recipe = furnaceSmeltEvent.getRecipe();
+            case FurnaceSmeltEvent furnaceSmeltEvent -> {
+                if (CrypticLibBukkit.isPaper()) {
+                    recipe = furnaceSmeltEvent.getRecipe();
+                } else {
+                    //非paper端读取不到配方信息
+                    return null;
+                }
+            }
+            case FurnaceStartSmeltEvent furnaceStartSmeltEvent -> recipe = furnaceStartSmeltEvent.getRecipe();
+            case CampfireStartEvent campfireStartEvent -> recipe = campfireStartEvent.getRecipe();
             case BlockCookEvent blockCookEvent -> recipe = blockCookEvent.getRecipe();
+            case InventoryClickEvent clickEvent -> {
+                Inventory clickedInventory = clickEvent.getClickedInventory();
+                if (clickedInventory == null) {
+                    return null;
+                }
+                switch (clickedInventory) {
+                    case CraftingInventory craftingInventory -> recipe = craftingInventory.getRecipe();
+                    case SmithingInventory smithingInventory -> recipe = smithingInventory.getRecipe();
+                    case AnvilInventory anvilInventory -> {
+                        ItemStack base = anvilInventory.getItem(0);
+                        ItemStack addition = anvilInventory.getItem(1);
+                        if (ItemHelper.isAir(base) || ItemHelper.isAir(addition))
+                            return null;
+
+                        AnvilRecipe anvilRecipe = AnvilRecipeHandler.INSTANCE.matchAnvilRecipe(base, addition);
+                        return anvilRecipe != null ? anvilRecipe.getKey() : null;
+                    }
+                    default -> {
+                        return null;
+                    }
+                }
+            }
             case PrepareAnvilEvent prepareAnvilEvent -> {
                 if (!PluginConfigs.ENABLE_ANVIL_RECIPE.value())
                     return null;
@@ -70,18 +100,6 @@ public class EventUtils {
                 return null;
             }
             default -> {
-                if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_17_1)) {
-                    if (event instanceof FurnaceStartSmeltEvent furnaceStartSmeltEvent) {
-                        recipe = furnaceStartSmeltEvent.getRecipe();
-                        break;
-                    }
-                }
-                if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_19_3)) {
-                    if (event instanceof CampfireStartEvent campfireStartEvent) {
-                        recipe = campfireStartEvent.getRecipe();
-                        break;
-                    }
-                }
                 if (hasCrafterCraftEvent) {
                     if (event instanceof CrafterCraftEvent crafterCraftEvent) {
                         recipe = crafterCraftEvent.getRecipe();

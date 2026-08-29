@@ -9,8 +9,6 @@ import crypticlib.lifecycle.Lifecycle;
 import crypticlib.lifecycle.LifecycleRule;
 import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskSettings;
-import org.bukkit.Bukkit;
-import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.fakeresult.FakeResultDataHandler;
 import pers.yufiria.craftorithm.hook.PluginHook;
