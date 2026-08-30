@@ -158,12 +158,23 @@ public enum RecipeManager implements LifecycleTask {
     }
 
     private void loadRecipesFromConfig(Runnable callback) {
-        if (!RECIPE_FILE_FOLDER.exists()) {
-            boolean mkdirResult = RECIPE_FILE_FOLDER.mkdir();
-            if (!mkdirResult)
-                return;
-        }
-        new RecipeLoadTask(RECIPE_FILE_FOLDER, callback).start();
+        CrypticLibBukkit.scheduler().async(() -> {
+            if (!RECIPE_FILE_FOLDER.exists()) {
+                boolean mkdirResult = RECIPE_FILE_FOLDER.mkdir();
+                if (!mkdirResult)
+                    return;
+            }
+            List<BukkitConfigWrapper> recipeConfigs = IOHelper.allYamlFiles(RECIPE_FILE_FOLDER)
+                .stream()
+                .map(BukkitConfigWrapper::new)
+                .toList();
+            new RecipeLoadTask(
+                RECIPE_FILE_FOLDER,
+                callback,
+                recipeConfigs
+            ).start();
+        });
+
     }
 
     /**
@@ -488,20 +499,20 @@ public enum RecipeManager implements LifecycleTask {
 
     public class RecipeLoadTask extends CrypticLibRunnable {
 
-        private List<File> recipeFiles;
+        private List<BukkitConfigWrapper> recipeConfigs;
         private final File folder;
         private int useTick = 0;
         //配方加载完毕后执行的代码
         private final Runnable callback;
         private long useMilliseconds = 0;
 
-        public RecipeLoadTask(File folder, Runnable doneActions) {
+        public RecipeLoadTask(File folder, Runnable doneActions, List<BukkitConfigWrapper> recipeConfigs) {
             this.callback = doneActions;
             if (!folder.isDirectory()) {
                 throw new IllegalArgumentException(folder.getAbsolutePath() + " is not a directory");
             }
             this.folder = folder;
-            this.recipeFiles = IOHelper.allYamlFiles(folder);
+            this.recipeConfigs = recipeConfigs;
         }
 
         public void start() {
@@ -523,12 +534,12 @@ public enum RecipeManager implements LifecycleTask {
             }
             try {
                 int maxRegRecipePerTick = PluginConfigs.MAX_REG_RECIPE_PER_TICK.value();
-                if (recipeFiles.size() <= maxRegRecipePerTick) {
-                    loadRecipes(recipeFiles);
+                if (recipeConfigs.size() <= maxRegRecipePerTick) {
+                    loadRecipes(recipeConfigs);
                     end();
                 } else {
-                    List<File> loadFiles = recipeFiles.subList(0, maxRegRecipePerTick);
-                    recipeFiles = recipeFiles.subList(maxRegRecipePerTick, recipeFiles.size());
+                    List<BukkitConfigWrapper> loadFiles = recipeConfigs.subList(0, maxRegRecipePerTick);
+                    recipeConfigs = recipeConfigs.subList(maxRegRecipePerTick, recipeConfigs.size());
                     loadRecipes(loadFiles);
                 }
             } catch (Throwable t) {
@@ -538,21 +549,17 @@ public enum RecipeManager implements LifecycleTask {
             }
         }
 
-        public void loadRecipes(List<File> files) {
+        public void loadRecipes(List<BukkitConfigWrapper> recipeConfigs) {
             long startTime = System.currentTimeMillis();
             int recipeNum = 0;
-            for (File file : files) {
-                if (!file.exists()) {
-                    continue;
-                }
-                String recipeName = file.getPath().substring(folder.getPath().length() + 1);
+            for (BukkitConfigWrapper recipeConfig : recipeConfigs) {
+                String recipeName = recipeConfig.configFile().getPath().substring(folder.getPath().length() + 1);
                 recipeName = recipeName.replace("\\", "/");
                 recipeName = recipeName.replace('-', '_');
                 int lastDotIndex = recipeName.lastIndexOf(".");
                 recipeName = recipeName.substring(0, lastDotIndex).toLowerCase();
-                BukkitConfigWrapper recipeConfigWrapper = new BukkitConfigWrapper(file);
                 try {
-                    boolean result = loadRecipeFromConfig(recipeName, recipeConfigWrapper, false);
+                    boolean result = loadRecipeFromConfig(recipeName, recipeConfig, false);
                     if (result) {
                         recipeNum ++;
                     }
