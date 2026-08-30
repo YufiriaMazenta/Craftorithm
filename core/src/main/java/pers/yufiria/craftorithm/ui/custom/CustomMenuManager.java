@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.ui.custom;
 
 import crypticlib.CrypticLib;
+import crypticlib.CrypticLibBukkit;
 import crypticlib.CrypticLibPlugin;
 import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.lifecycle.Lifecycle;
@@ -85,30 +86,35 @@ public enum CustomMenuManager implements LifecycleTask {
     }
 
     public void reloadMenus() {
-        //重载所有自定义页面
-        menuOpeners.clear();
-        List<File> files = IOHelper.allYamlFiles(customMenuFolder);
-        if (files.isEmpty()) {
-            Craftorithm.instance().saveResource("menus/custom/example_recipe_list.yml", false);
-            files.add(new File(customMenuFolder, "example_recipe_list.yml"));
-        }
-        for (File menuFile : files) {
-            String filename = IOHelper.getRelativeFileName(customMenuFolder, menuFile);
-            String menuName = filename.substring(0, filename.lastIndexOf('.'));
-            try {
-                BukkitConfigWrapper configWrapper = new BukkitConfigWrapper(menuFile);
-                CustomMenuInfo menuInfo = new CustomMenuInfo(configWrapper.config());
-                menuOpeners.put(menuName, player -> {
-                    CustomMenu customMenu = new CustomMenu(player, menuInfo);
-                    customMenu.openMenu();
-                    return customMenu;
-                });
-                CrypticLib.info("Loaded menu: " + menuName);
-            } catch (Throwable throwable) {
-                CrypticLib.info("&cLoad menu " + menuName + " failed");
-                throwable.printStackTrace();
+        CrypticLibBukkit.scheduler().async(() -> {
+            int loadedMenuNum = 0;
+            //重载所有自定义页面
+            menuOpeners.clear();
+            List<File> files = IOHelper.allYamlFiles(customMenuFolder);
+            if (files.isEmpty()) {
+                Craftorithm.instance().saveResource("menus/custom/example_recipe_list.yml", false);
+                files.add(new File(customMenuFolder, "example_recipe_list.yml"));
             }
-        }
+            for (File menuFile : files) {
+                String filename = IOHelper.getRelativeFileName(customMenuFolder, menuFile);
+                String menuName = filename.substring(0, filename.lastIndexOf('.'));
+                try {
+                    BukkitConfigWrapper configWrapper = new BukkitConfigWrapper(menuFile);
+                    CustomMenuInfo menuInfo = new CustomMenuInfo(configWrapper.config());
+                    menuOpeners.put(menuName, player -> {
+                        CustomMenu customMenu = new CustomMenu(player, menuInfo);
+                        customMenu.openMenu();
+                        return customMenu;
+                    });
+                    CrypticLib.info("Loaded menu: " + menuName);
+                    loadedMenuNum ++;
+                } catch (Throwable throwable) {
+                    CrypticLib.info("&cLoad menu " + menuName + " failed");
+                    throwable.printStackTrace();
+                }
+            }
+            CrypticLib.info("Loaded " + loadedMenuNum + " menu(s)");
+        });
     }
 
     public enum OpenMenuResult {

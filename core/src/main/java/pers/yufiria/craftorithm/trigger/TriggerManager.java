@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.trigger;
 
+import crypticlib.CrypticLibBukkit;
 import crypticlib.CrypticLibPlugin;
 import crypticlib.chat.BukkitMsgSender;
 import crypticlib.config.BukkitConfigWrapper;
@@ -92,76 +93,78 @@ public enum TriggerManager implements LifecycleTask {
      * 从 triggers 文件夹加载所有触发器
      */
     public void reloadTriggers() {
-        // 清理旧数据
-        triggers.clear();
-        triggerById.clear();
-        cooldownManager.clear();
-        hasTriggerRecipeKeys.clear();
-        triggerTypeMatchAllMap.clear();
+        CrypticLibBukkit.scheduler().async(() -> {
+            // 清理旧数据
+            triggers.clear();
+            triggerById.clear();
+            cooldownManager.clear();
+            hasTriggerRecipeKeys.clear();
+            triggerTypeMatchAllMap.clear();
 
-        if (!TRIGGER_FOLDER.exists()) {
-            TRIGGER_FOLDER.mkdirs();
-            return;
-        }
+            if (!TRIGGER_FOLDER.exists()) {
+                TRIGGER_FOLDER.mkdirs();
+                return;
+            }
 
-        List<File> triggerFiles = IOHelper.allYamlFiles(TRIGGER_FOLDER);
-        int count = 0;
+            List<File> triggerFiles = IOHelper.allYamlFiles(TRIGGER_FOLDER);
+            int count = 0;
 
-        for (File file : triggerFiles) {
-            String fileName = file.getName();
-            // 去掉扩展名作为文件标识
-            String fileKey = fileName.contains(".")
-                ? fileName.substring(0, fileName.lastIndexOf('.'))
-                : fileName;
+            for (File file : triggerFiles) {
+                String fileName = file.getName();
+                // 去掉扩展名作为文件标识
+                String fileKey = fileName.contains(".")
+                    ? fileName.substring(0, fileName.lastIndexOf('.'))
+                    : fileName;
 
-            BukkitConfigWrapper wrapper = new BukkitConfigWrapper(file);
-            YamlConfiguration config = wrapper.config();
+                BukkitConfigWrapper wrapper = new BukkitConfigWrapper(file);
+                YamlConfiguration config = wrapper.config();
 
-            for (String localId : config.getKeys(false)) {
-                ConfigurationSection section = config.getConfigurationSection(localId);
-                if (section == null) continue;
+                for (String localId : config.getKeys(false)) {
+                    ConfigurationSection section = config.getConfigurationSection(localId);
+                    if (section == null) continue;
 
-                try {
-                    String fullId = fileKey + ":" + localId;
-                    Trigger trigger = parseTrigger(fullId, section);
+                    try {
+                        String fullId = fileKey + ":" + localId;
+                        Trigger trigger = parseTrigger(fullId, section);
 
-                    if (trigger == null) continue;
+                        if (trigger == null) continue;
 
-                    List<NamespacedKey> triggerMatchRecipes = trigger.recipes();
-                    if (triggerMatchRecipes.isEmpty()) {
-                        //如果该触发器是合成类型，且没有设置配方，那么标记该触发器类型会匹配所有配方
-                        TriggerType triggerType = getTriggerType(trigger.typeKey());
-                        if (triggerType instanceof CraftTriggerTypes) {
-                            triggerTypeMatchAllMap.put(triggerType, true);
+                        List<NamespacedKey> triggerMatchRecipes = trigger.recipes();
+                        if (triggerMatchRecipes.isEmpty()) {
+                            //如果该触发器是合成类型，且没有设置配方，那么标记该触发器类型会匹配所有配方
+                            TriggerType triggerType = getTriggerType(trigger.typeKey());
+                            if (triggerType instanceof CraftTriggerTypes) {
+                                triggerTypeMatchAllMap.put(triggerType, true);
+                            }
+                        } else {
+                            this.hasTriggerRecipeKeys.addAll(triggerMatchRecipes);
                         }
-                    } else {
-                        this.hasTriggerRecipeKeys.addAll(triggerMatchRecipes);
-                    }
 
-                    if (trigger.enabled()) {
-                        triggers.computeIfAbsent(trigger.typeKey(), k -> new ArrayList<>())
+                        if (trigger.enabled()) {
+                            triggers.computeIfAbsent(trigger.typeKey(), k -> new ArrayList<>())
                                 .add(trigger);
-                        triggerById.put(fullId, trigger);
-                        count++;
+                            triggerById.put(fullId, trigger);
+                            count++;
+                            BukkitMsgSender.INSTANCE.info(
+                                "Loaded trigger '" + localId + "' in " + fileName
+                            );
+                        }
+                    } catch (Exception e) {
                         BukkitMsgSender.INSTANCE.info(
-                            "Loaded trigger '" + localId + "' in " + fileName
+                            "&cFailed to load trigger '" + localId + "' in " + fileName
                         );
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    BukkitMsgSender.INSTANCE.info(
-                        "&cFailed to load trigger '" + localId + "' in " + fileName
-                    );
-                    e.printStackTrace();
                 }
             }
-        }
 
-        // 按 priority 排序
-        triggers.values().forEach(list ->
-            list.sort(Comparator.comparingInt(Trigger::priority))
-        );
+            // 按 priority 排序
+            triggers.values().forEach(list ->
+                list.sort(Comparator.comparingInt(Trigger::priority))
+            );
 
-        BukkitMsgSender.INSTANCE.info("Loaded " + count + " trigger(s)");
+            BukkitMsgSender.INSTANCE.info("Loaded " + count + " trigger(s)");
+        });
     }
 
     /**
@@ -209,8 +212,8 @@ public enum TriggerManager implements LifecycleTask {
                 String joined = "script".equals(mode)
                     ? String.join("\n", condSources)
                     : condSources.size() == 1
-                        ? condSources.getFirst()
-                        : condSources.stream().map(c -> "(" + c + ")").collect(Collectors.joining(" && "));
+                      ? condSources.getFirst()
+                      : condSources.stream().map(c -> "(" + c + ")").collect(Collectors.joining(" && "));
                 conditionScript = ScriptEngine.INSTANCE.compile(fullId + "_cond", joined);
             }
         } else {
