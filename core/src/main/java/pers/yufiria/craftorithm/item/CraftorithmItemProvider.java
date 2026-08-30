@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.item;
 
 import crypticlib.CrypticLib;
+import crypticlib.CrypticLibBukkit;
 import crypticlib.CrypticLibPlugin;
 import crypticlib.MinecraftVersion;
 import crypticlib.config.BukkitConfigWrapper;
@@ -128,21 +129,23 @@ public enum CraftorithmItemProvider implements ItemPluginHook, ItemProvider, Lif
 
 
     public NamespacedItemIdStack regCraftorithmItem(String namespace, String itemName, ItemStack item) {
-        BukkitConfigWrapper itemConfigWrapper = itemConfigFileMap.computeIfAbsent(namespace, ns -> {
-            File itemFile = new File(ITEM_FILE_FOLDER, ns + ".yml");
-            if (!itemFile.exists()) {
-                IOHelper.createNewFile(itemFile);
-            }
-            return new BukkitConfigWrapper(itemFile);
-        });
-        itemConfigWrapper.set(itemName, item);
-        itemConfigWrapper.saveConfig();
         String namespaceItemId = namespace + ":" + itemName;
         idItemMap.put(namespaceItemId, item);
         itemBuckets.computeIfAbsent(
             ItemBucketKey.of(item),
             fp -> new ConcurrentHashMap<>()
         ).put(namespaceItemId, item);
+        CrypticLibBukkit.scheduler().async(() -> {
+            BukkitConfigWrapper itemConfigWrapper = itemConfigFileMap.computeIfAbsent(namespace, ns -> {
+                File itemFile = new File(ITEM_FILE_FOLDER, ns + ".yml");
+                if (!itemFile.exists()) {
+                    IOHelper.createNewFile(itemFile);
+                }
+                return new BukkitConfigWrapper(itemFile);
+            });
+            itemConfigWrapper.set(itemName, item);
+            itemConfigWrapper.saveConfig();
+        });
         return new NamespacedItemIdStack(
             NamespacedItemId.of(
                 namespace(),
