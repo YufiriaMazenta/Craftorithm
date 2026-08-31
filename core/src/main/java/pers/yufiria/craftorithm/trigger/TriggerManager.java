@@ -21,6 +21,7 @@ import pers.yufiria.craftorithm.trigger.event.EventTriggerTypes;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 /**
@@ -51,6 +52,7 @@ public enum TriggerManager implements LifecycleTask {
     private final Map<TriggerType, Boolean> triggerTypeMatchAllMap = new ConcurrentHashMap<>();
     // 冷却管理
     private final TriggerCooldown cooldownManager = TriggerCooldown.INSTANCE;
+    private final AtomicBoolean isReloading = new AtomicBoolean(false);
 
     // ---- 类型注册 ----
 
@@ -93,78 +95,92 @@ public enum TriggerManager implements LifecycleTask {
      * 从 triggers 文件夹加载所有触发器
      */
     public void reloadTriggers() {
+        if (isReloading.get()) {
+            return;
+        }
+        isReloading.set(true);
         CrypticLibBukkit.scheduler().async(() -> {
-            // 清理旧数据
-            triggers.clear();
-            triggerById.clear();
-            cooldownManager.clear();
-            hasTriggerRecipeKeys.clear();
-            triggerTypeMatchAllMap.clear();
+            try {
+                // 清理旧数据
+                triggers.clear();
+                triggerById.clear();
+                cooldownManager.clear();
+                hasTriggerRecipeKeys.clear();
+                triggerTypeMatchAllMap.clear();
 
-            if (!TRIGGER_FOLDER.exists()) {
-                TRIGGER_FOLDER.mkdirs();
-                return;
-            }
-
-            List<File> triggerFiles = IOHelper.allYamlFiles(TRIGGER_FOLDER);
-            int count = 0;
-
-            for (File file : triggerFiles) {
-                String fileName = file.getName();
-                // 去掉扩展名作为文件标识
-                String fileKey = fileName.contains(".")
-                    ? fileName.substring(0, fileName.lastIndexOf('.'))
-                    : fileName;
-
-                BukkitConfigWrapper wrapper = new BukkitConfigWrapper(file);
-                YamlConfiguration config = wrapper.config();
-
-                for (String localId : config.getKeys(false)) {
-                    ConfigurationSection section = config.getConfigurationSection(localId);
-                    if (section == null) continue;
-
-                    try {
-                        String fullId = fileKey + ":" + localId;
-                        Trigger trigger = parseTrigger(fullId, section);
-
-                        if (trigger == null) continue;
-
-                        List<NamespacedKey> triggerMatchRecipes = trigger.recipes();
-                        if (triggerMatchRecipes.isEmpty()) {
-                            //如果该触发器是合成类型，且没有设置配方，那么标记该触发器类型会匹配所有配方
-                            TriggerType triggerType = getTriggerType(trigger.typeKey());
-                            if (triggerType instanceof CraftTriggerTypes) {
-                                triggerTypeMatchAllMap.put(triggerType, true);
-                            }
-                        } else {
-                            this.hasTriggerRecipeKeys.addAll(triggerMatchRecipes);
-                        }
-
-                        if (trigger.enabled()) {
-                            triggers.computeIfAbsent(trigger.typeKey(), k -> new ArrayList<>())
-                                .add(trigger);
-                            triggerById.put(fullId, trigger);
-                            count++;
-                            BukkitMsgSender.INSTANCE.info(
-                                "Loaded trigger '" + localId + "' in " + fileName
-                            );
-                        }
-                    } catch (Exception e) {
-                        BukkitMsgSender.INSTANCE.info(
-                            "&cFailed to load trigger '" + localId + "' in " + fileName
-                        );
-                        e.printStackTrace();
-                    }
+                if (!TRIGGER_FOLDER.exists()) {
+                    TRIGGER_FOLDER.mkdirs();
+                    return;
                 }
+
+                List<File> triggerFiles = IOHelper.allYamlFiles(TRIGGER_FOLDER);
+                int count = 0;
+
+                for (File file : triggerFiles) {
+                    count += loadTriggersFromConfigFile(file);
+                }
+
+                // 按 priority 排序
+                triggers.values().forEach(list ->
+                    list.sort(Comparator.comparingInt(Trigger::priority))
+                );
+
+                BukkitMsgSender.INSTANCE.info("Loaded " + count + " trigger(s)");
+            } finally {
+                isReloading.set(false);
             }
-
-            // 按 priority 排序
-            triggers.values().forEach(list ->
-                list.sort(Comparator.comparingInt(Trigger::priority))
-            );
-
-            BukkitMsgSender.INSTANCE.info("Loaded " + count + " trigger(s)");
         });
+    }
+
+    private int loadTriggersFromConfigFile(File file) {
+        int count = 0;
+        String fileName = file.getName();
+        // 去掉扩展名作为文件标识
+        String fileKey = fileName.contains(".")
+            ? fileName.substring(0, fileName.lastIndexOf('.'))
+            : fileName;
+
+        BukkitConfigWrapper wrapper = new BukkitConfigWrapper(file);
+        YamlConfiguration config = wrapper.config();
+
+        for (String localId : config.getKeys(false)) {
+            ConfigurationSection section = config.getConfigurationSection(localId);
+            if (section == null) continue;
+
+            try {
+                String fullId = fileKey + ":" + localId;
+                Trigger trigger = parseTrigger(fullId, section);
+
+                if (trigger == null) continue;
+
+                List<NamespacedKey> triggerMatchRecipes = trigger.recipes();
+                if (triggerMatchRecipes.isEmpty()) {
+                    //如果该触发器是合成类型，且没有设置配方，那么标记该触发器类型会匹配所有配方
+                    TriggerType triggerType = getTriggerType(trigger.typeKey());
+                    if (triggerType instanceof CraftTriggerTypes) {
+                        triggerTypeMatchAllMap.put(triggerType, true);
+                    }
+                } else {
+                    this.hasTriggerRecipeKeys.addAll(triggerMatchRecipes);
+                }
+
+                if (trigger.enabled()) {
+                    triggers.computeIfAbsent(trigger.typeKey(), k -> new ArrayList<>())
+                        .add(trigger);
+                    triggerById.put(fullId, trigger);
+                    BukkitMsgSender.INSTANCE.info(
+                        "Loaded trigger '" + localId + "' in " + fileName
+                    );
+                }
+                count ++;
+            } catch (Throwable throwable) {
+                BukkitMsgSender.INSTANCE.info(
+                    "&cFailed to load trigger '" + localId + "' in " + fileName
+                );
+                throwable.printStackTrace();
+            }
+        }
+        return count;
     }
 
     /**
