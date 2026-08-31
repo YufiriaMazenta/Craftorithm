@@ -60,15 +60,6 @@ public enum RecipeManager implements LifecycleTask {
     private final AtomicBoolean isReloadingRecipeManager = new AtomicBoolean(false);
     private volatile CompletableFuture<Void> reloadCompletion;
 
-    public record ParsedRecipe(
-        String recipeName,
-        String recipeId,
-        Recipe recipe,
-        RecipeType recipeType,
-        BukkitConfigWrapper configWrapper,
-        long createTime
-    ) {}
-
     //配方类型相关
 
     public boolean regRecipeType(RecipeType type) {
@@ -212,7 +203,7 @@ public enum RecipeManager implements LifecycleTask {
         return recipeName.substring(0, lastDotIndex).toLowerCase();
     }
 
-    private @Nullable ParsedRecipe parseRecipeFromConfig(String recipeFileName, BukkitConfigWrapper configWrapper) {
+    public @Nullable ParsedRecipe parseRecipeFromConfig(String recipeFileName, BukkitConfigWrapper configWrapper) {
         YamlConfiguration recipeConfig = configWrapper.config();
         String recipeId;
         if (recipeConfig.contains("recipe_id")) {
@@ -239,7 +230,7 @@ public enum RecipeManager implements LifecycleTask {
         return new ParsedRecipe(recipeFileName, recipeId, recipe, recipeType, configWrapper, createTime);
     }
 
-    private boolean registerParsedRecipe(ParsedRecipe parsed, boolean updateRecipes) {
+    public boolean registerParsedRecipe(ParsedRecipe parsed, boolean updateRecipes) {
         Recipe recipe = parsed.recipe();
         RecipeType recipeType = parsed.recipeType();
         BukkitConfigWrapper configWrapper = parsed.configWrapper();
@@ -299,7 +290,7 @@ public enum RecipeManager implements LifecycleTask {
         return registerParsedRecipe(parsed, updateRecipes);
     }
 
-    public void loadServerRecipeKeys() {
+    private void loadServerRecipeKeys() {
         Iterator<Recipe> recipeIterator = Bukkit.recipeIterator();
         serverRecipeKeys.clear();
         while (recipeIterator.hasNext()) {
