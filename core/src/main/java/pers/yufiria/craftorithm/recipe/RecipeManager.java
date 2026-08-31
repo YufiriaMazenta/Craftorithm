@@ -60,6 +60,15 @@ public enum RecipeManager implements LifecycleTask {
     private final AtomicBoolean isReloadingRecipeManager = new AtomicBoolean(false);
     private volatile CompletableFuture<Void> reloadCompletion;
 
+    public record ParsedRecipe(
+        String recipeName,
+        String recipeId,
+        Recipe recipe,
+        RecipeType recipeType,
+        BukkitConfigWrapper configWrapper,
+        long createTime
+    ) {}
+
     //配方类型相关
 
     public boolean regRecipeType(RecipeType type) {
@@ -171,25 +180,40 @@ public enum RecipeManager implements LifecycleTask {
                 .stream()
                 .map(BukkitConfigWrapper::new)
                 .toList();
-            new RecipeLoadTask(
+            long parseStart = System.currentTimeMillis();
+            List<ParsedRecipe> parsedRecipes = new ArrayList<>();
+            for (BukkitConfigWrapper configWrapper : recipeConfigs) {
+                String recipeName = deriveRecipeName(configWrapper);
+                try {
+                    ParsedRecipe parsed = parseRecipeFromConfig(recipeName, configWrapper);
+                    if (parsed != null) {
+                        parsedRecipes.add(parsed);
+                    }
+                } catch (Throwable throwable) {
+                    LangUtils.info(Languages.RECIPE_LOAD_EXCEPTION, CollectionsUtils.newStringHashMap("<recipe_name>", recipeName));
+                    throwable.printStackTrace();
+                }
+            }
+            long parseElapsed = System.currentTimeMillis() - parseStart;
+            CrypticLib.info("Parsed " + parsedRecipes.size() + " recipes in " + parseElapsed + "ms");
+            new RecipeRegisterTask(
                 RECIPE_FILE_FOLDER,
                 callback,
-                recipeConfigs
+                parsedRecipes
             ).start();
         });
-
     }
 
-    /**
-     * 从配置文件里加载并注册一个配方
-     *
-     * @param recipeFileName      配方文件的名字,当配方文件里不存在recipe_id这个配置时,会尝试使用文件名字作为配方id
-     * @param recipeConfigWrapper 配方的配置文件
-     * @param updateRecipes 是否向玩家更新配方列表
-     * @return
-     */
-    public boolean loadRecipeFromConfig(String recipeFileName, BukkitConfigWrapper recipeConfigWrapper, boolean updateRecipes) {
-        YamlConfiguration recipeConfig = recipeConfigWrapper.config();
+    private String deriveRecipeName(BukkitConfigWrapper configWrapper) {
+        String recipeName = configWrapper.configFile().getPath().substring(RECIPE_FILE_FOLDER.getPath().length() + 1);
+        recipeName = recipeName.replace("\\", "/");
+        recipeName = recipeName.replace('-', '_');
+        int lastDotIndex = recipeName.lastIndexOf(".");
+        return recipeName.substring(0, lastDotIndex).toLowerCase();
+    }
+
+    private @Nullable ParsedRecipe parseRecipeFromConfig(String recipeFileName, BukkitConfigWrapper configWrapper) {
+        YamlConfiguration recipeConfig = configWrapper.config();
         String recipeId;
         if (recipeConfig.contains("recipe_id")) {
             recipeId = recipeConfig.getString("recipe_id");
@@ -197,11 +221,10 @@ public enum RecipeManager implements LifecycleTask {
             recipeId = recipeFileName;
         }
         String typeId = recipeConfig.getString("type");
-        RecipeType recipeType;
         if (typeId == null) {
             throw new RecipeLoadException("Unknown recipe type of " + recipeFileName + "(" + recipeId + "): " + null);
         }
-        recipeType = recipeTypes.get(typeId);
+        RecipeType recipeType = recipeTypes.get(typeId);
         if (recipeType == null) {
             throw new RecipeLoadException("Unknown recipe type of " + recipeFileName + "(" + recipeId + "): " + typeId);
         }
@@ -209,8 +232,21 @@ public enum RecipeManager implements LifecycleTask {
         Recipe recipe = recipeParser.parse(recipeId, recipeConfig);
         if (recipe == null) {
             BukkitMsgSender.INSTANCE.info("&eLoad recipe " + recipeFileName + "(" + recipeId + ") failed");
-            return false;
+            return null;
         }
+        File recipeFile = configWrapper.configFile();
+        long createTime = recipeFile.exists() ? recipeFile.lastModified() : System.currentTimeMillis();
+        return new ParsedRecipe(recipeFileName, recipeId, recipe, recipeType, configWrapper, createTime);
+    }
+
+    private boolean registerParsedRecipe(ParsedRecipe parsed, boolean updateRecipes) {
+        Recipe recipe = parsed.recipe();
+        RecipeType recipeType = parsed.recipeType();
+        BukkitConfigWrapper configWrapper = parsed.configWrapper();
+        YamlConfiguration recipeConfig = configWrapper.config();
+        String recipeFileName = parsed.recipeName();
+        String recipeId = parsed.recipeId();
+
         RecipeRegister recipeRegister = recipeType.recipeRegister();
         NamespacedKey recipeKey = Objects.requireNonNull(getRecipeKey(recipe));
         RecipeLoadFromConfigEvent recipeLoadFromConfigEvent = new RecipeLoadFromConfigEvent(
@@ -227,11 +263,10 @@ public enum RecipeManager implements LifecycleTask {
         if (result) {
             craftorithmRecipes.put(recipeKey, recipe);
             serverRecipeKeys.add(recipeKey);
-            recipeConfigWrapperMap.put(recipeKey, recipeConfigWrapper);
+            recipeConfigWrapperMap.put(recipeKey, configWrapper);
             recipeFileNameToKeyMap.put(recipeFileName, recipeKey);
             recipeKeyToFileNameMap.put(recipeKey, recipeFileName);
-            File recipeFile = recipeConfigWrapper.configFile();
-            recipeCreateTimeMap.put(recipeKey, recipeFile.exists() ? recipeFile.lastModified() : System.currentTimeMillis());
+            recipeCreateTimeMap.put(recipeKey, parsed.createTime());
             if (recipeConfig.contains("group")) {
                 String groupId = recipeConfig.getString("group");
                 if (recipeGroupMap.containsKey(groupId)) {
@@ -246,6 +281,22 @@ public enum RecipeManager implements LifecycleTask {
             BukkitMsgSender.INSTANCE.info("&eRegister recipe " + recipeFileName + "(" + recipeId + ") failed");
         }
         return result;
+    }
+
+    /**
+     * 从配置文件里加载并注册一个配方
+     *
+     * @param recipeFileName      配方文件的名字,当配方文件里不存在recipe_id这个配置时,会尝试使用文件名字作为配方id
+     * @param recipeConfigWrapper 配方的配置文件
+     * @param updateRecipes 是否向玩家更新配方列表
+     * @return
+     */
+    public boolean loadRecipeFromConfig(String recipeFileName, BukkitConfigWrapper recipeConfigWrapper, boolean updateRecipes) {
+        ParsedRecipe parsed = parseRecipeFromConfig(recipeFileName, recipeConfigWrapper);
+        if (parsed == null) {
+            return false;
+        }
+        return registerParsedRecipe(parsed, updateRecipes);
     }
 
     public void loadServerRecipeKeys() {
@@ -522,22 +573,20 @@ public enum RecipeManager implements LifecycleTask {
         }
     }
 
-    public class RecipeLoadTask extends CrypticLibRunnable {
+    public class RecipeRegisterTask extends CrypticLibRunnable {
 
-        private List<BukkitConfigWrapper> recipeConfigs;
-        private final File folder;
+        private List<ParsedRecipe> parsedRecipes;
         private int useTick = 0;
         //配方加载完毕后执行的代码
         private final Runnable callback;
         private long useMilliseconds = 0;
 
-        public RecipeLoadTask(File folder, Runnable doneActions, List<BukkitConfigWrapper> recipeConfigs) {
+        public RecipeRegisterTask(File folder, Runnable doneActions, List<ParsedRecipe> parsedRecipes) {
             this.callback = doneActions;
             if (!folder.isDirectory()) {
                 throw new IllegalArgumentException(folder.getAbsolutePath() + " is not a directory");
             }
-            this.folder = folder;
-            this.recipeConfigs = recipeConfigs;
+            this.parsedRecipes = parsedRecipes;
         }
 
         public void start() {
@@ -559,13 +608,13 @@ public enum RecipeManager implements LifecycleTask {
             }
             try {
                 int maxRegRecipePerTick = PluginConfigs.MAX_REG_RECIPE_PER_TICK.value();
-                if (recipeConfigs.size() <= maxRegRecipePerTick) {
-                    loadRecipes(recipeConfigs);
+                if (parsedRecipes.size() <= maxRegRecipePerTick) {
+                    registerRecipes(parsedRecipes);
                     end();
                 } else {
-                    List<BukkitConfigWrapper> loadFiles = recipeConfigs.subList(0, maxRegRecipePerTick);
-                    recipeConfigs = recipeConfigs.subList(maxRegRecipePerTick, recipeConfigs.size());
-                    loadRecipes(loadFiles);
+                    List<ParsedRecipe> batch = parsedRecipes.subList(0, maxRegRecipePerTick);
+                    parsedRecipes = parsedRecipes.subList(maxRegRecipePerTick, parsedRecipes.size());
+                    registerRecipes(batch);
                 }
             } catch (Throwable t) {
                 CrypticLib.info("&cUnexpected error during recipe loading, aborting...");
@@ -574,27 +623,22 @@ public enum RecipeManager implements LifecycleTask {
             }
         }
 
-        public void loadRecipes(List<BukkitConfigWrapper> recipeConfigs) {
+        public void registerRecipes(List<ParsedRecipe> batch) {
             long startTime = System.currentTimeMillis();
             int recipeNum = 0;
-            for (BukkitConfigWrapper recipeConfig : recipeConfigs) {
-                String recipeName = recipeConfig.configFile().getPath().substring(folder.getPath().length() + 1);
-                recipeName = recipeName.replace("\\", "/");
-                recipeName = recipeName.replace('-', '_');
-                int lastDotIndex = recipeName.lastIndexOf(".");
-                recipeName = recipeName.substring(0, lastDotIndex).toLowerCase();
+            for (ParsedRecipe parsed : batch) {
                 try {
-                    boolean result = loadRecipeFromConfig(recipeName, recipeConfig, false);
+                    boolean result = registerParsedRecipe(parsed, false);
                     if (result) {
                         recipeNum ++;
                     }
                 } catch (Throwable throwable) {
-                    LangUtils.info(Languages.RECIPE_LOAD_EXCEPTION, CollectionsUtils.newStringHashMap("<recipe_name>", recipeName));
+                    LangUtils.info(Languages.RECIPE_LOAD_EXCEPTION, CollectionsUtils.newStringHashMap("<recipe_name>", parsed.recipeName()));
                     throwable.printStackTrace();
                 }
             }
             long thisTickUseMs = System.currentTimeMillis() - startTime;
-            CrypticLib.info("Loaded " + recipeNum + " recipes in " + thisTickUseMs + " ms.");
+            CrypticLib.info("Registered " + recipeNum + " recipes in " + thisTickUseMs + "ms");
             useMilliseconds += thisTickUseMs;
             useTick ++;
         }

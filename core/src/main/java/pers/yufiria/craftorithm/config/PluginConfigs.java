@@ -35,7 +35,7 @@ public class PluginConfigs {
     public final static BooleanConfig DEBUG = new BooleanConfig("debug", false);
     public final static IntConfig MAX_REG_RECIPE_PER_TICK = new IntConfig(
         "max_reg_recipe_per_tick",
-        12,
+        100,
         "每tick注册的配方数量，调低此数值可以减少服务器卡顿"
     );
     public final static ConfigSectionListConfig INGREDIENT_RESTRICTION_RULES = new ConfigSectionListConfig(
