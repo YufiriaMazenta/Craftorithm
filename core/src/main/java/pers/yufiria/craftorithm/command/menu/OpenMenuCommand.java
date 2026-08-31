@@ -40,7 +40,7 @@ public class OpenMenuCommand extends CommandNode {
             return;
         }
         String menuName = args.getFirst();
-        Optional<Function<Player, Menu>> menuOpenerOpt = CustomMenuManager.INSTANCE.getMenuOpenerOpt(menuName);
+        Optional<Function<Player, Menu>> menuOpenerOpt = CustomMenuManager.INSTANCE.getMenuCreatorOpt(menuName);
         if (menuOpenerOpt.isEmpty()) {
             LangUtils.sendLang(invoker, Languages.COMMAND_OPENMENU_UNKNOWN_MENU, Map.of("<menu_name>", menuName));
             return;
@@ -76,6 +76,6 @@ public class OpenMenuCommand extends CommandNode {
 
     @Override
     public @Nullable List<String> tabComplete(@NotNull Invoker invoker, @NotNull List<String> args) {
-        return CustomMenuManager.INSTANCE.menuOpeners().keySet().stream().toList();
+        return CustomMenuManager.INSTANCE.menuCreators().keySet().stream().toList();
     }
 }

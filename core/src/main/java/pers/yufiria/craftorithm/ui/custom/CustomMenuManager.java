@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -35,8 +36,9 @@ public enum CustomMenuManager implements LifecycleTask {
 
     INSTANCE;
 
-    private final Map<String, Function<Player, Menu>> menuOpeners = new ConcurrentHashMap<>();
+    private final Map<String, Function<Player, Menu>> menuCreators = new ConcurrentHashMap<>();
     private File customMenuFolder;
+    private final AtomicBoolean isReloading = new AtomicBoolean(false);
 
     /**
      * 为某玩家打开一个菜单
@@ -49,7 +51,7 @@ public enum CustomMenuManager implements LifecycleTask {
             callback.accept(OpenMenuResult.PLAYER_OFFLINE);
             return;
         }
-        Optional<Function<Player, Menu>> menuOpenerOpt = getMenuOpenerOpt(menuName);
+        Optional<Function<Player, Menu>> menuOpenerOpt = getMenuCreatorOpt(menuName);
         if (menuOpenerOpt.isEmpty()) {
             callback.accept(OpenMenuResult.NOT_EXIST_MENU);
             return;
@@ -69,12 +71,12 @@ public enum CustomMenuManager implements LifecycleTask {
         }
     }
 
-    public Optional<Function<Player, Menu>> getMenuOpenerOpt(String name) {
-        return Optional.ofNullable(menuOpeners.get(name));
+    public Optional<Function<Player, Menu>> getMenuCreatorOpt(String name) {
+        return Optional.ofNullable(menuCreators.get(name));
     }
 
-    public @Unmodifiable Map<String, Function<Player, Menu>> menuOpeners() {
-        return Collections.unmodifiableMap(menuOpeners);
+    public @Unmodifiable Map<String, Function<Player, Menu>> menuCreators() {
+        return Collections.unmodifiableMap(menuCreators);
     }
 
     @Override
@@ -86,35 +88,51 @@ public enum CustomMenuManager implements LifecycleTask {
     }
 
     public void reloadMenus() {
+        if (isReloading.get()) {
+            return;
+        }
+        isReloading.set(true);
         CrypticLibBukkit.scheduler().async(() -> {
-            int loadedMenuNum = 0;
-            //重载所有自定义页面
-            menuOpeners.clear();
-            List<File> files = IOHelper.allYamlFiles(customMenuFolder);
-            if (files.isEmpty()) {
-                Craftorithm.instance().saveResource("menus/custom/example_recipe_list.yml", false);
-                files.add(new File(customMenuFolder, "example_recipe_list.yml"));
-            }
-            for (File menuFile : files) {
-                String filename = IOHelper.getRelativeFileName(customMenuFolder, menuFile);
-                String menuName = filename.substring(0, filename.lastIndexOf('.'));
-                try {
-                    BukkitConfigWrapper configWrapper = new BukkitConfigWrapper(menuFile);
-                    CustomMenuInfo menuInfo = new CustomMenuInfo(configWrapper.config());
-                    menuOpeners.put(menuName, player -> {
-                        CustomMenu customMenu = new CustomMenu(player, menuInfo);
-                        customMenu.openMenu();
-                        return customMenu;
-                    });
-                    CrypticLib.info("Loaded menu: " + menuName);
-                    loadedMenuNum ++;
-                } catch (Throwable throwable) {
-                    CrypticLib.info("&cLoad menu " + menuName + " failed");
-                    throwable.printStackTrace();
+            try {
+                int loadedMenuNum = 0;
+                //重载所有自定义页面
+                menuCreators.clear();
+                List<File> files = IOHelper.allYamlFiles(customMenuFolder);
+                if (files.isEmpty()) {
+                    Craftorithm.instance().saveResource("menus/custom/example_recipe_list.yml", false);
+                    files.add(new File(customMenuFolder, "example_recipe_list.yml"));
                 }
+                for (File menuFile : files) {
+                    boolean result = loadMenuCreatorFromConfigFile(menuFile);
+                    if (result) {
+                        loadedMenuNum ++;
+                    }
+                }
+                CrypticLib.info("Loaded " + loadedMenuNum + " menu(s)");
+            } finally {
+                isReloading.set(false);
             }
-            CrypticLib.info("Loaded " + loadedMenuNum + " menu(s)");
         });
+    }
+
+    private boolean loadMenuCreatorFromConfigFile(File menuFile) {
+        String filename = IOHelper.getRelativeFileName(customMenuFolder, menuFile);
+        String menuName = filename.substring(0, filename.lastIndexOf('.'));
+        try {
+            BukkitConfigWrapper configWrapper = new BukkitConfigWrapper(menuFile);
+            CustomMenuInfo menuInfo = new CustomMenuInfo(configWrapper.config());
+            menuCreators.put(menuName, player -> {
+                CustomMenu customMenu = new CustomMenu(player, menuInfo);
+                customMenu.openMenu();
+                return customMenu;
+            });
+            CrypticLib.info("Loaded menu: " + menuName);
+            return true;
+        } catch (Throwable throwable) {
+            CrypticLib.info("&cLoad menu " + menuName + " failed");
+            throwable.printStackTrace();
+            return false;
+        }
     }
 
     public enum OpenMenuResult {
