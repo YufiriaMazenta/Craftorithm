@@ -40,6 +40,9 @@ public class MainCommand extends CommandTree {
     CommandNode disable = DisableCommand.INSTANCE;
 
     @Subcommand
+    CommandNode restore = RestoreCommand.INSTANCE;
+
+    @Subcommand
     CommandNode item = ItemCommand.INSTANCE;
 
     @Subcommand

@@ -32,6 +32,10 @@ command:
     success: '<prefix> &cレシピを無効化しました。'
     not_exist: '<prefix> &cレシピが存在しないか、すでに無効化されています。'
     failed: '<prefix> &cレシピの無効化に失敗しました。すでに無効化されているか、存在しない可能性があります。'
+  restore:
+    success: '<prefix> &aレシピ <recipe_id> を再有効化しました。'
+    failed: '<prefix> &cレシピ <recipe_id> は無効化されていない可能性があります。'
+    invalid_recipe_id: '<prefix> &c無効なレシピIDです。'
   version: '<prefix> &aプラグインバージョン: <version>'
   create:
     unsupported_recipe_type: '<prefix> &cサポートされていないレシピタイプです。'

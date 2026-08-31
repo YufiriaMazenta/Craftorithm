@@ -32,6 +32,10 @@ command:
     success: '<prefix> &cReceta deshabilitada con éxito.'
     not_exist: '<prefix> &cLa receta no existe o ya ha sido deshabilitada.'
     failed: '<prefix> &cError al deshabilitar la receta. Puede que ya esté deshabilitada o no exista.'
+  restore:
+    success: '<prefix> &aReceta <recipe_id> re-habilitada con éxito.'
+    failed: '<prefix> &cLa receta <recipe_id> puede no estar deshabilitada.'
+    invalid_recipe_id: '<prefix> &cID de receta inválido.'
   version: '<prefix> &aVersión del plugin: <version>'
   create:
     unsupported_recipe_type: '<prefix> &cTipo de receta no soportado.'

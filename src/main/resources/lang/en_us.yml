@@ -32,6 +32,10 @@ command:
     success: '<prefix> &cRecipe disabled successfully.'
     not_exist: '<prefix> &cRecipe does not exist or has already been disabled.'
     failed: '<prefix> &cFailed to disable recipe, it may already be disabled or does not exist.'
+  restore:
+    success: '<prefix> &aRecipe <recipe_id> re-enabled successfully.'
+    failed: '<prefix> &cRecipe <recipe_id> may not be disabled.'
+    invalid_recipe_id: '<prefix> &cInvalid recipe ID.'
   version: '<prefix> &aPlugin version: <version>'
   create:
     unsupported_recipe_type: '<prefix> &cUnsupported recipe type.'

@@ -32,6 +32,10 @@ command:
     success: '<prefix> &c配方停用成功。'
     not_exist: '<prefix> &c配方唔存在或已經被停用。'
     failed: '<prefix> &c配方停用失敗，可能已被停用或唔存在。'
+  restore:
+    success: '<prefix> &a配方 <recipe_id> 重新啟用成功。'
+    failed: '<prefix> &c配方 <recipe_id> 可能並未被停用。'
+    invalid_recipe_id: '<prefix> &c無效嘅配方ID。'
   version: '<prefix> &a插件版本：<version>'
   create:
     unsupported_recipe_type: '<prefix> &c唔支援嘅配方類型。'

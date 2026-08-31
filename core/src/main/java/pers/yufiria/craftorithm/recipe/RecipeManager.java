@@ -32,7 +32,6 @@ import pers.yufiria.craftorithm.util.LangUtils;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @LifecycleTaskConfig(
@@ -53,7 +52,7 @@ public enum RecipeManager implements LifecycleTask {
     private final Map<String, NamespacedKey> recipeFileNameToKeyMap = new ConcurrentHashMap<>();
     private final Map<NamespacedKey, String> recipeKeyToFileNameMap = new ConcurrentHashMap<>();
     private final Map<NamespacedKey, Long> recipeCreateTimeMap = new ConcurrentHashMap<>();
-    private final List<Recipe> disabledRecipesCache = new CopyOnWriteArrayList<>();
+    private final Map<NamespacedKey, Recipe> disabledRecipes = new ConcurrentHashMap<>();
     private final Set<NamespacedKey> serverRecipeKeys = ConcurrentHashMap.newKeySet();
     private final Map<String, RecipeGroup> recipeGroupMap = new ConcurrentHashMap<>();
     private Boolean supportPotionMix;
@@ -150,11 +149,11 @@ public enum RecipeManager implements LifecycleTask {
         ResultProcessorManager.INSTANCE.resetRecipeProcessors();
 
         //还原被禁用的配方
-        for (Recipe recipe : disabledRecipesCache) {
+        for (Recipe recipe : disabledRecipes.values()) {
             RecipeType recipeType = getRecipeType(recipe);
             recipeType.recipeRegister().registerRecipe(recipe, false);
         }
-        disabledRecipesCache.clear();
+        disabledRecipes.clear();
     }
 
     private void loadRecipesFromConfig(Runnable callback) {
@@ -307,13 +306,33 @@ public enum RecipeManager implements LifecycleTask {
      */
     public boolean disableRecipe(NamespacedKey recipeKey, boolean save) {
         if (save)
-            saveDisabledRecipesData(recipeKey);
+            addDisabledRecipes2Config(recipeKey);
         Recipe recipe = getRecipe(recipeKey);
         boolean result = removeRecipe(recipeKey);
         if (result) {
-            disabledRecipesCache.add(recipe);
+            disabledRecipes.put(recipeKey, recipe);
             serverRecipeKeys.remove(recipeKey);
         }
+        return result;
+    }
+
+    /**
+     * 重新启用一个已经被禁用的配方
+     */
+    public boolean restoreDisabledRecipe(NamespacedKey recipeKey) {
+        if (!disabledRecipes.containsKey(recipeKey)) {
+            return false;
+        }
+        Recipe recipe = disabledRecipes.get(recipeKey);
+        boolean result = getRecipeType(recipe).recipeRegister().registerRecipe(recipe, true);
+        disabledRecipes.remove(recipeKey);
+        CrypticLibBukkit.scheduler().async(() -> {
+            List<String> disabledRecipesConfig = disabledRecipesConfigWrapper.config().getStringList("recipes");
+            String keyStr = recipeKey.toString();
+            disabledRecipesConfig.remove(keyStr);
+            disabledRecipesConfigWrapper.set("recipes", disabledRecipesConfig);
+            disabledRecipesConfigWrapper.saveConfig();
+        });
         return result;
     }
 
@@ -321,24 +340,17 @@ public enum RecipeManager implements LifecycleTask {
      * 保存一个被禁用的配方
      * @param recipeKey 被禁用的配方Key
      */
-    private void saveDisabledRecipesData(NamespacedKey recipeKey) {
+    private void addDisabledRecipes2Config(NamespacedKey recipeKey) {
         if (recipeKey.getNamespace().equals(NamespacedKey.MINECRAFT) && PluginConfigs.REMOVE_ALL_VANILLA_RECIPE.value())
             return;
-        List<String> disabledRecipes = disabledRecipesConfigWrapper.config().getStringList("recipes");
-        String keyStr = recipeKey.toString();
-        if (!disabledRecipes.contains(keyStr))
-            disabledRecipes.add(keyStr);
         CrypticLibBukkit.scheduler().async(() -> {
+            List<String> disabledRecipes = disabledRecipesConfigWrapper.config().getStringList("recipes");
+            String keyStr = recipeKey.toString();
+            if (!disabledRecipes.contains(keyStr))
+                disabledRecipes.add(keyStr);
             disabledRecipesConfigWrapper.set("recipes", disabledRecipes);
             disabledRecipesConfigWrapper.saveConfig();
         });
-    }
-
-    private void addDisabledRecipeCache(NamespacedKey recipeKey) {
-        Recipe recipe = getRecipe(recipeKey);
-        if (recipe == null)
-            return;
-
     }
 
     /**
@@ -467,6 +479,10 @@ public enum RecipeManager implements LifecycleTask {
 
     public Set<NamespacedKey> serverRecipeKeys() {
         return serverRecipeKeys;
+    }
+
+    public Set<NamespacedKey> disableRecipeKeys() {
+        return disabledRecipes.keySet();
     }
 
     public boolean supportPotionMix() {

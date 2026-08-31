@@ -32,6 +32,10 @@ command:
     success: '<prefix> &cRecette désactivée avec succès.'
     not_exist: '<prefix> &cLa recette n''existe pas ou est déjà désactivée.'
     failed: '<prefix> &cÉchec de la désactivation de la recette. Elle est peut-être déjà désactivée ou n''existe pas.'
+  restore:
+    success: '<prefix> &aRecette <recipe_id> réactivée avec succès.'
+    failed: '<prefix> &cLa recette <recipe_id> n''est peut-être pas désactivée.'
+    invalid_recipe_id: '<prefix> &cIdentifiant de recette invalide.'
   version: '<prefix> &aVersion du plugin : <version>'
   create:
     unsupported_recipe_type: '<prefix> &cType de recette non pris en charge.'

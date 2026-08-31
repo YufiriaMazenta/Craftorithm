@@ -30,6 +30,9 @@ public class Languages {
     public static final StringLangEntry COMMAND_DISABLE_SUCCESS = new StringLangEntry("command.disable.success");
     public static final StringLangEntry COMMAND_DISABLE_NOT_EXIST = new StringLangEntry("command.disable.not_exist");
     public static final StringLangEntry COMMAND_DISABLE_FAILED = new StringLangEntry("command.disable.failed");
+    public static final StringLangEntry COMMAND_RESTORE_SUCCESS = new StringLangEntry("command.restore.success");
+    public static final StringLangEntry COMMAND_RESTORE_INVALID_RECIPE_ID = new StringLangEntry("command.restore.invalid_recipe_id");
+    public static final StringLangEntry COMMAND_RESTORE_FAILED = new StringLangEntry("command.restore.failed");
     public static final StringLangEntry COMMAND_VERSION = new StringLangEntry("command.version");
     public static final StringLangEntry COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE = new StringLangEntry("command.create.unsupported_recipe_type");
     public static final StringLangEntry COMMAND_CREATE_UNSUPPORTED_RECIPE_NAME = new StringLangEntry("command.create.unsupported_recipe_name");

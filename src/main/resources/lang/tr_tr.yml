@@ -32,6 +32,10 @@ command:
     success: '<prefix> &cTarif başarıyla devre dışı bırakıldı.'
     not_exist: '<prefix> &cTarif mevcut değil veya zaten devre dışı.'
     failed: '<prefix> &cTarif devre dışı bırakılamadı. Zaten devre dışı bırakılmış olabilir veya mevcut değil.'
+  restore:
+    success: '<prefix> &aTarif <recipe_id> başarıyla yeniden etkinleştirildi.'
+    failed: '<prefix> &cTarif <recipe_id> devre dışı olmayabilir.'
+    invalid_recipe_id: '<prefix> &cGeçersiz tarif kimliği.'
   version: '<prefix> &aEklenti sürümü: <version>'
   create:
     unsupported_recipe_type: '<prefix> &cDesteklenmeyen tarif tipi.'

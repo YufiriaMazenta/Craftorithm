@@ -32,6 +32,10 @@ command:
     success: '<prefix> &cРецепт успешно отключён.'
     not_exist: '<prefix> &cРецепт не существует или уже отключён.'
     failed: '<prefix> &cНе удалось отключить рецепт. Возможно, он уже отключён или не существует.'
+  restore:
+    success: '<prefix> &aРецепт <recipe_id> успешно включён обратно.'
+    failed: '<prefix> &cРецепт <recipe_id> возможно не отключён.'
+    invalid_recipe_id: '<prefix> &cНедопустимый идентификатор рецепта.'
   version: '<prefix> &aВерсия плагина: <version>'
   create:
     unsupported_recipe_type: '<prefix> &cНеподдерживаемый тип рецепта.'

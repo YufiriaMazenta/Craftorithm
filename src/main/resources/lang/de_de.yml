@@ -32,6 +32,10 @@ command:
     success: '<prefix> &cRezept erfolgreich deaktiviert.'
     not_exist: '<prefix> &cRezept existiert nicht oder wurde bereits deaktiviert.'
     failed: '<prefix> &cRezept konnte nicht deaktiviert werden. Es wurde möglicherweise bereits deaktiviert oder existiert nicht.'
+  restore:
+    success: '<prefix> &aRezept <recipe_id> erfolgreich wieder aktiviert.'
+    failed: '<prefix> &cRezept <recipe_id> wurde möglicherweise nicht deaktiviert.'
+    invalid_recipe_id: '<prefix> &cUngültige Rezept-ID.'
   version: '<prefix> &aPlugin-Version: <version>'
   create:
     unsupported_recipe_type: '<prefix> &cNicht unterstützter Rezepttyp.'

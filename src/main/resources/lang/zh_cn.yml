@@ -33,6 +33,10 @@ command:
     success: '<prefix> &c禁用配方成功'
     not_exist: '<prefix> &c配方不存在或已经被禁用'
     failed: '<prefix> &c配方禁用失败，可能已被禁用或不存在'
+  restore:
+    success: '<prefix> &a重新启用配方<recipe_id>成功'
+    failed: '<prefix> &c配方<recipe_id>可能并没有被禁用'
+    invalid_recipe_id: '<prefix> &c无效的配方ID'
   version: '<prefix> &a插件版本：<version>'
   create:
     unsupported_recipe_type: '<prefix> &c不支持的配方类型'
@@ -50,7 +54,6 @@ command:
     unknown_menu: '<prefix> &c未知的菜单:<menu_name>'
   script:
     operation_time: '<prefix> &a语句执行消耗<time>纳秒'
-
   edit:
     invalid_recipe_id: '<prefix> &c无效的配方ID'
     recipe_not_found: '<prefix> &c找不到该配方'
