@@ -1,10 +1,10 @@
 package pers.yufiria.craftorithm.trigger.listener;
 
 import crypticlib.CrypticLibPlugin;
-import crypticlib.lifecycle.Lifecycle;
-import crypticlib.lifecycle.LifecycleRule;
+import crypticlib.lifecycle.LifecyclePhase;
+import crypticlib.lifecycle.LifecycleSchedule;
 import crypticlib.lifecycle.LifecycleTask;
-import crypticlib.lifecycle.LifecycleTaskSettings;
+import crypticlib.lifecycle.LifecycleTaskConfig;
 import crypticlib.listener.EventListener;
 import crypticlib.scheduler.CrypticLibRunnable;
 import org.bukkit.event.EventHandler;
@@ -17,10 +17,12 @@ import pers.yufiria.craftorithm.trigger.TriggerManager;
  * 玩家退出时清理其触发器冷却记录，防止冷却表无限增长
  */
 @EventListener
-@LifecycleTaskSettings(rules = {
-    @LifecycleRule(lifeCycle = Lifecycle.ENABLE),
-    @LifecycleRule(lifeCycle = Lifecycle.DISABLE)
-})
+@LifecycleTaskConfig(
+    schedules = {
+        @LifecycleSchedule(phase = LifecyclePhase.ENABLE),
+        @LifecycleSchedule(phase = LifecyclePhase.DISABLE)
+    }
+)
 public enum TriggerCooldownCleanupHandler implements Listener, LifecycleTask {
 
     INSTANCE;
@@ -32,7 +34,7 @@ public enum TriggerCooldownCleanupHandler implements Listener, LifecycleTask {
     }
 
     @Override
-    public void lifecycle(CrypticLibPlugin crypticLibPlugin, Lifecycle lifecycle) {
+    public void onLifecycle(CrypticLibPlugin crypticLibPlugin, LifecyclePhase lifecycle) {
         switch (lifecycle) {
             case ENABLE -> {
                 this.cooldownCleanupTask = new CrypticLibRunnable() {

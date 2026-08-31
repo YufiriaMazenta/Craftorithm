@@ -4,10 +4,10 @@ import crypticlib.CrypticLibBukkit;
 import crypticlib.CrypticLibPlugin;
 import crypticlib.chat.BukkitMsgSender;
 import crypticlib.config.BukkitConfigWrapper;
-import crypticlib.lifecycle.Lifecycle;
-import crypticlib.lifecycle.LifecycleRule;
+import crypticlib.lifecycle.LifecyclePhase;
+import crypticlib.lifecycle.LifecycleSchedule;
 import crypticlib.lifecycle.LifecycleTask;
-import crypticlib.lifecycle.LifecycleTaskSettings;
+import crypticlib.lifecycle.LifecycleTaskConfig;
 import crypticlib.script.ScriptEngine;
 import crypticlib.script.compile.CompiledScript;
 import crypticlib.util.IOHelper;
@@ -28,10 +28,12 @@ import java.util.stream.Collectors;
  * 触发器管理器
  * 负责触发器类型注册、YAML加载、事件监听器管理和触发执行
  */
-@LifecycleTaskSettings(rules = {
-    @LifecycleRule(lifeCycle = Lifecycle.ACTIVE, priority = 3),
-    @LifecycleRule(lifeCycle = Lifecycle.RELOAD, priority = 3)
-})
+@LifecycleTaskConfig(
+    schedules = {
+        @LifecycleSchedule(phase = LifecyclePhase.ACTIVE, priority = 3),
+        @LifecycleSchedule(phase = LifecyclePhase.RELOAD, isAsync = true)
+    }
+)
 public enum TriggerManager implements LifecycleTask {
 
     INSTANCE;
@@ -99,37 +101,35 @@ public enum TriggerManager implements LifecycleTask {
             return;
         }
         isReloading.set(true);
-        CrypticLibBukkit.scheduler().async(() -> {
-            try {
-                // 清理旧数据
-                triggers.clear();
-                triggerById.clear();
-                cooldownManager.clear();
-                hasTriggerRecipeKeys.clear();
-                triggerTypeMatchAllMap.clear();
+        try {
+            // 清理旧数据
+            triggers.clear();
+            triggerById.clear();
+            cooldownManager.clear();
+            hasTriggerRecipeKeys.clear();
+            triggerTypeMatchAllMap.clear();
 
-                if (!TRIGGER_FOLDER.exists()) {
-                    TRIGGER_FOLDER.mkdirs();
-                    return;
-                }
-
-                List<File> triggerFiles = IOHelper.allYamlFiles(TRIGGER_FOLDER);
-                int count = 0;
-
-                for (File file : triggerFiles) {
-                    count += loadTriggersFromConfigFile(file);
-                }
-
-                // 按 priority 排序
-                triggers.values().forEach(list ->
-                    list.sort(Comparator.comparingInt(Trigger::priority))
-                );
-
-                BukkitMsgSender.INSTANCE.info("Loaded " + count + " trigger(s)");
-            } finally {
-                isReloading.set(false);
+            if (!TRIGGER_FOLDER.exists()) {
+                TRIGGER_FOLDER.mkdirs();
+                return;
             }
-        });
+
+            List<File> triggerFiles = IOHelper.allYamlFiles(TRIGGER_FOLDER);
+            int count = 0;
+
+            for (File file : triggerFiles) {
+                count += loadTriggersFromConfigFile(file);
+            }
+
+            // 按 priority 排序
+            triggers.values().forEach(list ->
+                list.sort(Comparator.comparingInt(Trigger::priority))
+            );
+
+            BukkitMsgSender.INSTANCE.info("Loaded " + count + " trigger(s)");
+        } finally {
+            isReloading.set(false);
+        }
     }
 
     private int loadTriggersFromConfigFile(File file) {
@@ -336,8 +336,8 @@ public enum TriggerManager implements LifecycleTask {
     // ---- 生命周期 ----
 
     @Override
-    public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
-        if (lifeCycle == Lifecycle.ACTIVE) {
+    public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase phase) {
+        if (phase == LifecyclePhase.ACTIVE) {
             TRIGGER_FOLDER.mkdirs();
             // 初始化动态事件注册器
             EventTriggerTypes.INSTANCE.init();

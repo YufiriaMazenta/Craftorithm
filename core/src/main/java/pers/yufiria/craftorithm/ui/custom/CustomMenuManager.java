@@ -4,10 +4,10 @@ import crypticlib.CrypticLib;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.CrypticLibPlugin;
 import crypticlib.config.BukkitConfigWrapper;
-import crypticlib.lifecycle.Lifecycle;
-import crypticlib.lifecycle.LifecycleRule;
+import crypticlib.lifecycle.LifecyclePhase;
+import crypticlib.lifecycle.LifecycleSchedule;
 import crypticlib.lifecycle.LifecycleTask;
-import crypticlib.lifecycle.LifecycleTaskSettings;
+import crypticlib.lifecycle.LifecycleTaskConfig;
 import crypticlib.ui.menu.Menu;
 import crypticlib.ui.util.MenuHelper;
 import crypticlib.util.IOHelper;
@@ -28,9 +28,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-@LifecycleTaskSettings(rules = {
-    @LifecycleRule(lifeCycle = Lifecycle.ENABLE),
-    @LifecycleRule(lifeCycle = Lifecycle.RELOAD)
+@LifecycleTaskConfig(schedules = {
+    @LifecycleSchedule(phase = LifecyclePhase.ENABLE),
+    @LifecycleSchedule(phase = LifecyclePhase.RELOAD, isAsync = true)
 })
 public enum CustomMenuManager implements LifecycleTask {
 
@@ -80,8 +80,8 @@ public enum CustomMenuManager implements LifecycleTask {
     }
 
     @Override
-    public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
-        if (lifeCycle == Lifecycle.ENABLE) {
+    public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase lifeCycle) {
+        if (lifeCycle == LifecyclePhase.ENABLE) {
             customMenuFolder = new File(((Plugin) plugin).getDataFolder(), "menus/custom");
         }
         reloadMenus();
@@ -92,27 +92,25 @@ public enum CustomMenuManager implements LifecycleTask {
             return;
         }
         isReloading.set(true);
-        CrypticLibBukkit.scheduler().async(() -> {
-            try {
-                int loadedMenuNum = 0;
-                //重载所有自定义页面
-                menuCreators.clear();
-                List<File> files = IOHelper.allYamlFiles(customMenuFolder);
-                if (files.isEmpty()) {
-                    Craftorithm.instance().saveResource("menus/custom/example_recipe_list.yml", false);
-                    files.add(new File(customMenuFolder, "example_recipe_list.yml"));
-                }
-                for (File menuFile : files) {
-                    boolean result = loadMenuCreatorFromConfigFile(menuFile);
-                    if (result) {
-                        loadedMenuNum ++;
-                    }
-                }
-                CrypticLib.info("Loaded " + loadedMenuNum + " menu(s)");
-            } finally {
-                isReloading.set(false);
+        try {
+            int loadedMenuNum = 0;
+            //重载所有自定义页面
+            menuCreators.clear();
+            List<File> files = IOHelper.allYamlFiles(customMenuFolder);
+            if (files.isEmpty()) {
+                Craftorithm.instance().saveResource("menus/custom/example_recipe_list.yml", false);
+                files.add(new File(customMenuFolder, "example_recipe_list.yml"));
             }
-        });
+            for (File menuFile : files) {
+                boolean result = loadMenuCreatorFromConfigFile(menuFile);
+                if (result) {
+                    loadedMenuNum ++;
+                }
+            }
+            CrypticLib.info("Loaded " + loadedMenuNum + " menu(s)");
+        } finally {
+            isReloading.set(false);
+        }
     }
 
     private boolean loadMenuCreatorFromConfigFile(File menuFile) {

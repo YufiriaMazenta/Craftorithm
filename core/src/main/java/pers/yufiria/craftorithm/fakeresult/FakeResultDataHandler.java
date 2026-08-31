@@ -2,10 +2,10 @@ package pers.yufiria.craftorithm.fakeresult;
 
 import crypticlib.CrypticLib;
 import crypticlib.CrypticLibPlugin;
-import crypticlib.lifecycle.Lifecycle;
-import crypticlib.lifecycle.LifecycleRule;
+import crypticlib.lifecycle.LifecyclePhase;
+import crypticlib.lifecycle.LifecycleSchedule;
 import crypticlib.lifecycle.LifecycleTask;
-import crypticlib.lifecycle.LifecycleTaskSettings;
+import crypticlib.lifecycle.LifecycleTaskConfig;
 import crypticlib.listener.EventListener;
 import crypticlib.util.ItemHelper;
 import org.bukkit.NamespacedKey;
@@ -37,8 +37,10 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @EventListener
-@LifecycleTaskSettings(
-    rules = {@LifecycleRule(lifeCycle = Lifecycle.RELOAD)}
+@LifecycleTaskConfig(
+    schedules = {
+        @LifecycleSchedule(phase = LifecyclePhase.RELOAD)
+    }
 )
 public enum FakeResultDataHandler implements Listener, LifecycleTask {
 
@@ -190,7 +192,7 @@ public enum FakeResultDataHandler implements Listener, LifecycleTask {
     }
 
     @Override
-    public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
+    public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase lifeCycle) {
         this.recipeFakeResultMap.clear();
     }
 

@@ -3,10 +3,7 @@ package pers.yufiria.craftorithm.recipe.nms.paper;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.CrypticLibPlugin;
 import crypticlib.MinecraftVersion;
-import crypticlib.lifecycle.Lifecycle;
-import crypticlib.lifecycle.LifecycleRule;
-import crypticlib.lifecycle.LifecycleTask;
-import crypticlib.lifecycle.LifecycleTaskSettings;
+import crypticlib.lifecycle.*;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.ItemStack;
@@ -27,9 +24,7 @@ import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.Collection;
 
-@LifecycleTaskSettings(rules = {
-    @LifecycleRule(lifeCycle = Lifecycle.LOAD)
-})
+@LifecycleTaskConfig(schedules = @LifecycleSchedule(phase = LifecyclePhase.LOAD))
 public enum CraftorithmRecipeRegistry12110 implements CraftorithmRecipeRegistry, LifecycleTask {
 
     INSTANCE;
@@ -127,7 +122,7 @@ public enum CraftorithmRecipeRegistry12110 implements CraftorithmRecipeRegistry,
     }
 
     @Override
-    public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
+    public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase lifeCycle) {
         //这个版本兼容1.21.9-1.21.11
         if (CrypticLibBukkit.isPaper()) {
             REGISTRY_COMPAT.register(MinecraftVersion.V1_21_9.name(), () -> this);

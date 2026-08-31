@@ -4,10 +4,10 @@ import com.google.common.base.Preconditions;
 import crypticlib.CrypticLib;
 import crypticlib.CrypticLibPlugin;
 import crypticlib.config.BukkitConfigWrapper;
-import crypticlib.lifecycle.Lifecycle;
-import crypticlib.lifecycle.LifecycleRule;
+import crypticlib.lifecycle.LifecyclePhase;
+import crypticlib.lifecycle.LifecycleSchedule;
 import crypticlib.lifecycle.LifecycleTask;
-import crypticlib.lifecycle.LifecycleTaskSettings;
+import crypticlib.lifecycle.LifecycleTaskConfig;
 import crypticlib.util.ItemHelper;
 import crypticlib.util.MaterialHelper;
 import org.bukkit.Material;
@@ -26,14 +26,10 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-@LifecycleTaskSettings(
-    rules = {
-        @LifecycleRule(
-            lifeCycle = Lifecycle.ACTIVE, priority = 1
-        ),
-        @LifecycleRule(
-            lifeCycle = Lifecycle.RELOAD, priority = 1
-        )
+@LifecycleTaskConfig(
+    schedules = {
+        @LifecycleSchedule(phase = LifecyclePhase.ACTIVE, priority = 1),
+        @LifecycleSchedule(phase = LifecyclePhase.RELOAD, priority = 1)
     }
 )
 public enum ItemManager implements LifecycleTask {
@@ -294,8 +290,8 @@ public enum ItemManager implements LifecycleTask {
     }
 
     @Override
-    public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
-        if (lifeCycle.equals(Lifecycle.ACTIVE)) {
+    public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase lifeCycle) {
+        if (lifeCycle.equals(LifecyclePhase.ACTIVE)) {
             customFuelConfig = new BukkitConfigWrapper(Craftorithm.instance(), "custom_fuels.yml");
             itemPacksConfig = new BukkitConfigWrapper(Craftorithm.instance(), "item_packs.yml");
         }

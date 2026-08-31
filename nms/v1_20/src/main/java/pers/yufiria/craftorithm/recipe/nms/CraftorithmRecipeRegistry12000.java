@@ -2,10 +2,7 @@ package pers.yufiria.craftorithm.recipe.nms;
 
 import crypticlib.CrypticLibPlugin;
 import crypticlib.MinecraftVersion;
-import crypticlib.lifecycle.Lifecycle;
-import crypticlib.lifecycle.LifecycleRule;
-import crypticlib.lifecycle.LifecycleTask;
-import crypticlib.lifecycle.LifecycleTaskSettings;
+import crypticlib.lifecycle.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.crafting.IRecipe;
 import org.bukkit.NamespacedKey;
@@ -14,9 +11,7 @@ import org.bukkit.inventory.*;
 import pers.yufiria.craftorithm.recipe.CraftorithmRecipeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 
-@LifecycleTaskSettings(rules = {
-    @LifecycleRule(lifeCycle = Lifecycle.LOAD)
-})
+@LifecycleTaskConfig(schedules = @LifecycleSchedule(phase = LifecyclePhase.LOAD))
 public enum CraftorithmRecipeRegistry12000 implements CraftorithmRecipeRegistry, LifecycleTask {
 
     INSTANCE;
@@ -66,7 +61,7 @@ public enum CraftorithmRecipeRegistry12000 implements CraftorithmRecipeRegistry,
     }
 
     @Override
-    public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
+    public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase lifeCycle) {
         REGISTRY_COMPAT.register(MinecraftVersion.V1_20.name(), () -> this);
     }
 }

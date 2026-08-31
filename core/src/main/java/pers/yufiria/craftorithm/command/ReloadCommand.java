@@ -3,6 +3,7 @@ package pers.yufiria.craftorithm.command;
 import crypticlib.Invoker;
 import crypticlib.command.CommandInfo;
 import crypticlib.command.CommandNode;
+import crypticlib.lifecycle.LifecycleTaskConfig;
 import crypticlib.perm.PermInfo;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.Craftorithm;

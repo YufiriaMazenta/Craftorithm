@@ -5,10 +5,10 @@ import crypticlib.Invoker;
 import crypticlib.Key;
 import crypticlib.command.CommandInfo;
 import crypticlib.command.CommandNode;
-import crypticlib.lifecycle.Lifecycle;
-import crypticlib.lifecycle.LifecycleRule;
+import crypticlib.lifecycle.LifecyclePhase;
+import crypticlib.lifecycle.LifecycleSchedule;
 import crypticlib.lifecycle.LifecycleTask;
-import crypticlib.lifecycle.LifecycleTaskSettings;
+import crypticlib.lifecycle.LifecycleTaskConfig;
 import crypticlib.perm.PermInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -35,9 +35,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@LifecycleTaskSettings(
-    rules = {
-        @LifecycleRule(lifeCycle = Lifecycle.ACTIVE)
+@LifecycleTaskConfig(
+    schedules = {
+        @LifecycleSchedule(phase = LifecyclePhase.ACTIVE)
     }
 )
 public final class CreateCommand extends CommandNode implements LifecycleTask {
@@ -155,7 +155,7 @@ public final class CreateCommand extends CommandNode implements LifecycleTask {
     }
 
     @Override
-    public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
+    public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase lifeCycle) {
         registerDefRecipeCreators();
     }
 

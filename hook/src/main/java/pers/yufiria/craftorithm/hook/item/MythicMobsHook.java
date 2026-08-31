@@ -1,13 +1,9 @@
 package pers.yufiria.craftorithm.hook.item;
 
-import crypticlib.lifecycle.Lifecycle;
-import crypticlib.lifecycle.LifecycleRule;
-import crypticlib.lifecycle.LifecycleTaskSettings;
+import crypticlib.lifecycle.*;
 import pers.yufiria.craftorithm.item.ItemProvider;
 
-@LifecycleTaskSettings(rules = {
-    @LifecycleRule(lifeCycle = Lifecycle.ENABLE)
-})
+@LifecycleTaskConfig(schedules = @LifecycleSchedule(phase = LifecyclePhase.ENABLE))
 public enum MythicMobsHook implements ItemPluginHook {
 
     INSTANCE;

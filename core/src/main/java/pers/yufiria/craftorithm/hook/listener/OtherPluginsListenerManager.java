@@ -3,10 +3,10 @@ package pers.yufiria.craftorithm.hook.listener;
 import crypticlib.CrypticLib;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.CrypticLibPlugin;
-import crypticlib.lifecycle.Lifecycle;
-import crypticlib.lifecycle.LifecycleRule;
+import crypticlib.lifecycle.LifecyclePhase;
+import crypticlib.lifecycle.LifecycleSchedule;
 import crypticlib.lifecycle.LifecycleTask;
-import crypticlib.lifecycle.LifecycleTaskSettings;
+import crypticlib.lifecycle.LifecycleTaskConfig;
 import crypticlib.util.ReflectionHelper;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -29,11 +29,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-@LifecycleTaskSettings(
-    rules = {
-        @LifecycleRule(lifeCycle = Lifecycle.ACTIVE),
-        @LifecycleRule(lifeCycle = Lifecycle.RELOAD),
-        @LifecycleRule(lifeCycle = Lifecycle.DISABLE)
+@LifecycleTaskConfig(
+    schedules = {
+        @LifecycleSchedule(phase = LifecyclePhase.ACTIVE),
+        @LifecycleSchedule(phase = LifecyclePhase.RELOAD),
+        @LifecycleSchedule(phase = LifecyclePhase.DISABLE)
     }
 )
 public enum OtherPluginsListenerManager implements LifecycleTask {
@@ -196,7 +196,7 @@ public enum OtherPluginsListenerManager implements LifecycleTask {
     }
 
     @Override
-    public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
+    public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase lifeCycle) {
         switch (lifeCycle) {
             case ACTIVE -> {
                 convertOtherPluginsListeners();

@@ -1,10 +1,10 @@
 package pers.yufiria.craftorithm.ui.editor;
 
 import crypticlib.CrypticLibPlugin;
-import crypticlib.lifecycle.Lifecycle;
-import crypticlib.lifecycle.LifecycleRule;
+import crypticlib.lifecycle.LifecyclePhase;
+import crypticlib.lifecycle.LifecycleSchedule;
 import crypticlib.lifecycle.LifecycleTask;
-import crypticlib.lifecycle.LifecycleTaskSettings;
+import crypticlib.lifecycle.LifecycleTaskConfig;
 import crypticlib.ui.menu.Menu;
 import crypticlib.util.TriFunction;
 import org.bukkit.NamespacedKey;
@@ -32,11 +32,7 @@ import java.util.Optional;
  * 配方编辑器管理器
  * 管理各配方类型的编辑器注册，类似RecipeDisplayManager
  */
-@LifecycleTaskSettings(
-    rules = {
-        @LifecycleRule(lifeCycle = Lifecycle.ENABLE)
-    }
-)
+@LifecycleTaskConfig(schedules = @LifecycleSchedule(phase = LifecyclePhase.ENABLE))
 public enum RecipeEditorManager implements LifecycleTask {
 
     INSTANCE;
@@ -56,7 +52,7 @@ public enum RecipeEditorManager implements LifecycleTask {
     }
 
     @Override
-    public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
+    public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase lifeCycle) {
         registerDefaultEditors();
     }
 

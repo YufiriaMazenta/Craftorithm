@@ -1,19 +1,16 @@
 package pers.yufiria.craftorithm.hook.placeholder;
 
 import crypticlib.CrypticLibPlugin;
-import crypticlib.lifecycle.Lifecycle;
-import crypticlib.lifecycle.LifecycleRule;
-import crypticlib.lifecycle.LifecycleTask;
-import crypticlib.lifecycle.LifecycleTaskSettings;
+import crypticlib.lifecycle.*;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.hook.PluginHook;
 import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.util.Map;
 
-@LifecycleTaskSettings(rules = {
-    @LifecycleRule(lifeCycle = Lifecycle.ACTIVE),
-    @LifecycleRule(lifeCycle = Lifecycle.DISABLE)
+@LifecycleTaskConfig(schedules = {
+    @LifecycleSchedule(phase = LifecyclePhase.ACTIVE),
+    @LifecycleSchedule(phase = LifecyclePhase.DISABLE)
 })
 public enum PlaceholderAPIHook implements PluginHook, LifecycleTask {
 
@@ -39,12 +36,12 @@ public enum PlaceholderAPIHook implements PluginHook, LifecycleTask {
     }
 
     @Override
-    public void lifecycle(CrypticLibPlugin crypticLibPlugin, Lifecycle lifecycle) {
-        if (lifecycle == Lifecycle.ACTIVE) {
+    public void onLifecycle(CrypticLibPlugin crypticLibPlugin, LifecyclePhase lifecycle) {
+        if (lifecycle == LifecyclePhase.ACTIVE) {
             if (hook()) {
                 LangUtils.info(Languages.LOAD_HOOK_PLUGIN_SUCCESS, Map.of("<plugin>", pluginName()));
             }
-        } else if (lifecycle == Lifecycle.DISABLE) {
+        } else if (lifecycle == LifecyclePhase.DISABLE) {
             unhook();
         }
     }

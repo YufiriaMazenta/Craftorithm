@@ -3,10 +3,7 @@ package pers.yufiria.craftorithm.hook.protocollib;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import crypticlib.CrypticLibPlugin;
-import crypticlib.lifecycle.Lifecycle;
-import crypticlib.lifecycle.LifecycleRule;
-import crypticlib.lifecycle.LifecycleTask;
-import crypticlib.lifecycle.LifecycleTaskSettings;
+import crypticlib.lifecycle.*;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.fakeresult.FakeResultDataHandler;
@@ -15,18 +12,16 @@ import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.util.Map;
 
-@LifecycleTaskSettings(
-    rules = {
-        @LifecycleRule(lifeCycle = Lifecycle.ACTIVE),
-        @LifecycleRule(lifeCycle = Lifecycle.DISABLE)
-    }
-)
+@LifecycleTaskConfig(schedules = {
+    @LifecycleSchedule(phase = LifecyclePhase.ACTIVE),
+    @LifecycleSchedule(phase = LifecyclePhase.DISABLE)
+})
 public enum ProtocolLibHook implements PluginHook, LifecycleTask {
 
     INSTANCE;
 
     @Override
-    public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
+    public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase lifeCycle) {
         switch (lifeCycle) {
             case ACTIVE -> {
                 hook();

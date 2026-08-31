@@ -3,10 +3,10 @@ package pers.yufiria.craftorithm.migrator;
 import crypticlib.CrypticLib;
 import crypticlib.CrypticLibPlugin;
 import crypticlib.config.BukkitConfigWrapper;
-import crypticlib.lifecycle.Lifecycle;
-import crypticlib.lifecycle.LifecycleRule;
+import crypticlib.lifecycle.LifecyclePhase;
+import crypticlib.lifecycle.LifecycleSchedule;
 import crypticlib.lifecycle.LifecycleTask;
-import crypticlib.lifecycle.LifecycleTaskSettings;
+import crypticlib.lifecycle.LifecycleTaskConfig;
 import crypticlib.util.BukkitConfigHelper;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -19,9 +19,9 @@ import java.util.*;
  * <p>
  * 将 cannot_craft_items 和 blocked_crafting_lore_rules 迁移为新的 block_crafting_rules 格式
  */
-@LifecycleTaskSettings(
-    rules = {
-        @LifecycleRule(lifeCycle = Lifecycle.INIT)
+@LifecycleTaskConfig(
+    schedules = {
+        @LifecycleSchedule(phase = LifecyclePhase.INIT)
     }
 )
 public enum LegacyIngredientRestrictionMigrator implements LifecycleTask {
@@ -33,7 +33,7 @@ public enum LegacyIngredientRestrictionMigrator implements LifecycleTask {
     private static final String NEW_KEY = "ingredient_restriction_rules";
 
     @Override
-    public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
+    public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase lifeCycle) {
         BukkitConfigWrapper configWrapper = ((Craftorithm) plugin).getConfigWrapperOrCreate("config.yml");
         YamlConfiguration config = configWrapper.config();
 

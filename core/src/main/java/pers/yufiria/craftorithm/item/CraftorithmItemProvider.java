@@ -6,10 +6,10 @@ import crypticlib.CrypticLibPlugin;
 import crypticlib.MinecraftVersion;
 import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.config.node.impl.bukkit.StringListConfig;
-import crypticlib.lifecycle.Lifecycle;
-import crypticlib.lifecycle.LifecycleRule;
+import crypticlib.lifecycle.LifecyclePhase;
+import crypticlib.lifecycle.LifecycleSchedule;
 import crypticlib.lifecycle.LifecycleTask;
-import crypticlib.lifecycle.LifecycleTaskSettings;
+import crypticlib.lifecycle.LifecycleTaskConfig;
 import crypticlib.util.IOHelper;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -29,10 +29,10 @@ import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-@LifecycleTaskSettings(
-    rules = {
-        @LifecycleRule(lifeCycle = Lifecycle.ENABLE),
-        @LifecycleRule(lifeCycle = Lifecycle.RELOAD, priority = -1)
+@LifecycleTaskConfig(
+    schedules = {
+        @LifecycleSchedule(phase = LifecyclePhase.ENABLE),
+        @LifecycleSchedule(phase = LifecyclePhase.RELOAD, priority = -1)
     }
 )
 public enum CraftorithmItemProvider implements ItemPluginHook, ItemProvider, LifecycleTask {
@@ -185,8 +185,8 @@ public enum CraftorithmItemProvider implements ItemPluginHook, ItemProvider, Lif
     }
 
     @Override
-    public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
-        if (lifeCycle == Lifecycle.ENABLE) {
+    public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase lifeCycle) {
+        if (lifeCycle == LifecyclePhase.ENABLE) {
             ItemPluginHookManager.INSTANCE.addItemPluginHook(this);
         }
         //检查物品源优先级的配置里是否包含Craftorithm的物品源，如果不包含则添加到末尾

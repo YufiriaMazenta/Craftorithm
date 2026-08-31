@@ -5,10 +5,7 @@ import com.github.retrooper.packetevents.event.EventManager;
 import com.github.retrooper.packetevents.event.PacketListenerCommon;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import crypticlib.CrypticLibPlugin;
-import crypticlib.lifecycle.Lifecycle;
-import crypticlib.lifecycle.LifecycleRule;
-import crypticlib.lifecycle.LifecycleTask;
-import crypticlib.lifecycle.LifecycleTaskSettings;
+import crypticlib.lifecycle.*;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.fakeresult.FakeResultDataHandler;
 import pers.yufiria.craftorithm.hook.PluginHook;
@@ -16,12 +13,10 @@ import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.util.Map;
 
-@LifecycleTaskSettings(
-    rules = {
-        @LifecycleRule(lifeCycle = Lifecycle.ACTIVE),
-        @LifecycleRule(lifeCycle = Lifecycle.DISABLE)
-    }
-)
+@LifecycleTaskConfig(schedules = {
+    @LifecycleSchedule(phase = LifecyclePhase.ACTIVE),
+    @LifecycleSchedule(phase = LifecyclePhase.DISABLE)
+})
 public enum PacketEventsHook implements PluginHook, LifecycleTask {
 
     INSTANCE;
@@ -29,7 +24,7 @@ public enum PacketEventsHook implements PluginHook, LifecycleTask {
     private Object fakeResultPacketListenerCommon = null;
 
     @Override
-    public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
+    public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase lifeCycle) {
         switch (lifeCycle) {
             case ACTIVE -> {
                 hook();

@@ -5,10 +5,10 @@ import crypticlib.CrypticLibBukkit;
 import crypticlib.CrypticLibPlugin;
 import crypticlib.chat.BukkitMsgSender;
 import crypticlib.config.BukkitConfigWrapper;
-import crypticlib.lifecycle.Lifecycle;
-import crypticlib.lifecycle.LifecycleRule;
+import crypticlib.lifecycle.LifecyclePhase;
+import crypticlib.lifecycle.LifecycleSchedule;
 import crypticlib.lifecycle.LifecycleTask;
-import crypticlib.lifecycle.LifecycleTaskSettings;
+import crypticlib.lifecycle.LifecycleTaskConfig;
 import crypticlib.scheduler.CrypticLibRunnable;
 import crypticlib.util.IOHelper;
 import org.bukkit.Bukkit;
@@ -35,10 +35,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-@LifecycleTaskSettings(
-    rules = {
-        @LifecycleRule(lifeCycle = Lifecycle.ENABLE),
-        @LifecycleRule(lifeCycle = Lifecycle.RELOAD, priority = 2)
+@LifecycleTaskConfig(
+    schedules = {
+        @LifecycleSchedule(phase = LifecyclePhase.ENABLE),
+        @LifecycleSchedule(phase = LifecyclePhase.RELOAD, priority = 2)
     }
 )
 public enum RecipeManager implements LifecycleTask {
@@ -308,9 +308,10 @@ public enum RecipeManager implements LifecycleTask {
     public boolean disableRecipe(NamespacedKey recipeKey, boolean save) {
         if (save)
             saveDisabledRecipesData(recipeKey);
+        Recipe recipe = getRecipe(recipeKey);
         boolean result = removeRecipe(recipeKey);
         if (result) {
-            addDisabledRecipeCache(recipeKey);
+            disabledRecipesCache.add(recipe);
             serverRecipeKeys.remove(recipeKey);
         }
         return result;
@@ -337,7 +338,7 @@ public enum RecipeManager implements LifecycleTask {
         Recipe recipe = getRecipe(recipeKey);
         if (recipe == null)
             return;
-        disabledRecipesCache.add(recipe);
+
     }
 
     /**
@@ -485,7 +486,7 @@ public enum RecipeManager implements LifecycleTask {
     }
 
     @Override
-    public void lifecycle(CrypticLibPlugin plugin, Lifecycle lifeCycle) {
+    public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase lifeCycle) {
         switch (lifeCycle) {
             case ENABLE -> {
                 //注册各内置配方类型
