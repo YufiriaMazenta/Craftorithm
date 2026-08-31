@@ -62,6 +62,11 @@ public enum CraftorithmRecipeRegistry12003 implements CraftorithmRecipeRegistry,
     }
 
     @Override
+    public void updateRecipes() {
+        MinecraftServer.getServer().ae().u();
+    }
+
+    @Override
     public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase lifeCycle) {
         REGISTRY_COMPAT.register(MinecraftVersion.V1_20_3.name(), () -> this);
     }

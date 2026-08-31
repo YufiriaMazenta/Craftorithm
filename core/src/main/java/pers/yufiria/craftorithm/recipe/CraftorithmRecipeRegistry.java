@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.recipe;
 
 import crypticlib.CrypticLib;
+import crypticlib.CrypticLibBukkit;
 import crypticlib.MinecraftVersion;
 import crypticlib.compat.Compat;
 import org.bukkit.Bukkit;
@@ -71,7 +72,9 @@ public interface CraftorithmRecipeRegistry {
      * 用于给玩家更新配方列表
      */
     default void updateRecipes() {
-        Bukkit.updateRecipes();
+        if (CrypticLibBukkit.isPaper()) {
+            Bukkit.updateRecipes();
+        }
     }
 
     enum RegisterResult {

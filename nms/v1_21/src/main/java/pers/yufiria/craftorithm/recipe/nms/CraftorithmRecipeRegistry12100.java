@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.recipe.nms;
 
+import crypticlib.CrypticLibBukkit;
 import crypticlib.CrypticLibPlugin;
 import crypticlib.MinecraftVersion;
 import crypticlib.lifecycle.*;
@@ -9,6 +10,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftRecipe;
 import org.bukkit.inventory.*;
+import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.recipe.CraftorithmRecipeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 
@@ -59,6 +61,11 @@ public enum CraftorithmRecipeRegistry12100 implements CraftorithmRecipeRegistry,
         }
         MinecraftServer.getServer().aJ().addRecipe(recipeHolder);
         return RegisterResult.SUCCESS;
+    }
+
+    @Override
+    public void updateRecipes() {
+        MinecraftServer.getServer().ah().u();
     }
 
     @Override
