@@ -31,6 +31,7 @@ import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -57,6 +58,7 @@ public enum RecipeManager implements LifecycleTask {
     private final Map<String, RecipeGroup> recipeGroupMap = new ConcurrentHashMap<>();
     private Boolean supportPotionMix;
     private final AtomicBoolean isReloadingRecipeManager = new AtomicBoolean(false);
+    private volatile CompletableFuture<Void> reloadCompletion;
 
     //配方类型相关
 
@@ -114,6 +116,7 @@ public enum RecipeManager implements LifecycleTask {
             return;
         }
         isReloadingRecipeManager.set(true);
+        reloadCompletion = new CompletableFuture<>();
         resetRecipes();
         loadRecipesFromConfig(() -> {
             loadServerRecipeKeys();
@@ -122,6 +125,7 @@ public enum RecipeManager implements LifecycleTask {
                 isReloadingRecipeManager.set(false);
                 //所有操作进行完毕后，为玩家更新配方信息
                 CraftorithmRecipeRegistry.findImpl().updateRecipes();
+                reloadCompletion.complete(null);
             }, 2L);
         });
     }
@@ -499,6 +503,10 @@ public enum RecipeManager implements LifecycleTask {
 
     public boolean isReloadingRecipeManager() {
         return isReloadingRecipeManager.get();
+    }
+
+    public CompletableFuture<Void> getReloadCompletion() {
+        return reloadCompletion;
     }
 
     @Override

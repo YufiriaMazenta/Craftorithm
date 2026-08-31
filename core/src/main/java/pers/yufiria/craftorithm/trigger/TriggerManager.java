@@ -102,6 +102,8 @@ public enum TriggerManager implements LifecycleTask {
         }
         isReloading.set(true);
         try {
+            long startTime = System.currentTimeMillis();
+
             // 清理旧数据
             triggers.clear();
             triggerById.clear();
@@ -126,7 +128,8 @@ public enum TriggerManager implements LifecycleTask {
                 list.sort(Comparator.comparingInt(Trigger::priority))
             );
 
-            BukkitMsgSender.INSTANCE.info("Loaded " + count + " trigger(s)");
+            long elapsed = System.currentTimeMillis() - startTime;
+            BukkitMsgSender.INSTANCE.info("Loaded " + count + " trigger(s) in " + elapsed + "ms");
         } finally {
             isReloading.set(false);
         }

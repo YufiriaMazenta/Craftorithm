@@ -93,6 +93,7 @@ public enum CustomMenuManager implements LifecycleTask {
         }
         isReloading.set(true);
         try {
+            long startTime = System.currentTimeMillis();
             int loadedMenuNum = 0;
             //重载所有自定义页面
             menuCreators.clear();
@@ -107,7 +108,8 @@ public enum CustomMenuManager implements LifecycleTask {
                     loadedMenuNum ++;
                 }
             }
-            CrypticLib.info("Loaded " + loadedMenuNum + " menu(s)");
+            long elapsed = System.currentTimeMillis() - startTime;
+            CrypticLib.info("Loaded " + loadedMenuNum + " menu(s) in " + elapsed + "ms");
         } finally {
             isReloading.set(false);
         }
