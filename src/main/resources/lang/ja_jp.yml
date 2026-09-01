@@ -22,6 +22,7 @@ command:
         success: '<prefix> &aカスタム燃料を削除しました。'
         failed_not_exist: '<prefix> &cカスタム燃料の削除に失敗しました。理由：この燃料は存在しません。'
   reload:
+    reloading: '<prefix> &aプラグインをリロード中です。お待ちください'
     success: '<prefix> &aプラグインをリロードしました。'
     exception: '<prefix> &cプラグインのリロード中にエラーが発生しました。コンソールを確認してください。'
     recipe_manager_reloading: '<prefix> &cレシピマネージャーは現在リロード中です。しばらくしてからもう一度お試しください。'

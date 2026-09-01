@@ -22,6 +22,7 @@ command:
         success: '<prefix> &aÖzel yakıt başarıyla kaldırıldı.'
         failed_not_exist: '<prefix> &cÖzel yakıt kaldırılamadı. Neden: Bu yakıt mevcut değil.'
   reload:
+    reloading: '<prefix> &aEklenti yeniden yükleniyor, lütfen bekleyin'
     success: '<prefix> &aEklenti başarıyla yeniden yüklendi!'
     exception: '<prefix> &cEklenti yeniden yüklenirken bir hata oluştu. Lütfen konsolu kontrol edin.'
     recipe_manager_reloading: '<prefix> &cTarif yöneticisi şu anda yeniden yükleniyor. Lütfen daha sonra tekrar deneyin.'

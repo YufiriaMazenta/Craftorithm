@@ -22,6 +22,7 @@ public class Languages {
     public static final StringLangEntry COMMAND_ITEM_FUEL_ADD_FAILED_EXIST = new StringLangEntry("command.item.fuel.add.failed_exist");
     public static final StringLangEntry COMMAND_ITEM_FUEL_REMOVE_SUCCESS = new StringLangEntry("command.item.fuel.remove.success");
     public static final StringLangEntry COMMAND_ITEM_FUEL_REMOVE_FAILED_NOT_EXIST = new StringLangEntry("command.item.fuel.remove.failed_not_exist");
+    public static final StringLangEntry COMMAND_RELOAD_RELOADING = new StringLangEntry("command.reload.reloading");
     public static final StringLangEntry COMMAND_RELOAD_SUCCESS = new StringLangEntry("command.reload.success");
     public static final StringLangEntry COMMAND_RELOAD_EXCEPTION = new StringLangEntry("command.reload.exception");
     public static final StringLangEntry COMMAND_RELOAD_RECIPE_MANAGER_RELOADING = new StringLangEntry("command.reload.recipe_manager_reloading");

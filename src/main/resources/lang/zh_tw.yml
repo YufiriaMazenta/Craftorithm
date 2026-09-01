@@ -22,6 +22,7 @@ command:
         success: '<prefix> &a自訂燃料刪除成功。'
         failed_not_exist: '<prefix> &c自訂燃料刪除失敗，原因：此燃料不存在。'
   reload:
+    reloading: '<prefix> &a插件正在重載中，請稍等'
     success: '<prefix> &a插件重載成功。'
     exception: '<prefix> &c插件重載過程中發生錯誤，請查看控制台。'
     recipe_manager_reloading: '<prefix> &c配方管理器正在重載中，請稍後再試。'

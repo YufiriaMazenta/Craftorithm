@@ -22,6 +22,7 @@ command:
         success: '<prefix> &aCarburant personnalisé supprimé avec succès.'
         failed_not_exist: '<prefix> &cÉchec de la suppression du carburant personnalisé. Raison : ce carburant n''existe pas.'
   reload:
+    reloading: '<prefix> &aLe plugin est en cours de rechargement, veuillez patienter'
     success: '<prefix> &aPlugin rechargé avec succès.'
     exception: '<prefix> &cUne erreur est survenue lors du rechargement du plugin. Veuillez consulter la console.'
     recipe_manager_reloading: '<prefix> &cLe gestionnaire de recettes est en cours de rechargement. Veuillez réessayer plus tard.'

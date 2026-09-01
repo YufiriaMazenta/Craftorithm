@@ -22,6 +22,7 @@ command:
         success: '<prefix> &aCombustible personalizado eliminado con éxito.'
         failed_not_exist: '<prefix> &cError al eliminar combustible personalizado. Motivo: este combustible no existe.'
   reload:
+    reloading: '<prefix> &aEl plugin se está recargando, por favor espera'
     success: '<prefix> &a¡Plugin recargado con éxito!'
     exception: '<prefix> &cSe produjo un error durante la recarga del plugin. Por favor, revisa la consola.'
     recipe_manager_reloading: '<prefix> &cEl gestor de recetas se está recargando. Por favor, inténtalo de nuevo más tarde.'

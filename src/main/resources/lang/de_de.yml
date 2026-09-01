@@ -22,6 +22,7 @@ command:
         success: '<prefix> &aBenutzerdefinierter Brennstoff erfolgreich entfernt.'
         failed_not_exist: '<prefix> &cBenutzerdefinierter Brennstoff konnte nicht entfernt werden. Grund: Dieser Brennstoff existiert nicht.'
   reload:
+    reloading: '<prefix> &aPlugin wird neu geladen, bitte warten'
     success: '<prefix> &aPlugin erfolgreich neu geladen.'
     exception: '<prefix> &cBeim Neuladen des Plugins ist ein Fehler aufgetreten. Bitte überprüfe die Konsole.'
     recipe_manager_reloading: '<prefix> &cDer Rezeptmanager wird gerade neu geladen. Bitte versuche es später erneut.'

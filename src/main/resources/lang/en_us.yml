@@ -22,6 +22,7 @@ command:
         success: '<prefix> &aCustom fuel removed successfully.'
         failed_not_exist: '<prefix> &cFailed to remove custom fuel. Reason: This fuel does not exist.'
   reload:
+    reloading: '<prefix> &aPlugin is reloading, please wait'
     success: '<prefix> &aPlugin reloaded successfully.'
     exception: '<prefix> &cAn error occurred during plugin reload, please check the console.'
     recipe_manager_reloading: '<prefix> &cRecipe manager is currently reloading, please try again later.'

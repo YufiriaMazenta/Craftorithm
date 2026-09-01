@@ -43,6 +43,7 @@ public final class ReloadCommand extends CommandNode implements LifecycleTask {
         }
         try {
             reloadSenderUuid = invoker.uniqueId();
+            LangUtils.sendLang(invoker, Languages.COMMAND_RELOAD_RELOADING);
             Craftorithm.instance().reloadPlugin();
         } catch (Exception e) {
             e.printStackTrace();
