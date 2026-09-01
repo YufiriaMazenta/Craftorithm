@@ -55,6 +55,7 @@ public final class ReloadCommand extends CommandNode implements LifecycleTask {
                 @Override
                 public void run() {
                     reloading.set(false);
+                    reloadSenderUuid = null;
                 }
             };
             reloadTimeoutCallback.asyncLater(1200);
@@ -73,12 +74,12 @@ public final class ReloadCommand extends CommandNode implements LifecycleTask {
     public void onLifecycle(CrypticLibPlugin crypticLibPlugin, LifecyclePhase lifecyclePhase) {
         RecipeManager.INSTANCE.getReloadCompletion().join();
         CommandSender sender = getReloadSender();
-        reloadSenderUuid = null;
         //如果正确重载了，取消超时任务
         if (reloadTimeoutCallback != null) {
             reloadTimeoutCallback.cancel();
             reloadTimeoutCallback = null;
         }
+        reloadSenderUuid = null;
         reloading.set(false);
         if (sender != null) {
             LangUtils.sendLang(sender, Languages.COMMAND_RELOAD_SUCCESS);
