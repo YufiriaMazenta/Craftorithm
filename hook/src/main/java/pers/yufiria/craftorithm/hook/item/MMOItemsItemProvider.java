@@ -2,6 +2,8 @@ package pers.yufiria.craftorithm.hook.item;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -42,7 +44,13 @@ public enum MMOItemsItemProvider implements ItemProvider {
         int index = itemId.indexOf(":");
         String type = itemId.substring(0, index);
         String id = itemId.substring(index + 1);
-        return MMOItems.plugin.getItem(type, id);
+        Type itemType = MMOItems.plugin.getTypes().get(type);
+        if (itemType == null)
+            return null;
+        MMOItem mmoItem = MMOItems.plugin.getMMOItem(itemType, id);
+        if (mmoItem == null)
+            return null;
+        return mmoItem.newBuilder().buildSilently();
     }
 
 
