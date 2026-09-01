@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.command;
 
-import crypticlib.CrypticLibBukkit;
 import crypticlib.CrypticLibPlugin;
 import crypticlib.Invoker;
 import crypticlib.command.CommandInfo;
@@ -10,13 +9,17 @@ import crypticlib.lifecycle.LifecycleSchedule;
 import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskConfig;
 import crypticlib.perm.PermInfo;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.util.List;
+import java.util.UUID;
 
 @LifecycleTaskConfig(schedules = @LifecycleSchedule(
     phase = LifecyclePhase.RELOAD,
@@ -26,7 +29,7 @@ import java.util.List;
 public final class ReloadCommand extends CommandNode implements LifecycleTask {
 
     public static final ReloadCommand INSTANCE = new ReloadCommand();
-    private volatile Invoker reloadInvoker;
+    private volatile @Nullable UUID reloadSenderUuid;
 
     private ReloadCommand() {
         super(CommandInfo.builder("reload").permission(new PermInfo("craftorithm.command.reload")).build());
@@ -39,7 +42,7 @@ public final class ReloadCommand extends CommandNode implements LifecycleTask {
             return;
         }
         try {
-            reloadInvoker = invoker;
+            reloadSenderUuid = invoker.uniqueId();
             Craftorithm.instance().reloadPlugin();
         } catch (Exception e) {
             e.printStackTrace();
@@ -54,16 +57,20 @@ public final class ReloadCommand extends CommandNode implements LifecycleTask {
 
     @Override
     public void onLifecycle(CrypticLibPlugin crypticLibPlugin, LifecyclePhase lifecyclePhase) {
-        // 等待 RecipeManager 异步配方加载完成（当前已在异步线程，阻塞不会影响主线程）
         RecipeManager.INSTANCE.getReloadCompletion().join();
-        // 确保消息在主线程发送
-        CrypticLibBukkit.scheduler().sync(() -> {
-            Invoker invoker = reloadInvoker;
-            reloadInvoker = null;
-            if (invoker != null) {
-                LangUtils.sendLang(invoker, Languages.COMMAND_RELOAD_SUCCESS);
-            }
-        });
+        CommandSender sender = getReloadSender();
+        reloadSenderUuid = null;
+        if (sender != null) {
+            LangUtils.sendLang(sender, Languages.COMMAND_RELOAD_SUCCESS);
+        }
+    }
+
+    private @Nullable CommandSender getReloadSender() {
+        UUID uuid = reloadSenderUuid;
+        if (uuid == null || uuid.equals(Invoker.CONSOLE_UUID)) {
+            return Bukkit.getConsoleSender();
+        }
+        return Bukkit.getPlayer(uuid);
     }
 
 }
