@@ -25,7 +25,6 @@ command:
     reloading: '<prefix> &aPlugin wird neu geladen, bitte warten'
     success: '<prefix> &aPlugin erfolgreich neu geladen.'
     exception: '<prefix> &cBeim Neuladen des Plugins ist ein Fehler aufgetreten. Bitte überprüfe die Konsole.'
-    recipe_manager_reloading: '<prefix> &cDer Rezeptmanager wird gerade neu geladen. Bitte versuche es später erneut.'
   remove:
     success: '<prefix> &aRezept erfolgreich entfernt.'
     not_exist: '<prefix> &cRezept existiert nicht.'

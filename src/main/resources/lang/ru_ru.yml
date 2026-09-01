@@ -25,7 +25,6 @@ command:
     reloading: '<prefix> &aПлагин загружается, подождите'
     success: '<prefix> &aПлагин успешно перезагружен.'
     exception: '<prefix> &cПри перезагрузке плагина произошла ошибка. Проверьте консоль.'
-    recipe_manager_reloading: '<prefix> &cМенеджер рецептов сейчас перезагружается. Попробуйте позже.'
   remove:
     success: '<prefix> &aРецепт успешно удалён.'
     not_exist: '<prefix> &cРецепт не существует.'

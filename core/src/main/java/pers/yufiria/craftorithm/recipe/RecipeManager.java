@@ -33,12 +33,11 @@ import java.io.File;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @LifecycleTaskConfig(
     schedules = {
         @LifecycleSchedule(phase = LifecyclePhase.ENABLE),
-        @LifecycleSchedule(phase = LifecyclePhase.RELOAD, priority = 2)
+        @LifecycleSchedule(phase = LifecyclePhase.RELOAD, priority = 2, isAsync = true)
     }
 )
 public enum RecipeManager implements LifecycleTask {
@@ -57,7 +56,6 @@ public enum RecipeManager implements LifecycleTask {
     private final Set<NamespacedKey> serverRecipeKeys = ConcurrentHashMap.newKeySet();
     private final Map<String, RecipeGroup> recipeGroupMap = new ConcurrentHashMap<>();
     private Boolean supportPotionMix;
-    private final AtomicBoolean isReloadingRecipeManager = new AtomicBoolean(false);
     private volatile CompletableFuture<Void> reloadCompletion;
 
     //配方类型相关
@@ -112,17 +110,12 @@ public enum RecipeManager implements LifecycleTask {
 
     //配方加载相关
     public void reloadRecipeManager() {
-        if (isReloadingRecipeManager.get()) {
-            return;
-        }
-        isReloadingRecipeManager.set(true);
         reloadCompletion = new CompletableFuture<>();
         resetRecipes();
         loadRecipesFromConfig(() -> {
             loadServerRecipeKeys();
             reloadDisabledRecipes();
             CrypticLibBukkit.scheduler().syncLater(() -> {
-                isReloadingRecipeManager.set(false);
                 //所有操作进行完毕后，为玩家更新配方信息
                 CraftorithmRecipeRegistry.findImpl().updateRecipes();
                 reloadCompletion.complete(null);
@@ -543,10 +536,6 @@ public enum RecipeManager implements LifecycleTask {
         return supportPotionMix;
     }
 
-    public boolean isReloadingRecipeManager() {
-        return isReloadingRecipeManager.get();
-    }
-
     public CompletableFuture<Void> getReloadCompletion() {
         return reloadCompletion;
     }
@@ -559,7 +548,9 @@ public enum RecipeManager implements LifecycleTask {
                 regDefaultRecipeTypes();
             }
             case RELOAD -> {
-                reloadRecipeManager();
+                CrypticLibBukkit.scheduler().sync(() -> {
+                    reloadRecipeManager();
+                });
             }
         }
     }

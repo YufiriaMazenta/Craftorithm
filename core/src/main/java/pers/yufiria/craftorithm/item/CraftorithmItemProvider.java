@@ -32,7 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @LifecycleTaskConfig(
     schedules = {
         @LifecycleSchedule(phase = LifecyclePhase.ENABLE),
-        @LifecycleSchedule(phase = LifecyclePhase.RELOAD, priority = -1)
+        @LifecycleSchedule(phase = LifecyclePhase.RELOAD, priority = -1, isAsync = true)
     }
 )
 public enum CraftorithmItemProvider implements ItemPluginHook, ItemProvider, LifecycleTask {

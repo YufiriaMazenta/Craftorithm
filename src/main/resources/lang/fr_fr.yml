@@ -25,7 +25,6 @@ command:
     reloading: '<prefix> &aLe plugin est en cours de rechargement, veuillez patienter'
     success: '<prefix> &aPlugin rechargé avec succès.'
     exception: '<prefix> &cUne erreur est survenue lors du rechargement du plugin. Veuillez consulter la console.'
-    recipe_manager_reloading: '<prefix> &cLe gestionnaire de recettes est en cours de rechargement. Veuillez réessayer plus tard.'
   remove:
     success: '<prefix> &aRecette supprimée avec succès.'
     not_exist: '<prefix> &cLa recette n''existe pas.'

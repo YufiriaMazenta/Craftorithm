@@ -54,7 +54,6 @@ public enum TriggerManager implements LifecycleTask {
     private final Map<TriggerType, Boolean> triggerTypeMatchAllMap = new ConcurrentHashMap<>();
     // 冷却管理
     private final TriggerCooldown cooldownManager = TriggerCooldown.INSTANCE;
-    private final AtomicBoolean isReloading = new AtomicBoolean(false);
 
     // ---- 类型注册 ----
 
@@ -97,42 +96,34 @@ public enum TriggerManager implements LifecycleTask {
      * 从 triggers 文件夹加载所有触发器
      */
     public void reloadTriggers() {
-        if (isReloading.get()) {
+        long startTime = System.currentTimeMillis();
+
+        // 清理旧数据
+        triggers.clear();
+        triggerById.clear();
+        cooldownManager.clear();
+        hasTriggerRecipeKeys.clear();
+        triggerTypeMatchAllMap.clear();
+
+        if (!TRIGGER_FOLDER.exists()) {
+            TRIGGER_FOLDER.mkdirs();
             return;
         }
-        isReloading.set(true);
-        try {
-            long startTime = System.currentTimeMillis();
 
-            // 清理旧数据
-            triggers.clear();
-            triggerById.clear();
-            cooldownManager.clear();
-            hasTriggerRecipeKeys.clear();
-            triggerTypeMatchAllMap.clear();
+        List<File> triggerFiles = IOHelper.allYamlFiles(TRIGGER_FOLDER);
+        int count = 0;
 
-            if (!TRIGGER_FOLDER.exists()) {
-                TRIGGER_FOLDER.mkdirs();
-                return;
-            }
-
-            List<File> triggerFiles = IOHelper.allYamlFiles(TRIGGER_FOLDER);
-            int count = 0;
-
-            for (File file : triggerFiles) {
-                count += loadTriggersFromConfigFile(file);
-            }
-
-            // 按 priority 排序
-            triggers.values().forEach(list ->
-                list.sort(Comparator.comparingInt(Trigger::priority))
-            );
-
-            long elapsed = System.currentTimeMillis() - startTime;
-            BukkitMsgSender.INSTANCE.info("Loaded " + count + " trigger(s) in " + elapsed + "ms");
-        } finally {
-            isReloading.set(false);
+        for (File file : triggerFiles) {
+            count += loadTriggersFromConfigFile(file);
         }
+
+        // 按 priority 排序
+        triggers.values().forEach(list ->
+            list.sort(Comparator.comparingInt(Trigger::priority))
+        );
+
+        long elapsed = System.currentTimeMillis() - startTime;
+        BukkitMsgSender.INSTANCE.info("Loaded " + count + " trigger(s) in " + elapsed + "ms");
     }
 
     private int loadTriggersFromConfigFile(File file) {

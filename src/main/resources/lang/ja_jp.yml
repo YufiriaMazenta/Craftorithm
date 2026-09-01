@@ -25,7 +25,6 @@ command:
     reloading: '<prefix> &aプラグインをリロード中です。お待ちください'
     success: '<prefix> &aプラグインをリロードしました。'
     exception: '<prefix> &cプラグインのリロード中にエラーが発生しました。コンソールを確認してください。'
-    recipe_manager_reloading: '<prefix> &cレシピマネージャーは現在リロード中です。しばらくしてからもう一度お試しください。'
   remove:
     success: '<prefix> &aレシピを削除しました。'
     not_exist: '<prefix> &cレシピが存在しません。'

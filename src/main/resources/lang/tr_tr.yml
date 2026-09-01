@@ -25,7 +25,6 @@ command:
     reloading: '<prefix> &aEklenti yeniden yükleniyor, lütfen bekleyin'
     success: '<prefix> &aEklenti başarıyla yeniden yüklendi!'
     exception: '<prefix> &cEklenti yeniden yüklenirken bir hata oluştu. Lütfen konsolu kontrol edin.'
-    recipe_manager_reloading: '<prefix> &cTarif yöneticisi şu anda yeniden yükleniyor. Lütfen daha sonra tekrar deneyin.'
   remove:
     success: '<prefix> &aTarif başarıyla kaldırıldı.'
     not_exist: '<prefix> &cTarif mevcut değil.'

@@ -38,7 +38,6 @@ public enum CustomMenuManager implements LifecycleTask {
 
     private final Map<String, Function<Player, Menu>> menuCreators = new ConcurrentHashMap<>();
     private File customMenuFolder;
-    private final AtomicBoolean isReloading = new AtomicBoolean(false);
 
     /**
      * 为某玩家打开一个菜单
@@ -88,31 +87,23 @@ public enum CustomMenuManager implements LifecycleTask {
     }
 
     public void reloadMenus() {
-        if (isReloading.get()) {
-            return;
+        long startTime = System.currentTimeMillis();
+        int loadedMenuNum = 0;
+        //重载所有自定义页面
+        menuCreators.clear();
+        List<File> files = IOHelper.allYamlFiles(customMenuFolder);
+        if (files.isEmpty()) {
+            Craftorithm.instance().saveResource("menus/custom/example_recipe_list.yml", false);
+            files.add(new File(customMenuFolder, "example_recipe_list.yml"));
         }
-        isReloading.set(true);
-        try {
-            long startTime = System.currentTimeMillis();
-            int loadedMenuNum = 0;
-            //重载所有自定义页面
-            menuCreators.clear();
-            List<File> files = IOHelper.allYamlFiles(customMenuFolder);
-            if (files.isEmpty()) {
-                Craftorithm.instance().saveResource("menus/custom/example_recipe_list.yml", false);
-                files.add(new File(customMenuFolder, "example_recipe_list.yml"));
+        for (File menuFile : files) {
+            boolean result = loadMenuCreatorFromConfigFile(menuFile);
+            if (result) {
+                loadedMenuNum ++;
             }
-            for (File menuFile : files) {
-                boolean result = loadMenuCreatorFromConfigFile(menuFile);
-                if (result) {
-                    loadedMenuNum ++;
-                }
-            }
-            long elapsed = System.currentTimeMillis() - startTime;
-            CrypticLib.info("Loaded " + loadedMenuNum + " menu(s) in " + elapsed + "ms");
-        } finally {
-            isReloading.set(false);
         }
+        long elapsed = System.currentTimeMillis() - startTime;
+        CrypticLib.info("Loaded " + loadedMenuNum + " menu(s) in " + elapsed + "ms");
     }
 
     private boolean loadMenuCreatorFromConfigFile(File menuFile) {

@@ -25,7 +25,6 @@ command:
     reloading: '<prefix> &aPlugin is reloading, please wait'
     success: '<prefix> &aPlugin reloaded successfully.'
     exception: '<prefix> &cAn error occurred during plugin reload, please check the console.'
-    recipe_manager_reloading: '<prefix> &cRecipe manager is currently reloading, please try again later.'
   remove:
     success: '<prefix> &aRecipe removed successfully.'
     not_exist: '<prefix> &cRecipe does not exist.'

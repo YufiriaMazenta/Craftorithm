@@ -7,6 +7,7 @@ import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
+import pers.yufiria.craftorithm.command.ReloadCommand;
 import pers.yufiria.craftorithm.hook.item.ItemPluginHook;
 import pers.yufiria.craftorithm.hook.item.ItemPluginHookManager;
 import pers.yufiria.craftorithm.item.CraftorithmItemProvider;
@@ -242,8 +243,8 @@ public enum CraftorithmAPI {
      * 检查配方管理器是否正在重载
      * @return 是否正在重载
      */
-    public boolean isReloadingRecipeManager() {
-        return RecipeManager.INSTANCE.isReloadingRecipeManager();
+    public boolean isReloading() {
+        return ReloadCommand.INSTANCE.isReloading();
     }
 
 }
