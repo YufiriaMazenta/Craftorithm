@@ -79,8 +79,8 @@ public final class ReloadCommand extends CommandNode implements LifecycleTask {
             reloadTimeoutCallback.cancel();
             reloadTimeoutCallback = null;
         }
+        reloading.set(false);
         if (sender != null) {
-            reloading.set(false);
             LangUtils.sendLang(sender, Languages.COMMAND_RELOAD_SUCCESS);
         }
     }
