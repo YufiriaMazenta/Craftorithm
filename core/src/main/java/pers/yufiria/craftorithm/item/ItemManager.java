@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @LifecycleTaskConfig(
     schedules = {
         @LifecycleSchedule(phase = LifecyclePhase.ACTIVE, priority = 1),
-        @LifecycleSchedule(phase = LifecyclePhase.RELOAD, priority = 1)
+        @LifecycleSchedule(phase = LifecyclePhase.RELOAD, priority = 1, isAsync = true)
     }
 )
 public enum ItemManager implements LifecycleTask {

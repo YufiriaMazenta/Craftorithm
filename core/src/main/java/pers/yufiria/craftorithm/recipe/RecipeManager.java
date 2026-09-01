@@ -56,7 +56,7 @@ public enum RecipeManager implements LifecycleTask {
     private final Set<NamespacedKey> serverRecipeKeys = ConcurrentHashMap.newKeySet();
     private final Map<String, RecipeGroup> recipeGroupMap = new ConcurrentHashMap<>();
     private Boolean supportPotionMix;
-    private volatile CompletableFuture<Void> reloadCompletion;
+    private volatile CompletableFuture<Void> reloadCompletion = null;
 
     //配方类型相关
 
@@ -110,7 +110,6 @@ public enum RecipeManager implements LifecycleTask {
 
     //配方加载相关
     public void reloadRecipeManager() {
-        reloadCompletion = new CompletableFuture<>();
         resetRecipes();
         loadRecipesFromConfig(() -> {
             loadServerRecipeKeys();
@@ -118,7 +117,9 @@ public enum RecipeManager implements LifecycleTask {
             CrypticLibBukkit.scheduler().syncLater(() -> {
                 //所有操作进行完毕后，为玩家更新配方信息
                 CraftorithmRecipeRegistry.findImpl().updateRecipes();
-                reloadCompletion.complete(null);
+                if (reloadCompletion != null) {
+                    reloadCompletion.complete(null);
+                }
             }, 2L);
         });
     }
@@ -548,9 +549,8 @@ public enum RecipeManager implements LifecycleTask {
                 regDefaultRecipeTypes();
             }
             case RELOAD -> {
-                CrypticLibBukkit.scheduler().sync(() -> {
-                    reloadRecipeManager();
-                });
+                reloadCompletion = new CompletableFuture<>();
+                CrypticLibBukkit.scheduler().sync(this::reloadRecipeManager);
             }
         }
     }
