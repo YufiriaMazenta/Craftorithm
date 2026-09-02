@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.ui.editor;
 
+import crypticlib.CrypticLib;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.config.BukkitConfigWrapper;
@@ -19,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
+import pers.yufiria.craftorithm.recipe.ParsedRecipe;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.ui.BackableMenu;
 import pers.yufiria.craftorithm.ui.recipeBook.BackIcon;
@@ -110,9 +112,15 @@ public abstract class RecipeEditorMenu extends StoredMenu implements BackableMen
             configWrapper.saveConfig();
             configWrapper.reloadConfig();
             String recipeId = recipeKey.getKey();
+            String recipeFileName = RecipeManager.INSTANCE.getRecipeFileNameByKey(recipeKey);
             RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeId, false);
+            ParsedRecipe parsedRecipe = RecipeManager.INSTANCE.parseRecipeFromConfig(recipeFileName, configWrapper);
+            if (parsedRecipe == null) {
+                CrypticLib.info("&cFailed to load recipe " + recipeFileName);
+                return;
+            }
             CrypticLibBukkit.scheduler().syncLater(() -> {
-                RecipeManager.INSTANCE.loadRecipeFromConfig(recipeId, configWrapper, true);
+                RecipeManager.INSTANCE.registerParsedRecipe(parsedRecipe, true);
                 if (callback != null) {
                     callback.run();
                 }

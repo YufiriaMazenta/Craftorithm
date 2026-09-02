@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.ui.creator.vanillaSmelting;
 
+import crypticlib.CrypticLib;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.conversation.Conversation;
@@ -21,6 +22,7 @@ import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
+import pers.yufiria.craftorithm.recipe.ParsedRecipe;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.ui.SmeltingMenuType;
@@ -239,9 +241,15 @@ public class VanillaSmeltingCreator extends RecipeCreator {
                     recipeConfig.saveConfig();
                     recipeConfig.reloadConfig();
 
+                    ParsedRecipe parsedRecipe = RecipeManager.INSTANCE.parseRecipeFromConfig(recipeFileName, recipeConfig);
+                    if (parsedRecipe == null) {
+                        CrypticLib.info("&cFailed to load recipe " + recipeFileName);
+                        return;
+                    }
+
                     CrypticLibBukkit.scheduler().sync(() -> {
                         // 6. 加载配方到RecipeManager
-                        boolean loadResult = RecipeManager.INSTANCE.loadRecipeFromConfig(recipeFileName, recipeConfig, true);
+                        boolean loadResult = RecipeManager.INSTANCE.registerParsedRecipe(parsedRecipe, true);
                         if (loadResult) {
                             LangUtils.sendLang(
                                 event.getWhoClicked(),
