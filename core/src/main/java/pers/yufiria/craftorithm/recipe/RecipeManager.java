@@ -47,11 +47,8 @@ public enum RecipeManager implements LifecycleTask {
     public final String PLUGIN_RECIPE_NAMESPACE = "craftorithm";
     private final BukkitConfigWrapper disabledRecipesConfigWrapper = new BukkitConfigWrapper(Craftorithm.instance(), "disabled_recipes.yml");
     private final Map<String, RecipeType> recipeTypes = new ConcurrentHashMap<>();
-    private final Map<NamespacedKey, Recipe> craftorithmRecipes = new ConcurrentHashMap<>();
-    private final Map<NamespacedKey, BukkitConfigWrapper> recipeConfigWrapperMap = new ConcurrentHashMap<>();
+    private final Map<NamespacedKey, ParsedRecipe> craftorithmRecipes = new ConcurrentHashMap<>();
     private final Map<String, NamespacedKey> recipeFileNameToKeyMap = new ConcurrentHashMap<>();
-    private final Map<NamespacedKey, String> recipeKeyToFileNameMap = new ConcurrentHashMap<>();
-    private final Map<NamespacedKey, Long> recipeCreateTimeMap = new ConcurrentHashMap<>();
     private final Map<NamespacedKey, Recipe> disabledRecipes = new ConcurrentHashMap<>();
     private final Set<NamespacedKey> serverRecipeKeys = ConcurrentHashMap.newKeySet();
     private final Map<String, RecipeGroup> recipeGroupMap = new ConcurrentHashMap<>();
@@ -131,16 +128,13 @@ public enum RecipeManager implements LifecycleTask {
      */
     public void resetRecipes() {
         //删除所有由插件添加的配方
-        craftorithmRecipes.forEach((recipeKey, recipe) -> {
-            RecipeType recipeType = getRecipeType(recipe);
+        craftorithmRecipes.forEach((recipeKey, parsed) -> {
+            RecipeType recipeType = parsed.recipeType();
             recipeType.recipeRegister().unregisterRecipe(recipeKey, false);
         });
         craftorithmRecipes.clear();
         serverRecipeKeys.clear();
-        recipeCreateTimeMap.clear();
         recipeFileNameToKeyMap.clear();
-        recipeKeyToFileNameMap.clear();
-        recipeConfigWrapperMap.clear();
         recipeGroupMap.clear();
 
         //重置所有配方的结果处理器
@@ -217,9 +211,14 @@ public enum RecipeManager implements LifecycleTask {
             BukkitMsgSender.INSTANCE.info("&eLoad recipe " + recipeFileName + "(" + recipeId + ") failed");
             return null;
         }
+        NamespacedKey recipeKey = getRecipeKey(recipe);
+        if (recipeKey == null) {
+            BukkitMsgSender.INSTANCE.info("&eRecipe " + recipeFileName + "(" + recipeId + ") has no valid NamespacedKey");
+            return null;
+        }
         File recipeFile = configWrapper.configFile();
         long createTime = recipeFile.exists() ? recipeFile.lastModified() : System.currentTimeMillis();
-        return new ParsedRecipe(recipeFileName, recipeId, recipe, recipeType, configWrapper, createTime);
+        return new ParsedRecipe(recipeFileName, recipeKey, recipe, recipeType, configWrapper, createTime);
     }
 
     public boolean registerParsedRecipe(ParsedRecipe parsed, boolean updateRecipes) {
@@ -227,11 +226,10 @@ public enum RecipeManager implements LifecycleTask {
         RecipeType recipeType = parsed.recipeType();
         BukkitConfigWrapper configWrapper = parsed.configWrapper();
         YamlConfiguration recipeConfig = configWrapper.config();
-        String recipeFileName = parsed.recipeName();
-        String recipeId = parsed.recipeId();
+        String recipeFileName = parsed.recipeFileName();
+        NamespacedKey recipeKey = parsed.recipeKey();
 
         RecipeRegister recipeRegister = recipeType.recipeRegister();
-        NamespacedKey recipeKey = Objects.requireNonNull(getRecipeKey(recipe));
         RecipeLoadFromConfigEvent recipeLoadFromConfigEvent = new RecipeLoadFromConfigEvent(
             recipe,
             recipeKey,
@@ -244,12 +242,9 @@ public enum RecipeManager implements LifecycleTask {
         }
         boolean result = recipeLoadFromConfigEvent.recipeRegister().registerRecipe(recipeLoadFromConfigEvent.recipe(), updateRecipes, recipeConfig);
         if (result) {
-            craftorithmRecipes.put(recipeKey, recipe);
+            craftorithmRecipes.put(recipeKey, parsed);
             serverRecipeKeys.add(recipeKey);
-            recipeConfigWrapperMap.put(recipeKey, configWrapper);
             recipeFileNameToKeyMap.put(recipeFileName, recipeKey);
-            recipeKeyToFileNameMap.put(recipeKey, recipeFileName);
-            recipeCreateTimeMap.put(recipeKey, parsed.createTime());
             if (recipeConfig.contains("group")) {
                 String groupId = recipeConfig.getString("group");
                 if (recipeGroupMap.containsKey(groupId)) {
@@ -261,7 +256,7 @@ public enum RecipeManager implements LifecycleTask {
                 }
             }
         } else {
-            BukkitMsgSender.INSTANCE.info("&eRegister recipe " + recipeFileName + "(" + recipeId + ") failed");
+            BukkitMsgSender.INSTANCE.info("&eRegister recipe " + recipeFileName + "(" + recipeKey + ") failed");
         }
         return result;
     }
@@ -317,11 +312,11 @@ public enum RecipeManager implements LifecycleTask {
      * 根据给定NamespacedKey获取配方实例,会从插件配方和服务器配方中寻找
      */
     public @Nullable Recipe getRecipe(NamespacedKey recipeKey) {
-        Recipe recipe = craftorithmRecipes.get(recipeKey);
-        if (recipe == null) {
-            return Bukkit.getRecipe(recipeKey);
+        ParsedRecipe parsed = craftorithmRecipes.get(recipeKey);
+        if (parsed != null) {
+            return parsed.recipe();
         }
-        return recipe;
+        return Bukkit.getRecipe(recipeKey);
     }
 
     @Contract("null -> null")
@@ -404,16 +399,14 @@ public enum RecipeManager implements LifecycleTask {
         NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeId);
         boolean result = removeRecipe(recipeKey);
         if (result) {
-            craftorithmRecipes.remove(recipeKey);
+            ParsedRecipe removed = craftorithmRecipes.remove(recipeKey);
             serverRecipeKeys.remove(recipeKey);
-            recipeCreateTimeMap.remove(recipeKey);
-            String removedFileName = recipeKeyToFileNameMap.remove(recipeKey);
-            if (removedFileName != null) {
-                recipeFileNameToKeyMap.remove(removedFileName);
-            }
-            if (recipeConfigWrapperMap.containsKey(recipeKey) && deleteFile) {
-                BukkitConfigWrapper removed = recipeConfigWrapperMap.remove(recipeKey);
-                CrypticLibBukkit.scheduler().async(removed::deleteConfigFile);
+            if (removed != null) {
+                recipeFileNameToKeyMap.remove(removed.recipeFileName());
+                if (deleteFile) {
+                    BukkitConfigWrapper configWrapper = removed.configWrapper();
+                    CrypticLibBukkit.scheduler().async(configWrapper::deleteConfigFile);
+                }
             }
         }
         return result;
@@ -445,45 +438,28 @@ public enum RecipeManager implements LifecycleTask {
         return recipeGroupMap.get(groupId);
     }
 
-    /**
-     * 通过配方文件名查找配方的NamespacedKey
-     * @param recipeFileName 配方文件名
-     * @return 配方的NamespacedKey, 如果不存在则返回null
-     */
     public @Nullable NamespacedKey getRecipeKeyByFileName(String recipeFileName) {
         return recipeFileNameToKeyMap.get(recipeFileName);
     }
 
-    /**
-     * 通过配方的NamespacedKey查找配方文件名
-     * @param recipeKey 配方的NamespacedKey
-     * @return 配方文件名, 如果不存在则返回null
-     */
     public @Nullable String getRecipeFileNameByKey(NamespacedKey recipeKey) {
-        return recipeKeyToFileNameMap.get(recipeKey);
+        ParsedRecipe parsed = craftorithmRecipes.get(recipeKey);
+        return parsed != null ? parsed.recipeFileName() : null;
     }
 
-    /**
-     * 获取配方的创建时间
-     * @param recipeKey 配方的NamespacedKey
-     * @return 创建时间戳(毫秒), 如果不存在则返回null
-     */
     public @Nullable Long getRecipeCreateTime(NamespacedKey recipeKey) {
-        return recipeCreateTimeMap.get(recipeKey);
+        ParsedRecipe parsed = craftorithmRecipes.get(recipeKey);
+        return parsed != null ? parsed.createTime() : null;
     }
 
-    /**
-     * 获取指定类型的所有Craftorithm配方
-     * @param type 配方类型
-     * @return 该类型的所有配方的NamespacedKey列表
-     */
     public List<Map.Entry<NamespacedKey, Recipe>> getRecipesByType(RecipeType type) {
         return craftorithmRecipes.entrySet().stream()
-            .filter(entry -> type.isThisType(entry.getValue()))
+            .filter(entry -> type.isThisType(entry.getValue().recipe()))
+            .map(entry -> Map.entry(entry.getKey(), entry.getValue().recipe()))
             .toList();
     }
 
-    public Map<NamespacedKey, Recipe> craftorithmRecipes() {
+    public Map<NamespacedKey, ParsedRecipe> craftorithmRecipes() {
         return craftorithmRecipes;
     }
 
@@ -496,7 +472,8 @@ public enum RecipeManager implements LifecycleTask {
     }
 
     public @Nullable BukkitConfigWrapper getRecipeConfigWrapper(NamespacedKey recipeKey) {
-        return recipeConfigWrapperMap.get(recipeKey);
+        ParsedRecipe parsed = craftorithmRecipes.get(recipeKey);
+        return parsed != null ? parsed.configWrapper() : null;
     }
 
     /**
@@ -505,10 +482,10 @@ public enum RecipeManager implements LifecycleTask {
      * @param recipeKey 配方key
      */
     public @Nullable YamlConfiguration getRecipeConfig(NamespacedKey recipeKey) {
-        BukkitConfigWrapper recipeConfigWrapper = recipeConfigWrapperMap.get(recipeKey);
-        if (recipeConfigWrapper == null)
+        ParsedRecipe parsed = craftorithmRecipes.get(recipeKey);
+        if (parsed == null)
             return null;
-        return recipeConfigWrapper.config();
+        return parsed.configWrapper().config();
     }
 
     public List<String> getRecipeGroups() {
@@ -613,7 +590,7 @@ public enum RecipeManager implements LifecycleTask {
                         recipeNum ++;
                     }
                 } catch (Throwable throwable) {
-                    LangUtils.info(Languages.RECIPE_LOAD_EXCEPTION, CollectionsUtils.newStringHashMap("<recipe_name>", parsed.recipeName()));
+                    LangUtils.info(Languages.RECIPE_LOAD_EXCEPTION, CollectionsUtils.newStringHashMap("<recipe_name>", parsed.recipeFileName()));
                     throwable.printStackTrace();
                 }
             }

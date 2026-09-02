@@ -11,6 +11,7 @@ import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.exception.UnsupportedVersionException;
 import pers.yufiria.craftorithm.metrics.BStats;
+import pers.yufiria.craftorithm.recipe.ParsedRecipe;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.script.ActionModule;
@@ -68,8 +69,8 @@ public final class Craftorithm extends BukkitPlugin implements LifecycleTask {
         bStats.addCustomChart(new BStats.SingleLineChart("recipes", () -> RecipeManager.INSTANCE.craftorithmRecipes().size()));
         bStats.addCustomChart(new BStats.AdvancedPie("recipe_type_count", () -> {
             Map<String, Integer> map = new HashMap<>();
-            for (Recipe recipe : RecipeManager.INSTANCE.craftorithmRecipes().values()) {
-                RecipeType type = RecipeManager.INSTANCE.getRecipeType(recipe);
+            for (ParsedRecipe parsed : RecipeManager.INSTANCE.craftorithmRecipes().values()) {
+                RecipeType type = parsed.recipeType();
                 map.merge(type.typeKey(), 1, Integer::sum);
             }
             return map;

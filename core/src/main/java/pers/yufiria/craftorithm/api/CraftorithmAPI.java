@@ -116,7 +116,9 @@ public enum CraftorithmAPI {
      * @return 配方映射副本
      */
     public @NotNull Map<NamespacedKey, Recipe> getCraftorithmRecipes() {
-        return Collections.unmodifiableMap(RecipeManager.INSTANCE.craftorithmRecipes());
+        Map<NamespacedKey, Recipe> result = new HashMap<>();
+        RecipeManager.INSTANCE.craftorithmRecipes().forEach((key, parsed) -> result.put(key, parsed.recipe()));
+        return Collections.unmodifiableMap(result);
     }
 
     /**
