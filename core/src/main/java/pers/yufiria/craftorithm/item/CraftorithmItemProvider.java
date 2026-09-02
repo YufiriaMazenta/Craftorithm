@@ -159,10 +159,6 @@ public enum CraftorithmItemProvider implements ItemPluginHook, ItemProvider, Lif
         return new HashMap<>(idItemMap);
     }
 
-    public Map<ItemBucketKey, Map<String, ItemStack>> itemBuckets() {
-        return itemBuckets;
-    }
-
     public Map<String, BukkitConfigWrapper> itemConfigFileMap() {
         return new HashMap<>(itemConfigFileMap);
     }
