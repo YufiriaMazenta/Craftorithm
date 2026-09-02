@@ -161,24 +161,22 @@ public enum RecipeManager implements LifecycleTask {
                 if (!mkdirResult)
                     return;
             }
-            List<BukkitConfigWrapper> recipeConfigs = IOHelper.allYamlFiles(RECIPE_FILE_FOLDER)
-                .stream()
-                .map(BukkitConfigWrapper::new)
-                .toList();
             long parseStart = System.currentTimeMillis();
-            List<ParsedRecipe> parsedRecipes = new ArrayList<>();
-            for (BukkitConfigWrapper configWrapper : recipeConfigs) {
-                String recipeName = deriveRecipeName(configWrapper);
-                try {
-                    ParsedRecipe parsed = parseRecipeFromConfig(recipeName, configWrapper);
-                    if (parsed != null) {
-                        parsedRecipes.add(parsed);
+            List<ParsedRecipe> parsedRecipes = IOHelper.allYamlFiles(RECIPE_FILE_FOLDER)
+                .stream()
+                .map(file -> {
+                    BukkitConfigWrapper recipeConfig = new BukkitConfigWrapper(file);
+                    String recipeName = deriveRecipeName(recipeConfig);
+                    try {
+                        return parseRecipeFromConfig(recipeName, recipeConfig);
+                    } catch (Throwable throwable) {
+                        LangUtils.info(Languages.RECIPE_LOAD_EXCEPTION, CollectionsUtils.newStringHashMap("<recipe_name>", recipeName));
+                        throwable.printStackTrace();
+                        return null;
                     }
-                } catch (Throwable throwable) {
-                    LangUtils.info(Languages.RECIPE_LOAD_EXCEPTION, CollectionsUtils.newStringHashMap("<recipe_name>", recipeName));
-                    throwable.printStackTrace();
-                }
-            }
+                })
+                .filter(Objects::nonNull)
+                .toList();
             long parseElapsed = System.currentTimeMillis() - parseStart;
             CrypticLib.info("Parsed " + parsedRecipes.size() + " recipes in " + parseElapsed + "ms");
             new RecipeRegisterTask(
