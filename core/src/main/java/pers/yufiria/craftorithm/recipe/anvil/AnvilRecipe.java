@@ -4,6 +4,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.item.ItemManager;
+import pers.yufiria.craftorithm.item.exception.ItemNotFoundException;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.CustomRecipe;
 import pers.yufiria.craftorithm.recipe.choice.ItemIdStackRecipeChoice;
@@ -58,7 +59,7 @@ public class AnvilRecipe implements CustomRecipe {
 
     @Override
     public @NotNull ItemStack getResult() {
-        return ItemManager.INSTANCE.matchItem(result).orElseThrow();
+        return ItemManager.INSTANCE.matchItem(result).orElseThrow(() -> new ItemNotFoundException("Anvil recipe result not found: " + result));
     }
 
     public NamespacedItemIdStack result() {

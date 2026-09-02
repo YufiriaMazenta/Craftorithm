@@ -23,6 +23,7 @@ import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.menu.editor.AnvilEditorConfig;
 import pers.yufiria.craftorithm.item.ItemManager;
+import pers.yufiria.craftorithm.item.exception.ItemNotFoundException;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
@@ -86,7 +87,8 @@ public final class AnvilEditor extends RecipeEditorMenu {
         inventory.setItem(ADDITION_SLOT, anvilRecipe.addition().getItemStack().clone());
 
         // result - NamespacedItemIdStack, 用ItemManager.matchItem获取ItemStack
-        ItemStack resultItem = ItemManager.INSTANCE.matchItem(anvilRecipe.result()).orElseThrow();
+        ItemStack resultItem = ItemManager.INSTANCE.matchItem(anvilRecipe.result())
+            .orElseThrow(() -> new ItemNotFoundException("Anvil recipe result not found: " + anvilRecipe.result()));
         inventory.setItem(RESULT_SLOT, resultItem.clone());
     }
 

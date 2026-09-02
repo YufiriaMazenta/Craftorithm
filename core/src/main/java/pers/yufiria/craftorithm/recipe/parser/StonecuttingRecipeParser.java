@@ -8,6 +8,7 @@ import org.bukkit.inventory.StonecuttingRecipe;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.item.ItemManager;
+import pers.yufiria.craftorithm.item.exception.ItemNotFoundException;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 
@@ -21,7 +22,7 @@ public enum StonecuttingRecipeParser implements VanillaRecipeParser<Stonecutting
     public @NotNull StonecuttingRecipe parse(String recipeName, ConfigurationSection recipeConfig) {
         try {
             String resultId = recipeConfig.getString("result");
-            ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId)).orElseThrow();
+            ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId)).orElseThrow(() -> new ItemNotFoundException("Item not found: " + resultId));
             NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeName);
             String ingredientId = recipeConfig.getString("ingredient");
             RecipeChoice ingredient = choiceParser().parse(ingredientId);

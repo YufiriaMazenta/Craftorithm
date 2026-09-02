@@ -7,6 +7,7 @@ import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.recipe.CraftingBookCategory;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.item.ItemManager;
+import pers.yufiria.craftorithm.item.exception.ItemNotFoundException;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 
@@ -21,7 +22,7 @@ public enum ShapelessRecipeParser implements VanillaRecipeParser<ShapelessRecipe
     public ShapelessRecipe parse(String recipeName, ConfigurationSection recipeConfig) {
         try {
             String resultId = recipeConfig.getString("result");
-            ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId)).orElseThrow();
+            ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId)).orElseThrow(() -> new ItemNotFoundException("Item not found: " + resultId));
             NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeName);
             ShapelessRecipe recipe = new ShapelessRecipe(recipeKey, result);
             List<String> ingredientKeys = recipeConfig.getStringList("ingredients");

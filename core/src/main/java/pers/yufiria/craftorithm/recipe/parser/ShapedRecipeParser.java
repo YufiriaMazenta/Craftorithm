@@ -7,6 +7,7 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.recipe.CraftingBookCategory;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.item.ItemManager;
+import pers.yufiria.craftorithm.item.exception.ItemNotFoundException;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 
@@ -20,7 +21,7 @@ public enum ShapedRecipeParser implements VanillaRecipeParser<ShapedRecipe> {
     public ShapedRecipe parse(String recipeName, ConfigurationSection recipeConfig) {
         try {
             String resultId = recipeConfig.getString("result");
-            ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId)).orElseThrow();
+            ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId)).orElseThrow(() -> new ItemNotFoundException("Item not found: " + resultId));
             NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeName);
             ShapedRecipe recipe = new ShapedRecipe(recipeKey, result);
             recipe.shape(recipeConfig.getStringList("shape").toArray(new String[0]));

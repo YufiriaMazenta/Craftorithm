@@ -7,6 +7,7 @@ import org.bukkit.inventory.RecipeChoice;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.item.ItemManager;
+import pers.yufiria.craftorithm.item.exception.ItemNotFoundException;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.brewing.BrewingRecipe;
@@ -30,7 +31,7 @@ public enum BrewingRecipeParser implements RecipeParser<BrewingRecipe> {
         }
         try {
             String resultId = recipeConfig.getString("result");
-            ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId)).orElseThrow();
+            ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId)).orElseThrow(() -> new ItemNotFoundException("Item not found: " + resultId));
             NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeName);
             String inputId = recipeConfig.getString("input");
             RecipeChoice input = choiceParser().parse(inputId);
