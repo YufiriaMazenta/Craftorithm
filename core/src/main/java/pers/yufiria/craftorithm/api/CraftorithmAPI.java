@@ -18,6 +18,7 @@ import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.trigger.TriggerContext;
 import pers.yufiria.craftorithm.trigger.TriggerManager;
+import pers.yufiria.craftorithm.trigger.TriggerType;
 
 import java.util.*;
 
@@ -223,12 +224,12 @@ public enum CraftorithmAPI {
 
     /**
      * 触发指定类型的触发器
-     * @param typeKey 触发器类型
+     * @param triggerType 触发器类型
      * @param context 触发上下文
      * @return 是否有触发器被执行
      */
-    public boolean fireTrigger(@NotNull String typeKey, @NotNull TriggerContext context) {
-        return TriggerManager.INSTANCE.fire(typeKey, context);
+    public boolean fireTrigger(@NotNull TriggerType triggerType, @NotNull TriggerContext context) {
+        return TriggerManager.INSTANCE.fire(triggerType, context);
     }
 
     // ==================== Utility API ====================

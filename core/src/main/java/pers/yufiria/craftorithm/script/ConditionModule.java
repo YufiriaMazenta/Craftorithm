@@ -73,16 +73,16 @@ public enum ConditionModule implements ScriptModule {
         return idStackOpt.map(namespacedItemIdStack -> ScriptValue.of(namespacedItemIdStack.itemId().toString())).orElseGet(ScriptValue::nil);
     }
 
-    private ScriptValue perm(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
-        if (args.length < 1) return ScriptValue.of(false);
+    private ScriptValue.Bool perm(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
+        if (args.length < 1) return ScriptValue.Bool.of(false);
         String perm = args[0].asString();
         Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(PlayerUtils.getPlayerIdFromInvoker(ctx.invoker()));
         if (playerOpt.isEmpty()) {
-            return ScriptValue.nil();
+            return ScriptValue.Bool.of(false);
         }
         Player player = playerOpt.get();
         perm = BukkitTextProcessor.placeholder(player, perm);
-        return ScriptValue.of(player.hasPermission(perm));
+        return ScriptValue.Bool.of(player.hasPermission(perm));
     }
 
     private ScriptValue papi(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
@@ -150,24 +150,24 @@ public enum ConditionModule implements ScriptModule {
         return ScriptValue.of(playerBiome.equalsIgnoreCase(expected));
     }
 
-    private ScriptValue inWater(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
+    private ScriptValue.Bool inWater(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(PlayerUtils.getPlayerIdFromInvoker(ctx.invoker()));
         if (playerOpt.isEmpty()) {
-            return ScriptValue.nil();
+            return ScriptValue.Bool.of(false);
         }
         Player player = playerOpt.get();
         Block block = player.getLocation().getBlock();
-        return ScriptValue.of(block.getType() == Material.WATER);
+        return ScriptValue.Bool.of(block.getType() == Material.WATER);
     }
 
     @SuppressWarnings({"all", "removal"})
-    private ScriptValue inRain(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
+    private ScriptValue.Bool inRain(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(PlayerUtils.getPlayerIdFromInvoker(ctx.invoker()));
         if (playerOpt.isEmpty()) {
-            return ScriptValue.nil();
+            return ScriptValue.Bool.of(false);
         }
         Player player = playerOpt.get();
-        return ScriptValue.of(player.getLocation().getBlock().getBiome().name().contains("RAIN")
+        return ScriptValue.Bool.of(player.getLocation().getBlock().getBiome().name().contains("RAIN")
             || player.getWorld().hasStorm());
     }
 

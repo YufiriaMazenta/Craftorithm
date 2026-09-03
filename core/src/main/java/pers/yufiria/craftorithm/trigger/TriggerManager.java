@@ -255,6 +255,10 @@ public enum TriggerManager implements LifecycleTask {
 
     // ---- 触发执行 ----
 
+    public List<Trigger> getTriggers(TriggerType triggerType) {
+        return triggers.get(triggerType.typeKey());
+    }
+
     /**
      * 获取指定类型的所有触发器
      */
@@ -266,9 +270,9 @@ public enum TriggerManager implements LifecycleTask {
      * 触发 Prepare 阶段：评估条件，条件不通过的数量即为需要拒绝的数量
      * 如果配方的某个触发器正在冷却, 那么最少返回1
      */
-    public int firePrepare(String typeKey, TriggerContext context) {
+    public int firePrepare(TriggerType triggerType, TriggerContext context) {
         int denied = 0;
-        for (Trigger trigger : getTriggers(typeKey)) {
+        for (Trigger trigger : getTriggers(triggerType)) {
             if (!trigger.matches(context.recipeKey())) continue;
             if (cooldownManager.isOnCooldown(trigger, context.playerUniqueId())) {
                 denied ++;
@@ -284,9 +288,9 @@ public enum TriggerManager implements LifecycleTask {
     /**
      * 触发实际事件阶段：评估条件，通过则执行 actions
      */
-    public boolean fire(String typeKey, TriggerContext context) {
+    public boolean fire(TriggerType triggerType, TriggerContext context) {
         boolean fired = false;
-        for (Trigger trigger : getTriggers(typeKey)) {
+        for (Trigger trigger : getTriggers(triggerType)) {
             if (!trigger.matches(context.recipeKey())) continue;
             if (cooldownManager.isOnCooldown(trigger, context.playerUniqueId())) continue;
             if (!trigger.evaluateConditions(context)) continue;

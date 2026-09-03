@@ -37,7 +37,7 @@ public enum CraftingTriggerHandler implements Listener {
         }
         TriggerContext ctx = CraftTriggerTypes.CRAFTING.extractPrepareContext(event);
         if (ctx == null) return;
-        int denied = TriggerManager.INSTANCE.firePrepare(CraftTriggerTypes.CRAFTING.typeKey(), ctx);
+        int denied = TriggerManager.INSTANCE.firePrepare(CraftTriggerTypes.CRAFTING, ctx);
         if (denied > 0) {
             event.getInventory().setItem(0, null);
         }
@@ -70,7 +70,7 @@ public enum CraftingTriggerHandler implements Listener {
                 return;
             }
         }
-        TriggerManager.INSTANCE.fire(CraftTriggerTypes.CRAFTING.typeKey(), ctx);
+        TriggerManager.INSTANCE.fire(CraftTriggerTypes.CRAFTING, ctx);
     }
 
 }

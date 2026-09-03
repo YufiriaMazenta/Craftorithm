@@ -23,8 +23,11 @@ public enum CrafterListener implements Listener {
 
     INSTANCE;
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOW)
     public void checkCanCraft(CrafterCraftEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
         BlockState blockState = event.getBlock().getState();
         if (!(blockState instanceof Crafter crafter))
             return;

@@ -107,7 +107,7 @@ public enum AnvilRecipeHandler implements Listener {
             //只有存在配方对应触发器的时候，才进行触发器检查
             TriggerContext ctx = CraftTriggerTypes.ANVIL.extractPrepareContext(event);
             if (ctx != null) {
-                int denied = TriggerManager.INSTANCE.firePrepare(CraftTriggerTypes.ANVIL.typeKey(), ctx);
+                int denied = TriggerManager.INSTANCE.firePrepare(CraftTriggerTypes.ANVIL, ctx);
                 if (denied > 0) {
                     return;
                 }
@@ -187,7 +187,7 @@ public enum AnvilRecipeHandler implements Listener {
             //只有存在配方对应触发器的时候，才进行触发器检查
             ctx = CraftTriggerTypes.ANVIL.extractContext(event);
             if (ctx != null) {
-                int denied = TriggerManager.INSTANCE.firePrepare(CraftTriggerTypes.ANVIL.typeKey(), ctx);
+                int denied = TriggerManager.INSTANCE.firePrepare(CraftTriggerTypes.ANVIL, ctx);
                 if (denied > 0) {
                     return;
                 }
@@ -311,7 +311,7 @@ public enum AnvilRecipeHandler implements Listener {
             int craftNum = (event.getClick() == ClickType.SHIFT_LEFT || event.getClick() == ClickType.SHIFT_RIGHT)
                 ? canCraftNum : 1;
             ctx.setVariable("craft_num", ScriptValue.of(craftNum));
-            TriggerManager.INSTANCE.fire(CraftTriggerTypes.ANVIL.typeKey(), ctx);
+            TriggerManager.INSTANCE.fire(CraftTriggerTypes.ANVIL, ctx);
         }
 
         //更新页面

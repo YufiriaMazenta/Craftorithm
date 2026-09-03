@@ -37,7 +37,7 @@ public enum SmithingTriggerHandler implements Listener {
         }
         TriggerContext ctx = CraftTriggerTypes.SMITHING.extractPrepareContext(event);
         if (ctx == null) return;
-        int denied = TriggerManager.INSTANCE.firePrepare(CraftTriggerTypes.SMITHING.typeKey(), ctx);
+        int denied = TriggerManager.INSTANCE.firePrepare(CraftTriggerTypes.SMITHING, ctx);
         if (denied > 0) {
             event.setResult(null);
             event.getInventory().setResult(null);
@@ -67,7 +67,7 @@ public enum SmithingTriggerHandler implements Listener {
                 return;
             }
         }
-        TriggerManager.INSTANCE.fire(CraftTriggerTypes.SMITHING.typeKey(), ctx);
+        TriggerManager.INSTANCE.fire(CraftTriggerTypes.SMITHING, ctx);
     }
 
 }

@@ -55,6 +55,7 @@ public enum CraftTriggerTypes implements TriggerType {
                 if (matrix.length > 0) {
                     addIngredientsFromMatrix(ctx, matrix);
                 }
+                ctx.setVariable("is_crafter", ScriptValue.of(false));
                 ctx.setVariable("craft_num", ScriptValue.of(RecipeUtils.calculateVanillaCraftNum(craftItemEvent)));
                 ctx.setVariable("event", ScriptValue.of(
                     event,
@@ -86,6 +87,7 @@ public enum CraftTriggerTypes implements TriggerType {
                     event,
                     ReflectPropertyResolver.INSTANCE
                 ));
+                ctx.setVariable("is_crafter", ScriptValue.of(false));
                 ItemStack[] matrix = prepareItemCraftEvent.getInventory().getMatrix();
                 if (matrix.length > 0) {
                     addIngredientsFromMatrix(ctx, matrix);

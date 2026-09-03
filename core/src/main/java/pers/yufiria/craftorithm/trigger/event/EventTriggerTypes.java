@@ -388,9 +388,9 @@ public enum EventTriggerTypes {
             TriggerContext ctx = type.extractContext(event);
             if (ctx == null) return;
             if (async) {
-                CrypticLibBukkit.scheduler().sync(() -> TriggerManager.INSTANCE.fire(type.typeKey(), ctx));
+                CrypticLibBukkit.scheduler().sync(() -> TriggerManager.INSTANCE.fire(type, ctx));
             } else {
-                TriggerManager.INSTANCE.fire(type.typeKey(), ctx);
+                TriggerManager.INSTANCE.fire(type, ctx);
             }
         };
         Bukkit.getPluginManager().registerEvent(
