@@ -15,7 +15,7 @@ on_craft_diamond_sword:
     - 'tell("&a合成成功！")'
     - 'give_level(100)'
   priority: 0
-  enabled: true
+  enable: true #兼容之前的旧版键名enabled
   cooldown: 5
   per_player: true
 on_join:

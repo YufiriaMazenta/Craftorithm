@@ -28,7 +28,7 @@ public class Trigger {
     private final CompiledScript conditionScript;  // 条件脚本（正向，成立=放行）
     private final CompiledScript actionScript;     // 动作脚本
     private final int priority;
-    private final boolean enabled;
+    private final boolean enable;
     private final long cooldownMillis;
     private final boolean perPlayer;
 
@@ -39,7 +39,7 @@ public class Trigger {
         CompiledScript conditionScript,
         CompiledScript actionScript,
         int priority,
-        boolean enabled,
+        boolean enable,
         long cooldownMillis,
         boolean perPlayer
     ) {
@@ -49,7 +49,7 @@ public class Trigger {
         this.conditionScript = conditionScript;
         this.actionScript = actionScript;
         this.priority = priority;
-        this.enabled = enabled;
+        this.enable = enable;
         this.cooldownMillis = cooldownMillis;
         this.perPlayer = perPlayer;
     }
@@ -58,7 +58,7 @@ public class Trigger {
     public String typeKey() { return typeKey; }
     public List<NamespacedKey> recipes() { return recipes; }
     public int priority() { return priority; }
-    public boolean enabled() { return enabled; }
+    public boolean enabled() { return enable; }
     public long cooldownMillis() { return cooldownMillis; }
     public boolean perPlayer() { return perPlayer; }
 

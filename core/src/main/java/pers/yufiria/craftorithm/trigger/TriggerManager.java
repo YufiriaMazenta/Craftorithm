@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.trigger;
 
+import crypticlib.CrypticLib;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.CrypticLibPlugin;
 import crypticlib.chat.BukkitMsgSender;
@@ -243,13 +244,21 @@ public enum TriggerManager implements LifecycleTask {
         CompiledScript actionScript = ScriptEngine.INSTANCE.compile(fullId + "_act", actSource);
 
         int priority = section.getInt("priority", 0);
-        boolean enabled = section.getBoolean("enabled", true);
+        boolean enable;
+        if (section.isBoolean("enable")) {
+            enable = section.getBoolean("enable", true);
+        } else if (section.isBoolean("enabled")) {
+            //用于兼容旧版配置
+            enable = section.getBoolean("enabled", true);
+        } else {
+            enable = true;
+        }
         long cooldown = (long) (section.getDouble("cooldown", 0) * 1000);
         boolean perPlayer = section.getBoolean("per_player", true);
 
         return new Trigger(
             fullId, typeKey, recipeKeys, conditionScript, actionScript,
-            priority, enabled, cooldown, perPlayer
+            priority, enable, cooldown, perPlayer
         );
     }
 
