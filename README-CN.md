@@ -13,8 +13,8 @@
 </p>
 
 <p align="center">
-  <b>Minecraft 合成配方管理插件</b><br>
-  <sub>丰富的配方类型支持 · 触发器系统 · 脚本引擎 · GUI 界面 · 物品插件集成</sub>
+  <b>高级 Minecraft 配方管理插件</b><br>
+  <sub>广泛配方支持 · 触发器系统 · 脚本引擎 · GUI 界面 · 物品插件集成</sub>
 </p>
 
 <p align="center">
@@ -22,6 +22,13 @@
 </p>
 
 ---
+
+## 为什么选择 Craftorithm
+
+- 基于其他插件提供的物品 ID 进行匹配，物品改名、增加附魔，甚至更改物品类型，都不会影响合成
+- 通过注入原版合成系统的方式实现功能，性能远超基于监听器实现配方功能的插件，且支持所有的原版功能
+- 可禁用原版或其他插件的配方
+- 结果处理器、触发器、自定义箱子菜单等附加强大自定义功能
 
 ## 功能特性
 
@@ -60,7 +67,7 @@
 
 ## 结果处理器
 
-1.13.0.0 版本新增结果处理器系统，支持在合成时为配方结果添加额外效果：
+结果处理器是用于对合成结果进行额外修改的功能，例如：
 
 ```yaml
 result_processors:
@@ -78,12 +85,6 @@ result_processors:
 
 支持 `copy_from_source` / `add` / `merge_source` / `remove` 四种策略，可对附魔、属性、Lore、物品标志等多种组件进行操作。
 
-## 外部插件适配
-
-<p align="center">
-  <img src="https://github.com/YufiriaMazenta/picx-images-hosting/raw/master/integration-cn.99u2kbi8xk.png" width="100%" alt="适配插件">
-</p>
-
 ## 文档
 
 **[完整文档](https://yufiriamazenta.github.io/Craftorithm-Docs/)**
@@ -97,37 +98,7 @@ result_processors:
 | [物品系统](https://yufiriamazenta.github.io/Craftorithm-Docs/item/) | 自定义物品与外部插件集成 |
 | [配置文件](https://yufiriamazenta.github.io/Craftorithm-Docs/config/) | 配置项说明 |
 | [UI 系统](https://yufiriamazenta.github.io/Craftorithm-Docs/ui/) | GUI 与自定义菜单 |
-| [API 文档](https://yufiriamazenta.github.io/Craftorithm-Docs/api/) | 开发者接口 |
-
-## API
-
-Craftorithm 提供 Java API 供二次开发：
-
-```xml
-<repository>
-  <id>jitpack.io</id>
-  <url>https://jitpack.io</url>
-</repository>
-
-<dependency>
-  <groupId>com.github.YufiriaMazenta</groupId>
-  <artifactId>Craftorithm</artifactId>
-  <version>Tag</version>
-</dependency>
-```
-
-```java
-import pers.yufiria.craftorithm.api.CraftorithmAPI;
-
-CraftorithmAPI api = Craftorithm.api();
-```
 
 ## bStats
 
 ![bStats](https://bstats.org/signatures/bukkit/Craftorithm.svg)
-
-## 下载
-
-[![SpigotMC](https://img.shields.io/badge/SpigotMC-Craftorithm-orange?style=for-the-badge&logo=spigotmc)](https://www.spigotmc.org/resources/craftorithm-customized-crafting-management-plugin-1-13-1-20-folia-supported.108429/)
-[![Modrinth](https://img.shields.io/badge/Modrinth-Craftorithm-green?style=for-the-badge&logo=modrinth)](https://modrinth.com/plugin/craftorithm)
-[![GitHub](https://img.shields.io/badge/GitHub-Releases-blue?style=for-the-badge&logo=github)](https://github.com/YufiriaMazenta/Craftorithm/releases)

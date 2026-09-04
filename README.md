@@ -23,6 +23,13 @@
 
 ---
 
+## Why Craftorithm
+
+- Matches items by other plugin-provided item ID — renaming, adding enchantments, or even changing item types won't affect crafting
+- Implements functionality by injecting into the vanilla crafting system — performance far surpasses plugins that rely on event listeners, with full support for all vanilla features
+- Disable recipes from vanilla or other plugins
+- Result processors, triggers, custom chest menus, and other powerful customization features
+
 ## Features
 
 <!-- Feature Cards -->
@@ -60,7 +67,7 @@ Place ingredients and result items in the GUI, then click confirm. Recipes are a
 
 ## Result Processors
 
-Version 1.13.0.0 introduces the Result Processors system for adding effects to recipe results:
+Result processors allow you to apply additional modifications to crafting results, for example:
 
 ```yaml
 result_processors:
@@ -78,12 +85,6 @@ result_processors:
 
 Supports `copy_from_source` / `add` / `merge_source` / `remove` strategies for various component types including enchantments, attributes, lore, item flags, and more.
 
-## Compatible Plugins List
-
-<p align="center">
-  <img src="https://github.com/YufiriaMazenta/picx-images-hosting/raw/master/integration-en.b9mc30drt.png" width="100%" alt="Compatible Plugins">
-</p>
-
 ## Documentation
 
 **[Full Documentation](https://yufiriamazenta.github.io/Craftorithm-Docs/en/)**
@@ -97,37 +98,7 @@ Supports `copy_from_source` / `add` / `merge_source` / `remove` strategies for v
 | [Item System](https://yufiriamazenta.github.io/Craftorithm-Docs/en/item/) | Custom items and external plugins |
 | [Configuration](https://yufiriamazenta.github.io/Craftorithm-Docs/en/config/) | Configuration reference |
 | [UI System](https://yufiriamazenta.github.io/Craftorithm-Docs/en/ui/) | GUI and custom menus |
-| [API Docs](https://yufiriamazenta.github.io/Craftorithm-Docs/en/api/) | Developer API |
-
-## API
-
-Craftorithm provides a Java API for secondary development:
-
-```xml
-<repository>
-  <id>jitpack.io</id>
-  <url>https://jitpack.io</url>
-</repository>
-
-<dependency>
-  <groupId>com.github.YufiriaMazenta</groupId>
-  <artifactId>Craftorithm</artifactId>
-  <version>Tag</version>
-</dependency>
-```
-
-```java
-import pers.yufiria.craftorithm.api.CraftorithmAPI;
-
-CraftorithmAPI api = Craftorithm.api();
-```
 
 ## bStats
 
 ![bStats](https://bstats.org/signatures/bukkit/Craftorithm.svg)
-
-## Download
-
-[![SpigotMC](https://img.shields.io/badge/SpigotMC-Craftorithm-orange?style=for-the-badge&logo=spigotmc)](https://www.spigotmc.org/resources/craftorithm-customized-crafting-management-plugin-1-13-1-20-folia-supported.108429/)
-[![Modrinth](https://img.shields.io/badge/Modrinth-Craftorithm-green?style=for-the-badge&logo=modrinth)](https://modrinth.com/plugin/craftorithm)
-[![GitHub](https://img.shields.io/badge/GitHub-Releases-blue?style=for-the-badge&logo=github)](https://github.com/YufiriaMazenta/Craftorithm/releases)
