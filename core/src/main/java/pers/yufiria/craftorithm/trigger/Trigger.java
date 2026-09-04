@@ -58,7 +58,7 @@ public class Trigger {
     public String typeKey() { return typeKey; }
     public List<NamespacedKey> recipes() { return recipes; }
     public int priority() { return priority; }
-    public boolean enabled() { return enable; }
+    public boolean isEnable() { return enable; }
     public long cooldownMillis() { return cooldownMillis; }
     public boolean perPlayer() { return perPlayer; }
 

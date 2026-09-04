@@ -1,7 +1,5 @@
 package pers.yufiria.craftorithm.trigger;
 
-import crypticlib.CrypticLib;
-import crypticlib.CrypticLibBukkit;
 import crypticlib.CrypticLibPlugin;
 import crypticlib.chat.BukkitMsgSender;
 import crypticlib.config.BukkitConfigWrapper;
@@ -22,7 +20,6 @@ import pers.yufiria.craftorithm.trigger.event.EventTriggerTypes;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 /**
@@ -159,7 +156,7 @@ public enum TriggerManager implements LifecycleTask {
                     this.hasTriggerRecipeKeys.addAll(triggerMatchRecipes);
                 }
 
-                if (trigger.enabled()) {
+                if (trigger.isEnable()) {
                     triggers.computeIfAbsent(trigger.typeKey(), k -> new ArrayList<>())
                         .add(trigger);
                     triggerById.put(fullId, trigger);
