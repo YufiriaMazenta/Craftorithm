@@ -16,12 +16,12 @@ import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.recipe.anvil.AnvilRecipe;
 import pers.yufiria.craftorithm.recipe.brewing.BrewingRecipe;
 import pers.yufiria.craftorithm.ui.display.anvil.AnvilDisplayMenu;
-import pers.yufiria.craftorithm.ui.display.vanillaBrewing.VanillaBrewingDisplayMenu;
-import pers.yufiria.craftorithm.ui.display.vanillaShaped.VanillaShapedDisplayMenu;
-import pers.yufiria.craftorithm.ui.display.vanillaShapeless.VanillaShapelessDisplayMenu;
-import pers.yufiria.craftorithm.ui.display.vanillaSmelting.VanillaSmeltingDisplayMenu;
-import pers.yufiria.craftorithm.ui.display.vanillaSmithing.VanillaSmithingDisplayMenu;
-import pers.yufiria.craftorithm.ui.display.vanillaStonecutting.VanillaStonecuttingDisplayMenu;
+import pers.yufiria.craftorithm.ui.display.vanillabrewing.VanillaBrewingDisplayMenu;
+import pers.yufiria.craftorithm.ui.display.vanillashaped.VanillaShapedDisplayMenu;
+import pers.yufiria.craftorithm.ui.display.vanillashapeless.VanillaShapelessDisplayMenu;
+import pers.yufiria.craftorithm.ui.display.vanillasmelting.VanillaSmeltingDisplayMenu;
+import pers.yufiria.craftorithm.ui.display.vanillasmithing.VanillaSmithingDisplayMenu;
+import pers.yufiria.craftorithm.ui.display.vanillastonecutting.VanillaStonecuttingDisplayMenu;
 
 import java.util.Map;
 import java.util.Optional;

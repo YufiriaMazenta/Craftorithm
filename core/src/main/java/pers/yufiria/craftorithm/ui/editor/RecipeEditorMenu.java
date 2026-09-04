@@ -23,7 +23,7 @@ import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.ParsedRecipe;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.ui.BackableMenu;
-import pers.yufiria.craftorithm.ui.recipeBook.BackIcon;
+import pers.yufiria.craftorithm.ui.recipebook.BackIcon;
 
 /**
  * 配方编辑器基类

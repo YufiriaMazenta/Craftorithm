@@ -11,9 +11,9 @@ import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
-import pers.yufiria.craftorithm.ui.recipeBook.RecipeBookTypeSelectMenu;
-import pers.yufiria.craftorithm.ui.recipeBook.RecipeListMenu;
-import pers.yufiria.craftorithm.ui.recipeBook.SortMode;
+import pers.yufiria.craftorithm.ui.recipebook.RecipeBookTypeSelectMenu;
+import pers.yufiria.craftorithm.ui.recipebook.RecipeListMenu;
+import pers.yufiria.craftorithm.ui.recipebook.SortMode;
 import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
 

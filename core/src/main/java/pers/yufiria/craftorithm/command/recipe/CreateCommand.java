@@ -21,12 +21,12 @@ import pers.yufiria.craftorithm.recipe.RecipeTypeMap;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.ui.SmeltingMenuType;
 import pers.yufiria.craftorithm.ui.creator.anvil.AnvilCreator;
-import pers.yufiria.craftorithm.ui.creator.vanillaBrewing.VanillaBrewingCreator;
-import pers.yufiria.craftorithm.ui.creator.vanillaCrafting.VanillaShapedCreator;
-import pers.yufiria.craftorithm.ui.creator.vanillaCrafting.VanillaShapelessCreator;
-import pers.yufiria.craftorithm.ui.creator.vanillaSmelting.VanillaSmeltingCreator;
-import pers.yufiria.craftorithm.ui.creator.vanillaSmithing.VanillaSmithingTransformCreator;
-import pers.yufiria.craftorithm.ui.creator.vanillaStonecutting.VanillaStonecuttingCreator;
+import pers.yufiria.craftorithm.ui.creator.vanillabrewing.VanillaBrewingCreator;
+import pers.yufiria.craftorithm.ui.creator.vanillacrafting.VanillaShapedCreator;
+import pers.yufiria.craftorithm.ui.creator.vanillacrafting.VanillaShapelessCreator;
+import pers.yufiria.craftorithm.ui.creator.vanillasmelting.VanillaSmeltingCreator;
+import pers.yufiria.craftorithm.ui.creator.vanillasmithing.VanillaSmithingTransformCreator;
+import pers.yufiria.craftorithm.ui.creator.vanillastonecutting.VanillaStonecuttingCreator;
 import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
 

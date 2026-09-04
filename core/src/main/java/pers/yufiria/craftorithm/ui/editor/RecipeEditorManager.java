@@ -19,12 +19,12 @@ import pers.yufiria.craftorithm.recipe.anvil.AnvilRecipe;
 import pers.yufiria.craftorithm.recipe.brewing.BrewingRecipe;
 import pers.yufiria.craftorithm.ui.SmeltingMenuType;
 import pers.yufiria.craftorithm.ui.editor.anvil.AnvilEditor;
-import pers.yufiria.craftorithm.ui.editor.vanillaBrewing.VanillaBrewingEditor;
-import pers.yufiria.craftorithm.ui.editor.vanillaCrafting.VanillaShapedEditor;
-import pers.yufiria.craftorithm.ui.editor.vanillaCrafting.VanillaShapelessEditor;
-import pers.yufiria.craftorithm.ui.editor.vanillaSmelting.SmeltingEditor;
-import pers.yufiria.craftorithm.ui.editor.vanillaSmithing.VanillaSmithingTransformEditor;
-import pers.yufiria.craftorithm.ui.editor.vanillaStonecutting.VanillaStonecuttingEditor;
+import pers.yufiria.craftorithm.ui.editor.vanillabrewing.VanillaBrewingEditor;
+import pers.yufiria.craftorithm.ui.editor.vanillacrafting.VanillaShapedEditor;
+import pers.yufiria.craftorithm.ui.editor.vanillacrafting.VanillaShapelessEditor;
+import pers.yufiria.craftorithm.ui.editor.vanillasmelting.SmeltingEditor;
+import pers.yufiria.craftorithm.ui.editor.vanillasmithing.VanillaSmithingTransformEditor;
+import pers.yufiria.craftorithm.ui.editor.vanillastonecutting.VanillaStonecuttingEditor;
 
 import java.util.Optional;
 

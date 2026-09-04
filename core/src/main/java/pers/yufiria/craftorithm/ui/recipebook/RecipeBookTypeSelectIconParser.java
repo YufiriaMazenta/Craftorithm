@@ -1,0 +1,39 @@
+package pers.yufiria.craftorithm.ui.recipebook;
+
+import crypticlib.script.compile.CompiledScript;
+import crypticlib.ui.display.Icon;
+import crypticlib.ui.display.IconDisplay;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.inventory.ClickType;
+import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.recipe.RecipeType;
+import pers.yufiria.craftorithm.ui.icon.IconParser;
+
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Supplier;
+
+public enum RecipeBookTypeSelectIconParser implements IconParser {
+
+    INSTANCE;
+
+    @Override
+    public Supplier<Icon> parse(ConfigurationSection config) {
+        String iconType = config.getString("icon_type", "common").toLowerCase();
+        switch (iconType) {
+            case "recipe_list" -> {
+                String recipeTypeKey = config.getString("recipe_type");
+                Objects.requireNonNull(recipeTypeKey, "recipe_list icon must have recipe_type");
+                RecipeType recipeType = RecipeManager.INSTANCE.getRecipeTypeByKey(recipeTypeKey);
+                Objects.requireNonNull(recipeType, "Unknown recipe type: " + recipeTypeKey);
+                IconDisplay iconDisplay = parseIconDisplay(config);
+                Map<ClickType, CompiledScript> actions = parseActions(config.getConfigurationSection("actions"));
+                return () -> new RecipeListIcon(iconDisplay, recipeType, actions);
+            }
+            default -> {
+                return IconParser.super.parse(config);
+            }
+        }
+    }
+
+}
