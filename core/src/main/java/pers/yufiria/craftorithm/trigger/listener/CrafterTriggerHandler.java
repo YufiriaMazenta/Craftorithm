@@ -45,6 +45,7 @@ public enum CrafterTriggerHandler implements Listener {
             event.setCancelled(true);
             return;
         }
+        ctx.setVariable("craft_num", ScriptValue.of(1));
         TriggerManager.INSTANCE.fire(CraftTriggerTypes.CRAFTING, ctx);
     }
 
