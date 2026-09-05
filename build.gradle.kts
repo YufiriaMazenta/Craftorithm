@@ -1,5 +1,3 @@
-import java.text.SimpleDateFormat
-
 plugins {
     `java-library`
     `maven-publish`
@@ -24,7 +22,20 @@ dependencies {
 
 version = "${rootProject.findProperty("pluginVer")}"
 group = "pers.yufiria.craftorithm"
-var pluginVersion: String = version.toString() + "-" + SimpleDateFormat("yyyyMMdd").format(System.currentTimeMillis())
+val gitHash: String by lazy {
+    runCatching {
+        val process = ProcessBuilder("git", "rev-parse", "--short", "HEAD")
+            .directory(project.rootDir)
+            .start()
+        val exitCode = process.waitFor()
+        if (exitCode == 0) {
+            process.inputStream.bufferedReader(Charsets.UTF_8).readText().trim()
+        } else {
+            null
+        }
+    }.getOrNull() ?: "unknown"
+}
+
 java.sourceCompatibility = JavaVersion.VERSION_21
 java.targetCompatibility = JavaVersion.VERSION_21
 
@@ -38,8 +49,9 @@ val crypticlibRelocate = "pers.yufiria.craftorithm.crypticlib"
 
 tasks {
     val props = HashMap<String, String>()
-    props["version"] = pluginVersion
+    props["version"] = "$version-$gitHash"
     processResources {
+        outputs.upToDateWhen { false }
         filesMatching("plugin.yml") {
             expand(props)
         }
@@ -48,7 +60,7 @@ tasks {
         dependsOn(shadowJar)
     }
     compileJava {
-        dependsOn(clean)
+//        dependsOn(clean)
         options.encoding = "UTF-8"
     }
     shadowJar {
