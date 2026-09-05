@@ -181,7 +181,18 @@ public enum CraftorithmAPI {
      * @return 是否成功
      */
     public boolean disableRecipe(@NotNull NamespacedKey recipeKey, boolean save) {
-        return RecipeManager.INSTANCE.disableRecipe(recipeKey, save);
+        return RecipeManager.INSTANCE.disableRecipe(recipeKey, save, true);
+    }
+
+    /**
+     * 禁用配方
+     * @param recipeKey 配方Key
+     * @param save 是否保存到配置
+     * @param updateRecipes 是否给玩家更新配方列表
+     * @return 是否成功
+     */
+    public boolean disableRecipe(@NotNull NamespacedKey recipeKey, boolean save, boolean updateRecipes) {
+        return RecipeManager.INSTANCE.disableRecipe(recipeKey, save, updateRecipes);
     }
 
     /**
@@ -191,7 +202,17 @@ public enum CraftorithmAPI {
      * @return 是否成功
      */
     public boolean removeCraftorithmRecipe(@NotNull String recipeId, boolean deleteFile) {
-        return RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeId, deleteFile);
+        return RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeId, deleteFile, true);
+    }
+
+    /**
+     * 删除Craftorithm配方
+     * @param recipeId 配方ID
+     * @param deleteFile 是否删除配置文件
+     * @return 是否成功
+     */
+    public boolean removeCraftorithmRecipe(@NotNull String recipeId, boolean deleteFile, boolean updateRecipes) {
+        return RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeId, deleteFile, updateRecipes);
     }
 
     /**

@@ -302,7 +302,7 @@ public enum RecipeManager implements LifecycleTask {
         }
         for (String recipeKeyStr : disabledRecipes) {
             NamespacedKey recipeKey = NamespacedKey.fromString(recipeKeyStr);
-            disableRecipe(recipeKey, false);
+            disableRecipe(recipeKey, false, false);
         }
     }
 
@@ -337,11 +337,11 @@ public enum RecipeManager implements LifecycleTask {
      * @param save
      * @return
      */
-    public boolean disableRecipe(NamespacedKey recipeKey, boolean save) {
+    public boolean disableRecipe(NamespacedKey recipeKey, boolean save, boolean updateRecipes) {
         if (save)
             addDisabledRecipes2Config(recipeKey);
         Recipe recipe = getRecipe(recipeKey);
-        boolean result = removeRecipe(recipeKey);
+        boolean result = removeRecipe(recipeKey, updateRecipes);
         if (result) {
             disabledRecipes.put(recipeKey, recipe);
             serverRecipeKeys.remove(recipeKey);
@@ -389,15 +389,15 @@ public enum RecipeManager implements LifecycleTask {
     /**
      * 删除一个配方,并通知玩家
      */
-    public boolean removeRecipe(NamespacedKey recipeKey) {
+    public boolean removeRecipe(NamespacedKey recipeKey, boolean updateRecipes) {
         Recipe recipe = getRecipe(recipeKey);
         RecipeType recipeType = getRecipeType(recipe);
-        return recipeType.recipeRegister().unregisterRecipe(recipeKey, true);
+        return recipeType.recipeRegister().unregisterRecipe(recipeKey, updateRecipes);
     }
 
-    public boolean removeCraftorithmRecipe(String recipeId, boolean deleteFile) {
+    public boolean removeCraftorithmRecipe(String recipeId, boolean deleteFile, boolean updateRecipes) {
         NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeId);
-        boolean result = removeRecipe(recipeKey);
+        boolean result = removeRecipe(recipeKey, updateRecipes);
         if (result) {
             ParsedRecipe removed = craftorithmRecipes.remove(recipeKey);
             serverRecipeKeys.remove(recipeKey);

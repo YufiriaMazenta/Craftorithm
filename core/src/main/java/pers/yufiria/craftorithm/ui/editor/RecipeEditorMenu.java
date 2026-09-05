@@ -113,7 +113,7 @@ public abstract class RecipeEditorMenu extends StoredMenu implements BackableMen
             configWrapper.reloadConfig();
             String recipeId = recipeKey.getKey();
             String recipeFileName = RecipeManager.INSTANCE.getRecipeFileNameByKey(recipeKey);
-            RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeId, false);
+            RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeId, false, false);
             ParsedRecipe parsedRecipe = RecipeManager.INSTANCE.parseRecipeFromConfig(recipeFileName, configWrapper);
             if (parsedRecipe == null) {
                 CrypticLib.info("&cFailed to load recipe " + recipeFileName);
