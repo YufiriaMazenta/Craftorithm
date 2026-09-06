@@ -1,7 +1,10 @@
 package pers.yufiria.craftorithm.hook;
 
 import crypticlib.CrypticLibPlugin;
-import crypticlib.lifecycle.*;
+import crypticlib.lifecycle.LifecyclePhase;
+import crypticlib.lifecycle.LifecycleSchedule;
+import crypticlib.lifecycle.LifecycleTask;
+import crypticlib.lifecycle.LifecycleTaskConfig;
 import crypticlib.script.ScriptEngine;
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.jetbrains.annotations.Nullable;

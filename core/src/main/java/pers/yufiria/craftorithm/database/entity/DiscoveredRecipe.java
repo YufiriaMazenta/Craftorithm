@@ -17,16 +17,12 @@ public class DiscoveredRecipe {
     @DatabaseField(columnName = "recipe_key", canBeNull = false, uniqueCombo = true)
     private String recipeKey;
 
-    @DatabaseField(columnName = "discovered_time", canBeNull = false)
-    private long discoveredTime;
-
     public DiscoveredRecipe() {
     }
 
-    public DiscoveredRecipe(UUID playerUuid, String recipeKey, long discoveredTime) {
+    public DiscoveredRecipe(UUID playerUuid, String recipeKey) {
         this.playerUuid = playerUuid;
         this.recipeKey = recipeKey;
-        this.discoveredTime = discoveredTime;
     }
 
     public UUID getPlayerUuid() {
@@ -35,10 +31,6 @@ public class DiscoveredRecipe {
 
     public String getRecipeKey() {
         return recipeKey;
-    }
-
-    public long getDiscoveredTime() {
-        return discoveredTime;
     }
 
 }

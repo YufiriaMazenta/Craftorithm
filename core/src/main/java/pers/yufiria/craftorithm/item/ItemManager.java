@@ -25,7 +25,6 @@ import pers.yufiria.craftorithm.item.ingredientrestriction.IngredientRestriction
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @LifecycleTaskConfig(
     schedules = {

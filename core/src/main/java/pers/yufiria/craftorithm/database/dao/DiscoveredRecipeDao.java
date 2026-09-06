@@ -6,7 +6,6 @@ import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import crypticlib.CrypticLib;
-import crypticlib.CrypticLibBukkit;
 import crypticlib.CrypticLibPlugin;
 import crypticlib.lifecycle.LifecyclePhase;
 import crypticlib.lifecycle.LifecycleSchedule;
@@ -22,11 +21,7 @@ import pers.yufiria.craftorithm.database.entity.DiscoveredRecipe;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @LifecycleTaskConfig(
@@ -71,35 +66,43 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
         try {
             Set<String> currentKeys = getDiscoveredRecipes(playerUuid);
 
-            Set<String> toAdd = new HashSet<>(recipeKeys);
-            toAdd.removeAll(currentKeys);
-
+            //删除数据库里已经不存在的配方
             Set<String> toRemove = new HashSet<>(currentKeys);
             toRemove.removeAll(recipeKeys);
-
             if (!toRemove.isEmpty()) {
                 DeleteBuilder<DiscoveredRecipe, Long> deleteBuilder = dao.deleteBuilder();
                 deleteBuilder.where().eq("player_uuid", playerUuid).and().in("recipe_key", toRemove);
                 deleteBuilder.delete();
             }
-
-            long now = System.currentTimeMillis();
-            for (String recipeKey : toAdd) {
-                dao.create(new DiscoveredRecipe(playerUuid, recipeKey, now));
+            int removedRecipesCount = toRemove.size();
+            if (removedRecipesCount > 0) {
+                CrypticLib.info("Removed " + removedRecipesCount + " discovered recipes for player: " + playerUuid);
             }
 
-            CrypticLib.info("Removed " + toRemove.size() + " discovered recipes for player: " + playerUuid);
-            CrypticLib.info("Saved " + toAdd.size() + " discovered recipes for player: " + playerUuid);
+            //存入新增的已解锁配方
+            Set<String> toAdd = new HashSet<>(recipeKeys);
+            toAdd.removeAll(currentKeys);
+            for (String recipeKey : toAdd) {
+                dao.create(new DiscoveredRecipe(playerUuid, recipeKey));
+            }
+            int addedRecipesCount = toAdd.size();
+            if (addedRecipesCount > 0) {
+                CrypticLib.info("Saved " + toAdd.size() + " discovered recipes for player: " + playerUuid);
+            }
         } catch (SQLException e) {
             CrypticLib.info("&cFailed to set discovered recipes for " + playerUuid + ": " + e.getMessage());
         }
     }
 
     public void saveAllOnlinePlayersData() {
+        Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
+        if (onlinePlayers.isEmpty()) {
+            return;
+        }
         Set<String> serverRecipeKeys = RecipeManager.INSTANCE.serverRecipeKeys().stream()
             .map(Objects::toString)
             .collect(Collectors.toSet());
-        for (Player player : Bukkit.getOnlinePlayers()) {
+        for (Player player : onlinePlayers) {
             UUID uuid = player.getUniqueId();
             Set<String> localRecipes = player.getDiscoveredRecipes().stream()
                 .map(NamespacedKey::toString)
@@ -116,7 +119,7 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
             case ACTIVE, RELOAD -> {
                 if (PluginConfigs.RECIPE_DISCOVERY_SYNC_ENABLE.value()) {
                     initTable();
-                    startPeriodicSave();
+                    startPeriodicSaveTask();
                 }
             }
             case DISABLE -> {
@@ -127,7 +130,7 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
         }
     }
 
-    private void startPeriodicSave() {
+    private void startPeriodicSaveTask() {
         int intervalTicks = PluginConfigs.RECIPE_DISCOVERY_SYNC_INTERVAL_TICKS.value();
         if (periodSaveTask != null) {
             periodSaveTask.cancel();

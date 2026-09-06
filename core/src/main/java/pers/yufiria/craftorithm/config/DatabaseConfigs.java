@@ -2,7 +2,6 @@ package pers.yufiria.craftorithm.config;
 
 import crypticlib.config.ConfigHandler;
 import crypticlib.config.node.impl.bukkit.ConfigSectionConfig;
-import crypticlib.config.node.impl.bukkit.IntConfig;
 import crypticlib.config.node.impl.bukkit.StringConfig;
 
 @ConfigHandler(path = "database.yml")

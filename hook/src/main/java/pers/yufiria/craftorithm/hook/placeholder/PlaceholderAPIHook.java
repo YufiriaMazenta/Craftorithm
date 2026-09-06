@@ -1,7 +1,10 @@
 package pers.yufiria.craftorithm.hook.placeholder;
 
 import crypticlib.CrypticLibPlugin;
-import crypticlib.lifecycle.*;
+import crypticlib.lifecycle.LifecyclePhase;
+import crypticlib.lifecycle.LifecycleSchedule;
+import crypticlib.lifecycle.LifecycleTask;
+import crypticlib.lifecycle.LifecycleTaskConfig;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.hook.PluginHook;
 import pers.yufiria.craftorithm.util.LangUtils;

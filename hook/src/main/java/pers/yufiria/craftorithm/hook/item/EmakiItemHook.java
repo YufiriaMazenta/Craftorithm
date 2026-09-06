@@ -1,6 +1,8 @@
 package pers.yufiria.craftorithm.hook.item;
 
-import crypticlib.lifecycle.*;
+import crypticlib.lifecycle.LifecyclePhase;
+import crypticlib.lifecycle.LifecycleSchedule;
+import crypticlib.lifecycle.LifecycleTaskConfig;
 import pers.yufiria.craftorithm.item.ItemProvider;
 
 @LifecycleTaskConfig(schedules = @LifecycleSchedule(phase = LifecyclePhase.ENABLE))
