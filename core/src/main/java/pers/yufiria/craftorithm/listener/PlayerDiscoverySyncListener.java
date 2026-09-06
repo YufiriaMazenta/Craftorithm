@@ -35,7 +35,7 @@ public enum PlayerDiscoverySyncListener implements Listener {
         CrypticLibBukkit.scheduler().syncLater(() -> {
             CrypticLibBukkit.scheduler().runOnEntity(player, () -> {
                 try {
-                    Set<String> localRecipes = player.getDiscoveredRecipes().stream()
+                    Set<String> localDiscoveredRecipes = player.getDiscoveredRecipes().stream()
                         .map(NamespacedKey::toString)
                         .collect(Collectors.toSet());
 
@@ -50,13 +50,11 @@ public enum PlayerDiscoverySyncListener implements Listener {
                             dbRecipes.retainAll(serverRecipeKeys);
 
                             Set<String> merged = new HashSet<>(dbRecipes);
-                            merged.addAll(localRecipes);
+                            merged.addAll(localDiscoveredRecipes);
                             merged.retainAll(serverRecipeKeys);
 
-                            DiscoveredRecipeDao.INSTANCE.saveDiscoveredRecipes(uuid, merged);
-
                             Set<String> toDiscover = new HashSet<>(merged);
-                            toDiscover.removeAll(localRecipes);
+                            toDiscover.removeAll(localDiscoveredRecipes);
 
                             if (!toDiscover.isEmpty()) {
                                 CrypticLibBukkit.scheduler().runOnEntity(player, () -> {
