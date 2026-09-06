@@ -7,6 +7,7 @@ import crypticlib.lifecycle.LifecycleSchedule;
 import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskConfig;
 import pers.yufiria.craftorithm.config.DatabaseConfigs;
+import pers.yufiria.craftorithm.database.dao.DiscoveredRecipeDao;
 import pers.yufiria.craftorithm.database.exception.DatabaseLoadException;
 import pers.yufiria.craftorithm.database.loader.DataSourceLoader;
 import pers.yufiria.craftorithm.database.loader.MysqlDataSourceLoader;
@@ -36,7 +37,9 @@ public enum DataSourceManager implements LifecycleTask {
     @Override
     public void onLifecycle(CrypticLibPlugin crypticLibPlugin, LifecyclePhase lifecyclePhase) {
         switch (lifecyclePhase) {
-            case ACTIVE -> databaseConnection = loadDatabaseConnection();
+            case ACTIVE -> {
+                databaseConnection = loadDatabaseConnection();
+            }
             case DISABLE -> {
                 if (databaseConnection != null) {
                     databaseConnection.closeQuietly();
