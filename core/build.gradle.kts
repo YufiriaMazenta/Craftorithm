@@ -13,6 +13,7 @@ dependencies {
     compileOnly("net.kyori:adventure-api:${rootProject.findProperty("adventureApiVer")}")
     compileOnly("io.papermc.paper:paper-api:${rootProject.findProperty("paperApiVer")}")
     compileOnly("com.crypticlib:bukkit:${rootProject.findProperty("crypticlibVer")}")
+    compileOnly("com.j256.ormlite:ormlite-jdbc:${rootProject.findProperty("ormliteVer")}")
     implementation("com.crypticlib:bukkit-ui:${rootProject.findProperty("crypticlibVer")}")
     implementation("com.crypticlib:bukkit-conversation:${rootProject.findProperty("crypticlibVer")}")
     implementation("com.crypticlib:bukkit-i18n:${rootProject.findProperty("crypticlibVer")}")
