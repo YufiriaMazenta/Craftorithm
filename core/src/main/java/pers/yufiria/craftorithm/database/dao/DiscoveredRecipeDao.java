@@ -87,6 +87,9 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
             for (String recipeKey : toAdd) {
                 dao.create(new DiscoveredRecipe(playerUuid, recipeKey, now));
             }
+
+            CrypticLib.info("Removed " + toRemove.size() + " discovered recipes for player: " + playerUuid);
+            CrypticLib.info("Saved " + toAdd.size() + " discovered recipes for player: " + playerUuid);
         } catch (SQLException e) {
             CrypticLib.info("&cFailed to set discovered recipes for " + playerUuid + ": " + e.getMessage());
         }
@@ -104,6 +107,7 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
             localRecipes.retainAll(serverRecipeKeys);
             saveDiscoveredRecipes(uuid, localRecipes);
         }
+        CrypticLib.info("Saved online players' discovered recipes");
     }
 
     @Override
@@ -134,13 +138,12 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
                 if (!PluginConfigs.RECIPE_DISCOVERY_SYNC_ENABLE.value()) return;
                 try {
                     saveAllOnlinePlayersData();
-                    CrypticLib.info("Saved online players' discovered recipes");
                 } catch (Exception e) {
                     CrypticLib.info("&cFailed to periodic save discovered recipes: " + e.getMessage());
                 }
             }
         };
-        periodSaveTask.asyncTimer(0, intervalTicks);
+        periodSaveTask.asyncTimer(intervalTicks, intervalTicks);
     }
 
 }
