@@ -38,7 +38,7 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
 
     INSTANCE;
 
-    private Dao<DiscoveredRecipe, Integer> dao;
+    private Dao<DiscoveredRecipe, Long> dao;
 
     public void initTable() {
         try {
@@ -75,7 +75,7 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
             toRemove.removeAll(recipeKeys);
 
             if (!toRemove.isEmpty()) {
-                DeleteBuilder<DiscoveredRecipe, Integer> deleteBuilder = dao.deleteBuilder();
+                DeleteBuilder<DiscoveredRecipe, Long> deleteBuilder = dao.deleteBuilder();
                 deleteBuilder.where().eq("player_uuid", playerUuid).and().in("recipe_key", toRemove);
                 deleteBuilder.delete();
             }

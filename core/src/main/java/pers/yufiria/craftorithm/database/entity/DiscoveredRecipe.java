@@ -9,7 +9,7 @@ import java.util.UUID;
 public class DiscoveredRecipe {
 
     @DatabaseField(generatedId = true)
-    private int id;
+    private long id;
 
     @DatabaseField(columnName = "player_uuid", canBeNull = false, uniqueCombo = true)
     private UUID playerUuid;
