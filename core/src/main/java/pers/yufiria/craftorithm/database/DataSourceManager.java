@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.database;
 
+import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 import crypticlib.CrypticLibPlugin;
 import crypticlib.lifecycle.LifecyclePhase;
@@ -20,6 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @LifecycleTaskConfig(
     schedules = {
         @LifecycleSchedule(phase = LifecyclePhase.ACTIVE, isAsync = true, priority = -1),
+        @LifecycleSchedule(phase = LifecyclePhase.RELOAD, isAsync = true, priority = -1),
         @LifecycleSchedule(phase = LifecyclePhase.DISABLE, priority = Integer.MAX_VALUE)
     }
 )
@@ -38,6 +40,13 @@ public enum DataSourceManager implements LifecycleTask {
     public void onLifecycle(CrypticLibPlugin crypticLibPlugin, LifecyclePhase lifecyclePhase) {
         switch (lifecyclePhase) {
             case ACTIVE -> {
+                databaseConnection = loadDatabaseConnection();
+            }
+            case RELOAD -> {
+                if (databaseConnection != null) {
+                    databaseConnection.closeQuietly();
+                }
+                DaoManager.clearCache();
                 databaseConnection = loadDatabaseConnection();
             }
             case DISABLE -> {

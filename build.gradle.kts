@@ -91,7 +91,6 @@ subprojects {
             dependsOn(shadowJar)
         }
         compileJava {
-            dependsOn(clean)
             options.encoding = "UTF-8"
         }
         shadowJar {

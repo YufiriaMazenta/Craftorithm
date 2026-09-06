@@ -12,6 +12,7 @@ import crypticlib.lifecycle.LifecyclePhase;
 import crypticlib.lifecycle.LifecycleSchedule;
 import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskConfig;
+import crypticlib.scheduler.CrypticLibRunnable;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
 @LifecycleTaskConfig(
     schedules = {
         @LifecycleSchedule(phase = LifecyclePhase.ACTIVE, isAsync = true),
+        @LifecycleSchedule(phase = LifecyclePhase.RELOAD, isAsync = true),
         @LifecycleSchedule(phase = LifecyclePhase.DISABLE)
     }
 )
@@ -39,6 +41,7 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
     INSTANCE;
 
     private Dao<DiscoveredRecipe, Long> dao;
+    private CrypticLibRunnable periodSaveTask;
 
     public void initTable() {
         try {
@@ -89,7 +92,7 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
         }
     }
 
-    public void syncAllOnlinePlayers() {
+    public void saveAllOnlinePlayersData() {
         Set<String> serverRecipeKeys = RecipeManager.INSTANCE.serverRecipeKeys().stream()
             .map(Objects::toString)
             .collect(Collectors.toSet());
@@ -106,7 +109,7 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
     @Override
     public void onLifecycle(CrypticLibPlugin crypticLibPlugin, LifecyclePhase lifecyclePhase) {
         switch (lifecyclePhase) {
-            case ACTIVE -> {
+            case ACTIVE, RELOAD -> {
                 if (PluginConfigs.RECIPE_DISCOVERY_SYNC_ENABLE.value()) {
                     initTable();
                     startPeriodicSave();
@@ -114,7 +117,7 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
             }
             case DISABLE -> {
                 if (PluginConfigs.RECIPE_DISCOVERY_SYNC_ENABLE.value()) {
-                    syncAllOnlinePlayers();
+                    saveAllOnlinePlayersData();
                 }
             }
         }
@@ -122,15 +125,22 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
 
     private void startPeriodicSave() {
         int intervalTicks = PluginConfigs.RECIPE_DISCOVERY_SYNC_INTERVAL_TICKS.value();
-        CrypticLibBukkit.scheduler().asyncTimer(() -> {
-            if (!PluginConfigs.RECIPE_DISCOVERY_SYNC_ENABLE.value()) return;
-            try {
-                syncAllOnlinePlayers();
-                CrypticLib.info("Saved online players' discovered recipes");
-            } catch (Exception e) {
-                CrypticLib.info("&cFailed to periodic save discovered recipes: " + e.getMessage());
+        if (periodSaveTask != null) {
+            periodSaveTask.cancel();
+        }
+        periodSaveTask = new CrypticLibRunnable() {
+            @Override
+            public void run() {
+                if (!PluginConfigs.RECIPE_DISCOVERY_SYNC_ENABLE.value()) return;
+                try {
+                    saveAllOnlinePlayersData();
+                    CrypticLib.info("Saved online players' discovered recipes");
+                } catch (Exception e) {
+                    CrypticLib.info("&cFailed to periodic save discovered recipes: " + e.getMessage());
+                }
             }
-        }, 0L, intervalTicks);
+        };
+        periodSaveTask.asyncTimer(0, intervalTicks);
     }
 
 }
