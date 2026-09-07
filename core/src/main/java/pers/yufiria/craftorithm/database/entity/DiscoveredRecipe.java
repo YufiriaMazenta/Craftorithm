@@ -1,20 +1,20 @@
 package pers.yufiria.craftorithm.database.entity;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
+import crypticlib.database.annotation.Field;
+import crypticlib.database.annotation.Table;
 
 import java.util.UUID;
 
-@DatabaseTable(tableName = "discovered_recipes")
+@Table(name = "discovered_recipes")
 public class DiscoveredRecipe {
 
-    @DatabaseField(generatedId = true)
+    @Field(id = true, generated = true)
     private long id;
 
-    @DatabaseField(columnName = "player_uuid", canBeNull = false, uniqueCombo = true)
+    @Field(name = "player_uuid", nullable = false)
     private UUID playerUuid;
 
-    @DatabaseField(columnName = "recipe_key", canBeNull = false, uniqueCombo = true)
+    @Field(name = "recipe_key", nullable = false)
     private String recipeKey;
 
     public DiscoveredRecipe() {

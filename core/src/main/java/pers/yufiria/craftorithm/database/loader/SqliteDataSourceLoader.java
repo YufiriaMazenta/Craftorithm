@@ -1,7 +1,7 @@
 package pers.yufiria.craftorithm.database.loader;
 
-import com.j256.ormlite.jdbc.JdbcConnectionSource;
-import com.j256.ormlite.support.ConnectionSource;
+import crypticlib.database.connection.JdbcConnectionSource;
+import crypticlib.database.connection.ConnectionSource;
 import org.bukkit.configuration.ConfigurationSection;
 import pers.yufiria.craftorithm.config.DatabaseConfigs;
 

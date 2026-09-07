@@ -1,7 +1,7 @@
 package pers.yufiria.craftorithm.database.loader;
 
-import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
-import com.j256.ormlite.support.ConnectionSource;
+import crypticlib.database.connection.ConnectionSource;
+import crypticlib.database.connection.PooledConnectionSource;
 import org.bukkit.configuration.ConfigurationSection;
 import pers.yufiria.craftorithm.config.DatabaseConfigs;
 
@@ -13,27 +13,29 @@ public enum MysqlDataSourceLoader implements DataSourceLoader {
 
     @Override
     public ConnectionSource load() throws SQLException {
-        ConfigurationSection databaseConfig = DatabaseConfigs.MYSQL.value();
-        String host = databaseConfig.getString("host", "localhost");
-        int port = databaseConfig.getInt("port", 3306);
-        String database = databaseConfig.getString("database", "craftorithm");
-        String params = databaseConfig.getString("parameters");
-        String username = databaseConfig.getString("username", "root");
-        String password = databaseConfig.getString("password", "");
+        ConfigurationSection mysqlConfig = DatabaseConfigs.MYSQL.value();
+        String host = mysqlConfig.getString("host", "localhost");
+        int port = mysqlConfig.getInt("port", 3306);
+        String database = mysqlConfig.getString("database", "craftorithm");
+        String params = mysqlConfig.getString("parameters");
+        String username = mysqlConfig.getString("username", "root");
+        String password = mysqlConfig.getString("password", "");
         String jdbcUrl = "jdbc:mysql://" + host + ":" + port + "/" + database;
         if (params != null && !params.isEmpty()) {
             jdbcUrl += "?" + params;
         }
-        int checkConnectionEveryMillis = databaseConfig.getInt("check_connection_every_millis", 5000);
-        long maxConnectionAgeMillis = databaseConfig.getLong("max_connection_age_millis", 1800000);
-        int maxConnectionFree = databaseConfig.getInt("max_connection_free", 10);
-        boolean testBeforeGet = databaseConfig.getBoolean("test_before_get", true);
-        JdbcPooledConnectionSource connectionSource = new JdbcPooledConnectionSource(jdbcUrl, username, password);
-        connectionSource.setCheckConnectionsEveryMillis(checkConnectionEveryMillis);
-        connectionSource.setMaxConnectionsFree(maxConnectionFree);
-        connectionSource.setMaxConnectionAgeMillis(maxConnectionAgeMillis);
+        ConfigurationSection poolConfig = mysqlConfig.getConfigurationSection("pool");
+        int maxConnections = poolConfig != null ? poolConfig.getInt("max_connections", 10) : 10;
+        long maxIdleTimeMs = poolConfig != null ? poolConfig.getLong("max_idle_time_ms", 60000) : 60000;
+        long maxLifetimeMs = poolConfig != null ? poolConfig.getLong("max_lifetime_ms", 1800000) : 1800000;
+        long checkConnectionsEveryMs = poolConfig != null ? poolConfig.getLong("check_connections_every_ms", 5000) : 5000;
+        boolean testBeforeGet = poolConfig != null && poolConfig.getBoolean("test_before_get", true);
+        PooledConnectionSource connectionSource = new PooledConnectionSource(jdbcUrl, username, password);
+        connectionSource.setMaxConnections(maxConnections);
+        connectionSource.setMaxIdleTimeMs(maxIdleTimeMs);
+        connectionSource.setMaxLifetimeMs(maxLifetimeMs);
+        connectionSource.setCheckConnectionsEveryMs(checkConnectionsEveryMs);
         connectionSource.setTestBeforeGet(testBeforeGet);
-        connectionSource.initialize();
         return connectionSource;
     }
 

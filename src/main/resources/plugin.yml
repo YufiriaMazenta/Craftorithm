@@ -30,5 +30,3 @@ softdepend:
 authors: [ YufiriaMazenta ]
 folia-supported: true
 website: https://github.com/YufiriaMazenta/Craftorithm
-libraries:
-  - 'com.j256.ormlite:ormlite-jdbc:6.1'

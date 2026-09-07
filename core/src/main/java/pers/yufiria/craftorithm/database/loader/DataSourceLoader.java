@@ -1,6 +1,6 @@
 package pers.yufiria.craftorithm.database.loader;
 
-import com.j256.ormlite.support.ConnectionSource;
+import crypticlib.database.connection.ConnectionSource;
 
 import java.sql.SQLException;
 

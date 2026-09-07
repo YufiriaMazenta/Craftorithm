@@ -1,12 +1,11 @@
 package pers.yufiria.craftorithm.database.dao;
 
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.DaoManager;
-import com.j256.ormlite.stmt.DeleteBuilder;
-import com.j256.ormlite.support.ConnectionSource;
-import com.j256.ormlite.table.TableUtils;
 import crypticlib.CrypticLib;
 import crypticlib.CrypticLibPlugin;
+import crypticlib.database.connection.ConnectionSource;
+import crypticlib.database.dao.Dao;
+import crypticlib.database.dao.DaoManager;
+import crypticlib.database.table.TableUtils;
 import crypticlib.lifecycle.LifecyclePhase;
 import crypticlib.lifecycle.LifecycleSchedule;
 import crypticlib.lifecycle.LifecycleTask;
@@ -35,7 +34,7 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
 
     INSTANCE;
 
-    private Dao<DiscoveredRecipe, Long> dao;
+    private Dao<DiscoveredRecipe> dao;
     private CrypticLibRunnable periodSaveTask;
 
     public void initTable() {
@@ -50,7 +49,9 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
 
     public Set<String> getDiscoveredRecipes(UUID playerUuid) {
         try {
-            List<DiscoveredRecipe> recipes = dao.queryForEq("player_uuid", playerUuid);
+            List<DiscoveredRecipe> recipes = dao.queryBuilder().where(
+                where -> where.equals("player_uuid", playerUuid)
+            ).query();
             Set<String> result = new HashSet<>();
             for (DiscoveredRecipe recipe : recipes) {
                 result.add(recipe.getRecipeKey());
@@ -70,9 +71,9 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
             Set<String> toRemove = new HashSet<>(currentKeys);
             toRemove.removeAll(recipeKeys);
             if (!toRemove.isEmpty()) {
-                DeleteBuilder<DiscoveredRecipe, Long> deleteBuilder = dao.deleteBuilder();
-                deleteBuilder.where().eq("player_uuid", playerUuid).and().in("recipe_key", toRemove);
-                deleteBuilder.delete();
+                dao.deleteBuilder().where(
+                    where -> where.equals("player_uuid", playerUuid).and().in("recipe_key", toRemove)
+                ).execute();
             }
             int removedRecipesCount = toRemove.size();
             if (removedRecipesCount > 0) {

@@ -1,8 +1,8 @@
 package pers.yufiria.craftorithm.database;
 
-import com.j256.ormlite.dao.DaoManager;
-import com.j256.ormlite.support.ConnectionSource;
 import crypticlib.CrypticLibPlugin;
+import crypticlib.database.connection.ConnectionSource;
+import crypticlib.database.dao.DaoManager;
 import crypticlib.lifecycle.LifecyclePhase;
 import crypticlib.lifecycle.LifecycleSchedule;
 import crypticlib.lifecycle.LifecycleTask;
@@ -43,14 +43,14 @@ public enum DataSourceManager implements LifecycleTask {
             }
             case RELOAD -> {
                 if (databaseConnection != null) {
-                    databaseConnection.closeQuietly();
+                    databaseConnection.close();
                 }
                 DaoManager.clearCache();
                 databaseConnection = loadDatabaseConnection();
             }
             case DISABLE -> {
                 if (databaseConnection != null) {
-                    databaseConnection.closeQuietly();
+                    databaseConnection.close();
                 }
             }
         }
@@ -74,14 +74,11 @@ public enum DataSourceManager implements LifecycleTask {
     }
 
     public ConnectionSource databaseConnection() {
-        // 第一次检查（无锁）
-        if (databaseConnection == null || !databaseConnection.isOpen(null)) {
+        if (databaseConnection == null) {
             synchronized (this) {
-                // 第二次检查（锁内）
-                if (databaseConnection == null || !databaseConnection.isOpen(null)) {
-                    // 如果存在旧连接（已关闭），先释放资源
+                if (databaseConnection == null || !databaseConnection.isOpen()) {
                     if (databaseConnection != null) {
-                        databaseConnection.closeQuietly();
+                        databaseConnection.close();
                     }
                     databaseConnection = loadDatabaseConnection();
                 }

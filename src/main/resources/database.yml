@@ -5,7 +5,7 @@ type: sqlite
 sqlite:
   # 数据库文件路径（相对或绝对）
   file: "plugins/Craftorithm/data.db"
-  parameters: "foreign_keys=true&journal_mode=WAL"
+  parameters: "foreign_keys=on&journal_mode=WAL"
 
 # MySQL专用配置
 mysql:
@@ -16,7 +16,8 @@ mysql:
   password: "your_password"
   parameters: "useSSL=false&serverTimezone=UTC"
   pool:
-    check_connection_every_millis: 5000
-    max_connection_age_millis: 1800000
-    max_connection_free: 10
+    max_connections: 10
+    max_idle_time_ms: 60000
+    max_lifetime_ms: 1800000
+    check_connections_every_ms: 5000
     test_before_get: true
