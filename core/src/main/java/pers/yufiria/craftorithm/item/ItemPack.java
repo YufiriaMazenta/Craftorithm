@@ -3,7 +3,7 @@ package pers.yufiria.craftorithm.item;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.inventory.ItemStack;
-import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
+import pers.yufiria.craftorithm.item.exception.ItemNotFoundException;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.*;
@@ -28,7 +28,7 @@ public class ItemPack {
                     String tagId = itemIdStack.itemId().toString();
                     Optional<Tag<Material>> tagOpt = IngredientUtils.getTag(tagId);
                     if (tagOpt.isEmpty()) {
-                        throw new RecipeLoadException(tagId + " is not a valid tag");
+                        throw new ItemNotFoundException(tagId + " is not a valid tag");
                     }
                     Tag<Material> materialTag = tagOpt.get();
                     for (Material material : materialTag.getValues()) {
