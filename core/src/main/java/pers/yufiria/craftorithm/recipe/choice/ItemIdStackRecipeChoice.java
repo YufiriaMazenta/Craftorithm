@@ -59,10 +59,13 @@ public class ItemIdStackRecipeChoice implements RecipeChoice {
 
     @Override
     public boolean test(@NotNull ItemStack itemStack) {
-        NamespacedItemIdStack finalStackedItemId = ItemManager.INSTANCE.matchItemId(itemStack, true)
-            .orElseGet(() -> new NamespacedItemIdStack(NamespacedItemId.fromMaterial(itemStack.getType()), itemStack.getAmount()));
-        NamespacedItemIdStack stored = itemIdsMap.get(finalStackedItemId.itemId());
-        return stored != null && finalStackedItemId.amount() >= stored.amount();
+        Optional<NamespacedItemIdStack> inputItemIdStackOpt = ItemManager.INSTANCE.matchItemIdOrVanilla(itemStack, false);
+        if (inputItemIdStackOpt.isEmpty()) {
+            return false;
+        }
+        NamespacedItemIdStack inputItemIdStack = inputItemIdStackOpt.get();
+        NamespacedItemIdStack ingredientItemIdStack = itemIdsMap.get(inputItemIdStack.itemId());
+        return ingredientItemIdStack != null && inputItemIdStack.amount() >= ingredientItemIdStack.amount();
     }
 
     @Override

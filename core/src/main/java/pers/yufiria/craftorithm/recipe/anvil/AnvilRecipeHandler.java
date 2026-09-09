@@ -176,7 +176,11 @@ public enum AnvilRecipeHandler implements Listener {
                     event.setCancelled(true);
                 }
             }
+            return;
         }
+
+        if (event.getSlot() != 2)
+            return;
 
         AnvilRecipe anvilRecipe = matchAnvilRecipe(base, addition);
         if (anvilRecipe == null)
@@ -199,10 +203,8 @@ public enum AnvilRecipeHandler implements Listener {
             return;
         }
 
-        NamespacedItemIdStack baseId = ItemManager.INSTANCE.matchItemId(base, true)
-            .orElseGet(() -> new NamespacedItemIdStack(NamespacedItemId.fromMaterial(base.getType()), base.getAmount()));
-        NamespacedItemIdStack additionId = ItemManager.INSTANCE.matchItemId(addition, true)
-            .orElseGet(() -> new NamespacedItemIdStack(NamespacedItemId.fromMaterial(addition.getType()), addition.getAmount()));
+        NamespacedItemIdStack baseId = ItemManager.INSTANCE.matchItemIdOrVanilla(base, false).orElseThrow();
+        NamespacedItemIdStack additionId = ItemManager.INSTANCE.matchItemIdOrVanilla(addition, false).orElseThrow();
         Player player = (Player) event.getWhoClicked();
 
         //处理结果处理器
@@ -213,18 +215,12 @@ public enum AnvilRecipeHandler implements Listener {
             }
         );
 
-        int baseNum = base.getAmount(), additionNum = addition.getAmount();
+        int baseNum = baseId.amount(), additionNum = additionId.amount();
         int needBaseNum = anvilRecipe.base().getUseAmount(baseId.itemId()), needAdditionNum = anvilRecipe.addition().getUseAmount(additionId.itemId());
         int costLevel = anvilRecipe.costLevel();
         int canCraftNum = Math.min(baseNum / needBaseNum, additionNum / needAdditionNum);
         canCraftNum = Math.min(result.get().getMaxStackSize(), canCraftNum);
 
-        if (!(event.getClickedInventory() instanceof AnvilInventory)) {
-            return;
-        }
-        if (event.getSlot() != 2)
-            return;
-//        event.setCancelled(true);
         event.setResult(Event.Result.DENY);
         //判断是否合成成功,用于触发事件等操作
         boolean craftResult = false;
