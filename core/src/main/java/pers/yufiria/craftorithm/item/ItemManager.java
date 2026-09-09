@@ -124,7 +124,7 @@ public enum ItemManager implements LifecycleTask {
 
     /**
      * 获取一个物品的完整id,包含命名空间和id
-     * 不会匹配没有数据的原版物品
+     * 如果该物品完全没有数据值, 那么将会返回原版物品id
      * @param item 传入的物品
      * @return 传入的物品id，未找到返回 Optional.empty()
      */
@@ -134,7 +134,11 @@ public enum ItemManager implements LifecycleTask {
         }
 
         if (!item.hasItemMeta()) {
-            return Optional.empty();
+            //如果他没有数据值,那么他就是一个完全的原版物品, 直接返回原版物品id
+            return Optional.of(ignoreAmount
+                ? new NamespacedItemIdStack(NamespacedItemId.fromMaterial(item.getType()))
+                : new NamespacedItemIdStack(NamespacedItemId.fromMaterial(item.getType()), item.getAmount())
+            );
         }
 
         return matchItemIdFromProviders(item, ignoreAmount);
@@ -143,6 +147,7 @@ public enum ItemManager implements LifecycleTask {
     /**
      * 获取一个物品的完整id,包含命名空间和id
      * 如果无法在已经挂钩的其他插件里找到这个物品，但它又不为空气，那么将会返回原版物品id
+     * 与{@link ItemManager#matchItemId(ItemStack, boolean)}不同, 无论物品是否有数据值, 在没有其他插件认领的情况下都会返回原版物品id
      * @param item 传入的物品
      * @return 传入的物品id
      */
