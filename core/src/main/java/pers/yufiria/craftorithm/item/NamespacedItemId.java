@@ -2,6 +2,7 @@ package pers.yufiria.craftorithm.item;
 
 import crypticlib.util.MaterialHelper;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -14,6 +15,7 @@ public final class NamespacedItemId {
     private final @NotNull String namespace;
     private final @NotNull String itemId;
     private final @NotNull String toString;
+    private final boolean vanillaItem;
     private final int hashCode;
 
     private static final ConcurrentHashMap<String, NamespacedItemId> INSTANCE_CACHE = new ConcurrentHashMap<>();
@@ -24,6 +26,7 @@ public final class NamespacedItemId {
         this.itemId = itemId;
         this.toString = namespace + ":" + itemId;
         this.hashCode = Objects.hashCode(this.toString);
+        this.vanillaItem = namespace.equals(NamespacedKey.MINECRAFT);
     }
 
     public String namespace() {
@@ -32,6 +35,10 @@ public final class NamespacedItemId {
 
     public String itemId() {
         return itemId;
+    }
+
+    public boolean isVanillaItem() {
+        return vanillaItem;
     }
 
     @Override
