@@ -80,6 +80,7 @@ public class Languages {
     public static final StringLangEntry MENU_RECIPE_DISPLAY_ANVIL_COST_LEVEL = new StringLangEntry("menu.recipe_display.anvil.cost_level");
     public static final StringLangEntry MENU_RECIPE_DISPLAY_VANILLA_SMELTING_TIME = new StringLangEntry("menu.recipe_display.vanilla_smelting.time");
     public static final StringLangEntry MENU_RECIPE_DISPLAY_VANILLA_SMELTING_REWARD_EXP = new StringLangEntry("menu.recipe_display.vanilla_smelting.reward_exp");
+    public static final StringLangEntry MENU_RECIPE_DISPLAY_BACK = new StringLangEntry("menu.recipe_display.back");
 
     public static final StringLangEntry MENU_RECIPE_BOOK_SORT_MODE_NAME_ASC = new StringLangEntry("menu.recipe_book.sort_mode.name_asc");
     public static final StringLangEntry MENU_RECIPE_BOOK_SORT_MODE_NAME_DESC = new StringLangEntry("menu.recipe_book.sort_mode.name_desc");
@@ -160,7 +161,5 @@ public class Languages {
     public static final StringLangEntry MENU_RECIPE_CREATOR_CONFIRM_LORE_STONECUTTING = new StringLangEntry("menu.recipe_creator.confirm_lore.stonecutting");
     public static final StringLangEntry MENU_RECIPE_CREATOR_CONFIRM_LORE_BREWING = new StringLangEntry("menu.recipe_creator.confirm_lore.brewing");
     public static final StringLangEntry MENU_RECIPE_CREATOR_CONFIRM_LORE_ANVIL = new StringLangEntry("menu.recipe_creator.confirm_lore.anvil");
-
-    public static final StringLangEntry MENU_RECIPE_DISPLAY_BACK = new StringLangEntry("menu.recipe_display.back");
 
 }

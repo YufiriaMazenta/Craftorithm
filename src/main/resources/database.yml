@@ -16,7 +16,7 @@ mysql:
   password: "your_password"
   parameters: "useSSL=false&serverTimezone=UTC"
   pool:
-    max_connections: 10
+    max_connections: 8
     max_idle_time_ms: 60000
     max_lifetime_ms: 1800000
     check_connections_every_ms: 5000
