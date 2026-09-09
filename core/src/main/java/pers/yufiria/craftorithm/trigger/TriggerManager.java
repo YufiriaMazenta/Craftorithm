@@ -262,7 +262,7 @@ public enum TriggerManager implements LifecycleTask {
     // ---- 触发执行 ----
 
     public List<Trigger> getTriggers(TriggerType triggerType) {
-        return triggers.get(triggerType.typeKey());
+        return triggers.getOrDefault(triggerType.typeKey(), Collections.emptyList());
     }
 
     /**

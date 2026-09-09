@@ -103,7 +103,7 @@ public enum AnvilRecipeHandler implements Listener {
         if (anvilRecipe == null)
             return;
 
-        if (!TriggerManager.INSTANCE.hasTrigger(CraftTriggerTypes.ANVIL, anvilRecipe.getKey())) {
+        if (TriggerManager.INSTANCE.hasTrigger(CraftTriggerTypes.ANVIL, anvilRecipe.getKey())) {
             //只有存在配方对应触发器的时候，才进行触发器检查
             TriggerContext ctx = CraftTriggerTypes.ANVIL.extractPrepareContext(event);
             if (ctx != null) {
@@ -187,7 +187,7 @@ public enum AnvilRecipeHandler implements Listener {
             return;
 
         TriggerContext ctx = null;
-        if (!TriggerManager.INSTANCE.hasTrigger(CraftTriggerTypes.ANVIL, anvilRecipe.getKey())) {
+        if (TriggerManager.INSTANCE.hasTrigger(CraftTriggerTypes.ANVIL, anvilRecipe.getKey())) {
             //只有存在配方对应触发器的时候，才进行触发器检查
             ctx = CraftTriggerTypes.ANVIL.extractContext(event);
             if (ctx != null) {
