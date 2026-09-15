@@ -16,7 +16,9 @@ dependencies {
     implementation("com.crypticlib:bukkit-ui:${rootProject.findProperty("crypticlibVer")}")
     implementation("com.crypticlib:bukkit-conversation:${rootProject.findProperty("crypticlibVer")}")
     implementation("com.crypticlib:bukkit-i18n:${rootProject.findProperty("crypticlibVer")}")
+    implementation("com.crypticlib:bukkit-util:${rootProject.findProperty("crypticlibVer")}")
     implementation("com.crypticlib:common-compat:${rootProject.findProperty("crypticlibVer")}")
     implementation("com.crypticlib:common-script:${rootProject.findProperty("crypticlibVer")}")
     implementation("com.crypticlib:common-database:${rootProject.findProperty("crypticlibVer")}")
+    implementation("com.crypticlib:common-util:${rootProject.findProperty("crypticlibVer")}")
 }

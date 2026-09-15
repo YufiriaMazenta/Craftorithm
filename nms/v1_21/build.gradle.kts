@@ -7,5 +7,6 @@ dependencies {
     compileOnly("ink.ptms.core:v12100:12100:universal")
     compileOnly("com.google.guava:guava:33.2.0-jre")
     compileOnly("com.crypticlib:bukkit:${rootProject.findProperty("crypticlibVer")}")
+    compileOnly("com.crypticlib:bukkit-util:${rootProject.findProperty("crypticlibVer")}")
     compileOnly("com.crypticlib:common-compat:${rootProject.findProperty("crypticlibVer")}")
 }
