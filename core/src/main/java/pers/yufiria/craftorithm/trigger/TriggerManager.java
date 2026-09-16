@@ -47,7 +47,8 @@ public enum TriggerManager implements LifecycleTask {
     // 触发器ID -> 触发器（用于快速查找）
     private final Map<String, Trigger> triggerById = new ConcurrentHashMap<>();
     // 记录存在触发器的配方，对于不存在触发器的配方，不执行触发器以减少性能开销
-    private final Set<NamespacedKey> hasTriggerRecipeKeys = new HashSet<>();
+    // 重载在异步线程进行,而该集合会被主线程的触发器判定读取,因此使用并发集合
+    private final Set<NamespacedKey> hasTriggerRecipeKeys = ConcurrentHashMap.newKeySet();
     // 记录这触发器类型是否存在匹配所有配方的触发器，如果存在的话，所有该类型配方都将执行触发器操作
     private final Map<TriggerType, Boolean> triggerTypeMatchAllMap = new ConcurrentHashMap<>();
     // 冷却管理
@@ -96,36 +97,63 @@ public enum TriggerManager implements LifecycleTask {
     public void reloadTriggers() {
         long startTime = System.currentTimeMillis();
 
-        // 清理旧数据
-        triggers.clear();
-        triggerById.clear();
         cooldownManager.clear();
-        hasTriggerRecipeKeys.clear();
-        triggerTypeMatchAllMap.clear();
 
-        if (!TRIGGER_FOLDER.exists()) {
+        //重载在异步线程进行,因此先在本地构建完整数据,构建完毕后再整体发布,避免主线程读到构建中的集合
+        List<Trigger> parsedTriggers = new ArrayList<>();
+        if (TRIGGER_FOLDER.exists()) {
+            for (File file : IOHelper.allYamlFiles(TRIGGER_FOLDER)) {
+                parsedTriggers.addAll(parseTriggersFromConfigFile(file));
+            }
+        } else {
             TRIGGER_FOLDER.mkdirs();
-            return;
         }
 
-        List<File> triggerFiles = IOHelper.allYamlFiles(TRIGGER_FOLDER);
-        int count = 0;
+        Map<String, List<Trigger>> newTriggers = new HashMap<>();
+        Map<String, Trigger> newTriggerById = new HashMap<>();
+        Set<NamespacedKey> newHasTriggerRecipeKeys = new HashSet<>();
+        Map<TriggerType, Boolean> newTriggerTypeMatchAllMap = new HashMap<>();
 
-        for (File file : triggerFiles) {
-            count += loadTriggersFromConfigFile(file);
+        for (Trigger trigger : parsedTriggers) {
+            List<NamespacedKey> triggerMatchRecipes = trigger.recipes();
+            if (triggerMatchRecipes.isEmpty()) {
+                //如果该触发器是合成类型，且没有设置配方，那么标记该触发器类型会匹配所有配方
+                TriggerType triggerType = getTriggerType(trigger.typeKey());
+                if (triggerType instanceof CraftTriggerTypes) {
+                    newTriggerTypeMatchAllMap.put(triggerType, true);
+                }
+            } else {
+                newHasTriggerRecipeKeys.addAll(triggerMatchRecipes);
+            }
+
+            if (trigger.isEnable()) {
+                newTriggers.computeIfAbsent(trigger.typeKey(), k -> new ArrayList<>()).add(trigger);
+                newTriggerById.put(trigger.id(), trigger);
+            }
         }
 
-        // 按 priority 排序
-        triggers.values().forEach(list ->
-            list.sort(Comparator.comparingInt(Trigger::priority))
-        );
+        //按 priority 排序并固化为不可变列表,发布后不会再被修改
+        Map<String, List<Trigger>> sortedTriggers = new HashMap<>();
+        newTriggers.forEach((typeKey, list) -> {
+            list.sort(Comparator.comparingInt(Trigger::priority));
+            sortedTriggers.put(typeKey, List.copyOf(list));
+        });
+
+        triggers.clear();
+        triggers.putAll(sortedTriggers);
+        triggerById.clear();
+        triggerById.putAll(newTriggerById);
+        hasTriggerRecipeKeys.clear();
+        hasTriggerRecipeKeys.addAll(newHasTriggerRecipeKeys);
+        triggerTypeMatchAllMap.clear();
+        triggerTypeMatchAllMap.putAll(newTriggerTypeMatchAllMap);
 
         long elapsed = System.currentTimeMillis() - startTime;
-        BukkitMsgSender.INSTANCE.info("Loaded " + count + " trigger(s) in " + elapsed + "ms");
+        BukkitMsgSender.INSTANCE.info("Loaded " + parsedTriggers.size() + " trigger(s) in " + elapsed + "ms");
     }
 
-    private int loadTriggersFromConfigFile(File file) {
-        int count = 0;
+    private List<Trigger> parseTriggersFromConfigFile(File file) {
+        List<Trigger> parsedTriggers = new ArrayList<>();
         String fileName = file.getName();
         // 去掉扩展名作为文件标识
         String fileKey = fileName.contains(".")
@@ -145,26 +173,12 @@ public enum TriggerManager implements LifecycleTask {
 
                 if (trigger == null) continue;
 
-                List<NamespacedKey> triggerMatchRecipes = trigger.recipes();
-                if (triggerMatchRecipes.isEmpty()) {
-                    //如果该触发器是合成类型，且没有设置配方，那么标记该触发器类型会匹配所有配方
-                    TriggerType triggerType = getTriggerType(trigger.typeKey());
-                    if (triggerType instanceof CraftTriggerTypes) {
-                        triggerTypeMatchAllMap.put(triggerType, true);
-                    }
-                } else {
-                    this.hasTriggerRecipeKeys.addAll(triggerMatchRecipes);
-                }
-
+                parsedTriggers.add(trigger);
                 if (trigger.isEnable()) {
-                    triggers.computeIfAbsent(trigger.typeKey(), k -> new ArrayList<>())
-                        .add(trigger);
-                    triggerById.put(fullId, trigger);
                     BukkitMsgSender.INSTANCE.info(
                         "Loaded trigger '" + localId + "' in " + fileName
                     );
                 }
-                count ++;
             } catch (Throwable throwable) {
                 BukkitMsgSender.INSTANCE.info(
                     "&cFailed to load trigger '" + localId + "' in " + fileName
@@ -172,7 +186,7 @@ public enum TriggerManager implements LifecycleTask {
                 throwable.printStackTrace();
             }
         }
-        return count;
+        return parsedTriggers;
     }
 
     /**
