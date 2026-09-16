@@ -137,13 +137,10 @@ public enum ItemManager implements LifecycleTask {
 
         if (!item.hasItemMeta()) {
             //如果他没有数据值,那么他就是一个完全的原版物品, 直接返回原版物品id
-            return Optional.of(ignoreAmount
-                ? new NamespacedItemIdStack(NamespacedItemId.fromMaterial(item.getType()))
-                : new NamespacedItemIdStack(NamespacedItemId.fromMaterial(item.getType()), item.getAmount())
-            );
+            return Optional.of(stackOf(NamespacedItemId.fromMaterial(item.getType()), item, ignoreAmount));
         }
 
-        return matchItemIdFromProviders(item, ignoreAmount);
+        return matchItemIdFromProviders(item).map(itemId -> stackOf(itemId, item, ignoreAmount));
     }
 
     /**
@@ -159,36 +156,41 @@ public enum ItemManager implements LifecycleTask {
         }
 
         if (!item.hasItemMeta()) {
-            return Optional.of(new NamespacedItemIdStack(
-                NamespacedItemId.fromMaterial(item.getType()),
-                ignoreAmount ? 1 : item.getAmount()
-            ));
+            return Optional.of(stackOf(NamespacedItemId.fromMaterial(item.getType()), item, ignoreAmount));
         }
 
-        return matchItemIdFromProviders(item, ignoreAmount)
-            .or(() -> Optional.of(new NamespacedItemIdStack(
-                NamespacedItemId.fromMaterial(item.getType()),
-                ignoreAmount ? 1 : item.getAmount()
-            )));
+        return matchItemIdFromProviders(item)
+            .map(itemId -> stackOf(itemId, item, ignoreAmount))
+            .or(() -> Optional.of(stackOf(NamespacedItemId.fromMaterial(item.getType()), item, ignoreAmount)));
     }
 
     /**
      * 遍历所有物品提供源尝试匹配物品id
      */
-    private Optional<NamespacedItemIdStack> matchItemIdFromProviders(ItemStack item, boolean ignoreAmount) {
+    private Optional<NamespacedItemId> matchItemIdFromProviders(ItemStack item) {
         for (Map.Entry<String, ItemProvider> itemProviderEntry : itemProviderMap.entrySet()) {
-            NamespacedItemIdStack namespacedItemIdStack;
+            NamespacedItemId namespacedItemId;
             try {
-                namespacedItemIdStack = itemProviderEntry.getValue().matchItemId(item, ignoreAmount);
+                namespacedItemId = itemProviderEntry.getValue().matchItemId(item);
             } catch (Throwable t) {
                 logProviderError(itemProviderEntry.getKey(), t);
                 continue;
             }
-            if (namespacedItemIdStack != null) {
-                return Optional.of(namespacedItemIdStack);
+            if (namespacedItemId != null) {
+                return Optional.of(namespacedItemId);
             }
         }
         return Optional.empty();
+    }
+
+    /**
+     * 将物品id与物品数量组合为物品id栈
+     * @param itemId 物品id
+     * @param item 取数量的物品
+     * @param ignoreAmount 是否忽略数量, 为true时数量恒为1
+     */
+    private NamespacedItemIdStack stackOf(NamespacedItemId itemId, ItemStack item, boolean ignoreAmount) {
+        return new NamespacedItemIdStack(itemId, ignoreAmount ? 1 : item.getAmount());
     }
 
     /**
@@ -208,16 +210,14 @@ public enum ItemManager implements LifecycleTask {
                 if (CraftorithmItemProvider.INSTANCE.matchItem("plugin_created:" + id) != null) {
                     id += "_" + TIME_FORMAT.format(System.currentTimeMillis());
                 }
-                itemId = CraftorithmItemProvider.INSTANCE.regCraftorithmItem("plugin_created", id, item);
-                if (ignoreAmount) {
-                    itemId.setAmount(1);
-                }
+                itemId = stackOf(
+                    CraftorithmItemProvider.INSTANCE.regCraftorithmItem("plugin_created", id, item),
+                    item,
+                    ignoreAmount
+                );
             }
         } else {
-            itemId = new NamespacedItemIdStack(
-                NamespacedItemId.fromMaterial(item.getType()),
-                ignoreAmount ? 1 : item.getAmount()
-            );
+            itemId = stackOf(NamespacedItemId.fromMaterial(item.getType()), item, ignoreAmount);
         }
         return itemId;
     }

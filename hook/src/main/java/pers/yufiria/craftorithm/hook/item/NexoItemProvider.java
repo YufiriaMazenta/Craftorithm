@@ -5,7 +5,6 @@ import com.nexomc.nexo.items.ItemBuilder;
 import org.bukkit.inventory.ItemStack;
 import pers.yufiria.craftorithm.item.ItemProvider;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
-import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 
 public enum NexoItemProvider implements ItemProvider {
 
@@ -17,19 +16,16 @@ public enum NexoItemProvider implements ItemProvider {
     }
 
     @Override
-    public NamespacedItemIdStack matchItemId(ItemStack itemStack, boolean ignoreAmount) {
+    public NamespacedItemId matchItemId(ItemStack itemStack) {
         if (!NexoItems.exists(itemStack))
             return null;
         String itemId = NexoItems.idFromItem(itemStack);
         if (itemId == null) {
             return null;
         }
-        return new NamespacedItemIdStack(
-            NamespacedItemId.of(
-                namespace(),
-                itemId
-            ),
-            ignoreAmount ? 1 : itemStack.getAmount()
+        return NamespacedItemId.of(
+            namespace(),
+            itemId
         );
     }
 

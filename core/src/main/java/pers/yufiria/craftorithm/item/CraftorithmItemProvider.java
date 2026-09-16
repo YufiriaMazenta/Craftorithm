@@ -55,7 +55,7 @@ public enum CraftorithmItemProvider implements ItemPluginHook, ItemProvider, Lif
     }
 
     @Override
-    public @Nullable NamespacedItemIdStack matchItemId(ItemStack itemStack, boolean ignoreAmount) {
+    public @Nullable NamespacedItemId matchItemId(ItemStack itemStack) {
         ItemBucketKey bucketKey = ItemBucketKey.of(itemStack);
         Map<String, ItemStack> itemMap = this.itemBuckets.get(bucketKey);
         if (itemMap == null) {
@@ -65,11 +65,7 @@ public enum CraftorithmItemProvider implements ItemPluginHook, ItemProvider, Lif
         for (Map.Entry<String, ItemStack> itemStackEntry : itemMap.entrySet()) {
             ItemStack item = itemStackEntry.getValue();
             if (item.isSimilar(itemStack)) {
-                NamespacedItemId namespacedItemId = NamespacedItemId.of(namespace(), itemStackEntry.getKey());
-                return new NamespacedItemIdStack(
-                    namespacedItemId,
-                    ignoreAmount ? 1 : itemStack.getAmount()
-                );
+                return NamespacedItemId.of(namespace(), itemStackEntry.getKey());
             }
         }
         return null;
@@ -128,7 +124,7 @@ public enum CraftorithmItemProvider implements ItemPluginHook, ItemProvider, Lif
     }
 
 
-    public NamespacedItemIdStack regCraftorithmItem(String namespace, String itemName, ItemStack item) {
+    public NamespacedItemId regCraftorithmItem(String namespace, String itemName, ItemStack item) {
         String namespaceItemId = namespace + ":" + itemName;
         idItemMap.put(namespaceItemId, item);
         itemBuckets.computeIfAbsent(
@@ -146,12 +142,9 @@ public enum CraftorithmItemProvider implements ItemPluginHook, ItemProvider, Lif
             itemConfigWrapper.set(itemName, item);
             itemConfigWrapper.saveConfig();
         });
-        return new NamespacedItemIdStack(
-            NamespacedItemId.of(
-                namespace(),
-                namespaceItemId
-            ),
-            item.getAmount()
+        return NamespacedItemId.of(
+            namespace(),
+            namespaceItemId
         );
     }
 

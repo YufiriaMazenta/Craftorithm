@@ -10,7 +10,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.item.ItemProvider;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
-import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 
 public enum CraftEngineItemProvider implements ItemProvider {
 
@@ -22,7 +21,7 @@ public enum CraftEngineItemProvider implements ItemProvider {
     }
 
     @Override
-    public @Nullable NamespacedItemIdStack matchItemId(ItemStack itemStack, boolean ignoreAmount) {
+    public @Nullable NamespacedItemId matchItemId(ItemStack itemStack) {
         if (!CraftEngineItems.isCustomItem(itemStack)) {
             return null;
         }
@@ -30,12 +29,9 @@ public enum CraftEngineItemProvider implements ItemProvider {
         if (craftEngineItemId == null) {
             return null;
         }
-        return new NamespacedItemIdStack(
-            NamespacedItemId.of(
-                namespace(),
-                craftEngineItemId.asString()
-            ),
-            ignoreAmount ? 1 : itemStack.getAmount()
+        return NamespacedItemId.of(
+            namespace(),
+            craftEngineItemId.asString()
         );
     }
 

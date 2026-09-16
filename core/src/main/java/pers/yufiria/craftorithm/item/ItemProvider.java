@@ -11,7 +11,7 @@ public interface ItemProvider {
     String namespace();
 
     @Nullable
-    NamespacedItemIdStack matchItemId(ItemStack itemStack, boolean ignoreAmount);
+    NamespacedItemId matchItemId(ItemStack itemStack);
 
     @Nullable
     ItemStack matchItem(String itemId);

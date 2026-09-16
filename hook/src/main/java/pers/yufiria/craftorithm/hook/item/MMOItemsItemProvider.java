@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.item.ItemProvider;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
-import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 
 public enum MMOItemsItemProvider implements ItemProvider {
 
@@ -21,19 +20,16 @@ public enum MMOItemsItemProvider implements ItemProvider {
     }
 
     @Override
-    public @Nullable NamespacedItemIdStack matchItemId(ItemStack itemStack, boolean ignoreAmount) {
+    public @Nullable NamespacedItemId matchItemId(ItemStack itemStack) {
         NBTItem nbtItem = NBTItem.get(itemStack);
         if (!nbtItem.hasType())
             return null;
         String type = nbtItem.getType();
         String id = nbtItem.getString("MMOITEMS_ITEM_ID");
         String itemKey = type + ":" + id;
-        return new NamespacedItemIdStack(
-            NamespacedItemId.of(
-                namespace(),
-                itemKey
-            ),
-            ignoreAmount ? 1 : itemStack.getAmount()
+        return NamespacedItemId.of(
+            namespace(),
+            itemKey
         );
     }
 

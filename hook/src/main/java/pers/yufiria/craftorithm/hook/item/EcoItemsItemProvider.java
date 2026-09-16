@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.item.ItemProvider;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
-import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 
 public enum EcoItemsItemProvider implements ItemProvider {
 
@@ -20,18 +19,15 @@ public enum EcoItemsItemProvider implements ItemProvider {
     }
 
     @Override
-    public @Nullable NamespacedItemIdStack matchItemId(ItemStack itemStack, boolean ignoreAmount) {
+    public @Nullable NamespacedItemId matchItemId(ItemStack itemStack) {
         EcoItem ecoItem = ItemUtilsKt.getEcoItem(itemStack);
         if (ecoItem == null) {
             return null;
         }
         String id = ecoItem.getID();
-        return new NamespacedItemIdStack(
-            NamespacedItemId.of(
-                namespace(),
-                id
-            ),
-            ignoreAmount ? 1 : itemStack.getAmount()
+        return NamespacedItemId.of(
+            namespace(),
+            id
         );
     }
 

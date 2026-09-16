@@ -8,7 +8,6 @@ import pers.neige.neigeitems.item.ItemInfo;
 import pers.neige.neigeitems.manager.ItemManager;
 import pers.yufiria.craftorithm.item.ItemProvider;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
-import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 
 public enum NeigeItemsItemProvider implements ItemProvider {
 
@@ -20,18 +19,15 @@ public enum NeigeItemsItemProvider implements ItemProvider {
     }
 
     @Override
-    public @Nullable NamespacedItemIdStack matchItemId(ItemStack itemStack, boolean ignoreAmount) {
+    public @Nullable NamespacedItemId matchItemId(ItemStack itemStack) {
         ItemInfo niItemInfo = ItemManager.INSTANCE.isNiItem(itemStack);
         if (niItemInfo == null) {
             return null;
         }
         String id = niItemInfo.getId();
-        return new NamespacedItemIdStack(
-            NamespacedItemId.of(
-                namespace(),
-                id
-            ),
-            ignoreAmount ? 1 : itemStack.getAmount()
+        return NamespacedItemId.of(
+            namespace(),
+            id
         );
     }
 

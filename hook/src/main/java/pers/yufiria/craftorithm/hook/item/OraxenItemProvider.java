@@ -7,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.item.ItemProvider;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
-import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 
 public enum OraxenItemProvider implements ItemProvider {
 
@@ -19,16 +18,13 @@ public enum OraxenItemProvider implements ItemProvider {
     }
 
     @Override
-    public @Nullable NamespacedItemIdStack matchItemId(ItemStack itemStack, boolean ignoreAmount) {
+    public @Nullable NamespacedItemId matchItemId(ItemStack itemStack) {
         if (!OraxenItems.exists(itemStack))
             return null;
         String itemName = OraxenItems.getIdByItem(itemStack);
-        return new NamespacedItemIdStack(
-            NamespacedItemId.of(
-                namespace(),
-                itemName
-            ),
-            ignoreAmount ? 1 : itemStack.getAmount()
+        return NamespacedItemId.of(
+            namespace(),
+            itemName
         );
     }
 

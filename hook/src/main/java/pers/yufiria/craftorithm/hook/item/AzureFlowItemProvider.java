@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.item.ItemProvider;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
-import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 
 
 public enum AzureFlowItemProvider implements ItemProvider {
@@ -22,18 +21,15 @@ public enum AzureFlowItemProvider implements ItemProvider {
     }
 
     @Override
-    public @Nullable NamespacedItemIdStack matchItemId(ItemStack itemStack, boolean ignoreAmount) {
+    public @Nullable NamespacedItemId matchItemId(ItemStack itemStack) {
         AzureFlowItem azureFlowItem = AzureFlowAPI.toItem(itemStack);
         if (azureFlowItem == null) {
             return null;
         }
         String itemId = azureFlowItem.getUuid();
-        return new NamespacedItemIdStack(
-            NamespacedItemId.of(
-                namespace(),
-                itemId
-            ),
-            ignoreAmount ? 1 : itemStack.getAmount()
+        return NamespacedItemId.of(
+            namespace(),
+            itemId
         );
     }
 

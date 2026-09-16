@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.item.ItemProvider;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
-import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 
 import java.util.Optional;
 
@@ -23,18 +22,15 @@ public enum ExecutableItemsItemProvider implements ItemProvider {
     }
 
     @Override
-    public @Nullable NamespacedItemIdStack matchItemId(ItemStack itemStack, boolean ignoreAmount) {
+    public @Nullable NamespacedItemId matchItemId(ItemStack itemStack) {
         ExecutableItemsManagerInterface executableItemsManager = ExecutableItemsAPI.getExecutableItemsManager();
         Optional<ExecutableItemInterface> executableItemOpt = executableItemsManager.getExecutableItem(itemStack);
         if (executableItemOpt.isPresent()) {
             ExecutableItemInterface executableItem = executableItemOpt.get();
             String id = executableItem.getId();
-            return new NamespacedItemIdStack(
-                NamespacedItemId.of(
-                    namespace(),
-                    id
-                ),
-                ignoreAmount ? 1 : itemStack.getAmount()
+            return NamespacedItemId.of(
+                namespace(),
+                id
             );
         } else {
             return null;
