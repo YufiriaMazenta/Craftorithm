@@ -17,6 +17,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.item.ingredientrestriction.IngredientRestrictionRegistry;
@@ -45,7 +46,8 @@ public enum ItemManager implements LifecycleTask {
     private BukkitConfigWrapper itemPacksConfig;
     private final Map<String, ItemPack> itemPacks = new ConcurrentHashMap<>();
     private final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("yyyyMMdd_HHmmss");
-    private final List<IngredientRestrictionRule> ingredientRestrictionRules = new ArrayList<>();
+    //重载在异步线程进行,而该列表会被主线程的合成事件读取,因此使用不可变快照整体替换
+    private volatile List<IngredientRestrictionRule> ingredientRestrictionRules = List.of();
 
     /**
      * 注册一个物品提供源
@@ -290,8 +292,8 @@ public enum ItemManager implements LifecycleTask {
         return true;
     }
 
-    public Map<NamespacedItemId, Integer> customCookingFuelMap() {
-        return customCookingFuelMap;
+    public @Unmodifiable Map<NamespacedItemId, Integer> customCookingFuelMap() {
+        return Collections.unmodifiableMap(customCookingFuelMap);
     }
 
     @Override
@@ -327,15 +329,17 @@ public enum ItemManager implements LifecycleTask {
     //合成限制规则相关
 
     private void reloadIngredientRestrictionRules() {
-        ingredientRestrictionRules.clear();
+        List<IngredientRestrictionRule> rules = new ArrayList<>();
         for (ConfigurationSection section : PluginConfigs.INGREDIENT_RESTRICTION_RULES.value()) {
             IngredientRestrictionRule rule = IngredientRestrictionRegistry.INSTANCE.create(section);
             if (rule == null) {
                 CrypticLib.info("&cUnknown ingredient restriction rule type: " + section.getString("type", ""));
                 continue;
             }
-            ingredientRestrictionRules.add(rule);
+            rules.add(rule);
         }
+        //全部构建完成后再整体替换,避免合成事件读到已清空或只填了一部分的规则列表
+        ingredientRestrictionRules = List.copyOf(rules);
     }
 
     /**
@@ -345,12 +349,14 @@ public enum ItemManager implements LifecycleTask {
      * @return 允许合成返回true，被规则阻止返回false
      */
     public boolean canCraft(ItemStack[] items, NamespacedKey recipeKey) {
-        if (ingredientRestrictionRules.isEmpty())
+        //取一次快照,保证同一次判定内使用的是同一份规则
+        List<IngredientRestrictionRule> rules = ingredientRestrictionRules;
+        if (rules.isEmpty())
             return true;
         for (ItemStack item : items) {
             if (ItemHelper.isAir(item))
                 continue;
-            for (IngredientRestrictionRule rule : ingredientRestrictionRules) {
+            for (IngredientRestrictionRule rule : rules) {
                 if (rule.isBlocked(item, recipeKey))
                     return false;
             }
