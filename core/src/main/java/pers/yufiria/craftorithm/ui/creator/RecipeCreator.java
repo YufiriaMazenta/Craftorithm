@@ -52,11 +52,6 @@ public abstract class RecipeCreator extends StoredMenu {
         });
     }
 
-    public RecipeCreator setRecipeFileName(@Nullable String recipeFileName) {
-        this.recipeFileName = recipeFileName;
-        return this;
-    }
-
     /**
      * 解析配方文件名
      * 优先级：recipeFileName > recipeId > 自动生成

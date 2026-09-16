@@ -18,6 +18,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.api.event.RecipeLoadFromConfigEvent;
 import pers.yufiria.craftorithm.config.Languages;
@@ -492,12 +493,12 @@ public enum RecipeManager implements LifecycleTask {
         return recipeGroupMap.keySet().stream().toList();
     }
 
-    public Set<NamespacedKey> serverRecipeKeys() {
-        return serverRecipeKeys;
+    public @Unmodifiable Set<NamespacedKey> serverRecipeKeys() {
+        return Collections.unmodifiableSet(serverRecipeKeys);
     }
 
-    public Set<NamespacedKey> disableRecipeKeys() {
-        return disabledRecipes.keySet();
+    public @Unmodifiable Set<NamespacedKey> disableRecipeKeys() {
+        return Collections.unmodifiableSet(disabledRecipes.keySet());
     }
 
     public boolean supportPotionMix() {
