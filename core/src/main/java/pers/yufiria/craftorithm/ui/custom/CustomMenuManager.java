@@ -61,11 +61,13 @@ public enum CustomMenuManager implements LifecycleTask {
             if (willOpenMenu instanceof BackableMenu backableMenu) {
                 backableMenu.setParentMenu(openingMenu);
             }
-            callback.accept(OpenMenuResult.SUCCESS);
         } catch (Throwable throwable) {
             callback.accept(OpenMenuResult.EXCEPTION);
             throwable.printStackTrace();
+            return;
         }
+        //回调放在try之外,避免回调自身抛异常时被捕获从而重复执行
+        callback.accept(OpenMenuResult.SUCCESS);
     }
 
     public Optional<Function<Player, Menu>> getMenuCreatorOpt(String name) {
