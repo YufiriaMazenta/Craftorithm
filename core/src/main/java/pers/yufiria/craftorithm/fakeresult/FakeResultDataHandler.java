@@ -48,7 +48,7 @@ public enum FakeResultDataHandler implements Listener, LifecycleTask {
 
     private final Map<NamespacedKey, ItemStack> recipeFakeResultMap = new ConcurrentHashMap<>();
     private final Map<UUID, CacheRecipeData> playerPreparingRecipe = new ConcurrentHashMap<>();
-    private boolean supportFakeResult = false;
+    private volatile boolean supportFakeResult = false;
 
     @EventHandler
     public void loadFakeResultConfig(RecipeLoadFromConfigEvent event) {
@@ -181,10 +181,12 @@ public enum FakeResultDataHandler implements Listener, LifecycleTask {
     }
 
     public Optional<ItemStack> getRecipeFakeResult(NamespacedKey recipeKey) {
-        if (!recipeFakeResultMap.containsKey(recipeKey)) {
+        //该方法会在数据包的异步线程被调用,重载时recipeFakeResultMap会被清空,因此需要一步取值
+        ItemStack fakeResult = recipeFakeResultMap.get(recipeKey);
+        if (fakeResult == null) {
             return Optional.empty();
         }
-        return Optional.of(recipeFakeResultMap.get(recipeKey).clone());
+        return Optional.of(fakeResult.clone());
     }
 
     public boolean hasFakeResult(NamespacedKey recipeKey) {
