@@ -11,7 +11,6 @@ import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -85,7 +84,10 @@ public enum ItemIdStackRecipeChoiceParser implements RecipeChoiceParser {
                 if (itemPack == null) {
                     throw new RecipeLoadException(packId + " is not a valid item pack");
                 }
-                choices = new ArrayList<>(itemPack.itemIds());
+                //物品组只记录物品id, 数量按1处理
+                choices = itemPack.itemIds().stream()
+                    .map(NamespacedItemIdStack::new)
+                    .toList();
                 break;
             default:
                 choices = List.of(NamespacedItemIdStack.fromString(choiceStr));

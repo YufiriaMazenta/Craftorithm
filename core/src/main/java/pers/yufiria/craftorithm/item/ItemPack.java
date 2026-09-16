@@ -12,46 +12,47 @@ public class ItemPack {
 
     private final String packId;
     private final List<ItemStack> items;
-    private final List<NamespacedItemIdStack> itemIds;
+    private final List<NamespacedItemId> itemIds;
 
     public ItemPack(String packId, List<String> itemIdStrList) {
         this.packId = packId;
         itemIds = new ArrayList<>();
         for (String itemIdStr : itemIdStrList) {
-            NamespacedItemIdStack itemIdStack = NamespacedItemIdStack.fromString(itemIdStr);
-            if (itemIdStack == null) {
+            //物品组只记录物品id, 条目上的数量后缀会被忽略
+            //这里沿用带数量的解析方式, 是为了正确剥离数量后缀后再取物品id
+            NamespacedItemIdStack parsedItemId = NamespacedItemIdStack.fromString(itemIdStr);
+            if (parsedItemId == null) {
                 continue;
             }
-            switch (itemIdStack.itemId().namespace()) {
+            NamespacedItemId itemId = parsedItemId.itemId();
+            switch (itemId.namespace()) {
                 case "tag" -> {
                     //是一个tag,将tag的所有物品加入
-                    String tagId = itemIdStack.itemId().toString();
+                    String tagId = itemId.itemId();
                     Optional<Tag<Material>> tagOpt = IngredientUtils.getTag(tagId);
                     if (tagOpt.isEmpty()) {
                         throw new ItemNotFoundException(tagId + " is not a valid tag");
                     }
                     Tag<Material> materialTag = tagOpt.get();
                     for (Material material : materialTag.getValues()) {
-                        this.itemIds.add(new NamespacedItemIdStack(NamespacedItemId.fromMaterial(material), itemIdStack.amount()));
+                        this.itemIds.add(NamespacedItemId.fromMaterial(material));
                     }
                 }
                 case "item_pack" -> {
                     //是另一个物品组,将他的所有物品加入
-                    String itemPackId = itemIdStack.itemId().toString();
-                    ItemPack otherItemPack = ItemManager.INSTANCE.getItemPack(itemPackId);
+                    ItemPack otherItemPack = ItemManager.INSTANCE.getItemPack(itemId.itemId());
                     if (otherItemPack == null) {
                         continue;
                     }
                     this.itemIds.addAll(otherItemPack.itemIds);
                 }
                 default -> {
-                    this.itemIds.add(itemIdStack);
-
+                    this.itemIds.add(itemId);
                 }
             }
         }
         this.items = new ArrayList<>();
-        for (NamespacedItemIdStack itemId : itemIds) {
+        for (NamespacedItemId itemId : itemIds) {
             ItemManager.INSTANCE.matchItem(itemId).ifPresent(item -> items.add(item.clone()));
         }
     }
@@ -60,7 +61,7 @@ public class ItemPack {
         return Collections.unmodifiableList(items);
     }
 
-    public List<NamespacedItemIdStack> itemIds() {
+    public List<NamespacedItemId> itemIds() {
         return Collections.unmodifiableList(itemIds);
     }
 

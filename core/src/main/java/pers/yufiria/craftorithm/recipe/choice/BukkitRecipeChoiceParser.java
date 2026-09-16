@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.ItemPack;
+import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 import pers.yufiria.craftorithm.util.IngredientUtils;
@@ -58,8 +59,8 @@ public enum BukkitRecipeChoiceParser implements RecipeChoiceParser {
                         throw new RecipeLoadException(packId + " is not a valid item pack");
                     }
                     boolean allVanilla = true;
-                    for (NamespacedItemIdStack stackedItemId : itemPack.itemIds()) {
-                        if (!stackedItemId.itemId().namespace().equals("minecraft")) {
+                    for (NamespacedItemId itemId : itemPack.itemIds()) {
+                        if (!itemId.namespace().equals("minecraft")) {
                             allVanilla = false;
                             break;
                         }

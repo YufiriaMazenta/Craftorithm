@@ -81,6 +81,14 @@ public enum ItemManager implements LifecycleTask {
      * 根据名字获取一个物品
      * @return 获取到的物品，不存在返回 Optional.empty()
      */
+    public Optional<ItemStack> matchItem(NamespacedItemId itemId) {
+        return matchItem(new NamespacedItemIdStack(itemId));
+    }
+
+    /**
+     * 根据名字获取一个物品
+     * @return 获取到的物品，不存在返回 Optional.empty()
+     */
     public Optional<ItemStack> matchItem(NamespacedItemIdStack stackedItemId) {
         return matchItem(stackedItemId, null);
     }
