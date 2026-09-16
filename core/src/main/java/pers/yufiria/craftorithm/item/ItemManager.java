@@ -281,10 +281,12 @@ public enum ItemManager implements LifecycleTask {
         NamespacedItemIdStack stackedItemId = matchItemIdOrCreate(item, false);
         if (stackedItemId == null)
             throw new IllegalArgumentException("Cannot add null item as a fuel");
-        if (customCookingFuelMap.containsKey(stackedItemId.itemId()))
+        NamespacedItemId itemId = stackedItemId.itemId();
+        if (customCookingFuelMap.containsKey(itemId))
             return false;
-        customCookingFuelMap.put(stackedItemId.itemId(), burnTime);
-        customFuelConfig.config().set(stackedItemId + "." + BURN_TIME_KEY, burnTime);
+        customCookingFuelMap.put(itemId, burnTime);
+        //配置键必须只使用物品id, 不能带上数量, 否则重载后会被解析成错误的物品id而永远匹配不上
+        customFuelConfig.config().set(itemId + "." + BURN_TIME_KEY, burnTime);
         customFuelConfig.saveConfig();
         customFuelConfig.reloadConfig();
         return true;
