@@ -12,8 +12,6 @@ import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public enum ItemIdStackRecipeChoiceParser implements RecipeChoiceParser {
 
@@ -57,36 +55,25 @@ public enum ItemIdStackRecipeChoiceParser implements RecipeChoiceParser {
                 choices = List.of(NamespacedItemIdStack.fromString(choiceStr));
                 break;
             case "tag":
-                String tagKeyStr = choiceStr.substring(4);
-                int spaceIndex = tagKeyStr.lastIndexOf(' ');
-                if (spaceIndex == -1) {
-                    Optional<Tag<Material>> tagOpt = IngredientUtils.getTag(tagKeyStr);
-                    if (tagOpt.isEmpty()) {
-                        throw new RecipeLoadException(tagKeyStr + " is not a valid tag");
-                    }
-                    Tag<Material> materialTag = tagOpt.get();
-                    choices = materialTag.getValues().stream().map(it -> new NamespacedItemIdStack(NamespacedItemId.fromMaterial(it))).collect(Collectors.toList());
-                } else {
-                    int amount = Integer.parseInt(tagKeyStr.substring(spaceIndex + 1));
-                    tagKeyStr = tagKeyStr.substring(0, spaceIndex);
-                    Optional<Tag<Material>> tagOpt = IngredientUtils.getTag(tagKeyStr);
-                    if (tagOpt.isEmpty()) {
-                        throw new RecipeLoadException(tagKeyStr + " is not a valid tag");
-                    }
-                    Tag<Material> materialTag = tagOpt.get();
-                    choices = materialTag.getValues().stream().map(it -> new NamespacedItemIdStack(NamespacedItemId.fromMaterial(it), amount)).collect(Collectors.toList());
-                }
+                StringAmount tagPart = splitAmount(choiceStr.substring(4));
+                Tag<Material> materialTag = IngredientUtils.getTag(tagPart.key())
+                    .orElseThrow(() -> new RecipeLoadException(tagPart.key() + " is not a valid tag"));
+                int tagAmount = tagPart.amount();
+                choices = materialTag.getValues().stream()
+                    .map(it -> new NamespacedItemIdStack(NamespacedItemId.fromMaterial(it), tagAmount))
+                    .toList();
                 break;
             case "item_pack":
                 //是物品组
-                String packId = choiceStr.substring("item_pack:".length());
-                ItemPack itemPack = ItemManager.INSTANCE.getItemPack(packId);
+                StringAmount packPart = splitAmount(choiceStr.substring("item_pack:".length()));
+                ItemPack itemPack = ItemManager.INSTANCE.getItemPack(packPart.key());
                 if (itemPack == null) {
-                    throw new RecipeLoadException(packId + " is not a valid item pack");
+                    throw new RecipeLoadException(packPart.key() + " is not a valid item pack");
                 }
-                //物品组只记录物品id, 数量按1处理
+                //物品组只记录物品id, 数量由引用处统一指定, 组内所有物品使用同一个数量
+                int packAmount = packPart.amount();
                 choices = itemPack.itemIds().stream()
-                    .map(NamespacedItemIdStack::new)
+                    .map(itemId -> new NamespacedItemIdStack(itemId, packAmount))
                     .toList();
                 break;
             default:
@@ -95,4 +82,26 @@ public enum ItemIdStackRecipeChoiceParser implements RecipeChoiceParser {
         }
         return new ItemIdStackRecipeChoice(choices);
     }
+
+    /**
+     * 剥离字符串尾部的数量后缀
+     * @param keyStr 待剥离的字符串
+     * @return 剥离数量后的字符串与数量, 没有数量后缀时数量为1
+     */
+    private static StringAmount splitAmount(String keyStr) {
+        int spaceIndex = keyStr.lastIndexOf(' ');
+        if (spaceIndex == -1) {
+            return new StringAmount(keyStr, 1);
+        }
+        String amountStr = keyStr.substring(spaceIndex + 1);
+        int amount;
+        try {
+            amount = Integer.parseInt(amountStr);
+        } catch (NumberFormatException e) {
+            throw new RecipeLoadException(amountStr + " is not a valid amount");
+        }
+        return new StringAmount(keyStr.substring(0, spaceIndex), amount);
+    }
+
+    private record StringAmount(String key, int amount) {}
 }
