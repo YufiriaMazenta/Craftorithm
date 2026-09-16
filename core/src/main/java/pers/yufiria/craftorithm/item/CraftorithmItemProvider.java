@@ -45,7 +45,7 @@ public enum CraftorithmItemProvider implements ItemPluginHook, ItemProvider, Lif
 
     CraftorithmItemProvider() {
         idItemMap = new ConcurrentHashMap<>();
-        itemConfigFileMap = new HashMap<>();
+        itemConfigFileMap = new ConcurrentHashMap<>();
         itemBuckets = new ConcurrentHashMap<>();
     }
 
