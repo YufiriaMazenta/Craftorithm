@@ -92,7 +92,8 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
                 CrypticLib.info("Saved " + toAdd.size() + " discovered recipes for player: " + playerUuid);
             }
         } catch (SQLException e) {
-            CrypticLib.info("&cFailed to set discovered recipes for " + playerUuid + ": " + e.getMessage());
+            CrypticLib.info("&cFailed to save discovered recipes for " + playerUuid + ": " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
