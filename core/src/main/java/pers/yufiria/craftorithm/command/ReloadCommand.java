@@ -16,7 +16,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.config.Languages;
-import pers.yufiria.craftorithm.database.dao.DiscoveredRecipeDao;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.util.LangUtils;
 
@@ -80,8 +79,6 @@ public final class ReloadCommand extends CommandNode implements LifecycleTask {
             reloadTimeoutCallback.cancel();
             reloadTimeoutCallback = null;
         }
-        //从数据库加载已解锁配方
-        DiscoveredRecipeDao.INSTANCE.loadOnlinePlayersDiscoveredRecipes();
         reloadSenderUuid = null;
         reloading.set(false);
         if (sender != null) {

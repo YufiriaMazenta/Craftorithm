@@ -23,6 +23,7 @@ import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.api.event.RecipeLoadFromConfigEvent;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.PluginConfigs;
+import pers.yufiria.craftorithm.database.dao.DiscoveredRecipeDao;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 import pers.yufiria.craftorithm.recipe.parser.RecipeParser;
 import pers.yufiria.craftorithm.recipe.register.RecipeRegister;
@@ -115,6 +116,10 @@ public enum RecipeManager implements LifecycleTask {
             CrypticLibBukkit.scheduler().syncLater(() -> {
                 //所有操作进行完毕后，为玩家更新配方信息
                 CraftorithmRecipeRegistry.findImpl().updateRecipes();
+                //从数据库恢复玩家已解锁配方（异步，避免阻塞主线程）
+                CrypticLibBukkit.scheduler().async(() -> {
+                    DiscoveredRecipeDao.INSTANCE.loadOnlinePlayersDiscoveredRecipes();
+                });
                 if (reloadCompletion != null) {
                     reloadCompletion.complete(null);
                 }
