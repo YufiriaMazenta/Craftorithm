@@ -20,4 +20,5 @@ include(
     "nms:v1_21_11_spigot",
     "nms:v26_1_spigot",
     "nms:v26_1_paper",
+    "nms:v26_3_paper",
 )

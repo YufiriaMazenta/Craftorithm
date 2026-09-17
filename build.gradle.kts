@@ -77,7 +77,6 @@ subprojects {
     java.sourceCompatibility = JavaVersion.VERSION_21
     java.targetCompatibility = JavaVersion.VERSION_21
     repositories {
-        mavenLocal()
         maven("https://repo.papermc.io/repository/maven-public/")
         //CrypticLib
         maven("https://repo2.crypticlib.com/releases/")
