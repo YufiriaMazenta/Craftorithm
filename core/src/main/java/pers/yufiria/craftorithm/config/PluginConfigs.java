@@ -33,22 +33,21 @@ public class PluginConfigs {
         "是否启用铁砧配方"
     );
     public final static BooleanConfig DEBUG = new BooleanConfig("debug", false);
-    public final static BooleanConfig RECIPE_DISCOVERY_SYNC_ENABLE = new BooleanConfig(
-        "recipe_discovery_sync.enable",
-        false,
+    public final static BooleanConfig SAVE_DISCOVERED_RECIPES = new BooleanConfig(
+        "save_discovered_recipes",
+        true,
         List.of(
-            "跨服已解锁配方同步",
-            "启用后，玩家的已解锁配方状态会在加入/退出服务器时与数据库同步",
-            "跨服切换时自动合并两端的已解锁配方"
+            "将已解锁配方键存储到数据库",
+            "在连接同一个数据库的情况下可以跨服同步已解锁配方"
         )
     );
-    public final static IntConfig RECIPE_DISCOVERY_SYNC_JOIN_SYNC_DELAY_TICKS = new IntConfig(
-        "recipe_discovery_sync.join_sync_delay_ticks",
+    public final static IntConfig DISCOVERED_RECIPES_JOIN_SYNC_DELAY_TICKS = new IntConfig(
+        "save_discovered_recipes.join_sync_delay_ticks",
         20,
         "玩家加入服务器后，等待多少tick再执行同步（建议10-40，即0.5-2秒）"
     );
-    public final static IntConfig RECIPE_DISCOVERY_SYNC_INTERVAL_TICKS = new IntConfig(
-        "recipe_discovery_sync.interval_ticks",
+    public final static IntConfig DISCOVERED_RECIPES_INTERVAL_TICKS = new IntConfig(
+        "save_discovered_recipes.interval_ticks",
         6000,
         "定时保存在线玩家已解锁配方到数据库的间隔（tick），默认300秒（5分钟）"
     );

@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.database.dao;
 
 import crypticlib.CrypticLib;
+import crypticlib.CrypticLibBukkit;
 import crypticlib.CrypticLibPlugin;
 import crypticlib.database.connection.ConnectionSource;
 import crypticlib.database.dao.Dao;
@@ -118,28 +119,34 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
     public void onLifecycle(CrypticLibPlugin crypticLibPlugin, LifecyclePhase lifecyclePhase) {
         switch (lifecyclePhase) {
             case ACTIVE, RELOAD -> {
-                if (PluginConfigs.RECIPE_DISCOVERY_SYNC_ENABLE.value()) {
+                if (PluginConfigs.SAVE_DISCOVERED_RECIPES.value()) {
                     initTable();
                     startPeriodicSaveTask();
                 }
             }
             case DISABLE -> {
-                if (PluginConfigs.RECIPE_DISCOVERY_SYNC_ENABLE.value()) {
-                    saveAllOnlinePlayersData();
+                if (PluginConfigs.SAVE_DISCOVERED_RECIPES.value()) {
+                    CrypticLibBukkit.scheduler().async(() -> {
+                        try {
+                            saveAllOnlinePlayersData();
+                        } catch (Exception e) {
+                            CrypticLib.info("&cFailed to save discovered recipes on disable: " + e.getMessage());
+                        }
+                    });
                 }
             }
         }
     }
 
     private void startPeriodicSaveTask() {
-        int intervalTicks = PluginConfigs.RECIPE_DISCOVERY_SYNC_INTERVAL_TICKS.value();
+        int intervalTicks = PluginConfigs.DISCOVERED_RECIPES_INTERVAL_TICKS.value();
         if (periodSaveTask != null) {
             periodSaveTask.cancel();
         }
         periodSaveTask = new CrypticLibRunnable() {
             @Override
             public void run() {
-                if (!PluginConfigs.RECIPE_DISCOVERY_SYNC_ENABLE.value()) return;
+                if (!PluginConfigs.SAVE_DISCOVERED_RECIPES.value()) return;
                 try {
                     saveAllOnlinePlayersData();
                 } catch (Exception e) {
@@ -148,6 +155,32 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
             }
         };
         periodSaveTask.asyncTimer(intervalTicks, intervalTicks);
+    }
+
+    /**
+     * 从数据库读取所有在线玩家的已解锁配方并解锁
+     */
+    public void loadOnlinePlayersDiscoveredRecipes() {
+        if (!PluginConfigs.SAVE_DISCOVERED_RECIPES.value()) return;
+        Set<String> serverRecipeKeys = RecipeManager.INSTANCE.serverRecipeKeys().stream()
+            .map(Objects::toString)
+            .collect(Collectors.toSet());
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            try {
+                Set<String> dbRecipes = getDiscoveredRecipes(player.getUniqueId());
+                dbRecipes.retainAll(serverRecipeKeys);
+                if (!dbRecipes.isEmpty()) {
+                    List<NamespacedKey> keys = dbRecipes.stream()
+                        .map(NamespacedKey::fromString)
+                        .filter(Objects::nonNull)
+                        .toList();
+                    CrypticLibBukkit.scheduler().runOnEntity(player, () -> player.discoverRecipes(keys), () -> {});
+                }
+            } catch (Exception e) {
+                CrypticLib.info("&cFailed to load discovered recipes for " + player.getName() + ": " + e.getMessage());
+            }
+        }
+        CrypticLib.info("Loaded discovered recipes for online players");
     }
 
 }
