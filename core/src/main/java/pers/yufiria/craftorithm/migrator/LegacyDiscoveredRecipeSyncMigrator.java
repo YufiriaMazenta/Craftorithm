@@ -14,11 +14,12 @@ import pers.yufiria.craftorithm.Craftorithm;
  * 旧版已解锁配方同步配置迁移器
  * <p>
  * 将 recipe_discovery_sync 配置段迁移为 save_discovered_recipes 配置段
+ * <p>
+ * 注意: enable 不参与迁移, 使其使用新键的默认值
  */
 @LifecycleTaskConfig(
     schedules = {
-        @LifecycleSchedule(phase = LifecyclePhase.INIT),
-        @LifecycleSchedule(phase = LifecyclePhase.LOAD)
+        @LifecycleSchedule(phase = LifecyclePhase.INIT)
     }
 )
 public enum LegacyDiscoveredRecipeSyncMigrator implements LifecycleTask {
@@ -28,27 +29,8 @@ public enum LegacyDiscoveredRecipeSyncMigrator implements LifecycleTask {
     private static final String OLD_SECTION = "recipe_discovery_sync";
     private static final String NEW_SECTION = "save_discovered_recipes";
 
-    /**
-     * 本次启动是否执行过迁移
-     */
-    private boolean migratedThisStartup = false;
-
     @Override
     public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase lifeCycle) {
-        switch (lifeCycle) {
-            case INIT -> migrate(plugin);
-            case LOAD -> {
-                //迁移时新键还没有注释, 默认注释要等配置节点加载后才会写入内存, 因此这里补一次保存让其落盘
-                if (migratedThisStartup) {
-                    migratedThisStartup = false;
-                    ((Craftorithm) plugin).getConfigWrapperOrCreate("config.yml").saveConfig();
-                }
-            }
-            default -> {}
-        }
-    }
-
-    private void migrate(CrypticLibPlugin plugin) {
         BukkitConfigWrapper configWrapper = ((Craftorithm) plugin).getConfigWrapperOrCreate("config.yml");
         YamlConfiguration config = configWrapper.config();
 
@@ -57,9 +39,6 @@ public enum LegacyDiscoveredRecipeSyncMigrator implements LifecycleTask {
         }
 
         int migrated = 0;
-        if (migrateOption(config, "enable", "enable")) {
-            migrated++;
-        }
         if (migrateOption(config, "join_sync_delay_ticks", "join_discover_delay_ticks")) {
             migrated++;
         }
@@ -71,7 +50,6 @@ public enum LegacyDiscoveredRecipeSyncMigrator implements LifecycleTask {
         config.set(OLD_SECTION, null);
         configWrapper.saveConfig();
         configWrapper.reloadConfig();
-        migratedThisStartup = true;
         CrypticLib.info("Migrated " + migrated + " option(s) from " + OLD_SECTION + " to " + NEW_SECTION);
     }
 
