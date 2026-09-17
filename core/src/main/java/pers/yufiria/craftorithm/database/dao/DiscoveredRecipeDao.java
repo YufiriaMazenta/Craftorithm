@@ -126,13 +126,11 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
             }
             case DISABLE -> {
                 if (PluginConfigs.SAVE_DISCOVERED_RECIPES_ENABLE.value()) {
-                    CrypticLibBukkit.scheduler().async(() -> {
-                        try {
-                            saveAllOnlinePlayersData();
-                        } catch (Exception e) {
-                            CrypticLib.info("&cFailed to save discovered recipes on disable: " + e.getMessage());
-                        }
-                    });
+                    try {
+                        saveAllOnlinePlayersData();
+                    } catch (Exception e) {
+                        CrypticLib.info("&cFailed to save discovered recipes on disable: " + e.getMessage());
+                    }
                 }
             }
         }
