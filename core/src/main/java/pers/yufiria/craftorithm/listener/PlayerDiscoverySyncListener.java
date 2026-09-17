@@ -26,11 +26,11 @@ public enum PlayerDiscoverySyncListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        if (!PluginConfigs.SAVE_DISCOVERED_RECIPES.value()) return;
+        if (!PluginConfigs.SAVE_DISCOVERED_RECIPES_ENABLE.value()) return;
 
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
-        int delayTicks = PluginConfigs.DISCOVERED_RECIPES_JOIN_SYNC_DELAY_TICKS.value();
+        int delayTicks = PluginConfigs.SAVE_DISCOVERED_RECIPES_JOIN_DISCOVER_DELAY_TICKS.value();
 
         CrypticLibBukkit.scheduler().syncLater(() -> {
             CrypticLibBukkit.scheduler().runOnEntity(player, () -> {
@@ -79,7 +79,7 @@ public enum PlayerDiscoverySyncListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        if (!PluginConfigs.SAVE_DISCOVERED_RECIPES.value()) return;
+        if (!PluginConfigs.SAVE_DISCOVERED_RECIPES_ENABLE.value()) return;
 
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();

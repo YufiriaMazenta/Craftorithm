@@ -119,13 +119,13 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
     public void onLifecycle(CrypticLibPlugin crypticLibPlugin, LifecyclePhase lifecyclePhase) {
         switch (lifecyclePhase) {
             case ACTIVE, RELOAD -> {
-                if (PluginConfigs.SAVE_DISCOVERED_RECIPES.value()) {
+                if (PluginConfigs.SAVE_DISCOVERED_RECIPES_ENABLE.value()) {
                     initTable();
                     startPeriodicSaveTask();
                 }
             }
             case DISABLE -> {
-                if (PluginConfigs.SAVE_DISCOVERED_RECIPES.value()) {
+                if (PluginConfigs.SAVE_DISCOVERED_RECIPES_ENABLE.value()) {
                     CrypticLibBukkit.scheduler().async(() -> {
                         try {
                             saveAllOnlinePlayersData();
@@ -139,14 +139,14 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
     }
 
     private void startPeriodicSaveTask() {
-        int intervalTicks = PluginConfigs.DISCOVERED_RECIPES_INTERVAL_TICKS.value();
+        int intervalTicks = PluginConfigs.SAVE_DISCOVERED_RECIPES_INTERVAL_TICKS.value();
         if (periodSaveTask != null) {
             periodSaveTask.cancel();
         }
         periodSaveTask = new CrypticLibRunnable() {
             @Override
             public void run() {
-                if (!PluginConfigs.SAVE_DISCOVERED_RECIPES.value()) return;
+                if (!PluginConfigs.SAVE_DISCOVERED_RECIPES_ENABLE.value()) return;
                 try {
                     saveAllOnlinePlayersData();
                 } catch (Exception e) {
@@ -161,7 +161,7 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
      * 从数据库读取所有在线玩家的已解锁配方并解锁
      */
     public void loadOnlinePlayersDiscoveredRecipes() {
-        if (!PluginConfigs.SAVE_DISCOVERED_RECIPES.value()) return;
+        if (!PluginConfigs.SAVE_DISCOVERED_RECIPES_ENABLE.value()) return;
         Set<String> serverRecipeKeys = RecipeManager.INSTANCE.serverRecipeKeys().stream()
             .map(Objects::toString)
             .collect(Collectors.toSet());
