@@ -59,11 +59,6 @@ public final class Craftorithm extends BukkitPlugin implements LifecycleTask {
         CrypticLib.debug = PluginConfigs.DEBUG.value();
     }
 
-    @Override
-    public void whenDisable() {
-        RecipeManager.INSTANCE.resetRecipes();
-    }
-
     private void loadBStat() {
         if (!PluginConfigs.BSTATS.value())
             return;

@@ -29,7 +29,8 @@ import java.util.stream.Collectors;
 @LifecycleTaskConfig(
     schedules = {
         @LifecycleSchedule(phase = LifecyclePhase.ACTIVE, priority = 3),
-        @LifecycleSchedule(phase = LifecyclePhase.RELOAD, isAsync = true)
+        @LifecycleSchedule(phase = LifecyclePhase.RELOAD, isAsync = true),
+        @LifecycleSchedule(phase = LifecyclePhase.DISABLE)
     }
 )
 public enum TriggerManager implements LifecycleTask {
@@ -355,18 +356,28 @@ public enum TriggerManager implements LifecycleTask {
 
     @Override
     public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase phase) {
-        if (phase == LifecyclePhase.ACTIVE) {
-            TRIGGER_FOLDER.mkdirs();
-            // 初始化动态事件注册器
-            EventTriggerTypes.INSTANCE.init();
-        }
-        // 注册内置类型（仅首次）
-        if (triggerTypes.isEmpty()) {
-            for (CraftTriggerTypes type : CraftTriggerTypes.values()) {
-                regTriggerType(type);
+        switch (phase) {
+            case ACTIVE -> {
+                TRIGGER_FOLDER.mkdirs();
+                // 初始化动态事件注册器
+                EventTriggerTypes.INSTANCE.init();
+                for (CraftTriggerTypes type : CraftTriggerTypes.values()) {
+                    regTriggerType(type);
+                }
+                reloadTriggers();
+            }
+            case RELOAD -> {
+                reloadTriggers();
+            }
+            case DISABLE -> {
+                triggers.clear();
+                triggerTypes.clear();
+                triggerById.clear();
+                cooldownManager.clear();
+                triggerTypeMatchAllMap.clear();
+                hasTriggerRecipeKeys.clear();
             }
         }
-        reloadTriggers();
     }
 
 }

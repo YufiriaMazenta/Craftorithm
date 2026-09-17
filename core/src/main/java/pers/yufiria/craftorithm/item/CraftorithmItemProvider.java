@@ -32,7 +32,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @LifecycleTaskConfig(
     schedules = {
         @LifecycleSchedule(phase = LifecyclePhase.ENABLE),
-        @LifecycleSchedule(phase = LifecyclePhase.RELOAD, priority = -1, isAsync = true)
+        @LifecycleSchedule(phase = LifecyclePhase.RELOAD, priority = -1, isAsync = true),
+        @LifecycleSchedule(phase = LifecyclePhase.DISABLE, priority = -1)
     }
 )
 public enum CraftorithmItemProvider implements ItemPluginHook, ItemProvider, LifecycleTask {
@@ -175,9 +176,27 @@ public enum CraftorithmItemProvider implements ItemPluginHook, ItemProvider, Lif
 
     @Override
     public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase lifeCycle) {
-        if (lifeCycle == LifecyclePhase.ENABLE) {
-            ItemPluginHookManager.INSTANCE.addItemPluginHook(this);
+        switch (lifeCycle) {
+            case ENABLE -> {
+                ItemPluginHookManager.INSTANCE.addItemPluginHook(this);
+                checkCraftorithmProvider();
+                loadItemFiles();
+                loadItems();
+            }
+            case RELOAD -> {
+                checkCraftorithmProvider();
+                loadItemFiles();
+                loadItems();
+            }
+            case DISABLE -> {
+                itemBuckets.clear();
+                idItemMap.clear();
+                itemConfigFileMap.clear();
+            }
         }
+    }
+
+    private void checkCraftorithmProvider() {
         //检查物品源优先级的配置里是否包含Craftorithm的物品源，如果不包含则添加到末尾
         StringListConfig itemPluginHookPriorityConfig = PluginConfigs.ITEM_PLUGIN_HOOK_PRIORITY;
         List<String> originValue = itemPluginHookPriorityConfig.value();
@@ -189,9 +208,6 @@ public enum CraftorithmItemProvider implements ItemPluginHook, ItemProvider, Lif
             itemPluginHookPriorityConfig.saveConfig();
             CrypticLib.info("Detected that the item hook priority configuration did not include Craftorithm, Automatically added");
         }
-
-        loadItemFiles();
-        loadItems();
     }
 
     /**

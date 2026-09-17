@@ -39,7 +39,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @LifecycleTaskConfig(
     schedules = {
         @LifecycleSchedule(phase = LifecyclePhase.ENABLE),
-        @LifecycleSchedule(phase = LifecyclePhase.RELOAD, priority = 2, isAsync = true)
+        @LifecycleSchedule(phase = LifecyclePhase.RELOAD, priority = 2, isAsync = true),
+        @LifecycleSchedule(phase = LifecyclePhase.DISABLE, priority = 2)
     }
 )
 public enum RecipeManager implements LifecycleTask {
@@ -532,6 +533,10 @@ public enum RecipeManager implements LifecycleTask {
             case RELOAD -> {
                 reloadCompletion = new CompletableFuture<>();
                 CrypticLibBukkit.scheduler().sync(this::reloadRecipeManager);
+            }
+            case DISABLE -> {
+                resetRecipes();
+                recipeTypes.clear();
             }
         }
     }

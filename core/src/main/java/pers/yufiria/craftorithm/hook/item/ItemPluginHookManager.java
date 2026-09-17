@@ -8,6 +8,7 @@ import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskConfig;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.PluginConfigs;
+import pers.yufiria.craftorithm.hook.PluginHook;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.util.LangUtils;
 
@@ -20,7 +21,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @LifecycleTaskConfig(
     schedules = {
         @LifecycleSchedule(phase = LifecyclePhase.ACTIVE),
-        @LifecycleSchedule(phase = LifecyclePhase.RELOAD)
+        @LifecycleSchedule(phase = LifecyclePhase.RELOAD),
+        @LifecycleSchedule(phase = LifecyclePhase.DISABLE)
     }
 )
 public enum ItemPluginHookManager implements LifecycleTask {
@@ -30,21 +32,30 @@ public enum ItemPluginHookManager implements LifecycleTask {
 
     @Override
     public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase lifeCycle) {
-        for (ItemPluginHook itemPluginHook : itemPluginHookMap.values()) {
-            itemPluginHook.unhook();
-        }
-        ItemManager.INSTANCE.resetItemProviders();
-        for (String hookPluginName : PluginConfigs.ITEM_PLUGIN_HOOK_PRIORITY.value()) {
-            ItemPluginHook itemPluginHooker = getItemPluginHook(hookPluginName);
-            if (itemPluginHooker == null) {
-                CrypticLib.info("&eUnknown item plugin '" + hookPluginName + "'");
-                continue;
+        switch (lifeCycle) {
+            case ACTIVE, RELOAD -> {
+                for (ItemPluginHook itemPluginHook : itemPluginHookMap.values()) {
+                    itemPluginHook.unhook();
+                }
+                ItemManager.INSTANCE.resetItemProviders();
+                for (String hookPluginName : PluginConfigs.ITEM_PLUGIN_HOOK_PRIORITY.value()) {
+                    ItemPluginHook itemPluginHooker = getItemPluginHook(hookPluginName);
+                    if (itemPluginHooker == null) {
+                        CrypticLib.info("&eUnknown item plugin '" + hookPluginName + "'");
+                        continue;
+                    }
+                    if (itemPluginHooker.hook()) {
+                        ItemManager.INSTANCE.regItemProvider(itemPluginHooker.itemProvider());
+                        LangUtils.info(Languages.LOAD_HOOK_PLUGIN_SUCCESS, Map.of("<plugin>", hookPluginName));
+                    }
+                }
             }
-            if (itemPluginHooker.hook()) {
-                ItemManager.INSTANCE.regItemProvider(itemPluginHooker.itemProvider());
-                LangUtils.info(Languages.LOAD_HOOK_PLUGIN_SUCCESS, Map.of("<plugin>", hookPluginName));
+            case DISABLE -> {
+                itemPluginHookMap.values().forEach(PluginHook::unhook);
+                itemPluginHookMap.clear();
             }
         }
+
     }
 
     public void addItemPluginHook(ItemPluginHook hooker) {

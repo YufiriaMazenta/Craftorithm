@@ -30,7 +30,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @LifecycleTaskConfig(
     schedules = {
         @LifecycleSchedule(phase = LifecyclePhase.ACTIVE, priority = 1),
-        @LifecycleSchedule(phase = LifecyclePhase.RELOAD, priority = 1, isAsync = true)
+        @LifecycleSchedule(phase = LifecyclePhase.RELOAD, priority = 1, isAsync = true),
+        @LifecycleSchedule(phase = LifecyclePhase.DISABLE, priority = 1)
     }
 )
 public enum ItemManager implements LifecycleTask {
@@ -307,15 +308,29 @@ public enum ItemManager implements LifecycleTask {
     }
 
     @Override
-    public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase lifeCycle) {
-        if (lifeCycle.equals(LifecyclePhase.ACTIVE)) {
-            customFuelConfig = new BukkitConfigWrapper(Craftorithm.instance(), "custom_fuels.yml");
-            itemPacksConfig = new BukkitConfigWrapper(Craftorithm.instance(), "item_packs.yml");
+    public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase lifecycle) {
+        switch (lifecycle) {
+            case ACTIVE -> {
+                customFuelConfig = new BukkitConfigWrapper(Craftorithm.instance(), "custom_fuels.yml");
+                itemPacksConfig = new BukkitConfigWrapper(Craftorithm.instance(), "item_packs.yml");
+                erroredProviders.clear();
+                reloadCustomCookingFuel();
+                reloadItemPacks();
+                reloadIngredientRestrictionRules();
+            }
+            case RELOAD -> {
+                erroredProviders.clear();
+                reloadCustomCookingFuel();
+                reloadItemPacks();
+                reloadIngredientRestrictionRules();
+            }
+            case DISABLE -> {
+                itemProviderMap.clear();
+                erroredProviders.clear();
+                customCookingFuelMap.clear();
+                itemPacks.clear();
+            }
         }
-        erroredProviders.clear();
-        reloadCustomCookingFuel();
-        reloadItemPacks();
-        reloadIngredientRestrictionRules();
     }
 
     private void reloadItemPacks() {

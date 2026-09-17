@@ -52,6 +52,7 @@ public enum DataSourceManager implements LifecycleTask {
                 if (databaseConnection != null) {
                     databaseConnection.close();
                 }
+                databaseLoaderMap.clear();
             }
         }
     }

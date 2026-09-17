@@ -28,7 +28,8 @@ import java.util.function.Function;
 
 @LifecycleTaskConfig(schedules = {
     @LifecycleSchedule(phase = LifecyclePhase.ENABLE),
-    @LifecycleSchedule(phase = LifecyclePhase.RELOAD, isAsync = true)
+    @LifecycleSchedule(phase = LifecyclePhase.RELOAD, isAsync = true),
+    @LifecycleSchedule(phase = LifecyclePhase.DISABLE)
 })
 public enum CustomMenuManager implements LifecycleTask {
 
@@ -79,11 +80,19 @@ public enum CustomMenuManager implements LifecycleTask {
     }
 
     @Override
-    public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase lifeCycle) {
-        if (lifeCycle == LifecyclePhase.ENABLE) {
-            customMenuFolder = new File(((Plugin) plugin).getDataFolder(), "menus/custom");
+    public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase lifecycle) {
+        switch (lifecycle) {
+            case ENABLE -> {
+                customMenuFolder = new File(((Plugin) plugin).getDataFolder(), "menus/custom");
+                reloadMenus();
+            }
+            case RELOAD -> {
+                reloadMenus();
+            }
+            case DISABLE -> {
+                menuCreators.clear();
+            }
         }
-        reloadMenus();
     }
 
     public void reloadMenus() {
