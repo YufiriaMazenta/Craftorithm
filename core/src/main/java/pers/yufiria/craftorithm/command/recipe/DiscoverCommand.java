@@ -14,6 +14,7 @@ import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
+import pers.yufiria.craftorithm.util.RecipeUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -49,34 +50,15 @@ public class DiscoverCommand extends CommandNode {
             return;
         }
 
-        CrypticLibBukkit.scheduler().async(() -> {
-            Pattern pattern;
-            try {
-                pattern = Pattern.compile(patternStr);
-            } catch (PatternSyntaxException e) {
-                pattern = null;
+        RecipeUtils.discoverRecipe(target, patternStr, count -> {
+            if (count > 0) {
+                LangUtils.sendLang(sender, Languages.COMMAND_DISCOVER_SUCCESS, Map.of(
+                    "<count>", String.valueOf(count),
+                    "<player_name>", target.getName()
+                ));
+            } else {
+                LangUtils.sendLang(sender, Languages.COMMAND_DISCOVER_NO_MATCH);
             }
-
-            final Pattern finalPattern = pattern;
-            List<NamespacedKey> discoverRecipes = RecipeManager.INSTANCE.serverRecipeKeys().stream().filter(key -> {
-                if (finalPattern != null) {
-                    return finalPattern.matcher(key.toString()).matches();
-                } else {
-                    return key.toString().equals(patternStr);
-                }
-            }).toList();
-
-            CrypticLibBukkit.scheduler().runOnEntity(target, () -> {
-                int count = target.discoverRecipes(discoverRecipes);
-                if (count > 0) {
-                    LangUtils.sendLang(sender, Languages.COMMAND_DISCOVER_SUCCESS, Map.of(
-                        "<count>", String.valueOf(count),
-                        "<player_name>", target.getName()
-                    ));
-                } else {
-                    LangUtils.sendLang(sender, Languages.COMMAND_DISCOVER_NO_MATCH);
-                }
-            }, () -> {});
         });
     }
 

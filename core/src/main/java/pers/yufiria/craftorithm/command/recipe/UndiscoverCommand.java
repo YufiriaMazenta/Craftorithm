@@ -14,6 +14,7 @@ import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
+import pers.yufiria.craftorithm.util.RecipeUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -49,24 +50,7 @@ public class UndiscoverCommand extends CommandNode {
             return;
         }
 
-        Pattern pattern;
-        try {
-            pattern = Pattern.compile(patternStr);
-        } catch (PatternSyntaxException e) {
-            pattern = null;
-        }
-
-        final Pattern finalPattern = pattern;
-        List<NamespacedKey> undiscoverRecipes = RecipeManager.INSTANCE.serverRecipeKeys().stream().filter(key -> {
-            if (finalPattern != null) {
-                return finalPattern.matcher(key.toString()).matches();
-            } else {
-                return key.toString().equals(patternStr);
-            }
-        }).toList();
-
-        CrypticLibBukkit.scheduler().runOnEntity(target, () -> {
-            int count = target.undiscoverRecipes(undiscoverRecipes);
+        RecipeUtils.undiscoverRecipe(target, patternStr, count -> {
             if (count > 0) {
                 LangUtils.sendLang(sender, Languages.COMMAND_UNDISCOVER_SUCCESS, Map.of(
                     "<count>", String.valueOf(count),
@@ -75,8 +59,7 @@ public class UndiscoverCommand extends CommandNode {
             } else {
                 LangUtils.sendLang(sender, Languages.COMMAND_UNDISCOVER_NO_MATCH);
             }
-        }, () -> {});
-
+        });
     }
 
     @Override

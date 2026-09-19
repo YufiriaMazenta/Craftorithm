@@ -21,14 +21,22 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
+import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.ui.BackableMenu;
 import pers.yufiria.craftorithm.ui.custom.CustomMenuManager;
+import pers.yufiria.craftorithm.util.LangUtils;
 import pers.yufiria.craftorithm.util.PlayerUtils;
+import pers.yufiria.craftorithm.util.RecipeUtils;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  * 内置动作函数模块
@@ -316,8 +324,13 @@ public enum ActionModule implements ScriptModule {
             return ScriptValue.nil();
         }
         Player player = playerOpt.get();
-        NamespacedKey recipeKey = NamespacedKey.fromString(args[0].asString());
-        return ScriptValue.of(player.discoverRecipe(Objects.requireNonNull(recipeKey)));
+        RecipeUtils.discoverRecipe(player, args[0].asString(), count -> {
+            ctx.invoker().sendMsg("Discovered <count> recipes for <player>", Map.of(
+                "<count>", String.valueOf(count),
+                "<player>", player.getName()
+            ));
+        });
+        return ScriptValue.nil();
     }
 
     private ScriptValue undiscoverRecipe(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
@@ -327,8 +340,13 @@ public enum ActionModule implements ScriptModule {
             return ScriptValue.nil();
         }
         Player player = playerOpt.get();
-        NamespacedKey recipeKey = NamespacedKey.fromString(args[0].asString());
-        return ScriptValue.of(player.undiscoverRecipe(Objects.requireNonNull(recipeKey)));
+        RecipeUtils.undiscoverRecipe(player, args[0].asString(), count -> {
+            ctx.invoker().sendMsg("Undiscovered <count> recipes for <player>", Map.of(
+                "<count>", String.valueOf(count),
+                "<player>", player.getName()
+            ));
+        });
+        return ScriptValue.nil();
     }
 
     /**
