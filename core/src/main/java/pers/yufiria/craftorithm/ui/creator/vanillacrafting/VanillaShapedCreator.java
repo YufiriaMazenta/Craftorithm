@@ -155,8 +155,7 @@ public final class VanillaShapedCreator extends RecipeCreator {
                 }
 
                 // 7. 移除首尾的全空行和全空列（保留中间的空行/列）
-                RecipeUtils.removeEmptyRow(shape);
-                RecipeUtils.removeEmptyColumn(shape);
+                RecipeUtils.trimShape(shape);
 
                 if (shape.isEmpty()) {
                     LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_RESULT);

@@ -174,8 +174,7 @@ public final class VanillaShapedEditor extends RecipeEditorMenu {
                     shape.add(new String(shapeChars, row * 3, 3));
                 }
 
-                RecipeUtils.removeEmptyRow(shape);
-                RecipeUtils.removeEmptyColumn(shape);
+                RecipeUtils.trimShape(shape);
 
                 if (shape.isEmpty()) {
                     LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_RESULT);

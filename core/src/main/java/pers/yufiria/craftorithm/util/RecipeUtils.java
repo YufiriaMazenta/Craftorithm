@@ -15,12 +15,10 @@ import org.bukkit.event.inventory.SmithItemEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.SmithingInventory;
-import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
@@ -47,49 +45,36 @@ public class RecipeUtils {
     }
 
     /**
-     * 移除配方形状中首尾的全空白行（保留中间的空行）
+     * 移除配方形状中首尾的全空白行与全空白列（保留中间的空行/空列）
      */
-    public static void removeEmptyRow(List<String> shape) {
+    public static void trimShape(List<String> shape) {
         while (!shape.isEmpty() && shape.getFirst().trim().isEmpty()) {
             shape.removeFirst();
         }
         while (!shape.isEmpty() && shape.getLast().trim().isEmpty()) {
             shape.removeLast();
         }
-    }
-
-    /**
-     * 移除配方形状中首尾的全空白列（保留中间的空列）
-     */
-    public static void removeEmptyColumn(List<String> shape) {
-        boolean[] empty = new boolean[3];
-        for (int i = 0; i < 3; i++) {
-            int finalI = i;
-            empty[i] = shape.stream().allMatch(s -> finalI >= s.length() || s.charAt(finalI) == ' ');
+        if (shape.isEmpty()) {
+            return;
         }
-        if (empty[0]) {
-            if (empty[1]) {
-                if (!empty[2]) {
-                    shape.replaceAll(s -> s.length() > 2 ? s.substring(2) : "");
-                }
-            } else {
-                if (empty[2]) {
-                    shape.replaceAll(s -> s.length() >= 2 ? s.substring(1, 2) : "");
-                } else {
-                    shape.replaceAll(s -> s.length() >= 2 ? s.substring(1) : "");
-                }
-            }
-        } else {
-            if (empty[1]) {
-                if (empty[2]) {
-                    shape.replaceAll(s -> s.substring(0, 1));
-                }
-            } else {
-                if (empty[2]) {
-                    shape.replaceAll(s -> s.substring(0, Math.min(2, s.length())));
+        //找出最左侧与最右侧的非空白字符所在的列
+        int firstColumn = Integer.MAX_VALUE;
+        int lastColumn = -1;
+        for (String row : shape) {
+            for (int i = 0; i < row.length(); i++) {
+                if (row.charAt(i) != ' ') {
+                    firstColumn = Math.min(firstColumn, i);
+                    lastColumn = Math.max(lastColumn, i);
                 }
             }
         }
+        //整行都是空白,无需处理
+        if (lastColumn < 0) {
+            return;
+        }
+        int start = firstColumn;
+        int end = lastColumn + 1;
+        shape.replaceAll(row -> row.length() > start ? row.substring(start, Math.min(end, row.length())) : "");
     }
 
     /**
