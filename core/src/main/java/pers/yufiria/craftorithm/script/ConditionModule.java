@@ -1,5 +1,7 @@
 package pers.yufiria.craftorithm.script;
 
+import crypticlib.CrypticLib;
+import crypticlib.Key;
 import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.script.ScriptContext;
 import crypticlib.script.ScriptValue;
@@ -7,6 +9,7 @@ import crypticlib.script.func.ScriptFunctionRegistry;
 import crypticlib.script.func.ScriptModule;
 import crypticlib.script.vm.ScriptVM;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -14,6 +17,7 @@ import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.util.PlayerUtils;
 
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -49,6 +53,24 @@ public enum ConditionModule implements ScriptModule {
         registry.register(moduleName, "in_rain", this::inRain);
         registry.register(moduleName, "light_level", this::lightLevel);
         registry.register(moduleName, "match_item_id", this::matchItemId);
+        registry.register(moduleName, "recipe_discovered", this::recipeDiscovered);
+    }
+
+    private ScriptValue recipeDiscovered(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
+        if (args.length < 1) return ScriptValue.Bool.of(false);
+        String recipeKeyStr = args[0].asString();
+        Key key = Key.key(recipeKeyStr);
+        if (key == null) {
+            CrypticLib.info("&cInvalid namespaced key: <key>", Map.of("<key>", recipeKeyStr));
+            return ScriptValue.of(false);
+        }
+        NamespacedKey recipeKey = new NamespacedKey(key.namespace(), key.key());
+        Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(PlayerUtils.getPlayerIdFromInvoker(ctx.invoker()));
+        if (playerOpt.isEmpty()) {
+            return ScriptValue.of(false);
+        }
+        Player player = playerOpt.get();
+        return ScriptValue.of(player.hasDiscoveredRecipe(recipeKey));
     }
 
     /**
