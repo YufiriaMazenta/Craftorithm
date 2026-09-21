@@ -29,4 +29,6 @@ softdepend:
   - AdvancedEnchantments
 authors: [ YufiriaMazenta ]
 folia-supported: true
+libraries:
+  - org.postgresql:postgresql:${postgresql_version}
 website: https://github.com/YufiriaMazenta/Craftorithm

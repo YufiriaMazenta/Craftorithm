@@ -1,4 +1,4 @@
-# 使用什么类型的数据库, 支持sqlite和mysql
+# 使用什么类型的数据库, 支持sqlite、mysql和postgresql
 type: sqlite
 
 # SQLite专用配置
@@ -15,6 +15,21 @@ mysql:
   username: "root"
   password: "your_password"
   parameters: "useSSL=false&serverTimezone=UTC"
+  pool:
+    max_connections: 8
+    max_idle_time_ms: 60000
+    max_lifetime_ms: 1800000
+    check_connections_every_ms: 5000
+    test_before_get: true
+
+# PostgreSQL专用配置
+postgresql:
+  host: "localhost"
+  port: 5432
+  database: "craftorithm"
+  username: "postgres"
+  password: "your_password"
+  parameters: "sslmode=disable"
   pool:
     max_connections: 8
     max_idle_time_ms: 60000

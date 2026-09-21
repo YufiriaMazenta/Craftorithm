@@ -11,6 +11,7 @@ import pers.yufiria.craftorithm.config.DatabaseConfigs;
 import pers.yufiria.craftorithm.database.exception.DatabaseLoadException;
 import pers.yufiria.craftorithm.database.loader.DataSourceLoader;
 import pers.yufiria.craftorithm.database.loader.MysqlDataSourceLoader;
+import pers.yufiria.craftorithm.database.loader.PostgresqlDataSourceLoader;
 import pers.yufiria.craftorithm.database.loader.SqliteDataSourceLoader;
 
 import java.sql.SQLException;
@@ -33,6 +34,7 @@ public enum DataSourceManager implements LifecycleTask {
     DataSourceManager() {
         registerDatabaseLoader("mysql", MysqlDataSourceLoader.INSTANCE);
         registerDatabaseLoader("sqlite", SqliteDataSourceLoader.INSTANCE);
+        registerDatabaseLoader("postgresql", PostgresqlDataSourceLoader.INSTANCE);
     }
 
     @Override

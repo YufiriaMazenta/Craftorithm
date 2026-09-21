@@ -73,7 +73,7 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
             toRemove.removeAll(recipeKeys);
             if (!toRemove.isEmpty()) {
                 dao.deleteBuilder().where(
-                    where -> where.equals("player_uuid", playerUuid).and().in("recipe_key", toRemove)
+                    where -> where.equals("player_uuid", playerUuid).and().in("recipe_key", toRemove.toArray())
                 ).delete();
             }
             int removedRecipesCount = toRemove.size();

@@ -50,6 +50,7 @@ val crypticlibRelocate = "pers.yufiria.craftorithm.crypticlib"
 tasks {
     val props = HashMap<String, String>()
     props["version"] = "$version-$gitHash"
+    props["postgresql_version"] = rootProject.findProperty("postgresqlVer").toString()
     processResources {
         outputs.upToDateWhen { false }
         filesMatching("plugin.yml") {
