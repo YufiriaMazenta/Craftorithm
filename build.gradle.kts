@@ -87,14 +87,8 @@ subprojects {
         compileOnly("com.crypticlib:bukkit:${rootProject.findProperty("crypticlibVer")}")
     }
     tasks {
-        build {
-            dependsOn(shadowJar)
-        }
         compileJava {
             options.encoding = "UTF-8"
-        }
-        shadowJar {
-            relocate("crypticlib", crypticlibRelocate)
         }
     }
 }
