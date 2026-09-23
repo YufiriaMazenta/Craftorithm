@@ -1,13 +1,19 @@
 package pers.yufiria.craftorithm.config;
 
+import crypticlib.CrypticLib;
+import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.config.ConfigHandler;
 import crypticlib.config.node.impl.bukkit.BooleanConfig;
 import crypticlib.config.node.impl.bukkit.ConfigSectionListConfig;
 import crypticlib.config.node.impl.bukkit.IntConfig;
 import crypticlib.config.node.impl.bukkit.StringListConfig;
+import crypticlib.util.BukkitConfigHelper;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
+import pers.yufiria.craftorithm.Craftorithm;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.function.Supplier;
 
 @ConfigHandler(path = "config.yml")
 public class PluginConfigs {
@@ -43,14 +49,36 @@ public class PluginConfigs {
     );
     public final static IntConfig SAVE_DISCOVERED_RECIPES_JOIN_DISCOVER_DELAY_TICKS = new IntConfig(
         "save_discovered_recipes.join_discover_delay_ticks",
-        20,
+        () -> {
+            BukkitConfigWrapper configWrapper = Craftorithm.instance().getConfigWrapperOrCreate("config.yml");
+            YamlConfiguration config = configWrapper.config();
+            String oldKey = "recipe_discovery_sync.join_sync_delay_ticks";
+            if (config.isInt(oldKey)) {
+                int def = config.getInt(oldKey, 20);
+                config.set(oldKey, null);
+                return def;
+            }
+            return 20;
+        },
         "玩家加入服务器后，等待多少tick再从数据库读取已解锁配方（建议10-40，即0.5-2秒）"
     );
+
     public final static IntConfig SAVE_DISCOVERED_RECIPES_INTERVAL_TICKS = new IntConfig(
         "save_discovered_recipes.interval_ticks",
-        6000,
+        () -> {
+            BukkitConfigWrapper configWrapper = Craftorithm.instance().getConfigWrapperOrCreate("config.yml");
+            YamlConfiguration config = configWrapper.config();
+            String oldKey = "recipe_discovery_sync.interval_ticks";
+            if (config.isInt(oldKey)) {
+                int def = config.getInt(oldKey, 6000);
+                config.set(oldKey, null);
+                return def;
+            }
+            return 6000;
+        },
         "定时保存在线玩家已解锁配方到数据库的间隔（tick），默认300秒（5分钟）"
     );
+
     public final static IntConfig MAX_REG_RECIPE_PER_TICK = new IntConfig(
         "max_reg_recipe_per_tick",
         100,
@@ -58,7 +86,95 @@ public class PluginConfigs {
     );
     public final static ConfigSectionListConfig INGREDIENT_RESTRICTION_RULES = new ConfigSectionListConfig(
         "ingredient_restriction_rules",
-        Collections.emptyList(),
+        new Supplier<>() {
+            @Override
+            public List<ConfigurationSection> get() {
+                String oldKeyCannotCraft = "cannot_craft_items";
+                String oldKeyLoreRules = "blocked_crafting_lore_rules";
+                String newKey = "ingredient_restriction_rules";
+                BukkitConfigWrapper configWrapper = Craftorithm.instance().getConfigWrapperOrCreate("config.yml");
+                YamlConfiguration config = configWrapper.config();
+
+                boolean hasCannotCraft = config.contains(oldKeyCannotCraft);
+                boolean hasLoreRules = config.contains(oldKeyLoreRules);
+
+                if (!hasCannotCraft && !hasLoreRules) {
+                    return Collections.emptyList();
+                }
+
+                List<Map<String, Object>> newRules = new ArrayList<>();
+
+                // 1. 迁移 cannot_craft_items
+                if (hasCannotCraft) {
+                    List<String> items = config.getStringList(oldKeyCannotCraft);
+                    for (String itemId : items) {
+                        Map<String, Object> rule = new LinkedHashMap<>();
+                        rule.put("type", "item_id");
+                        rule.put("item_id", itemId);
+                        rule.put("recipes", List.of(".*"));
+                        newRules.add(rule);
+                    }
+                    CrypticLib.info("Migrating " + items.size() + " cannot_craft_items rule(s)...");
+                }
+
+                // 2. 迁移 blocked_crafting_lore_rules
+                if (hasLoreRules) {
+                    List<Map<?, ?>> oldRules = config.getMapList(oldKeyLoreRules);
+                    for (Map<?, ?> raw : oldRules) {
+                        ConfigurationSection oldRule = BukkitConfigHelper.map2ConfigSection(raw);
+                        String lore = oldRule.getString("lore", "");
+                        if (lore.isEmpty()) {
+                            continue;
+                        }
+                        List<String> recipes = oldRule.getStringList("blocked_recipes");
+                        if (recipes.isEmpty()) {
+                            continue;
+                        }
+                        Map<String, Object> rule = new LinkedHashMap<>();
+                        rule.put("type", "lore");
+                        rule.put("lore", lore);
+                        rule.put("recipes", recipes);
+                        newRules.add(rule);
+                    }
+                    CrypticLib.info("Migrating " + oldRules.size() + " blocked_crafting_lore_rules rule(s)...");
+                }
+
+                // 3. 合并到已有的 block_crafting_rules（追加，不覆盖）
+                if (config.contains(newKey)) {
+                    List<Map<?, ?>> existing = config.getMapList(newKey);
+                    Set<String> existingSignatures = new HashSet<>();
+                    for (Map<?, ?> r : existing) {
+                        existingSignatures.add(ruleSignature(r));
+                    }
+                    int before = newRules.size();
+                    newRules.removeIf(r -> existingSignatures.contains(ruleSignature(r)));
+                    if (newRules.size() < before) {
+                        CrypticLib.info("Skipped " + (before - newRules.size()) + " duplicate rule(s) already in ingredient restriction rules.");
+                    }
+                }
+
+                if (newRules.isEmpty()) {
+                    configWrapper.saveConfig();
+                    return Collections.emptyList();
+                }
+
+                //清理原本的内容
+                config.set(oldKeyCannotCraft, null);
+                config.set(oldKeyLoreRules, null);
+
+                CrypticLib.info("Config migration complete: " + newRules.size() + " rule(s) added to " + newKey);
+                return newRules.stream().map(BukkitConfigHelper::map2ConfigSection).toList();
+            }
+
+            private String ruleSignature(Map<?, ?> rule) {
+                String type = Objects.toString(rule.get("type"), "");
+                return switch (type) {
+                    case "lore" -> "lore:" + rule.get("lore") + ":" + rule.get("recipes");
+                    case "item_id" -> "item_id:" + rule.get("item_id") + ":" + rule.get("recipes");
+                    default -> type + ":" + rule;
+                };
+            }
+        },
         List.of(
             "设定材料的合成限制规则",
             "支持的规则类型: lore(基于lore判断), item_id(基于物品id判断)",
