@@ -2,6 +2,7 @@ package pers.yufiria.craftorithm.item;
 
 import com.google.common.base.Preconditions;
 import crypticlib.CrypticLib;
+import crypticlib.CrypticLibBukkit;
 import crypticlib.CrypticLibPlugin;
 import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.lifecycle.LifecyclePhase;
@@ -287,9 +288,11 @@ public enum ItemManager implements LifecycleTask {
             return false;
         customCookingFuelMap.put(itemId, burnTime);
         //配置键必须只使用物品id, 不能带上数量, 否则重载后会被解析成错误的物品id而永远匹配不上
-        customFuelConfig.config().set(itemId + "." + BURN_TIME_KEY, burnTime);
-        customFuelConfig.saveConfig();
-        customFuelConfig.reloadConfig();
+        CrypticLibBukkit.scheduler().async(() -> {
+            customFuelConfig.set(itemId + "." + BURN_TIME_KEY, burnTime);
+            customFuelConfig.saveConfig();
+            customFuelConfig.reloadConfig();
+        });
         return true;
     }
 
@@ -297,9 +300,11 @@ public enum ItemManager implements LifecycleTask {
         if (itemId == null || !customCookingFuelMap.containsKey(itemId))
             return false;
         customCookingFuelMap.remove(itemId);
-        customFuelConfig.config().set(itemId.toString(), null);
-        customFuelConfig.saveConfig();
-        customFuelConfig.reloadConfig();
+        CrypticLibBukkit.scheduler().async(() -> {
+            customFuelConfig.set(itemId.toString(), null);
+            customFuelConfig.saveConfig();
+            customFuelConfig.reloadConfig();
+        });
         return true;
     }
 
