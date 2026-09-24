@@ -466,8 +466,8 @@ public enum RecipeManager implements LifecycleTask {
             .toList();
     }
 
-    public Map<NamespacedKey, ParsedRecipe> craftorithmRecipes() {
-        return craftorithmRecipes;
+    public @Unmodifiable Map<NamespacedKey, ParsedRecipe> craftorithmRecipes() {
+        return Collections.unmodifiableMap(craftorithmRecipes);
     }
 
     public @Nullable RecipeType getRecipeTypeByKey(String typeId) {
