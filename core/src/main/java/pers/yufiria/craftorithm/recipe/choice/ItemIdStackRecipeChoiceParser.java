@@ -27,7 +27,7 @@ public enum ItemIdStackRecipeChoiceParser implements RecipeChoiceParser {
         List<NamespacedItemId> itemIds;
 
         //该材料引用的物品组ID, 非物品组材料为null
-        String itemGroup = null;
+        String itemGroupId = null;
         if (!choiceStr.contains(":")) {
             Material material;
             int amount;
@@ -75,7 +75,7 @@ public enum ItemIdStackRecipeChoiceParser implements RecipeChoiceParser {
                     itemIds = materialTag.getValues().stream()
                         .map(NamespacedItemId::fromMaterial)
                         .toList();
-                    itemGroup = ItemGroup.GROUP_TYPE_TAG + ":" + tagPart.key();
+                    itemGroupId = ItemGroup.GROUP_TYPE_TAG + ":" + tagPart.key();
                     break;
                 case "item_pack":
                     //是物品组
@@ -87,7 +87,7 @@ public enum ItemIdStackRecipeChoiceParser implements RecipeChoiceParser {
                     itemIds = itemPack.itemIds();
                     //物品组只记录物品id, 数量由引用处统一指定, 组内所有物品使用同一个数量
                     amount = packPart.amount();
-                    itemGroup = ItemGroup.GROUP_TYPE_ITEM_PACK + ":" + packPart.key();
+                    itemGroupId = ItemGroup.GROUP_TYPE_ITEM_PACK + ":" + packPart.key();
                     break;
                 default:
                     NamespacedItemIdStack namespacedItemIdStack = Objects.requireNonNull(
@@ -98,7 +98,7 @@ public enum ItemIdStackRecipeChoiceParser implements RecipeChoiceParser {
                     amount = namespacedItemIdStack.amount();
                     break;
             }
-            return new ItemIdStackRecipeChoice(itemIds, amount, itemGroup);
+            return new ItemIdStackRecipeChoice(itemIds, amount, itemGroupId);
         }
     }
 

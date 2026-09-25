@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.recipe.choice;
 
-import crypticlib.util.ItemHelper;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.jetbrains.annotations.NotNull;
@@ -25,17 +24,17 @@ public class ItemIdStackRecipeChoice implements RecipeChoice {
     /**
      * 该材料引用的物品组ID, 如tag:minecraft:planks或item_pack:my_pack, 非物品组材料为null
      */
-    private final @Nullable String itemGroupSource;
+    private final @Nullable String itemGroupId;
 
     public ItemIdStackRecipeChoice(Collection<NamespacedItemId> itemIds, int amount) {
         this(itemIds, amount, null);
     }
 
-    public ItemIdStackRecipeChoice(Collection<NamespacedItemId> itemIds, int amount, @Nullable String itemGroupSource) {
+    public ItemIdStackRecipeChoice(Collection<NamespacedItemId> itemIds, int amount, @Nullable String itemGroupId) {
         this.amount = amount;
         if (itemIds == null || itemIds.isEmpty())
             throw new UnsupportedOperationException("ItemIds cannot be null or empty");
-        this.itemGroupSource = itemGroupSource;
+        this.itemGroupId = itemGroupId;
         if (itemIds.size() >= PluginConfigs.INGREDIENT_USE_SET_THRESHOLD.value()) {
             this.itemIds = Set.copyOf(itemIds);
         } else {
@@ -46,8 +45,8 @@ public class ItemIdStackRecipeChoice implements RecipeChoice {
     @Override
     public @NotNull ItemStack getItemStack() {
         //物品组材料使用构建出的物品组占位符作为展示物品
-        if (itemGroupSource != null) {
-            Optional<ItemStack> itemGroupItem = ItemGroup.fromIngredientId(itemGroupSource)
+        if (itemGroupId != null) {
+            Optional<ItemStack> itemGroupItem = ItemGroup.fromIngredientId(itemGroupId)
                 .flatMap(ItemGroup::toPlaceholderItem);
             if (itemGroupItem.isPresent()) {
                 ItemStack itemStack = itemGroupItem.get();
@@ -71,7 +70,7 @@ public class ItemIdStackRecipeChoice implements RecipeChoice {
 
     @Override
     public @NotNull RecipeChoice clone() {
-        return new ItemIdStackRecipeChoice(itemIds, amount, itemGroupSource);
+        return new ItemIdStackRecipeChoice(itemIds, amount, itemGroupId);
     }
 
     public int getUseAmount() {

@@ -20,15 +20,15 @@ public class ItemIdRecipeChoice implements CustomRecipeChoice {
     /**
      * 该材料引用的物品组ID, 如tag:minecraft:planks或item_pack:my_pack, 非物品组材料为null
      */
-    private final @Nullable String itemGroupSource;
+    private final @Nullable String itemGroupId;
 
     public ItemIdRecipeChoice(RecipeChoice bukkitChoice) {
         this(bukkitChoice, null);
     }
 
-    public ItemIdRecipeChoice(RecipeChoice bukkitChoice, @Nullable String itemGroupSource) {
+    public ItemIdRecipeChoice(RecipeChoice bukkitChoice, @Nullable String itemGroupId) {
         this.bukkitChoice = bukkitChoice;
-        this.itemGroupSource = itemGroupSource;
+        this.itemGroupId = itemGroupId;
         Collection<NamespacedItemId> ingredients;
         if (bukkitChoice instanceof MaterialChoice materialChoice) {
             ingredients = materialChoice.getChoices().stream().map(NamespacedItemId::fromMaterial).collect(Collectors.toList());
@@ -55,8 +55,8 @@ public class ItemIdRecipeChoice implements CustomRecipeChoice {
     @Override
     public @NotNull ItemStack getItemStack() {
         //物品组材料使用构建出的物品组占位符作为展示物品
-        if (itemGroupSource != null) {
-            Optional<ItemStack> itemGroupItem = ItemGroup.fromIngredientId(itemGroupSource)
+        if (itemGroupId != null) {
+            Optional<ItemStack> itemGroupItem = ItemGroup.fromIngredientId(itemGroupId)
                 .flatMap(ItemGroup::toPlaceholderItem);
             if (itemGroupItem.isPresent()) {
                 return itemGroupItem.get();
@@ -69,7 +69,7 @@ public class ItemIdRecipeChoice implements CustomRecipeChoice {
     public @NotNull RecipeChoice clone() {
         return new ItemIdRecipeChoice(
             bukkitChoice.clone(),
-            itemGroupSource
+            itemGroupId
         );
     }
 
