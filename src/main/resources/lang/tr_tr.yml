@@ -21,6 +21,11 @@ command:
       remove:
         success: '<prefix> &aÖzel yakıt başarıyla kaldırıldı.'
         failed_not_exist: '<prefix> &cÖzel yakıt kaldırılamadı. Neden: Bu yakıt mevcut değil.'
+    group_item:
+      tag:
+        unknown_tag: '<prefix> &cBilinmeyen eşya etiketi: <tag_id>'
+      item_pack:
+        unknown_item_pack: '<prefix> &cBilinmeyen eşya paketi: <item_pack_id>'
   reload:
     reloading: '<prefix> &aEklenti yeniden yükleniyor, lütfen bekleyin'
     success: '<prefix> &aEklenti başarıyla yeniden yüklendi!'

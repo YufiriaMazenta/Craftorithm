@@ -4,11 +4,13 @@ import crypticlib.util.ItemHelper;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.item.exception.ItemNotFoundException;
+import pers.yufiria.craftorithm.item.groupitem.ItemGroupItemManager;
 
 import java.util.*;
 
@@ -20,10 +22,19 @@ public class ItemIdStackRecipeChoice implements RecipeChoice {
     private final Collection<NamespacedItemIdStack> itemIds;
     private final Map<NamespacedItemId, NamespacedItemIdStack> itemIdsMap;
     private final Random rand = new Random();
+    /**
+     * 该材料引用的物品组ID, 如tag:minecraft:planks或item_pack:my_pack, 非物品组材料为null
+     */
+    private final @Nullable String itemGroupSource;
 
     public ItemIdStackRecipeChoice(Collection<NamespacedItemIdStack> itemIds) {
+        this(itemIds, null);
+    }
+
+    public ItemIdStackRecipeChoice(Collection<NamespacedItemIdStack> itemIds, @Nullable String itemGroupSource) {
         if (itemIds == null || itemIds.isEmpty())
             throw new UnsupportedOperationException("ItemIds cannot be null or empty");
+        this.itemGroupSource = itemGroupSource;
         if (itemIds.size() >= PluginConfigs.INGREDIENT_USE_SET_THRESHOLD.value()) {
             this.itemIds = Set.copyOf(itemIds);
         } else {
@@ -37,6 +48,13 @@ public class ItemIdStackRecipeChoice implements RecipeChoice {
 
     @Override
     public @NotNull ItemStack getItemStack() {
+        //物品组材料使用构建出的物品组占位符作为展示物品
+        if (itemGroupSource != null) {
+            Optional<ItemStack> itemGroupItem = ItemGroupItemManager.INSTANCE.buildItemGroupItem(itemGroupSource);
+            if (itemGroupItem.isPresent()) {
+                return itemGroupItem.get();
+            }
+        }
         int index = rand.nextInt(itemIds.size());
         NamespacedItemIdStack randomItemIdStack = itemIds.stream().skip(index).findFirst()
             .orElseThrow(() -> new ItemNotFoundException("No item at index " + index + " in ItemIdStackRecipeChoice"));
@@ -46,7 +64,7 @@ public class ItemIdStackRecipeChoice implements RecipeChoice {
 
     @Override
     public @NotNull RecipeChoice clone() {
-        return new ItemIdStackRecipeChoice(itemIds);
+        return new ItemIdStackRecipeChoice(itemIds, itemGroupSource);
     }
 
     public int getUseAmount(NamespacedItemId itemId) {

@@ -21,6 +21,11 @@ command:
       remove:
         success: '<prefix> &aCarburant personnalisé supprimé avec succès.'
         failed_not_exist: '<prefix> &cÉchec de la suppression du carburant personnalisé. Raison : ce carburant n''existe pas.'
+    group_item:
+      tag:
+        unknown_tag: '<prefix> &cBalise d''objet inconnue : <tag_id>'
+      item_pack:
+        unknown_item_pack: '<prefix> &cPack d''objets inconnu : <item_pack_id>'
   reload:
     reloading: '<prefix> &aLe plugin est en cours de rechargement, veuillez patienter'
     success: '<prefix> &aPlugin rechargé avec succès.'

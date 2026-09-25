@@ -352,8 +352,12 @@ public enum ItemManager implements LifecycleTask {
         }
     }
 
-    public @Nullable ItemPack getItemPack(String itemId) {
-        return itemPacks.get(itemId);
+    public @Nullable ItemPack getItemPack(String itemPackId) {
+        return itemPacks.get(itemPackId);
+    }
+
+    public @Unmodifiable Set<String> itemPackIds() {
+        return Collections.unmodifiableSet(itemPacks.keySet());
     }
 
     //合成限制规则相关

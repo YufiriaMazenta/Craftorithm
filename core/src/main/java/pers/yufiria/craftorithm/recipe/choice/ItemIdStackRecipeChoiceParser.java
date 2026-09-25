@@ -8,6 +8,7 @@ import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.ItemPack;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
+import pers.yufiria.craftorithm.item.groupitem.ItemGroupItemManager;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
@@ -23,6 +24,8 @@ public enum ItemIdStackRecipeChoiceParser implements RecipeChoiceParser {
             throw new RecipeLoadException(choiceStr + " is not a valid ingredient ID.");
         }
         List<NamespacedItemIdStack> choices;
+        //该材料引用的物品组ID, 非物品组材料为null
+        String itemGroup = null;
         if (!choiceStr.contains(":")) {
             Material material;
             if (choiceStr.contains(" ")) {
@@ -62,6 +65,7 @@ public enum ItemIdStackRecipeChoiceParser implements RecipeChoiceParser {
                 choices = materialTag.getValues().stream()
                     .map(it -> new NamespacedItemIdStack(NamespacedItemId.fromMaterial(it), tagAmount))
                     .toList();
+                itemGroup = ItemGroupItemManager.GROUP_TYPE_TAG + ":" + tagPart.key();
                 break;
             case "item_pack":
                 //是物品组
@@ -75,12 +79,13 @@ public enum ItemIdStackRecipeChoiceParser implements RecipeChoiceParser {
                 choices = itemPack.itemIds().stream()
                     .map(itemId -> new NamespacedItemIdStack(itemId, packAmount))
                     .toList();
+                itemGroup = ItemGroupItemManager.GROUP_TYPE_ITEM_PACK + ":" + packPart.key();
                 break;
             default:
                 choices = List.of(NamespacedItemIdStack.fromString(choiceStr));
                 break;
         }
-        return new ItemIdStackRecipeChoice(choices);
+        return new ItemIdStackRecipeChoice(choices, itemGroup);
     }
 
     /**

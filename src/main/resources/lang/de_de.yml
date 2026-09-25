@@ -21,6 +21,11 @@ command:
       remove:
         success: '<prefix> &aBenutzerdefinierter Brennstoff erfolgreich entfernt.'
         failed_not_exist: '<prefix> &cBenutzerdefinierter Brennstoff konnte nicht entfernt werden. Grund: Dieser Brennstoff existiert nicht.'
+    group_item:
+      tag:
+        unknown_tag: '<prefix> &cUnbekanntes Objekt-Tag: <tag_id>'
+      item_pack:
+        unknown_item_pack: '<prefix> &cUnbekanntes Objektpaket: <item_pack_id>'
   reload:
     reloading: '<prefix> &aPlugin wird neu geladen, bitte warten'
     success: '<prefix> &aPlugin erfolgreich neu geladen.'

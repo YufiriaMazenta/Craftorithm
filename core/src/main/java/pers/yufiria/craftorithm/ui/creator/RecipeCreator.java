@@ -15,11 +15,14 @@ import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
+import pers.yufiria.craftorithm.item.groupitem.ItemGroup;
+import pers.yufiria.craftorithm.item.groupitem.ItemGroupItemManager;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 
 import java.text.SimpleDateFormat;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public abstract class RecipeCreator extends StoredMenu {
@@ -117,8 +120,13 @@ public abstract class RecipeCreator extends StoredMenu {
 
     /**
      * 解析材料物品的ID字符串。
+     * 若为物品组占位符物品, 解析为tag:xxx或item_pack:xxx
      */
     protected String resolveIngredientId(ItemStack item) {
+        Optional<ItemGroup> itemGroupOpt = ItemGroupItemManager.INSTANCE.fromItemGroupItem(item);
+        if (itemGroupOpt.isPresent()) {
+            return itemGroupOpt.get().toIngredientId();
+        }
         NamespacedItemIdStack itemId = ItemManager.INSTANCE.matchItemIdOrCreate(item, true);
         return itemId != null ? itemId.toString() : null;
     }

@@ -3,10 +3,12 @@ package pers.yufiria.craftorithm.recipe.choice;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
+import pers.yufiria.craftorithm.item.groupitem.ItemGroupItemManager;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -14,10 +16,19 @@ import java.util.stream.Collectors;
 public class ItemIdRecipeChoice implements CustomRecipeChoice {
 
     private final RecipeChoice bukkitChoice;
-    private Collection<NamespacedItemId> ingredients;
+    private final Collection<NamespacedItemId> ingredients;
+    /**
+     * 该材料引用的物品组ID, 如tag:minecraft:planks或item_pack:my_pack, 非物品组材料为null
+     */
+    private final @Nullable String itemGroupSource;
 
     public ItemIdRecipeChoice(RecipeChoice bukkitChoice) {
+        this(bukkitChoice, null);
+    }
+
+    public ItemIdRecipeChoice(RecipeChoice bukkitChoice, @Nullable String itemGroupSource) {
         this.bukkitChoice = bukkitChoice;
+        this.itemGroupSource = itemGroupSource;
         Collection<NamespacedItemId> ingredients;
         if (bukkitChoice instanceof MaterialChoice materialChoice) {
             ingredients = materialChoice.getChoices().stream().map(NamespacedItemId::fromMaterial).collect(Collectors.toList());
@@ -43,13 +54,21 @@ public class ItemIdRecipeChoice implements CustomRecipeChoice {
 
     @Override
     public @NotNull ItemStack getItemStack() {
+        //物品组材料使用构建出的物品组占位符作为展示物品
+        if (itemGroupSource != null) {
+            Optional<ItemStack> itemGroupItem = ItemGroupItemManager.INSTANCE.buildItemGroupItem(itemGroupSource);
+            if (itemGroupItem.isPresent()) {
+                return itemGroupItem.get();
+            }
+        }
         return bukkitChoice.getItemStack();
     }
 
     @Override
     public @NotNull RecipeChoice clone() {
         return new ItemIdRecipeChoice(
-            bukkitChoice.clone()
+            bukkitChoice.clone(),
+            itemGroupSource
         );
     }
 

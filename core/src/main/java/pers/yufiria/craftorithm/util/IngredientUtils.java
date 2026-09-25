@@ -12,14 +12,12 @@ import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.recipe.choice.CustomRecipeChoice;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class IngredientUtils {
     static final Map<NamespacedKey, Tag<Material>> ITEMS_TAGS = new HashMap<>();
     static final Map<NamespacedKey, Tag<Material>> BLOCKS_TAGS = new HashMap<>();
+    static final Set<NamespacedKey> ALL_TAG_KEYS;
 
     static {
         Iterable<Tag<Material>> blocksTags = Bukkit.getTags("blocks", Material.class);
@@ -31,6 +29,10 @@ public class IngredientUtils {
         for (Tag<Material> itemsTag : itemsTags) {
             ITEMS_TAGS.put(itemsTag.getKey(), itemsTag);
         }
+
+        Set<NamespacedKey> tagKeys = new HashSet<>(BLOCKS_TAGS.keySet());
+        tagKeys.addAll(ITEMS_TAGS.keySet());
+        ALL_TAG_KEYS = Collections.unmodifiableSet(tagKeys);
     }
 
     public static Optional<Tag<Material>> getTag(String tagKeyStr) {
@@ -58,6 +60,10 @@ public class IngredientUtils {
             return BLOCKS_TAGS.get(tagKey);
         }
         return null;
+    }
+
+    public static Set<NamespacedKey> allTagKeys() {
+        return ALL_TAG_KEYS;
     }
 
     public static RecipeChoice getBukkitChoice(RecipeChoice recipeChoice) {
