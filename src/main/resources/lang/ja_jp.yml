@@ -21,7 +21,7 @@ command:
       remove:
         success: '<prefix> &aカスタム燃料を削除しました。'
         failed_not_exist: '<prefix> &cカスタム燃料の削除に失敗しました。理由：この燃料は存在しません。'
-    group_item:
+    get_item_group:
       tag:
         unknown_tag: '<prefix> &c不明なアイテムタグ: <tag_id>'
       item_pack:

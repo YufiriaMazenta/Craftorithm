@@ -21,7 +21,7 @@ command:
       remove:
         success: '<prefix> &aCombustible personalizado eliminado con éxito.'
         failed_not_exist: '<prefix> &cError al eliminar combustible personalizado. Motivo: este combustible no existe.'
-    group_item:
+    get_item_group:
       tag:
         unknown_tag: '<prefix> &cEtiqueta de objeto desconocida: <tag_id>'
       item_pack:

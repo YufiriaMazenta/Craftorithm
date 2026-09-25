@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.item.ItemManager;
-import pers.yufiria.craftorithm.item.groupitem.ItemGroupItemManager;
+import pers.yufiria.craftorithm.item.ItemGroup;
 import pers.yufiria.craftorithm.util.CollectionsUtils;
 import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.IngredientUtils;
@@ -21,19 +21,19 @@ import pers.yufiria.craftorithm.util.LangUtils;
 import java.util.List;
 import java.util.Optional;
 
-public final class GroupItemCommand extends CommandNode {
+public final class GetItemGroupCommand extends CommandNode {
 
-    public static final GroupItemCommand INSTANCE = new GroupItemCommand();
+    public static final GetItemGroupCommand INSTANCE = new GetItemGroupCommand();
 
-    private GroupItemCommand() {
-        super(CommandInfo.builder("groupitem").build());
+    private GetItemGroupCommand() {
+        super(CommandInfo.builder("getitemgroup").build());
     }
 
     @Subcommand
     final CommandNode tag = new CommandNode(
         CommandInfo
             .builder("tag")
-            .usage("&r/craftorithm item groupitem tag <tag_key>")
+            .usage("&r/craftorithm item getitemgroup tag <tag_key>")
             .build()
     ) {
 
@@ -46,11 +46,12 @@ public final class GroupItemCommand extends CommandNode {
             if (!CommandUtils.checkInvokerIsPlayer(invoker))
                 return;
             String tagId = args.getFirst();
-            Optional<ItemStack> itemOpt = ItemGroupItemManager.INSTANCE.buildItemGroupItem(ItemGroupItemManager.GROUP_TYPE_TAG, tagId);
+            Optional<ItemStack> itemOpt = ItemGroup.of(ItemGroup.GROUP_TYPE_TAG, tagId)
+                .flatMap(ItemGroup::toPlaceholderItem);
             if (itemOpt.isEmpty()) {
                 LangUtils.sendLang(
                     invoker,
-                    Languages.COMMAND_ITEM_GROUP_ITEM_TAG_UNKNOWN_TAG,
+                    Languages.COMMAND_ITEM_GET_ITEM_GROUP_TAG_UNKNOWN_TAG,
                     CollectionsUtils.newStringHashMap("<tag_id>", tagId)
                 );
                 return;
@@ -68,7 +69,7 @@ public final class GroupItemCommand extends CommandNode {
     final CommandNode itemPack = new CommandNode(
         CommandInfo
             .builder("itempack")
-            .usage("&r/craftorithm item groupitem itempack <item_pack_id>")
+            .usage("&r/craftorithm item getitemgroup itempack <item_pack_id>")
             .build()
     ) {
 
@@ -81,11 +82,12 @@ public final class GroupItemCommand extends CommandNode {
             if (!CommandUtils.checkInvokerIsPlayer(invoker))
                 return;
             String itemPackId = args.getFirst();
-            Optional<ItemStack> itemOpt = ItemGroupItemManager.INSTANCE.buildItemGroupItem(ItemGroupItemManager.GROUP_TYPE_ITEM_PACK, itemPackId);
+            Optional<ItemStack> itemOpt = ItemGroup.of(ItemGroup.GROUP_TYPE_ITEM_PACK, itemPackId)
+                .flatMap(ItemGroup::toPlaceholderItem);
             if (itemOpt.isEmpty()) {
                 LangUtils.sendLang(
                     invoker,
-                    Languages.COMMAND_ITEM_GROUP_ITEM_ITEM_PACK_UNKNOWN_ITEM_PACK,
+                    Languages.COMMAND_ITEM_GET_ITEM_GROUP_ITEM_PACK_UNKNOWN_ITEM_PACK,
                     CollectionsUtils.newStringHashMap("<item_pack_id>", itemPackId)
                 );
                 return;

@@ -21,7 +21,7 @@ command:
       remove:
         success: '<prefix> &aÖzel yakıt başarıyla kaldırıldı.'
         failed_not_exist: '<prefix> &cÖzel yakıt kaldırılamadı. Neden: Bu yakıt mevcut değil.'
-    group_item:
+    get_item_group:
       tag:
         unknown_tag: '<prefix> &cBilinmeyen eşya etiketi: <tag_id>'
       item_pack:

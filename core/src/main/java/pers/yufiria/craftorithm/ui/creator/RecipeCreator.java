@@ -15,8 +15,7 @@ import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
-import pers.yufiria.craftorithm.item.groupitem.ItemGroup;
-import pers.yufiria.craftorithm.item.groupitem.ItemGroupItemManager;
+import pers.yufiria.craftorithm.item.ItemGroup;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 
@@ -123,7 +122,7 @@ public abstract class RecipeCreator extends StoredMenu {
      * 若为物品组占位符物品, 解析为tag:xxx或item_pack:xxx
      */
     protected String resolveIngredientId(ItemStack item) {
-        Optional<ItemGroup> itemGroupOpt = ItemGroupItemManager.INSTANCE.fromItemGroupItem(item);
+        Optional<ItemGroup> itemGroupOpt = ItemGroup.fromItemStack(item);
         if (itemGroupOpt.isPresent()) {
             return itemGroupOpt.get().toIngredientId();
         }

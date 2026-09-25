@@ -20,8 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
-import pers.yufiria.craftorithm.item.groupitem.ItemGroup;
-import pers.yufiria.craftorithm.item.groupitem.ItemGroupItemManager;
+import pers.yufiria.craftorithm.item.ItemGroup;
 import pers.yufiria.craftorithm.recipe.ParsedRecipe;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.ui.BackableMenu;
@@ -103,7 +102,7 @@ public abstract class RecipeEditorMenu extends StoredMenu implements BackableMen
         if (ItemHelper.isAir(item)) {
             return null;
         }
-        Optional<ItemGroup> itemGroupOpt = ItemGroupItemManager.INSTANCE.fromItemGroupItem(item);
+        Optional<ItemGroup> itemGroupOpt = ItemGroup.fromItemStack(item);
         if (itemGroupOpt.isPresent()) {
             return itemGroupOpt.get().toIngredientId();
         }

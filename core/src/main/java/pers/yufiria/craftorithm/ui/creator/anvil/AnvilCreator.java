@@ -24,8 +24,7 @@ import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.menu.creator.AnvilCreatorConfig;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
-import pers.yufiria.craftorithm.item.groupitem.ItemGroup;
-import pers.yufiria.craftorithm.item.groupitem.ItemGroupItemManager;
+import pers.yufiria.craftorithm.item.ItemGroup;
 import pers.yufiria.craftorithm.recipe.ParsedRecipe;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
@@ -234,7 +233,7 @@ public class AnvilCreator extends RecipeCreator {
 
     @Override
     protected String resolveIngredientId(ItemStack item) {
-        Optional<ItemGroup> itemGroupOpt = ItemGroupItemManager.INSTANCE.fromItemGroupItem(item);
+        Optional<ItemGroup> itemGroupOpt = ItemGroup.fromItemStack(item);
         if (itemGroupOpt.isPresent()) {
             //铁砧配方支持数量后缀
             String ingredientId = itemGroupOpt.get().toIngredientId();

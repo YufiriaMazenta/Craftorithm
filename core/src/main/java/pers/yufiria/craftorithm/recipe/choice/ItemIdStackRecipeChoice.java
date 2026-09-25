@@ -10,7 +10,7 @@ import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.item.exception.ItemNotFoundException;
-import pers.yufiria.craftorithm.item.groupitem.ItemGroupItemManager;
+import pers.yufiria.craftorithm.item.ItemGroup;
 
 import java.util.*;
 
@@ -50,7 +50,8 @@ public class ItemIdStackRecipeChoice implements RecipeChoice {
     public @NotNull ItemStack getItemStack() {
         //物品组材料使用构建出的物品组占位符作为展示物品
         if (itemGroupSource != null) {
-            Optional<ItemStack> itemGroupItem = ItemGroupItemManager.INSTANCE.buildItemGroupItem(itemGroupSource);
+            Optional<ItemStack> itemGroupItem = ItemGroup.fromIngredientId(itemGroupSource)
+                .flatMap(ItemGroup::toPlaceholderItem);
             if (itemGroupItem.isPresent()) {
                 return itemGroupItem.get();
             }

@@ -22,8 +22,8 @@ public class Languages {
     public static final StringLangEntry COMMAND_ITEM_FUEL_ADD_FAILED_EXIST = new StringLangEntry("command.item.fuel.add.failed_exist");
     public static final StringLangEntry COMMAND_ITEM_FUEL_REMOVE_SUCCESS = new StringLangEntry("command.item.fuel.remove.success");
     public static final StringLangEntry COMMAND_ITEM_FUEL_REMOVE_FAILED_NOT_EXIST = new StringLangEntry("command.item.fuel.remove.failed_not_exist");
-    public static final StringLangEntry COMMAND_ITEM_GROUP_ITEM_TAG_UNKNOWN_TAG = new StringLangEntry("command.item.group_item.tag.unknown_tag");
-    public static final StringLangEntry COMMAND_ITEM_GROUP_ITEM_ITEM_PACK_UNKNOWN_ITEM_PACK = new StringLangEntry("command.item.group_item.item_pack.unknown_item_pack");
+    public static final StringLangEntry COMMAND_ITEM_GET_ITEM_GROUP_TAG_UNKNOWN_TAG = new StringLangEntry("command.item.get_item_group.tag.unknown_tag");
+    public static final StringLangEntry COMMAND_ITEM_GET_ITEM_GROUP_ITEM_PACK_UNKNOWN_ITEM_PACK = new StringLangEntry("command.item.get_item_group.item_pack.unknown_item_pack");
     public static final StringLangEntry COMMAND_RELOAD_RELOADING = new StringLangEntry("command.reload.reloading");
     public static final StringLangEntry COMMAND_RELOAD_SUCCESS = new StringLangEntry("command.reload.success");
     public static final StringLangEntry COMMAND_RELOAD_EXCEPTION = new StringLangEntry("command.reload.exception");

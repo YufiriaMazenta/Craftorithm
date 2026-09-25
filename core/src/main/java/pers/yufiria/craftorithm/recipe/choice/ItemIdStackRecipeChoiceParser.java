@@ -8,7 +8,7 @@ import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.ItemPack;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
-import pers.yufiria.craftorithm.item.groupitem.ItemGroupItemManager;
+import pers.yufiria.craftorithm.item.ItemGroup;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
@@ -65,7 +65,7 @@ public enum ItemIdStackRecipeChoiceParser implements RecipeChoiceParser {
                 choices = materialTag.getValues().stream()
                     .map(it -> new NamespacedItemIdStack(NamespacedItemId.fromMaterial(it), tagAmount))
                     .toList();
-                itemGroup = ItemGroupItemManager.GROUP_TYPE_TAG + ":" + tagPart.key();
+                itemGroup = ItemGroup.GROUP_TYPE_TAG + ":" + tagPart.key();
                 break;
             case "item_pack":
                 //是物品组
@@ -79,7 +79,7 @@ public enum ItemIdStackRecipeChoiceParser implements RecipeChoiceParser {
                 choices = itemPack.itemIds().stream()
                     .map(itemId -> new NamespacedItemIdStack(itemId, packAmount))
                     .toList();
-                itemGroup = ItemGroupItemManager.GROUP_TYPE_ITEM_PACK + ":" + packPart.key();
+                itemGroup = ItemGroup.GROUP_TYPE_ITEM_PACK + ":" + packPart.key();
                 break;
             default:
                 choices = List.of(NamespacedItemIdStack.fromString(choiceStr));

@@ -1,7 +1,7 @@
 package pers.yufiria.craftorithm.recipe.choice;
 
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.item.groupitem.ItemGroupItemManager;
+import pers.yufiria.craftorithm.item.ItemGroup;
 
 public enum ItemIdRecipeChoiceParser implements RecipeChoiceParser {
 
@@ -12,7 +12,7 @@ public enum ItemIdRecipeChoiceParser implements RecipeChoiceParser {
         RecipeChoice bukkitChoice = BukkitRecipeChoiceParser.INSTANCE.parse(choiceStr);
         return new ItemIdRecipeChoice(
             bukkitChoice,
-            ItemGroupItemManager.itemGroupSource(choiceStr).isPresent() ? choiceStr : null
+            ItemGroup.fromIngredientId(choiceStr).isPresent() ? choiceStr : null
         );
     }
 

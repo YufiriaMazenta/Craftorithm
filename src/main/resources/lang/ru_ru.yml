@@ -21,7 +21,7 @@ command:
       remove:
         success: '<prefix> &aПользовательское топливо успешно удалено.'
         failed_not_exist: '<prefix> &cНе удалось удалить топливо. Причина: это топливо не существует.'
-    group_item:
+    get_item_group:
       tag:
         unknown_tag: '<prefix> &cНеизвестный тег предмета: <tag_id>'
       item_pack:
