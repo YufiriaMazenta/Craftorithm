@@ -10,7 +10,7 @@ public class FuelCommand extends CommandNode {
     public static final FuelCommand INSTANCE = new FuelCommand();
 
     protected FuelCommand() {
-        super(CommandInfo.builder("fuel").permission(new PermInfo("craftorithm.command.fuel")).build());
+        super(CommandInfo.builder("fuel").build());
     }
 
     @Subcommand

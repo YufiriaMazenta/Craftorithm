@@ -28,7 +28,6 @@ public class GiveCommand extends CommandNode {
         super(
             CommandInfo
                 .builder("give")
-                .permission(new PermInfo("craftorithm.command.item.give"))
                 .usage("&r/craftorithm item give <item_id> [player_name]")
                 .build()
         );
