@@ -21,6 +21,11 @@ command:
       remove:
         success: '<prefix> &a自訂燃料刪除成功。'
         failed_not_exist: '<prefix> &c自訂燃料刪除失敗，原因：此燃料不存在。'
+    group_item:
+      tag:
+        unknown_tag: '<prefix> &c未知的物品Tag: <tag_id>'
+      item_pack:
+        unknown_item_pack: '<prefix> &c未知的物品組: <item_pack_id>'
   reload:
     reloading: '<prefix> &a插件正在重載中，請稍等'
     success: '<prefix> &a插件重載成功。'

@@ -20,10 +20,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
+import pers.yufiria.craftorithm.item.groupitem.ItemGroup;
+import pers.yufiria.craftorithm.item.groupitem.ItemGroupItemManager;
 import pers.yufiria.craftorithm.recipe.ParsedRecipe;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.ui.BackableMenu;
 import pers.yufiria.craftorithm.ui.recipebook.BackIcon;
+
+import java.util.Optional;
 
 /**
  * 配方编辑器基类
@@ -93,10 +97,15 @@ public abstract class RecipeEditorMenu extends StoredMenu implements BackableMen
 
     /**
      * 解析材料物品的ID字符串
+     * 若为物品组占位符物品, 解析为tag:xxx或item_pack:xxx
      */
     protected @Nullable String resolveIngredientId(@Nullable ItemStack item) {
         if (ItemHelper.isAir(item)) {
             return null;
+        }
+        Optional<ItemGroup> itemGroupOpt = ItemGroupItemManager.INSTANCE.fromItemGroupItem(item);
+        if (itemGroupOpt.isPresent()) {
+            return itemGroupOpt.get().toIngredientId();
         }
         NamespacedItemIdStack itemId = ItemManager.INSTANCE.matchItemIdOrCreate(item, true);
         return itemId != null ? itemId.toString() : null;

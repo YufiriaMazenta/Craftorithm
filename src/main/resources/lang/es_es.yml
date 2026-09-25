@@ -21,6 +21,11 @@ command:
       remove:
         success: '<prefix> &aCombustible personalizado eliminado con éxito.'
         failed_not_exist: '<prefix> &cError al eliminar combustible personalizado. Motivo: este combustible no existe.'
+    group_item:
+      tag:
+        unknown_tag: '<prefix> &cEtiqueta de objeto desconocida: <tag_id>'
+      item_pack:
+        unknown_item_pack: '<prefix> &cPaquete de objetos desconocido: <item_pack_id>'
   reload:
     reloading: '<prefix> &aEl plugin se está recargando, por favor espera'
     success: '<prefix> &a¡Plugin recargado con éxito!'

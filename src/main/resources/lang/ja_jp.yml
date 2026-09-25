@@ -21,6 +21,11 @@ command:
       remove:
         success: '<prefix> &aカスタム燃料を削除しました。'
         failed_not_exist: '<prefix> &cカスタム燃料の削除に失敗しました。理由：この燃料は存在しません。'
+    group_item:
+      tag:
+        unknown_tag: '<prefix> &c不明なアイテムタグ: <tag_id>'
+      item_pack:
+        unknown_item_pack: '<prefix> &c不明なアイテムパック: <item_pack_id>'
   reload:
     reloading: '<prefix> &aプラグインをリロード中です。お待ちください'
     success: '<prefix> &aプラグインをリロードしました。'

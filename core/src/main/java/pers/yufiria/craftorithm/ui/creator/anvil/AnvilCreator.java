@@ -24,6 +24,8 @@ import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.menu.creator.AnvilCreatorConfig;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
+import pers.yufiria.craftorithm.item.groupitem.ItemGroup;
+import pers.yufiria.craftorithm.item.groupitem.ItemGroupItemManager;
 import pers.yufiria.craftorithm.recipe.ParsedRecipe;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
@@ -37,6 +39,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public class AnvilCreator extends RecipeCreator {
@@ -231,6 +234,12 @@ public class AnvilCreator extends RecipeCreator {
 
     @Override
     protected String resolveIngredientId(ItemStack item) {
+        Optional<ItemGroup> itemGroupOpt = ItemGroupItemManager.INSTANCE.fromItemGroupItem(item);
+        if (itemGroupOpt.isPresent()) {
+            //铁砧配方支持数量后缀
+            String ingredientId = itemGroupOpt.get().toIngredientId();
+            return item.getAmount() <= 1 ? ingredientId : ingredientId + " " + item.getAmount();
+        }
         NamespacedItemIdStack itemId = ItemManager.INSTANCE.matchItemIdOrCreate(item, false);
         return itemId != null ? itemId.toString() : null;
     }

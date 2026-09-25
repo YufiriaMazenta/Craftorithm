@@ -34,4 +34,7 @@ public final class ItemCommand extends CommandNode {
     @Subcommand
     CommandNode fuel = FuelCommand.INSTANCE;
 
+    @Subcommand
+    CommandNode itemGroupItem = GroupItemCommand.INSTANCE;
+
 }

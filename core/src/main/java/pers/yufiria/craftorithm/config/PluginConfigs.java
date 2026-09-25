@@ -3,10 +3,7 @@ package pers.yufiria.craftorithm.config;
 import crypticlib.CrypticLib;
 import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.config.ConfigHandler;
-import crypticlib.config.node.impl.bukkit.BooleanConfig;
-import crypticlib.config.node.impl.bukkit.ConfigSectionListConfig;
-import crypticlib.config.node.impl.bukkit.IntConfig;
-import crypticlib.config.node.impl.bukkit.StringListConfig;
+import crypticlib.config.node.impl.bukkit.*;
 import crypticlib.util.BukkitConfigHelper;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -249,5 +246,10 @@ public class PluginConfigs {
         ),
         "不进行隔离的监听器类，在此列表里的监听器类可以检测到Craftorithm的配方"
     );
+
+    public static final StringConfig ITEM_GROUP_ITEM_NAME = new StringConfig("item_group_item.name", "&r<group_type>:<group_id>(<group_item_count>):");
+    public static final StringConfig ITEM_GROUP_ITEM_LORE_ELEMENT = new StringConfig("item_group_item.lore.element", "&7<item_id>");
+    public static final StringConfig ITEM_GROUP_ITEM_LORE_END = new StringConfig("item_group_item.lore.end", "&7...");
+    public static final IntConfig ITEM_GROUP_ITEM_LORE_MAX_SIZE = new IntConfig("item_group_item.lore.max_size", 5);
 
 }
