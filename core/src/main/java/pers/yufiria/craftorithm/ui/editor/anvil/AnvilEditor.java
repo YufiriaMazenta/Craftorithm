@@ -19,9 +19,11 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.menu.editor.AnvilEditorConfig;
+import pers.yufiria.craftorithm.item.ItemGroup;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.item.exception.ItemNotFoundException;
@@ -33,10 +35,7 @@ import pers.yufiria.craftorithm.ui.editor.RecipeEditorMenu;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
 import pers.yufiria.craftorithm.util.LangUtils;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Supplier;
 
 /**
@@ -186,5 +185,17 @@ public final class AnvilEditor extends RecipeEditorMenu {
                 return this;
             }
         };
+    }
+
+    @Override
+    protected String resolveIngredientId(ItemStack item) {
+        Optional<ItemGroup> itemGroupOpt = ItemGroup.fromItemStack(item);
+        if (itemGroupOpt.isPresent()) {
+            //铁砧配方支持数量后缀
+            String ingredientId = itemGroupOpt.get().toIngredientId();
+            return item.getAmount() <= 1 ? ingredientId : ingredientId + " " + item.getAmount();
+        }
+        NamespacedItemIdStack itemId = ItemManager.INSTANCE.matchItemIdOrCreate(item, false);
+        return itemId != null ? itemId.toString() : null;
     }
 }

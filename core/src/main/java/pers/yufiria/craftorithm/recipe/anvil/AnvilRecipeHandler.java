@@ -126,10 +126,9 @@ public enum AnvilRecipeHandler implements Listener {
         }
 
         Player player = playerOpt.get();
-        NamespacedItemIdStack resultId = ItemManager.INSTANCE.matchItemId(result.get(), false).orElse(null);
-        if (resultId != null) {
-            ItemManager.INSTANCE.matchItem(resultId, player).ifPresent(refreshItem -> result.get().setItemMeta(refreshItem.getItemMeta()));
-        }
+        ItemManager.INSTANCE.matchItemId(result.get(), false)
+                .flatMap(resultId -> ItemManager.INSTANCE.matchItem(resultId, player))
+            .ifPresent(refreshItem -> result.get().setItemMeta(refreshItem.getItemMeta()));
 
         //处理结果处理器
         Optional<ResultProcessors> recipeProcessors = ResultProcessorManager.INSTANCE.getRecipeProcessors(anvilRecipe.getKey());
@@ -215,7 +214,7 @@ public enum AnvilRecipeHandler implements Listener {
         );
 
         int baseNum = baseId.amount(), additionNum = additionId.amount();
-        int needBaseNum = anvilRecipe.base().getUseAmount(baseId.itemId()), needAdditionNum = anvilRecipe.addition().getUseAmount(additionId.itemId());
+        int needBaseNum = anvilRecipe.base().getUseAmount(), needAdditionNum = anvilRecipe.addition().getUseAmount();
         int costLevel = anvilRecipe.costLevel();
         int canCraftNum = Math.min(baseNum / needBaseNum, additionNum / needAdditionNum);
         canCraftNum = Math.min(result.get().getMaxStackSize(), canCraftNum);

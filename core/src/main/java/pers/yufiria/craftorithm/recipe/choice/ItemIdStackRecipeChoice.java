@@ -19,19 +19,20 @@ import java.util.*;
  */
 public class ItemIdStackRecipeChoice implements RecipeChoice {
 
-    private final Collection<NamespacedItemIdStack> itemIds;
-    private final Map<NamespacedItemId, NamespacedItemIdStack> itemIdsMap;
+    private final Collection<NamespacedItemId> itemIds;
+    private final int amount;
     private final Random rand = new Random();
     /**
      * 该材料引用的物品组ID, 如tag:minecraft:planks或item_pack:my_pack, 非物品组材料为null
      */
     private final @Nullable String itemGroupSource;
 
-    public ItemIdStackRecipeChoice(Collection<NamespacedItemIdStack> itemIds) {
-        this(itemIds, null);
+    public ItemIdStackRecipeChoice(Collection<NamespacedItemId> itemIds, int amount) {
+        this(itemIds, amount, null);
     }
 
-    public ItemIdStackRecipeChoice(Collection<NamespacedItemIdStack> itemIds, @Nullable String itemGroupSource) {
+    public ItemIdStackRecipeChoice(Collection<NamespacedItemId> itemIds, int amount, @Nullable String itemGroupSource) {
+        this.amount = amount;
         if (itemIds == null || itemIds.isEmpty())
             throw new UnsupportedOperationException("ItemIds cannot be null or empty");
         this.itemGroupSource = itemGroupSource;
@@ -39,10 +40,6 @@ public class ItemIdStackRecipeChoice implements RecipeChoice {
             this.itemIds = Set.copyOf(itemIds);
         } else {
             this.itemIds = List.copyOf(itemIds);
-        }
-        this.itemIdsMap = new HashMap<>();
-        for (NamespacedItemIdStack item : itemIds) {
-            itemIdsMap.put(item.itemId(), item);
         }
     }
 
@@ -53,27 +50,32 @@ public class ItemIdStackRecipeChoice implements RecipeChoice {
             Optional<ItemStack> itemGroupItem = ItemGroup.fromIngredientId(itemGroupSource)
                 .flatMap(ItemGroup::toPlaceholderItem);
             if (itemGroupItem.isPresent()) {
-                return itemGroupItem.get();
+                ItemStack itemStack = itemGroupItem.get();
+                itemStack.setAmount(amount);
+                return itemStack;
             }
         }
         int index = rand.nextInt(itemIds.size());
-        NamespacedItemIdStack randomItemIdStack = itemIds.stream().skip(index).findFirst()
-            .orElseThrow(() -> new ItemNotFoundException("No item at index " + index + " in ItemIdStackRecipeChoice"));
+        NamespacedItemIdStack randomItemIdStack = new NamespacedItemIdStack(
+            itemIds.stream()
+                .skip(index)
+                .findFirst()
+                .orElseThrow(
+                    () -> new ItemNotFoundException("No item at index " + index + " in ItemIdStackRecipeChoice")
+                ),
+            amount
+        );
         return ItemManager.INSTANCE.matchItem(randomItemIdStack)
             .orElseThrow(() -> new ItemNotFoundException("Item not found: " + randomItemIdStack));
     }
 
     @Override
     public @NotNull RecipeChoice clone() {
-        return new ItemIdStackRecipeChoice(itemIds, itemGroupSource);
+        return new ItemIdStackRecipeChoice(itemIds, amount, itemGroupSource);
     }
 
-    public int getUseAmount(NamespacedItemId itemId) {
-        NamespacedItemIdStack stored = itemIdsMap.get(itemId);
-        if (stored != null) {
-            return stored.amount();
-        }
-        throw new IllegalArgumentException("Do not have this item id: " + itemId);
+    public int getUseAmount() {
+        return amount;
     }
 
     @Override
@@ -83,22 +85,10 @@ public class ItemIdStackRecipeChoice implements RecipeChoice {
             return false;
         }
         NamespacedItemIdStack inputItemIdStack = inputItemIdStackOpt.get();
-        NamespacedItemIdStack ingredientItemIdStack = itemIdsMap.get(inputItemIdStack.itemId());
-        return ingredientItemIdStack != null && inputItemIdStack.amount() >= ingredientItemIdStack.amount();
-    }
-
-    @Override
-    public @NotNull RecipeChoice validate(boolean allowEmptyRecipes) {
-        if (this.itemIds.stream().anyMatch((it) -> {
-            Optional<ItemStack> itemStack = ItemManager.INSTANCE.matchItem(it);
-            return itemStack.isEmpty() || ItemHelper.isAir(itemStack.get());
-        })) {
-            throw new IllegalArgumentException("RecipeChoice.ExactChoice cannot contain air");
-        } else {
-            return this;
+        if (!itemIds.contains(inputItemIdStack.itemId())) {
+            return false;
         }
+        return inputItemIdStack.amount() >= amount;
     }
-
-
 
 }
