@@ -27,7 +27,10 @@ public enum BrewingListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void rebuildBrewResult(BrewEvent event) {
-        if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V26_1)) {
+        MinecraftVersion currentVersion = MinecraftVersion.current();
+        if (
+            currentVersion.afterOrEquals(MinecraftVersion.V26_1) && currentVersion.before(MinecraftVersion.V26_3)
+        ) {
             List<ItemStack> results = event.getResults();
             //因为paper在26.1开始, PotionBrewing.mix方法必须有原材料有药水组件才能使用,所以需要自行匹配
             BrewerInventory brewerInventory = event.getContents();
@@ -38,9 +41,9 @@ public enum BrewingListener implements Listener {
                     continue;
                 }
                 int finalI = i;
-                BrewingRecipeRegister.INSTANCE.mix(input, ingredient).ifPresent(
-                    potionMix -> {
-                        results.set(finalI, potionMix.getResult());
+                BrewingRecipeRegister.INSTANCE.match(input, ingredient).ifPresent(
+                    brewingRecipe -> {
+                        results.set(finalI, brewingRecipe.getResult());
                     }
                 );
             }
@@ -52,7 +55,7 @@ public enum BrewingListener implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGHEST)
     public void processResult(BrewEvent event) {
-        if (!RecipeManager.INSTANCE.supportPotionMix()) {
+        if (!RecipeManager.INSTANCE.supportBrewingRecipe()) {
             //如果服务器根本不支持酿造配方,那么也就没有必要处理酿造的结果
             return;
         }
@@ -68,7 +71,7 @@ public enum BrewingListener implements Listener {
                 .flatMap(ItemManager.INSTANCE::matchItem)
                 .orElse(null);
             if (input != null) {
-                Optional<NamespacedKey> recipeKeyOpt = BrewingRecipeRegister.INSTANCE.mixKey(input, ingredient);
+                Optional<NamespacedKey> recipeKeyOpt = BrewingRecipeRegister.INSTANCE.matchKey(input, ingredient);
                 if (recipeKeyOpt.isPresent()) {
                     NamespacedKey recipeKey = recipeKeyOpt.get();
                     // 检查 blocked_crafting_lore_rules

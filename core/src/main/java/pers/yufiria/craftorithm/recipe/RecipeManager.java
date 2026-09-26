@@ -3,6 +3,7 @@ package pers.yufiria.craftorithm.recipe;
 import crypticlib.CrypticLib;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.CrypticLibPlugin;
+import crypticlib.MinecraftVersion;
 import crypticlib.chat.BukkitMsgSender;
 import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.lifecycle.LifecyclePhase;
@@ -94,7 +95,7 @@ public enum RecipeManager implements LifecycleTask {
         if (PluginConfigs.ENABLE_ANVIL_RECIPE.value()) {
             regRecipeType(SimpleRecipeTypes.ANVIL);
         }
-        if (supportPotionMix()) {
+        if (supportBrewingRecipe()) {
             regRecipeType(SimpleRecipeTypes.VANILLA_BREWING);
         }
     }
@@ -288,10 +289,15 @@ public enum RecipeManager implements LifecycleTask {
         Iterator<Recipe> recipeIterator = Bukkit.recipeIterator();
         serverRecipeKeys.clear();
         while (recipeIterator.hasNext()) {
-            Recipe recipe = recipeIterator.next();
-            NamespacedKey recipeKey = getRecipeKey(recipe);
-            if (recipeKey != null)
-                serverRecipeKeys.add(recipeKey);
+            //不知道为什么spigot 26.3酿造配方为什么没有实现toBukkitRecipe导致这里会报错
+            try {
+                Recipe recipe = recipeIterator.next();
+                NamespacedKey recipeKey = getRecipeKey(recipe);
+                if (recipeKey != null)
+                    serverRecipeKeys.add(recipeKey);
+            } catch (Throwable throwable) {
+                CrypticLib.info("&cError when load server recipe keys: <message>", Map.of("<message>", throwable.getMessage()));
+            }
         }
     }
 
@@ -507,7 +513,11 @@ public enum RecipeManager implements LifecycleTask {
         return Collections.unmodifiableSet(disabledRecipes.keySet());
     }
 
-    public boolean supportPotionMix() {
+    public boolean supportBrewingRecipe() {
+        if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V26_3)) {
+            //26.3以上直接用BrewingRecipe
+            return true;
+        }
         if (supportPotionMix == null) {
             try {
                 Class.forName("io.papermc.paper.potion.PotionMix");

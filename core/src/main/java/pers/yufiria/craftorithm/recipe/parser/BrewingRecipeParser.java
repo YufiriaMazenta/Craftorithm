@@ -26,7 +26,7 @@ public enum BrewingRecipeParser implements RecipeParser<BrewingRecipe> {
 
     @Override
     public @NotNull BrewingRecipe parse(String recipeName, ConfigurationSection recipeConfig) {
-        if (!RecipeManager.INSTANCE.supportPotionMix()) {
+        if (!RecipeManager.INSTANCE.supportBrewingRecipe()) {
             throw new RecipeLoadException("&cThe server does not support brewing recipes");
         }
         try {

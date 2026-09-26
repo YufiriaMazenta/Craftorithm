@@ -89,7 +89,7 @@ public enum RecipeEditorManager implements LifecycleTask {
             return editor;
         });
 
-        if (RecipeManager.INSTANCE.supportPotionMix()) {
+        if (RecipeManager.INSTANCE.supportBrewingRecipe()) {
             registerEditor(SimpleRecipeTypes.VANILLA_BREWING, (player, recipeKey, recipe) -> {
                 VanillaBrewingEditor editor = new VanillaBrewingEditor(player, recipeKey, (BrewingRecipe) recipe);
                 editor.openMenu();

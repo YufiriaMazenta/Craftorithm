@@ -22,7 +22,7 @@ public class BrewingRecipe implements CustomRecipe {
         this.result = result;
     }
 
-    public PotionMix toPotionMix() {
+    public Object toPotionMix() {
         if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_20_3)) {
             //支持predicate
             return new PotionMix(

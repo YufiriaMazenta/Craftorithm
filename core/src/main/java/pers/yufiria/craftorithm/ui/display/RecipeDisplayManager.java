@@ -82,7 +82,7 @@ public enum RecipeDisplayManager implements LifecycleTask {
             stonecuttingDisplayMenu.openMenu();
             return stonecuttingDisplayMenu;
         });
-        if (RecipeManager.INSTANCE.supportPotionMix()) {
+        if (RecipeManager.INSTANCE.supportBrewingRecipe()) {
             addRecipeDisplay(SimpleRecipeTypes.VANILLA_BREWING, (player, recipe) -> {
                 VanillaBrewingDisplayMenu vanillaBrewingDisplay = new VanillaBrewingDisplayMenu(player, (BrewingRecipe) recipe);
                 vanillaBrewingDisplay.openMenu();

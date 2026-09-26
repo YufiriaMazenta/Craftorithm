@@ -24,6 +24,7 @@ import org.bukkit.inventory.*;
 import org.spigotmc.AsyncCatcher;
 import pers.yufiria.craftorithm.recipe.CraftorithmRecipeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.recipe.brewing.BrewingRecipe;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
 @LifecycleTaskConfig(schedules = @LifecycleSchedule(phase = LifecyclePhase.LOAD))
@@ -59,6 +60,9 @@ public enum CraftorithmRecipeRegistry260300 implements CraftorithmRecipeRegistry
             }
             case SmithingTrimRecipe smithingTrimRecipe -> {
                 recipeHolder = SmithingTrimRecipe260300.fromBukkit(recipeKey, smithingTrimRecipe);
+            }
+            case BrewingRecipe brewingRecipe -> {
+                recipeHolder = BrewingRecipe260300.fromBukkit(recipeKey, brewingRecipe);
             }
             case StonecuttingRecipe stonecuttingRecipe -> {
                 CraftStonecuttingRecipe craftStonecuttingRecipe = CraftStonecuttingRecipe.fromBukkitRecipe(stonecuttingRecipe);
