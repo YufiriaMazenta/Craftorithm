@@ -14,7 +14,7 @@ import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.RecipeTypeMap;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.recipe.anvil.AnvilRecipe;
-import pers.yufiria.craftorithm.recipe.brewing.BrewingRecipe;
+import pers.yufiria.craftorithm.recipe.BrewingRecipe;
 import pers.yufiria.craftorithm.ui.display.anvil.AnvilDisplayMenu;
 import pers.yufiria.craftorithm.ui.display.vanillabrewing.VanillaBrewingDisplayMenu;
 import pers.yufiria.craftorithm.ui.display.vanillashaped.VanillaShapedDisplayMenu;

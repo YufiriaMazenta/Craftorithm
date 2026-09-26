@@ -24,13 +24,16 @@ import java.util.Optional;
 public enum BrewingListener implements Listener {
 
     INSTANCE;
+    final boolean versionInV26_1andV26_3;
+
+    BrewingListener() {
+        MinecraftVersion currentVersion = MinecraftVersion.current();
+        versionInV26_1andV26_3 = currentVersion.afterOrEquals(MinecraftVersion.V26_1) && currentVersion.before(MinecraftVersion.V26_3);
+    }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void rebuildBrewResult(BrewEvent event) {
-        MinecraftVersion currentVersion = MinecraftVersion.current();
-        if (
-            currentVersion.afterOrEquals(MinecraftVersion.V26_1) && currentVersion.before(MinecraftVersion.V26_3)
-        ) {
+        if (versionInV26_1andV26_3) {
             List<ItemStack> results = event.getResults();
             //因为paper在26.1开始, PotionBrewing.mix方法必须有原材料有药水组件才能使用,所以需要自行匹配
             BrewerInventory brewerInventory = event.getContents();

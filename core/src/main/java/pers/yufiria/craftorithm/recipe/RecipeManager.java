@@ -514,16 +514,16 @@ public enum RecipeManager implements LifecycleTask {
     }
 
     public boolean supportBrewingRecipe() {
-        if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V26_3)) {
-            //26.3以上直接用BrewingRecipe
-            return true;
-        }
         if (supportPotionMix == null) {
-            try {
-                Class.forName("io.papermc.paper.potion.PotionMix");
+            if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V26_3)) {
                 supportPotionMix = true;
-            } catch (Throwable throwable) {
-                supportPotionMix = false;
+            } else {
+                try {
+                    Class.forName("io.papermc.paper.potion.PotionMix");
+                    supportPotionMix = true;
+                } catch (Throwable throwable) {
+                    supportPotionMix = false;
+                }
             }
         }
         return supportPotionMix;

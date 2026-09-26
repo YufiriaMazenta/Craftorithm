@@ -39,7 +39,7 @@ public class BrewingRecipe260300 extends BrewingRecipe {
             return cached;
         }
         org.bukkit.inventory.ItemStack result = CraftItemStack.asBukkitMirror(this.getOutput().create());
-        Recipe recipe = new pers.yufiria.craftorithm.recipe.brewing.BrewingRecipe(
+        Recipe recipe = new pers.yufiria.craftorithm.recipe.BrewingRecipe(
             namespacedKey,
             bukkitInput,
             bukkitReagent,
@@ -60,7 +60,7 @@ public class BrewingRecipe260300 extends BrewingRecipe {
         return PlacementInfo.NOT_PLACEABLE;
     }
 
-    public static RecipeHolder<BrewingRecipe> fromBukkit(NamespacedKey recipeKey, pers.yufiria.craftorithm.recipe.brewing.BrewingRecipe bukkitRecipe) {
+    public static RecipeHolder<BrewingRecipe> fromBukkit(NamespacedKey recipeKey, pers.yufiria.craftorithm.recipe.BrewingRecipe bukkitRecipe) {
         ItemStack nmsResult = CraftItemStack.asNMSCopy(bukkitRecipe.getResult());
         ItemStackTemplate resultTemplate = ItemStackTemplate.fromNonEmptyStack(nmsResult);
         return new RecipeHolder<>(CraftNamespacedKey.toResourceKey(Registries.RECIPE, recipeKey), new BrewingRecipe260300(
