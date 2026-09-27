@@ -131,8 +131,14 @@ public enum AnvilRecipeHandler implements Listener {
 
         AtomicReference<ItemStack> result = new AtomicReference<>(anvilRecipe.getResult());
 
+        //刷新结果
         ItemManager.INSTANCE.matchItemId(result.get(), false)
-                .flatMap(resultId -> ItemManager.INSTANCE.matchItem(resultId, player))
+            .flatMap(itemIdStack -> {
+                if (itemIdStack.itemId().isVanillaItem()) {
+                    return Optional.empty();
+                }
+                return ItemManager.INSTANCE.matchItem(itemIdStack, player);
+            })
             .ifPresent(refreshItem -> result.get().setItemMeta(refreshItem.getItemMeta()));
 
         //处理结果处理器
@@ -209,6 +215,16 @@ public enum AnvilRecipeHandler implements Listener {
         NamespacedItemIdStack baseId = ItemManager.INSTANCE.matchItemIdOrVanilla(base, false).orElseThrow();
         NamespacedItemIdStack additionId = ItemManager.INSTANCE.matchItemIdOrVanilla(addition, false).orElseThrow();
         Player player = (Player) event.getWhoClicked();
+
+        //刷新结果
+        ItemManager.INSTANCE.matchItemId(result.get(), false)
+            .flatMap(itemIdStack -> {
+                if (itemIdStack.itemId().isVanillaItem()) {
+                    return Optional.empty();
+                }
+                return ItemManager.INSTANCE.matchItem(itemIdStack, player);
+            })
+            .ifPresent(refreshItem -> result.get().setItemMeta(refreshItem.getItemMeta()));
 
         //处理结果处理器
         Optional<ResultProcessors> recipeProcessors = ResultProcessorManager.INSTANCE.getRecipeProcessors(anvilRecipe.getKey());

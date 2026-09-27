@@ -70,10 +70,6 @@ public enum BrewingListener implements Listener {
         for (int i = 0; i < resultsClone.size(); i++) {
             ItemStack result = resultsClone.get(i);
             ItemStack input = brewerInventory.getItem(i);
-            //重新从物品源获取物品, 刷新结果的组件
-            ItemStack refreshItem = ItemManager.INSTANCE.matchItemId(result, true)
-                .flatMap(ItemManager.INSTANCE::matchItem)
-                .orElse(null);
             if (input != null) {
                 Optional<NamespacedKey> recipeKeyOpt = BrewingRecipeRegister.INSTANCE.matchKey(input, ingredient);
                 if (recipeKeyOpt.isPresent()) {
@@ -96,6 +92,15 @@ public enum BrewingListener implements Listener {
                         }
                     }
 
+                    //重新从物品源获取物品, 刷新结果的组件
+                    ItemStack refreshItem = ItemManager.INSTANCE.matchItemId(result, true)
+                        .flatMap(itemIdStack -> {
+                            if (itemIdStack.itemId().isVanillaItem()) {
+                                return Optional.empty();
+                            }
+                            return ItemManager.INSTANCE.matchItem(itemIdStack);
+                        })
+                        .orElse(null);
                     if (refreshItem != null && !result.isSimilar(refreshItem)) {
                         result.setItemMeta(refreshItem.getItemMeta());
                     }

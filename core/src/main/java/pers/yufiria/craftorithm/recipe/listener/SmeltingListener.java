@@ -63,7 +63,14 @@ public enum SmeltingListener implements Listener {
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
         if (recipeKey != null) {
             ItemManager.INSTANCE.matchItemId(result, true)
-                .flatMap(ItemManager.INSTANCE::matchItem)
+                .flatMap(
+                    itemIdStack -> {
+                        if (itemIdStack.itemId().isVanillaItem()) {
+                            return Optional.empty();
+                        }
+                        return ItemManager.INSTANCE.matchItem(itemIdStack);
+                    }
+                )
                 .ifPresent(refreshItem -> {
                     result.setItemMeta(refreshItem.getItemMeta());
                 });
@@ -107,7 +114,14 @@ public enum SmeltingListener implements Listener {
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
         if (recipeKey != null) {
             ItemManager.INSTANCE.matchItemId(result, true)
-                .flatMap(ItemManager.INSTANCE::matchItem)
+                .flatMap(
+                    itemIdStack -> {
+                        if (itemIdStack.itemId().isVanillaItem()) {
+                            return Optional.empty();
+                        }
+                        return ItemManager.INSTANCE.matchItem(itemIdStack);
+                    }
+                )
                 .ifPresent(refreshItem -> {
                     result.setItemMeta(refreshItem.getItemMeta());
                 });

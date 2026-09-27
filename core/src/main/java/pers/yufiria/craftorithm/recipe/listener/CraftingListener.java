@@ -39,9 +39,13 @@ public enum CraftingListener implements Listener {
         ItemStack result = item.clone();
         // 重新从物品源获取物品, 刷新结果的组件
         ItemManager.INSTANCE.matchItemId(result, true)
-            .flatMap(id -> EventUtils.getViewer(event)
-                .flatMap(player -> ItemManager.INSTANCE.matchItem(id, player))
-            )
+            .flatMap(itemIdStack -> {
+                if (itemIdStack.itemId().isVanillaItem()) {
+                    return Optional.empty();
+                }
+                Optional<Player> playerOpt = EventUtils.getViewer(event);
+                return ItemManager.INSTANCE.matchItem(itemIdStack, playerOpt.orElse(null));
+            })
             .ifPresent(refreshItem -> {
                 if (!result.isSimilar(refreshItem)) {
                     result.setItemMeta(refreshItem.getItemMeta());

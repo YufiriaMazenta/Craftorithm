@@ -46,9 +46,13 @@ public enum SmithingListener implements Listener {
         }
 
         ItemManager.INSTANCE.matchItemId(result.get(), true)
-            .flatMap(id -> EventUtils.getViewer(event)
-                .flatMap(player -> ItemManager.INSTANCE.matchItem(id, player))
-            )
+            .flatMap(itemIdStack -> {
+                if (itemIdStack.itemId().isVanillaItem()) {
+                    return Optional.empty();
+                }
+                Optional<Player> playerOpt = EventUtils.getViewer(event);
+                return ItemManager.INSTANCE.matchItem(itemIdStack, playerOpt.orElse(null));
+            })
             .ifPresent(refreshItem -> {
                 if (!result.get().isSimilar(refreshItem)) {
                     result.get().setItemMeta(refreshItem.getItemMeta());
