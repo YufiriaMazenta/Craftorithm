@@ -215,25 +215,6 @@ public enum AnvilRecipeHandler implements Listener {
         NamespacedItemIdStack baseId = ItemManager.INSTANCE.matchItemIdOrVanilla(base, false).orElseThrow();
         NamespacedItemIdStack additionId = ItemManager.INSTANCE.matchItemIdOrVanilla(addition, false).orElseThrow();
         Player player = (Player) event.getWhoClicked();
-
-        //刷新结果
-        ItemManager.INSTANCE.matchItemId(result.get(), false)
-            .flatMap(itemIdStack -> {
-                if (itemIdStack.itemId().isVanillaItem()) {
-                    return Optional.empty();
-                }
-                return ItemManager.INSTANCE.matchItem(itemIdStack, player);
-            })
-            .ifPresent(refreshItem -> result.get().setItemMeta(refreshItem.getItemMeta()));
-
-        //处理结果处理器
-        Optional<ResultProcessors> recipeProcessors = ResultProcessorManager.INSTANCE.getRecipeProcessors(anvilRecipe.getKey());
-        recipeProcessors.ifPresent(
-            rules -> {
-                rules.processItem(base, result.get(), player);
-            }
-        );
-
         int baseNum = baseId.amount(), additionNum = additionId.amount();
         int needBaseNum = anvilRecipe.base().getUseAmount(), needAdditionNum = anvilRecipe.addition().getUseAmount();
         int costLevel = anvilRecipe.costLevel();
