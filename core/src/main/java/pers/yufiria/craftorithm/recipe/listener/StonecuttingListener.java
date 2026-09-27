@@ -15,6 +15,7 @@ import org.bukkit.inventory.StonecuttingRecipe;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessorManager;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessors;
+import pers.yufiria.craftorithm.worldisolation.WorldIsolationDataHandler;
 
 import java.util.Optional;
 
@@ -44,7 +45,14 @@ public enum StonecuttingListener implements Listener {
             ItemStack inputItem = stonecutterInventory.getInputItem();
 
             if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_21)) {
-                // 1.20.X情况下，基于物品的拦截功能由nms层进行，故只在1.21以上进行该操作
+                // 1.20.X版本这两个拦截功能由nms层进行，故只在1.21以上进行这两个判断
+                if (!WorldIsolationDataHandler.INSTANCE.canRecipeUse(
+                    recipeKey,
+                    player.getWorld()
+                )) {
+                    stonecutterInventory.setResult(null);
+                    return;
+                }
                 if (!ItemHelper.isAir(inputItem) && !ItemManager.INSTANCE.canCraft(new ItemStack[]{inputItem}, recipeKey)) {
                     stonecutterInventory.setResult(null);
                     return;
