@@ -39,7 +39,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @EventListener
 @LifecycleTaskConfig(
     schedules = {
-        @LifecycleSchedule(phase = LifecyclePhase.RELOAD)
+        @LifecycleSchedule(phase = LifecyclePhase.RELOAD),
+        @LifecycleSchedule(phase = LifecyclePhase.DISABLE)
     }
 )
 public enum FakeResultDataHandler implements Listener, LifecycleTask {
