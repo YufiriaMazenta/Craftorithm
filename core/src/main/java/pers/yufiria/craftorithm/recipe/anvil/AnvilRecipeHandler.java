@@ -31,7 +31,7 @@ import pers.yufiria.craftorithm.trigger.TriggerContext;
 import pers.yufiria.craftorithm.trigger.TriggerManager;
 import pers.yufiria.craftorithm.util.EventUtils;
 import pers.yufiria.craftorithm.util.PlayerUtils;
-import pers.yufiria.craftorithm.worldisolation.WorldIsolationDataHandler;
+import pers.yufiria.craftorithm.recipe.worldisolation.WorldIsolationDataHandler;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

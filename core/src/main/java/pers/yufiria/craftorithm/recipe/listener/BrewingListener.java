@@ -15,7 +15,7 @@ import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.register.BrewingRecipeRegister;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessorManager;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessors;
-import pers.yufiria.craftorithm.worldisolation.WorldIsolationDataHandler;
+import pers.yufiria.craftorithm.recipe.worldisolation.WorldIsolationDataHandler;
 
 import java.util.ArrayList;
 import java.util.List;

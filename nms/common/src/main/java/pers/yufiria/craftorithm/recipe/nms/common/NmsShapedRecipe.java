@@ -1,9 +1,8 @@
 package pers.yufiria.craftorithm.recipe.nms.common;
 
 import org.bukkit.World;
-import org.bukkit.inventory.ItemStack;
 import pers.yufiria.craftorithm.item.ItemManager;
-import pers.yufiria.craftorithm.worldisolation.WorldIsolationDataHandler;
+import pers.yufiria.craftorithm.recipe.worldisolation.WorldIsolationDataHandler;
 
 /**
  * 有序配方的通用实现

@@ -4,7 +4,7 @@ import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import pers.yufiria.craftorithm.item.ItemManager;
-import pers.yufiria.craftorithm.worldisolation.WorldIsolationDataHandler;
+import pers.yufiria.craftorithm.recipe.worldisolation.WorldIsolationDataHandler;
 
 /**
  * 酿造配方的通用实现：药水槽与材料槽都要匹配

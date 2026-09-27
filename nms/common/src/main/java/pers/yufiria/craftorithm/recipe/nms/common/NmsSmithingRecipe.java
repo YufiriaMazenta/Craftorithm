@@ -5,7 +5,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.util.IngredientUtils;
-import pers.yufiria.craftorithm.worldisolation.WorldIsolationDataHandler;
+import pers.yufiria.craftorithm.recipe.worldisolation.WorldIsolationDataHandler;
 
 import java.util.Optional;
 

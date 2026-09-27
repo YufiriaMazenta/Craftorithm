@@ -4,7 +4,7 @@ import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import pers.yufiria.craftorithm.item.ItemManager;
-import pers.yufiria.craftorithm.worldisolation.WorldIsolationDataHandler;
+import pers.yufiria.craftorithm.recipe.worldisolation.WorldIsolationDataHandler;
 
 /**
  * 单槽配方的通用实现：熔炉、烟熏、高炉、营火、切石

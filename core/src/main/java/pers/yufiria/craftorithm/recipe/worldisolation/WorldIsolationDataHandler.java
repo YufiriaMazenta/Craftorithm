@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.worldisolation;
+package pers.yufiria.craftorithm.recipe.worldisolation;
 
 import crypticlib.CrypticLib;
 import crypticlib.CrypticLibPlugin;
