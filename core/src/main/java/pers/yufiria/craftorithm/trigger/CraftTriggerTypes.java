@@ -202,7 +202,7 @@ public enum CraftTriggerTypes implements TriggerType {
             ItemStack addition = anvilInv.getItem(1);
             if (base == null || addition == null) return null;
 
-            AnvilRecipe customRecipe = AnvilRecipeHandler.INSTANCE.matchAnvilRecipe(base, addition);
+            AnvilRecipe customRecipe = AnvilRecipeHandler.INSTANCE.matchAnvilRecipe(base, addition, player.getWorld());
             NamespacedKey recipeKey = customRecipe != null ? customRecipe.getKey() : null;
             RecipeType recipeType = RecipeManager.INSTANCE.getRecipeTypeByKey("anvil");
             TriggerContext ctx = new TriggerContext(player, recipeKey, recipeType);
@@ -230,7 +230,7 @@ public enum CraftTriggerTypes implements TriggerType {
             }
 
             return EventUtils.getViewer(e).map(player -> {
-                AnvilRecipe customRecipe = AnvilRecipeHandler.INSTANCE.matchAnvilRecipe(base, addition);
+                AnvilRecipe customRecipe = AnvilRecipeHandler.INSTANCE.matchAnvilRecipe(base, addition, player.getWorld());
                 NamespacedKey recipeKey = customRecipe != null ? customRecipe.getKey() : null;
                 RecipeType recipeType = RecipeManager.INSTANCE.getRecipeTypeByKey("anvil");
                 TriggerContext ctx = new TriggerContext(player, recipeKey, recipeType);

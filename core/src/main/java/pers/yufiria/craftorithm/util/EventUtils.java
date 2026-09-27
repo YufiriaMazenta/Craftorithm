@@ -77,7 +77,12 @@ public class EventUtils {
                         if (ItemHelper.isAir(base) || ItemHelper.isAir(addition))
                             return null;
 
-                        AnvilRecipe anvilRecipe = AnvilRecipeHandler.INSTANCE.matchAnvilRecipe(base, addition);
+                        Optional<Player> playerOpt = EventUtils.getViewer(clickEvent);
+                        if (playerOpt.isEmpty()) {
+                            return null;
+                        }
+                        Player player = playerOpt.get();
+                        AnvilRecipe anvilRecipe = AnvilRecipeHandler.INSTANCE.matchAnvilRecipe(base, addition, player.getWorld());
                         return anvilRecipe != null ? anvilRecipe.getKey() : null;
                     }
                     default -> {
@@ -93,7 +98,12 @@ public class EventUtils {
                 if (ItemHelper.isAir(base) || ItemHelper.isAir(addition))
                     return null;
 
-                AnvilRecipe anvilRecipe = AnvilRecipeHandler.INSTANCE.matchAnvilRecipe(base, addition);
+                Optional<Player> playerOpt = EventUtils.getViewer(prepareAnvilEvent);
+                if (playerOpt.isEmpty()) {
+                    return null;
+                }
+                Player player = playerOpt.get();
+                AnvilRecipe anvilRecipe = AnvilRecipeHandler.INSTANCE.matchAnvilRecipe(base, addition, player.getWorld());
                 return anvilRecipe != null ? anvilRecipe.getKey() : null;
             }
             case null -> {

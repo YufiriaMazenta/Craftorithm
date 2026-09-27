@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.recipe.nms.common;
 
-import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
@@ -84,15 +83,14 @@ public class CustomShapedRecipePattern {
      * 1.20 ~ 1.20.5 的匹配方式：在合成格内滑动寻找匹配位置，每个位置先按镜像再按正向匹配
      *
      * @param inputItems 行优先展开的 Bukkit 合成格物品
-     * @param world      转换后的 Bukkit 世界，供将来按世界维度等条件做判定
      */
-    public boolean matchesBefore1_21(List<ItemStack> inputItems, int inputWidth, int inputHeight, World world) {
+    public boolean matchesBefore1_21(List<ItemStack> inputItems, int inputWidth, int inputHeight) {
         for (int offsetX = 0; offsetX <= inputWidth - width; offsetX++) {
             for (int offsetY = 0; offsetY <= inputHeight - height; offsetY++) {
-                if (matchesBefore1_21(inputItems, inputWidth, inputHeight, offsetX, offsetY, true, world)) {
+                if (matchesBefore1_21(inputItems, inputWidth, inputHeight, offsetX, offsetY, true)) {
                     return true;
                 }
-                if (matchesBefore1_21(inputItems, inputWidth, inputHeight, offsetX, offsetY, false, world)) {
+                if (matchesBefore1_21(inputItems, inputWidth, inputHeight, offsetX, offsetY, false)) {
                     return true;
                 }
             }
@@ -106,17 +104,17 @@ public class CustomShapedRecipePattern {
      * @param inputItems 行优先展开的 Bukkit 合成格物品
      * @param world      转换后的 Bukkit 世界，供将来按世界维度等条件做判定
      */
-    public boolean matchesSince1_21(List<ItemStack> inputItems, int inputWidth, int inputHeight, int inputIngredientCount, World world) {
+    public boolean matchesSince1_21(List<ItemStack> inputItems, int inputWidth, int inputHeight, int inputIngredientCount) {
         if (inputIngredientCount != ingredientCount) {
             return false;
         }
         if (inputWidth != width || inputHeight != height) {
             return false;
         }
-        if (!symmetrical && matchesSince1_21(inputItems, inputWidth, true, world)) {
+        if (!symmetrical && matchesSince1_21(inputItems, inputWidth, true)) {
             return true;
         }
-        return matchesSince1_21(inputItems, inputWidth, false, world);
+        return matchesSince1_21(inputItems, inputWidth, false);
     }
 
     /**
@@ -169,7 +167,7 @@ public class CustomShapedRecipePattern {
     }
 
     private boolean matchesBefore1_21(List<ItemStack> inputItems, int inputWidth, int inputHeight,
-                                      int offsetX, int offsetY, boolean mirrored, World world) {
+                                      int offsetX, int offsetY, boolean mirrored) {
         for (int column = 0; column < inputWidth; column++) {
             for (int row = 0; row < inputHeight; row++) {
                 int patternColumn = column - offsetX;
@@ -186,7 +184,7 @@ public class CustomShapedRecipePattern {
         return true;
     }
 
-    private boolean matchesSince1_21(List<ItemStack> inputItems, int inputWidth, boolean mirrored, World world) {
+    private boolean matchesSince1_21(List<ItemStack> inputItems, int inputWidth, boolean mirrored) {
         for (int row = 0; row < height; row++) {
             for (int column = 0; column < width; column++) {
                 Optional<RecipeChoice> ingredient = ingredients.get(ingredientIndex(column, row, mirrored));

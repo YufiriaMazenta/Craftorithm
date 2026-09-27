@@ -5,6 +5,7 @@ import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import pers.yufiria.craftorithm.util.IngredientUtils;
+import pers.yufiria.craftorithm.worldisolation.WorldIsolationDataHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,9 @@ public interface NmsShapelessRecipe<Input> extends NmsCraftingRecipe<Input> {
      * {@code world} 是转换后的 Bukkit 世界，供将来按世界维度等条件做判定
      */
     default boolean matchesShapeless(Input input, World world) {
+        if (!WorldIsolationDataHandler.INSTANCE.canRecipeUse(recipeKey(), world)) {
+            return false;
+        }
         List<ItemStack> bukkitInputItems = toBukkitCraftingInput(input).items();
         List<RecipeChoice> ingredients = customIngredients();
         List<ItemStack> inputItems = new ArrayList<>(bukkitInputItems.size());

@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.recipe.nms.common;
 
 import org.bukkit.World;
+import pers.yufiria.craftorithm.worldisolation.WorldIsolationDataHandler;
 
 /**
  * 有序配方的通用实现
@@ -20,8 +21,11 @@ public interface NmsShapedRecipe<Input> extends NmsCraftingRecipe<Input> {
      * {@code world} 是转换后的 Bukkit 世界，供将来按世界维度等条件做判定
      */
     default boolean matchesShapedBefore1_21(Input input, World world) {
+        if (!WorldIsolationDataHandler.INSTANCE.canRecipeUse(recipeKey(), world)) {
+            return false;
+        }
         BukkitCraftingInput craftingInput = toBukkitCraftingInput(input);
-        return customPattern().matchesBefore1_21(craftingInput.items(), craftingInput.width(), craftingInput.height(), world);
+        return customPattern().matchesBefore1_21(craftingInput.items(), craftingInput.width(), craftingInput.height());
     }
 
     /**
@@ -31,8 +35,11 @@ public interface NmsShapedRecipe<Input> extends NmsCraftingRecipe<Input> {
      * @param world               转换后的 Bukkit 世界，供将来按世界维度等条件做判定
      */
     default boolean matchesShapedSince1_21(Input input, int inputIngredientCount, World world) {
+        if (!WorldIsolationDataHandler.INSTANCE.canRecipeUse(recipeKey(), world)) {
+            return false;
+        }
         BukkitCraftingInput craftingInput = toBukkitCraftingInput(input);
-        return customPattern().matchesSince1_21(craftingInput.items(), craftingInput.width(), craftingInput.height(), inputIngredientCount, world);
+        return customPattern().matchesSince1_21(craftingInput.items(), craftingInput.width(), craftingInput.height(), inputIngredientCount);
     }
 
 }

@@ -32,14 +32,16 @@ public enum StonecuttingListener implements Listener {
     @EventHandler
     public void processResult(PlayerStonecutterRecipeSelectEvent event) {
         StonecutterInventory stonecutterInventory = event.getStonecutterInventory();
-        CrypticLibBukkit.scheduler().runOnLocation(event.getPlayer().getLocation(), () -> {
+        Player player = event.getPlayer();
+        CrypticLibBukkit.scheduler().runOnEntity(player, () -> {
             ItemStack result = stonecutterInventory.getResult();
             if (ItemHelper.isAir(result)) {
                 return;
             }
             StonecuttingRecipe recipe = event.getStonecuttingRecipe();
             NamespacedKey recipeKey = recipe.getKey();
-            // 检查 blocked_crafting_lore_rules
+
+            // 检查物品是否能用于合成
             ItemStack base = stonecutterInventory.getInputItem();
             if (!ItemHelper.isAir(base) && !ItemManager.INSTANCE.canCraft(new ItemStack[]{base}, recipeKey)) {
                 stonecutterInventory.setResult(null);
@@ -53,10 +55,9 @@ public enum StonecuttingListener implements Listener {
                 });
             //运行结果处理器
             Optional<ResultProcessors> recipeProcessors = ResultProcessorManager.INSTANCE.getRecipeProcessors(recipeKey);
-            Player processorPlayer = event.getPlayer();
             recipeProcessors.ifPresent(
                 rules -> {
-                    rules.processItem(base, result, processorPlayer);
+                    rules.processItem(base, result, player);
                 }
             );
             stonecutterInventory.setResult(result);

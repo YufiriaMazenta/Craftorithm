@@ -7,6 +7,7 @@ import crypticlib.util.InventoryHelper;
 import crypticlib.util.ItemHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -30,6 +31,7 @@ import pers.yufiria.craftorithm.trigger.TriggerContext;
 import pers.yufiria.craftorithm.trigger.TriggerManager;
 import pers.yufiria.craftorithm.util.EventUtils;
 import pers.yufiria.craftorithm.util.PlayerUtils;
+import pers.yufiria.craftorithm.worldisolation.WorldIsolationDataHandler;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -68,7 +70,7 @@ public enum AnvilRecipeHandler implements Listener {
     }
 
     @Nullable
-    public AnvilRecipe matchAnvilRecipe(ItemStack base, ItemStack addition) {
+    public AnvilRecipe matchAnvilRecipe(ItemStack base, ItemStack addition, World world) {
         if (!PluginConfigs.ENABLE_ANVIL_RECIPE.value())
             throw new UnsupportedOperationException("AnvilRecipe is not enabled");
         if (ItemHelper.isAir(base) || ItemHelper.isAir(addition)) {
@@ -76,6 +78,10 @@ public enum AnvilRecipeHandler implements Listener {
         }
         for (Map.Entry<NamespacedKey, AnvilRecipe> anvilRecipeEntry : anvilRecipes.entrySet()) {
             AnvilRecipe anvilRecipe = anvilRecipeEntry.getValue();
+            //如果不在允许的世界，直接忽略
+            if (!WorldIsolationDataHandler.INSTANCE.canRecipeUse(anvilRecipe.getKey(), world)) {
+                continue;
+            }
             ItemIdStackRecipeChoice recipeBaseId = anvilRecipe.base();
             ItemIdStackRecipeChoice recipeAdditionId = anvilRecipe.addition();
             if (!recipeBaseId.test(base))
@@ -98,7 +104,12 @@ public enum AnvilRecipeHandler implements Listener {
         if (ItemHelper.isAir(base) || ItemHelper.isAir(addition))
             return;
 
-        AnvilRecipe anvilRecipe = matchAnvilRecipe(base, addition);
+        Optional<Player> playerOpt = EventUtils.getViewer(event);
+        if (playerOpt.isEmpty()) {
+            return;
+        }
+        Player player = playerOpt.get();
+        AnvilRecipe anvilRecipe = AnvilRecipeHandler.INSTANCE.matchAnvilRecipe(base, addition, player.getWorld());
         if (anvilRecipe == null)
             return;
 
@@ -119,13 +130,7 @@ public enum AnvilRecipeHandler implements Listener {
         }
 
         AtomicReference<ItemStack> result = new AtomicReference<>(anvilRecipe.getResult());
-        Optional<Player> playerOpt = EventUtils.getViewer(event);
 
-        if (playerOpt.isEmpty()) {
-            return;
-        }
-
-        Player player = playerOpt.get();
         ItemManager.INSTANCE.matchItemId(result.get(), false)
                 .flatMap(resultId -> ItemManager.INSTANCE.matchItem(resultId, player))
             .ifPresent(refreshItem -> result.get().setItemMeta(refreshItem.getItemMeta()));
@@ -180,7 +185,7 @@ public enum AnvilRecipeHandler implements Listener {
         if (event.getSlot() != 2)
             return;
 
-        AnvilRecipe anvilRecipe = matchAnvilRecipe(base, addition);
+        AnvilRecipe anvilRecipe = matchAnvilRecipe(base, addition, event.getWhoClicked().getWorld());
         if (anvilRecipe == null)
             return;
 
@@ -309,7 +314,7 @@ public enum AnvilRecipeHandler implements Listener {
         }
 
         //更新页面
-        AnvilRecipe afterClickRecipe = matchAnvilRecipe(base, addition);
+        AnvilRecipe afterClickRecipe = matchAnvilRecipe(base, addition, player.getWorld());
         ItemStack afterResult = null;
         int afterRepairCost = 0;
         if (afterClickRecipe != null) {
