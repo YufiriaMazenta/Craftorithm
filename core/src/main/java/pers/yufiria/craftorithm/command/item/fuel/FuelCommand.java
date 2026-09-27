@@ -3,7 +3,6 @@ package pers.yufiria.craftorithm.command.item.fuel;
 import crypticlib.command.CommandInfo;
 import crypticlib.command.CommandNode;
 import crypticlib.command.annotation.Subcommand;
-import crypticlib.perm.PermInfo;
 
 public class FuelCommand extends CommandNode {
 

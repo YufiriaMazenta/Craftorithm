@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.command.recipe;
 
-import crypticlib.CrypticLibBukkit;
 import crypticlib.Invoker;
 import crypticlib.command.CommandInfo;
 import crypticlib.command.CommandNode;
@@ -18,8 +17,6 @@ import pers.yufiria.craftorithm.util.RecipeUtils;
 
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 public class DiscoverCommand extends CommandNode {
 

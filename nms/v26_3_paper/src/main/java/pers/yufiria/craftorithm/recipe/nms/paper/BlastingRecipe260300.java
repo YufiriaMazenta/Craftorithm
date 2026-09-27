@@ -12,35 +12,46 @@ import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
+import pers.yufiria.craftorithm.recipe.nms.common.CachedBukkitRecipe;
+import pers.yufiria.craftorithm.recipe.nms.common.NmsSingleItemRecipe;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
-public class BlastingRecipe260300 extends BlastingRecipe {
+public class BlastingRecipe260300 extends BlastingRecipe implements NmsSingleItemRecipe {
 
+    private final NamespacedKey recipeKey;
     private final RecipeChoice ingredient;
-    private volatile Recipe cachedBukkitRecipe;
+    private final CachedBukkitRecipe cachedBukkitRecipe = new CachedBukkitRecipe();
 
-    BlastingRecipe260300(net.minecraft.world.item.crafting.Recipe.CommonInfo commonInfo, AbstractCookingRecipe.CookingBookInfo bookInfo, Ingredient nmsIngredient, RecipeChoice ingredient, ItemStackTemplate result, float exp, int smeltTick) {
+    BlastingRecipe260300(NamespacedKey recipeKey, net.minecraft.world.item.crafting.Recipe.CommonInfo commonInfo, AbstractCookingRecipe.CookingBookInfo bookInfo, Ingredient nmsIngredient, RecipeChoice ingredient, ItemStackTemplate result, float exp, int smeltTick) {
         super(commonInfo, bookInfo, nmsIngredient, result, exp, smeltTick);
+        this.recipeKey = recipeKey;
         this.ingredient = ingredient;
     }
 
     @Override
+    public NamespacedKey recipeKey() {
+        return recipeKey;
+    }
+
+    @Override
+    public RecipeChoice ingredientChoice() {
+        return ingredient;
+    }
+
+    @Override
     public boolean matches(SingleRecipeInput input, Level level) {
-        return ingredient.test(CraftItemStack.asBukkitMirror(input.item()));
+        return matchesIngredient(CraftItemStack.asBukkitMirror(input.item()), level.getWorld());
     }
 
     @Override
     public Recipe toBukkitRecipe(NamespacedKey id) {
-        Recipe cached = cachedBukkitRecipe;
-        if (cached != null) {
-            return cached;
-        }
-        ItemStack result = CraftItemStack.asBukkitMirror(this.result().create());
-        CraftBlastingRecipe recipe = new CraftBlastingRecipe(id, result, ingredient, this.experience(), this.cookingTime());
-        recipe.setGroup(this.group());
-        recipe.setCategory(CraftRecipe.getCategory(this.category()));
-        cachedBukkitRecipe = recipe;
-        return recipe;
+        return cachedBukkitRecipe.get(() -> {
+            ItemStack result = CraftItemStack.asBukkitMirror(this.result().create());
+            CraftBlastingRecipe recipe = new CraftBlastingRecipe(id, result, ingredient, this.experience(), this.cookingTime());
+            recipe.setGroup(this.group());
+            recipe.setCategory(CraftRecipe.getCategory(this.category()));
+            return recipe;
+        });
     }
 
     public static RecipeHolder<BlastingRecipe> fromBukkit(NamespacedKey recipeKey, org.bukkit.inventory.BlastingRecipe bukkitRecipe) {
@@ -52,6 +63,7 @@ public class BlastingRecipe260300 extends BlastingRecipe {
         return new RecipeHolder<>(
             CraftNamespacedKey.toResourceKey(Registries.RECIPE, recipeKey),
             new BlastingRecipe260300(
+                recipeKey,
                 commonInfo,
                 bookInfo,
                 CraftRecipe.toIngredient(IngredientUtils.getBukkitChoice(recipeChoice), true),

@@ -9,35 +9,46 @@ import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.inventory.CraftRecipe;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
+import pers.yufiria.craftorithm.recipe.nms.common.CachedBukkitRecipe;
+import pers.yufiria.craftorithm.recipe.nms.common.NmsSingleItemRecipe;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
-public class SmeltingRecipe260100 extends SmeltingRecipe {
+public class SmeltingRecipe260100 extends SmeltingRecipe implements NmsSingleItemRecipe {
 
+    private final NamespacedKey recipeKey;
     private final RecipeChoice ingredient;
-    private volatile Recipe cachedBukkitRecipe;
+    private final CachedBukkitRecipe cachedBukkitRecipe = new CachedBukkitRecipe();
 
-    public SmeltingRecipe260100(net.minecraft.world.item.crafting.Recipe.CommonInfo commonInfo, AbstractCookingRecipe.CookingBookInfo bookInfo, Ingredient nmsIngredient, RecipeChoice ingredient, ItemStackTemplate result, float exp, int smeltTick) {
+    public SmeltingRecipe260100(NamespacedKey recipeKey, net.minecraft.world.item.crafting.Recipe.CommonInfo commonInfo, AbstractCookingRecipe.CookingBookInfo bookInfo, Ingredient nmsIngredient, RecipeChoice ingredient, ItemStackTemplate result, float exp, int smeltTick) {
         super(commonInfo, bookInfo, nmsIngredient, result, exp, smeltTick);
+        this.recipeKey = recipeKey;
         this.ingredient = ingredient;
     }
 
     @Override
+    public NamespacedKey recipeKey() {
+        return recipeKey;
+    }
+
+    @Override
+    public RecipeChoice ingredientChoice() {
+        return ingredient;
+    }
+
+    @Override
     public boolean matches(SingleRecipeInput input, Level level) {
-        return ingredient.test(CraftItemStack.asCraftMirror(input.item()));
+        return matchesIngredient(CraftItemStack.asCraftMirror(input.item()), level.getWorld());
     }
 
     @Override
     public Recipe toBukkitRecipe(NamespacedKey id) {
-        Recipe cached = cachedBukkitRecipe;
-        if (cached != null) {
-            return cached;
-        }
-        CraftItemStack result = CraftItemStack.asCraftMirror(this.result());
-        CraftFurnaceRecipe recipe = new CraftFurnaceRecipe(id, result, ingredient, this.experience(), this.cookingTime());
-        recipe.setGroup(this.group());
-        recipe.setCategory(CraftRecipe.getCategory(this.category()));
-        cachedBukkitRecipe = recipe;
-        return recipe;
+        return cachedBukkitRecipe.get(() -> {
+            CraftItemStack result = CraftItemStack.asCraftMirror(this.result());
+            CraftFurnaceRecipe recipe = new CraftFurnaceRecipe(id, result, ingredient, this.experience(), this.cookingTime());
+            recipe.setGroup(this.group());
+            recipe.setCategory(CraftRecipe.getCategory(this.category()));
+            return recipe;
+        });
     }
 
     public static RecipeHolder<SmeltingRecipe> fromBukkit(NamespacedKey recipeKey, org.bukkit.inventory.FurnaceRecipe bukkitRecipe) {
@@ -46,6 +57,6 @@ public class SmeltingRecipe260100 extends SmeltingRecipe {
         ItemStackTemplate resultTemplate = ItemStackTemplate.fromNonEmptyStack(CraftItemStack.asNMSCopy(bukkitRecipe.getResult()));
         net.minecraft.world.item.crafting.Recipe.CommonInfo commonInfo = new net.minecraft.world.item.crafting.Recipe.CommonInfo(true);
         AbstractCookingRecipe.CookingBookInfo bookInfo = new AbstractCookingRecipe.CookingBookInfo(CraftRecipe.getCategory(craftFurnaceRecipe.getCategory()), craftFurnaceRecipe.getGroup());
-        return new RecipeHolder<>(CraftRecipe.toMinecraft(recipeKey), new SmeltingRecipe260100(commonInfo, bookInfo, craftFurnaceRecipe.toNMS(IngredientUtils.getBukkitChoice(recipeChoice), true), recipeChoice, resultTemplate, bukkitRecipe.getExperience(), bukkitRecipe.getCookingTime()));
+        return new RecipeHolder<>(CraftRecipe.toMinecraft(recipeKey), new SmeltingRecipe260100(recipeKey, commonInfo, bookInfo, craftFurnaceRecipe.toNMS(IngredientUtils.getBukkitChoice(recipeChoice), true), recipeChoice, resultTemplate, bukkitRecipe.getExperience(), bukkitRecipe.getCookingTime()));
     }
 }

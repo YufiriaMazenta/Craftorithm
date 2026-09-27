@@ -1,5 +1,6 @@
 dependencies {
     compileOnly(project(":core"))
+    compileOnly(project(":nms:common"))
     compileOnly("io.papermc.paper:paper-core:1.21.10")
     compileOnly("io.papermc.paper:paper-api:${rootProject.findProperty("paperApiVer")}")
     compileOnly("com.crypticlib:bukkit:${rootProject.findProperty("crypticlibVer")}")

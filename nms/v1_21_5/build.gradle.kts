@@ -4,6 +4,7 @@ repositories {
 
 dependencies {
     compileOnly(project(":core"))
+    compileOnly(project(":nms:common"))
     compileOnly("ink.ptms.core:v12105:12105:universal")
     compileOnly("com.google.guava:guava:33.2.0-jre")
     compileOnly("com.crypticlib:bukkit:${rootProject.findProperty("crypticlibVer")}")

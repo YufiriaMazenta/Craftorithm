@@ -9,14 +9,18 @@ import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftRecipe;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
+import pers.yufiria.craftorithm.recipe.nms.common.CachedBukkitRecipe;
+import pers.yufiria.craftorithm.recipe.nms.common.NmsSingleItemRecipe;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
-public class CampfireRecipe12107 extends RecipeCampfire {
+public class CampfireRecipe12107 extends RecipeCampfire implements NmsSingleItemRecipe {
     
+    private final NamespacedKey recipeKey;
     private final RecipeChoice ingredient;
-    private volatile Recipe cachedBukkitRecipe;
+    private final CachedBukkitRecipe cachedBukkitRecipe = new CachedBukkitRecipe();
 
     CampfireRecipe12107(
+        NamespacedKey recipeKey,
         String group,
         CookingBookCategory cookingbookcategory,
         RecipeItemStack recipeitemstack,
@@ -26,26 +30,34 @@ public class CampfireRecipe12107 extends RecipeCampfire {
         int smeltTick
     ) {
         super(group, cookingbookcategory, recipeitemstack, result, exp, smeltTick);
+        this.recipeKey = recipeKey;
         this.ingredient = ingredient;
     }
 
     @Override
+    public NamespacedKey recipeKey() {
+        return recipeKey;
+    }
+
+    @Override
+    public RecipeChoice ingredientChoice() {
+        return ingredient;
+    }
+
+    @Override
     public boolean a(SingleRecipeInput input, World world) {
-        return ingredient.test(CraftItemStack.asCraftMirror(input.c()));
+        return matchesIngredient(CraftItemStack.asCraftMirror(input.c()), world.getWorld());
     }
 
     @Override
     public Recipe toBukkitRecipe(NamespacedKey id) {
-        Recipe cached = cachedBukkitRecipe;
-        if (cached != null) {
-            return cached;
-        }
-        CraftItemStack result = CraftItemStack.asCraftMirror(this.l());
-        CraftCampfireRecipe recipe = new CraftCampfireRecipe(id, result, ingredient, this.c(), this.d());
-        recipe.setGroup(this.j());
-        recipe.setCategory(CraftRecipe.getCategory(this.e()));
-        cachedBukkitRecipe = recipe;
-        return recipe;
+        return cachedBukkitRecipe.get(() -> {
+            CraftItemStack result = CraftItemStack.asCraftMirror(this.l());
+            CraftCampfireRecipe recipe = new CraftCampfireRecipe(id, result, ingredient, this.c(), this.d());
+            recipe.setGroup(this.j());
+            recipe.setCategory(CraftRecipe.getCategory(this.e()));
+            return recipe;
+        });
     }
 
     public static RecipeHolder<RecipeCampfire> fromBukkit(NamespacedKey recipeKey, org.bukkit.inventory.CampfireRecipe bukkitRecipe) {
@@ -54,6 +66,7 @@ public class CampfireRecipe12107 extends RecipeCampfire {
         return new RecipeHolder<>(
             CraftRecipe.toMinecraft(recipeKey),
             new CampfireRecipe12107(
+                recipeKey,
                 craftFurnaceRecipe.getGroup(),
                 CraftRecipe.getCategory(craftFurnaceRecipe.getCategory()),
                 craftFurnaceRecipe.toNMS(IngredientUtils.getBukkitChoice(recipeChoice), true),

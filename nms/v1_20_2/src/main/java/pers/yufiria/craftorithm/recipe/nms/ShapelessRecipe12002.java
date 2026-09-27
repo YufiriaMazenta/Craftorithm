@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.recipe.nms;
 
-import crypticlib.util.ItemHelper;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.inventory.InventoryCrafting;
 import net.minecraft.world.item.ItemStack;
@@ -14,21 +13,25 @@ import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftShapelessRecipe;
 import org.bukkit.craftbukkit.v1_20_R2.util.CraftNamespacedKey;
-import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapelessRecipe;
+import pers.yufiria.craftorithm.recipe.nms.common.BukkitCraftingInput;
+import pers.yufiria.craftorithm.recipe.nms.common.CachedBukkitRecipe;
+import pers.yufiria.craftorithm.recipe.nms.common.NmsShapelessRecipe;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShapelessRecipe12002 extends ShapelessRecipes {
+public class ShapelessRecipe12002 extends ShapelessRecipes implements NmsShapelessRecipe<InventoryCrafting> {
 
+    private final NamespacedKey recipeKey;
     private final List<RecipeChoice> customIngredients;
     private final ItemStack result;
-    private volatile Recipe cachedBukkitRecipe;
+    private final CachedBukkitRecipe cachedBukkitRecipe = new CachedBukkitRecipe();
 
     ShapelessRecipe12002(
+        NamespacedKey recipeKey,
         String group,
         CraftingBookCategory category,
         ItemStack result,
@@ -36,43 +39,50 @@ public class ShapelessRecipe12002 extends ShapelessRecipes {
         List<RecipeChoice> customIngredients
     ) {
         super(group, category, result, nmsIngredients);
+        this.recipeKey = recipeKey;
         this.result = result;
         this.customIngredients = customIngredients;
     }
 
     @Override
+    public NamespacedKey recipeKey() {
+        return recipeKey;
+    }
+
+    @Override
+    public List<RecipeChoice> customIngredients() {
+        return customIngredients;
+    }
+
+    @Override
+    public BukkitCraftingInput toBukkitCraftingInput(InventoryCrafting craftingInput) {
+        List<ItemStack> nmsItems = craftingInput.h();
+        List<org.bukkit.inventory.ItemStack> items = new ArrayList<>(nmsItems.size());
+        for (ItemStack nmsItem : nmsItems) {
+            items.add(CraftItemStack.asCraftMirror(nmsItem));
+        }
+        return new BukkitCraftingInput(items, craftingInput.f(), craftingInput.g());
+    }
+
+    @Override
     public boolean a(InventoryCrafting craftingInput, World world) {
-        List<ItemStack> nmsInputItems = craftingInput.h();
-        List<org.bukkit.inventory.ItemStack> inputItems = new ArrayList<>(nmsInputItems.size());
-        for (ItemStack nmsStack : nmsInputItems) {
-            org.bukkit.inventory.ItemStack bukkitCopy = CraftItemStack.asCraftMirror(nmsStack);
-            if (!ItemHelper.isAir(bukkitCopy)) {
-                inputItems.add(bukkitCopy);
-            }
-        }
-        if (inputItems.size() != customIngredients.size()) {
-            return false;
-        }
-        return IngredientUtils.matchItemsToChoices(inputItems, customIngredients);
+        return matchesShapeless(craftingInput, world.getWorld());
     }
 
     @Override
     public ShapelessRecipe toBukkitRecipe(NamespacedKey recipeKey) {
-        Recipe cached = cachedBukkitRecipe;
-        if (cached != null) {
-            return (ShapelessRecipe) cached;
-        }
-        CraftItemStack result = CraftItemStack.asCraftMirror(this.result);
-        CraftShapelessRecipe recipe = new CraftShapelessRecipe(recipeKey, result, this);
-        recipe.setGroup(this.c());
-        recipe.setCategory(CraftRecipe.getCategory(this.d()));
+        return (ShapelessRecipe) cachedBukkitRecipe.get(() -> {
+            CraftItemStack result = CraftItemStack.asCraftMirror(this.result);
+            CraftShapelessRecipe recipe = new CraftShapelessRecipe(recipeKey, result, this);
+            recipe.setGroup(this.c());
+            recipe.setCategory(CraftRecipe.getCategory(this.d()));
 
-        for(RecipeChoice choice : this.customIngredients) {
-            recipe.addIngredient(choice);
-        }
+            for(RecipeChoice choice : this.customIngredients) {
+                recipe.addIngredient(choice);
+            }
 
-        cachedBukkitRecipe = recipe;
-        return recipe;
+            return recipe;
+        });
     }
 
     public static RecipeHolder<ShapelessRecipes> fromBukkit(NamespacedKey recipeKey, ShapelessRecipe shapelessRecipe) {
@@ -87,6 +97,7 @@ public class ShapelessRecipe12002 extends ShapelessRecipes {
         return new RecipeHolder<>(
             CraftNamespacedKey.toMinecraft(recipeKey),
             new ShapelessRecipe12002(
+                recipeKey,
                 craftRecipe.getGroup(),
                 CraftRecipe.getCategory(craftRecipe.getCategory()),
                 CraftItemStack.asNMSCopy(craftRecipe.getResult()),

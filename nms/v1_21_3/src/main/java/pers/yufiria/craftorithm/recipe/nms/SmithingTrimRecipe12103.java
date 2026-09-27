@@ -8,30 +8,57 @@ import org.bukkit.craftbukkit.v1_21_R2.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.v1_21_R2.inventory.CraftSmithingTrimRecipe;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
+import pers.yufiria.craftorithm.recipe.nms.common.CachedBukkitRecipe;
+import pers.yufiria.craftorithm.recipe.nms.common.NmsSmithingRecipe;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.List;
 import java.util.Optional;
 
-public class SmithingTrimRecipe12103 extends SmithingTrimRecipe {
+public class SmithingTrimRecipe12103 extends SmithingTrimRecipe implements NmsSmithingRecipe {
 
+    private final NamespacedKey recipeKey;
     private final Optional<RecipeChoice> template, addition;
     private final Optional<RecipeChoice> base;
     private PlacementInfo placementInfo;
-    private volatile Recipe cachedBukkitRecipe;
+    private final CachedBukkitRecipe cachedBukkitRecipe = new CachedBukkitRecipe();
 
-    SmithingTrimRecipe12103(Optional<RecipeItemStack> nmsTemplate, Optional<RecipeChoice> template, Optional<RecipeItemStack> nmsBase, Optional<RecipeChoice> base, Optional<RecipeItemStack> nmsAddition, Optional<RecipeChoice> addition) {
+    SmithingTrimRecipe12103(NamespacedKey recipeKey, Optional<RecipeItemStack> nmsTemplate, Optional<RecipeChoice> template, Optional<RecipeItemStack> nmsBase, Optional<RecipeChoice> base, Optional<RecipeItemStack> nmsAddition, Optional<RecipeChoice> addition) {
         super(nmsTemplate, nmsBase, nmsAddition);
+        this.recipeKey = recipeKey;
         this.template = template;
         this.addition = addition;
         this.base = base;
     }
 
     @Override
+    public NamespacedKey recipeKey() {
+        return recipeKey;
+    }
+
+    @Override
+    public Optional<RecipeChoice> templateChoice() {
+        return template;
+    }
+
+    @Override
+    public Optional<RecipeChoice> baseChoice() {
+        return base;
+    }
+
+    @Override
+    public Optional<RecipeChoice> additionChoice() {
+        return addition;
+    }
+
+    @Override
     public boolean a(SmithingRecipeInput smithingInput, World world) {
-        return IngredientUtils.testOptionalChoice(template, CraftItemStack.asCraftMirror(smithingInput.c()))
-            && IngredientUtils.testOptionalChoice(base, CraftItemStack.asCraftMirror(smithingInput.d()))
-            && IngredientUtils.testOptionalChoice(addition, CraftItemStack.asCraftMirror(smithingInput.e()));
+        return matchesSmithing(
+            CraftItemStack.asCraftMirror(smithingInput.c()),
+            CraftItemStack.asCraftMirror(smithingInput.d()),
+            CraftItemStack.asCraftMirror(smithingInput.e()),
+            world.getWorld()
+        );
     }
 
     @Override
@@ -44,18 +71,16 @@ public class SmithingTrimRecipe12103 extends SmithingTrimRecipe {
 
     @Override
     public Recipe toBukkitRecipe(NamespacedKey id) {
-        Recipe cached = cachedBukkitRecipe;
-        if (cached != null) {
-            return cached;
-        }
-        Recipe recipe = new CraftSmithingTrimRecipe(id, template.orElse(null), base.orElse(null), addition.orElse(null));
-        cachedBukkitRecipe = recipe;
-        return recipe;
+        return cachedBukkitRecipe.get(() -> {
+            Recipe recipe = new CraftSmithingTrimRecipe(id, template.orElse(null), base.orElse(null), addition.orElse(null));
+            return recipe;
+        });
     }
 
     public static RecipeHolder<SmithingTrimRecipe> fromBukkit(NamespacedKey recipeKey, org.bukkit.inventory.SmithingTrimRecipe bukkitRecipe) {
         CraftSmithingTrimRecipe craftRecipe = CraftSmithingTrimRecipe.fromBukkitRecipe(bukkitRecipe);
         return new RecipeHolder<>(CraftRecipe.toMinecraft(recipeKey), new SmithingTrimRecipe12103(
+            recipeKey,
             craftRecipe.toNMSOptional(IngredientUtils.getBukkitChoice(bukkitRecipe.getTemplate()), false),
             Optional.ofNullable(bukkitRecipe.getTemplate()),
             craftRecipe.toNMSOptional(IngredientUtils.getBukkitChoice(bukkitRecipe.getBase()), false),

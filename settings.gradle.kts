@@ -7,6 +7,7 @@ rootProject.name = "Craftorithm"
 include("core")
 include("hook")
 include(
+    "nms:common",
     "nms:v1_20",
     "nms:v1_20_2",
     "nms:v1_20_3",

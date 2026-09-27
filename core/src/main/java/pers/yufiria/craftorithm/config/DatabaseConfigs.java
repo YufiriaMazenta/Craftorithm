@@ -5,7 +5,6 @@ import crypticlib.config.node.impl.bukkit.ConfigSectionConfig;
 import crypticlib.config.node.impl.bukkit.StringConfig;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
-import org.bukkit.configuration.file.FileConfiguration;
 
 @ConfigHandler(path = "database.yml")
 public class DatabaseConfigs {

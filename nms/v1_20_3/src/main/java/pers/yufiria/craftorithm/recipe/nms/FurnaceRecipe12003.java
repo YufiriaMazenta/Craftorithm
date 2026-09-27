@@ -14,14 +14,18 @@ import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.v1_20_R3.util.CraftNamespacedKey;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
+import pers.yufiria.craftorithm.recipe.nms.common.CachedBukkitRecipe;
+import pers.yufiria.craftorithm.recipe.nms.common.NmsSingleItemRecipe;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
-public class FurnaceRecipe12003 extends FurnaceRecipe {
+public class FurnaceRecipe12003 extends FurnaceRecipe implements NmsSingleItemRecipe {
 
+    private final NamespacedKey recipeKey;
     private final RecipeChoice ingredient;
-    private volatile Recipe cachedBukkitRecipe;
+    private final CachedBukkitRecipe cachedBukkitRecipe = new CachedBukkitRecipe();
 
     FurnaceRecipe12003(
+        NamespacedKey recipeKey,
         String group,
         CookingBookCategory cookingbookcategory,
         RecipeItemStack nmsIngredient,
@@ -31,26 +35,34 @@ public class FurnaceRecipe12003 extends FurnaceRecipe {
         int smeltTick
     ) {
         super(group, cookingbookcategory, nmsIngredient, result, exp, smeltTick);
+        this.recipeKey = recipeKey;
         this.ingredient = ingredient;
     }
 
     @Override
-    public boolean a(IInventory input, World var1) {
-        return ingredient.test(CraftItemStack.asCraftMirror(input.a(0)));
+    public NamespacedKey recipeKey() {
+        return recipeKey;
+    }
+
+    @Override
+    public RecipeChoice ingredientChoice() {
+        return ingredient;
+    }
+
+    @Override
+    public boolean a(IInventory input, World world) {
+        return matchesIngredient(CraftItemStack.asCraftMirror(input.a(0)), world.getWorld());
     }
 
     @Override
     public Recipe toBukkitRecipe(NamespacedKey recipeKey) {
-        Recipe cached = cachedBukkitRecipe;
-        if (cached != null) {
-            return cached;
-        }
-        CraftItemStack result = CraftItemStack.asCraftMirror(this.g());
-        CraftFurnaceRecipe recipe = new CraftFurnaceRecipe(recipeKey, result, ingredient, this.b(), this.d());
-        recipe.setGroup(this.c());
-        recipe.setCategory(CraftRecipe.getCategory(this.f()));
-        cachedBukkitRecipe = recipe;
-        return recipe;
+        return cachedBukkitRecipe.get(() -> {
+            CraftItemStack result = CraftItemStack.asCraftMirror(this.g());
+            CraftFurnaceRecipe recipe = new CraftFurnaceRecipe(recipeKey, result, ingredient, this.b(), this.d());
+            recipe.setGroup(this.c());
+            recipe.setCategory(CraftRecipe.getCategory(this.f()));
+            return recipe;
+        });
     }
 
     public static RecipeHolder<FurnaceRecipe> fromBukkit(NamespacedKey recipeKey, org.bukkit.inventory.FurnaceRecipe bukkitRecipe) {
@@ -59,6 +71,7 @@ public class FurnaceRecipe12003 extends FurnaceRecipe {
         return new RecipeHolder<>(
             CraftNamespacedKey.toMinecraft(recipeKey),
             new FurnaceRecipe12003(
+                recipeKey,
                 craftFurnaceRecipe.getGroup(),
                 CraftRecipe.getCategory(craftFurnaceRecipe.getCategory()),
                 craftFurnaceRecipe.toNMS(IngredientUtils.getBukkitChoice(recipeChoice), true),

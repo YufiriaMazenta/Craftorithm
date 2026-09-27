@@ -10,11 +10,11 @@ import crypticlib.lifecycle.LifecycleTaskConfig;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.*;
+import org.bukkit.inventory.Recipe;
 import org.spigotmc.AsyncCatcher;
+import pers.yufiria.craftorithm.recipe.BrewingRecipe;
 import pers.yufiria.craftorithm.recipe.CraftorithmRecipeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
-import pers.yufiria.craftorithm.recipe.BrewingRecipe;
 
 /**
  * 对26.3的酿造配方进行的额外适配

@@ -4,6 +4,7 @@ java {
 
 dependencies {
     compileOnly(project(":core"))
+    compileOnly(project(":nms:common"))
     compileOnly("io.papermc.paper:paper-core:26.3")
     compileOnly("io.papermc.paper:paper-api:${rootProject.findProperty("paperApiVer")}")
     compileOnly("com.crypticlib:bukkit:${rootProject.findProperty("crypticlibVer")}")

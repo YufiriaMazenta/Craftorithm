@@ -11,21 +11,25 @@ import org.bukkit.craftbukkit.inventory.CraftSmithingTrimRecipe;
 import org.bukkit.craftbukkit.inventory.trim.CraftTrimPattern;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
+import pers.yufiria.craftorithm.recipe.nms.common.CachedBukkitRecipe;
+import pers.yufiria.craftorithm.recipe.nms.common.NmsSmithingRecipe;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.List;
 import java.util.Optional;
 
-public class SmithingTrimRecipe12110 extends SmithingTrimRecipe {
+public class SmithingTrimRecipe12110 extends SmithingTrimRecipe implements NmsSmithingRecipe {
 
+    private final NamespacedKey recipeKey;
     private final RecipeChoice template, addition;
     private final RecipeChoice base;
     private final Holder<TrimPattern> trimPattern;
     private PlacementInfo placementInfo;
-    private volatile Recipe cachedBukkitRecipe;
+    private final CachedBukkitRecipe cachedBukkitRecipe = new CachedBukkitRecipe();
 
-    SmithingTrimRecipe12110(Ingredient nmsTemplate, RecipeChoice template, Ingredient nmsBase, RecipeChoice base, Ingredient nmsAddition, RecipeChoice addition, Holder<TrimPattern> trimPattern) {
+    SmithingTrimRecipe12110(NamespacedKey recipeKey, Ingredient nmsTemplate, RecipeChoice template, Ingredient nmsBase, RecipeChoice base, Ingredient nmsAddition, RecipeChoice addition, Holder<TrimPattern> trimPattern) {
         super(nmsTemplate, nmsBase, nmsAddition, trimPattern);
+        this.recipeKey = recipeKey;
         this.template = template;
         this.addition = addition;
         this.base = base;
@@ -33,10 +37,33 @@ public class SmithingTrimRecipe12110 extends SmithingTrimRecipe {
     }
 
     @Override
+    public NamespacedKey recipeKey() {
+        return recipeKey;
+    }
+
+    @Override
+    public Optional<RecipeChoice> templateChoice() {
+        return Optional.ofNullable(template);
+    }
+
+    @Override
+    public Optional<RecipeChoice> baseChoice() {
+        return Optional.ofNullable(base);
+    }
+
+    @Override
+    public Optional<RecipeChoice> additionChoice() {
+        return Optional.ofNullable(addition);
+    }
+
+    @Override
     public boolean matches(SmithingRecipeInput smithingInput, Level level) {
-        return template.test(CraftItemStack.asCraftMirror(smithingInput.template()))
-            && base.test(CraftItemStack.asCraftMirror(smithingInput.base()))
-            && addition.test(CraftItemStack.asCraftMirror(smithingInput.addition()));
+        return matchesSmithing(
+            CraftItemStack.asCraftMirror(smithingInput.template()),
+            CraftItemStack.asCraftMirror(smithingInput.base()),
+            CraftItemStack.asCraftMirror(smithingInput.addition()),
+            level.getWorld()
+        );
     }
 
     @Override
@@ -49,17 +76,14 @@ public class SmithingTrimRecipe12110 extends SmithingTrimRecipe {
 
     @Override
     public Recipe toBukkitRecipe(NamespacedKey id) {
-        Recipe cached = cachedBukkitRecipe;
-        if (cached != null) {
-            return cached;
-        }
-        CraftSmithingTrimRecipe recipe = new CraftSmithingTrimRecipe(id, template, base, addition, CraftTrimPattern.minecraftHolderToBukkit(this.trimPattern));
-        cachedBukkitRecipe = recipe;
-        return recipe;
+        return cachedBukkitRecipe.get(() -> {
+            CraftSmithingTrimRecipe recipe = new CraftSmithingTrimRecipe(id, template, base, addition, CraftTrimPattern.minecraftHolderToBukkit(this.trimPattern));
+            return recipe;
+        });
     }
 
     public static RecipeHolder<SmithingTrimRecipe> fromBukkit(NamespacedKey recipeKey, org.bukkit.inventory.SmithingTrimRecipe bukkitRecipe) {
         CraftSmithingTrimRecipe craftRecipe = CraftSmithingTrimRecipe.fromBukkitRecipe(bukkitRecipe);
-        return new RecipeHolder<>(CraftRecipe.toMinecraft(recipeKey), new SmithingTrimRecipe12110(craftRecipe.toNMS(IngredientUtils.getBukkitChoice(craftRecipe.getTemplate()), false), bukkitRecipe.getTemplate(), craftRecipe.toNMS(IngredientUtils.getBukkitChoice(craftRecipe.getBase()), false), bukkitRecipe.getBase(), craftRecipe.toNMS(IngredientUtils.getBukkitChoice(craftRecipe.getAddition()), false), bukkitRecipe.getAddition(), CraftTrimPattern.bukkitToMinecraftHolder(org.bukkit.inventory.meta.trim.TrimPattern.BOLT)));
+        return new RecipeHolder<>(CraftRecipe.toMinecraft(recipeKey), new SmithingTrimRecipe12110(recipeKey, craftRecipe.toNMS(IngredientUtils.getBukkitChoice(craftRecipe.getTemplate()), false), bukkitRecipe.getTemplate(), craftRecipe.toNMS(IngredientUtils.getBukkitChoice(craftRecipe.getBase()), false), bukkitRecipe.getBase(), craftRecipe.toNMS(IngredientUtils.getBukkitChoice(craftRecipe.getAddition()), false), bukkitRecipe.getAddition(), CraftTrimPattern.bukkitToMinecraftHolder(org.bukkit.inventory.meta.trim.TrimPattern.BOLT)));
     }
 }

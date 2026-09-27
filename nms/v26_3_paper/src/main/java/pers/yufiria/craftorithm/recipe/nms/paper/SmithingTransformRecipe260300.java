@@ -11,25 +11,34 @@ import org.bukkit.craftbukkit.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.inventory.CraftSmithingTransformRecipe;
 import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.inventory.RecipeChoice;
+import pers.yufiria.craftorithm.recipe.nms.common.CachedBukkitRecipe;
+import pers.yufiria.craftorithm.recipe.nms.common.NmsSmithingRecipe;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.List;
 import java.util.Optional;
 
-public class SmithingTransformRecipe260300 extends SmithingTransformRecipe {
+public class SmithingTransformRecipe260300 extends SmithingTransformRecipe implements NmsSmithingRecipe {
 
+    private final NamespacedKey recipeKey;
     private final Optional<RecipeChoice> template, addition;
     private final RecipeChoice base;
     private final ItemStackTemplate result;
     private PlacementInfo placementInfo;
-    private volatile org.bukkit.inventory.Recipe cachedBukkitRecipe;
+    private final CachedBukkitRecipe cachedBukkitRecipe = new CachedBukkitRecipe();
 
-    SmithingTransformRecipe260300(Recipe.CommonInfo commonInfo, Optional<Ingredient> nmsTemplate, Optional<RecipeChoice> template, Ingredient nmsBase, RecipeChoice base, Optional<Ingredient> nmsAddition, Optional<RecipeChoice> addition, ItemStackTemplate result) {
+    SmithingTransformRecipe260300(NamespacedKey recipeKey, Recipe.CommonInfo commonInfo, Optional<Ingredient> nmsTemplate, Optional<RecipeChoice> template, Ingredient nmsBase, RecipeChoice base, Optional<Ingredient> nmsAddition, Optional<RecipeChoice> addition, ItemStackTemplate result) {
         super(commonInfo, nmsTemplate, nmsBase, nmsAddition, result);
+        this.recipeKey = recipeKey;
         this.template = template;
         this.addition = addition;
         this.base = base;
         this.result = result;
+    }
+
+    @Override
+    public NamespacedKey recipeKey() {
+        return recipeKey;
     }
 
     @Override
@@ -41,22 +50,36 @@ public class SmithingTransformRecipe260300 extends SmithingTransformRecipe {
     }
 
     @Override
+    public Optional<RecipeChoice> templateChoice() {
+        return template;
+    }
+
+    @Override
+    public Optional<RecipeChoice> baseChoice() {
+        return Optional.ofNullable(base);
+    }
+
+    @Override
+    public Optional<RecipeChoice> additionChoice() {
+        return addition;
+    }
+
+    @Override
     public boolean matches(SmithingRecipeInput smithingInput, Level level) {
-        return IngredientUtils.testOptionalChoice(template, CraftItemStack.asBukkitMirror(smithingInput.template()))
-            && base.test(CraftItemStack.asBukkitMirror(smithingInput.base()))
-            && IngredientUtils.testOptionalChoice(addition, CraftItemStack.asBukkitMirror(smithingInput.addition()));
+        return matchesSmithing(
+            CraftItemStack.asBukkitMirror(smithingInput.template()),
+            CraftItemStack.asBukkitMirror(smithingInput.base()),
+            CraftItemStack.asBukkitMirror(smithingInput.addition()),
+            level.getWorld()
+        );
     }
 
     @Override
     public org.bukkit.inventory.Recipe toBukkitRecipe(NamespacedKey id) {
-        org.bukkit.inventory.Recipe cached = cachedBukkitRecipe;
-        if (cached != null) {
-            return cached;
-        }
-        org.bukkit.inventory.ItemStack result = CraftItemStack.asBukkitMirror(this.result.create());
-        org.bukkit.inventory.Recipe recipe = new CraftSmithingTransformRecipe(id, result, template.orElse(null), base, addition.orElse(null));
-        cachedBukkitRecipe = recipe;
-        return recipe;
+        return cachedBukkitRecipe.get(() -> {
+            org.bukkit.inventory.ItemStack result = CraftItemStack.asBukkitMirror(this.result.create());
+            return new CraftSmithingTransformRecipe(id, result, template.orElse(null), base, addition.orElse(null));
+        });
     }
 
     public static RecipeHolder<SmithingTransformRecipe> fromBukkit(NamespacedKey recipeKey, org.bukkit.inventory.SmithingTransformRecipe bukkitRecipe) {
@@ -66,6 +89,7 @@ public class SmithingTransformRecipe260300 extends SmithingTransformRecipe {
         return new RecipeHolder<>(
             CraftNamespacedKey.toResourceKey(Registries.RECIPE, recipeKey),
             new SmithingTransformRecipe260300(
+                recipeKey,
                 commonInfo,
                 CraftRecipe.toPossibleIngredient(IngredientUtils.getBukkitChoice(bukkitRecipe.getTemplate()), false),
                 Optional.ofNullable(bukkitRecipe.getTemplate()),

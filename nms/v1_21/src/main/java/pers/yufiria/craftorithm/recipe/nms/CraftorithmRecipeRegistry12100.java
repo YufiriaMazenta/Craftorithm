@@ -9,11 +9,18 @@ import crypticlib.lifecycle.LifecycleTaskConfig;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.crafting.IRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeStonecutting;
 import org.bukkit.NamespacedKey;
+import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftRecipe;
+import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftStonecuttingRecipe;
+import org.bukkit.craftbukkit.v1_21_R1.util.CraftNamespacedKey;
 import org.bukkit.inventory.*;
 import pers.yufiria.craftorithm.recipe.CraftorithmRecipeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.util.IngredientUtils;
+
+import java.util.Objects;
 
 @LifecycleTaskConfig(schedules = @LifecycleSchedule(phase = LifecyclePhase.LOAD))
 public enum CraftorithmRecipeRegistry12100 implements CraftorithmRecipeRegistry, LifecycleTask {
@@ -50,7 +57,15 @@ public enum CraftorithmRecipeRegistry12100 implements CraftorithmRecipeRegistry,
                 recipeHolder = SmithingTrimRecipe12100.fromBukkit(recipeKey, smithingTrimRecipe);
             }
             case StonecuttingRecipe stonecuttingRecipe -> {
-                recipeHolder = StonecuttingRecipe12100.fromBukkit(recipeKey, stonecuttingRecipe);
+                CraftStonecuttingRecipe craftStonecuttingRecipe = CraftStonecuttingRecipe.fromBukkitRecipe(stonecuttingRecipe);
+                recipeHolder = new RecipeHolder<>(
+                    CraftNamespacedKey.toMinecraft(Objects.requireNonNull(recipeKey)),
+                    new RecipeStonecutting(
+                        stonecuttingRecipe.getGroup(),
+                        craftStonecuttingRecipe.toNMS(IngredientUtils.getBukkitChoice(stonecuttingRecipe.getInputChoice()), true),
+                        CraftItemStack.asNMSCopy(craftStonecuttingRecipe.getResult())
+                    )
+                );
             }
             case CraftRecipe craftRecipe -> {
                 craftRecipe.addToCraftingManager();

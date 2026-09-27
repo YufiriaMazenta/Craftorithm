@@ -11,16 +11,20 @@ import org.bukkit.craftbukkit.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
+import pers.yufiria.craftorithm.recipe.nms.common.CachedBukkitRecipe;
+import pers.yufiria.craftorithm.recipe.nms.common.NmsBrewingRecipe;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.Optional;
 
-public class BrewingRecipe260300 extends BrewingRecipe {
+public class BrewingRecipe260300 extends BrewingRecipe implements NmsBrewingRecipe {
 
+    private final NamespacedKey recipeKey;
     private final RecipeChoice bukkitInput, bukkitReagent;
-    private volatile Recipe cachedBukkitRecipe;
+    private final CachedBukkitRecipe cachedBukkitRecipe = new CachedBukkitRecipe();
 
     public BrewingRecipe260300(
+        NamespacedKey recipeKey,
         PotionIngredient nmsInput,
         RecipeChoice bukkitInput,
         PotionIngredient nmsReagent,
@@ -28,31 +32,42 @@ public class BrewingRecipe260300 extends BrewingRecipe {
         ItemStackTemplate output
     ) {
         super(nmsInput, nmsReagent, output);
+        this.recipeKey = recipeKey;
         this.bukkitInput = bukkitInput;
         this.bukkitReagent = bukkitReagent;
     }
 
     @Override
+    public NamespacedKey recipeKey() {
+        return recipeKey;
+    }
+
+    @Override
+    public RecipeChoice inputChoice() {
+        return bukkitInput;
+    }
+
+    @Override
+    public RecipeChoice reagentChoice() {
+        return bukkitReagent;
+    }
+
+    @Override
     public Recipe toBukkitRecipe(NamespacedKey namespacedKey) {
-        Recipe cached = cachedBukkitRecipe;
-        if (cached != null) {
-            return cached;
-        }
-        org.bukkit.inventory.ItemStack result = CraftItemStack.asBukkitMirror(this.getOutput().create());
-        Recipe recipe = new pers.yufiria.craftorithm.recipe.BrewingRecipe(
-            namespacedKey,
-            bukkitInput,
-            bukkitReagent,
-            result
-        );
-        cachedBukkitRecipe = recipe;
-        return recipe;
+        return cachedBukkitRecipe.get(() -> {
+            org.bukkit.inventory.ItemStack result = CraftItemStack.asBukkitMirror(this.getOutput().create());
+            return new pers.yufiria.craftorithm.recipe.BrewingRecipe(
+                namespacedKey,
+                bukkitInput,
+                bukkitReagent,
+                result
+            );
+        });
     }
 
     @Override
     public boolean matches(BrewingInput brewingInput, Level level) {
-        return bukkitInput.test(CraftItemStack.asBukkitMirror(brewingInput.input()))
-            && bukkitReagent.test(CraftItemStack.asBukkitMirror(brewingInput.reagent()));
+        return matchesBrewing(CraftItemStack.asBukkitMirror(brewingInput.input()), CraftItemStack.asBukkitMirror(brewingInput.reagent()), level.getWorld());
     }
 
     @Override
@@ -64,6 +79,7 @@ public class BrewingRecipe260300 extends BrewingRecipe {
         ItemStack nmsResult = CraftItemStack.asNMSCopy(bukkitRecipe.getResult());
         ItemStackTemplate resultTemplate = ItemStackTemplate.fromNonEmptyStack(nmsResult);
         return new RecipeHolder<>(CraftNamespacedKey.toResourceKey(Registries.RECIPE, recipeKey), new BrewingRecipe260300(
+            recipeKey,
             new PotionIngredient(
                 CraftRecipe.toIngredient(IngredientUtils.getBukkitChoice(bukkitRecipe.input()), false),
                 Optional.empty()
