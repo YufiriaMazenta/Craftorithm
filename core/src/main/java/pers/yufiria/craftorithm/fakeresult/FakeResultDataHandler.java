@@ -8,9 +8,11 @@ import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskConfig;
 import crypticlib.listener.EventListener;
 import crypticlib.util.ItemHelper;
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -145,15 +147,23 @@ public enum FakeResultDataHandler implements Listener, LifecycleTask {
         if (!supportFakeResult) {
             return;
         }
-        UUID playerId = EventUtils.getViewer(event).map(HumanEntity::getUniqueId).orElse(null);
-        if (playerId == null) return;
+        Optional<Player> playerOpt = EventUtils.getViewer(event);
+        if (playerOpt.isEmpty()) {
+            return;
+        }
+        Player player = playerOpt.get();
+        UUID playerId = player.getUniqueId();
         if (ItemHelper.isAir(event.getInventory().getResult())) {
             //当玩家预览配方为null时，去除缓存
             playerPreparingRecipe.remove(playerId);
             return;
         }
         AnvilInventory anvilInventory = event.getInventory();
-        Recipe recipe = AnvilRecipeHandler.INSTANCE.matchAnvilRecipe(anvilInventory.getItem(0), anvilInventory.getItem(1));
+        Recipe recipe = AnvilRecipeHandler.INSTANCE.matchAnvilRecipe(
+            anvilInventory.getItem(0),
+            anvilInventory.getItem(1),
+            player.getWorld()
+        );
         if (recipe == null) {
             //当玩家预览配方为null时，去除缓存
             playerPreparingRecipe.remove(playerId);

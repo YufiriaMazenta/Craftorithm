@@ -3,6 +3,7 @@ package pers.yufiria.craftorithm.recipe.nms.common;
 import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
+import pers.yufiria.craftorithm.worldisolation.WorldIsolationDataHandler;
 
 /**
  * 酿造配方的通用实现：药水槽与材料槽都要匹配
@@ -27,6 +28,9 @@ public interface NmsBrewingRecipe extends NmsRecipe {
      * {@code world} 是转换后的 Bukkit 世界，供将来按世界维度等条件做判定
      */
     default boolean matchesBrewing(ItemStack input, ItemStack reagent, World world) {
+        if (!WorldIsolationDataHandler.INSTANCE.canRecipeUse(recipeKey(), world)) {
+            return false;
+        }
         return inputChoice().test(input)
             && reagentChoice().test(reagent);
     }

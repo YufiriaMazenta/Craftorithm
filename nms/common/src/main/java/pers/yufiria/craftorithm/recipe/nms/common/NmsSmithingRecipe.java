@@ -4,6 +4,7 @@ import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import pers.yufiria.craftorithm.util.IngredientUtils;
+import pers.yufiria.craftorithm.worldisolation.WorldIsolationDataHandler;
 
 import java.util.Optional;
 
@@ -35,6 +36,9 @@ public interface NmsSmithingRecipe extends NmsRecipe {
      * {@code world} 是转换后的 Bukkit 世界，供将来按世界维度等条件做判定
      */
     default boolean matchesSmithing(ItemStack templateInput, ItemStack baseInput, ItemStack additionInput, World world) {
+        if (!WorldIsolationDataHandler.INSTANCE.canRecipeUse(recipeKey(), world)) {
+            return false;
+        }
         return IngredientUtils.testOptionalChoice(templateChoice(), templateInput)
             && IngredientUtils.testOptionalChoice(baseChoice(), baseInput)
             && IngredientUtils.testOptionalChoice(additionChoice(), additionInput);

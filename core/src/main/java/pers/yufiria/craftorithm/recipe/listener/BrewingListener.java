@@ -15,6 +15,7 @@ import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.register.BrewingRecipeRegister;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessorManager;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessors;
+import pers.yufiria.craftorithm.worldisolation.WorldIsolationDataHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +78,19 @@ public enum BrewingListener implements Listener {
                 Optional<NamespacedKey> recipeKeyOpt = BrewingRecipeRegister.INSTANCE.matchKey(input, ingredient);
                 if (recipeKeyOpt.isPresent()) {
                     NamespacedKey recipeKey = recipeKeyOpt.get();
-                    // 检查 blocked_crafting_lore_rules
+
+                    if (MinecraftVersion.current().before(MinecraftVersion.V26_3)) {
+                        //因为26.3开始，这个功能在nms处理，所以只处理早期版本的能否在这个世界的判断
+                        if (!WorldIsolationDataHandler.INSTANCE.canRecipeUse(
+                            recipeKey,
+                            event.getBlock().getWorld()
+                        )) {
+                            results.set(i, input);
+                            continue;
+                        }
+                    }
+
+                    // 检查物品是否能用于合成
                     if (!ItemManager.INSTANCE.canCraft(new ItemStack[]{input, ingredient}, recipeKey)) {
                         results.set(i, input);
                         continue;
