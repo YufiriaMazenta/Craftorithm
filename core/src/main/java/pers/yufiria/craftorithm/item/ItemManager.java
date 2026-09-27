@@ -16,6 +16,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -383,6 +384,28 @@ public enum ItemManager implements LifecycleTask {
      * @return 允许合成返回true，被规则阻止返回false
      */
     public boolean canCraft(ItemStack[] items, NamespacedKey recipeKey) {
+        //取一次快照,保证同一次判定内使用的是同一份规则
+        List<IngredientRestrictionRule> rules = ingredientRestrictionRules;
+        if (rules.isEmpty())
+            return true;
+        for (ItemStack item : items) {
+            if (ItemHelper.isAir(item))
+                continue;
+            for (IngredientRestrictionRule rule : rules) {
+                if (rule.isBlocked(item, recipeKey))
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 检查物品是否允许参与指定配方
+     * @param items 物品数组
+     * @param recipeKey 配方的NamespacedKey
+     * @return 允许合成返回true，被规则阻止返回false
+     */
+    public boolean canCraft(List<ItemStack> items, NamespacedKey recipeKey) {
         //取一次快照,保证同一次判定内使用的是同一份规则
         List<IngredientRestrictionRule> rules = ingredientRestrictionRules;
         if (rules.isEmpty())

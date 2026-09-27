@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.recipe.listener;
 
 import crypticlib.CrypticLibBukkit;
+import crypticlib.MinecraftVersion;
 import crypticlib.listener.EventListener;
 import crypticlib.util.ItemHelper;
 import io.papermc.paper.event.player.PlayerStonecutterRecipeSelectEvent;
@@ -40,14 +41,17 @@ public enum StonecuttingListener implements Listener {
             }
             StonecuttingRecipe recipe = event.getStonecuttingRecipe();
             NamespacedKey recipeKey = recipe.getKey();
+            ItemStack inputItem = stonecutterInventory.getInputItem();
 
-            // 检查物品是否能用于合成
-            ItemStack base = stonecutterInventory.getInputItem();
-            if (!ItemHelper.isAir(base) && !ItemManager.INSTANCE.canCraft(new ItemStack[]{base}, recipeKey)) {
-                stonecutterInventory.setResult(null);
-                return;
+            if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_21)) {
+                // 1.20.X情况下，基于物品的拦截功能由nms层进行，故只在1.21以上进行该操作
+                if (!ItemHelper.isAir(inputItem) && !ItemManager.INSTANCE.canCraft(new ItemStack[]{inputItem}, recipeKey)) {
+                    stonecutterInventory.setResult(null);
+                    return;
+                }
             }
-            // lore检查通过后再刷新结果
+
+            // 物品检查通过后再刷新结果
             ItemManager.INSTANCE.matchItemId(result, true)
                 .flatMap(ItemManager.INSTANCE::matchItem)
                 .ifPresent(refreshItem -> {
@@ -57,7 +61,7 @@ public enum StonecuttingListener implements Listener {
             Optional<ResultProcessors> recipeProcessors = ResultProcessorManager.INSTANCE.getRecipeProcessors(recipeKey);
             recipeProcessors.ifPresent(
                 rules -> {
-                    rules.processItem(base, result, player);
+                    rules.processItem(inputItem, result, player);
                 }
             );
             stonecutterInventory.setResult(result);

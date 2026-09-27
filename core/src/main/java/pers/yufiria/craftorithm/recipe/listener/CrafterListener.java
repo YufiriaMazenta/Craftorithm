@@ -23,23 +23,6 @@ public enum CrafterListener implements Listener {
 
     INSTANCE;
 
-    @EventHandler(priority = EventPriority.LOW)
-    public void checkCanCraft(CrafterCraftEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
-        BlockState blockState = event.getBlock().getState();
-        if (!(blockState instanceof Crafter crafter))
-            return;
-        ItemStack[] items = crafter.getInventory().getContents();
-        // 检查 blocked_crafting_lore_rules
-        Recipe recipe = event.getRecipe();
-        NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
-        if (recipeKey != null && !ItemManager.INSTANCE.canCraft(items, recipeKey)) {
-            event.setCancelled(true);
-        }
-    }
-
     @EventHandler(priority = EventPriority.MONITOR)
     public void processResult(CrafterCraftEvent event) {
         if (event.isCancelled()) {

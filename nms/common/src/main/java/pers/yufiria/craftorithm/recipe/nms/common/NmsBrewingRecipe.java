@@ -3,6 +3,7 @@ package pers.yufiria.craftorithm.recipe.nms.common;
 import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
+import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.worldisolation.WorldIsolationDataHandler;
 
 /**
@@ -29,6 +30,9 @@ public interface NmsBrewingRecipe extends NmsRecipe {
      */
     default boolean matchesBrewing(ItemStack input, ItemStack reagent, World world) {
         if (!WorldIsolationDataHandler.INSTANCE.canRecipeUse(recipeKey(), world)) {
+            return false;
+        }
+        if (!ItemManager.INSTANCE.canCraft(new ItemStack[]{input, reagent}, recipeKey())) {
             return false;
         }
         return inputChoice().test(input)

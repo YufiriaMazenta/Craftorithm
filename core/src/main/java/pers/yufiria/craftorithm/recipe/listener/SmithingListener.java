@@ -69,18 +69,4 @@ public enum SmithingListener implements Listener {
         event.getInventory().setResult(result.get());
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void checkCannotCraft(PrepareSmithingEvent event) {
-        ItemStack[] items = event.getInventory().getContents();
-        // 检查 blocked_crafting_lore_rules
-        Recipe recipe = event.getInventory().getRecipe();
-        if (recipe != null) {
-            NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
-            if (recipeKey != null && !ItemManager.INSTANCE.canCraft(items, recipeKey)) {
-                event.getInventory().setResult(null);
-                event.setResult(null);
-            }
-        }
-    }
-
 }

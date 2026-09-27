@@ -1,6 +1,8 @@
 package pers.yufiria.craftorithm.recipe.nms.common;
 
 import org.bukkit.World;
+import org.bukkit.inventory.ItemStack;
+import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.worldisolation.WorldIsolationDataHandler;
 
 /**
@@ -25,6 +27,9 @@ public interface NmsShapedRecipe<Input> extends NmsCraftingRecipe<Input> {
             return false;
         }
         BukkitCraftingInput craftingInput = toBukkitCraftingInput(input);
+        if (!ItemManager.INSTANCE.canCraft(craftingInput.items(), recipeKey())) {
+            return false;
+        }
         return customPattern().matchesBefore1_21(craftingInput.items(), craftingInput.width(), craftingInput.height());
     }
 

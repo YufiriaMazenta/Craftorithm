@@ -3,6 +3,7 @@ package pers.yufiria.craftorithm.recipe.nms.common;
 import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
+import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.worldisolation.WorldIsolationDataHandler;
 
 /**
@@ -24,6 +25,9 @@ public interface NmsSingleItemRecipe extends NmsRecipe {
      */
     default boolean matchesIngredient(ItemStack input, World world) {
         if (!WorldIsolationDataHandler.INSTANCE.canRecipeUse(recipeKey(), world)) {
+            return false;
+        }
+        if (!ItemManager.INSTANCE.canCraft(new ItemStack[]{input}, recipeKey())) {
             return false;
         }
         return ingredientChoice().test(input);

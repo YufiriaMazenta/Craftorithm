@@ -3,6 +3,7 @@ package pers.yufiria.craftorithm.recipe.nms.common;
 import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
+import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 import pers.yufiria.craftorithm.worldisolation.WorldIsolationDataHandler;
 
@@ -37,6 +38,11 @@ public interface NmsSmithingRecipe extends NmsRecipe {
      */
     default boolean matchesSmithing(ItemStack templateInput, ItemStack baseInput, ItemStack additionInput, World world) {
         if (!WorldIsolationDataHandler.INSTANCE.canRecipeUse(recipeKey(), world)) {
+            return false;
+        }
+        if (!ItemManager.INSTANCE.canCraft(new ItemStack[]{
+            templateInput, baseInput, additionInput
+        }, recipeKey())) {
             return false;
         }
         return IngredientUtils.testOptionalChoice(templateChoice(), templateInput)

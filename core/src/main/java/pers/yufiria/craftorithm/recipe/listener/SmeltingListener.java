@@ -62,13 +62,6 @@ public enum SmeltingListener implements Listener {
         ItemStack result = event.getResult();
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
         if (recipeKey != null) {
-            // 检查 blocked_crafting_lore_rules
-            ItemStack source = event.getSource();
-            if (!ItemHelper.isAir(source) && !ItemManager.INSTANCE.canCraft(new ItemStack[]{source}, recipeKey)) {
-                event.setCancelled(true);
-                return;
-            }
-            // lore检查通过后再刷新结果
             ItemManager.INSTANCE.matchItemId(result, true)
                 .flatMap(ItemManager.INSTANCE::matchItem)
                 .ifPresent(refreshItem -> {
@@ -113,13 +106,6 @@ public enum SmeltingListener implements Listener {
         // 处理结果处理器
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
         if (recipeKey != null) {
-            // 检查 blocked_crafting_lore_rules
-            ItemStack source = event.getSource();
-            if (!ItemHelper.isAir(source) && !ItemManager.INSTANCE.canCraft(new ItemStack[]{source}, recipeKey)) {
-                event.setCancelled(true);
-                return;
-            }
-            // lore检查通过后再刷新结果
             ItemManager.INSTANCE.matchItemId(result, true)
                 .flatMap(ItemManager.INSTANCE::matchItem)
                 .ifPresent(refreshItem -> {

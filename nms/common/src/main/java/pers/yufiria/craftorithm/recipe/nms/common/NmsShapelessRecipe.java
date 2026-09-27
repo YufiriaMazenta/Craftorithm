@@ -4,6 +4,7 @@ import crypticlib.util.ItemHelper;
 import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
+import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 import pers.yufiria.craftorithm.worldisolation.WorldIsolationDataHandler;
 
@@ -38,6 +39,9 @@ public interface NmsShapelessRecipe<Input> extends NmsCraftingRecipe<Input> {
             if (!ItemHelper.isAir(inputItem)) {
                 inputItems.add(inputItem);
             }
+        }
+        if (!ItemManager.INSTANCE.canCraft(inputItems, recipeKey())) {
+            return false;
         }
         if (inputItems.size() != ingredients.size()) {
             return false;

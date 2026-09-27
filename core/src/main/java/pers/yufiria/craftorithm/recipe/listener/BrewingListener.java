@@ -80,7 +80,7 @@ public enum BrewingListener implements Listener {
                     NamespacedKey recipeKey = recipeKeyOpt.get();
 
                     if (MinecraftVersion.current().before(MinecraftVersion.V26_3)) {
-                        //因为26.3开始，这个功能在nms处理，所以只处理早期版本的能否在这个世界的判断
+                        //因为26.3开始，这两个拦截功能在nms层处理，所以只处理早期版本的相关逻辑
                         if (!WorldIsolationDataHandler.INSTANCE.canRecipeUse(
                             recipeKey,
                             event.getBlock().getWorld()
@@ -88,14 +88,14 @@ public enum BrewingListener implements Listener {
                             results.set(i, input);
                             continue;
                         }
+
+                        // 检查物品是否能用于合成
+                        if (!ItemManager.INSTANCE.canCraft(new ItemStack[]{input, ingredient}, recipeKey)) {
+                            results.set(i, input);
+                            continue;
+                        }
                     }
 
-                    // 检查物品是否能用于合成
-                    if (!ItemManager.INSTANCE.canCraft(new ItemStack[]{input, ingredient}, recipeKey)) {
-                        results.set(i, input);
-                        continue;
-                    }
-                    // lore检查通过后再刷新结果
                     if (refreshItem != null && !result.isSimilar(refreshItem)) {
                         result.setItemMeta(refreshItem.getItemMeta());
                     }
