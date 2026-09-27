@@ -79,6 +79,7 @@ public enum BrewingListener implements Listener {
                     NamespacedKey recipeKey = recipeKeyOpt.get();
                     // 检查 blocked_crafting_lore_rules
                     if (!ItemManager.INSTANCE.canCraft(new ItemStack[]{input, ingredient}, recipeKey)) {
+                        results.set(i, input);
                         continue;
                     }
                     // lore检查通过后再刷新结果
