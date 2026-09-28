@@ -11,8 +11,9 @@ import org.bukkit.craftbukkit.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.recipe.nms.common.CachedBukkitRecipe;
-import pers.yufiria.craftorithm.recipe.nms.common.NmsBrewingRecipe;
+import pers.yufiria.craftorithm.recipe.nms.CachedBukkitRecipe;
+import pers.yufiria.craftorithm.recipe.nms.NmsBrewingRecipe;
+import pers.yufiria.craftorithm.recipe.nms.input.BukkitBrewingInput;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.Optional;
@@ -67,7 +68,10 @@ public class BrewingRecipe260300 extends BrewingRecipe implements NmsBrewingReci
 
     @Override
     public boolean matches(BrewingInput brewingInput, Level level) {
-        return matchesBrewing(CraftItemStack.asBukkitMirror(brewingInput.input()), CraftItemStack.asBukkitMirror(brewingInput.reagent()), level.getWorld());
+        return matches(new BukkitBrewingInput(
+            CraftItemStack.asBukkitMirror(brewingInput.input()),
+            CraftItemStack.asBukkitMirror(brewingInput.reagent())
+        ), level.getWorld());
     }
 
     @Override

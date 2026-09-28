@@ -12,8 +12,7 @@ import org.bukkit.craftbukkit.v1_20_R4.inventory.CraftSmithingTrimRecipe;
 import org.bukkit.craftbukkit.v1_20_R4.util.CraftNamespacedKey;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.recipe.nms.common.CachedBukkitRecipe;
-import pers.yufiria.craftorithm.recipe.nms.common.NmsSmithingRecipe;
+import pers.yufiria.craftorithm.recipe.nms.input.BukkitSmithingInput;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.Optional;
@@ -70,20 +69,19 @@ public class SmithingTrimRecipe12005 extends SmithingTrimRecipe implements NmsSm
 
     @Override
     public boolean a(IInventory smithingInput, World world) {
-        return matchesSmithing(
-            CraftItemStack.asCraftMirror(smithingInput.a(0)),
-            CraftItemStack.asCraftMirror(smithingInput.a(1)),
-            CraftItemStack.asCraftMirror(smithingInput.a(2)),
+        return matches(
+            new BukkitSmithingInput(
+                CraftItemStack.asCraftMirror(smithingInput.a(0)),
+                CraftItemStack.asCraftMirror(smithingInput.a(1)),
+                CraftItemStack.asCraftMirror(smithingInput.a(2))
+            ),
             world.getWorld()
         );
     }
 
     @Override
     public Recipe toBukkitRecipe(NamespacedKey recipeKey) {
-        return cachedBukkitRecipe.get(() -> {
-            CraftSmithingTrimRecipe recipe = new CraftSmithingTrimRecipe(recipeKey, template, base, addition);
-            return recipe;
-        });
+        return cachedBukkitRecipe.get(() -> new CraftSmithingTrimRecipe(recipeKey, template, base, addition));
     }
 
     public static RecipeHolder<SmithingTrimRecipe> fromBukkit(NamespacedKey recipeKey, org.bukkit.inventory.SmithingTrimRecipe bukkitRecipe) {

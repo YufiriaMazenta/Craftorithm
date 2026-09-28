@@ -9,8 +9,6 @@ import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftRecipe;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.recipe.nms.common.CachedBukkitRecipe;
-import pers.yufiria.craftorithm.recipe.nms.common.NmsSingleItemRecipe;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
 public class FurnaceRecipe12107 extends FurnaceRecipe implements NmsSingleItemRecipe {
@@ -46,7 +44,7 @@ public class FurnaceRecipe12107 extends FurnaceRecipe implements NmsSingleItemRe
 
     @Override
     public boolean a(SingleRecipeInput input, World world) {
-        return matchesIngredient(CraftItemStack.asCraftMirror(input.c()), world.getWorld());
+        return matches(CraftItemStack.asCraftMirror(input.c()), world.getWorld());
     }
 
     @Override

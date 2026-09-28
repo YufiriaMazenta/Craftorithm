@@ -9,8 +9,9 @@ import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.inventory.CraftSmithingTransformRecipe;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.recipe.nms.common.CachedBukkitRecipe;
-import pers.yufiria.craftorithm.recipe.nms.common.NmsSmithingRecipe;
+import pers.yufiria.craftorithm.recipe.nms.CachedBukkitRecipe;
+import pers.yufiria.craftorithm.recipe.nms.NmsSmithingRecipe;
+import pers.yufiria.craftorithm.recipe.nms.input.BukkitSmithingInput;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.List;
@@ -64,10 +65,12 @@ public class SmithingTransformRecipe260100 extends SmithingTransformRecipe imple
 
     @Override
     public boolean matches(SmithingRecipeInput smithingInput, Level level) {
-        return matchesSmithing(
-            CraftItemStack.asCraftMirror(smithingInput.template()),
-            CraftItemStack.asCraftMirror(smithingInput.base()),
-            CraftItemStack.asCraftMirror(smithingInput.addition()),
+        return matches(
+            new BukkitSmithingInput(
+                CraftItemStack.asCraftMirror(smithingInput.template()),
+                CraftItemStack.asCraftMirror(smithingInput.base()),
+                CraftItemStack.asCraftMirror(smithingInput.addition())
+            ),
             level.getWorld()
         );
     }

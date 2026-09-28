@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.recipe.nms.common;
+package pers.yufiria.craftorithm.recipe.nms;
 
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;

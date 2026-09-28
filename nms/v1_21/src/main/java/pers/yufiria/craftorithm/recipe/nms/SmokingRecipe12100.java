@@ -10,8 +10,6 @@ import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftSmokingRecipe;
 import org.bukkit.craftbukkit.v1_21_R1.util.CraftNamespacedKey;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.recipe.nms.common.CachedBukkitRecipe;
-import pers.yufiria.craftorithm.recipe.nms.common.NmsSingleItemRecipe;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
 public class SmokingRecipe12100 extends RecipeSmoking implements NmsSingleItemRecipe {
@@ -38,7 +36,7 @@ public class SmokingRecipe12100 extends RecipeSmoking implements NmsSingleItemRe
 
     @Override
     public boolean a(SingleRecipeInput input, World world) {
-        return matchesIngredient(CraftItemStack.asCraftMirror(input.c()), world.getWorld());
+        return matches(CraftItemStack.asCraftMirror(input.c()), world.getWorld());
     }
 
     @Override

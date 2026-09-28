@@ -12,8 +12,9 @@ import org.bukkit.craftbukkit.inventory.CraftSmithingTrimRecipe;
 import org.bukkit.craftbukkit.inventory.trim.CraftTrimPattern;
 import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.recipe.nms.common.CachedBukkitRecipe;
-import pers.yufiria.craftorithm.recipe.nms.common.NmsSmithingRecipe;
+import pers.yufiria.craftorithm.recipe.nms.CachedBukkitRecipe;
+import pers.yufiria.craftorithm.recipe.nms.NmsSmithingRecipe;
+import pers.yufiria.craftorithm.recipe.nms.input.BukkitSmithingInput;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.List;
@@ -67,10 +68,12 @@ public class SmithingTrimRecipe260100 extends SmithingTrimRecipe implements NmsS
 
     @Override
     public boolean matches(SmithingRecipeInput smithingInput, Level level) {
-        return matchesSmithing(
-            CraftItemStack.asCraftMirror(smithingInput.template()),
-            CraftItemStack.asCraftMirror(smithingInput.base()),
-            CraftItemStack.asCraftMirror(smithingInput.addition()),
+        return matches(
+            new BukkitSmithingInput(
+                CraftItemStack.asCraftMirror(smithingInput.template()),
+                CraftItemStack.asCraftMirror(smithingInput.base()),
+                CraftItemStack.asCraftMirror(smithingInput.addition())
+            ),
             level.getWorld()
         );
     }

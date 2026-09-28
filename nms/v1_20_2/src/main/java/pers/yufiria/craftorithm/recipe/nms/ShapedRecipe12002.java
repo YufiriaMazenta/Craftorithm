@@ -15,10 +15,7 @@ import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftShapedRecipe;
 import org.bukkit.craftbukkit.v1_20_R2.util.CraftNamespacedKey;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
-import pers.yufiria.craftorithm.recipe.nms.common.BukkitCraftingInput;
-import pers.yufiria.craftorithm.recipe.nms.common.CachedBukkitRecipe;
-import pers.yufiria.craftorithm.recipe.nms.common.CustomShapedRecipePattern;
-import pers.yufiria.craftorithm.recipe.nms.common.NmsShapedRecipe;
+import pers.yufiria.craftorithm.recipe.nms.input.BukkitCraftingInput;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.ArrayList;
@@ -64,7 +61,7 @@ public final class ShapedRecipe12002 extends ShapedRecipes implements NmsShapedR
      */
     @Override
     public boolean a(InventoryCrafting inventorycrafting, World world) {
-        return matches(inventorycrafting, world.getWorld());
+        return matches(toBukkitCraftingInput(inventorycrafting), world.getWorld());
     }
 
     @Override

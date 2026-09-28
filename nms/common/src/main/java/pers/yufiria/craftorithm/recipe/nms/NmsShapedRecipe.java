@@ -1,8 +1,9 @@
-package pers.yufiria.craftorithm.recipe.nms.common;
+package pers.yufiria.craftorithm.recipe.nms;
 
 import crypticlib.MinecraftVersion;
 import org.bukkit.World;
 import pers.yufiria.craftorithm.item.ItemManager;
+import pers.yufiria.craftorithm.recipe.nms.input.BukkitCraftingInput;
 import pers.yufiria.craftorithm.recipe.worldisolation.WorldIsolationDataHandler;
 
 /**
@@ -18,7 +19,7 @@ public interface NmsShapedRecipe<Input> extends NmsCraftingRecipe<Input> {
     CustomShapedRecipePattern customPattern();
 
     @Override
-    default boolean matches(Input input, World world) {
+    default boolean matches(BukkitCraftingInput craftingInput, World world) {
         if (!WorldIsolationDataHandler.INSTANCE.canRecipeUse(recipeKey(), world)) {
             return false;
         }
@@ -26,10 +27,8 @@ public interface NmsShapedRecipe<Input> extends NmsCraftingRecipe<Input> {
             if (!WorldIsolationDataHandler.INSTANCE.canRecipeUse(recipeKey(), world)) {
                 return false;
             }
-            BukkitCraftingInput craftingInput = toBukkitCraftingInput(input);
             return customPattern().matchesSince1_21(craftingInput.items(), craftingInput.width(), craftingInput.height(), craftingInput.ingredientCount());
         } else {
-            BukkitCraftingInput craftingInput = toBukkitCraftingInput(input);
             if (!ItemManager.INSTANCE.canCraft(craftingInput.items(), recipeKey())) {
                 return false;
             }

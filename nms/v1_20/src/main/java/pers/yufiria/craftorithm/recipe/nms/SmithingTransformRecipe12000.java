@@ -11,8 +11,7 @@ import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftSmithingTransformRecipe;
 import org.bukkit.craftbukkit.v1_20_R1.util.CraftNamespacedKey;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.recipe.nms.common.CachedBukkitRecipe;
-import pers.yufiria.craftorithm.recipe.nms.common.NmsSmithingRecipe;
+import pers.yufiria.craftorithm.recipe.nms.input.BukkitSmithingInput;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.Optional;
@@ -80,10 +79,12 @@ public class SmithingTransformRecipe12000 extends SmithingTransformRecipe implem
 
     @Override
     public boolean a(IInventory smithingInput, World world) {
-        return matchesSmithing(
-            CraftItemStack.asCraftMirror(smithingInput.a(0)),
-            CraftItemStack.asCraftMirror(smithingInput.a(1)),
-            CraftItemStack.asCraftMirror(smithingInput.a(2)),
+        return matches(
+            new BukkitSmithingInput(
+                CraftItemStack.asCraftMirror(smithingInput.a(0)),
+                CraftItemStack.asCraftMirror(smithingInput.a(1)),
+                CraftItemStack.asCraftMirror(smithingInput.a(2))
+            ),
             world.getWorld()
         );
     }

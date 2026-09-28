@@ -14,9 +14,7 @@ import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftShapelessRecipe;
 import org.bukkit.craftbukkit.v1_20_R1.util.CraftNamespacedKey;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapelessRecipe;
-import pers.yufiria.craftorithm.recipe.nms.common.BukkitCraftingInput;
-import pers.yufiria.craftorithm.recipe.nms.common.CachedBukkitRecipe;
-import pers.yufiria.craftorithm.recipe.nms.common.NmsShapelessRecipe;
+import pers.yufiria.craftorithm.recipe.nms.input.BukkitCraftingInput;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.ArrayList;
@@ -65,7 +63,7 @@ public class ShapelessRecipe12000 extends ShapelessRecipes implements NmsShapele
 
     @Override
     public boolean a(InventoryCrafting craftingInput, World world) {
-        return matches(craftingInput, world.getWorld());
+        return matches(toBukkitCraftingInput(craftingInput), world.getWorld());
     }
 
     @Override

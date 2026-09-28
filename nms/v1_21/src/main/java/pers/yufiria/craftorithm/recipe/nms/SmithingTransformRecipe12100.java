@@ -12,8 +12,7 @@ import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftSmithingTransformRecipe;
 import org.bukkit.craftbukkit.v1_21_R1.util.CraftNamespacedKey;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.recipe.nms.common.CachedBukkitRecipe;
-import pers.yufiria.craftorithm.recipe.nms.common.NmsSmithingRecipe;
+import pers.yufiria.craftorithm.recipe.nms.input.BukkitSmithingInput;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.Optional;
@@ -81,10 +80,12 @@ public class SmithingTransformRecipe12100 extends SmithingTransformRecipe implem
 
     @Override
     public boolean a(SmithingRecipeInput smithingInput, World world) {
-        return matchesSmithing(
-            CraftItemStack.asCraftMirror(smithingInput.c()),
-            CraftItemStack.asCraftMirror(smithingInput.d()),
-            CraftItemStack.asCraftMirror(smithingInput.e()),
+        return matches(
+            new BukkitSmithingInput(
+                CraftItemStack.asCraftMirror(smithingInput.c()),
+                CraftItemStack.asCraftMirror(smithingInput.d()),
+                CraftItemStack.asCraftMirror(smithingInput.e())
+            ),
             world.getWorld()
         );
     }
@@ -93,8 +94,7 @@ public class SmithingTransformRecipe12100 extends SmithingTransformRecipe implem
     public Recipe toBukkitRecipe(NamespacedKey id) {
         return cachedBukkitRecipe.get(() -> {
             org.bukkit.inventory.ItemStack result = CraftItemStack.asBukkitCopy(this.result);
-            Recipe recipe = new CraftSmithingTransformRecipe(id, result, template, base, addition);
-            return recipe;
+            return new CraftSmithingTransformRecipe(id, result, template, base, addition);
         });
     }
 

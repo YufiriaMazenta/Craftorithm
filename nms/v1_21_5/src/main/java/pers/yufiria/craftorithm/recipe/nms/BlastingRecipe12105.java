@@ -9,8 +9,6 @@ import org.bukkit.craftbukkit.v1_21_R4.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_21_R4.inventory.CraftRecipe;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.recipe.nms.common.CachedBukkitRecipe;
-import pers.yufiria.craftorithm.recipe.nms.common.NmsSingleItemRecipe;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
 public class BlastingRecipe12105 extends RecipeBlasting implements NmsSingleItemRecipe {
@@ -37,7 +35,7 @@ public class BlastingRecipe12105 extends RecipeBlasting implements NmsSingleItem
 
     @Override
     public boolean a(SingleRecipeInput input, World world) {
-        return matchesIngredient(CraftItemStack.asCraftMirror(input.c()), world.getWorld());
+        return matches(CraftItemStack.asCraftMirror(input.c()), world.getWorld());
     }
 
     @Override

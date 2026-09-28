@@ -1,10 +1,11 @@
-package pers.yufiria.craftorithm.recipe.nms.common;
+package pers.yufiria.craftorithm.recipe.nms;
 
 import crypticlib.util.ItemHelper;
 import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import pers.yufiria.craftorithm.item.ItemManager;
+import pers.yufiria.craftorithm.recipe.nms.input.BukkitCraftingInput;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 import pers.yufiria.craftorithm.recipe.worldisolation.WorldIsolationDataHandler;
 
@@ -14,26 +15,21 @@ import java.util.List;
 /**
  * 无序配方的通用接口
  * <p>
- * 各版本的配方类只需实现 {@link NmsCraftingRecipe#toBukkitCraftingInput}，匹配由{@link NmsShapelessRecipe#matches(Object, World)}进行
+ * 各版本的配方类只需实现 {@link NmsCraftingRecipe#toBukkitCraftingInput}
  */
-public interface NmsShapelessRecipe<Input> extends NmsCraftingRecipe<Input> {
+public interface NmsShapelessRecipe<NmsInput> extends NmsCraftingRecipe<NmsInput> {
 
     /**
      * 配方材料，由版本侧的字段提供
      */
     List<RecipeChoice> customIngredients();
 
-    /**
-     * 过滤空气后比较材料数量，再进行回溯匹配
-     * <p>
-     * {@code world} 是转换后的 Bukkit 世界，供将来按世界维度等条件做判定
-     */
     @Override
-    default boolean matches(Input input, World world) {
+    default boolean matches(BukkitCraftingInput craftingInput, World world) {
         if (!WorldIsolationDataHandler.INSTANCE.canRecipeUse(recipeKey(), world)) {
             return false;
         }
-        List<ItemStack> bukkitInputItems = toBukkitCraftingInput(input).items();
+        List<ItemStack> bukkitInputItems = craftingInput.items();
         List<RecipeChoice> ingredients = customIngredients();
         List<ItemStack> inputItems = new ArrayList<>(bukkitInputItems.size());
         for (ItemStack inputItem : bukkitInputItems) {
