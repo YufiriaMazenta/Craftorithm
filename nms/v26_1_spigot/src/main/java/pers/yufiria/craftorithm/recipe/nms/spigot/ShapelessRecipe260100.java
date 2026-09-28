@@ -47,12 +47,12 @@ public class ShapelessRecipe260100 extends ShapelessRecipe implements NmsShapele
         for (net.minecraft.world.item.ItemStack nmsItem : nmsItems) {
             items.add(CraftItemStack.asCraftMirror(nmsItem));
         }
-        return new BukkitCraftingInput(items, craftinginput.width(), craftinginput.height());
+        return new BukkitCraftingInput(items, craftinginput.width(), craftinginput.height(), craftinginput.ingredientCount());
     }
 
     @Override
     public boolean matches(CraftingInput craftinginput, Level level) {
-        return matchesShapeless(craftinginput, level.getWorld());
+        return matches(craftinginput, level.getWorld());
     }
 
     @Override

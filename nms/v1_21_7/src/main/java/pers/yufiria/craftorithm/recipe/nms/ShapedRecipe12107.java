@@ -62,7 +62,7 @@ public final class ShapedRecipe12107 extends ShapedRecipes implements NmsShapedR
                 items.add(CraftItemStack.asCraftMirror(craftingInput.a(column, row)));
             }
         }
-        return new BukkitCraftingInput(items, width, height);
+        return new BukkitCraftingInput(items, width, height, craftingInput.e());
     }
 
     /**
@@ -70,7 +70,7 @@ public final class ShapedRecipe12107 extends ShapedRecipes implements NmsShapedR
      */
     @Override
     public boolean a(CraftingInput input, World world) {
-        return matchesShapedSince1_21(input, input.e(), world.getWorld());
+        return matches(input, world.getWorld());
     }
 
     public static RecipeHolder<ShapedRecipes> fromBukkit(NamespacedKey recipeKey, ShapedRecipe shapedRecipe) {

@@ -9,7 +9,7 @@ import pers.yufiria.craftorithm.recipe.worldisolation.WorldIsolationDataHandler;
 /**
  * 酿造配方的通用实现：药水槽与材料槽都要匹配
  * <p>
- * 各版本的配方类只需提供自己的两个材料，匹配逻辑由默认方法提供
+ * 各版本的配方类只需提供自己的两个材料，匹配逻辑由{@link NmsBrewingRecipe#matchesBrewing(ItemStack, ItemStack, World)}进行
  */
 public interface NmsBrewingRecipe extends NmsRecipe {
 

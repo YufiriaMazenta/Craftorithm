@@ -59,7 +59,7 @@ public class ShapelessRecipe12005 extends ShapelessRecipes implements NmsShapele
 
     @Override
     public boolean a(InventoryCrafting craftingInput, World world) {
-        return matchesShapeless(craftingInput, world.getWorld());
+        return matches(craftingInput, world.getWorld());
     }
 
     @Override

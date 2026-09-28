@@ -12,7 +12,7 @@ import java.util.Optional;
 /**
  * 锻造配方的通用实现：用 {@link RecipeChoice} 匹配锻造台的三个槽位
  * <p>
- * 各版本的配方类只需实现三个取值方法，匹配算法由默认方法提供
+ * 各版本的配方类只需实现三个取值方法，匹配由{@link NmsSmithingRecipe#matchesSmithing(ItemStack, ItemStack, ItemStack, World)}进行
  */
 public interface NmsSmithingRecipe extends NmsRecipe {
 

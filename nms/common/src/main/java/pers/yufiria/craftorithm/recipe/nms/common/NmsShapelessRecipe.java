@@ -12,9 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 无序配方的通用实现：用 {@link RecipeChoice} 匹配 NMS 合成格
+ * 无序配方的通用接口
  * <p>
- * 各版本的配方类只需实现 {@link NmsCraftingRecipe#toBukkitCraftingInput}，匹配算法由默认方法提供
+ * 各版本的配方类只需实现 {@link NmsCraftingRecipe#toBukkitCraftingInput}，匹配由{@link NmsShapelessRecipe#matches(Object, World)}进行
  */
 public interface NmsShapelessRecipe<Input> extends NmsCraftingRecipe<Input> {
 
@@ -28,7 +28,8 @@ public interface NmsShapelessRecipe<Input> extends NmsCraftingRecipe<Input> {
      * <p>
      * {@code world} 是转换后的 Bukkit 世界，供将来按世界维度等条件做判定
      */
-    default boolean matchesShapeless(Input input, World world) {
+    @Override
+    default boolean matches(Input input, World world) {
         if (!WorldIsolationDataHandler.INSTANCE.canRecipeUse(recipeKey(), world)) {
             return false;
         }

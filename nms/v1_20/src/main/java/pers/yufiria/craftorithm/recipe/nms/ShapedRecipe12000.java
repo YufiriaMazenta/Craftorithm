@@ -63,7 +63,7 @@ public final class ShapedRecipe12000 extends ShapedRecipes implements NmsShapedR
      */
     @Override
     public boolean a(InventoryCrafting inventorycrafting, World world) {
-        return matchesShapedBefore1_21(inventorycrafting, world.getWorld());
+        return matches(inventorycrafting, world.getWorld());
     }
 
     @Override

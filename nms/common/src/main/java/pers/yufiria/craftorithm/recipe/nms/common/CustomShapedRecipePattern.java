@@ -11,9 +11,9 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 
 /**
- * 有序配方的通用实现：形状、材料，与 Bukkit 合成格的匹配，以及把配方还原成 Bukkit 的 shape
+ * 有序配方的通用实现：包含形状、材料等信息
  * <p>
- * 各版本的配方实现只需要把 NMS 合成格逐格转换为 Bukkit 物品列表（行优先展开），
+ * 各版本的配方实现只需要把 NMS 的合成输入内容转换为 Bukkit 物品列表
  * 匹配逻辑（1.20 ~ 1.20.5 的滑动匹配与 1.21 起的精确匹配）统一在这里
  */
 public class CustomShapedRecipePattern {
@@ -102,7 +102,6 @@ public class CustomShapedRecipePattern {
      * 1.21 起的匹配方式
      *
      * @param inputItems 行优先展开的 Bukkit 合成格物品
-     * @param world      转换后的 Bukkit 世界，供将来按世界维度等条件做判定
      */
     public boolean matchesSince1_21(List<ItemStack> inputItems, int inputWidth, int inputHeight, int inputIngredientCount) {
         if (inputIngredientCount != ingredientCount) {
