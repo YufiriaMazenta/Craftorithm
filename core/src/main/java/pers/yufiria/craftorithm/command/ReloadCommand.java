@@ -2,6 +2,7 @@ package pers.yufiria.craftorithm.command;
 
 import crypticlib.CrypticLibPlugin;
 import crypticlib.Invoker;
+import crypticlib.command.CommandContext;
 import crypticlib.command.CommandInfo;
 import crypticlib.command.CommandNode;
 import crypticlib.lifecycle.LifecyclePhase;
@@ -19,7 +20,6 @@ import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.util.LangUtils;
 
-import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -40,7 +40,8 @@ public final class ReloadCommand extends CommandNode implements LifecycleTask {
     }
 
     @Override
-    public void execute(@NotNull Invoker invoker, List<String> args) {
+    public void execute(@NotNull CommandContext context) {
+        Invoker invoker = context.invoker();
         if (reloading.get()) {
             LangUtils.sendLang(invoker, Languages.COMMAND_RELOAD_RELOADING);
             return;
@@ -66,8 +67,8 @@ public final class ReloadCommand extends CommandNode implements LifecycleTask {
     }
 
     @Override
-    public void onNoPerm(@NotNull Invoker invoker, List<String> args) {
-        LangUtils.sendLang(invoker, Languages.COMMAND_NO_PERM);
+    public void onNoPerm(@NotNull CommandContext context) {
+        LangUtils.sendLang(context.invoker(), Languages.COMMAND_NO_PERM);
     }
 
     @Override

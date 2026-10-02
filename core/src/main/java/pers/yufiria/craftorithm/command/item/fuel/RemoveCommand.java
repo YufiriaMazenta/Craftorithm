@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.command.item.fuel;
 
 import crypticlib.Invoker;
+import crypticlib.command.CommandContext;
 import crypticlib.command.CommandInfo;
 import crypticlib.command.CommandNode;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +24,9 @@ public class RemoveCommand extends CommandNode {
     }
 
     @Override
-    public void execute(@NotNull Invoker invoker, List<String> args) {
+    public void execute(@NotNull CommandContext context) {
+        Invoker invoker = context.invoker();
+        List<String> args = context.args();
         if (args.isEmpty()) {
             sendDescriptions(invoker);
             return;
@@ -40,7 +43,8 @@ public class RemoveCommand extends CommandNode {
     }
 
     @Override
-    public List<String> tabComplete(@NotNull Invoker invoker, List<String> args) {
+    public List<String> tabComplete(@NotNull CommandContext context) {
+        List<String> args = context.args();
         if (args.size() <= 1) {
             return new ArrayList<>(ItemManager.INSTANCE.customCookingFuelMap().keySet().stream().map(NamespacedItemId::toString).toList());
         }

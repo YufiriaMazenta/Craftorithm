@@ -2,6 +2,7 @@ package pers.yufiria.craftorithm.command.recipe;
 
 import crypticlib.Invoker;
 import crypticlib.Key;
+import crypticlib.command.CommandContext;
 import crypticlib.command.CommandInfo;
 import crypticlib.command.CommandNode;
 import crypticlib.perm.PermInfo;
@@ -32,7 +33,9 @@ public class RestoreCommand extends CommandNode {
     }
 
     @Override
-    public void execute(@NotNull Invoker invoker, @NotNull List<String> args) {
+    public void execute(@NotNull CommandContext context) {
+        Invoker invoker = context.invoker();
+        List<String> args = context.args();
         if (args.isEmpty()) {
             sendDescriptions(invoker);
             return;
@@ -52,7 +55,7 @@ public class RestoreCommand extends CommandNode {
     }
 
     @Override
-    public @Nullable List<String> tabComplete(@NotNull Invoker invoker, @NotNull List<String> args) {
+    public @Nullable List<String> tabComplete(@NotNull CommandContext context) {
         return RecipeManager.INSTANCE.disableRecipeKeys().stream().map(NamespacedKey::asString).toList();
     }
 }

@@ -1,6 +1,6 @@
 package pers.yufiria.craftorithm.command.item;
 
-import crypticlib.Invoker;
+import crypticlib.command.CommandContext;
 import crypticlib.command.CommandInfo;
 import crypticlib.command.CommandNode;
 import crypticlib.command.annotation.Subcommand;
@@ -9,8 +9,6 @@ import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.command.item.fuel.FuelCommand;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.util.LangUtils;
-
-import java.util.List;
 
 public final class ItemCommand extends CommandNode {
 
@@ -21,8 +19,8 @@ public final class ItemCommand extends CommandNode {
     }
 
     @Override
-    public void onNoPerm(@NotNull Invoker invoker, @NotNull List<String> args) {
-        LangUtils.sendLang(invoker, Languages.COMMAND_NO_PERM);
+    public void onNoPerm(@NotNull CommandContext context) {
+        LangUtils.sendLang(context.invoker(), Languages.COMMAND_NO_PERM);
     }
 
     @Subcommand

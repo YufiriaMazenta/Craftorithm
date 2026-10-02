@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.command.recipe;
 
 import crypticlib.Invoker;
+import crypticlib.command.CommandContext;
 import crypticlib.command.CommandInfo;
 import crypticlib.command.CommandNode;
 import crypticlib.perm.PermInfo;
@@ -32,7 +33,9 @@ public class DiscoverCommand extends CommandNode {
     }
 
     @Override
-    public void execute(@NotNull Invoker invoker, @NotNull List<String> args) {
+    public void execute(@NotNull CommandContext context) {
+        Invoker invoker = context.invoker();
+        List<String> args = context.args();
         if (args.size() < 2) {
             sendDescriptions(invoker);
             return;
@@ -60,12 +63,13 @@ public class DiscoverCommand extends CommandNode {
     }
 
     @Override
-    public void onNoPerm(@NotNull Invoker invoker, @NotNull List<String> args) {
-        LangUtils.sendLang(invoker, Languages.COMMAND_NO_PERM);
+    public void onNoPerm(@NotNull CommandContext context) {
+        LangUtils.sendLang(context.invoker(), Languages.COMMAND_NO_PERM);
     }
 
     @Override
-    public List<String> tabComplete(@NotNull Invoker invoker, List<String> args) {
+    public List<String> tabComplete(@NotNull CommandContext context) {
+        List<String> args = context.args();
         if (args.size() <= 1) {
             return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
         }

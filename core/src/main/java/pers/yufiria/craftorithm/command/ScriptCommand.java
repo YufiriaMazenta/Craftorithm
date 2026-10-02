@@ -2,6 +2,7 @@ package pers.yufiria.craftorithm.command;
 
 import crypticlib.CrypticLib;
 import crypticlib.Invoker;
+import crypticlib.command.CommandContext;
 import crypticlib.command.CommandNode;
 import crypticlib.command.annotation.Command;
 import crypticlib.perm.PermInfo;
@@ -26,7 +27,9 @@ public class ScriptCommand extends CommandNode {
     }
 
     @Override
-    public void execute(@NotNull Invoker invoker, @NotNull List<String> args) {
+    public void execute(@NotNull CommandContext context) {
+        Invoker invoker = context.invoker();
+        List<String> args = context.args();
         if (args.isEmpty()) {
             return;
         }
@@ -39,8 +42,8 @@ public class ScriptCommand extends CommandNode {
     }
 
     @Override
-    public void onNoPerm(@NotNull Invoker invoker, @NotNull List<String> args) {
-        LangUtils.sendLang(invoker, Languages.COMMAND_NO_PERM);
+    public void onNoPerm(@NotNull CommandContext context) {
+        LangUtils.sendLang(context.invoker(), Languages.COMMAND_NO_PERM);
     }
 
 }

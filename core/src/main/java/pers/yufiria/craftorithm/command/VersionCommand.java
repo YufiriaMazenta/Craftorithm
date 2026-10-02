@@ -1,14 +1,12 @@
 package pers.yufiria.craftorithm.command;
 
-import crypticlib.Invoker;
+import crypticlib.command.CommandContext;
 import crypticlib.command.CommandInfo;
 import crypticlib.command.CommandNode;
 import crypticlib.perm.PermInfo;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.util.LangUtils;
-
-import java.util.List;
 
 public final class VersionCommand extends CommandNode {
 
@@ -19,13 +17,13 @@ public final class VersionCommand extends CommandNode {
     }
 
     @Override
-    public void execute(@NotNull Invoker invoker, List<String> args) {
-        LangUtils.sendLang(invoker, Languages.COMMAND_VERSION);
+    public void execute(@NotNull CommandContext context) {
+        LangUtils.sendLang(context.invoker(), Languages.COMMAND_VERSION);
     }
 
     @Override
-    public void onNoPerm(@NotNull Invoker invoker, @NotNull List<String> args) {
-        LangUtils.sendLang(invoker, Languages.COMMAND_NO_PERM);
+    public void onNoPerm(@NotNull CommandContext context) {
+        LangUtils.sendLang(context.invoker(), Languages.COMMAND_NO_PERM);
     }
 
 }

@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.command.item.fuel;
 
 import crypticlib.Invoker;
+import crypticlib.command.CommandContext;
 import crypticlib.command.CommandInfo;
 import crypticlib.command.CommandNode;
 import crypticlib.util.ItemHelper;
@@ -24,7 +25,9 @@ public class AddCommand extends CommandNode {
     }
 
     @Override
-    public void execute(@NotNull Invoker invoker, List<String> args) {
+    public void execute(@NotNull CommandContext context) {
+        Invoker invoker = context.invoker();
+        List<String> args = context.args();
         if (args.isEmpty()) {
             sendDescriptions(invoker);
             return;
@@ -52,7 +55,8 @@ public class AddCommand extends CommandNode {
     }
 
     @Override
-    public List<String> tabComplete(@NotNull Invoker invoker, List<String> args) {
+    public List<String> tabComplete(@NotNull CommandContext context) {
+        List<String> args = context.args();
         if (args.size() <= 1) {
             return new ArrayList<>(Arrays.asList("50", "67", "100", "150", "200", "300", "800", "1200", "1600", "2400", "4001", "16000", "20000"));
         }

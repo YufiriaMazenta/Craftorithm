@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.command.item;
 
 import crypticlib.Invoker;
+import crypticlib.command.CommandContext;
 import crypticlib.command.CommandInfo;
 import crypticlib.command.CommandNode;
 import crypticlib.util.ItemHelper;
@@ -32,7 +33,9 @@ public final class SaveCommand extends CommandNode {
     }
 
     @Override
-    public void execute(@NotNull Invoker invoker, List<String> args) {
+    public void execute(@NotNull CommandContext context) {
+        Invoker invoker = context.invoker();
+        List<String> args = context.args();
         if (!CommandUtils.checkInvokerIsPlayer(invoker))
             return;
         if (args.size() < 2) {
@@ -56,7 +59,8 @@ public final class SaveCommand extends CommandNode {
     }
 
     @Override
-    public List<String> tabComplete(@NotNull Invoker invoker, List<String> args) {
+    public List<String> tabComplete(@NotNull CommandContext context) {
+        List<String> args = context.args();
         if (args.size() < 2) {
             return new ArrayList<>(CraftorithmItemProvider.INSTANCE.itemConfigFileMap().keySet());
         } else {

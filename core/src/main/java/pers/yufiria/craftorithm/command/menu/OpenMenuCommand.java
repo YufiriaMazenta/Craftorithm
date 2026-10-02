@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.command.menu;
 
 import crypticlib.Invoker;
+import crypticlib.command.CommandContext;
 import crypticlib.command.CommandInfo;
 import crypticlib.command.CommandNode;
 import crypticlib.perm.PermInfo;
@@ -34,7 +35,9 @@ public class OpenMenuCommand extends CommandNode {
     }
 
     @Override
-    public void execute(@NotNull Invoker invoker, @NotNull List<String> args) {
+    public void execute(@NotNull CommandContext context) {
+        Invoker invoker = context.invoker();
+        List<String> args = context.args();
         if (args.isEmpty()) {
             sendDescriptions(invoker);
             return;
@@ -70,12 +73,12 @@ public class OpenMenuCommand extends CommandNode {
     }
 
     @Override
-    public void onNoPerm(@NotNull Invoker invoker, @NotNull List<String> args) {
-        LangUtils.sendLang(invoker, Languages.COMMAND_NO_PERM);
+    public void onNoPerm(@NotNull CommandContext context) {
+        LangUtils.sendLang(context.invoker(), Languages.COMMAND_NO_PERM);
     }
 
     @Override
-    public @Nullable List<String> tabComplete(@NotNull Invoker invoker, @NotNull List<String> args) {
+    public @Nullable List<String> tabComplete(@NotNull CommandContext context) {
         return CustomMenuManager.INSTANCE.menuCreators().keySet().stream().toList();
     }
 }
