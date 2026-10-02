@@ -18,12 +18,17 @@ import org.bukkit.event.player.*;
 import org.bukkit.plugin.EventExecutor;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
+import pers.yufiria.craftorithm.api.event.RecipeLoadFromConfigEvent;
+import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.trigger.TriggerContext;
 import pers.yufiria.craftorithm.trigger.TriggerManager;
 import pers.yufiria.craftorithm.util.ItemUtils;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 /**
  * 动态事件注册器
@@ -356,6 +361,33 @@ public enum EventTriggerTypes {
                 "event", event -> ScriptValue.of(event, ReflectPropertyResolver.INSTANCE)
             )
         );
+
+        // 一些玩家无关的事件
+        register("recipe_load", RecipeLoadFromConfigEvent.class,
+            event -> {
+                if (!(event instanceof RecipeLoadFromConfigEvent recipeLoadEvent)) {
+                    return null;
+                }
+                Map<String, ScriptValue> vars = new HashMap<>();
+                vars.put("event", ScriptValue.of(event, ReflectPropertyResolver.INSTANCE));
+                vars.put("recipe_key", ScriptValue.of((recipeLoadEvent.recipeKey().asString())));
+                return new TriggerContext(
+                    recipeLoadEvent.recipeKey(),
+                    RecipeManager.INSTANCE.getRecipeType(recipeLoadEvent.recipe()),
+                    vars
+                );
+            }
+        );
+    }
+
+    private void register(
+        String typeKey,
+        Class<? extends Event> eventClass,
+        Function<Event, TriggerContext> triggerContextCreator
+    ) {
+        GenericEventTriggerType type = new GenericEventTriggerType(typeKey, eventClass, triggerContextCreator);
+        eventTypes.put(typeKey, type);
+        registerEventListener(type, true);
     }
 
     private void register(
@@ -376,6 +408,16 @@ public enum EventTriggerTypes {
         Map<String, EventVariableExtractor> varExtractors
     ) {
         GenericEventTriggerType type = new GenericEventTriggerType(typeKey, eventClass, extractor, varExtractors);
+        eventTypes.put(typeKey, type);
+        registerEventListener(type, true);
+    }
+
+    private void registerAsync(
+        String typeKey,
+        Class<? extends Event> eventClass,
+        Function<Event, TriggerContext> triggerContextCreator
+    ) {
+        GenericEventTriggerType type = new GenericEventTriggerType(typeKey, eventClass, triggerContextCreator);
         eventTypes.put(typeKey, type);
         registerEventListener(type, true);
     }

@@ -14,7 +14,7 @@ public enum EmakiItemItemProvider implements ItemProvider {
 
     @Override
     public @NotNull String namespace() {
-        return "emaikiitem";
+        return "emakiitem";
     }
 
     @Override

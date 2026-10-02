@@ -22,29 +22,41 @@ import java.util.UUID;
  */
 public class TriggerContext {
 
-    private final @Nullable UUID playerId;
+    private final @NotNull UUID invokerId;
     private final @Nullable NamespacedKey recipeKey;
     private final @Nullable RecipeType recipeType;
     private final Map<String, ScriptValue> variables;
 
-    public TriggerContext(@Nullable UUID playerId, @Nullable NamespacedKey recipeKey, @Nullable RecipeType recipeType) {
-        this(playerId, recipeKey, recipeType, null);
+    public TriggerContext(@Nullable NamespacedKey recipeKey, @Nullable RecipeType recipeType) {
+        this(Invoker.CONSOLE_UUID, recipeKey, recipeType);
+    }
+
+    public TriggerContext(@NotNull UUID invokerId, @Nullable NamespacedKey recipeKey, @Nullable RecipeType recipeType) {
+        this(invokerId, recipeKey, recipeType, null);
     }
 
     public TriggerContext(@Nullable Player player, @Nullable NamespacedKey recipeKey, @Nullable RecipeType recipeType) {
-        this(player != null ? player.getUniqueId() : null, recipeKey, recipeType, null);
+        this(player != null ? player.getUniqueId() : Invoker.CONSOLE_UUID, recipeKey, recipeType, null);
     }
 
-    public TriggerContext(@Nullable UUID playerId, @NotNull Map<String, ScriptValue> variables) {
-        this(playerId, null, null, new HashMap<>(variables));
+    public TriggerContext(@NotNull Map<String, ScriptValue> variables) {
+        this(Invoker.CONSOLE_UUID, null, null, new HashMap<>(variables));
+    }
+
+    public TriggerContext(@NotNull UUID invokerId, @NotNull Map<String, ScriptValue> variables) {
+        this(invokerId, null, null, new HashMap<>(variables));
     }
 
     public TriggerContext(@Nullable Player player, @NotNull Map<String, ScriptValue> variables) {
-        this(player != null ? player.getUniqueId() : null, variables);
+        this(player != null ? player.getUniqueId() : Invoker.CONSOLE_UUID, variables);
     }
 
-    public TriggerContext(@Nullable UUID playerId, @Nullable NamespacedKey recipeKey, @Nullable RecipeType recipeType, Map<String, ScriptValue> variables) {
-        this.playerId = playerId;
+    public TriggerContext(@Nullable NamespacedKey recipeKey, @Nullable RecipeType recipeType, Map<String, ScriptValue> variables) {
+        this(Invoker.CONSOLE_UUID, recipeKey, recipeType, variables);
+    }
+
+    public TriggerContext(@NotNull UUID invokerId, @Nullable NamespacedKey recipeKey, @Nullable RecipeType recipeType, Map<String, ScriptValue> variables) {
+        this.invokerId = invokerId;
         this.recipeKey = recipeKey;
         this.recipeType = recipeType;
         this.variables = variables != null ? new HashMap<>(variables) : new HashMap<>();
@@ -60,8 +72,8 @@ public class TriggerContext {
      */
     public ScriptContext toScriptContext() {
         Invoker invoker;
-        if (playerId != null) {
-            invoker = CommonPlayer.fromUuid(playerId).orElse(null);
+        if (!Invoker.CONSOLE_UUID.equals(invokerId)) {
+            invoker = CommonPlayer.fromUuid(invokerId).orElse(null);
             if (invoker == null) {
                 invoker = Craftorithm.instance().getConsoleInvoker();
             }
@@ -84,7 +96,7 @@ public class TriggerContext {
     }
 
     public @Nullable UUID playerUniqueId() {
-        return playerId;
+        return invokerId;
     }
 
     public @Nullable NamespacedKey recipeKey() {

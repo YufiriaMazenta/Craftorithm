@@ -11,6 +11,8 @@ import pers.yufiria.craftorithm.trigger.TriggerType;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * 通用事件触发器类型
@@ -20,8 +22,17 @@ public class GenericEventTriggerType implements TriggerType {
 
     private final String typeKey;
     private final Class<? extends Event> eventClass;
-    private final PlayerExtractor playerExtractor;
-    private final Map<String, EventVariableExtractor> variableExtractors;
+    private final Function<Event, TriggerContext> triggerContextCreator;
+
+    public GenericEventTriggerType(
+        @NotNull String typeKey,
+        @NotNull Class<? extends Event> eventClass,
+        @NotNull Function<Event, TriggerContext> triggerContextCreator
+    ) {
+        this.typeKey = typeKey;
+        this.eventClass = eventClass;
+        this.triggerContextCreator = triggerContextCreator;
+    }
 
     public GenericEventTriggerType(
         @NotNull String typeKey,
@@ -29,10 +40,17 @@ public class GenericEventTriggerType implements TriggerType {
         @NotNull PlayerExtractor playerExtractor,
         @NotNull Map<String, EventVariableExtractor> variableExtractors
     ) {
-        this.typeKey = typeKey;
-        this.eventClass = eventClass;
-        this.playerExtractor = playerExtractor;
-        this.variableExtractors = variableExtractors;
+        this(typeKey, eventClass, event -> {
+            Player player = playerExtractor.extract(event);
+            Map<String, ScriptValue> vars = new HashMap<>();
+            for (Map.Entry<String, EventVariableExtractor> entry : variableExtractors.entrySet()) {
+                ScriptValue val = entry.getValue().extract(event);
+                if (val != null) {
+                    vars.put(entry.getKey(), val);
+                }
+            }
+            return new TriggerContext(player, vars);
+        });
     }
 
     @Override
@@ -52,24 +70,7 @@ public class GenericEventTriggerType implements TriggerType {
 
     @Override
     public @Nullable TriggerContext extractContext(@NotNull Event event) {
-        Player player = playerExtractor.extract(event);
-        if (player == null) return null;
-        Map<String, ScriptValue> vars = new HashMap<>();
-        for (Map.Entry<String, EventVariableExtractor> entry : variableExtractors.entrySet()) {
-            ScriptValue val = entry.getValue().extract(event);
-            if (val != null) {
-                vars.put(entry.getKey(), val);
-            }
-        }
-        return new TriggerContext(player, vars);
-    }
-
-    public @NotNull PlayerExtractor playerExtractor() {
-        return playerExtractor;
-    }
-
-    public @NotNull Map<String, EventVariableExtractor> variableExtractors() {
-        return variableExtractors;
+        return triggerContextCreator.apply(event);
     }
 
 }
