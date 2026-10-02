@@ -8,6 +8,7 @@ repositories {
     mavenLocal()
     //CrypticLib
     maven("https://repo2.crypticlib.com/releases/")
+    maven("https://repo2.crypticlib.com/snapshots/")
     mavenCentral()
 }
 
@@ -81,6 +82,7 @@ subprojects {
         maven("https://repo.papermc.io/repository/maven-public/")
         //CrypticLib
         maven("https://repo2.crypticlib.com/releases/")
+        maven("https://repo2.crypticlib.com/snapshots/")
     }
     dependencies {
         compileOnly("org.jetbrains:annotations:${rootProject.findProperty("jetbrainsAnnotationsVer")}")
