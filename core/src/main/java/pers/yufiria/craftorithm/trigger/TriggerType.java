@@ -1,7 +1,6 @@
 package pers.yufiria.craftorithm.trigger;
 
 import org.bukkit.event.Event;
-import org.bukkit.event.Listener;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -15,11 +14,6 @@ public interface TriggerType {
      * 类型标识，对应YAML中的type字段
      */
     String typeKey();
-
-    /**
-     * 返回此类型使用的监听器实例
-     */
-    Listener listener();
 
     /**
      * 实际事件类（CraftItemEvent / SmithItemEvent / InventoryClickEvent 等）

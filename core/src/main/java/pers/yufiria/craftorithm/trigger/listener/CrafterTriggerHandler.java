@@ -2,7 +2,6 @@ package pers.yufiria.craftorithm.trigger.listener;
 
 import crypticlib.listener.EventListener;
 import crypticlib.script.ScriptValue;
-import crypticlib.script.object.ReflectPropertyResolver;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -14,8 +13,6 @@ import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.trigger.CraftTriggerTypes;
 import pers.yufiria.craftorithm.trigger.TriggerContext;
 import pers.yufiria.craftorithm.trigger.TriggerManager;
-
-import java.util.UUID;
 
 @EventListener
 public enum CrafterTriggerHandler implements Listener {
@@ -34,12 +31,9 @@ public enum CrafterTriggerHandler implements Listener {
             return;
         }
         RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipe);
-        TriggerContext ctx = new TriggerContext((UUID) null, recipeKey, recipeType);
+        TriggerContext ctx = new TriggerContext(recipeKey, recipeType);
         ctx.setVariable("is_crafter", ScriptValue.of(true));
-        ctx.setVariable("event", ScriptValue.of(
-            event,
-            ReflectPropertyResolver.INSTANCE
-        ));
+        ctx.putEvent(event);
         int deniedTriggerNum = TriggerManager.INSTANCE.firePrepare(CraftTriggerTypes.CRAFTING, ctx);
         if (deniedTriggerNum > 0) {
             event.setCancelled(true);

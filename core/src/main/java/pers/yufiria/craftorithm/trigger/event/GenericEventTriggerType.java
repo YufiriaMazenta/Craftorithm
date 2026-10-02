@@ -3,7 +3,6 @@ package pers.yufiria.craftorithm.trigger.event;
 import crypticlib.script.ScriptValue;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.trigger.TriggerContext;
@@ -12,7 +11,6 @@ import pers.yufiria.craftorithm.trigger.TriggerType;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * 通用事件触发器类型
@@ -64,13 +62,13 @@ public class GenericEventTriggerType implements TriggerType {
     }
 
     @Override
-    public Listener listener() {
-        return null;
-    }
-
-    @Override
     public @Nullable TriggerContext extractContext(@NotNull Event event) {
-        return triggerContextCreator.apply(event);
+        TriggerContext ctx = triggerContextCreator.apply(event);
+        if (ctx != null) {
+            //统一注入标准 event 变量
+            ctx.putEvent(event);
+        }
+        return ctx;
     }
 
 }

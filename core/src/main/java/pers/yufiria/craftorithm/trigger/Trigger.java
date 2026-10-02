@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.trigger;
 
-import crypticlib.script.ScriptContext;
 import crypticlib.script.compile.CompiledScript;
 import org.bukkit.NamespacedKey;
 import org.jetbrains.annotations.Nullable;
@@ -28,7 +27,7 @@ public class Trigger {
     private final CompiledScript conditionScript;  // 条件脚本（正向，成立=放行）
     private final CompiledScript actionScript;     // 动作脚本
     private final int priority;
-    private final boolean enable;
+    private final boolean enabled;
     private final long cooldownMillis;
     private final boolean perPlayer;
 
@@ -39,7 +38,7 @@ public class Trigger {
         CompiledScript conditionScript,
         CompiledScript actionScript,
         int priority,
-        boolean enable,
+        boolean enabled,
         long cooldownMillis,
         boolean perPlayer
     ) {
@@ -49,7 +48,7 @@ public class Trigger {
         this.conditionScript = conditionScript;
         this.actionScript = actionScript;
         this.priority = priority;
-        this.enable = enable;
+        this.enabled = enabled;
         this.cooldownMillis = cooldownMillis;
         this.perPlayer = perPlayer;
     }
@@ -58,7 +57,7 @@ public class Trigger {
     public String typeKey() { return typeKey; }
     public List<NamespacedKey> recipes() { return recipes; }
     public int priority() { return priority; }
-    public boolean isEnable() { return enable; }
+    public boolean isEnabled() { return enabled; }
     public long cooldownMillis() { return cooldownMillis; }
     public boolean perPlayer() { return perPlayer; }
 
@@ -86,26 +85,7 @@ public class Trigger {
      * 执行动作脚本
      */
     public void execute(TriggerContext context) {
-        ScriptContext scriptCtx = context.toScriptContext();
-        CURRENT_TRIGGER_CONTEXT.set(context);
-        try {
-            actionScript.execute(scriptCtx);
-        } finally {
-            CURRENT_TRIGGER_CONTEXT.remove();
-        }
+        actionScript.execute(context.toScriptContext());
     }
 
-    public static TriggerContext currentTriggerContext() {
-        return CURRENT_TRIGGER_CONTEXT.get();
-    }
-
-    private static final ThreadLocal<TriggerContext> CURRENT_TRIGGER_CONTEXT = new ThreadLocal<>();
-
-    public CompiledScript conditionScript() {
-        return conditionScript;
-    }
-
-    public CompiledScript actionScript() {
-        return actionScript;
-    }
 }

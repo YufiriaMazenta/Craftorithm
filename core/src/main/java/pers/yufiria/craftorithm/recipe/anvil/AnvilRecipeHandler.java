@@ -2,7 +2,6 @@ package pers.yufiria.craftorithm.recipe.anvil;
 
 import crypticlib.MinecraftVersion;
 import crypticlib.listener.EventListener;
-import crypticlib.script.ScriptValue;
 import crypticlib.util.InventoryHelper;
 import crypticlib.util.ItemHelper;
 import org.bukkit.Bukkit;
@@ -26,9 +25,8 @@ import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.choice.ItemIdStackRecipeChoice;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessorManager;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessors;
-import pers.yufiria.craftorithm.trigger.CraftTriggerTypes;
 import pers.yufiria.craftorithm.trigger.TriggerContext;
-import pers.yufiria.craftorithm.trigger.TriggerManager;
+import pers.yufiria.craftorithm.trigger.listener.AnvilTriggerHandler;
 import pers.yufiria.craftorithm.util.EventUtils;
 import pers.yufiria.craftorithm.util.PlayerUtils;
 import pers.yufiria.craftorithm.recipe.worldisolation.WorldIsolationDataHandler;
@@ -113,15 +111,8 @@ public enum AnvilRecipeHandler implements Listener {
         if (anvilRecipe == null)
             return;
 
-        if (TriggerManager.INSTANCE.hasTrigger(CraftTriggerTypes.ANVIL, anvilRecipe.getKey())) {
-            //只有存在配方对应触发器的时候，才进行触发器检查
-            TriggerContext ctx = CraftTriggerTypes.ANVIL.extractPrepareContext(event);
-            if (ctx != null) {
-                int denied = TriggerManager.INSTANCE.firePrepare(CraftTriggerTypes.ANVIL, ctx);
-                if (denied > 0) {
-                    return;
-                }
-            }
+        if (AnvilTriggerHandler.INSTANCE.denyPrepare(event, player, base, addition, anvilRecipe)) {
+            return;
         }
 
         // 检查 blocked_crafting_lore_rules
@@ -195,16 +186,10 @@ public enum AnvilRecipeHandler implements Listener {
         if (anvilRecipe == null)
             return;
 
-        TriggerContext ctx = null;
-        if (TriggerManager.INSTANCE.hasTrigger(CraftTriggerTypes.ANVIL, anvilRecipe.getKey())) {
-            //只有存在配方对应触发器的时候，才进行触发器检查
-            ctx = CraftTriggerTypes.ANVIL.extractContext(event);
-            if (ctx != null) {
-                int denied = TriggerManager.INSTANCE.firePrepare(CraftTriggerTypes.ANVIL, ctx);
-                if (denied > 0) {
-                    return;
-                }
-            }
+        Player player = (Player) event.getWhoClicked();
+        TriggerContext ctx = AnvilTriggerHandler.INSTANCE.context(event, player, base, addition, anvilRecipe);
+        if (ctx != null && AnvilTriggerHandler.INSTANCE.deny(ctx)) {
+            return;
         }
 
         // 检查能否合成
@@ -214,7 +199,6 @@ public enum AnvilRecipeHandler implements Listener {
 
         NamespacedItemIdStack baseId = ItemManager.INSTANCE.matchItemIdOrVanilla(base, false).orElseThrow();
         NamespacedItemIdStack additionId = ItemManager.INSTANCE.matchItemIdOrVanilla(addition, false).orElseThrow();
-        Player player = (Player) event.getWhoClicked();
         int baseNum = baseId.amount(), additionNum = additionId.amount();
         int needBaseNum = anvilRecipe.base().getUseAmount(), needAdditionNum = anvilRecipe.addition().getUseAmount();
         int costLevel = anvilRecipe.costLevel();
@@ -306,8 +290,7 @@ public enum AnvilRecipeHandler implements Listener {
         if (craftResult && ctx != null) {
             int craftNum = (event.getClick() == ClickType.SHIFT_LEFT || event.getClick() == ClickType.SHIFT_RIGHT)
                 ? canCraftNum : 1;
-            ctx.setVariable("craft_num", ScriptValue.of(craftNum));
-            TriggerManager.INSTANCE.fire(CraftTriggerTypes.ANVIL, ctx);
+            AnvilTriggerHandler.INSTANCE.fire(ctx, craftNum);
         }
 
         //更新页面

@@ -2,17 +2,11 @@ package pers.yufiria.craftorithm.trigger;
 
 import crypticlib.CrypticLibPlugin;
 import crypticlib.chat.BukkitMsgSender;
-import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.lifecycle.LifecyclePhase;
 import crypticlib.lifecycle.LifecycleSchedule;
 import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskConfig;
-import crypticlib.script.ScriptEngine;
-import crypticlib.script.compile.CompiledScript;
-import crypticlib.util.IOHelper;
 import org.bukkit.NamespacedKey;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.trigger.event.EventTriggerTypes;
@@ -20,11 +14,11 @@ import pers.yufiria.craftorithm.trigger.event.EventTriggerTypes;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 /**
  * 触发器管理器
- * 负责触发器类型注册、YAML加载、事件监听器管理和触发执行
+ * 负责触发器类型注册、触发器索引维护和触发执行
+ * YAML 解析由 {@link TriggerLoader} 负责
  */
 @LifecycleTaskConfig(
     schedules = {
@@ -43,17 +37,23 @@ public enum TriggerManager implements LifecycleTask {
 
     // typeKey -> TriggerType
     private final Map<String, TriggerType> triggerTypes = new ConcurrentHashMap<>();
-    // typeKey -> 按 priority 排序的触发器列表
-    private final Map<String, List<Trigger>> triggers = new ConcurrentHashMap<>();
-    // 触发器ID -> 触发器（用于快速查找）
-    private final Map<String, Trigger> triggerById = new ConcurrentHashMap<>();
-    // 记录存在触发器的配方，对于不存在触发器的配方，不执行触发器以减少性能开销
-    // 重载在异步线程进行,而该集合会被主线程的触发器判定读取,因此使用并发集合
-    private final Set<NamespacedKey> hasTriggerRecipeKeys = ConcurrentHashMap.newKeySet();
-    // 记录这触发器类型是否存在匹配所有配方的触发器，如果存在的话，所有该类型配方都将执行触发器操作
-    private final Map<TriggerType, Boolean> triggerTypeMatchAllMap = new ConcurrentHashMap<>();
     // 冷却管理
     private final TriggerCooldown cooldownManager = TriggerCooldown.INSTANCE;
+
+    /**
+     * 触发器索引快照
+     * 重载在异步线程构建完整数据，主线程只读，通过 volatile 引用一次性整体发布，避免读到构建中的集合
+     */
+    private record TriggerSnapshot(
+        Map<String, List<Trigger>> triggersByType,
+        Map<String, Trigger> triggerById,
+        Set<NamespacedKey> hasTriggerRecipeKeys,
+        Set<String> matchAllTypeKeys
+    ) {
+        static final TriggerSnapshot EMPTY = new TriggerSnapshot(Map.of(), Map.of(), Set.of(), Set.of());
+    }
+
+    private volatile TriggerSnapshot snapshot = TriggerSnapshot.EMPTY;
 
     // ---- 类型注册 ----
 
@@ -70,17 +70,19 @@ public enum TriggerManager implements LifecycleTask {
      */
     public void removeTriggerType(String typeKey) {
         triggerTypes.remove(typeKey);
-        triggers.remove(typeKey);
-        triggerById.values().removeIf(trigger -> trigger.typeKey().equals(typeKey));
+        //基于剩余触发器重建索引快照，保证各索引一致
+        List<Trigger> remaining = snapshot.triggersByType().values().stream()
+            .flatMap(List::stream)
+            .filter(trigger -> !trigger.typeKey().equals(typeKey))
+            .toList();
+        snapshot = buildSnapshot(remaining);
     }
 
     /**
      * 获取已注册的触发器类型
      */
     public @Nullable TriggerType getTriggerType(String typeKey) {
-        TriggerType type = triggerTypes.get(typeKey);
-        if (type != null) return type;
-        return EventTriggerTypes.INSTANCE.getEventType(typeKey);
+        return triggerTypes.get(typeKey);
     }
 
     /**
@@ -100,37 +102,39 @@ public enum TriggerManager implements LifecycleTask {
 
         cooldownManager.clear();
 
-        //重载在异步线程进行,因此先在本地构建完整数据,构建完毕后再整体发布,避免主线程读到构建中的集合
-        List<Trigger> parsedTriggers = new ArrayList<>();
-        if (TRIGGER_FOLDER.exists()) {
-            for (File file : IOHelper.allYamlFiles(TRIGGER_FOLDER)) {
-                parsedTriggers.addAll(parseTriggersFromConfigFile(file));
-            }
-        } else {
-            TRIGGER_FOLDER.mkdirs();
-        }
+        List<Trigger> parsedTriggers = TriggerLoader.loadAll(TRIGGER_FOLDER);
+        snapshot = buildSnapshot(parsedTriggers);
 
+        long elapsed = System.currentTimeMillis() - startTime;
+        BukkitMsgSender.INSTANCE.info("Loaded " + parsedTriggers.size() + " trigger(s) in " + elapsed + "ms");
+    }
+
+    /**
+     * 由解析结果构建完整索引快照
+     * 禁用的触发器不参与任何索引，避免无谓的触发器检查开销
+     */
+    private TriggerSnapshot buildSnapshot(List<Trigger> parsedTriggers) {
         Map<String, List<Trigger>> newTriggers = new HashMap<>();
         Map<String, Trigger> newTriggerById = new HashMap<>();
         Set<NamespacedKey> newHasTriggerRecipeKeys = new HashSet<>();
-        Map<TriggerType, Boolean> newTriggerTypeMatchAllMap = new HashMap<>();
+        Set<String> newMatchAllTypeKeys = new HashSet<>();
 
         for (Trigger trigger : parsedTriggers) {
+            if (!trigger.isEnabled()) continue;
+
             List<NamespacedKey> triggerMatchRecipes = trigger.recipes();
             if (triggerMatchRecipes.isEmpty()) {
                 //如果该触发器是合成类型，且没有设置配方，那么标记该触发器类型会匹配所有配方
                 TriggerType triggerType = getTriggerType(trigger.typeKey());
                 if (triggerType instanceof CraftTriggerTypes) {
-                    newTriggerTypeMatchAllMap.put(triggerType, true);
+                    newMatchAllTypeKeys.add(trigger.typeKey());
                 }
             } else {
                 newHasTriggerRecipeKeys.addAll(triggerMatchRecipes);
             }
 
-            if (trigger.isEnable()) {
-                newTriggers.computeIfAbsent(trigger.typeKey(), k -> new ArrayList<>()).add(trigger);
-                newTriggerById.put(trigger.id(), trigger);
-            }
+            newTriggers.computeIfAbsent(trigger.typeKey(), k -> new ArrayList<>()).add(trigger);
+            newTriggerById.put(trigger.id(), trigger);
         }
 
         //按 priority 排序并固化为不可变列表,发布后不会再被修改
@@ -140,151 +144,35 @@ public enum TriggerManager implements LifecycleTask {
             sortedTriggers.put(typeKey, List.copyOf(list));
         });
 
-        triggers.clear();
-        triggers.putAll(sortedTriggers);
-        triggerById.clear();
-        triggerById.putAll(newTriggerById);
-        hasTriggerRecipeKeys.clear();
-        hasTriggerRecipeKeys.addAll(newHasTriggerRecipeKeys);
-        triggerTypeMatchAllMap.clear();
-        triggerTypeMatchAllMap.putAll(newTriggerTypeMatchAllMap);
-
-        long elapsed = System.currentTimeMillis() - startTime;
-        BukkitMsgSender.INSTANCE.info("Loaded " + parsedTriggers.size() + " trigger(s) in " + elapsed + "ms");
-    }
-
-    private List<Trigger> parseTriggersFromConfigFile(File file) {
-        List<Trigger> parsedTriggers = new ArrayList<>();
-        String fileName = file.getName();
-        // 去掉扩展名作为文件标识
-        String fileKey = fileName.contains(".")
-            ? fileName.substring(0, fileName.lastIndexOf('.'))
-            : fileName;
-
-        BukkitConfigWrapper wrapper = new BukkitConfigWrapper(file);
-        YamlConfiguration config = wrapper.config();
-
-        for (String localId : config.getKeys(false)) {
-            ConfigurationSection section = config.getConfigurationSection(localId);
-            if (section == null) continue;
-
-            try {
-                String fullId = fileKey + ":" + localId;
-                Trigger trigger = parseTrigger(fullId, section);
-
-                if (trigger == null) continue;
-
-                parsedTriggers.add(trigger);
-                if (trigger.isEnable()) {
-                    BukkitMsgSender.INSTANCE.info(
-                        "Loaded trigger '" + localId + "' in " + fileName
-                    );
-                }
-            } catch (Throwable throwable) {
-                BukkitMsgSender.INSTANCE.info(
-                    "&cFailed to load trigger '" + localId + "' in " + fileName
-                );
-                throwable.printStackTrace();
-            }
-        }
-        return parsedTriggers;
-    }
-
-    /**
-     * 解析单个触发器
-     *
-     * YAML 结构:
-     *   type: 'crafting'
-     *   recipes: [...]
-     *   conditions: [条件脚本]    ← 正向逻辑，成立=放行
-     *   actions: [动作脚本]
-     */
-    private @Nullable Trigger parseTrigger(String fullId, ConfigurationSection section) {
-        String typeKey = section.getString("type");
-        if (typeKey == null) {
-            BukkitMsgSender.INSTANCE.info("&eTrigger '" + fullId + "' missing 'type' field");
-            return null;
-        }
-
-        if (getTriggerType(typeKey) == null) {
-            BukkitMsgSender.INSTANCE.info("&eUnknown trigger type '" + typeKey + "' in " + fullId);
-            return null;
-        }
-
-        List<NamespacedKey> recipeKeys = section.getStringList("recipes").stream().map(NamespacedKey::fromString).toList();
-
-        // 编译 conditions 脚本
-        // 旧格式（列表，默认 && 连接）:
-        //   conditions:
-        //     - 'level() >= 10'
-        //     - 'perm("vip")'
-        // 新格式（对象，支持 mode 字段）:
-        //   conditions:
-        //     mode: 'block'
-        //     body:
-        //       - 'if level() >= 10'
-        //       - '  return true'
-        //       - 'endif'
-        CompiledScript conditionScript = null;
-        ConfigurationSection condSection = section.getConfigurationSection("conditions");
-        if (condSection != null) {
-            // 新格式：对象模式
-            String mode = condSection.getString("mode", "and");
-            List<String> condSources = condSection.getStringList("body");
-            if (!condSources.isEmpty()) {
-                String joined = "script".equals(mode)
-                    ? String.join("\n", condSources)
-                    : condSources.size() == 1
-                      ? condSources.getFirst()
-                      : condSources.stream().map(c -> "(" + c + ")").collect(Collectors.joining(" && "));
-                conditionScript = ScriptEngine.INSTANCE.compile(fullId + "_cond", joined);
-            }
-        } else {
-            // 旧格式：列表模式（默认 && 连接）
-            List<String> condSources = section.getStringList("conditions");
-            if (!condSources.isEmpty()) {
-                String joined = condSources.size() == 1
-                    ? condSources.getFirst()
-                    : condSources.stream().map(c -> "(" + c + ")").collect(Collectors.joining(" && "));
-                conditionScript = ScriptEngine.INSTANCE.compile(fullId + "_cond", joined);
-            }
-        }
-
-        // 编译 actions 脚本
-        List<String> actSources = section.getStringList("actions");
-        String actSource = String.join("\n", actSources);
-        CompiledScript actionScript = ScriptEngine.INSTANCE.compile(fullId + "_act", actSource);
-
-        int priority = section.getInt("priority", 0);
-        boolean enable;
-        if (section.isBoolean("enable")) {
-            enable = section.getBoolean("enable", true);
-        } else if (section.isBoolean("enabled")) {
-            //用于兼容旧版配置
-            enable = section.getBoolean("enabled", true);
-        } else {
-            enable = true;
-        }
-        long cooldown = (long) (section.getDouble("cooldown", 0) * 1000);
-        boolean perPlayer = section.getBoolean("per_player", true);
-
-        return new Trigger(
-            fullId, typeKey, recipeKeys, conditionScript, actionScript,
-            priority, enable, cooldown, perPlayer
+        return new TriggerSnapshot(
+            Map.copyOf(sortedTriggers),
+            Map.copyOf(newTriggerById),
+            Set.copyOf(newHasTriggerRecipeKeys),
+            Set.copyOf(newMatchAllTypeKeys)
         );
     }
 
     // ---- 触发执行 ----
 
+    /**
+     * 获取指定类型的所有触发器
+     */
     public List<Trigger> getTriggers(TriggerType triggerType) {
-        return triggers.getOrDefault(triggerType.typeKey(), Collections.emptyList());
+        return getTriggers(triggerType.typeKey());
     }
 
     /**
      * 获取指定类型的所有触发器
      */
     public List<Trigger> getTriggers(String typeKey) {
-        return triggers.getOrDefault(typeKey, Collections.emptyList());
+        return snapshot.triggersByType().getOrDefault(typeKey, Collections.emptyList());
+    }
+
+    /**
+     * 该类型下是否存在任意触发器（供无配方维度的通用事件预检）
+     */
+    public boolean hasAnyTrigger(TriggerType triggerType) {
+        return !getTriggers(triggerType).isEmpty();
     }
 
     /**
@@ -327,7 +215,7 @@ public enum TriggerManager implements LifecycleTask {
      * 通过完整ID获取触发器
      */
     public @Nullable Trigger getTriggerById(String fullId) {
-        return triggerById.get(fullId);
+        return snapshot.triggerById().get(fullId);
     }
 
     public TriggerCooldown cooldownManager() {
@@ -344,12 +232,13 @@ public enum TriggerManager implements LifecycleTask {
         if (recipeKey == null) {
             return false;
         }
-        if (triggerTypeMatchAllMap.getOrDefault(triggerType, false)) {
+        TriggerSnapshot current = snapshot;
+        if (current.matchAllTypeKeys().contains(triggerType.typeKey())) {
             //如果这个类型的触发器有一个匹配所有配方的，且配方key不为null，那么无论如何返回true
             return true;
         }
 
-        return hasTriggerRecipeKeys.contains(recipeKey);
+        return current.hasTriggerRecipeKeys().contains(recipeKey);
     }
 
     // ---- 生命周期 ----
@@ -370,12 +259,10 @@ public enum TriggerManager implements LifecycleTask {
                 reloadTriggers();
             }
             case DISABLE -> {
-                triggers.clear();
+                snapshot = TriggerSnapshot.EMPTY;
                 triggerTypes.clear();
-                triggerById.clear();
                 cooldownManager.clear();
-                triggerTypeMatchAllMap.clear();
-                hasTriggerRecipeKeys.clear();
+                EventTriggerTypes.INSTANCE.reset();
             }
         }
     }
