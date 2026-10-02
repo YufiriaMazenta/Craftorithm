@@ -67,7 +67,9 @@ public enum ActionModule implements ScriptModule {
         registry.register(moduleName, "back", this::back);
         registry.register(moduleName, "openmenu", this::openmenu);
         registry.register(moduleName, "discover_recipe", this::discoverRecipe);
+        registry.register(moduleName, "discover_recipe_all", this::discoverRecipeAll);
         registry.register(moduleName, "undiscover_recipe", this::undiscoverRecipe);
+        registry.register(moduleName, "undiscover_recipe_all", this::undiscoverRecipeAll);
         registry.register(moduleName, "sound", this::sound);
         registry.register(moduleName, "set_inv_item", this::setInvItem);
     }
@@ -326,6 +328,12 @@ public enum ActionModule implements ScriptModule {
         return ScriptValue.nil();
     }
 
+    private ScriptValue discoverRecipeAll(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
+        if (args.length < 1) return ScriptValue.of(false);
+        RecipeUtils.discoverRecipeForOnlinePlayers(args[0].asString());
+        return ScriptValue.nil();
+    }
+
     private ScriptValue undiscoverRecipe(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.of(false);
         Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(PlayerUtils.getPlayerIdFromInvoker(ctx.invoker()));
@@ -339,6 +347,12 @@ public enum ActionModule implements ScriptModule {
                 "<player>", player.getName()
             ));
         });
+        return ScriptValue.nil();
+    }
+
+    private ScriptValue undiscoverRecipeAll(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
+        if (args.length < 1) return ScriptValue.of(false);
+        RecipeUtils.undiscoverRecipeForOnlinePlayers(args[0].asString());
         return ScriptValue.nil();
     }
 

@@ -5,6 +5,7 @@ import crypticlib.CrypticLibBukkit;
 import crypticlib.Key;
 import crypticlib.MinecraftVersion;
 import crypticlib.util.ItemHelper;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.HumanEntity;
@@ -17,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.SmithingInventory;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -167,6 +169,21 @@ public class RecipeUtils {
     }
 
     /**
+     * 为在线的所有玩家解锁配方（支持正则表达式）
+     * @param recipeKeyPattern 配方key的正则表达式,如果不是正则则解析为{@link NamespacedKey}
+     */
+    public static void discoverRecipeForOnlinePlayers(String recipeKeyPattern) {
+        CrypticLibBukkit.scheduler().async(() -> {
+            List<NamespacedKey> discoverRecipes = matchRecipeKeys(recipeKeyPattern);
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                CrypticLibBukkit.scheduler().runOnEntity(player, () -> {
+                    player.discoverRecipes(discoverRecipes);
+                });
+            }
+        });
+    }
+
+    /**
      * 为玩家解锁配方(支持正则表达式)
      * @param target 要解锁的玩家
      * @param recipeKeyPattern 配方key的正则表达式,如果不是正则则解析为{@link NamespacedKey}
@@ -174,27 +191,7 @@ public class RecipeUtils {
     **/
     public static void discoverRecipe(Player target, String recipeKeyPattern, Consumer<Integer> callback) {
         CrypticLibBukkit.scheduler().async(() -> {
-            Pattern pattern;
-            try {
-                pattern = Pattern.compile(recipeKeyPattern);
-            } catch (PatternSyntaxException e) {
-                pattern = null;
-            }
-
-            final Pattern finalPattern = pattern;
-            List<NamespacedKey> discoverRecipes;
-            if (pattern == null) {
-                Key key = Key.key(recipeKeyPattern);
-                if (key == null) {
-                    CrypticLib.info("&cInvalid recipe key <key>", Map.of("<key>", recipeKeyPattern));
-                    callback.accept(0);
-                    return;
-                }
-                discoverRecipes = List.of(new NamespacedKey(key.namespace(), key.key()));
-            } else {
-                discoverRecipes = RecipeManager.INSTANCE.serverRecipeKeys().stream()
-                    .filter(key -> finalPattern.matcher(key.toString()).matches()).toList();
-            }
+            List<NamespacedKey> discoverRecipes = matchRecipeKeys(recipeKeyPattern);
             CrypticLibBukkit.scheduler().runOnEntity(target, () -> {
                 callback.accept(target.discoverRecipes(discoverRecipes));
             }, () -> {});
@@ -209,31 +206,51 @@ public class RecipeUtils {
      **/
     public static void undiscoverRecipe(Player target, String recipeKeyPattern, Consumer<Integer> callback) {
         CrypticLibBukkit.scheduler().async(() -> {
-            Pattern pattern;
-            try {
-                pattern = Pattern.compile(recipeKeyPattern);
-            } catch (PatternSyntaxException e) {
-                pattern = null;
-            }
-
-            final Pattern finalPattern = pattern;
-            List<NamespacedKey> discoverRecipes;
-            if (pattern == null) {
-                Key key = Key.key(recipeKeyPattern);
-                if (key == null) {
-                    CrypticLib.info("&cInvalid recipe key <key>", Map.of("<key>", recipeKeyPattern));
-                    callback.accept(0);
-                    return;
-                }
-                discoverRecipes = List.of(new NamespacedKey(key.namespace(), key.key()));
-            } else {
-                discoverRecipes = RecipeManager.INSTANCE.serverRecipeKeys().stream()
-                    .filter(key -> finalPattern.matcher(key.toString()).matches()).toList();
-            }
+            List<NamespacedKey> undiscoverRecipes = matchRecipeKeys(recipeKeyPattern);
             CrypticLibBukkit.scheduler().runOnEntity(target, () -> {
-                callback.accept(target.undiscoverRecipes(discoverRecipes));
+                callback.accept(target.undiscoverRecipes(undiscoverRecipes));
             }, () -> {});
         });
     }
+
+    /**
+     * 为在线的所有玩家取消解锁配方（支持正则表达式）
+     * @param recipeKeyPattern 配方key的正则表达式,如果不是正则则解析为{@link NamespacedKey}
+     */
+    public static void undiscoverRecipeForOnlinePlayers(String recipeKeyPattern) {
+        CrypticLibBukkit.scheduler().async(() -> {
+            List<NamespacedKey> undiscoverRecipes = matchRecipeKeys(recipeKeyPattern);
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                CrypticLibBukkit.scheduler().runOnEntity(player, () -> {
+                    player.undiscoverRecipes(undiscoverRecipes);
+                });
+            }
+        });
+    }
+
+    public static List<NamespacedKey> matchRecipeKeys(String recipeKeyPattern) {
+        Pattern pattern;
+        try {
+            pattern = Pattern.compile(recipeKeyPattern);
+        } catch (PatternSyntaxException e) {
+            pattern = null;
+        }
+
+        final Pattern finalPattern = pattern;
+        List<NamespacedKey> recipeKeys;
+        if (pattern == null) {
+            Key key = Key.key(recipeKeyPattern);
+            if (key == null) {
+                CrypticLib.info("&cInvalid recipe key <key>", Map.of("<key>", recipeKeyPattern));
+                return Collections.emptyList();
+            }
+            recipeKeys = List.of(new NamespacedKey(key.namespace(), key.key()));
+        } else {
+            recipeKeys = RecipeManager.INSTANCE.serverRecipeKeys().stream()
+                .filter(key -> finalPattern.matcher(key.toString()).matches()).toList();
+        }
+        return recipeKeys;
+    }
+
 
 }
