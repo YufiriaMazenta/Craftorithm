@@ -76,7 +76,3 @@ dependencies {
     compileOnly("net.advancedplugins:AdvancedEnchantments-API:${rootProject.findProperty("advancedEnchantmentsApiVer")}")
     compileOnly("me.clip:placeholderapi:${rootProject.findProperty("placeholderApiVer")}")
 }
-
-java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(25))
-}

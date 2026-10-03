@@ -1,7 +1,3 @@
-java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(25))
-}
-
 dependencies {
     compileOnly(project(":core"))
     compileOnly(project(":nms:common"))

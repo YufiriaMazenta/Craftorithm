@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.recipe;
 
+import crypticlib.MinecraftVersion;
 import crypticlib.lang.entry.StringLangEntry;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
@@ -95,18 +96,14 @@ public enum SimpleRecipeTypes implements RecipeType {
         "vanilla_smithing_transform",
         SmithingTransformRecipeParser.INSTANCE,
         BukkitRecipeRegister.INSTANCE,
-        recipe -> {
-            return recipe instanceof SmithingTransformRecipe;
-        },
+        recipe -> recipe instanceof SmithingTransformRecipe,
         Languages.RECIPE_TYPE_NAME_VANILLA_SMITHING_TRANSFORM,
         7),
     VANILLA_SMITHING_TRIM(
         "vanilla_smithing_trim",
         SmithingTrimRecipeParser.INSTANCE,
         BukkitRecipeRegister.INSTANCE,
-        recipe -> {
-            return recipe instanceof SmithingTrimRecipe;
-        },
+        recipe -> recipe instanceof SmithingTrimRecipe,
         Languages.RECIPE_TYPE_NAME_VANILLA_SMITHING_TRIM,
         8),
     VANILLA_STONECUTTING(
@@ -120,7 +117,14 @@ public enum SimpleRecipeTypes implements RecipeType {
         "vanilla_brewing",
         BrewingRecipeParser.INSTANCE,
         BrewingRecipeRegister.INSTANCE,
-        recipe -> recipe instanceof BrewingRecipe,
+        recipe -> {
+            if (recipe instanceof BrewingRecipe) {
+                return true;
+            }
+            if (MinecraftVersion.current().before(MinecraftVersion.V26_3))
+                return false;
+            return recipe instanceof org.bukkit.inventory.BrewingRecipe;
+        },
         Languages.RECIPE_TYPE_NAME_VANILLA_BREWING,
         10),
     ANVIL(

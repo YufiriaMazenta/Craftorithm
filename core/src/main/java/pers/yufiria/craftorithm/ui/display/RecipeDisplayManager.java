@@ -1,6 +1,8 @@
 package pers.yufiria.craftorithm.ui.display;
 
+import crypticlib.CrypticLibBukkit;
 import crypticlib.CrypticLibPlugin;
+import crypticlib.MinecraftVersion;
 import crypticlib.lifecycle.LifecyclePhase;
 import crypticlib.lifecycle.LifecycleSchedule;
 import crypticlib.lifecycle.LifecycleTask;
@@ -10,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.recipe.*;
+import pers.yufiria.craftorithm.recipe.BrewingRecipe;
 import pers.yufiria.craftorithm.recipe.anvil.AnvilRecipe;
 import pers.yufiria.craftorithm.ui.display.anvil.AnvilDisplayMenu;
 import pers.yufiria.craftorithm.ui.display.vanillabrewing.VanillaBrewingDisplayMenu;
@@ -80,9 +83,27 @@ public enum RecipeDisplayManager implements LifecycleTask {
         });
         if (RecipeManager.INSTANCE.supportBrewingRecipe()) {
             addRecipeDisplay(SimpleRecipeTypes.VANILLA_BREWING, (player, recipe) -> {
-                VanillaBrewingDisplayMenu vanillaBrewingDisplay = new VanillaBrewingDisplayMenu(player, (BrewingRecipe) recipe);
-                vanillaBrewingDisplay.openMenu();
-                return vanillaBrewingDisplay;
+                if (recipe instanceof BrewingRecipe brewingRecipe) {
+                    VanillaBrewingDisplayMenu vanillaBrewingDisplay = new VanillaBrewingDisplayMenu(player, brewingRecipe);
+                    vanillaBrewingDisplay.openMenu();
+                    return vanillaBrewingDisplay;
+                }
+                if (MinecraftVersion.current().before(MinecraftVersion.V26_3)) {
+                    return null;
+                }
+                if (!CrypticLibBukkit.isPaper()) {
+                    //Spigot的BrewingRecipe现在根本没用，直接返回
+                    return null;
+                }
+                if (recipe instanceof org.bukkit.inventory.BrewingRecipe bukkitBrewingRecipe) {
+                    VanillaBrewingDisplayMenu vanillaBrewingDisplay = new VanillaBrewingDisplayMenu(
+                        player,
+                        BrewingRecipe.fromPaperBrewingRecipe(bukkitBrewingRecipe)
+                    );
+                    vanillaBrewingDisplay.openMenu();
+                    return vanillaBrewingDisplay;
+                }
+                return null;
             });
         }
         if (PluginConfigs.ENABLE_ANVIL_RECIPE.value()) {

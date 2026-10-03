@@ -1,3 +1,6 @@
+import org.gradle.api.attributes.java.TargetJvmVersion
+import org.gradle.jvm.toolchain.JavaLanguageVersion
+
 plugins {
     `java-library`
     `maven-publish`
@@ -78,6 +81,12 @@ subprojects {
     version = rootProject.version
     java.sourceCompatibility = JavaVersion.VERSION_21
     java.targetCompatibility = JavaVersion.VERSION_21
+    java.toolchain.languageVersion.set(JavaLanguageVersion.of(25))
+    configurations.configureEach {
+        if (name == "compileClasspath" || name == "testCompileClasspath" || name == "testRuntimeClasspath") {
+            attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 25)
+        }
+    }
     repositories {
         maven("https://repo.papermc.io/repository/maven-public/")
         //CrypticLib

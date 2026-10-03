@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+@SuppressWarnings({"removal"})
 public enum BrewingRecipeRegister implements RecipeRegister {
 
     INSTANCE;

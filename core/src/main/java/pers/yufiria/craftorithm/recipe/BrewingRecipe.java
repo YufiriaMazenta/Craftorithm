@@ -4,10 +4,12 @@ import crypticlib.MinecraftVersion;
 import io.papermc.paper.potion.PotionMix;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
+@SuppressWarnings({"removal", "deprecation"})
 public class BrewingRecipe implements CustomRecipe {
 
     private final NamespacedKey recipeKey;
@@ -57,6 +59,21 @@ public class BrewingRecipe implements CustomRecipe {
 
     public @NotNull RecipeChoice ingredient() {
         return ingredient;
+    }
+
+    public static BrewingRecipe fromPaperBrewingRecipe(Recipe recipe) {
+        if (MinecraftVersion.current().before(MinecraftVersion.V26_3)) {
+            return null;
+        }
+        if (!(recipe instanceof org.bukkit.inventory.BrewingRecipe brewingRecipe)) {
+            return null;
+        }
+        return new BrewingRecipe(
+            brewingRecipe.getKey(),
+            brewingRecipe.getInput(),
+            brewingRecipe.getIngredient(),
+            brewingRecipe.getResult()
+        );
     }
 
 }
