@@ -31,7 +31,7 @@ public final class EditCommand extends CommandNode {
         super(
             CommandInfo
                 .builder("edit")
-                .permission(new PermInfo("craftorithm.edit_recipe"))
+                .permission(new PermInfo("craftorithm.recipe.edit"))
                 .usage("&r/craftorithm editor <recipe_id>")
                 .build()
         );

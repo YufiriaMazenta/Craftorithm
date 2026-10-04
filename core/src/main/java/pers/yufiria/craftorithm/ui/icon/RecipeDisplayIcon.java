@@ -98,7 +98,7 @@ public class RecipeDisplayIcon extends ActionIcon {
                 LangUtils.sendLang(whoClicked, Languages.COMMAND_DISPLAY_UNSUPPORTED_RECIPE_TYPE);
             });
         } else if (click == editClick) {
-            if (!whoClicked.hasPermission("craftorithm.edit_recipe")) {
+            if (!whoClicked.hasPermission("craftorithm.recipe.edit")) {
                 return this;
             }
             RecipeEditorManager.INSTANCE.getEditor(recipeType).ifPresent(editorFunc -> {
