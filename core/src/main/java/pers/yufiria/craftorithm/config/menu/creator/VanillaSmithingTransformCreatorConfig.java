@@ -9,8 +9,8 @@ import pers.yufiria.craftorithm.config.menu.MenuIconConfigUtils;
 public class VanillaSmithingTransformCreatorConfig {
 
     public static final StringConfig TITLE = new StringConfig("title", "<translate:lang:recipe_type_name.vanilla_smithing_transform><translate:lang:menu.recipe_creator.name>");
-    public static final ConfigSectionConfig FRAME_ICON = new ConfigSectionConfig("frame_icon", () -> MenuIconConfigUtils.creatorFrameIcon("vanilla_smithing_transform", "smithing", "result_right", "confirm_button"));
-    public static final ConfigSectionConfig RESULT_FRAME_ICON = new ConfigSectionConfig("result_frame_icon", () -> MenuIconConfigUtils.creatorResultFrameIcon("smithing"));
-    public static final ConfigSectionConfig CONFIRM_ICON = new ConfigSectionConfig("confirm_icon", () -> MenuIconConfigUtils.creatorConfirmIcon("minecraft:smithing_table", "smithing"));
+    public static final ConfigSectionConfig FRAME_ICON = new ConfigSectionConfig("frame_icon", MenuIconConfigUtils.creatorFrameIcon("vanilla_smithing_transform", "smithing", "result_right", "confirm_button"));
+    public static final ConfigSectionConfig RESULT_FRAME_ICON = new ConfigSectionConfig("result_frame_icon", MenuIconConfigUtils.creatorResultFrameIcon("smithing"));
+    public static final ConfigSectionConfig CONFIRM_ICON = new ConfigSectionConfig("confirm_icon", MenuIconConfigUtils.creatorConfirmIcon("minecraft:smithing_table", "smithing"));
 
 }

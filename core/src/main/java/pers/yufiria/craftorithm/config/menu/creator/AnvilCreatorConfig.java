@@ -10,9 +10,9 @@ import pers.yufiria.craftorithm.config.menu.MenuIconConfigUtils;
 public class AnvilCreatorConfig {
 
     public static final StringConfig TITLE = new StringConfig("title", "<translate:lang:recipe_type_name.anvil><translate:lang:menu.recipe_creator.name>");
-    public static final ConfigSectionConfig FRAME_ICON = new ConfigSectionConfig("frame_icon", () -> MenuIconConfigUtils.creatorFrameIcon("anvil", "anvil", "result_right", "confirm_button"));
-    public static final ConfigSectionConfig CONFIRM_ICON = new ConfigSectionConfig("confirm_icon", () -> MenuIconConfigUtils.creatorConfirmIcon("minecraft:anvil", "anvil"));
-    public static final ConfigSectionConfig COST_LEVEL_ICON = new ConfigSectionConfig("cost_level_icon", () -> MenuIconConfigUtils.icon(
+    public static final ConfigSectionConfig FRAME_ICON = new ConfigSectionConfig("frame_icon", MenuIconConfigUtils.creatorFrameIcon("anvil", "anvil", "result_right", "confirm_button"));
+    public static final ConfigSectionConfig CONFIRM_ICON = new ConfigSectionConfig("confirm_icon", MenuIconConfigUtils.creatorConfirmIcon("minecraft:anvil", "anvil"));
+    public static final ConfigSectionConfig COST_LEVEL_ICON = new ConfigSectionConfig("cost_level_icon", MenuIconConfigUtils.icon(
         "minecraft:experience_bottle",
         "<translate:lang:menu.recipe_creator.anvil.cost_level>",
         "",

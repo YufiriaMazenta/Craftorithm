@@ -15,7 +15,9 @@ public class VanillaSmeltingCampfireDisplayConfig {
 
     public static final StringConfig TITLE = new StringConfig("title", "<translate:lang:recipe_type_name.vanilla_smelting_campfire>:<recipe_key>");
     public static final StringListConfig LAYOUT = new StringListConfig("layout", List.of("########X", "##A###R##", "#########"));
-    public static final ConfigSectionConfig ICONS = new ConfigSectionConfig("icons", () -> {
+    public static final ConfigSectionConfig ICONS = new ConfigSectionConfig("icons", buildIcons());
+
+    private static ConfigurationSection buildIcons() {
         ConfigurationSection config = new MemoryConfiguration();
         config.set("#", MenuIconConfigUtils.icon(
             "minecraft:green_stained_glass_pane",
@@ -27,6 +29,6 @@ public class VanillaSmeltingCampfireDisplayConfig {
         config.set("R.icon_type", "result");
         MenuIconConfigUtils.setDisplayBackButton(config, "X");
         return config;
-    });
+    }
 
 }

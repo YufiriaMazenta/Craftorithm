@@ -21,7 +21,9 @@ public class RecipeListConfig {
         "#RRRRRRR#",
         "#BS###PN#"
     ));
-    public static final ConfigSectionConfig ICONS = new ConfigSectionConfig("icons", () -> {
+    public static final ConfigSectionConfig ICONS = new ConfigSectionConfig("icons", buildIcons());
+
+    private static ConfigurationSection buildIcons() {
         ConfigurationSection config = new MemoryConfiguration();
         config.set("#", MenuIconConfigUtils.icon("minecraft:gray_stained_glass_pane", "&r"));
         config.set("R.icon_type", "recipe_display");
@@ -45,6 +47,6 @@ public class RecipeListConfig {
         config.set("B.material", "minecraft:barrier");
         config.set("B.name", "<translate:lang:menu.common.back>");
         return config;
-    });
+    }
 
 }

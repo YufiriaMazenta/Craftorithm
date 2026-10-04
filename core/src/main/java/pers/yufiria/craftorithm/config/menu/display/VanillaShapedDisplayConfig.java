@@ -15,7 +15,9 @@ public class VanillaShapedDisplayConfig {
 
     public static final StringConfig TITLE = new StringConfig("title", "<translate:lang:recipe_type_name.vanilla_shaped>:<recipe_key>");
     public static final StringListConfig LAYOUT = new StringListConfig("layout", List.of("########X", "#ABC#####", "#DEF###R#", "#GHI#####", "#########"));
-    public static final ConfigSectionConfig ICONS = new ConfigSectionConfig("icons", () -> {
+    public static final ConfigSectionConfig ICONS = new ConfigSectionConfig("icons", buildIcons());
+
+    private static ConfigurationSection buildIcons() {
         ConfigurationSection config = new MemoryConfiguration();
         config.set("#", MenuIconConfigUtils.icon("minecraft:green_stained_glass_pane", "&a<translate:lang:recipe_type_name.vanilla_shaped>"));
         config.set("A.icon_type", "vanilla_shaped_ingredient");
@@ -39,6 +41,6 @@ public class VanillaShapedDisplayConfig {
         config.set("R.icon_type", "result");
         MenuIconConfigUtils.setDisplayBackButton(config, "X");
         return config;
-    });
+    }
 
 }

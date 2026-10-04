@@ -16,7 +16,9 @@ public class VanillaShapelessDisplayConfig {
 
     public static final StringConfig TITLE = new StringConfig("title", "<translate:lang:recipe_type_name.vanilla_shapeless>:<recipe_key>");
     public static final StringListConfig LAYOUT = new StringListConfig("layout", List.of("########X", "#ABC#####", "#DEF###R#", "#GHI#####", "#########"));
-    public static final ConfigSectionConfig ICONS = new ConfigSectionConfig("icons", () -> {
+    public static final ConfigSectionConfig ICONS = new ConfigSectionConfig("icons", buildIcons());
+
+    private static ConfigurationSection buildIcons() {
         ConfigurationSection config = new MemoryConfiguration();
         config.set("#", MenuIconConfigUtils.icon("minecraft:green_stained_glass_pane", "&a<translate:lang:recipe_type_name.vanilla_shapeless>"));
         config.set("A.icon_type", "vanilla_shapeless_ingredient");
@@ -40,6 +42,6 @@ public class VanillaShapelessDisplayConfig {
         config.set("R.icon_type", "result");
         MenuIconConfigUtils.setDisplayBackButton(config, "X");
         return config;
-    });
+    }
 
 }

@@ -15,7 +15,9 @@ public class VanillaSmithingDisplayConfig {
 
     public static final StringConfig TITLE = new StringConfig("title", "<translate:lang:recipe_type_name.vanilla_smithing_transform>:<recipe_key>");
     public static final StringListConfig LAYOUT = new StringListConfig("layout", List.of("########X", "#ABC###R#", "#########"));
-    public static final ConfigSectionConfig ICONS = new ConfigSectionConfig("icons", () -> {
+    public static final ConfigSectionConfig ICONS = new ConfigSectionConfig("icons", buildIcons());
+
+    private static ConfigurationSection buildIcons() {
         ConfigurationSection config = new MemoryConfiguration();
         config.set("#", MenuIconConfigUtils.icon("minecraft:green_stained_glass_pane", "&a<translate:lang:recipe_type_name.vanilla_smithing_transform>"));
         config.set("A.icon_type", "vanilla_smithing_template");
@@ -24,6 +26,6 @@ public class VanillaSmithingDisplayConfig {
         config.set("R.icon_type", "result");
         MenuIconConfigUtils.setDisplayBackButton(config, "X");
         return config;
-    });
+    }
 
 }

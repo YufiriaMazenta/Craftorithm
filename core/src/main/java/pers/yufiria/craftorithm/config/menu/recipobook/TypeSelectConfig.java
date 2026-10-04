@@ -20,7 +20,9 @@ public class TypeSelectConfig {
         "#HIJKLMN#",
         "#########"
     ));
-    public static final ConfigSectionConfig ICONS = new ConfigSectionConfig("icons", () -> {
+    public static final ConfigSectionConfig ICONS = new ConfigSectionConfig("icons", buildIcons());
+
+    private static ConfigurationSection buildIcons() {
         ConfigurationSection config = new MemoryConfiguration();
         config.set("#", MenuIconConfigUtils.icon("minecraft:gray_stained_glass_pane", "&r"));
         setRecipeListIcon(config, "A", "vanilla_shaped", "minecraft:crafting_table");
@@ -34,7 +36,7 @@ public class TypeSelectConfig {
         setRecipeListIcon(config, "I", "vanilla_brewing", "minecraft:brewing_stand");
         setRecipeListIcon(config, "J", "anvil", "minecraft:anvil");
         return config;
-    });
+    }
 
     private static void setRecipeListIcon(ConfigurationSection config, String key, String recipeType, String material) {
         config.set(key + ".icon_type", "recipe_list");

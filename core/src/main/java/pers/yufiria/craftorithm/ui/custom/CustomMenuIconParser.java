@@ -20,34 +20,30 @@ public enum CustomMenuIconParser implements IconParser {
     @Override
     public Supplier<Icon> parse(ConfigurationSection config) {
         String iconType = config.getString("icon_type", "common").toLowerCase();
-        switch (iconType) {
-            case "recipe_display" -> {
-                String recipeId = config.getString("recipe_id");
-                NamespacedKey recipeKey = NamespacedKey.fromString(Objects.requireNonNull(recipeId));
-                ClickType viewClick, editClick;
-                if (config.contains("view_click")) {
-                    viewClick = ClickType.valueOf(config.getString("view_click").toUpperCase());
-                } else {
-                    viewClick = null;
-                }
-                if (config.contains("edit_click")) {
-                    editClick = ClickType.valueOf(config.getString("edit_click").toUpperCase());
-                } else {
-                    editClick = null;
-                }
-                List<String> extraLore = config.getStringList("extra_lore");
-                Map<ClickType, CompiledScript> actions = parseActions(config.getConfigurationSection("actions"));
-                return () -> new RecipeDisplayIcon(
-                    recipeKey,
-                    extraLore,
-                    viewClick != null ? viewClick : ClickType.LEFT,
-                    editClick != null ? editClick : ClickType.SHIFT_RIGHT,
-                    actions
-                );
+        if (iconType.equals("recipe_display")) {
+            String recipeId = config.getString("recipe_id");
+            NamespacedKey recipeKey = NamespacedKey.fromString(Objects.requireNonNull(recipeId));
+            ClickType viewClick, editClick;
+            if (config.contains("view_click")) {
+                viewClick = ClickType.valueOf(config.getString("view_click").toUpperCase());
+            } else {
+                viewClick = null;
             }
-            default -> {
-                return IconParser.super.parse(config);
+            if (config.contains("edit_click")) {
+                editClick = ClickType.valueOf(config.getString("edit_click").toUpperCase());
+            } else {
+                editClick = null;
             }
+            List<String> extraLore = config.getStringList("extra_lore");
+            Map<ClickType, CompiledScript> actions = parseActions(config.getConfigurationSection("actions"));
+            return () -> new RecipeDisplayIcon(
+                recipeKey,
+                extraLore,
+                viewClick != null ? viewClick : ClickType.LEFT,
+                editClick != null ? editClick : ClickType.SHIFT_RIGHT,
+                actions
+            );
         }
+        return IconParser.super.parse(config);
     }
 }

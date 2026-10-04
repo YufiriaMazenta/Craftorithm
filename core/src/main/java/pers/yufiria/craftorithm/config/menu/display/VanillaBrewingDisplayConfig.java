@@ -15,7 +15,9 @@ public class VanillaBrewingDisplayConfig {
 
     public static final StringConfig TITLE = new StringConfig("title", "<translate:lang:recipe_type_name.vanilla_brewing>:<recipe_key>");
     public static final StringListConfig LAYOUT = new StringListConfig("layout", List.of("########X", "##A######", "######C##", "##B######", "#########"));
-    public static final ConfigSectionConfig ICONS = new ConfigSectionConfig("icons", () -> {
+    public static final ConfigSectionConfig ICONS = new ConfigSectionConfig("icons", buildIcons());
+
+    private static ConfigurationSection buildIcons() {
         ConfigurationSection config = new MemoryConfiguration();
         config.set("#", MenuIconConfigUtils.icon("minecraft:green_stained_glass_pane", "&a<translate:lang:recipe_type_name.vanilla_brewing>"));
         config.set("A.icon_type", "vanilla_brewing_ingredient");
@@ -23,6 +25,6 @@ public class VanillaBrewingDisplayConfig {
         config.set("C.icon_type", "result");
         MenuIconConfigUtils.setDisplayBackButton(config, "X");
         return config;
-    });
+    }
 
 }

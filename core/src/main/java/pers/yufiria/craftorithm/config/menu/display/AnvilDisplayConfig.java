@@ -15,7 +15,9 @@ public class AnvilDisplayConfig {
 
     public static final StringConfig TITLE = new StringConfig("title", "<translate:lang:recipe_type_name.anvil>:<recipe_key>, <translate:lang:menu.recipe_display.anvil.cost_level>");
     public static final StringListConfig LAYOUT = new StringListConfig("layout", List.of("########X", "#A#B###C#", "#########"));
-    public static final ConfigSectionConfig ICONS = new ConfigSectionConfig("icons", () -> {
+    public static final ConfigSectionConfig ICONS = new ConfigSectionConfig("icons", buildIcons());
+
+    private static ConfigurationSection buildIcons() {
         ConfigurationSection config = new MemoryConfiguration();
         config.set("#", MenuIconConfigUtils.icon(
             "minecraft:green_stained_glass_pane",
@@ -27,6 +29,6 @@ public class AnvilDisplayConfig {
         config.set("C.icon_type", "result");
         MenuIconConfigUtils.setDisplayBackButton(config, "X");
         return config;
-    });
+    }
 
 }

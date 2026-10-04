@@ -8,13 +8,13 @@ import pers.yufiria.craftorithm.config.menu.MenuIconConfigUtils;
 @ConfigHandler(path = "menus/internal/editor/anvil.yml")
 public class AnvilEditorConfig {
     public static final StringConfig TITLE = new StringConfig("title", "<translate:lang:recipe_type_name.anvil> - <recipe_key> - <translate:lang:menu.recipe_editor.name>");
-    public static final ConfigSectionConfig FRAME_ICON = new ConfigSectionConfig("frame_icon", () -> MenuIconConfigUtils.editorFrameIcon("anvil"));
-    public static final ConfigSectionConfig CONFIRM_ICON = new ConfigSectionConfig("confirm_icon", () -> MenuIconConfigUtils.editorConfirmIcon("minecraft:anvil"));
-    public static final ConfigSectionConfig COST_LEVEL_ICON = new ConfigSectionConfig("cost_level_icon", () -> MenuIconConfigUtils.icon(
+    public static final ConfigSectionConfig FRAME_ICON = new ConfigSectionConfig("frame_icon", MenuIconConfigUtils.editorFrameIcon("anvil"));
+    public static final ConfigSectionConfig CONFIRM_ICON = new ConfigSectionConfig("confirm_icon", MenuIconConfigUtils.editorConfirmIcon("minecraft:anvil"));
+    public static final ConfigSectionConfig COST_LEVEL_ICON = new ConfigSectionConfig("cost_level_icon", MenuIconConfigUtils.icon(
         "minecraft:experience_bottle",
         "<translate:lang:menu.recipe_editor.anvil.cost_level>",
         "<translate:lang:menu.recipe_editor.anvil.cost_level_lore>"
     ));
-    public static final ConfigSectionConfig BACK_ICON = new ConfigSectionConfig("back_icon", MenuIconConfigUtils::editorBackIcon);
-    public static final ConfigSectionConfig DELETE_ICON = new ConfigSectionConfig("delete_icon", MenuIconConfigUtils::editorDeleteIcon);
+    public static final ConfigSectionConfig BACK_ICON = new ConfigSectionConfig("back_icon", MenuIconConfigUtils.editorBackIcon());
+    public static final ConfigSectionConfig DELETE_ICON = new ConfigSectionConfig("delete_icon", MenuIconConfigUtils.editorDeleteIcon());
 }
