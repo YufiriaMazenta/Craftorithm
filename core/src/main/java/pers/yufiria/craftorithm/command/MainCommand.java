@@ -11,6 +11,7 @@ import pers.yufiria.craftorithm.command.item.ItemCommand;
 import pers.yufiria.craftorithm.command.menu.OpenMenuCommand;
 import pers.yufiria.craftorithm.command.recipe.*;
 import pers.yufiria.craftorithm.config.PluginConfigs;
+import pers.yufiria.craftorithm.permission.Permissions;
 
 @Command(platforms = {PlatformSide.BUKKIT})
 public class MainCommand extends CommandTree {
@@ -21,7 +22,7 @@ public class MainCommand extends CommandTree {
         super(
             CommandInfo
                 .builder("craftorithm")
-                .permission(new PermInfo("craftorithm.command"))
+                .permission(new PermInfo(Permissions.COMMAND))
                 .aliases(PluginConfigs.MAIN_COMMAND_ALIASES.value())
                 .build()
         );

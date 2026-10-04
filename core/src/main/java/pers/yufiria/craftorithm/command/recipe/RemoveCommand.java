@@ -8,6 +8,7 @@ import crypticlib.perm.PermInfo;
 import org.bukkit.NamespacedKey;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.config.Languages;
+import pers.yufiria.craftorithm.permission.Permissions;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.util.LangUtils;
 
@@ -24,7 +25,7 @@ public final class RemoveCommand extends CommandNode {
     private RemoveCommand() {
         super(CommandInfo
             .builder("remove")
-            .permission(new PermInfo("craftorithm.recipe.remove"))
+            .permission(new PermInfo(Permissions.RECIPE_REMOVE))
             .usage("&r/craftorithm remove <recipe_name>")
             .build()
         );

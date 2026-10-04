@@ -23,6 +23,7 @@ import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.item.ItemGroup;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
+import pers.yufiria.craftorithm.permission.Permissions;
 import pers.yufiria.craftorithm.recipe.ParsedRecipe;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.ui.BackableMenu;
@@ -110,7 +111,7 @@ public abstract class RecipeEditorMenu extends StoredMenu implements BackableMen
             @Override
             public Icon onClick(InventoryClickEvent event) {
                 Player player = (Player) event.getWhoClicked();
-                if (!player.hasPermission("craftorithm.recipe.remove")) {
+                if (!player.hasPermission(Permissions.RECIPE_REMOVE)) {
                     LangUtils.sendLang(player, Languages.COMMAND_NO_PERM);
                     return this;
                 }

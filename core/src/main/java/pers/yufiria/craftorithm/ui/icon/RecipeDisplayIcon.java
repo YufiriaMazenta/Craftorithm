@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import pers.yufiria.craftorithm.config.Languages;
+import pers.yufiria.craftorithm.permission.Permissions;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.ui.BackableMenu;
@@ -98,7 +99,7 @@ public class RecipeDisplayIcon extends ActionIcon {
                 LangUtils.sendLang(whoClicked, Languages.COMMAND_DISPLAY_UNSUPPORTED_RECIPE_TYPE);
             });
         } else if (click == editClick) {
-            if (!whoClicked.hasPermission("craftorithm.recipe.edit")) {
+            if (!whoClicked.hasPermission(Permissions.RECIPE_EDIT)) {
                 return this;
             }
             RecipeEditorManager.INSTANCE.getEditor(recipeType).ifPresent(editorFunc -> {

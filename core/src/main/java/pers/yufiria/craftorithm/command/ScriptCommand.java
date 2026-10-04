@@ -11,6 +11,7 @@ import crypticlib.script.ScriptEngine;
 import crypticlib.util.FunctionExecutor;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.config.Languages;
+import pers.yufiria.craftorithm.permission.Permissions;
 import pers.yufiria.craftorithm.script.RootScriptContext;
 import pers.yufiria.craftorithm.util.LangUtils;
 
@@ -23,7 +24,7 @@ public class ScriptCommand extends CommandNode {
     public static final ScriptCommand INSTANCE = new ScriptCommand();
 
     private ScriptCommand() {
-        super("script", new PermInfo("craftorithm.command.script"));
+        super("script", new PermInfo(Permissions.COMMAND_SCRIPT));
     }
 
     @Override

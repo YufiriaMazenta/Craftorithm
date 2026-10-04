@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.Languages;
+import pers.yufiria.craftorithm.permission.Permissions;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.RecipeTypeMap;
@@ -49,7 +50,7 @@ public final class CreateCommand extends CommandNode implements LifecycleTask {
     private CreateCommand() {
         super(CommandInfo
             .builder("create")
-            .permission(new PermInfo("craftorithm.command.create"))
+            .permission(new PermInfo(Permissions.RECIPE_CREATE))
             .usage("&r/craftorithm create <recipe_type> [recipe_id] [recipe_file_name]")
             .build()
         );

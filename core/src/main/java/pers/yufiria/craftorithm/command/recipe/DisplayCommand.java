@@ -13,6 +13,7 @@ import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.Languages;
+import pers.yufiria.craftorithm.permission.Permissions;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayManager;
@@ -30,7 +31,7 @@ public class DisplayCommand extends CommandNode {
         super(
             CommandInfo
                 .builder("display")
-                .permission(new PermInfo("craftorithm.command.display"))
+                .permission(new PermInfo(Permissions.RECIPE_DISPLAY))
                 .usage("&r/craftorithm display <recipe_id>")
                 .build()
         );

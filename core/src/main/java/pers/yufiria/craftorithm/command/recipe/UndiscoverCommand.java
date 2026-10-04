@@ -11,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.config.Languages;
+import pers.yufiria.craftorithm.permission.Permissions;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
@@ -26,7 +27,7 @@ public class UndiscoverCommand extends CommandNode {
     private UndiscoverCommand() {
         super(CommandInfo
             .builder("undiscover")
-            .permission(new PermInfo("craftorithm.command.undiscover"))
+            .permission(new PermInfo(Permissions.RECIPE_UNDISCOVER))
             .usage("&r/craftorithm undiscover <target> <recipe_key_pattern>")
             .build()
         );

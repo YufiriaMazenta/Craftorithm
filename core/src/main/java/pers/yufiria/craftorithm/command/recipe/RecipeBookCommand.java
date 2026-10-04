@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.Languages;
+import pers.yufiria.craftorithm.permission.Permissions;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.ui.recipebook.RecipeBookTypeSelectMenu;
@@ -32,7 +33,7 @@ public class RecipeBookCommand extends CommandNode {
         super(
             CommandInfo
                 .builder("recipebook")
-                .permission(new PermInfo("craftorithm.command.recipebook"))
+                .permission(new PermInfo(Permissions.COMMAND_RECIPE_BOOK))
                 .usage("&r/craftorithm recipebook [--player <name>] [--type <type>]")
                 .build()
         );

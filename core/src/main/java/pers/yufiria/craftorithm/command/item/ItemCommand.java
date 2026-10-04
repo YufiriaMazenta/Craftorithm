@@ -8,6 +8,7 @@ import crypticlib.perm.PermInfo;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.command.item.fuel.FuelCommand;
 import pers.yufiria.craftorithm.config.Languages;
+import pers.yufiria.craftorithm.permission.Permissions;
 import pers.yufiria.craftorithm.util.LangUtils;
 
 public final class ItemCommand extends CommandNode {
@@ -15,7 +16,7 @@ public final class ItemCommand extends CommandNode {
     public static final ItemCommand INSTANCE = new ItemCommand();
 
     private ItemCommand() {
-        super(CommandInfo.builder("item").permission(new PermInfo("craftorithm.command.item")).build());
+        super(CommandInfo.builder("item").permission(new PermInfo(Permissions.ITEM)).build());
     }
 
     @Override

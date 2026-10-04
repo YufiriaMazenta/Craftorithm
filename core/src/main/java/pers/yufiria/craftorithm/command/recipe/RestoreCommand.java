@@ -10,6 +10,7 @@ import org.bukkit.NamespacedKey;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.Languages;
+import pers.yufiria.craftorithm.permission.Permissions;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.util.LangUtils;
 
@@ -26,7 +27,7 @@ public class RestoreCommand extends CommandNode {
     private RestoreCommand() {
         super(CommandInfo
             .builder("restore")
-            .permission(new PermInfo("craftorithm.command.restore"))
+            .permission(new PermInfo(Permissions.RECIPE_RESTORE))
             .usage("&r/craftorithm restore <recipe_id>")
             .build()
         );

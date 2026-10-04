@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.config.Languages;
+import pers.yufiria.craftorithm.permission.Permissions;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.ui.editor.RecipeEditorManager;
@@ -31,7 +32,7 @@ public final class EditCommand extends CommandNode {
         super(
             CommandInfo
                 .builder("edit")
-                .permission(new PermInfo("craftorithm.recipe.edit"))
+                .permission(new PermInfo(Permissions.RECIPE_EDIT))
                 .usage("&r/craftorithm editor <recipe_id>")
                 .build()
         );

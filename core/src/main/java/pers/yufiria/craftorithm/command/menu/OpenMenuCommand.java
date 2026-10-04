@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.Languages;
+import pers.yufiria.craftorithm.permission.Permissions;
 import pers.yufiria.craftorithm.ui.custom.CustomMenuManager;
 import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
@@ -28,7 +29,7 @@ public class OpenMenuCommand extends CommandNode {
         super(
             CommandInfo
                 .builder("openmenu")
-                .permission(new PermInfo("craftorithm.command.openmenu"))
+                .permission(new PermInfo(Permissions.COMMAND_OPEN_MENU))
                 .usage("&r/craftorithm openmenu <menu_name> [player_name]")
                 .build()
         );

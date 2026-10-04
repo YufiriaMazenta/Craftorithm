@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.config.Languages;
+import pers.yufiria.craftorithm.permission.Permissions;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.util.LangUtils;
 
@@ -36,7 +37,7 @@ public final class ReloadCommand extends CommandNode implements LifecycleTask {
     private CrypticLibRunnable reloadTimeoutCallback = null;
 
     private ReloadCommand() {
-        super(CommandInfo.builder("reload").permission(new PermInfo("craftorithm.command.reload")).build());
+        super(CommandInfo.builder("reload").permission(new PermInfo(Permissions.COMMAND_RELOAD)).build());
     }
 
     @Override

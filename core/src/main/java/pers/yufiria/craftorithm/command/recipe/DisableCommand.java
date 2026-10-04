@@ -8,6 +8,7 @@ import crypticlib.perm.PermInfo;
 import org.bukkit.NamespacedKey;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.config.Languages;
+import pers.yufiria.craftorithm.permission.Permissions;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.util.LangUtils;
 
@@ -21,7 +22,7 @@ public final class DisableCommand extends CommandNode {
     private DisableCommand() {
         super(CommandInfo
             .builder("disable")
-            .permission(new PermInfo("craftorithm.command.disable"))
+            .permission(new PermInfo(Permissions.RECIPE_DISABLE))
             .usage("&r/craftorithm disable <recipe_id>")
             .build()
         );
