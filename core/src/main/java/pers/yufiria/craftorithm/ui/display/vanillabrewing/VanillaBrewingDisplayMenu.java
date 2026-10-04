@@ -3,7 +3,7 @@ package pers.yufiria.craftorithm.ui.display.vanillabrewing;
 import crypticlib.ui.display.Icon;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import pers.yufiria.craftorithm.config.menu.display.VanillaBrewingDisplay;
+import pers.yufiria.craftorithm.config.menu.display.VanillaBrewingDisplayConfig;
 import pers.yufiria.craftorithm.recipe.BrewingRecipe;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayManager;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayMenu;
@@ -17,9 +17,9 @@ public class VanillaBrewingDisplayMenu extends RecipeDisplayMenu<BrewingRecipe> 
     public VanillaBrewingDisplayMenu(@NotNull Player player, BrewingRecipe recipe) {
         super(player, recipe);
         setDisplay(loadMenuDisplay(
-            VanillaBrewingDisplay.TITLE.value(),
-            VanillaBrewingDisplay.LAYOUT.value(),
-            VanillaBrewingDisplay.ICONS.value()
+            VanillaBrewingDisplayConfig.TITLE.value(),
+            VanillaBrewingDisplayConfig.LAYOUT.value(),
+            VanillaBrewingDisplayConfig.ICONS.value()
         ));
     }
 

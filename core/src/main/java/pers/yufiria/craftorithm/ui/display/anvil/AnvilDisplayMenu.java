@@ -3,7 +3,7 @@ package pers.yufiria.craftorithm.ui.display.anvil;
 import crypticlib.ui.display.Icon;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import pers.yufiria.craftorithm.config.menu.display.AnvilDisplay;
+import pers.yufiria.craftorithm.config.menu.display.AnvilDisplayConfig;
 import pers.yufiria.craftorithm.recipe.anvil.AnvilRecipe;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayManager;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayMenu;
@@ -22,9 +22,9 @@ public class AnvilDisplayMenu extends RecipeDisplayMenu<AnvilRecipe> {
             anvilRecipe
         );
         setDisplay(loadMenuDisplay(
-            AnvilDisplay.TITLE.value(),
-            AnvilDisplay.LAYOUT.value(),
-            AnvilDisplay.ICONS.value()
+            AnvilDisplayConfig.TITLE.value(),
+            AnvilDisplayConfig.LAYOUT.value(),
+            AnvilDisplayConfig.ICONS.value()
         ));
     }
 

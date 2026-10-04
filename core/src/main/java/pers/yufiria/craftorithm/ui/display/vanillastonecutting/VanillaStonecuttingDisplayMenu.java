@@ -4,7 +4,7 @@ import crypticlib.ui.display.Icon;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.StonecuttingRecipe;
 import org.jetbrains.annotations.NotNull;
-import pers.yufiria.craftorithm.config.menu.display.VanillaStonecuttingDisplay;
+import pers.yufiria.craftorithm.config.menu.display.VanillaStonecuttingDisplayConfig;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayManager;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayMenu;
 import pers.yufiria.craftorithm.ui.icon.IconParser;
@@ -18,9 +18,9 @@ public class VanillaStonecuttingDisplayMenu extends RecipeDisplayMenu<Stonecutti
         super(player, recipe);
         setDisplay(
             loadMenuDisplay(
-                VanillaStonecuttingDisplay.TITLE.value(),
-                VanillaStonecuttingDisplay.LAYOUT.value(),
-                VanillaStonecuttingDisplay.ICONS.value()
+                VanillaStonecuttingDisplayConfig.TITLE.value(),
+                VanillaStonecuttingDisplayConfig.LAYOUT.value(),
+                VanillaStonecuttingDisplayConfig.ICONS.value()
             )
         );
     }

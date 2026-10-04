@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.jetbrains.annotations.NotNull;
-import pers.yufiria.craftorithm.config.menu.display.VanillaShapelessDisplay;
+import pers.yufiria.craftorithm.config.menu.display.VanillaShapelessDisplayConfig;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayManager;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayMenu;
 import pers.yufiria.craftorithm.ui.icon.IconParser;
@@ -21,9 +21,9 @@ public class VanillaShapelessDisplayMenu extends RecipeDisplayMenu<ShapelessReci
     public VanillaShapelessDisplayMenu(@NotNull Player player, ShapelessRecipe recipe) {
         super(player, recipe);
         setDisplay(loadMenuDisplay(
-            VanillaShapelessDisplay.TITLE.value(),
-            VanillaShapelessDisplay.LAYOUT.value(),
-            VanillaShapelessDisplay.ICONS.value()
+            VanillaShapelessDisplayConfig.TITLE.value(),
+            VanillaShapelessDisplayConfig.LAYOUT.value(),
+            VanillaShapelessDisplayConfig.ICONS.value()
         ));
     }
 

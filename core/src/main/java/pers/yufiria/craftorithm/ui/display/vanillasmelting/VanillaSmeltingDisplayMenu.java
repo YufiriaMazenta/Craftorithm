@@ -4,10 +4,10 @@ import crypticlib.ui.display.Icon;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
 import org.jetbrains.annotations.NotNull;
-import pers.yufiria.craftorithm.config.menu.display.VanillaSmeltingBlastDisplay;
-import pers.yufiria.craftorithm.config.menu.display.VanillaSmeltingCampfireDisplay;
-import pers.yufiria.craftorithm.config.menu.display.VanillaSmeltingFurnaceDisplay;
-import pers.yufiria.craftorithm.config.menu.display.VanillaSmeltingSmokerDisplay;
+import pers.yufiria.craftorithm.config.menu.display.VanillaSmeltingBlastDisplayConfig;
+import pers.yufiria.craftorithm.config.menu.display.VanillaSmeltingCampfireDisplayConfig;
+import pers.yufiria.craftorithm.config.menu.display.VanillaSmeltingFurnaceDisplayConfig;
+import pers.yufiria.craftorithm.config.menu.display.VanillaSmeltingSmokerDisplayConfig;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayManager;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayMenu;
 import pers.yufiria.craftorithm.ui.icon.ActionIcon;
@@ -25,36 +25,36 @@ public class VanillaSmeltingDisplayMenu extends RecipeDisplayMenu<CookingRecipe<
             case FurnaceRecipe furnaceRecipe -> {
                 setDisplay(
                     loadMenuDisplay(
-                        VanillaSmeltingFurnaceDisplay.TITLE.value(),
-                        VanillaSmeltingFurnaceDisplay.LAYOUT.value(),
-                        VanillaSmeltingFurnaceDisplay.ICONS.value()
+                        VanillaSmeltingFurnaceDisplayConfig.TITLE.value(),
+                        VanillaSmeltingFurnaceDisplayConfig.LAYOUT.value(),
+                        VanillaSmeltingFurnaceDisplayConfig.ICONS.value()
                     )
                 );
             }
             case BlastingRecipe blastingRecipe -> {
                 setDisplay(
                     loadMenuDisplay(
-                        VanillaSmeltingBlastDisplay.TITLE.value(),
-                        VanillaSmeltingBlastDisplay.LAYOUT.value(),
-                        VanillaSmeltingBlastDisplay.ICONS.value()
+                        VanillaSmeltingBlastDisplayConfig.TITLE.value(),
+                        VanillaSmeltingBlastDisplayConfig.LAYOUT.value(),
+                        VanillaSmeltingBlastDisplayConfig.ICONS.value()
                     )
                 );
             }
             case SmokingRecipe smokingRecipe -> {
                 setDisplay(
                     loadMenuDisplay(
-                        VanillaSmeltingSmokerDisplay.TITLE.value(),
-                        VanillaSmeltingSmokerDisplay.LAYOUT.value(),
-                        VanillaSmeltingSmokerDisplay.ICONS.value()
+                        VanillaSmeltingSmokerDisplayConfig.TITLE.value(),
+                        VanillaSmeltingSmokerDisplayConfig.LAYOUT.value(),
+                        VanillaSmeltingSmokerDisplayConfig.ICONS.value()
                     )
                 );
             }
             case CampfireRecipe campfireRecipe -> {
                 setDisplay(
                     loadMenuDisplay(
-                        VanillaSmeltingCampfireDisplay.TITLE.value(),
-                        VanillaSmeltingCampfireDisplay.LAYOUT.value(),
-                        VanillaSmeltingCampfireDisplay.ICONS.value()
+                        VanillaSmeltingCampfireDisplayConfig.TITLE.value(),
+                        VanillaSmeltingCampfireDisplayConfig.LAYOUT.value(),
+                        VanillaSmeltingCampfireDisplayConfig.ICONS.value()
                     )
                 );
             }

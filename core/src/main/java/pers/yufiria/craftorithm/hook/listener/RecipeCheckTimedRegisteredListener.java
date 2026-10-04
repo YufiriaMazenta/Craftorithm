@@ -12,6 +12,7 @@ import pers.yufiria.craftorithm.util.EventUtils;
 
 import java.util.*;
 
+@SuppressWarnings("removal")
 public class RecipeCheckTimedRegisteredListener extends TimedRegisteredListener {
 
     private final UUID UNIQUE_KEY = UUID.randomUUID();

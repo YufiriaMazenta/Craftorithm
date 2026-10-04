@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.jetbrains.annotations.NotNull;
-import pers.yufiria.craftorithm.config.menu.display.VanillaShapedDisplay;
+import pers.yufiria.craftorithm.config.menu.display.VanillaShapedDisplayConfig;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayManager;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayMenu;
 import pers.yufiria.craftorithm.ui.icon.IconParser;
@@ -18,9 +18,9 @@ public class VanillaShapedDisplayMenu extends RecipeDisplayMenu<ShapedRecipe> {
     public VanillaShapedDisplayMenu(@NotNull Player player, ShapedRecipe shapedRecipe) {
         super(player, shapedRecipe);
         setDisplay(loadMenuDisplay(
-            VanillaShapedDisplay.TITLE.value(),
-            VanillaShapedDisplay.LAYOUT.value(),
-            VanillaShapedDisplay.ICONS.value()
+            VanillaShapedDisplayConfig.TITLE.value(),
+            VanillaShapedDisplayConfig.LAYOUT.value(),
+            VanillaShapedDisplayConfig.ICONS.value()
         ));
     }
 

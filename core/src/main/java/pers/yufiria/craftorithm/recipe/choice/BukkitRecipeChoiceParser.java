@@ -14,6 +14,7 @@ import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.Optional;
 
+@SuppressWarnings("removal")
 public enum BukkitRecipeChoiceParser implements RecipeChoiceParser {
 
     INSTANCE;
