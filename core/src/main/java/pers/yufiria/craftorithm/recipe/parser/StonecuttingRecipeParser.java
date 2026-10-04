@@ -17,6 +17,18 @@ import java.util.Objects;
 public enum StonecuttingRecipeParser implements VanillaRecipeParser<StonecuttingRecipe> {
 
     INSTANCE;
+    private final boolean supportPredicateChoice;
+
+    StonecuttingRecipeParser() {
+        boolean supportPredicateChoice;
+        try {
+            Class.forName("org.bukkit.inventory.RecipeChoice$PredicateChoice");
+            supportPredicateChoice = true;
+        } catch (ClassNotFoundException e) {
+            supportPredicateChoice = false;
+        }
+        this.supportPredicateChoice = supportPredicateChoice;
+    }
 
     @Override
     public @NotNull StonecuttingRecipe parse(String recipeName, ConfigurationSection recipeConfig) {
@@ -26,6 +38,9 @@ public enum StonecuttingRecipeParser implements VanillaRecipeParser<Stonecutting
             NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeName);
             String ingredientId = recipeConfig.getString("ingredient");
             RecipeChoice ingredient = choiceParser().parse(ingredientId);
+            if (supportPredicateChoice) {
+                ingredient = RecipeChoice.predicateChoice(ingredient, ingredient.getItemStack());
+            }
             StonecuttingRecipe recipe = new StonecuttingRecipe(recipeKey, result, ingredient);
             if (recipeConfig.contains("group")) {
                 recipe.setGroup(Objects.requireNonNull(recipeConfig.getString("group")));
