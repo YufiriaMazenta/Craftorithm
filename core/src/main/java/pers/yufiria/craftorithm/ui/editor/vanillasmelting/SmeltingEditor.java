@@ -77,7 +77,7 @@ public class SmeltingEditor extends RecipeEditorMenu {
         this.display = new MenuDisplay(
             configs.title().value(),
             new MenuLayout(Arrays.asList(
-                "B########",
+                "B#######D",
                 "#####FFF#",
                 "##I#AFRF#",
                 "#####FFF#",
@@ -91,6 +91,7 @@ public class SmeltingEditor extends RecipeEditorMenu {
                 layoutMap.put('F', this::getResultFrameIcon);
                 layoutMap.put('B', this::getBackIcon);
                 layoutMap.put('G', () -> categoryIcon);
+                layoutMap.put('D', this::getDeleteIcon);
                 return layoutMap;
             })
         );
@@ -118,6 +119,10 @@ public class SmeltingEditor extends RecipeEditorMenu {
 
     private Icon getBackIcon() {
         return createBackIcon(smeltingType.editorConfigs().backIcon().value());
+    }
+
+    private Icon getDeleteIcon() {
+        return createDeleteIcon(smeltingType.editorConfigs().deleteIcon().value());
     }
 
     private Icon getExpIcon() {

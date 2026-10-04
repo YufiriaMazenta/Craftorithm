@@ -25,6 +25,11 @@ back_icon:
   name: '<translate:lang:menu.common.back>'
   lore:
     - '<translate:lang:menu.recipe_editor.back_lore>'
+delete_icon:
+  material: minecraft:barrier
+  name: '<translate:lang:menu.common.delete>'
+  lore:
+    - '<translate:lang:menu.recipe_editor.delete_lore>'
 category_icon:
   food:
     material: minecraft:cooked_beef

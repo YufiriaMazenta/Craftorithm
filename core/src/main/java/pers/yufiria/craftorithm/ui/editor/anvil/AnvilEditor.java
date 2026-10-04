@@ -61,7 +61,7 @@ public final class AnvilEditor extends RecipeEditorMenu {
         this.display = new MenuDisplay(
             AnvilEditorConfig.TITLE.value(),
             new MenuLayout(Arrays.asList(
-                "X########",
+                "X#######D",
                 "#B#A###R#",
                 "##L###C##",
                 "#########"
@@ -71,6 +71,7 @@ public final class AnvilEditor extends RecipeEditorMenu {
                 layoutMap.put('C', this::getConfirmIcon);
                 layoutMap.put('L', this::getCostLevelIcon);
                 layoutMap.put('X', this::getBackIcon);
+                layoutMap.put('D', this::getDeleteIcon);
                 return layoutMap;
             })
         );
@@ -96,6 +97,10 @@ public final class AnvilEditor extends RecipeEditorMenu {
 
     private Icon getBackIcon() {
         return createBackIcon(AnvilEditorConfig.BACK_ICON.value());
+    }
+
+    private Icon getDeleteIcon() {
+        return createDeleteIcon(AnvilEditorConfig.DELETE_ICON.value());
     }
 
     private Icon getCostLevelIcon() {

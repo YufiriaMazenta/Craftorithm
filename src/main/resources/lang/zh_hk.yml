@@ -105,6 +105,7 @@ menu:
     result_frame: '&a編輯器 - 結果物品'
     confirm_lore: '&7點擊儲存配方修改'
     back_lore: '&7點擊返回配方列表'
+    delete_lore: '&7點擊永久刪除該配方'
     category_prefix: '&a配方類型:'
     category_lore: '&7點擊切換分類'
     smelting:
@@ -177,6 +178,7 @@ menu:
     click_to_view: '&7點擊檢視'
     confirm_edit: '&a&l確認編輯'
     confirm_create: '&a&l確認建立'
+    delete: '&c&l刪除配方'
 crafting_category_name:
   misc: '&e物品'
   building: '&e建築方塊'

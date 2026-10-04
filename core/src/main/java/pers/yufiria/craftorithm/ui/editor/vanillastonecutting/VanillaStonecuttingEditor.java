@@ -48,7 +48,7 @@ public final class VanillaStonecuttingEditor extends RecipeEditorMenu {
         this.display = new MenuDisplay(
             VanillaStonecuttingEditorConfig.TITLE.value(),
             new MenuLayout(Arrays.asList(
-                "B########",
+                "B#######D",
                 "#####FFF#",
                 "##I#AFRF#",
                 "#####FFF#",
@@ -60,6 +60,7 @@ public final class VanillaStonecuttingEditor extends RecipeEditorMenu {
                 layoutMap.put('F', this::getResultFrameIcon);
                 layoutMap.put('A', this::getConfirmIcon);
                 layoutMap.put('B', this::getBackIcon);
+                layoutMap.put('D', this::getDeleteIcon);
                 return layoutMap;
             })
         );
@@ -83,6 +84,10 @@ public final class VanillaStonecuttingEditor extends RecipeEditorMenu {
 
     private Icon getBackIcon() {
         return createBackIcon(VanillaStonecuttingEditorConfig.BACK_ICON.value());
+    }
+
+    private Icon getDeleteIcon() {
+        return createDeleteIcon(VanillaStonecuttingEditorConfig.DELETE_ICON.value());
     }
 
     private Icon getConfirmIcon() {

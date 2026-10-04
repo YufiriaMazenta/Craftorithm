@@ -96,6 +96,7 @@ public class Languages {
     public static final StringLangEntry MENU_COMMON_CLICK_TO_VIEW = new StringLangEntry("menu.common.click_to_view");
     public static final StringLangEntry MENU_COMMON_CONFIRM_EDIT = new StringLangEntry("menu.common.confirm_edit");
     public static final StringLangEntry MENU_COMMON_CONFIRM_CREATE = new StringLangEntry("menu.common.confirm_create");
+    public static final StringLangEntry MENU_COMMON_DELETE = new StringLangEntry("menu.common.delete");
 
     public static final StringLangEntry MENU_RECIPE_BOOK_TITLE = new StringLangEntry("menu.recipe_book.title");
     public static final StringLangEntry MENU_RECIPE_BOOK_SELECT_TITLE = new StringLangEntry("menu.recipe_book.select_title");
@@ -109,6 +110,7 @@ public class Languages {
     public static final StringLangEntry MENU_RECIPE_EDITOR_RESULT_FRAME = new StringLangEntry("menu.recipe_editor.result_frame");
     public static final StringLangEntry MENU_RECIPE_EDITOR_CONFIRM_LORE = new StringLangEntry("menu.recipe_editor.confirm_lore");
     public static final StringLangEntry MENU_RECIPE_EDITOR_BACK_LORE = new StringLangEntry("menu.recipe_editor.back_lore");
+    public static final StringLangEntry MENU_RECIPE_EDITOR_DELETE_LORE = new StringLangEntry("menu.recipe_editor.delete_lore");
     public static final StringLangEntry MENU_RECIPE_EDITOR_CATEGORY_PREFIX = new StringLangEntry("menu.recipe_editor.category_prefix");
     public static final StringLangEntry MENU_RECIPE_EDITOR_CATEGORY_LORE = new StringLangEntry("menu.recipe_editor.category_lore");
 

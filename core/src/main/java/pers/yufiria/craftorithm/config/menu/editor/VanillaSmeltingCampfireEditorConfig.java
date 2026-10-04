@@ -13,6 +13,7 @@ public class VanillaSmeltingCampfireEditorConfig {
     public static final ConfigSectionConfig EXP_ICON = new ConfigSectionConfig("exp_icon");
     public static final ConfigSectionConfig TIME_ICON = new ConfigSectionConfig("time_icon");
     public static final ConfigSectionConfig BACK_ICON = new ConfigSectionConfig("back_icon");
+    public static final ConfigSectionConfig DELETE_ICON = new ConfigSectionConfig("delete_icon");
 
     public static final ConfigSectionConfig CATEGORY_ICON_FOOD = new ConfigSectionConfig("category_icon.food");
     public static final ConfigSectionConfig CATEGORY_ICON_BLOCKS = new ConfigSectionConfig("category_icon.blocks");

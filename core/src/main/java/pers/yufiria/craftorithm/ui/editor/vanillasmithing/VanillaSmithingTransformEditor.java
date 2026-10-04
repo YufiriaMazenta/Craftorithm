@@ -51,7 +51,7 @@ public final class VanillaSmithingTransformEditor extends RecipeEditorMenu {
         this.display = new MenuDisplay(
             VanillaSmithingTransformEditorConfig.TITLE.value(),
             new MenuLayout(Arrays.asList(
-                "X########",
+                "X#######D",
                 "######FFF",
                 "#T#BCAFRF",
                 "######FFF",
@@ -62,6 +62,7 @@ public final class VanillaSmithingTransformEditor extends RecipeEditorMenu {
                 layoutMap.put('F', this::getResultFrameIcon);
                 layoutMap.put('C', this::getConfirmIcon);
                 layoutMap.put('X', this::getBackIcon);
+                layoutMap.put('D', this::getDeleteIcon);
                 return layoutMap;
             })
         );
@@ -92,6 +93,10 @@ public final class VanillaSmithingTransformEditor extends RecipeEditorMenu {
 
     private Icon getBackIcon() {
         return createBackIcon(VanillaSmithingTransformEditorConfig.BACK_ICON.value());
+    }
+
+    private Icon getDeleteIcon() {
+        return createDeleteIcon(VanillaSmithingTransformEditorConfig.DELETE_ICON.value());
     }
 
     private Icon getConfirmIcon() {

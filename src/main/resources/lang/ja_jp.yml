@@ -105,6 +105,7 @@ menu:
     result_frame: '&aエディター - 結果アイテム'
     confirm_lore: '&7クリックでレシピの変更を保存'
     back_lore: '&7クリックでレシピリストに戻る'
+    delete_lore: '&7クリックでこのレシピを完全に削除'
     category_prefix: '&aカテゴリ:'
     category_lore: '&7クリックでカテゴリを切り替え'
     smelting:
@@ -177,6 +178,7 @@ menu:
     click_to_view: '&7クリックで表示'
     confirm_edit: '&a&l編集を確定'
     confirm_create: '&a&l作成を確定'
+    delete: '&c&lレシピを削除'
 crafting_category_name:
   misc: '&eアイテム'
   building: '&e建築ブロック'

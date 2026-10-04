@@ -12,6 +12,7 @@ public class VanillaShapedEditorConfig {
     public static final ConfigSectionConfig RESULT_FRAME_ICON = new ConfigSectionConfig("result_frame_icon");
     public static final ConfigSectionConfig CONFIRM_ICON = new ConfigSectionConfig("confirm_icon");
     public static final ConfigSectionConfig BACK_ICON = new ConfigSectionConfig("back_icon");
+    public static final ConfigSectionConfig DELETE_ICON = new ConfigSectionConfig("delete_icon");
 
     public static final ConfigSectionConfig CATEGORY_ICON_MISC = new ConfigSectionConfig("category_icon.misc");
     public static final ConfigSectionConfig CATEGORY_ICON_BUILDING = new ConfigSectionConfig("category_icon.building");

@@ -54,7 +54,7 @@ public final class VanillaShapelessEditor extends RecipeEditorMenu {
         this.display = new MenuDisplay(
             VanillaShapelessEditorConfig.TITLE.value(),
             new MenuLayout(Arrays.asList(
-                "B########",
+                "B#######D",
                 "#123#***#",
                 "#456A* *#",
                 "#789#***#",
@@ -66,6 +66,7 @@ public final class VanillaShapelessEditor extends RecipeEditorMenu {
                 layoutMap.put('A', this::getConfirmIcon);
                 layoutMap.put('B', this::getBackIcon);
                 layoutMap.put('C', () -> categoryIcon);
+                layoutMap.put('D', this::getDeleteIcon);
                 return layoutMap;
             })
         );
@@ -93,6 +94,10 @@ public final class VanillaShapelessEditor extends RecipeEditorMenu {
 
     private Icon getBackIcon() {
         return createBackIcon(VanillaShapelessEditorConfig.BACK_ICON.value());
+    }
+
+    private Icon getDeleteIcon() {
+        return createDeleteIcon(VanillaShapelessEditorConfig.DELETE_ICON.value());
     }
 
     private Icon getConfirmIcon() {

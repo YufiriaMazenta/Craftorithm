@@ -105,6 +105,7 @@ menu:
     result_frame: '&aРедактор - Результат'
     confirm_lore: '&7Нажмите для сохранения'
     back_lore: '&7Нажмите для возврата к списку'
+    delete_lore: '&7Нажмите, чтобы безвозвратно удалить этот рецепт'
     category_prefix: '&aКатегория:'
     category_lore: '&7Нажмите для переключения'
     smelting:
@@ -177,6 +178,7 @@ menu:
     click_to_view: '&7Нажмите для просмотра'
     confirm_edit: '&a&lПодтвердить'
     confirm_create: '&a&lСоздать'
+    delete: '&c&lУдалить рецепт'
 crafting_category_name:
   misc: '&eПредметы'
   building: '&eСтроительные блоки'

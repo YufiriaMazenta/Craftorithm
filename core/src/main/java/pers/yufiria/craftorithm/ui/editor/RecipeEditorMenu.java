@@ -13,18 +13,22 @@ import crypticlib.util.ItemHelper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.item.ItemGroup;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.ParsedRecipe;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.ui.BackableMenu;
+import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
 import pers.yufiria.craftorithm.ui.recipebook.BackIcon;
+import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.util.Optional;
 
@@ -92,6 +96,33 @@ public abstract class RecipeEditorMenu extends StoredMenu implements BackableMen
     protected Icon createBackIcon(ConfigurationSection config) {
         IconDisplay iconDisplay = EditorIconParser.INSTANCE.parseIconDisplay(config);
         return new BackIcon(iconDisplay);
+    }
+
+    /**
+     * 创建删除按钮图标，从配置中读取外观
+     * 子类调用此方法并传入自己的配置来创建删除按钮
+     * 点击后删除当前编辑的配方及其配置文件
+     * @param config 删除按钮的配置节
+     */
+    protected Icon createDeleteIcon(ConfigurationSection config) {
+        IconDisplay iconDisplay = EditorIconParser.INSTANCE.parseIconDisplay(config);
+        return new TranslatableIcon(iconDisplay) {
+            @Override
+            public Icon onClick(InventoryClickEvent event) {
+                Player player = (Player) event.getWhoClicked();
+                if (!player.hasPermission("craftorithm.recipe.remove")) {
+                    LangUtils.sendLang(player, Languages.COMMAND_NO_PERM);
+                    return this;
+                }
+                if (RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeKey.getKey(), true, true)) {
+                    LangUtils.sendLang(player, Languages.COMMAND_REMOVE_SUCCESS);
+                } else {
+                    LangUtils.sendLang(player, Languages.COMMAND_REMOVE_NOT_EXIST);
+                }
+                player.closeInventory();
+                return this;
+            }
+        };
     }
 
     /**

@@ -59,7 +59,7 @@ public final class VanillaShapedEditor extends RecipeEditorMenu {
         this.display = new MenuDisplay(
             VanillaShapedEditorConfig.TITLE.value(),
             new MenuLayout(Arrays.asList(
-                "B########",
+                "B#######D",
                 "#123#***#",
                 "#456A* *#",
                 "#789#***#",
@@ -71,6 +71,7 @@ public final class VanillaShapedEditor extends RecipeEditorMenu {
                 layoutMap.put('A', this::getConfirmIcon);
                 layoutMap.put('B', this::getBackIcon);
                 layoutMap.put('C', () -> categoryIcon);
+                layoutMap.put('D', this::getDeleteIcon);
                 return layoutMap;
             })
         );
@@ -112,6 +113,10 @@ public final class VanillaShapedEditor extends RecipeEditorMenu {
 
     private Icon getBackIcon() {
         return createBackIcon(VanillaShapedEditorConfig.BACK_ICON.value());
+    }
+
+    private Icon getDeleteIcon() {
+        return createDeleteIcon(VanillaShapedEditorConfig.DELETE_ICON.value());
     }
 
     private Icon getConfirmIcon() {

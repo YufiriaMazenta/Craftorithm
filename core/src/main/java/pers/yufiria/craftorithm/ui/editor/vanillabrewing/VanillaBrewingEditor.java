@@ -61,7 +61,7 @@ public final class VanillaBrewingEditor extends RecipeEditorMenu {
         this.display = new MenuDisplay(
             VanillaBrewingEditorConfig.TITLE.value(),
             new MenuLayout(Arrays.asList(
-                "B########",
+                "B#######D",
                 "##G##FFF#",
                 "####AFRF#",
                 "##I##FFF#",
@@ -72,6 +72,7 @@ public final class VanillaBrewingEditor extends RecipeEditorMenu {
                 layoutMap.put('A', this::getConfirmIcon);
                 layoutMap.put('F', this::getResultFrameIcon);
                 layoutMap.put('B', this::getBackIcon);
+                layoutMap.put('D', this::getDeleteIcon);
                 return layoutMap;
             })
         );
@@ -100,6 +101,10 @@ public final class VanillaBrewingEditor extends RecipeEditorMenu {
 
     private Icon getBackIcon() {
         return createBackIcon(VanillaBrewingEditorConfig.BACK_ICON.value());
+    }
+
+    private Icon getDeleteIcon() {
+        return createDeleteIcon(VanillaBrewingEditorConfig.DELETE_ICON.value());
     }
 
     private Icon getConfirmIcon() {

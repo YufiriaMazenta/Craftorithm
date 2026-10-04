@@ -43,6 +43,7 @@ public enum SmeltingMenuType {
             VanillaSmeltingFurnaceEditorConfig.EXP_ICON,
             VanillaSmeltingFurnaceEditorConfig.TIME_ICON,
             VanillaSmeltingFurnaceEditorConfig.BACK_ICON,
+            VanillaSmeltingFurnaceEditorConfig.DELETE_ICON,
             VanillaSmeltingFurnaceEditorConfig.CATEGORY_ICON_FOOD,
             VanillaSmeltingFurnaceEditorConfig.CATEGORY_ICON_BLOCKS,
             VanillaSmeltingFurnaceEditorConfig.CATEGORY_ICON_MISC
@@ -71,6 +72,7 @@ public enum SmeltingMenuType {
             VanillaSmeltingBlastEditorConfig.EXP_ICON,
             VanillaSmeltingBlastEditorConfig.TIME_ICON,
             VanillaSmeltingBlastEditorConfig.BACK_ICON,
+            VanillaSmeltingBlastEditorConfig.DELETE_ICON,
             VanillaSmeltingBlastEditorConfig.CATEGORY_ICON_FOOD,
             VanillaSmeltingBlastEditorConfig.CATEGORY_ICON_BLOCKS,
             VanillaSmeltingBlastEditorConfig.CATEGORY_ICON_MISC
@@ -99,6 +101,7 @@ public enum SmeltingMenuType {
             VanillaSmeltingSmokerEditorConfig.EXP_ICON,
             VanillaSmeltingSmokerEditorConfig.TIME_ICON,
             VanillaSmeltingSmokerEditorConfig.BACK_ICON,
+            VanillaSmeltingSmokerEditorConfig.DELETE_ICON,
             VanillaSmeltingSmokerEditorConfig.CATEGORY_ICON_FOOD,
             VanillaSmeltingSmokerEditorConfig.CATEGORY_ICON_BLOCKS,
             VanillaSmeltingSmokerEditorConfig.CATEGORY_ICON_MISC
@@ -127,6 +130,7 @@ public enum SmeltingMenuType {
             VanillaSmeltingCampfireEditorConfig.EXP_ICON,
             VanillaSmeltingCampfireEditorConfig.TIME_ICON,
             VanillaSmeltingCampfireEditorConfig.BACK_ICON,
+            VanillaSmeltingCampfireEditorConfig.DELETE_ICON,
             VanillaSmeltingCampfireEditorConfig.CATEGORY_ICON_FOOD,
             VanillaSmeltingCampfireEditorConfig.CATEGORY_ICON_BLOCKS,
             VanillaSmeltingCampfireEditorConfig.CATEGORY_ICON_MISC
@@ -178,6 +182,7 @@ public enum SmeltingMenuType {
         ConfigSectionConfig expIcon,
         ConfigSectionConfig timeIcon,
         ConfigSectionConfig backIcon,
+        ConfigSectionConfig deleteIcon,
         ConfigSectionConfig categoryIconFood,
         ConfigSectionConfig categoryIconBlocks,
         ConfigSectionConfig categoryIconMisc

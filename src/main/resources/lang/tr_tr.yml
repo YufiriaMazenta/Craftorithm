@@ -105,6 +105,7 @@ menu:
     result_frame: '&aDüzenleyici - Sonuç'
     confirm_lore: '&7Değişiklikleri kaydetmek için tıkla'
     back_lore: '&7Listeye dönmek için tıkla'
+    delete_lore: '&7Bu tarifi kalıcı olarak silmek için tıkla'
     category_prefix: '&aKategori:'
     category_lore: '&7Kategori değiştirmek için tıkla'
     smelting:
@@ -177,6 +178,7 @@ menu:
     click_to_view: '&7Görmek için tıkla'
     confirm_edit: '&a&lOnayla'
     confirm_create: '&a&lOluştur'
+    delete: '&c&lTarifi Sil'
 crafting_category_name:
   misc: '&eEşyalar'
   building: '&eİnşaat blokları'

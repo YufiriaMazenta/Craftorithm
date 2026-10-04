@@ -105,6 +105,7 @@ menu:
     result_frame: '&aEditor - Resultado'
     confirm_lore: '&7Haz clic para guardar cambios'
     back_lore: '&7Haz clic para volver a la lista'
+    delete_lore: '&7Haz clic para eliminar esta receta permanentemente'
     category_prefix: '&aCategoría:'
     category_lore: '&7Haz clic para cambiar categoría'
     smelting:
@@ -177,6 +178,7 @@ menu:
     click_to_view: '&7Haz clic para ver'
     confirm_edit: '&a&lConfirmar edición'
     confirm_create: '&a&lCrear'
+    delete: '&c&lEliminar receta'
 crafting_category_name:
   misc: '&eObjetos'
   building: '&eBloques de construcción'

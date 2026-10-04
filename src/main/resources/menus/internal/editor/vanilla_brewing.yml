@@ -1,4 +1,4 @@
-﻿title: <translate:lang:recipe_type_name.vanilla_brewing> - <recipe_key> - <translate:lang:menu.recipe_editor.name>
+title: <translate:lang:recipe_type_name.vanilla_brewing> - <recipe_key> - <translate:lang:menu.recipe_editor.name>
 frame_icon:
   material: minecraft:gray_stained_glass_pane
   name: '&7<translate:lang:recipe_type_name.vanilla_brewing>'
@@ -15,3 +15,8 @@ back_icon:
   name: '<translate:lang:menu.common.back>'
   lore:
     - '<translate:lang:menu.recipe_editor.back_lore>'
+delete_icon:
+  material: minecraft:barrier
+  name: '<translate:lang:menu.common.delete>'
+  lore:
+    - '<translate:lang:menu.recipe_editor.delete_lore>'

@@ -105,6 +105,7 @@ menu:
     result_frame: '&aEditor - Ergebnis'
     confirm_lore: '&7Klicke zum Speichern'
     back_lore: '&7Klicke zur Rezeptliste'
+    delete_lore: '&7Klicke, um dieses Rezept dauerhaft zu löschen'
     category_prefix: '&aKategorie:'
     category_lore: '&7Klicke zum Wechseln'
     smelting:
@@ -177,6 +178,7 @@ menu:
     click_to_view: '&7Klicke zum Anzeigen'
     confirm_edit: '&a&lBestätigen'
     confirm_create: '&a&lErstellen'
+    delete: '&c&lRezept löschen'
 crafting_category_name:
   misc: '&eGegenstände'
   building: '&eBausteine'

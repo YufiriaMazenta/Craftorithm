@@ -105,6 +105,7 @@ menu:
     result_frame: '&aEditor - Result Item'
     confirm_lore: '&7Click to save recipe changes'
     back_lore: '&7Click to return to recipe list'
+    delete_lore: '&7Click to delete this recipe permanently'
     category_prefix: '&aCategory:'
     category_lore: '&7Click to switch category'
     smelting:
@@ -177,6 +178,7 @@ menu:
     click_to_view: '&7Click to view'
     confirm_edit: '&a&lConfirm Edit'
     confirm_create: '&a&lCreate'
+    delete: '&c&lDelete Recipe'
 crafting_category_name:
   misc: '&eItems'
   building: '&eBuilding Blocks'
