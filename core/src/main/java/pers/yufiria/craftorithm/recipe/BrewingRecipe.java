@@ -63,7 +63,7 @@ public class BrewingRecipe implements CustomRecipe {
 
     public static BrewingRecipe fromPaperBrewingRecipe(Recipe recipe) {
         if (MinecraftVersion.current().before(MinecraftVersion.V26_3)) {
-            return null;
+            throw new UnsupportedOperationException("Paper brewing recipe only suppor 26.3 and above");
         }
         if (!(recipe instanceof org.bukkit.inventory.BrewingRecipe brewingRecipe)) {
             return null;
