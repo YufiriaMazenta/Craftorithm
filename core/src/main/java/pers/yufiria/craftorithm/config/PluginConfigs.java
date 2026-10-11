@@ -34,7 +34,12 @@ public class PluginConfigs {
         true,
         "是否启用铁砧配方"
     );
-    public final static BooleanConfig DEBUG = new BooleanConfig("debug", false);
+    public final static StringConfig LOG_LEVEL = new StringConfig(
+        "log_level",
+        migrateLegacyLogLevel(),
+        "插件的日志级别，默认为info，可选debug/verbose/info/warn/error/off"
+    );
+
     public final static BooleanConfig SAVE_DISCOVERED_RECIPES_ENABLE = new BooleanConfig(
         "save_discovered_recipes.enable",
         true,
@@ -240,6 +245,15 @@ public class PluginConfigs {
         }
         CrypticLib.info("&e<old_key> is not a int type value!", Map.of("<old_key>", oldKey));
         return def;
+    }
+
+    private static String migrateLegacyLogLevel() {
+        BukkitConfigWrapper configWrapper = Craftorithm.instance().getConfigWrapperOrCreate("config.yml");
+        YamlConfiguration config = configWrapper.config();
+        if (config.getBoolean("debug")) {
+            return "debug";
+        } else
+            return "info";
     }
 
 }

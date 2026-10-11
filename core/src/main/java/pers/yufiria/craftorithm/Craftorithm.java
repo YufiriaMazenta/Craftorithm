@@ -6,6 +6,7 @@ import crypticlib.lifecycle.LifecyclePhase;
 import crypticlib.lifecycle.LifecycleSchedule;
 import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskConfig;
+import crypticlib.log.LogLevel;
 import crypticlib.script.ScriptEngine;
 import org.bukkit.Bukkit;
 import pers.yufiria.craftorithm.api.CraftorithmAPI;
@@ -39,7 +40,7 @@ public final class Craftorithm extends BukkitPlugin implements LifecycleTask {
 
     @Override
     public void whenLoad() {
-        CrypticLib.debug = PluginConfigs.DEBUG.value();
+        CrypticLib.logger().setLevel(LogLevel.valueOf(PluginConfigs.LOG_LEVEL.value().toUpperCase()));
         CrypticLib.info("&7Server Type: " + CrypticLibBukkit.serverAdapter().type() + ", Version: " + MinecraftVersion.current().versionStr());
     }
 
@@ -52,7 +53,7 @@ public final class Craftorithm extends BukkitPlugin implements LifecycleTask {
 
     @Override
     public void whenReload() {
-        CrypticLib.debug = PluginConfigs.DEBUG.value();
+        CrypticLib.logger().setLevel(LogLevel.valueOf(PluginConfigs.LOG_LEVEL.value().toUpperCase()));
     }
 
     private void loadBStat() {
