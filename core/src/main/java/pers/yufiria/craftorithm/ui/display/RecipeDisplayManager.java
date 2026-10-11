@@ -33,15 +33,15 @@ public enum RecipeDisplayManager implements LifecycleTask {
     public static final String ICON_TYPE_RESULT = "result";
     private final Map<RecipeType, BiFunction<Player, Recipe, Menu>> recipeDisplayMap = new RecipeTypeMap<>();
 
-    public void addRecipeDisplay(RecipeType recipeType, BiFunction<Player, Recipe, Menu> displayFunc) {
-        recipeDisplayMap.put(recipeType, displayFunc);
+    public void addRecipeDisplay(RecipeType recipeType, BiFunction<Player, Recipe, Menu> displayFactory) {
+        recipeDisplayMap.put(recipeType, displayFactory);
     }
 
     public void removeRecipeDisplay(RecipeType recipeType) {
         recipeDisplayMap.remove(recipeType);
     }
 
-    public Optional<BiFunction<Player, Recipe, Menu>> getRecipeDisplay(RecipeType recipeType) {
+    public Optional<BiFunction<Player, Recipe, Menu>> getRecipeDisplayFactory(RecipeType recipeType) {
         return Optional.ofNullable(recipeDisplayMap.get(recipeType));
     }
 
@@ -61,21 +61,21 @@ public enum RecipeDisplayManager implements LifecycleTask {
             shapelessDisplayMenu.openMenu();
             return shapelessDisplayMenu;
         });
-        BiFunction<Player, Recipe, Menu> smeltingFunc = (player, recipe) -> {
+        BiFunction<Player, Recipe, Menu> smeltingFactory = (player, recipe) -> {
             VanillaSmeltingDisplayMenu smeltingDisplayMenu = new VanillaSmeltingDisplayMenu(player, (CookingRecipe<?>) recipe);
             smeltingDisplayMenu.openMenu();
             return smeltingDisplayMenu;
         };
-        addRecipeDisplay(SimpleRecipeTypes.VANILLA_SMELTING_FURNACE, smeltingFunc);
-        addRecipeDisplay(SimpleRecipeTypes.VANILLA_SMELTING_BLAST, smeltingFunc);
-        addRecipeDisplay(SimpleRecipeTypes.VANILLA_SMELTING_SMOKER, smeltingFunc);
-        addRecipeDisplay(SimpleRecipeTypes.VANILLA_SMELTING_CAMPFIRE, smeltingFunc);
-        BiFunction<Player, Recipe, Menu> smithingFunc = (player, recipe) -> {
+        addRecipeDisplay(SimpleRecipeTypes.VANILLA_SMELTING_FURNACE, smeltingFactory);
+        addRecipeDisplay(SimpleRecipeTypes.VANILLA_SMELTING_BLAST, smeltingFactory);
+        addRecipeDisplay(SimpleRecipeTypes.VANILLA_SMELTING_SMOKER, smeltingFactory);
+        addRecipeDisplay(SimpleRecipeTypes.VANILLA_SMELTING_CAMPFIRE, smeltingFactory);
+        BiFunction<Player, Recipe, Menu> smithingFactory = (player, recipe) -> {
             VanillaSmithingDisplayMenu smithingDisplayMenu = new VanillaSmithingDisplayMenu(player, (SmithingRecipe) recipe);
             smithingDisplayMenu.openMenu();
             return smithingDisplayMenu;
         };
-        addRecipeDisplay(SimpleRecipeTypes.VANILLA_SMITHING_TRANSFORM, smithingFunc);
+        addRecipeDisplay(SimpleRecipeTypes.VANILLA_SMITHING_TRANSFORM, smithingFactory);
         addRecipeDisplay(SimpleRecipeTypes.VANILLA_STONECUTTING, (player, recipe) -> {
             VanillaStonecuttingDisplayMenu stonecuttingDisplayMenu = new VanillaStonecuttingDisplayMenu(player, (StonecuttingRecipe) recipe);
             stonecuttingDisplayMenu.openMenu();

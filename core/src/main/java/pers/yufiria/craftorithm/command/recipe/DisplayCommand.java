@@ -71,9 +71,9 @@ public class DisplayCommand extends CommandNode {
             return;
         }
         RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipe);
-        Optional<BiFunction<Player, Recipe, Menu>> recipeDisplayOpt = RecipeDisplayManager.INSTANCE.getRecipeDisplay(recipeType);
-        recipeDisplayOpt.ifPresentOrElse(displayFunc -> {
-            displayFunc.apply(target, recipe);
+        Optional<BiFunction<Player, Recipe, Menu>> displayFactoryOpt = RecipeDisplayManager.INSTANCE.getRecipeDisplayFactory(recipeType);
+        displayFactoryOpt.ifPresentOrElse(displayFactory -> {
+            displayFactory.apply(target, recipe);
         }, () -> {
             LangUtils.sendLang(target, Languages.COMMAND_DISPLAY_UNSUPPORTED_RECIPE_TYPE);
         });

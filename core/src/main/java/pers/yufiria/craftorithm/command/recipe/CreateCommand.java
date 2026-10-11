@@ -1,51 +1,31 @@
 package pers.yufiria.craftorithm.command.recipe;
 
-import crypticlib.CrypticLibPlugin;
 import crypticlib.Invoker;
 import crypticlib.Key;
 import crypticlib.command.CommandContext;
 import crypticlib.command.CommandInfo;
 import crypticlib.command.CommandNode;
-import crypticlib.lifecycle.LifecyclePhase;
-import crypticlib.lifecycle.LifecycleSchedule;
-import crypticlib.lifecycle.LifecycleTask;
-import crypticlib.lifecycle.LifecycleTaskConfig;
 import crypticlib.perm.PermInfo;
+import crypticlib.ui.menu.Menu;
+import crypticlib.util.TriFunction;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.permission.Permissions;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
-import pers.yufiria.craftorithm.recipe.RecipeTypeMap;
-import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
-import pers.yufiria.craftorithm.ui.SmeltingMenuType;
-import pers.yufiria.craftorithm.ui.creator.anvil.AnvilCreator;
-import pers.yufiria.craftorithm.ui.creator.vanillabrewing.VanillaBrewingCreator;
-import pers.yufiria.craftorithm.ui.creator.vanillacrafting.VanillaShapedCreator;
-import pers.yufiria.craftorithm.ui.creator.vanillacrafting.VanillaShapelessCreator;
-import pers.yufiria.craftorithm.ui.creator.vanillasmelting.VanillaSmeltingCreator;
-import pers.yufiria.craftorithm.ui.creator.vanillasmithing.VanillaSmithingTransformCreator;
-import pers.yufiria.craftorithm.ui.creator.vanillastonecutting.VanillaStonecuttingCreator;
+import pers.yufiria.craftorithm.ui.creator.RecipeCreatorManager;
 import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-@LifecycleTaskConfig(
-    schedules = {
-        @LifecycleSchedule(phase = LifecyclePhase.ACTIVE)
-    }
-)
-public final class CreateCommand extends CommandNode implements LifecycleTask {
+public final class CreateCommand extends CommandNode {
 
     public static final CreateCommand INSTANCE = new CreateCommand();
-    private final Map<RecipeType, RecipeCreatorFactory> recipeCreatorMap = new RecipeTypeMap<>();
 
     private CreateCommand() {
         super(CommandInfo
@@ -90,8 +70,8 @@ public final class CreateCommand extends CommandNode implements LifecycleTask {
             LangUtils.sendLang(invoker, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
             return;
         }
-        RecipeCreatorFactory creatorFactory = recipeCreatorMap.get(recipeType);
-        if (creatorFactory == null) {
+        Optional<TriFunction<Player, String, String, Menu>> creatorFactoryOpt = RecipeCreatorManager.INSTANCE.getCreatorFactory(recipeType);
+        if (creatorFactoryOpt.isEmpty()) {
             LangUtils.sendLang(invoker, Languages.COMMAND_CREATE_UNSUPPORTED_RECIPE_TYPE);
             return;
         }
@@ -100,7 +80,7 @@ public final class CreateCommand extends CommandNode implements LifecycleTask {
             LangUtils.sendLang(invoker, Languages.COMMAND_PLAYER_ONLY);
             return;
         }
-        creatorFactory.create(playerOpt.get(), recipeId, recipeFileName);
+        creatorFactoryOpt.get().apply(playerOpt.get(), recipeId, recipeFileName);
     }
 
     @Override
@@ -112,61 +92,12 @@ public final class CreateCommand extends CommandNode implements LifecycleTask {
     public List<String> tabComplete(@NotNull CommandContext context) {
         List<String> args = context.args();
         if (args.size() <= 1) {
-            return recipeCreatorMap.keySet().stream().map(RecipeType::typeKey).toList();
+            return RecipeCreatorManager.INSTANCE.recipeTypes().stream().map(RecipeType::typeKey).toList();
         }
         if (args.size() == 2) {
             return Collections.singletonList("<recipe_id>");
         }
         return Collections.singletonList("<recipe_file_name>");
-    }
-
-    private void registerDefRecipeCreators() {
-        addRecipeCreator(SimpleRecipeTypes.VANILLA_SHAPED, (player, recipeId, recipeFileName) -> {
-            new VanillaShapedCreator(player, recipeId, recipeFileName).openMenu();
-        });
-        addRecipeCreator(SimpleRecipeTypes.VANILLA_SHAPELESS, (player, recipeId, recipeFileName) -> {
-            new VanillaShapelessCreator(player, recipeId, recipeFileName).openMenu();
-        });
-        // 熔炉配方 (furnace, blast, smoker, campfire)
-        for (SmeltingMenuType smeltingType : SmeltingMenuType.values()) {
-            addRecipeCreator(smeltingType.recipeType(), (player, recipeId, recipeFileName) -> {
-                new VanillaSmeltingCreator(player, recipeId, recipeFileName, smeltingType).openMenu();
-            });
-        }
-        // 锻造台配方
-        addRecipeCreator(SimpleRecipeTypes.VANILLA_SMITHING_TRANSFORM, (player, recipeId, recipeFileName) -> {
-            new VanillaSmithingTransformCreator(player, recipeId, recipeFileName).openMenu();
-        });
-        // 切石机配方
-        addRecipeCreator(SimpleRecipeTypes.VANILLA_STONECUTTING, (player, recipeId, recipeFileName) -> {
-            new VanillaStonecuttingCreator(player, recipeId, recipeFileName).openMenu();
-        });
-        // 酿造台配方
-        addRecipeCreator(SimpleRecipeTypes.VANILLA_BREWING, (player, recipeId, recipeFileName) -> {
-            new VanillaBrewingCreator(player, recipeId, recipeFileName).openMenu();
-        });
-        // 铁砧配方
-        addRecipeCreator(SimpleRecipeTypes.ANVIL, (player, recipeId, recipeFileName) -> {
-            new AnvilCreator(player, recipeId, recipeFileName).openMenu();
-        });
-    }
-
-    public void addRecipeCreator(RecipeType recipeType, RecipeCreatorFactory creatorFunc) {
-        recipeCreatorMap.put(recipeType, creatorFunc);
-    }
-
-    public void removeRecipeCreator(RecipeType recipeType) {
-        recipeCreatorMap.remove(recipeType);
-    }
-
-    @Override
-    public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase lifeCycle) {
-        registerDefRecipeCreators();
-    }
-
-    @FunctionalInterface
-    public interface RecipeCreatorFactory {
-        void create(Player player, @Nullable String recipeId, @Nullable String recipeFileName);
     }
 
 }

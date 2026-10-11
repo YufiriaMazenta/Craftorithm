@@ -36,15 +36,15 @@ public enum RecipeEditorManager implements LifecycleTask {
 
     private final RecipeTypeMap<RecipeType, TriFunction<Player, NamespacedKey, Recipe, Menu>> editorMap = new RecipeTypeMap<>();
 
-    public void registerEditor(RecipeType recipeType, TriFunction<Player, NamespacedKey, Recipe, Menu> editorFunc) {
-        editorMap.put(recipeType, editorFunc);
+    public void registerEditor(RecipeType recipeType, TriFunction<Player, NamespacedKey, Recipe, Menu> editorFactory) {
+        editorMap.put(recipeType, editorFactory);
     }
 
     public void removeEditor(RecipeType recipeType) {
         editorMap.remove(recipeType);
     }
 
-    public Optional<TriFunction<Player, NamespacedKey, Recipe, Menu>> getEditor(RecipeType recipeType) {
+    public Optional<TriFunction<Player, NamespacedKey, Recipe, Menu>> getEditorFactory(RecipeType recipeType) {
         return Optional.ofNullable(editorMap.get(recipeType));
     }
 

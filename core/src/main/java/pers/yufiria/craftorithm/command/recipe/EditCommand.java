@@ -66,8 +66,8 @@ public final class EditCommand extends CommandNode {
         }
 
         RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipe);
-        Optional<TriFunction<Player, NamespacedKey, Recipe, Menu>> editorOpt = RecipeEditorManager.INSTANCE.getEditor(recipeType);
-        if (editorOpt.isEmpty()) {
+        Optional<TriFunction<Player, NamespacedKey, Recipe, Menu>> editorFactoryOpt = RecipeEditorManager.INSTANCE.getEditorFactory(recipeType);
+        if (editorFactoryOpt.isEmpty()) {
             LangUtils.sendLang(invoker, Languages.COMMAND_DISPLAY_UNSUPPORTED_RECIPE_TYPE);
             return;
         }
@@ -76,7 +76,7 @@ public final class EditCommand extends CommandNode {
         if (playerOpt.isEmpty()) {
             return;
         }
-        editorOpt.get().apply(playerOpt.get(), recipeKey, recipe);
+        editorFactoryOpt.get().apply(playerOpt.get(), recipeKey, recipe);
     }
 
     @Override

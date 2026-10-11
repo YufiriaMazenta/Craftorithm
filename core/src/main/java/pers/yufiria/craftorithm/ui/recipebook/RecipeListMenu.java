@@ -58,7 +58,7 @@ public class RecipeListMenu extends Menu implements BackableMenu, Multipage {
             // type为null时加载所有Craftorithm配方
             recipes = new ArrayList<>();
             RecipeManager.INSTANCE.craftorithmRecipes().forEach((key, parsed) -> recipes.add(Map.entry(key, parsed.recipe())));
-            recipes.removeIf(recipeHolder -> RecipeDisplayManager.INSTANCE.getRecipeDisplay(RecipeManager.INSTANCE.getRecipeType(recipeHolder.getValue())).isEmpty());
+            recipes.removeIf(recipeHolder -> RecipeDisplayManager.INSTANCE.getRecipeDisplayFactory(RecipeManager.INSTANCE.getRecipeType(recipeHolder.getValue())).isEmpty());
         } else {
             recipes = new ArrayList<>(RecipeManager.INSTANCE.getRecipesByType(type));
         }
