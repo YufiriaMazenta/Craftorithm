@@ -50,13 +50,13 @@ public class PluginConfigs {
     );
     public final static IntConfig SAVE_DISCOVERED_RECIPES_JOIN_DISCOVER_DELAY_TICKS = new IntConfig(
         "save_discovered_recipes.join_discover_delay_ticks",
-        loadLegacyIntValue("recipe_discovery_sync.join_sync_delay_ticks", 20),
+        migrateLegacyIntValue("recipe_discovery_sync.join_sync_delay_ticks", 20),
         "玩家加入服务器后，等待多少tick再从数据库读取已解锁配方（建议10-40，即0.5-2秒）"
     );
 
     public final static IntConfig SAVE_DISCOVERED_RECIPES_INTERVAL_TICKS = new IntConfig(
         "save_discovered_recipes.interval_ticks",
-        loadLegacyIntValue("recipe_discovery_sync.interval_ticks", 6000),
+        migrateLegacyIntValue("recipe_discovery_sync.interval_ticks", 6000),
         "定时保存在线玩家已解锁配方到数据库的间隔（tick），默认300秒（5分钟）"
     );
 
@@ -67,7 +67,7 @@ public class PluginConfigs {
     );
     public final static ConfigSectionListConfig INGREDIENT_RESTRICTION_RULES = new ConfigSectionListConfig(
         "ingredient_restriction_rules",
-        loadLegacyIngredientRestriction(),
+        migrateLegacyIngredientRestriction(),
         List.of(
             "设定材料的合成限制规则",
             "支持的规则类型: lore(基于lore判断), item_id(基于物品id判断)",
@@ -148,7 +148,7 @@ public class PluginConfigs {
     public static final StringConfig ITEM_GROUP_ITEM_LORE_END = new StringConfig("item_group_item.lore.end", "&7...");
     public static final IntConfig ITEM_GROUP_ITEM_LORE_MAX_SIZE = new IntConfig("item_group_item.lore.max_size", 5);
 
-    private static List<ConfigurationSection> loadLegacyIngredientRestriction() {
+    private static List<ConfigurationSection> migrateLegacyIngredientRestriction() {
         String oldKeyCannotCraft = "cannot_craft_items";
         String oldKeyLoreRules = "blocked_crafting_lore_rules";
         String newKey = "ingredient_restriction_rules";
@@ -235,7 +235,7 @@ public class PluginConfigs {
         };
     }
 
-    private static int loadLegacyIntValue(String oldKey, int def) {
+    private static int migrateLegacyIntValue(String oldKey, int def) {
         BukkitConfigWrapper configWrapper = Craftorithm.instance().getConfigWrapperOrCreate("config.yml");
         YamlConfiguration config = configWrapper.config();
         if (config.isInt(oldKey)) {
@@ -250,10 +250,15 @@ public class PluginConfigs {
     private static String migrateLegacyLogLevel() {
         BukkitConfigWrapper configWrapper = Craftorithm.instance().getConfigWrapperOrCreate("config.yml");
         YamlConfiguration config = configWrapper.config();
-        if (config.getBoolean("debug")) {
-            return "debug";
-        } else
-            return "info";
+        try {
+            if (config.getBoolean("debug", false)) {
+                return "debug";
+            } else {
+                return "info";
+            }
+        } finally {
+            config.set("debug", null);
+        }
     }
 
 }

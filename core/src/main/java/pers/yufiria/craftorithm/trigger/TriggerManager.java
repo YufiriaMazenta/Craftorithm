@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.trigger;
 
+import crypticlib.CrypticLib;
 import crypticlib.CrypticLibPlugin;
 import crypticlib.chat.BukkitMsgSender;
 import crypticlib.lifecycle.LifecyclePhase;
@@ -106,7 +107,7 @@ public enum TriggerManager implements LifecycleTask {
         snapshot = buildSnapshot(parsedTriggers);
 
         long elapsed = System.currentTimeMillis() - startTime;
-        BukkitMsgSender.INSTANCE.info("Loaded " + parsedTriggers.size() + " trigger(s) in " + elapsed + "ms");
+        CrypticLib.info("Loaded " + parsedTriggers.size() + " trigger(s) in " + elapsed + "ms");
     }
 
     /**

@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.trigger;
 
+import crypticlib.CrypticLib;
 import crypticlib.chat.BukkitMsgSender;
 import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.script.ScriptEngine;
@@ -59,12 +60,12 @@ public final class TriggerLoader {
 
                 parsedTriggers.add(trigger);
                 if (trigger.isEnabled()) {
-                    BukkitMsgSender.INSTANCE.info(
+                    CrypticLib.info(
                         "Loaded trigger '" + localId + "' in " + fileName
                     );
                 }
             } catch (Throwable throwable) {
-                BukkitMsgSender.INSTANCE.info(
+                CrypticLib.info(
                     "&cFailed to load trigger '" + localId + "' in " + fileName
                 );
                 throwable.printStackTrace();
@@ -85,12 +86,12 @@ public final class TriggerLoader {
     private static @Nullable Trigger parseTrigger(String fullId, ConfigurationSection section) {
         String typeKey = section.getString("type");
         if (typeKey == null) {
-            BukkitMsgSender.INSTANCE.info("&eTrigger '" + fullId + "' missing 'type' field");
+            CrypticLib.info("&eTrigger '" + fullId + "' missing 'type' field");
             return null;
         }
 
         if (TriggerManager.INSTANCE.getTriggerType(typeKey) == null) {
-            BukkitMsgSender.INSTANCE.info("&eUnknown trigger type '" + typeKey + "' in " + fullId);
+            CrypticLib.info("&eUnknown trigger type '" + typeKey + "' in " + fullId);
             return null;
         }
 

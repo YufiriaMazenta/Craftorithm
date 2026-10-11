@@ -216,12 +216,12 @@ public enum RecipeManager implements LifecycleTask {
         RecipeParser<?> recipeParser = recipeType.recipeParser();
         Recipe recipe = recipeParser.parse(recipeId, recipeConfig);
         if (recipe == null) {
-            BukkitMsgSender.INSTANCE.info("&eLoad recipe " + recipeFileName + "(" + recipeId + ") failed");
+            CrypticLib.warn("Load recipe " + recipeFileName + "(" + recipeId + ") failed");
             return null;
         }
         NamespacedKey recipeKey = getRecipeKey(recipe);
         if (recipeKey == null) {
-            BukkitMsgSender.INSTANCE.info("&eRecipe " + recipeFileName + "(" + recipeId + ") has no valid NamespacedKey");
+            CrypticLib.warn("Recipe " + recipeFileName + "(" + recipeId + ") has no valid NamespacedKey");
             return null;
         }
         File recipeFile = configWrapper.configFile();
@@ -264,7 +264,7 @@ public enum RecipeManager implements LifecycleTask {
                 }
             }
         } else {
-            BukkitMsgSender.INSTANCE.info("&eRegister recipe " + recipeFileName + "(" + recipeKey + ") failed");
+            CrypticLib.warn("Register recipe " + recipeFileName + "(" + recipeKey + ") failed");
         }
         return result;
     }
@@ -573,7 +573,7 @@ public enum RecipeManager implements LifecycleTask {
 
         public void end() {
             this.cancel();
-            BukkitMsgSender.INSTANCE.info("Loaded " + craftorithmRecipes.size() + " recipes in " + useTick + " ticks(" + useMilliseconds + "ms)");
+            CrypticLib.info("Loaded " + craftorithmRecipes.size() + " recipes in " + useTick + " ticks(" + useMilliseconds + "ms)");
             if (callback != null) {
                 callback.run();
             }
