@@ -22,7 +22,7 @@ import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.ui.creator.vanillacrafting.RecipeBookCategoryIcon;
 import pers.yufiria.craftorithm.ui.editor.EditorIconParser;
-import pers.yufiria.craftorithm.ui.editor.RecipeEditorMenu;
+import pers.yufiria.craftorithm.ui.editor.RecipeEditor;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
 import pers.yufiria.craftorithm.util.LangUtils;
 import pers.yufiria.craftorithm.util.RecipeUtils;
@@ -39,7 +39,7 @@ import java.util.function.Supplier;
  * 返回按钮: 0
  * 确认按钮: 15
  */
-public final class VanillaShapedEditor extends RecipeEditorMenu {
+public final class VanillaShapedEditor extends RecipeEditor {
 
     private static final int[] INGREDIENT_SLOTS = {10, 11, 12, 19, 20, 21, 28, 29, 30};
     private static final int RESULT_SLOT = 24;

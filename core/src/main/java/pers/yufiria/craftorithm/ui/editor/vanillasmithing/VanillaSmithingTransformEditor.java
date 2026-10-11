@@ -22,7 +22,7 @@ import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.ui.editor.EditorIconParser;
-import pers.yufiria.craftorithm.ui.editor.RecipeEditorMenu;
+import pers.yufiria.craftorithm.ui.editor.RecipeEditor;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
 import pers.yufiria.craftorithm.util.LangUtils;
 
@@ -36,7 +36,7 @@ import java.util.function.Supplier;
  * 锻造台配方编辑器
  * base(模板): 19, addition(添加物): 21, result: 24
  */
-public final class VanillaSmithingTransformEditor extends RecipeEditorMenu {
+public final class VanillaSmithingTransformEditor extends RecipeEditor {
 
     private static final int TEMPLATE_SLOT = 19;
     private static final int BASE_SLOT = 21;

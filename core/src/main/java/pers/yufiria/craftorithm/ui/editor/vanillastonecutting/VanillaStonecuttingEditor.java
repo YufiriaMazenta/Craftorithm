@@ -21,7 +21,7 @@ import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.ui.editor.EditorIconParser;
-import pers.yufiria.craftorithm.ui.editor.RecipeEditorMenu;
+import pers.yufiria.craftorithm.ui.editor.RecipeEditor;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
 import pers.yufiria.craftorithm.util.LangUtils;
 
@@ -35,7 +35,7 @@ import java.util.function.Supplier;
  * 切石机配方编辑器
  * 材料: 20, 结果: 24
  */
-public final class VanillaStonecuttingEditor extends RecipeEditorMenu {
+public final class VanillaStonecuttingEditor extends RecipeEditor {
 
     private static final int INGREDIENT_SLOT = 20;
     private static final int RESULT_SLOT = 25;

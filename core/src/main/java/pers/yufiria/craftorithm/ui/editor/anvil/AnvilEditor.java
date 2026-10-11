@@ -30,7 +30,7 @@ import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.recipe.anvil.AnvilRecipe;
 import pers.yufiria.craftorithm.ui.editor.EditorIconParser;
-import pers.yufiria.craftorithm.ui.editor.RecipeEditorMenu;
+import pers.yufiria.craftorithm.ui.editor.RecipeEditor;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
 import pers.yufiria.craftorithm.util.LangUtils;
 
@@ -45,7 +45,7 @@ import java.util.function.Supplier;
  *   BASE: 10, ADDITION: 12, RESULT: 16
  *   costLevel通过Conversation修改
  */
-public final class AnvilEditor extends RecipeEditorMenu {
+public final class AnvilEditor extends RecipeEditor {
 
     private static final int BASE_SLOT = 10;
     private static final int ADDITION_SLOT = 12;

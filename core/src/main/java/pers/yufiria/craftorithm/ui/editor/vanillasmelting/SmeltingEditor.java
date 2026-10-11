@@ -28,7 +28,7 @@ import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.ui.SmeltingMenuType;
 import pers.yufiria.craftorithm.ui.creator.vanillasmelting.CookingRecipeBookCategoryIcon;
 import pers.yufiria.craftorithm.ui.editor.EditorIconParser;
-import pers.yufiria.craftorithm.ui.editor.RecipeEditorMenu;
+import pers.yufiria.craftorithm.ui.editor.RecipeEditor;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
 import pers.yufiria.craftorithm.util.LangUtils;
 
@@ -48,7 +48,7 @@ import java.util.function.Supplier;
  * 结果槽位: 24
  * exp/time通过图标点击触发Conversation修改
  */
-public class SmeltingEditor extends RecipeEditorMenu {
+public class SmeltingEditor extends RecipeEditor {
 
     private static final int INGREDIENT_SLOT = 20;
     private static final int RESULT_SLOT = 24;

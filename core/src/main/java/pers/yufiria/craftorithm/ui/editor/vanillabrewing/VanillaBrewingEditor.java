@@ -21,7 +21,7 @@ import pers.yufiria.craftorithm.recipe.BrewingRecipe;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.ui.editor.EditorIconParser;
-import pers.yufiria.craftorithm.ui.editor.RecipeEditorMenu;
+import pers.yufiria.craftorithm.ui.editor.RecipeEditor;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
 import pers.yufiria.craftorithm.util.LangUtils;
 
@@ -47,7 +47,7 @@ import java.util.function.Supplier;
  *   ##G##FFF#
  *   #########
  */
-public final class VanillaBrewingEditor extends RecipeEditorMenu {
+public final class VanillaBrewingEditor extends RecipeEditor {
 
     private static final int INPUT_SLOT = 29;
     private static final int INGREDIENT_SLOT = 11;

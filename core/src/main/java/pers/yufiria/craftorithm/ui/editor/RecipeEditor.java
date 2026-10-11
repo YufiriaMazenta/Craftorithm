@@ -38,7 +38,7 @@ import java.util.Optional;
  * 继承StoredMenu，与RecipeCreator类似的模式，但用于编辑已有配方。
  * 子类在构造时调用fillRecipeData()将现有配方数据预填充到GUI槽位。
  */
-public abstract class RecipeEditorMenu extends StoredMenu implements BackableMenu {
+public abstract class RecipeEditor extends StoredMenu implements BackableMenu {
 
     protected Menu parentMenu;
     protected final NamespacedKey recipeKey;
@@ -48,7 +48,7 @@ public abstract class RecipeEditorMenu extends StoredMenu implements BackableMen
      */
     private boolean initialized = false;
 
-    public RecipeEditorMenu(
+    public RecipeEditor(
         @NotNull Player player,
         @NotNull NamespacedKey recipeKey,
         @NotNull String recipeId
