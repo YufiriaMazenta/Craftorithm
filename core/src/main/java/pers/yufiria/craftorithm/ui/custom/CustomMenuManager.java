@@ -129,7 +129,7 @@ public enum CustomMenuManager implements LifecycleTask {
             CrypticLib.info("Loaded menu: " + menuName);
             return true;
         } catch (Throwable throwable) {
-            CrypticLib.info("&cLoad menu " + menuName + " failed");
+            CrypticLib.error("Load menu " + menuName + " failed");
             throwable.printStackTrace();
             return false;
         }

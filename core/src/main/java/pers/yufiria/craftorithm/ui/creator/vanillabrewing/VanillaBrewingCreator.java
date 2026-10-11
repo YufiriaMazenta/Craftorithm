@@ -137,7 +137,7 @@ public class VanillaBrewingCreator extends RecipeCreator {
 
                     ParsedRecipe parsedRecipe = RecipeManager.INSTANCE.parseRecipeFromConfig(recipeFileName, recipeConfig);
                     if (parsedRecipe == null) {
-                        CrypticLib.info("&cFailed to load recipe " + recipeFileName);
+                        CrypticLib.error("Failed to load recipe " + recipeFileName);
                         return;
                     }
 

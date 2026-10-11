@@ -44,7 +44,7 @@ public interface CraftorithmRecipeRegistry {
             return registryOpt.get();
         }
         if (UNSUPPORTED_VERSION_WARNED.compareAndSet(false, true)) {
-            CrypticLib.info("&cCan not find craftorithm recipe register impl for version " + MinecraftVersion.current().versionStr() + ", custom recipes will not be registered!");
+            CrypticLib.error("Can not find craftorithm recipe register impl for version " + MinecraftVersion.current().versionStr() + ", custom recipes will not be registered!");
         }
         return (bukkitRecipe, send2Player) -> RegisterResult.UNSUPPORTED_VERSION;
     }

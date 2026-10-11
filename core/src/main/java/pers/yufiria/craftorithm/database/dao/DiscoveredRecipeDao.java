@@ -44,7 +44,7 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
             dao = DaoManager.createDao(connectionSource, DiscoveredRecipe.class);
             TableUtils.createTableIfNotExists(connectionSource, DiscoveredRecipe.class);
         } catch (SQLException e) {
-            CrypticLib.info("&cFailed to initialize discovered_recipes table: " + e.getMessage());
+            CrypticLib.error("Failed to initialize discovered_recipes table: " + e.getMessage());
         }
     }
 
@@ -59,7 +59,7 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
             }
             return result;
         } catch (SQLException e) {
-            CrypticLib.info("&cFailed to get discovered recipes for " + playerUuid + ": " + e.getMessage());
+            CrypticLib.error("Failed to get discovered recipes for " + playerUuid + ": " + e.getMessage());
             return new HashSet<>();
         }
     }
@@ -78,7 +78,7 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
             }
             int removedRecipesCount = toRemove.size();
             if (removedRecipesCount > 0) {
-                CrypticLib.info("Removed " + removedRecipesCount + " discovered recipes for player: " + playerUuid);
+                CrypticLib.verbose("Removed " + removedRecipesCount + " discovered recipes for player: " + playerUuid);
             }
 
             //存入新增的已解锁配方
@@ -89,10 +89,10 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
             }
             int addedRecipesCount = toAdd.size();
             if (addedRecipesCount > 0) {
-                CrypticLib.info("Saved " + toAdd.size() + " discovered recipes for player: " + playerUuid);
+                CrypticLib.verbose("Saved " + toAdd.size() + " discovered recipes for player: " + playerUuid);
             }
         } catch (SQLException e) {
-            CrypticLib.info("&cFailed to save discovered recipes for " + playerUuid + ": " + e.getMessage());
+            CrypticLib.error("Failed to save discovered recipes for " + playerUuid + ": " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -113,7 +113,7 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
             localRecipes.retainAll(serverRecipeKeys);
             saveDiscoveredRecipes(uuid, localRecipes);
         }
-        CrypticLib.info("Saved online players' discovered recipes");
+        CrypticLib.verbose("Saved online players' discovered recipes");
     }
 
     @Override
@@ -130,7 +130,7 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
                     try {
                         saveAllOnlinePlayersData();
                     } catch (Exception e) {
-                        CrypticLib.info("&cFailed to save discovered recipes on disable: " + e.getMessage());
+                        CrypticLib.error("Failed to save discovered recipes on disable: " + e.getMessage());
                     }
                 }
             }
@@ -149,7 +149,7 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
                 try {
                     saveAllOnlinePlayersData();
                 } catch (Exception e) {
-                    CrypticLib.info("&cFailed to periodic save discovered recipes: " + e.getMessage());
+                    CrypticLib.error("Failed to periodic save discovered recipes: " + e.getMessage());
                 }
             }
         };
@@ -176,7 +176,7 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
                     CrypticLibBukkit.scheduler().runOnEntity(player, () -> player.discoverRecipes(keys), () -> {});
                 }
             } catch (Exception e) {
-                CrypticLib.info("&cFailed to load discovered recipes for " + player.getName() + ": " + e.getMessage());
+                CrypticLib.error("Failed to load discovered recipes for " + player.getName() + ": " + e.getMessage());
             }
         }
         CrypticLib.info("Loaded discovered recipes for online players");

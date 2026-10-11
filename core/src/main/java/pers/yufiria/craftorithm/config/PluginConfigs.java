@@ -243,7 +243,7 @@ public class PluginConfigs {
             config.set(oldKey, null);
             return value;
         }
-        CrypticLib.info("&e<old_key> is not a int type value!", Map.of("<old_key>", oldKey));
+        CrypticLib.warn("<old_key> is not a int type value!", Map.of("<old_key>", oldKey));
         return def;
     }
 

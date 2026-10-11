@@ -64,7 +64,7 @@ public enum OtherPluginsListenerManager implements LifecycleTask {
                 EventExecutor executor = getRegisteredListenerExecutor(originRegisteredListener);
                 if (executor == null) {
                     //拿不到原监听器的executor时不能转换,否则包装监听器会在事件触发时抛NPE
-                    CrypticLib.info("&cCannot get executor of listener " + listenerClassName + ", skip converting it");
+                    CrypticLib.error("Cannot get executor of listener " + listenerClassName + ", skip converting it");
                     continue;
                 }
                 RegisteredListener convertedRegisteredListener;
@@ -87,7 +87,7 @@ public enum OtherPluginsListenerManager implements LifecycleTask {
                         );
                     }
                 } catch (Throwable t) {
-                    CrypticLib.info("&eFailed to convert timed listener " + listenerClassName + ", fallback to non-timed wrapper: " + t);
+                    CrypticLib.warn("Failed to convert timed listener " + listenerClassName + ", fallback to non-timed wrapper: " + t);
                     convertedRegisteredListener = new RecipeCheckRegisteredListener(
                         listener,
                         executor,
@@ -172,7 +172,7 @@ public enum OtherPluginsListenerManager implements LifecycleTask {
         try {
             return ReflectionHelper.getDeclaredField(RegisteredListener.class, "executor");
         } catch (Throwable t) {
-            CrypticLib.info("&cCannot find executor field of RegisteredListener, other plugins' craft listeners will not be converted");
+            CrypticLib.error("Cannot find executor field of RegisteredListener, other plugins' craft listeners will not be converted");
             return null;
         }
     }

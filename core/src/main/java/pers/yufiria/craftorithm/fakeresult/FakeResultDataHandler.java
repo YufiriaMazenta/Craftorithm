@@ -72,7 +72,7 @@ public enum FakeResultDataHandler implements Listener, LifecycleTask {
         String fakeResultIdStr = recipeConfig.getString(FAKE_RESULT_PREVIEW_CONFIG_KEY);
         NamespacedItemIdStack fakeResultId = NamespacedItemIdStack.fromString(fakeResultIdStr);
         if (fakeResultId == null) {
-            CrypticLib.info("&eFailed to resolve fake result item from: " + fakeResultIdStr);
+            CrypticLib.warn("Failed to resolve fake result item from: " + fakeResultIdStr);
             return;
         }
         Optional<ItemStack> itemStack = ItemManager.INSTANCE.matchItem(fakeResultId);

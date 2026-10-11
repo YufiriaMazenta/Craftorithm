@@ -156,7 +156,7 @@ public abstract class RecipeEditorMenu extends StoredMenu implements BackableMen
             RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeId, false, false);
             ParsedRecipe parsedRecipe = RecipeManager.INSTANCE.parseRecipeFromConfig(recipeFileName, configWrapper);
             if (parsedRecipe == null) {
-                CrypticLib.info("&cFailed to load recipe " + recipeFileName);
+                CrypticLib.error("Failed to load recipe " + recipeFileName);
                 return;
             }
             CrypticLibBukkit.scheduler().syncLater(() -> {

@@ -296,7 +296,7 @@ public enum RecipeManager implements LifecycleTask {
                 if (recipeKey != null)
                     serverRecipeKeys.add(recipeKey);
             } catch (Throwable throwable) {
-                CrypticLib.info("&cError when load server recipe keys: <message>", Map.of("<message>", throwable.getMessage()));
+                CrypticLib.error("Error when load server recipe keys: <message>", Map.of("<message>", throwable.getMessage()));
             }
         }
     }
@@ -595,7 +595,7 @@ public enum RecipeManager implements LifecycleTask {
                     registerRecipes(batch);
                 }
             } catch (Throwable t) {
-                CrypticLib.info("&cUnexpected error during recipe loading, aborting...");
+                CrypticLib.error("Unexpected error during recipe loading, aborting...");
                 t.printStackTrace();
                 end();
             }

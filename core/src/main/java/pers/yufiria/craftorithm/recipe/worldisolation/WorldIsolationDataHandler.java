@@ -54,7 +54,7 @@ public enum WorldIsolationDataHandler implements Listener, LifecycleTask {
         if (recipeConfig.isString(ENABLE_WORLDS_CONFIG_KEY)) {
             String worldName = recipeConfig.getString(ENABLE_WORLDS_CONFIG_KEY);
             if (!isWorldValid(worldName)) {
-                CrypticLib.info("&c" + worldName + " is a invalid world in recipe: " + event.recipeKey());
+                CrypticLib.error(worldName + " is a invalid world in recipe: " + event.recipeKey());
                 return;
             }
             enableWorlds = new EnableWorlds(Collections.singletonList(worldName));
@@ -63,7 +63,7 @@ public enum WorldIsolationDataHandler implements Listener, LifecycleTask {
             enableWorldNameList.removeIf(it -> {
                 boolean worldValid = isWorldValid(it);
                 if (!worldValid) {
-                    CrypticLib.info("&c" + it + " is a invalid world in recipe: " + event.recipeKey());
+                    CrypticLib.error(it + " is a invalid world in recipe: " + event.recipeKey());
                 }
                 return !worldValid;
             });

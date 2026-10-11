@@ -130,7 +130,7 @@ public enum ItemManager implements LifecycleTask {
 
     private void logProviderError(String providerNamespace, Throwable throwable) {
         if (erroredProviders.add(providerNamespace)) {
-            CrypticLib.info("&cItem provider '" + providerNamespace + "' threw an exception, it may be incompatible with the installed plugin version");
+            CrypticLib.error("Item provider '" + providerNamespace + "' threw an exception, it may be incompatible with the installed plugin version");
             throwable.printStackTrace();
         }
     }
@@ -368,7 +368,7 @@ public enum ItemManager implements LifecycleTask {
         for (ConfigurationSection section : PluginConfigs.INGREDIENT_RESTRICTION_RULES.value()) {
             IngredientRestrictionRule rule = IngredientRestrictionRegistry.INSTANCE.create(section);
             if (rule == null) {
-                CrypticLib.info("&cUnknown ingredient restriction rule type: " + section.getString("type", ""));
+                CrypticLib.error("Unknown ingredient restriction rule type: " + section.getString("type", ""));
                 continue;
             }
             rules.add(rule);

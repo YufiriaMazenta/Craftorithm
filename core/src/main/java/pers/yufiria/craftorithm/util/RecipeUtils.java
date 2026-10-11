@@ -241,7 +241,7 @@ public class RecipeUtils {
         if (pattern == null) {
             Key key = Key.key(recipeKeyPattern);
             if (key == null) {
-                CrypticLib.info("&cInvalid recipe key <key>", Map.of("<key>", recipeKeyPattern));
+                CrypticLib.error("Invalid recipe key <key>", Map.of("<key>", recipeKeyPattern));
                 return Collections.emptyList();
             }
             recipeKeys = List.of(new NamespacedKey(key.namespace(), key.key()));

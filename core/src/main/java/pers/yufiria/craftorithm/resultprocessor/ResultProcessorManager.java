@@ -82,7 +82,7 @@ public enum ResultProcessorManager implements Listener {
         for (String componentName : processorsSection.getKeys(false)) {
             ComponentProcessorFactory factory = factoryMap.get(componentName);
             if (factory == null) {
-                CrypticLib.info("&eUnknown component: " + componentName);
+                CrypticLib.warn("Unknown component: " + componentName);
                 continue;
             }
             if (processorsSection.isList(componentName)) {
@@ -99,7 +99,7 @@ public enum ResultProcessorManager implements Listener {
                 // 单个配置格式
                 ConfigurationSection entry = processorsSection.getConfigurationSection(componentName);
                 if (entry == null) {
-                    CrypticLib.info("&eInvalid result_processor entry: " + componentName);
+                    CrypticLib.warn("Invalid result_processor entry: " + componentName);
                     continue;
                 }
                 parseAndAddProcessor(processors, factory, componentName, entry);
@@ -111,14 +111,14 @@ public enum ResultProcessorManager implements Listener {
     private void parseAndAddProcessor(List<ResultProcessor> processors, ComponentProcessorFactory factory, String componentName, ConfigurationSection entry) {
         String type = entry.getString("type");
         if (type == null) {
-            CrypticLib.info("&eMissing 'type' for result_processor: " + componentName);
+            CrypticLib.warn("Missing 'type' for result_processor: " + componentName);
             return;
         }
         ConfigurationSection data = entry.getConfigurationSection("data");
         try {
             processors.add(factory.createProcessor(type, data));
         } catch (UnsupportedOperationException e) {
-            CrypticLib.info("&e" + e.getMessage());
+            CrypticLib.warn(e.getMessage());
         }
     }
 
@@ -149,14 +149,14 @@ public enum ResultProcessorManager implements Listener {
             }
             ComponentProcessorFactory factory = factoryMap.get(ruleName);
             if (factory == null) {
-                CrypticLib.info("&eUnknown rule: " + ruleName);
+                CrypticLib.warn("Unknown rule: " + ruleName);
                 continue;
             }
             ConfigurationSection data = parseLegacyArg(arg);
             try {
                 processors.add(factory.createProcessor("copy_from_source", data));
             } catch (UnsupportedOperationException e) {
-                CrypticLib.info("&e" + e.getMessage());
+                CrypticLib.warn(e.getMessage());
             }
         }
         recipeProcessors.put(recipeKey, new ResultProcessors(processors));

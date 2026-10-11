@@ -41,7 +41,7 @@ public enum ItemPluginHookManager implements LifecycleTask {
                 for (String hookPluginName : PluginConfigs.ITEM_PLUGIN_HOOK_PRIORITY.value()) {
                     ItemPluginHook itemPluginHooker = getItemPluginHook(hookPluginName);
                     if (itemPluginHooker == null) {
-                        CrypticLib.info("&eUnknown item plugin '" + hookPluginName + "'");
+                        CrypticLib.warn("Unknown item plugin '" + hookPluginName + "'");
                         continue;
                     }
                     if (itemPluginHooker.hook()) {

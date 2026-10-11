@@ -111,7 +111,7 @@ public enum ItemFlagProcessorFactory implements ComponentProcessorFactory {
         try {
             return ItemFlag.valueOf(flagName.toUpperCase());
         } catch (IllegalArgumentException e) {
-            CrypticLib.info("&eUnknown ItemFlag: " + flagName);
+            CrypticLib.warn("Unknown ItemFlag: " + flagName);
             return null;
         }
     }

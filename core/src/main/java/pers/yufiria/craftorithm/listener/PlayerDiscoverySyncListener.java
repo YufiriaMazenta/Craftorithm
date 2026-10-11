@@ -66,11 +66,11 @@ public enum PlayerDiscoverySyncListener implements Listener {
                                 });
                             }
                         } catch (Exception e) {
-                            CrypticLib.info("&cFailed to sync discovered recipes on join for " + player.getName() + ": " + e.getMessage());
+                            CrypticLib.error("Failed to sync discovered recipes on join for " + player.getName() + ": " + e.getMessage());
                         }
                     });
                 } catch (Exception e) {
-                    CrypticLib.info("&cFailed to read local recipes on join for " + player.getName() + ": " + e.getMessage());
+                    CrypticLib.error("Failed to read local recipes on join for " + player.getName() + ": " + e.getMessage());
                 }
             }, () -> {
             });
@@ -98,7 +98,7 @@ public enum PlayerDiscoverySyncListener implements Listener {
             try {
                 DiscoveredRecipeDao.INSTANCE.saveDiscoveredRecipes(uuid, localRecipes);
             } catch (Exception e) {
-                CrypticLib.info("&cFailed to sync discovered recipes on quit for " + player.getName() + ": " + e.getMessage());
+                CrypticLib.error("Failed to sync discovered recipes on quit for " + player.getName() + ": " + e.getMessage());
             }
         });
     }

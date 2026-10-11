@@ -228,12 +228,12 @@ public enum CustomPersistentDataProcessorFactory implements ComponentProcessorFa
         try {
             Field field = ReflectionHelper.getField(dataTypeClass, upperTypeStr);
             if (field == null) {
-                CrypticLib.info("&eUnknown PersistentDataType: " + typeStr);
+                CrypticLib.warn("Unknown PersistentDataType: " + typeStr);
                 return null;
             }
             Object dataType = ReflectionHelper.getFieldObj(field, null);
             if (dataType == null) {
-                CrypticLib.info("&eUnknown PersistentDataType: " + typeStr);
+                CrypticLib.warn("Unknown PersistentDataType: " + typeStr);
                 return null;
             }
             return (PersistentDataType<?, ?>) dataType;

@@ -95,7 +95,7 @@ public enum BrewingRecipeRegister implements RecipeRegister {
         @Override
         public boolean registerRecipe(Recipe recipe, boolean updateRecipes) {
             if (!RecipeManager.INSTANCE.supportBrewingRecipe()) {
-                CrypticLib.info("&cThe server does not support brewing recipes");
+                CrypticLib.error("The server does not support brewing recipes");
                 return false;
             }
             if (!(recipe instanceof BrewingRecipe brewingRecipe)) {
@@ -110,7 +110,7 @@ public enum BrewingRecipeRegister implements RecipeRegister {
         @Override
         public boolean unregisterRecipe(NamespacedKey recipeKey, boolean updateRecipes) {
             if (!RecipeManager.INSTANCE.supportBrewingRecipe()) {
-                CrypticLib.info("&cThe server does not support brewing recipes");
+                CrypticLib.error("The server does not support brewing recipes");
                 return false;
             }
             PotionBrewer potionBrewer = Bukkit.getPotionBrewer();

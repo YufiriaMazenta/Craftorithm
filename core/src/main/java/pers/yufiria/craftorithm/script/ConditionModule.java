@@ -61,7 +61,7 @@ public enum ConditionModule implements ScriptModule {
         String recipeKeyStr = args[0].asString();
         Key key = Key.key(recipeKeyStr);
         if (key == null) {
-            CrypticLib.info("&cInvalid namespaced key: <key>", Map.of("<key>", recipeKeyStr));
+            CrypticLib.error("Invalid namespaced key: <key>", Map.of("<key>", recipeKeyStr));
             return ScriptValue.of(false);
         }
         NamespacedKey recipeKey = new NamespacedKey(key.namespace(), key.key());
