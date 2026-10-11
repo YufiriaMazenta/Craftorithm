@@ -119,9 +119,7 @@ public enum RecipeManager implements LifecycleTask {
                 //所有操作进行完毕后，为玩家更新配方信息
                 CraftorithmRecipeRegistry.findImpl().updateRecipes();
                 //从数据库恢复玩家已解锁配方（异步，避免阻塞主线程）
-                CrypticLibBukkit.scheduler().async(() -> {
-                    DiscoveredRecipeDao.INSTANCE.loadOnlinePlayersDiscoveredRecipes();
-                });
+                CrypticLibBukkit.scheduler().async(DiscoveredRecipeDao.INSTANCE::loadOnlinePlayersDiscoveredRecipes);
                 if (reloadCompletion != null) {
                     reloadCompletion.complete(null);
                 }
