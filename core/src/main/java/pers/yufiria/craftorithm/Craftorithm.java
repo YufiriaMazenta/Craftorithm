@@ -1,7 +1,6 @@
 package pers.yufiria.craftorithm;
 
 import crypticlib.*;
-import crypticlib.chat.BukkitMsgSender;
 import crypticlib.lifecycle.LifecyclePhase;
 import crypticlib.lifecycle.LifecycleSchedule;
 import crypticlib.lifecycle.LifecycleTask;
@@ -9,10 +8,9 @@ import crypticlib.lifecycle.LifecycleTaskConfig;
 import crypticlib.log.LogLevel;
 import crypticlib.script.ScriptEngine;
 import org.bukkit.Bukkit;
-import pers.yufiria.craftorithm.api.CraftorithmAPI;
+import pers.yufiria.craftorithm.api.CraftorithmApi;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.PluginConfigs;
-import pers.yufiria.craftorithm.exception.UnsupportedVersionException;
 import pers.yufiria.craftorithm.metrics.BStats;
 import pers.yufiria.craftorithm.recipe.ParsedRecipe;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
@@ -75,8 +73,8 @@ public final class Craftorithm extends BukkitPlugin implements LifecycleTask {
         return INSTANCE;
     }
 
-    public static CraftorithmAPI api() {
-        return CraftorithmAPI.INSTANCE;
+    public static CraftorithmApi api() {
+        return CraftorithmApi.INSTANCE;
     }
 
     @Override

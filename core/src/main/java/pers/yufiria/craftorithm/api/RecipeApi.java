@@ -1,89 +1,20 @@
 package pers.yufiria.craftorithm.api;
 
 import org.bukkit.NamespacedKey;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.yufiria.craftorithm.Craftorithm;
-import pers.yufiria.craftorithm.command.ReloadCommand;
-import pers.yufiria.craftorithm.hook.item.ItemPluginHook;
-import pers.yufiria.craftorithm.hook.item.ItemPluginHookManager;
-import pers.yufiria.craftorithm.item.CraftorithmItemProvider;
-import pers.yufiria.craftorithm.item.ItemManager;
-import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeGroup;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
-import pers.yufiria.craftorithm.trigger.TriggerContext;
-import pers.yufiria.craftorithm.trigger.TriggerManager;
-import pers.yufiria.craftorithm.trigger.TriggerType;
 
 import java.util.*;
 
-public enum CraftorithmAPI {
+public enum RecipeApi {
 
     INSTANCE;
 
-    // ==================== Item API ====================
 
-    /**
-     * 获取一个Craftorithm物品
-     * @param itemName 物品名称（格式: namespace:id 或 纯id）
-     * @return 物品栈，不存在返回null
-     */
-    public @Nullable ItemStack getCraftorithmItem(@NotNull String itemName) {
-        return CraftorithmItemProvider.INSTANCE.matchItem(itemName);
-    }
-
-    /**
-     * 根据NamespacedItemIdStack获取物品
-     * @param itemIdStack 物品ID栈
-     * @return 物品栈，不存在返回 Optional.empty()
-     */
-    public Optional<ItemStack> getItem(@NotNull NamespacedItemIdStack itemIdStack) {
-        return ItemManager.INSTANCE.matchItem(itemIdStack);
-    }
-
-    /**
-     * 根据NamespacedItemIdStack获取物品（带玩家变量解析）
-     * @param itemIdStack 物品ID栈
-     * @param player 玩家
-     * @return 物品栈，不存在返回 Optional.empty()
-     */
-    public Optional<ItemStack> getItem(@NotNull NamespacedItemIdStack itemIdStack, @Nullable Player player) {
-        return ItemManager.INSTANCE.matchItem(itemIdStack, player);
-    }
-
-    /**
-     * 获取物品的NamespacedItemId
-     * @param item 物品栈
-     * @param ignoreAmount 是否忽略数量
-     * @return 物品ID，无法识别返回 Optional.empty()
-     */
-    public Optional<NamespacedItemIdStack> matchItemId(@NotNull ItemStack item, boolean ignoreAmount) {
-        return ItemManager.INSTANCE.matchItemId(item, ignoreAmount);
-    }
-
-    /**
-     * 注册一个物品插件挂钩
-     * 通过此方式注册的挂钩会在重载时自动重新注册，不会丢失
-     * @param hook 物品插件挂钩
-     */
-    public void registerItemPluginHook(@NotNull ItemPluginHook hook) {
-        ItemPluginHookManager.INSTANCE.addItemPluginHook(hook);
-    }
-
-    /**
-     * 获取所有Craftorithm物品
-     * @return 物品映射副本
-     */
-    public @NotNull Map<String, ItemStack> getCraftorithmItems() {
-        return CraftorithmItemProvider.INSTANCE.idItemMap();
-    }
-
-    // ==================== Recipe API ====================
 
     /**
      * 根据配方Key获取配方，会从服务器里查找所有配方
@@ -127,7 +58,7 @@ public enum CraftorithmAPI {
      * @return 配方Key集合副本
      */
     public @NotNull Set<NamespacedKey> getServerRecipeKeys() {
-        return Collections.unmodifiableSet(RecipeManager.INSTANCE.serverRecipeKeys());
+        return RecipeManager.INSTANCE.serverRecipeKeys();
     }
 
     /**
@@ -231,44 +162,6 @@ public enum CraftorithmAPI {
      */
     public @Nullable NamespacedKey getRecipeKeyByFileName(@NotNull String recipeFileName) {
         return RecipeManager.INSTANCE.getRecipeKeyByFileName(recipeFileName);
-    }
-
-    // ==================== Trigger API ====================
-
-    /**
-     * 获取触发器管理器
-     * @return 触发器管理器实例
-     */
-    public @NotNull TriggerManager getTriggerManager() {
-        return TriggerManager.INSTANCE;
-    }
-
-    /**
-     * 触发指定类型的触发器
-     * @param triggerType 触发器类型
-     * @param context 触发上下文
-     * @return 是否有触发器被执行
-     */
-    public boolean fireTrigger(@NotNull TriggerType triggerType, @NotNull TriggerContext context) {
-        return TriggerManager.INSTANCE.fire(triggerType, context);
-    }
-
-    // ==================== Utility API ====================
-
-    /**
-     * 获取插件实例
-     * @return 插件实例
-     */
-    public @NotNull Craftorithm getPlugin() {
-        return Craftorithm.instance();
-    }
-
-    /**
-     * 检查配方管理器是否正在重载
-     * @return 是否正在重载
-     */
-    public boolean isReloading() {
-        return ReloadCommand.INSTANCE.isReloading();
     }
 
 }
