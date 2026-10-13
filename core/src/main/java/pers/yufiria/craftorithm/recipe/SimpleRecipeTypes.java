@@ -1,7 +1,7 @@
 package pers.yufiria.craftorithm.recipe;
 
 import crypticlib.MinecraftVersion;
-import crypticlib.lang.entry.StringLangEntry;
+import crypticlib.lang.node.StringLang;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -139,7 +139,7 @@ public enum SimpleRecipeTypes implements RecipeType {
     private final RecipeParser<?> recipeParser;
     private final RecipeRegister recipeRegister;
     private final Function<Recipe, Boolean> isThisTypeFunction;
-    private final StringLangEntry recipeNameLang;
+    private final StringLang recipeNameLang;
     private final @Range(from = 0, to = 256) Integer typeId;
 
     SimpleRecipeTypes(
@@ -147,7 +147,7 @@ public enum SimpleRecipeTypes implements RecipeType {
         RecipeParser<?> recipeParser,
         RecipeRegister recipeRegister,
         Function<Recipe, Boolean> isThisTypeFunction,
-        StringLangEntry recipeNameLang,
+        StringLang recipeNameLang,
         @Range(from = 0, to = 256) Integer typeId
     ) {
         this.typeKey = typeKey;

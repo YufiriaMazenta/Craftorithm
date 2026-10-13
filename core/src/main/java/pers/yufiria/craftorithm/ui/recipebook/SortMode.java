@@ -1,6 +1,6 @@
 package pers.yufiria.craftorithm.ui.recipebook;
 
-import crypticlib.lang.entry.StringLangEntry;
+import crypticlib.lang.node.StringLang;
 import pers.yufiria.craftorithm.config.Languages;
 
 public enum SortMode {
@@ -10,13 +10,13 @@ public enum SortMode {
     TIME_ASC(Languages.MENU_RECIPE_BOOK_SORT_MODE_TIME_ASC),
     TIME_DESC(Languages.MENU_RECIPE_BOOK_SORT_MODE_TIME_DESC);
 
-    private final StringLangEntry nameLang;
+    private final StringLang nameLang;
 
-    SortMode(StringLangEntry nameLang) {
+    SortMode(StringLang nameLang) {
         this.nameLang = nameLang;
     }
 
-    public StringLangEntry nameLang() {
+    public StringLang nameLang() {
         return nameLang;
     }
 
