@@ -5,7 +5,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
+import pers.yufiria.craftorithm.config.Languages;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -53,6 +55,31 @@ public class PlayerUtils {
             return invoker.asPlayer().uniqueId();
         }
         return null;
+    }
+
+    /**
+     * 取命令执行者对应的在线玩家。
+     * 执行者不是玩家或玩家已不在线时会向执行者发送提示。
+     * @param invoker 命令执行者
+     * @return 执行者对应的玩家, 取不到返回null
+     */
+    public static @Nullable Player resolveInvokerPlayer(Invoker invoker) {
+        if (!CommandUtils.checkInvokerIsPlayer(invoker)) {
+            return null;
+        }
+        Optional<Player> playerOpt = invoker.asPlayer().getPlatformPlayer(Bukkit::getPlayer);
+        if (playerOpt.isEmpty()) {
+            LangUtils.sendLang(invoker, Languages.COMMAND_PLAYER_ONLY);
+            return null;
+        }
+        return playerOpt.get();
+    }
+
+    /**
+     * 获取当前所有在线玩家的名字
+     */
+    public static List<String> onlinePlayerNames() {
+        return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
     }
 
 }

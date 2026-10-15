@@ -2,14 +2,13 @@ package pers.yufiria.craftorithm.command;
 
 import crypticlib.command.CommandContext;
 import crypticlib.command.CommandInfo;
-import crypticlib.command.CommandNode;
 import crypticlib.perm.PermInfo;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.permission.Permissions;
 import pers.yufiria.craftorithm.util.LangUtils;
 
-public final class VersionCommand extends CommandNode {
+public final class VersionCommand extends AbstractSubcommand {
 
     public static final VersionCommand INSTANCE = new VersionCommand();
 
@@ -22,9 +21,5 @@ public final class VersionCommand extends CommandNode {
         LangUtils.sendLang(context.invoker(), Languages.COMMAND_VERSION);
     }
 
-    @Override
-    public void onNoPerm(@NotNull CommandContext context) {
-        LangUtils.sendLang(context.invoker(), Languages.COMMAND_NO_PERM);
-    }
 
 }

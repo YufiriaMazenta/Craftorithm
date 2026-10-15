@@ -3,8 +3,8 @@ package pers.yufiria.craftorithm.command.recipe;
 import crypticlib.Invoker;
 import crypticlib.Key;
 import crypticlib.command.CommandContext;
+import pers.yufiria.craftorithm.command.AbstractSubcommand;
 import crypticlib.command.CommandInfo;
-import crypticlib.command.CommandNode;
 import crypticlib.perm.PermInfo;
 import crypticlib.ui.menu.Menu;
 import crypticlib.util.TriFunction;
@@ -23,7 +23,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public final class CreateCommand extends CommandNode {
+public final class CreateCommand extends AbstractSubcommand {
 
     public static final CreateCommand INSTANCE = new CreateCommand();
 
@@ -83,10 +83,6 @@ public final class CreateCommand extends CommandNode {
         creatorFactoryOpt.get().apply(playerOpt.get(), recipeId, recipeFileName);
     }
 
-    @Override
-    public void onNoPerm(@NotNull CommandContext context) {
-        LangUtils.sendLang(context.invoker(), Languages.COMMAND_NO_PERM);
-    }
 
     @Override
     public List<String> tabComplete(@NotNull CommandContext context) {

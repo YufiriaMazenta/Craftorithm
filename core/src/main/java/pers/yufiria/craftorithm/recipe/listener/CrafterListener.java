@@ -3,8 +3,6 @@ package pers.yufiria.craftorithm.recipe.listener;
 import crypticlib.listener.EventListener;
 import crypticlib.util.ItemHelper;
 import org.bukkit.NamespacedKey;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Crafter;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;

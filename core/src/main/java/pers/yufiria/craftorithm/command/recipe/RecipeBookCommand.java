@@ -2,8 +2,8 @@ package pers.yufiria.craftorithm.command.recipe;
 
 import crypticlib.Invoker;
 import crypticlib.command.CommandContext;
+import pers.yufiria.craftorithm.command.AbstractSubcommand;
 import crypticlib.command.CommandInfo;
-import crypticlib.command.CommandNode;
 import crypticlib.perm.PermInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -18,11 +18,12 @@ import pers.yufiria.craftorithm.ui.recipebook.RecipeListMenu;
 import pers.yufiria.craftorithm.ui.recipebook.SortMode;
 import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
+import pers.yufiria.craftorithm.util.PlayerUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class RecipeBookCommand extends CommandNode {
+public final class RecipeBookCommand extends AbstractSubcommand {
 
     public static final RecipeBookCommand INSTANCE = new RecipeBookCommand();
 
@@ -53,15 +54,10 @@ public class RecipeBookCommand extends CommandNode {
                 return;
             }
         } else {
-            if (!CommandUtils.checkInvokerIsPlayer(invoker)) {
+            target = PlayerUtils.resolveInvokerPlayer(invoker);
+            if (target == null) {
                 return;
             }
-            Optional<Player> targetOpt = invoker.asPlayer().getPlatformPlayer(Bukkit::getPlayer);
-            if (targetOpt.isEmpty()) {
-                LangUtils.sendLang(invoker, Languages.COMMAND_PLAYER_ONLY);
-                return;
-            }
-            target = targetOpt.get();
         }
 
         String typeKey = CommandUtils.parseFlag(args, FLAG_TYPE);
@@ -82,10 +78,6 @@ public class RecipeBookCommand extends CommandNode {
         }
     }
 
-    @Override
-    public void onNoPerm(@NotNull CommandContext context) {
-        LangUtils.sendLang(context.invoker(), Languages.COMMAND_NO_PERM);
-    }
 
     @Override
     public @Nullable List<String> tabComplete(@NotNull CommandContext context) {
@@ -97,9 +89,7 @@ public class RecipeBookCommand extends CommandNode {
         String lastArg = args.get(args.size() - 2);
         switch (lastArg.toLowerCase()) {
             case FLAG_PLAYER:
-                return Bukkit.getOnlinePlayers().stream()
-                    .map(Player::getName)
-                    .collect(Collectors.toList());
+                return PlayerUtils.onlinePlayerNames();
             case FLAG_TYPE:
                 List<String> typeSuggestions = RecipeManager.INSTANCE.getRecipeTypes().stream()
                     .filter(type -> type.typeId() != 0) // 过滤掉UNKNOWN类型

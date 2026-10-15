@@ -2,8 +2,8 @@ package pers.yufiria.craftorithm.command.recipe;
 
 import crypticlib.Invoker;
 import crypticlib.command.CommandContext;
+import pers.yufiria.craftorithm.command.AbstractSubcommand;
 import crypticlib.command.CommandInfo;
-import crypticlib.command.CommandNode;
 import crypticlib.perm.PermInfo;
 import org.bukkit.NamespacedKey;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +15,7 @@ import pers.yufiria.craftorithm.util.LangUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class DisableCommand extends CommandNode {
+public final class DisableCommand extends AbstractSubcommand {
 
     public static final DisableCommand INSTANCE = new DisableCommand();
 
@@ -47,10 +47,6 @@ public final class DisableCommand extends CommandNode {
             LangUtils.sendLang(invoker, Languages.COMMAND_DISABLE_FAILED);
     }
 
-    @Override
-    public void onNoPerm(@NotNull CommandContext context) {
-        LangUtils.sendLang(context.invoker(), Languages.COMMAND_NO_PERM);
-    }
 
     @Override
     public List<String> tabComplete(@NotNull CommandContext context) {

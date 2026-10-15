@@ -2,8 +2,8 @@ package pers.yufiria.craftorithm.command.recipe;
 
 import crypticlib.Invoker;
 import crypticlib.command.CommandContext;
+import pers.yufiria.craftorithm.command.AbstractSubcommand;
 import crypticlib.command.CommandInfo;
-import crypticlib.command.CommandNode;
 import crypticlib.perm.PermInfo;
 import crypticlib.ui.menu.Menu;
 import crypticlib.util.TriFunction;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public final class EditCommand extends CommandNode {
+public final class EditCommand extends AbstractSubcommand {
 
     public static final EditCommand INSTANCE = new EditCommand();
 
@@ -79,10 +79,6 @@ public final class EditCommand extends CommandNode {
         editorFactoryOpt.get().apply(playerOpt.get(), recipeKey, recipe);
     }
 
-    @Override
-    public void onNoPerm(@NotNull CommandContext context) {
-        LangUtils.sendLang(context.invoker(), Languages.COMMAND_NO_PERM);
-    }
 
     @Override
     public @NotNull List<String> tabComplete(@NotNull CommandContext context) {

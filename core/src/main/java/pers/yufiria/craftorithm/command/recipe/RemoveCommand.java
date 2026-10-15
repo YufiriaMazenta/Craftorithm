@@ -2,8 +2,8 @@ package pers.yufiria.craftorithm.command.recipe;
 
 import crypticlib.Invoker;
 import crypticlib.command.CommandContext;
+import pers.yufiria.craftorithm.command.AbstractSubcommand;
 import crypticlib.command.CommandInfo;
-import crypticlib.command.CommandNode;
 import crypticlib.perm.PermInfo;
 import org.bukkit.NamespacedKey;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * 重构为只能删除本身插件的配方，取消其他插件配方移动到disable命令
  */
-public final class RemoveCommand extends CommandNode {
+public final class RemoveCommand extends AbstractSubcommand {
 
     public static final RemoveCommand INSTANCE = new RemoveCommand();
 
@@ -47,10 +47,6 @@ public final class RemoveCommand extends CommandNode {
             LangUtils.sendLang(invoker, Languages.COMMAND_REMOVE_NOT_EXIST);
     }
 
-    @Override
-    public void onNoPerm(@NotNull CommandContext context) {
-        LangUtils.sendLang(context.invoker(), Languages.COMMAND_NO_PERM);
-    }
 
     @Override
     public List<String> tabComplete(@NotNull CommandContext context) {

@@ -5,7 +5,6 @@ import crypticlib.CrypticLibPlugin;
 import crypticlib.Invoker;
 import crypticlib.command.CommandContext;
 import crypticlib.command.CommandInfo;
-import crypticlib.command.CommandNode;
 import crypticlib.lifecycle.LifecyclePhase;
 import crypticlib.lifecycle.LifecycleSchedule;
 import crypticlib.lifecycle.LifecycleTask;
@@ -30,7 +29,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
     priority = Integer.MAX_VALUE,
     isAsync = true
 ))
-public final class ReloadCommand extends CommandNode implements LifecycleTask {
+public final class ReloadCommand extends AbstractSubcommand implements LifecycleTask {
 
     public static final ReloadCommand INSTANCE = new ReloadCommand();
     private volatile @Nullable UUID reloadSenderUuid;
@@ -68,10 +67,6 @@ public final class ReloadCommand extends CommandNode implements LifecycleTask {
         }
     }
 
-    @Override
-    public void onNoPerm(@NotNull CommandContext context) {
-        LangUtils.sendLang(context.invoker(), Languages.COMMAND_NO_PERM);
-    }
 
     @Override
     public void onLifecycle(CrypticLibPlugin crypticLibPlugin, LifecyclePhase lifecyclePhase) {

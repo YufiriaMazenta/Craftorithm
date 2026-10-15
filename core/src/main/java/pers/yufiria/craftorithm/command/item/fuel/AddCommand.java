@@ -5,22 +5,21 @@ import crypticlib.command.CommandContext;
 import crypticlib.command.CommandInfo;
 import crypticlib.command.CommandNode;
 import crypticlib.util.ItemHelper;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.item.ItemManager;
-import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
+import pers.yufiria.craftorithm.util.PlayerUtils;
 
 import java.util.*;
 
-public class AddCommand extends CommandNode {
+public final class AddCommand extends CommandNode {
 
     public static final AddCommand INSTANCE = new AddCommand();
 
-    protected AddCommand() {
+    private AddCommand() {
         super(CommandInfo.builder("add").build());
     }
 
@@ -32,15 +31,11 @@ public class AddCommand extends CommandNode {
             sendDescriptions(invoker);
             return;
         }
-        if (!CommandUtils.checkInvokerIsPlayer(invoker))
-            return;
-
-        Optional<Player> playerOpt = invoker.asPlayer().getPlatformPlayer(Bukkit::getPlayer);
-        if (playerOpt.isEmpty()) {
-            LangUtils.sendLang(invoker, Languages.COMMAND_PLAYER_ONLY);
+        Player player = PlayerUtils.resolveInvokerPlayer(invoker);
+        if (player == null) {
             return;
         }
-        ItemStack item = playerOpt.get().getInventory().getItemInMainHand();
+        ItemStack item = player.getInventory().getItemInMainHand();
         if (ItemHelper.isAir(item)) {
             LangUtils.sendLang(invoker, Languages.COMMAND_ITEM_FUEL_ADD_FAILED_ADD_AIR);
             return;

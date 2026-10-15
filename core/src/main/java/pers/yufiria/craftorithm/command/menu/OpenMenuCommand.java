@@ -2,8 +2,8 @@ package pers.yufiria.craftorithm.command.menu;
 
 import crypticlib.Invoker;
 import crypticlib.command.CommandContext;
+import pers.yufiria.craftorithm.command.AbstractSubcommand;
 import crypticlib.command.CommandInfo;
-import crypticlib.command.CommandNode;
 import crypticlib.perm.PermInfo;
 import crypticlib.ui.menu.Menu;
 import org.bukkit.Bukkit;
@@ -13,15 +13,15 @@ import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.permission.Permissions;
 import pers.yufiria.craftorithm.ui.custom.CustomMenuManager;
-import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
+import pers.yufiria.craftorithm.util.PlayerUtils;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class OpenMenuCommand extends CommandNode {
+public final class OpenMenuCommand extends AbstractSubcommand {
 
     public static final OpenMenuCommand INSTANCE = new OpenMenuCommand();
 
@@ -53,30 +53,20 @@ public class OpenMenuCommand extends CommandNode {
         Player target;
         if (args.size() > 1) {
             String targetName = args.get(1);
-            Player player = Bukkit.getPlayer(targetName);
-            if (player == null) {
+            target = Bukkit.getPlayer(targetName);
+            if (target == null) {
                 LangUtils.sendLang(invoker, Languages.COMMAND_UNKNOWN_PLAYER, Map.of("<player_name>", targetName));
                 return;
             }
-            target = player;
         } else {
-            if (!CommandUtils.checkInvokerIsPlayer(invoker)) {
+            target = PlayerUtils.resolveInvokerPlayer(invoker);
+            if (target == null) {
                 return;
             }
-            Optional<Player> targetOpt = invoker.asPlayer().getPlatformPlayer(Bukkit::getPlayer);
-            if (targetOpt.isEmpty()) {
-                LangUtils.sendLang(invoker, Languages.COMMAND_PLAYER_ONLY);
-                return;
-            }
-            target = targetOpt.get();
         }
         menuOpener.apply(target);
     }
 
-    @Override
-    public void onNoPerm(@NotNull CommandContext context) {
-        LangUtils.sendLang(context.invoker(), Languages.COMMAND_NO_PERM);
-    }
 
     @Override
     public @Nullable List<String> tabComplete(@NotNull CommandContext context) {

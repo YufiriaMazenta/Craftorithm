@@ -3,8 +3,8 @@ package pers.yufiria.craftorithm.command.recipe;
 import crypticlib.Invoker;
 import crypticlib.Key;
 import crypticlib.command.CommandContext;
+import pers.yufiria.craftorithm.command.AbstractSubcommand;
 import crypticlib.command.CommandInfo;
-import crypticlib.command.CommandNode;
 import crypticlib.perm.PermInfo;
 import org.bukkit.NamespacedKey;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +20,7 @@ import java.util.Map;
 /**
  * 恢复一个被禁用的配方
  */
-public class RestoreCommand extends CommandNode {
+public final class RestoreCommand extends AbstractSubcommand {
 
     public static final RestoreCommand INSTANCE = new RestoreCommand();
 

@@ -14,13 +14,14 @@ import pers.yufiria.craftorithm.item.CraftorithmItemProvider;
 import pers.yufiria.craftorithm.util.CollectionsUtils;
 import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
+import pers.yufiria.craftorithm.util.PlayerUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-public class GiveCommand extends CommandNode {
+public final class GiveCommand extends CommandNode {
 
     public static final GiveCommand INSTANCE = new GiveCommand();
 
@@ -92,16 +93,7 @@ public class GiveCommand extends CommandNode {
         if (args.size() < 2) {
             return new ArrayList<>(CraftorithmItemProvider.INSTANCE.idItemMap().keySet());
         }
-        else
-            return getOnlinePlayerNameList();
-    }
-
-    private List<String> getOnlinePlayerNameList() {
-        List<String> onlinePlayerNameList = new ArrayList<>();
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            onlinePlayerNameList.add(onlinePlayer.getName());
-        }
-        return onlinePlayerNameList;
+        return PlayerUtils.onlinePlayerNames();
     }
 
 }

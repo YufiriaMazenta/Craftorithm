@@ -15,11 +15,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class RemoveCommand extends CommandNode {
+public final class RemoveCommand extends CommandNode {
 
     public static final RemoveCommand INSTANCE = new RemoveCommand();
 
-    protected RemoveCommand() {
+    private RemoveCommand() {
         super(CommandInfo.builder("remove").build());
     }
 

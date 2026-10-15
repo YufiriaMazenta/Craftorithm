@@ -1,17 +1,14 @@
 package pers.yufiria.craftorithm.command.item;
 
-import crypticlib.command.CommandContext;
+import pers.yufiria.craftorithm.command.AbstractSubcommand;
 import crypticlib.command.CommandInfo;
 import crypticlib.command.CommandNode;
 import crypticlib.command.annotation.Subcommand;
 import crypticlib.perm.PermInfo;
-import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.command.item.fuel.FuelCommand;
-import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.permission.Permissions;
-import pers.yufiria.craftorithm.util.LangUtils;
 
-public final class ItemCommand extends CommandNode {
+public final class ItemCommand extends AbstractSubcommand {
 
     public static final ItemCommand INSTANCE = new ItemCommand();
 
@@ -19,10 +16,6 @@ public final class ItemCommand extends CommandNode {
         super(CommandInfo.builder("item").permission(new PermInfo(Permissions.ITEM)).build());
     }
 
-    @Override
-    public void onNoPerm(@NotNull CommandContext context) {
-        LangUtils.sendLang(context.invoker(), Languages.COMMAND_NO_PERM);
-    }
 
     @Subcommand
     CommandNode save = SaveCommand.INSTANCE;

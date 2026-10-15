@@ -2,8 +2,8 @@ package pers.yufiria.craftorithm.command.recipe;
 
 import crypticlib.Invoker;
 import crypticlib.command.CommandContext;
+import pers.yufiria.craftorithm.command.AbstractSubcommand;
 import crypticlib.command.CommandInfo;
-import crypticlib.command.CommandNode;
 import crypticlib.perm.PermInfo;
 import crypticlib.ui.menu.Menu;
 import org.bukkit.Bukkit;
@@ -17,17 +17,17 @@ import pers.yufiria.craftorithm.permission.Permissions;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayManager;
-import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
+import pers.yufiria.craftorithm.util.PlayerUtils;
 
 import java.util.*;
 import java.util.function.BiFunction;
 
-public class DisplayCommand extends CommandNode {
+public final class DisplayCommand extends AbstractSubcommand {
 
     public static final DisplayCommand INSTANCE = new DisplayCommand();
 
-    protected DisplayCommand() {
+    private DisplayCommand() {
         super(
             CommandInfo
                 .builder("display")
@@ -48,22 +48,16 @@ public class DisplayCommand extends CommandNode {
         Player target;
         if (args.size() >= 2) {
             String targetName = args.get(1);
-            Player player = Bukkit.getPlayer(targetName);
-            if (player == null) {
+            target = Bukkit.getPlayer(targetName);
+            if (target == null) {
                 LangUtils.sendLang(invoker, Languages.COMMAND_UNKNOWN_PLAYER, Map.of("<player_name>", targetName));
                 return;
             }
-            target = player;
         } else {
-            if (!CommandUtils.checkInvokerIsPlayer(invoker)) {
+            target = PlayerUtils.resolveInvokerPlayer(invoker);
+            if (target == null) {
                 return;
             }
-            Optional<Player> targetOpt = invoker.asPlayer().getPlatformPlayer(Bukkit::getPlayer);
-            if (targetOpt.isEmpty()) {
-                LangUtils.sendLang(invoker, Languages.COMMAND_PLAYER_ONLY);
-                return;
-            }
-            target = targetOpt.get();
         }
         NamespacedKey recipeKey = NamespacedKey.fromString(args.get(0));
         Recipe recipe = RecipeManager.INSTANCE.getRecipe(recipeKey);
@@ -79,10 +73,6 @@ public class DisplayCommand extends CommandNode {
         });
     }
 
-    @Override
-    public void onNoPerm(@NotNull CommandContext context) {
-        LangUtils.sendLang(context.invoker(), Languages.COMMAND_NO_PERM);
-    }
 
     @Override
     public @Nullable List<String> tabComplete(@NotNull CommandContext context) {
@@ -92,7 +82,7 @@ public class DisplayCommand extends CommandNode {
             recipes.addAll(RecipeManager.INSTANCE.serverRecipeKeys());
             return recipes.stream().map(NamespacedKey::toString).toList();
         } else if (args.size() == 2) {
-            return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
+            return PlayerUtils.onlinePlayerNames();
         }
         return Collections.singletonList("");
     }

@@ -4,11 +4,11 @@ import crypticlib.command.CommandInfo;
 import crypticlib.command.CommandNode;
 import crypticlib.command.annotation.Subcommand;
 
-public class FuelCommand extends CommandNode {
+public final class FuelCommand extends CommandNode {
 
     public static final FuelCommand INSTANCE = new FuelCommand();
 
-    protected FuelCommand() {
+    private FuelCommand() {
         super(CommandInfo.builder("fuel").build());
     }
 
