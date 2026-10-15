@@ -2,7 +2,6 @@ package pers.yufiria.craftorithm.trigger;
 
 import crypticlib.CrypticLib;
 import crypticlib.CrypticLibPlugin;
-import crypticlib.chat.BukkitMsgSender;
 import crypticlib.lifecycle.LifecyclePhase;
 import crypticlib.lifecycle.LifecycleSchedule;
 import crypticlib.lifecycle.LifecycleTask;

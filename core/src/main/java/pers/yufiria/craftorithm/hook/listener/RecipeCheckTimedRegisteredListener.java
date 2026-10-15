@@ -15,7 +15,7 @@ import java.util.*;
 @SuppressWarnings("removal")
 public class RecipeCheckTimedRegisteredListener extends TimedRegisteredListener {
 
-    private final UUID UNIQUE_KEY = UUID.randomUUID();
+    private final UUID uniqueKey = UUID.randomUUID();
 
     public RecipeCheckTimedRegisteredListener(@NotNull Listener pluginListener, @NotNull EventExecutor eventExecutor, @NotNull EventPriority eventPriority, @NotNull Plugin registeredPlugin, boolean listenCancelled) {
         super(pluginListener, eventExecutor, eventPriority, registeredPlugin, listenCancelled);
@@ -40,12 +40,12 @@ public class RecipeCheckTimedRegisteredListener extends TimedRegisteredListener 
     @Override
     public boolean equals(Object object) {
         if (!(object instanceof RecipeCheckTimedRegisteredListener that)) return false;
-        return Objects.equals(UNIQUE_KEY, that.UNIQUE_KEY);
+        return Objects.equals(uniqueKey, that.uniqueKey);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(UNIQUE_KEY);
+        return Objects.hashCode(uniqueKey);
     }
 
 }

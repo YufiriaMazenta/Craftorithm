@@ -7,7 +7,7 @@ import org.bukkit.inventory.SmithingRecipe;
 import org.bukkit.inventory.SmithingTransformRecipe;
 import org.bukkit.inventory.SmithingTrimRecipe;
 import org.jetbrains.annotations.NotNull;
-import pers.yufiria.craftorithm.config.menu.display.VanillaSmithingDisplayConfig;
+import pers.yufiria.craftorithm.config.menu.display.VanillaSmithingTransformDisplayConfig;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayManager;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayMenu;
 import pers.yufiria.craftorithm.ui.icon.IconParser;
@@ -21,9 +21,9 @@ public class VanillaSmithingDisplayMenu extends RecipeDisplayMenu<SmithingRecipe
         super(player, recipe);
         setDisplay(
             loadMenuDisplay(
-                VanillaSmithingDisplayConfig.TITLE.value(),
-                VanillaSmithingDisplayConfig.LAYOUT.value(),
-                VanillaSmithingDisplayConfig.ICONS.value()
+                VanillaSmithingTransformDisplayConfig.TITLE.value(),
+                VanillaSmithingTransformDisplayConfig.LAYOUT.value(),
+                VanillaSmithingTransformDisplayConfig.ICONS.value()
             )
         );
     }

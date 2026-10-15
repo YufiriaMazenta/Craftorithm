@@ -4,7 +4,6 @@ import crypticlib.CrypticLib;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.CrypticLibPlugin;
 import crypticlib.MinecraftVersion;
-import crypticlib.chat.BukkitMsgSender;
 import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.lifecycle.LifecyclePhase;
 import crypticlib.lifecycle.LifecycleSchedule;
@@ -171,7 +170,7 @@ public enum RecipeManager implements LifecycleTask {
                         return parseRecipeFromConfig(recipeName, recipeConfig);
                     } catch (Throwable throwable) {
                         LangUtils.info(Languages.RECIPE_LOAD_EXCEPTION, CollectionsUtils.newStringHashMap("<recipe_name>", recipeName));
-                        throwable.printStackTrace();
+                        CrypticLib.error("Failed to parse recipe " + recipeName, throwable);
                         return null;
                     }
                 })
@@ -593,8 +592,7 @@ public enum RecipeManager implements LifecycleTask {
                     registerRecipes(batch);
                 }
             } catch (Throwable t) {
-                CrypticLib.error("Unexpected error during recipe loading, aborting...");
-                t.printStackTrace();
+                CrypticLib.error("Unexpected error during recipe loading, aborting...", t);
                 end();
             }
         }
@@ -610,7 +608,7 @@ public enum RecipeManager implements LifecycleTask {
                     }
                 } catch (Throwable throwable) {
                     LangUtils.info(Languages.RECIPE_LOAD_EXCEPTION, CollectionsUtils.newStringHashMap("<recipe_name>", parsed.recipeFileName()));
-                    throwable.printStackTrace();
+                    CrypticLib.error("Failed to register recipe " + parsed.recipeFileName(), throwable);
                 }
             }
             long thisTickUseMs = System.currentTimeMillis() - startTime;

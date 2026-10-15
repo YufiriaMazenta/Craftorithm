@@ -63,8 +63,8 @@ public enum ItemIdStackRecipeChoiceParser implements RecipeChoiceParser {
                     }
                     itemIds = List.of(NamespacedItemId.fromMaterial(material));
                     break;
-                case "tag":
-                    StringAmount tagPart = splitAmount(choiceStr.substring(4));
+                case ItemGroup.GROUP_TYPE_TAG:
+                    StringAmount tagPart = splitAmount(choiceStr.substring(index + 1));
                     Tag<Material> materialTag = IngredientUtils.getTag(tagPart.key())
                         .orElseThrow(() -> new RecipeLoadException(tagPart.key() + " is not a valid tag"));
                     amount = tagPart.amount();
@@ -73,9 +73,9 @@ public enum ItemIdStackRecipeChoiceParser implements RecipeChoiceParser {
                         .toList();
                     itemGroupId = ItemGroup.GROUP_TYPE_TAG + ":" + tagPart.key();
                     break;
-                case "item_pack":
+                case ItemGroup.GROUP_TYPE_ITEM_PACK:
                     //是物品组
-                    StringAmount packPart = splitAmount(choiceStr.substring("item_pack:".length()));
+                    StringAmount packPart = splitAmount(choiceStr.substring(index + 1));
                     ItemPack itemPack = ItemManager.INSTANCE.getItemPack(packPart.key());
                     if (itemPack == null) {
                         throw new RecipeLoadException(packPart.key() + " is not a valid item pack");

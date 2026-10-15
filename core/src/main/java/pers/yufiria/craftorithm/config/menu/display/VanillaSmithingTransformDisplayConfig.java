@@ -11,7 +11,7 @@ import pers.yufiria.craftorithm.config.menu.MenuIconConfigUtils;
 import java.util.List;
 
 @ConfigHandler(path = "menus/internal/display/vanilla_smithing_transform.yml")
-public class VanillaSmithingDisplayConfig {
+public class VanillaSmithingTransformDisplayConfig {
 
     public static final StringConfig TITLE = new StringConfig("title", "<translate:lang:recipe_type_name.vanilla_smithing_transform>:<recipe_key>");
     public static final StringListConfig LAYOUT = new StringListConfig("layout", List.of("########X", "#ABC###R#", "#########"));

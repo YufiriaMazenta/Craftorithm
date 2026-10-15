@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
+import pers.yufiria.craftorithm.item.ItemGroup;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.ItemPack;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
@@ -43,8 +44,8 @@ public enum BukkitRecipeChoiceParser implements RecipeChoiceParser {
                     }
                     bukkitChoice = new RecipeChoice.MaterialChoice(material);
                     break;
-                case "tag":
-                    String tagKeyStr = choiceStr.substring(4);
+                case ItemGroup.GROUP_TYPE_TAG:
+                    String tagKeyStr = choiceStr.substring(index + 1);
                     Optional<Tag<Material>> tagOpt = IngredientUtils.getTag(tagKeyStr);
                     if (tagOpt.isEmpty()) {
                         throw new RecipeLoadException(tagKeyStr + " is not a valid tag");
@@ -52,9 +53,9 @@ public enum BukkitRecipeChoiceParser implements RecipeChoiceParser {
                     Tag<Material> materialTag = tagOpt.get();
                     bukkitChoice = new RecipeChoice.MaterialChoice(materialTag);
                     break;
-                case "item_pack":
+                case ItemGroup.GROUP_TYPE_ITEM_PACK:
                     //是物品组
-                    String packId = choiceStr.substring("item_pack:".length());
+                    String packId = choiceStr.substring(index + 1);
                     ItemPack itemPack = ItemManager.INSTANCE.getItemPack(packId);
                     if (itemPack == null) {
                         throw new RecipeLoadException(packId + " is not a valid item pack");

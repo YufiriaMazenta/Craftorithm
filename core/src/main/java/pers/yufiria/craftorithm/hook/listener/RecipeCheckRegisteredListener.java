@@ -14,7 +14,7 @@ import java.util.*;
 
 public class RecipeCheckRegisteredListener extends RegisteredListener {
 
-    private final UUID UNIQUE_KEY = UUID.randomUUID();
+    private final UUID uniqueKey = UUID.randomUUID();
 
     public RecipeCheckRegisteredListener(@NotNull Listener listener, @NotNull EventExecutor executor, @NotNull EventPriority priority, @NotNull Plugin plugin, boolean ignoreCancelled) {
         super(listener, executor, priority, plugin, ignoreCancelled);
@@ -39,12 +39,12 @@ public class RecipeCheckRegisteredListener extends RegisteredListener {
     @Override
     public boolean equals(Object object) {
         if (!(object instanceof RecipeCheckRegisteredListener that)) return false;
-        return Objects.equals(UNIQUE_KEY, that.UNIQUE_KEY);
+        return Objects.equals(uniqueKey, that.uniqueKey);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(UNIQUE_KEY);
+        return Objects.hashCode(uniqueKey);
     }
 
 }

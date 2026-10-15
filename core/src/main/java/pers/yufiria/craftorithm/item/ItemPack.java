@@ -26,7 +26,7 @@ public class ItemPack {
             }
             NamespacedItemId itemId = parsedItemId.itemId();
             switch (itemId.namespace()) {
-                case "tag" -> {
+                case ItemGroup.GROUP_TYPE_TAG -> {
                     //是一个tag,将tag的所有物品加入
                     String tagId = itemId.itemId();
                     Optional<Tag<Material>> tagOpt = IngredientUtils.getTag(tagId);
@@ -38,7 +38,7 @@ public class ItemPack {
                         this.itemIds.add(NamespacedItemId.fromMaterial(material));
                     }
                 }
-                case "item_pack" -> {
+                case ItemGroup.GROUP_TYPE_ITEM_PACK -> {
                     //是另一个物品组,将他的所有物品加入
                     ItemPack otherItemPack = ItemManager.INSTANCE.getItemPack(itemId.itemId());
                     if (otherItemPack == null) {

@@ -16,7 +16,6 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -40,15 +39,21 @@ public enum ItemManager implements LifecycleTask {
 
     INSTANCE;
 
+    //自定义燃料配置里记录燃烧时间的键
+    private static final String BURN_TIME_KEY = "burn_time";
+    //自定义燃料未指定燃烧时间时的默认值, 单位tick
+    private static final int DEFAULT_BURN_TIME = 200;
+    //玩家通过界面创建物品时使用的物品命名空间
+    private static final String PLUGIN_CREATED_NAMESPACE = "plugin_created";
+
     private final Map<String, ItemProvider> itemProviderMap = new LinkedHashMap<>();
     //记录已抛出过异常的物品提供源, 避免每次匹配都重复打印堆栈
     private final Set<String> erroredProviders = ConcurrentHashMap.newKeySet();
     private final Map<NamespacedItemId, Integer> customCookingFuelMap = new ConcurrentHashMap<>();
     private BukkitConfigWrapper customFuelConfig;
-    private final String BURN_TIME_KEY = "burn_time";
     private BukkitConfigWrapper itemPacksConfig;
     private final Map<String, ItemPack> itemPacks = new ConcurrentHashMap<>();
-    private final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("yyyyMMdd_HHmmss");
+    private final SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
     //重载在异步线程进行,而该列表会被主线程的合成事件读取,因此使用不可变快照整体替换
     private volatile List<IngredientRestrictionRule> ingredientRestrictionRules = List.of();
 
@@ -130,8 +135,7 @@ public enum ItemManager implements LifecycleTask {
 
     private void logProviderError(String providerNamespace, Throwable throwable) {
         if (erroredProviders.add(providerNamespace)) {
-            CrypticLib.error("Item provider '" + providerNamespace + "' threw an exception, it may be incompatible with the installed plugin version");
-            throwable.printStackTrace();
+            CrypticLib.error("Item provider '" + providerNamespace + "' threw an exception, it may be incompatible with the installed plugin version", throwable);
         }
     }
 
@@ -218,11 +222,11 @@ public enum ItemManager implements LifecycleTask {
             itemId = matchItemId(item, ignoreAmount).orElse(null);
             if (itemId == null) {
                 String id = item.getType().getKey().getKey();
-                if (CraftorithmItemProvider.INSTANCE.matchItem("plugin_created:" + id) != null) {
-                    id += "_" + TIME_FORMAT.format(System.currentTimeMillis());
+                if (CraftorithmItemProvider.INSTANCE.matchItem(PLUGIN_CREATED_NAMESPACE + ":" + id) != null) {
+                    id += "_" + timeFormat.format(System.currentTimeMillis());
                 }
                 itemId = stackOf(
-                    CraftorithmItemProvider.INSTANCE.regCraftorithmItem("plugin_created", id, item),
+                    CraftorithmItemProvider.INSTANCE.regCraftorithmItem(PLUGIN_CREATED_NAMESPACE, id, item),
                     item,
                     ignoreAmount
                 );
@@ -257,7 +261,7 @@ public enum ItemManager implements LifecycleTask {
             ConfigurationSection fuelConfig = config.getConfigurationSection(fuelId);
             if (fuelConfig == null)
                 continue;
-            int time = fuelConfig.getInt(BURN_TIME_KEY, 200);
+            int time = fuelConfig.getInt(BURN_TIME_KEY, DEFAULT_BURN_TIME);
             NamespacedItemId itemId = NamespacedItemId.fromString(fuelId);
             if (time != 0)
                 customCookingFuelMap.put(itemId, time);

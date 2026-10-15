@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.command;
 
+import crypticlib.CrypticLib;
 import crypticlib.CrypticLibPlugin;
 import crypticlib.Invoker;
 import crypticlib.command.CommandContext;
@@ -62,7 +63,7 @@ public final class ReloadCommand extends CommandNode implements LifecycleTask {
             };
             reloadTimeoutCallback.asyncLater(1200);
         } catch (Exception e) {
-            e.printStackTrace();
+            CrypticLib.error("Failed to reload Craftorithm", e);
             LangUtils.sendLang(invoker, Languages.COMMAND_RELOAD_EXCEPTION);
         }
     }

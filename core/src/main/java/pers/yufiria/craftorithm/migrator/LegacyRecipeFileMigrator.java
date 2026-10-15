@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -61,7 +62,7 @@ public enum LegacyRecipeFileMigrator implements LifecycleTask {
                     legacyFiles.add(file);
                 }
             } catch (Exception e) {
-                logger.warning("[Craftorithm] Failed to read recipe file " + file.getName() + " when detecting legacy format, skipped: " + e);
+                logger.warning("Failed to read recipe file " + file.getName() + " when detecting legacy format, skipped: " + e);
             }
         }
 
@@ -69,7 +70,7 @@ public enum LegacyRecipeFileMigrator implements LifecycleTask {
             return false;
         }
 
-        logger.info("[Craftorithm] Detected " + legacyFiles.size() + " legacy recipe file(s), starting migration...");
+        logger.info("Detected " + legacyFiles.size() + " legacy recipe file(s), starting migration...");
 
         // 创建备份文件夹
         this.backupFolder = new File(Craftorithm.instance().getDataFolder(), BACKUP_FOLDER_NAME);
@@ -82,12 +83,11 @@ public enum LegacyRecipeFileMigrator implements LifecycleTask {
                 migrateFile(legacyFile);
             } catch (Exception e) {
                 errorCount++;
-                logger.warning("[Craftorithm] Failed to migrate " + legacyFile.getName() + ": " + e.getMessage());
-                e.printStackTrace();
+                logger.log(Level.WARNING, "Failed to migrate " + legacyFile.getName(), e);
             }
         }
 
-        logger.info("[Craftorithm] Migration complete: " + migratedCount + " migrated, " + skippedCount + " skipped, " + errorCount + " errors");
+        logger.info("Migration complete: " + migratedCount + " migrated, " + skippedCount + " skipped, " + errorCount + " errors");
         return true;
     }
 
@@ -206,7 +206,7 @@ public enum LegacyRecipeFileMigrator implements LifecycleTask {
                 migratedCount++;
             } catch (IOException e) {
                 errorCount++;
-                logger.warning("[Craftorithm] Failed to write migrated recipe file: " + newFile.getName());
+                logger.warning("Failed to write migrated recipe file: " + newFile.getName());
             }
         }
 
@@ -372,7 +372,7 @@ public enum LegacyRecipeFileMigrator implements LifecycleTask {
                 }
             }
             case "random_cooking" -> {
-                logger.warning("[Craftorithm] random_cooking recipe is no longer supported in the new version.");
+                logger.warning("random_cooking recipe is no longer supported in the new version.");
             }
         }
 
@@ -473,11 +473,11 @@ public enum LegacyRecipeFileMigrator implements LifecycleTask {
                 return null;
             }
             case "random_cooking" -> {
-                logger.warning("[Craftorithm] random_cooking recipe is no longer supported in the new version, skipping.");
+                logger.warning("random_cooking recipe is no longer supported in the new version, skipping.");
                 return null;
             }
             default -> {
-                logger.warning("[Craftorithm] Unknown legacy recipe type: " + type);
+                logger.warning("Unknown legacy recipe type: " + type);
                 return null;
             }
         }

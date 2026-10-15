@@ -64,7 +64,7 @@ public enum CustomMenuManager implements LifecycleTask {
             }
         } catch (Throwable throwable) {
             callback.accept(OpenMenuResult.EXCEPTION);
-            throwable.printStackTrace();
+            CrypticLib.error("Failed to open menu for " + player.getName(), throwable);
             return;
         }
         //回调放在try之外,避免回调自身抛异常时被捕获从而重复执行
@@ -129,8 +129,7 @@ public enum CustomMenuManager implements LifecycleTask {
             CrypticLib.info("Loaded menu: " + menuName);
             return true;
         } catch (Throwable throwable) {
-            CrypticLib.error("Load menu " + menuName + " failed");
-            throwable.printStackTrace();
+            CrypticLib.error("Load menu " + menuName + " failed", throwable);
             return false;
         }
     }

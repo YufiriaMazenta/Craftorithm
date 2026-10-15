@@ -1,7 +1,6 @@
 package pers.yufiria.craftorithm.trigger;
 
 import crypticlib.CrypticLib;
-import crypticlib.chat.BukkitMsgSender;
 import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.script.ScriptEngine;
 import crypticlib.script.compile.CompiledScript;
@@ -21,6 +20,9 @@ import java.util.stream.Collectors;
  * 负责从 triggers 文件夹解析触发器配置（含新旧 conditions 格式兼容）
  */
 public final class TriggerLoader {
+
+    //配置中的cooldown以秒为单位, 内部统一使用毫秒
+    private static final int MILLIS_PER_SECOND = 1000;
 
     /**
      * 加载 triggers 文件夹下的所有触发器
@@ -65,10 +67,7 @@ public final class TriggerLoader {
                     );
                 }
             } catch (Throwable throwable) {
-                CrypticLib.info(
-                    "&cFailed to load trigger '" + localId + "' in " + fileName
-                );
-                throwable.printStackTrace();
+                CrypticLib.error("Failed to load trigger '" + localId + "' in " + fileName, throwable);
             }
         }
         return parsedTriggers;
@@ -86,12 +85,12 @@ public final class TriggerLoader {
     private static @Nullable Trigger parseTrigger(String fullId, ConfigurationSection section) {
         String typeKey = section.getString("type");
         if (typeKey == null) {
-            CrypticLib.info("&eTrigger '" + fullId + "' missing 'type' field");
+            CrypticLib.warn("Trigger '" + fullId + "' missing 'type' field");
             return null;
         }
 
         if (TriggerManager.INSTANCE.getTriggerType(typeKey) == null) {
-            CrypticLib.info("&eUnknown trigger type '" + typeKey + "' in " + fullId);
+            CrypticLib.warn("Unknown trigger type '" + typeKey + "' in " + fullId);
             return null;
         }
 
@@ -138,7 +137,7 @@ public final class TriggerLoader {
         } else {
             enable = true;
         }
-        long cooldown = (long) (section.getDouble("cooldown", 0) * 1000);
+        long cooldown = (long) (section.getDouble("cooldown", 0) * MILLIS_PER_SECOND);
         boolean perPlayer = section.getBoolean("per_player", true);
 
         return new Trigger(
