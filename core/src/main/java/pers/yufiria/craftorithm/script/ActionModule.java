@@ -127,7 +127,7 @@ public enum ActionModule implements ScriptModule {
                 player.closeInventory();
             }
         }
-        return null;
+        return ScriptValue.nil();
     }
 
     private ScriptValue openmenu(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
@@ -141,7 +141,7 @@ public enum ActionModule implements ScriptModule {
         Player player = playerOpt.get();
         String menuName = args[0].asString();
         CustomMenuManager.INSTANCE.openMenu(player, menuName, result -> {});
-        return null;
+        return ScriptValue.nil();
     }
 
     private ScriptValue command(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
