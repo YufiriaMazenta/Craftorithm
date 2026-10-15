@@ -1,15 +1,12 @@
 package pers.yufiria.craftorithm.ui.editor.vanillacrafting;
 
-import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.display.MenuLayout;
-import crypticlib.ui.menu.StoredMenu;
 import crypticlib.util.ItemHelper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
@@ -18,12 +15,12 @@ import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.menu.editor.VanillaShapedEditorConfig;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
-import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
+import pers.yufiria.craftorithm.ui.StoredMenuUtils;
 import pers.yufiria.craftorithm.ui.creator.vanillacrafting.RecipeBookCategoryIcon;
-import pers.yufiria.craftorithm.ui.editor.EditorIconParser;
 import pers.yufiria.craftorithm.ui.editor.RecipeEditor;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
+import pers.yufiria.craftorithm.ui.icon.TranslatableIconParser;
 import pers.yufiria.craftorithm.util.LangUtils;
 import pers.yufiria.craftorithm.util.RecipeUtils;
 
@@ -104,11 +101,11 @@ public final class VanillaShapedEditor extends RecipeEditor {
     }
 
     private Icon getFrameIcon() {
-        return EditorIconParser.INSTANCE.parse(VanillaShapedEditorConfig.FRAME_ICON.value()).get();
+        return TranslatableIconParser.INSTANCE.parse(VanillaShapedEditorConfig.FRAME_ICON.value()).get();
     }
 
     private Icon getResultFrameIcon() {
-        return EditorIconParser.INSTANCE.parse(VanillaShapedEditorConfig.RESULT_FRAME_ICON.value()).get();
+        return TranslatableIconParser.INSTANCE.parse(VanillaShapedEditorConfig.RESULT_FRAME_ICON.value()).get();
     }
 
     private Icon getBackIcon() {
@@ -120,101 +117,54 @@ public final class VanillaShapedEditor extends RecipeEditor {
     }
 
     private Icon getConfirmIcon() {
-        IconDisplay iconDisplay = EditorIconParser.INSTANCE.parseIconDisplay(VanillaShapedEditorConfig.CONFIRM_ICON.value());
-        return new TranslatableIcon(iconDisplay) {
-            @Override
-            public Icon onClick(InventoryClickEvent event) {
-                StoredMenu creator = (StoredMenu) Objects.requireNonNull(event.getClickedInventory()).getHolder();
-                Map<Integer, ItemStack> storedItems = Objects.requireNonNull(creator).storedItems();
+        IconDisplay iconDisplay = TranslatableIconParser.INSTANCE.parseIconDisplay(VanillaShapedEditorConfig.CONFIRM_ICON.value());
+        TranslatableIcon icon = new TranslatableIcon(iconDisplay);
+        icon.setClickAction(event -> {
+            Map<Integer, ItemStack> storedItems = StoredMenuUtils.storedItems(event);
 
-                // 验证结果物品
-                ItemStack result = storedItems.get(RESULT_SLOT);
-                if (ItemHelper.isAir(result)) {
-                    LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_RESULT);
-                    return this;
-                }
-
-                // 从3x3网格收集材料
-                List<String> ingredientIds = new ArrayList<>();
-                for (int slot : INGREDIENT_SLOTS) {
-                    ItemStack source = storedItems.get(slot);
-                    if (ItemHelper.isAir(source)) {
-                        ingredientIds.add(null);
-                    } else {
-                        ingredientIds.add(resolveIngredientId(source));
-                    }
-                }
-
-                // 验证材料不全为空
-                if (ingredientIds.stream().allMatch(Objects::isNull)) {
-                    LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_RESULT);
-                    return this;
-                }
-
-                // 解析结果物品ID
-                NamespacedItemIdStack resultId = ItemManager.INSTANCE.matchItemIdOrCreate(result, false);
-                if (resultId == null) {
-                    LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_RESULT);
-                    return this;
-                }
-
-                // 构建形状字符映射
-                Map<String, Character> idToCharMap = new LinkedHashMap<>();
-                char[] shapeChars = new char[]{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '};
-                char nextChar = 'a';
-
-                for (int i = 0; i < ingredientIds.size(); i++) {
-                    String id = ingredientIds.get(i);
-                    if (id == null) continue;
-                    if (!idToCharMap.containsKey(id)) {
-                        idToCharMap.put(id, nextChar);
-                        nextChar++;
-                    }
-                    shapeChars[i] = idToCharMap.get(id);
-                }
-
-                // 构建形状行列表
-                List<String> shape = new ArrayList<>();
-                for (int row = 0; row < 3; row++) {
-                    shape.add(new String(shapeChars, row * 3, 3));
-                }
-
-                RecipeUtils.trimShape(shape);
-
-                if (shape.isEmpty()) {
-                    LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_RESULT);
-                    return this;
-                }
-
-                // 构建材料映射
-                Map<Character, String> ingredientIdMap = new LinkedHashMap<>();
-                for (Map.Entry<String, Character> entry : idToCharMap.entrySet()) {
-                    ingredientIdMap.put(entry.getValue(), entry.getKey());
-                }
-
-                // 保存配置
-                BukkitConfigWrapper configWrapper = getRecipeConfigWrapper();
-                if (configWrapper != null) {
-                    configWrapper.set("type", SimpleRecipeTypes.VANILLA_SHAPED.typeKey());
-                    configWrapper.set("result", resultId.toString());
-                    configWrapper.set("shape", shape);
-                    configWrapper.set("ingredients", ingredientIdMap);
-                    configWrapper.set("recipe_book_category", categoryIcon.category().name().toLowerCase());
-                    saveRecipeEdit(configWrapper, () -> {
-                        String fileName = RecipeManager.INSTANCE.getRecipeFileNameByKey(recipeKey);
-                        LangUtils.sendLang(event.getWhoClicked(), Languages.COMMAND_EDIT_SUCCESS, Map.of(
-                            "<recipe_id>", recipeId,
-                            "<recipe_file_name>", fileName != null ? fileName : recipeId
-                        ));
-                    });
-                }
-
-                event.getWhoClicked().closeInventory();
-                return this;
+            // 验证结果物品
+            ItemStack result = storedItems.get(RESULT_SLOT);
+            if (ItemHelper.isAir(result)) {
+                LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_RESULT);
+                return;
             }
-        };
+
+            // 从3x3网格收集材料
+            List<String> ingredientIds = new ArrayList<>();
+            for (int slot : INGREDIENT_SLOTS) {
+                ItemStack source = storedItems.get(slot);
+                ingredientIds.add(ItemHelper.isAir(source) ? null : resolveIngredientId(source));
+            }
+
+            // 验证材料不全为空
+            if (ingredientIds.stream().allMatch(Objects::isNull)) {
+                LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_RESULT);
+                return;
+            }
+
+            // 解析结果物品ID
+            NamespacedItemIdStack resultId = ItemManager.INSTANCE.matchItemIdOrCreate(result, false);
+            if (resultId == null) {
+                LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_RESULT);
+                return;
+            }
+
+            // 构建形状与材料映射
+            RecipeUtils.ShapedGrid shapedGrid = RecipeUtils.buildShapedGrid(ingredientIds);
+            if (shapedGrid.shape().isEmpty()) {
+                LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_RESULT);
+                return;
+            }
+
+            saveEdit((Player) event.getWhoClicked(), configWrapper -> {
+                configWrapper.set("type", SimpleRecipeTypes.VANILLA_SHAPED.typeKey());
+                configWrapper.set("result", resultId.toString());
+                configWrapper.set("shape", shapedGrid.shape());
+                configWrapper.set("ingredients", shapedGrid.ingredientIdMap());
+                configWrapper.set("recipe_book_category", categoryIcon.category().name().toLowerCase());
+            });
+        });
+        return icon;
     }
-
-
 
 }

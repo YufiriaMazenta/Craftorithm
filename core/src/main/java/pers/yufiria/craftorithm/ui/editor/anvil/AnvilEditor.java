@@ -1,37 +1,29 @@
 package pers.yufiria.craftorithm.ui.editor.anvil;
 
-import crypticlib.CrypticLibBukkit;
-import crypticlib.chat.BukkitTextProcessor;
-import crypticlib.config.BukkitConfigWrapper;
-import crypticlib.conversation.Conversation;
-import crypticlib.conversation.NumberPrompt;
-import crypticlib.conversation.Prompt;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.display.MenuLayout;
-import crypticlib.ui.menu.StoredMenu;
 import crypticlib.util.ItemHelper;
-import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.menu.editor.AnvilEditorConfig;
 import pers.yufiria.craftorithm.item.ItemGroup;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.item.exception.ItemNotFoundException;
-import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.recipe.anvil.AnvilRecipe;
-import pers.yufiria.craftorithm.ui.editor.EditorIconParser;
+import pers.yufiria.craftorithm.ui.ConversationUtils;
+import pers.yufiria.craftorithm.ui.StoredMenuUtils;
 import pers.yufiria.craftorithm.ui.editor.RecipeEditor;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
+import pers.yufiria.craftorithm.ui.icon.TranslatableIconParser;
 import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.util.*;
@@ -92,7 +84,7 @@ public final class AnvilEditor extends RecipeEditor {
     }
 
     private Icon getFrameIcon() {
-        return EditorIconParser.INSTANCE.parse(AnvilEditorConfig.FRAME_ICON.value()).get();
+        return TranslatableIconParser.INSTANCE.parse(AnvilEditorConfig.FRAME_ICON.value()).get();
     }
 
     private Icon getBackIcon() {
@@ -104,7 +96,7 @@ public final class AnvilEditor extends RecipeEditor {
     }
 
     private Icon getCostLevelIcon() {
-        IconDisplay iconDisplay = EditorIconParser.INSTANCE.parseIconDisplay(
+        IconDisplay iconDisplay = TranslatableIconParser.INSTANCE.parseIconDisplay(
             AnvilEditorConfig.COST_LEVEL_ICON.value()
         );
         return new TranslatableIcon(iconDisplay) {
@@ -120,75 +112,46 @@ public final class AnvilEditor extends RecipeEditor {
             public Icon onClick(InventoryClickEvent event) {
                 Player player = (Player) event.getWhoClicked();
                 player.closeInventory();
-                new Conversation(Craftorithm.instance(), player,
-                    new NumberPrompt() {
-                        @Override
-                        public Prompt acceptValidatedInput(Map<Object, Object> conversationData, Number input) {
-                            costLevel = Math.max(0, input.intValue());
-                            return null;
-                        }
-
-                        @Override
-                        public BaseComponent promptText(Map<Object, Object> conversationData) {
-                            return BukkitTextProcessor.toComponent(
-                                BukkitTextProcessor.color(
-                                    Languages.COMMAND_CREATE_INPUT_HINT_ANVIL_COST_LEVEL.value(player)
-                                )
-                            );
-                        }
-                    },
-                    data -> {
-                        updateMenu();
-                        CrypticLibBukkit.scheduler().sync(() -> openMenu());
-                    }
-                ).start();
+                ConversationUtils.startNumberInput(
+                    player,
+                    AnvilEditor.this,
+                    Languages.COMMAND_CREATE_INPUT_HINT_ANVIL_COST_LEVEL,
+                    input -> costLevel = Math.max(0, input.intValue())
+                );
                 return this;
             }
         };
     }
 
     private Icon getConfirmIcon() {
-        IconDisplay iconDisplay = EditorIconParser.INSTANCE.parseIconDisplay(AnvilEditorConfig.CONFIRM_ICON.value());
-        return new TranslatableIcon(iconDisplay) {
-            @Override
-            public Icon onClick(InventoryClickEvent event) {
-                StoredMenu creator = (StoredMenu) Objects.requireNonNull(event.getClickedInventory()).getHolder();
-                Map<Integer, ItemStack> storedItems = Objects.requireNonNull(creator).storedItems();
+        IconDisplay iconDisplay = TranslatableIconParser.INSTANCE.parseIconDisplay(AnvilEditorConfig.CONFIRM_ICON.value());
+        TranslatableIcon icon = new TranslatableIcon(iconDisplay);
+        icon.setClickAction(event -> {
+            Map<Integer, ItemStack> storedItems = StoredMenuUtils.storedItems(event);
 
-                ItemStack result = storedItems.get(RESULT_SLOT);
-                if (ItemHelper.isAir(result)) {
-                    LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_RESULT);
-                    return this;
-                }
-
-                String baseId = resolveIngredientId(storedItems.get(BASE_SLOT));
-                String additionId = resolveIngredientId(storedItems.get(ADDITION_SLOT));
-                NamespacedItemIdStack resultId = ItemManager.INSTANCE.matchItemIdOrCreate(result, false);
-                if (resultId == null) {
-                    LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_RESULT);
-                    return this;
-                }
-
-                BukkitConfigWrapper configWrapper = getRecipeConfigWrapper();
-                if (configWrapper != null) {
-                    configWrapper.set("type", SimpleRecipeTypes.ANVIL.typeKey());
-                    configWrapper.set("result", resultId.toString());
-                    if (baseId != null) configWrapper.set("base", baseId);
-                    if (additionId != null) configWrapper.set("addition", additionId);
-                    configWrapper.set("cost_level", costLevel);
-                    saveRecipeEdit(configWrapper, () -> {
-                        String fileName = RecipeManager.INSTANCE.getRecipeFileNameByKey(recipeKey);
-                        LangUtils.sendLang(event.getWhoClicked(), Languages.COMMAND_EDIT_SUCCESS, Map.of(
-                            "<recipe_id>", recipeId,
-                            "<recipe_file_name>", fileName != null ? fileName : recipeId
-                        ));
-                    });
-                }
-
-                event.getWhoClicked().closeInventory();
-                return this;
+            ItemStack result = storedItems.get(RESULT_SLOT);
+            if (ItemHelper.isAir(result)) {
+                LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_RESULT);
+                return;
             }
-        };
+
+            String baseId = resolveIngredientId(storedItems.get(BASE_SLOT));
+            String additionId = resolveIngredientId(storedItems.get(ADDITION_SLOT));
+            NamespacedItemIdStack resultId = ItemManager.INSTANCE.matchItemIdOrCreate(result, false);
+            if (resultId == null) {
+                LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_RESULT);
+                return;
+            }
+
+            saveEdit((Player) event.getWhoClicked(), configWrapper -> {
+                configWrapper.set("type", SimpleRecipeTypes.ANVIL.typeKey());
+                configWrapper.set("result", resultId.toString());
+                if (baseId != null) configWrapper.set("base", baseId);
+                if (additionId != null) configWrapper.set("addition", additionId);
+                configWrapper.set("cost_level", costLevel);
+            });
+        });
+        return icon;
     }
 
     @Override

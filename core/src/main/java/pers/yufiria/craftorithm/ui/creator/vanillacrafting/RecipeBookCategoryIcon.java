@@ -9,11 +9,11 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.recipe.CraftingBookCategory;
-import pers.yufiria.craftorithm.ui.creator.CreatorIconParser;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
 
 import java.util.List;
 import java.util.Objects;
+import pers.yufiria.craftorithm.ui.icon.TranslatableIconParser;
 
 /**
  * 合成配方的配方书分类图标
@@ -49,22 +49,22 @@ public class RecipeBookCategoryIcon extends TranslatableIcon {
         ItemStack display;
         switch (category) {
             case MISC -> {
-                display = CreatorIconParser.INSTANCE.parseIconDisplay(
+                display = TranslatableIconParser.INSTANCE.parseIconDisplay(
                     miscIconConfig.value()
                 ).toItemStack();
             }
             case BUILDING -> {
-                display = CreatorIconParser.INSTANCE.parseIconDisplay(
+                display = TranslatableIconParser.INSTANCE.parseIconDisplay(
                     buildingIconConfig.value()
                 ).toItemStack();
             }
             case REDSTONE -> {
-                display = CreatorIconParser.INSTANCE.parseIconDisplay(
+                display = TranslatableIconParser.INSTANCE.parseIconDisplay(
                     redstoneIconConfig.value()
                 ).toItemStack();
             }
             case EQUIPMENT -> {
-                display = CreatorIconParser.INSTANCE.parseIconDisplay(
+                display = TranslatableIconParser.INSTANCE.parseIconDisplay(
                     equipmentIconConfig.value()
                 ).toItemStack();
             }

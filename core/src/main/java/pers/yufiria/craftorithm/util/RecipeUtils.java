@@ -18,7 +18,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.SmithingInventory;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,6 +30,10 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 public class RecipeUtils {
+
+    //3x3合成网格
+    private static final int GRID_SIZE = 3;
+    private static final int GRID_LENGTH = GRID_SIZE * GRID_SIZE;
 
     private static final Set<ClickType> quickCraftClickTypes;
 
@@ -78,6 +85,50 @@ public class RecipeUtils {
         int end = lastColumn + 1;
         shape.replaceAll(row -> row.length() > start ? row.substring(start, Math.min(end, row.length())) : "");
     }
+
+    /**
+     * 由3x3的材料id网格构建配方形状与材料映射。
+     * 相同材料id会被分配同一个字符(a, b, c...), 并移除形状首尾的全空行与全空列。
+     * @param ingredientIds 按行优先排列的9个材料id, 空槽位为null
+     * @return 形状与材料映射; 若网格全空, 形状为空列表
+     */
+    public static ShapedGrid buildShapedGrid(List<String> ingredientIds) {
+        Map<String, Character> idToCharMap = new LinkedHashMap<>();
+        char[] shapeChars = new char[GRID_LENGTH];
+        Arrays.fill(shapeChars, ' ');
+        char nextChar = 'a';
+
+        for (int i = 0; i < ingredientIds.size(); i++) {
+            String id = ingredientIds.get(i);
+            if (id == null) {
+                continue;
+            }
+            if (!idToCharMap.containsKey(id)) {
+                idToCharMap.put(id, nextChar);
+                nextChar++;
+            }
+            shapeChars[i] = idToCharMap.get(id);
+        }
+
+        List<String> shape = new ArrayList<>();
+        for (int row = 0; row < GRID_SIZE; row++) {
+            shape.add(new String(shapeChars, row * GRID_SIZE, GRID_SIZE));
+        }
+        trimShape(shape);
+
+        Map<Character, String> ingredientIdMap = new LinkedHashMap<>();
+        for (Map.Entry<String, Character> entry : idToCharMap.entrySet()) {
+            ingredientIdMap.put(entry.getValue(), entry.getKey());
+        }
+        return new ShapedGrid(shape, ingredientIdMap);
+    }
+
+    /**
+     * 3x3合成网格的解析结果
+     * @param shape 配方形状行列表, 已移除首尾的全空行与全空列
+     * @param ingredientIdMap 形状字符 -> 材料id
+     */
+    public record ShapedGrid(List<String> shape, Map<Character, String> ingredientIdMap) {}
 
     /**
      * 计算本次合成的次数

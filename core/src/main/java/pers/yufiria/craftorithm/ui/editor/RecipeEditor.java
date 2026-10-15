@@ -28,10 +28,13 @@ import pers.yufiria.craftorithm.recipe.ParsedRecipe;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.ui.BackableMenu;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
+import pers.yufiria.craftorithm.ui.icon.TranslatableIconParser;
 import pers.yufiria.craftorithm.ui.recipebook.BackIcon;
 import pers.yufiria.craftorithm.util.LangUtils;
 
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * 配方编辑器基类
@@ -95,7 +98,7 @@ public abstract class RecipeEditor extends StoredMenu implements BackableMenu {
      * @param config 返回按钮的配置节
      */
     protected Icon createBackIcon(ConfigurationSection config) {
-        IconDisplay iconDisplay = EditorIconParser.INSTANCE.parseIconDisplay(config);
+        IconDisplay iconDisplay = TranslatableIconParser.INSTANCE.parseIconDisplay(config);
         return new BackIcon(iconDisplay);
     }
 
@@ -106,7 +109,7 @@ public abstract class RecipeEditor extends StoredMenu implements BackableMenu {
      * @param config 删除按钮的配置节
      */
     protected Icon createDeleteIcon(ConfigurationSection config) {
-        IconDisplay iconDisplay = EditorIconParser.INSTANCE.parseIconDisplay(config);
+        IconDisplay iconDisplay = TranslatableIconParser.INSTANCE.parseIconDisplay(config);
         return new TranslatableIcon(iconDisplay) {
             @Override
             public Icon onClick(InventoryClickEvent event) {
@@ -169,8 +172,28 @@ public abstract class RecipeEditor extends StoredMenu implements BackableMenu {
     }
 
     /**
+     * 保存编辑后的配方。
+     * 统一处理「取出配方配置 → 写入字段 → 落盘重载并重新注册 → 关闭菜单 → 发送成功提示」。
+     * @param player 操作玩家
+     * @param writeFields 写入该配方类型字段的回调
+     */
+    protected void saveEdit(@NotNull Player player, @NotNull Consumer<BukkitConfigWrapper> writeFields) {
+        BukkitConfigWrapper configWrapper = getRecipeConfigWrapper();
+        if (configWrapper != null) {
+            writeFields.accept(configWrapper);
+            saveRecipeEdit(configWrapper, () -> {
+                String fileName = RecipeManager.INSTANCE.getRecipeFileNameByKey(recipeKey);
+                LangUtils.sendLang(player, Languages.COMMAND_EDIT_SUCCESS, Map.of(
+                    "<recipe_id>", recipeId,
+                    "<recipe_file_name>", fileName != null ? fileName : recipeId
+                ));
+            });
+        }
+        player.closeInventory();
+    }
+
+    /**
      * 获取配方的BukkitConfigWrapper
-     * 通过重新创建指向同一文件的wrapper来实现
      */
     protected @Nullable BukkitConfigWrapper getRecipeConfigWrapper() {
         return RecipeManager.INSTANCE.getRecipeConfigWrapper(recipeKey);

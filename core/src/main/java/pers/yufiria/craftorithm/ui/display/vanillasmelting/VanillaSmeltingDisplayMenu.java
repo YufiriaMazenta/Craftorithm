@@ -8,14 +8,11 @@ import pers.yufiria.craftorithm.config.menu.display.VanillaSmeltingBlastDisplayC
 import pers.yufiria.craftorithm.config.menu.display.VanillaSmeltingCampfireDisplayConfig;
 import pers.yufiria.craftorithm.config.menu.display.VanillaSmeltingFurnaceDisplayConfig;
 import pers.yufiria.craftorithm.config.menu.display.VanillaSmeltingSmokerDisplayConfig;
-import pers.yufiria.craftorithm.ui.display.RecipeDisplayManager;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayMenu;
 import pers.yufiria.craftorithm.ui.icon.ActionIcon;
 import pers.yufiria.craftorithm.ui.icon.IconParser;
-import pers.yufiria.craftorithm.ui.icon.ItemDisplayIcon;
 
 import java.util.Map;
-import java.util.Optional;
 
 public class VanillaSmeltingDisplayMenu extends RecipeDisplayMenu<CookingRecipe<?>> {
 
@@ -72,20 +69,10 @@ public class VanillaSmeltingDisplayMenu extends RecipeDisplayMenu<CookingRecipe<
         if (icon instanceof ActionIcon actionIcon) {
             actionIcon.setTextReplaceMap(Map.of("<reward_exp>", recipe.getExperience() + "", "<time>", recipe.getCookingTime() + ""));
         }
-        if (icon instanceof ItemDisplayIcon itemDisplayIcon) {
-            Optional<Object> iconTypeOpt = itemDisplayIcon.getData("icon_type");
-            iconTypeOpt.ifPresent(obj -> {
-                String iconType = obj.toString();
-                switch (iconType.toLowerCase()) {
-                    case VanillaSmeltingDisplayIconParser.ICON_TYPE_INGREDIENT -> {
-                        itemDisplayIcon.setDisplayItem(recipe.getInputChoice().getItemStack());
-                    }
-                    case RecipeDisplayManager.ICON_TYPE_RESULT -> {
-                        itemDisplayIcon.setDisplayItem(recipe.getResult());
-                    }
-                }
-            });
-        }
+        applyIconType(icon, Map.of(
+            VanillaSmeltingDisplayIconParser.ICON_TYPE_INGREDIENT,
+            itemDisplayIcon -> itemDisplayIcon.setDisplayItem(recipe.getInputChoice().getItemStack())
+        ));
     }
 
     public String replaceExpAndTime(String origin) {

@@ -1,18 +1,10 @@
 package pers.yufiria.craftorithm.ui.editor.vanillasmelting;
 
-import crypticlib.CrypticLibBukkit;
-import crypticlib.chat.BukkitTextProcessor;
-import crypticlib.config.BukkitConfigWrapper;
-import crypticlib.conversation.Conversation;
-import crypticlib.conversation.NumberPrompt;
-import crypticlib.conversation.Prompt;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.display.MenuLayout;
-import crypticlib.ui.menu.StoredMenu;
 import crypticlib.util.ItemHelper;
-import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -20,22 +12,21 @@ import org.bukkit.inventory.CookingRecipe;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
-import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.ui.ConversationUtils;
 import pers.yufiria.craftorithm.ui.SmeltingMenuType;
+import pers.yufiria.craftorithm.ui.StoredMenuUtils;
 import pers.yufiria.craftorithm.ui.creator.vanillasmelting.CookingRecipeBookCategoryIcon;
-import pers.yufiria.craftorithm.ui.editor.EditorIconParser;
 import pers.yufiria.craftorithm.ui.editor.RecipeEditor;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
+import pers.yufiria.craftorithm.ui.icon.TranslatableIconParser;
 import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
@@ -110,11 +101,11 @@ public class SmeltingEditor extends RecipeEditor {
     }
 
     private Icon getFrameIcon() {
-        return EditorIconParser.INSTANCE.parse(smeltingType.editorConfigs().frameIcon().value()).get();
+        return TranslatableIconParser.INSTANCE.parse(smeltingType.editorConfigs().frameIcon().value()).get();
     }
 
     private Icon getResultFrameIcon() {
-        return EditorIconParser.INSTANCE.parse(smeltingType.editorConfigs().resultFrameIcon().value()).get();
+        return TranslatableIconParser.INSTANCE.parse(smeltingType.editorConfigs().resultFrameIcon().value()).get();
     }
 
     private Icon getBackIcon() {
@@ -126,7 +117,7 @@ public class SmeltingEditor extends RecipeEditor {
     }
 
     private Icon getExpIcon() {
-        IconDisplay iconDisplay = EditorIconParser.INSTANCE.parseIconDisplay(smeltingType.editorConfigs().expIcon().value());
+        IconDisplay iconDisplay = TranslatableIconParser.INSTANCE.parseIconDisplay(smeltingType.editorConfigs().expIcon().value());
         return new TranslatableIcon(iconDisplay) {
             @Override
             public ItemStack display() {
@@ -140,35 +131,19 @@ public class SmeltingEditor extends RecipeEditor {
             public Icon onClick(InventoryClickEvent event) {
                 Player player = (Player) event.getWhoClicked();
                 player.closeInventory();
-                new Conversation(Craftorithm.instance(), player,
-                    new NumberPrompt() {
-                        @Override
-                        public Prompt acceptValidatedInput(Map<Object, Object> conversationData, Number input) {
-                            exp = input.floatValue();
-                            return null;
-                        }
-
-                        @Override
-                        public BaseComponent promptText(Map<Object, Object> conversationData) {
-                            return BukkitTextProcessor.toComponent(
-                                BukkitTextProcessor.color(
-                                    Languages.COMMAND_CREATE_INPUT_HINT_SMELTING_EXP.value(player)
-                                )
-                            );
-                        }
-                    },
-                    data -> {
-                        updateMenu();
-                        CrypticLibBukkit.scheduler().sync(() -> openMenu());
-                    }
-                ).start();
+                ConversationUtils.startNumberInput(
+                    player,
+                    SmeltingEditor.this,
+                    Languages.COMMAND_CREATE_INPUT_HINT_SMELTING_EXP,
+                    input -> exp = input.floatValue()
+                );
                 return this;
             }
         };
     }
 
     private Icon getTimeIcon() {
-        IconDisplay iconDisplay = EditorIconParser.INSTANCE.parseIconDisplay(smeltingType.editorConfigs().timeIcon().value());
+        IconDisplay iconDisplay = TranslatableIconParser.INSTANCE.parseIconDisplay(smeltingType.editorConfigs().timeIcon().value());
         return new TranslatableIcon(iconDisplay) {
             @Override
             public ItemStack display() {
@@ -182,86 +157,57 @@ public class SmeltingEditor extends RecipeEditor {
             public Icon onClick(InventoryClickEvent event) {
                 Player player = (Player) event.getWhoClicked();
                 player.closeInventory();
-                new Conversation(Craftorithm.instance(), player,
-                    new NumberPrompt() {
-                        @Override
-                        public Prompt acceptValidatedInput(Map<Object, Object> conversationData, Number input) {
-                            time = Math.max(1, input.intValue());
-                            return null;
-                        }
-
-                        @Override
-                        public BaseComponent promptText(Map<Object, Object> conversationData) {
-                            return BukkitTextProcessor.toComponent(
-                                BukkitTextProcessor.color(
-                                    Languages.COMMAND_CREATE_INPUT_HINT_SMELTING_TIME.value(player)
-                                )
-                            );
-                        }
-                    },
-                    data -> {
-                        updateMenu();
-                        CrypticLibBukkit.scheduler().sync(() -> openMenu());
-                    }
-                ).start();
+                ConversationUtils.startNumberInput(
+                    player,
+                    SmeltingEditor.this,
+                    Languages.COMMAND_CREATE_INPUT_HINT_SMELTING_TIME,
+                    input -> time = Math.max(1, input.intValue())
+                );
                 return this;
             }
         };
     }
 
     private Icon getConfirmIcon() {
-        IconDisplay iconDisplay = EditorIconParser.INSTANCE.parseIconDisplay(smeltingType.editorConfigs().confirmIcon().value());
-        return new TranslatableIcon(iconDisplay) {
-            @Override
-            public Icon onClick(InventoryClickEvent event) {
-                StoredMenu creator = (StoredMenu) Objects.requireNonNull(event.getClickedInventory()).getHolder();
-                Map<Integer, ItemStack> storedItems = Objects.requireNonNull(creator).storedItems();
+        IconDisplay iconDisplay = TranslatableIconParser.INSTANCE.parseIconDisplay(smeltingType.editorConfigs().confirmIcon().value());
+        TranslatableIcon icon = new TranslatableIcon(iconDisplay);
+        icon.setClickAction(event -> {
+            Map<Integer, ItemStack> storedItems = StoredMenuUtils.storedItems(event);
 
-                ItemStack result = storedItems.get(RESULT_SLOT);
-                if (ItemHelper.isAir(result)) {
-                    LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_RESULT);
-                    return this;
-                }
-
-                ItemStack ingredientItem = storedItems.get(INGREDIENT_SLOT);
-                if (ItemHelper.isAir(ingredientItem)) {
-                    LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_INGREDIENTS);
-                    return this;
-                }
-
-                NamespacedItemIdStack resultId = ItemManager.INSTANCE.matchItemIdOrCreate(result, false);
-                if (resultId == null) {
-                    LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_RESULT);
-                    return this;
-                }
-
-                String ingredientId = resolveIngredientId(ingredientItem);
-                if (ingredientId == null) {
-                    LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_INGREDIENTS);
-                    return this;
-                }
-
-                BukkitConfigWrapper configWrapper = getRecipeConfigWrapper();
-                if (configWrapper != null) {
-                    // 保持原有的type不变
-                    configWrapper.set("result", resultId.toString());
-                    configWrapper.set("ingredient", ingredientId);
-                    configWrapper.set("exp", exp);
-                    configWrapper.set("time", time);
-                    configWrapper.set("recipe_book_category", categoryIcon.category().name().toLowerCase());
-                    saveRecipeEdit(configWrapper, () -> {
-                        String fileName = RecipeManager.INSTANCE.getRecipeFileNameByKey(recipeKey);
-                        LangUtils.sendLang(event.getWhoClicked(), Languages.COMMAND_EDIT_SUCCESS, Map.of(
-                            "<recipe_id>", recipeId,
-                            "<recipe_file_name>", fileName != null ? fileName : recipeId
-                        ));
-                    });
-                }
-
-                event.getWhoClicked().closeInventory();
-                return this;
+            ItemStack result = storedItems.get(RESULT_SLOT);
+            if (ItemHelper.isAir(result)) {
+                LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_RESULT);
+                return;
             }
-        };
+
+            ItemStack ingredientItem = storedItems.get(INGREDIENT_SLOT);
+            if (ItemHelper.isAir(ingredientItem)) {
+                LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_INGREDIENTS);
+                return;
+            }
+
+            NamespacedItemIdStack resultId = ItemManager.INSTANCE.matchItemIdOrCreate(result, false);
+            if (resultId == null) {
+                LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_RESULT);
+                return;
+            }
+
+            String ingredientId = resolveIngredientId(ingredientItem);
+            if (ingredientId == null) {
+                LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_INGREDIENTS);
+                return;
+            }
+
+            // 保持原有的type不变
+            saveEdit((Player) event.getWhoClicked(), configWrapper -> {
+                configWrapper.set("result", resultId.toString());
+                configWrapper.set("ingredient", ingredientId);
+                configWrapper.set("exp", exp);
+                configWrapper.set("time", time);
+                configWrapper.set("recipe_book_category", categoryIcon.category().name().toLowerCase());
+            });
+        });
+        return icon;
     }
 
 }

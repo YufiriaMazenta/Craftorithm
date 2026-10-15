@@ -1,15 +1,11 @@
 package pers.yufiria.craftorithm.ui.creator.vanillabrewing;
 
-import crypticlib.CrypticLib;
-import crypticlib.CrypticLibBukkit;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.display.MenuLayout;
-import crypticlib.ui.menu.StoredMenu;
 import crypticlib.util.ItemHelper;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,19 +13,17 @@ import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.menu.creator.VanillaBrewingCreatorConfig;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
-import pers.yufiria.craftorithm.recipe.ParsedRecipe;
-import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
-import pers.yufiria.craftorithm.ui.creator.CreatorIconParser;
+import pers.yufiria.craftorithm.ui.StoredMenuUtils;
 import pers.yufiria.craftorithm.ui.creator.RecipeCreator;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
+import pers.yufiria.craftorithm.ui.icon.TranslatableIconParser;
 import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Supplier;
 
 public class VanillaBrewingCreator extends RecipeCreator {
@@ -65,111 +59,65 @@ public class VanillaBrewingCreator extends RecipeCreator {
 
     @Override
     protected Icon getFrameIcon() {
-        return CreatorIconParser.INSTANCE.parse(VanillaBrewingCreatorConfig.FRAME_ICON.value()).get();
+        return TranslatableIconParser.INSTANCE.parse(VanillaBrewingCreatorConfig.FRAME_ICON.value()).get();
     }
 
     @Override
     protected Icon getResultFrameIcon() {
-        return CreatorIconParser.INSTANCE.parse(VanillaBrewingCreatorConfig.RESULT_FRAME_ICON.value()).get();
+        return TranslatableIconParser.INSTANCE.parse(VanillaBrewingCreatorConfig.RESULT_FRAME_ICON.value()).get();
     }
 
     private Icon getConfirmIcon() {
-        IconDisplay iconDisplay = CreatorIconParser.INSTANCE.parseIconDisplay(
+        IconDisplay iconDisplay = TranslatableIconParser.INSTANCE.parseIconDisplay(
             VanillaBrewingCreatorConfig.CONFIRM_ICON.value()
         );
-        return new TranslatableIcon(iconDisplay) {
-            @Override
-            public Icon onClick(InventoryClickEvent event) {
-                StoredMenu creator = (StoredMenu) Objects.requireNonNull(event.getClickedInventory()).getHolder();
-                Map<Integer, ItemStack> storedItems = Objects.requireNonNull(creator).storedItems();
+        TranslatableIcon icon = new TranslatableIcon(iconDisplay);
+        icon.setClickAction(event -> {
+            Map<Integer, ItemStack> storedItems = StoredMenuUtils.storedItems(event);
 
-                // 1. 验证结果物品
-                ItemStack result = storedItems.get(RESULT_SLOT);
-                if (ItemHelper.isAir(result)) {
-                    LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_RESULT);
-                    return this;
-                }
-
-                // 2. 验证输入物品
-                ItemStack inputItem = storedItems.get(INPUT_SLOT);
-                if (ItemHelper.isAir(inputItem)) {
-                    LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_INGREDIENTS);
-                    return this;
-                }
-
-                // 3. 验证材料物品
-                ItemStack ingredientItem = storedItems.get(INGREDIENT_SLOT);
-                if (ItemHelper.isAir(ingredientItem)) {
-                    LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_INGREDIENTS);
-                    return this;
-                }
-
-                // 4. 解析结果物品ID
-                NamespacedItemIdStack resultId = ItemManager.INSTANCE.matchItemIdOrCreate(result, false);
-                if (resultId == null) {
-                    LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_RESULT);
-                    return this;
-                }
-
-                // 5. 解析输入和材料物品ID
-                String inputId = resolveIngredientId(inputItem);
-                String ingredientId = resolveIngredientId(ingredientItem);
-
-                if (inputId == null || ingredientId == null) {
-                    LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_INGREDIENTS);
-                    return this;
-                }
-
-                String recipeId = resolveRecipeId(SimpleRecipeTypes.VANILLA_BREWING.typeKey(), resultId.itemId());
-                String recipeFileName = resolveRecipeFileName(resultId.itemId());
-                event.getWhoClicked().closeInventory();
-                // 6. 创建并保存配方配置文件
-                createRecipeConfig(recipeFileName, recipeConfig -> {
-                    recipeConfig.set("type", SimpleRecipeTypes.VANILLA_BREWING.typeKey());
-                    recipeConfig.set("result", resultId.toString());
-                    recipeConfig.set("input", inputId);
-                    recipeConfig.set("ingredient", ingredientId);
-                    if (recipeId != null) {
-                        recipeConfig.set("recipe_id", recipeId);
-                    }
-                    recipeConfig.saveConfig();
-                    recipeConfig.reloadConfig();
-
-                    ParsedRecipe parsedRecipe = RecipeManager.INSTANCE.parseRecipeFromConfig(recipeFileName, recipeConfig);
-                    if (parsedRecipe == null) {
-                        CrypticLib.error("Failed to load recipe " + recipeFileName);
-                        return;
-                    }
-
-                    CrypticLibBukkit.scheduler().sync(() -> {
-                        // 7. 加载配方到RecipeManager
-                        boolean loadResult = RecipeManager.INSTANCE.registerParsedRecipe(parsedRecipe,true);
-                        if (loadResult) {
-                            LangUtils.sendLang(
-                                event.getWhoClicked(),
-                                Languages.COMMAND_CREATE_SUCCESS,
-                                Map.of(
-                                    "<recipe_type>",
-                                    Languages.RECIPE_TYPE_NAME_VANILLA_BREWING.value((Player) event.getWhoClicked()),
-                                    "<recipe_file_name>",
-                                    recipeFileName,
-                                    "<recipe_id>",
-                                    recipeId != null ? recipeId : recipeFileName
-                                )
-                            );
-                        } else {
-                            LangUtils.sendLang(
-                                event.getWhoClicked(),
-                                Languages.RECIPE_LOAD_EXCEPTION,
-                                Map.of("<recipe_name>", recipeFileName)
-                            );
-                        }
-                    });
-                });
-
-                return this;
+            // 1. 验证结果物品
+            ItemStack result = storedItems.get(RESULT_SLOT);
+            if (ItemHelper.isAir(result)) {
+                LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_RESULT);
+                return;
             }
-        };
+
+            // 2. 验证输入物品
+            ItemStack inputItem = storedItems.get(INPUT_SLOT);
+            if (ItemHelper.isAir(inputItem)) {
+                LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_INGREDIENTS);
+                return;
+            }
+
+            // 3. 验证材料物品
+            ItemStack ingredientItem = storedItems.get(INGREDIENT_SLOT);
+            if (ItemHelper.isAir(ingredientItem)) {
+                LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_INGREDIENTS);
+                return;
+            }
+
+            // 4. 解析结果物品ID
+            NamespacedItemIdStack resultId = ItemManager.INSTANCE.matchItemIdOrCreate(result, false);
+            if (resultId == null) {
+                LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_RESULT);
+                return;
+            }
+
+            // 5. 解析输入和材料物品ID
+            String inputId = resolveIngredientId(inputItem);
+            String ingredientId = resolveIngredientId(ingredientItem);
+            if (inputId == null || ingredientId == null) {
+                LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_INGREDIENTS);
+                return;
+            }
+
+            // 6. 创建并保存配方配置文件
+            saveAndRegister((Player) event.getWhoClicked(), resultId, recipeConfig -> {
+                recipeConfig.set("input", inputId);
+                recipeConfig.set("ingredient", ingredientId);
+            });
+        });
+        return icon;
     }
 
 }

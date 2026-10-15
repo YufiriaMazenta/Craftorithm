@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.ui.creator;
 
+import crypticlib.CrypticLib;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.Key;
 import crypticlib.chat.BukkitTextProcessor;
@@ -12,14 +13,18 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
+import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.item.ItemGroup;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
+import pers.yufiria.craftorithm.recipe.ParsedRecipe;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
+import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.text.SimpleDateFormat;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -51,6 +56,55 @@ public abstract class RecipeCreator extends StoredMenu {
             BukkitConfigWrapper recipeConfigWrapper = new BukkitConfigWrapper(Craftorithm.instance(), "recipes/" + recipeFileName + ".yml");
             recipeConfigWrapper.saveDefaultConfigFile();
             callback.accept(recipeConfigWrapper);
+        });
+    }
+
+    /**
+     * 保存并注册配方。
+     * 统一处理「解析配方id与文件名 → 关闭菜单 → 写入配置 → 落盘并重载 → 解析配方 →
+     * 回到主线程注册 → 发送结果提示」这一整套流程。
+     * @param player 操作玩家
+     * @param resultId 结果物品id
+     * @param writeFields 写入该配方类型特有字段的回调; type / result / recipe_id 由本方法统一写入
+     */
+    protected void saveAndRegister(
+        @NotNull Player player,
+        @NotNull NamespacedItemIdStack resultId,
+        @NotNull Consumer<BukkitConfigWrapper> writeFields
+    ) {
+        String typeKey = recipeType().typeKey();
+        String recipeId = resolveRecipeId(typeKey, resultId.itemId());
+        String recipeFileName = resolveRecipeFileName(resultId.itemId());
+        player.closeInventory();
+
+        createRecipeConfig(recipeFileName, recipeConfig -> {
+            recipeConfig.set("type", typeKey);
+            recipeConfig.set("result", resultId.toString());
+            writeFields.accept(recipeConfig);
+            if (recipeId != null) {
+                recipeConfig.set("recipe_id", recipeId);
+            }
+            recipeConfig.saveConfig();
+            recipeConfig.reloadConfig();
+
+            ParsedRecipe parsedRecipe = RecipeManager.INSTANCE.parseRecipeFromConfig(recipeFileName, recipeConfig);
+            if (parsedRecipe == null) {
+                CrypticLib.error("Failed to load recipe " + recipeFileName);
+                return;
+            }
+
+            CrypticLibBukkit.scheduler().sync(() -> {
+                boolean loadResult = RecipeManager.INSTANCE.registerParsedRecipe(parsedRecipe, true);
+                if (loadResult) {
+                    LangUtils.sendLang(player, Languages.COMMAND_CREATE_SUCCESS, Map.of(
+                        "<recipe_type>", recipeType().getLocalizedName(player),
+                        "<recipe_file_name>", recipeFileName,
+                        "<recipe_id>", recipeId != null ? recipeId : recipeFileName
+                    ));
+                } else {
+                    LangUtils.sendLang(player, Languages.RECIPE_LOAD_EXCEPTION, Map.of("<recipe_name>", recipeFileName));
+                }
+            });
         });
     }
 
