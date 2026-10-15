@@ -60,18 +60,7 @@ public enum StonecuttingListener implements Listener {
             }
 
             // 物品检查通过后再刷新结果
-            ItemManager.INSTANCE.matchItemId(result, true)
-                .flatMap(
-                    itemIdStack -> {
-                        if (itemIdStack.itemId().isVanillaItem()) {
-                            return Optional.empty();
-                        }
-                        return ItemManager.INSTANCE.matchItem(itemIdStack, event.getPlayer());
-                    }
-                )
-                .ifPresent(refreshItem -> {
-                    result.setItemMeta(refreshItem.getItemMeta());
-                });
+            ItemManager.INSTANCE.refreshItem(result, player);
             //运行结果处理器
             Optional<ResultProcessors> recipeProcessors = ResultProcessorManager.INSTANCE.getRecipeProcessors(recipeKey);
             recipeProcessors.ifPresent(

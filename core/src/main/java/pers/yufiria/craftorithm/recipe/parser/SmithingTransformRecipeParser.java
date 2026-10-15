@@ -8,10 +8,6 @@ import org.bukkit.inventory.SmithingRecipe;
 import org.bukkit.inventory.SmithingTransformRecipe;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.Craftorithm;
-import pers.yufiria.craftorithm.item.ItemManager;
-import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
-import pers.yufiria.craftorithm.item.exception.ItemNotFoundException;
-import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 
 public enum SmithingTransformRecipeParser implements VanillaRecipeParser<SmithingRecipe> {
 
@@ -19,9 +15,8 @@ public enum SmithingTransformRecipeParser implements VanillaRecipeParser<Smithin
 
     @Override
     public @NotNull SmithingRecipe parse(String recipeName, ConfigurationSection recipeConfig) {
-        try {
-            String resultId = recipeConfig.getString("result");
-            ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId)).orElseThrow(() -> new ItemNotFoundException("Item not found: " + resultId));
+        return parseSafely(() -> {
+            ItemStack result = requireResult(recipeConfig);
             NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeName);
             String baseId = recipeConfig.getString("base");
             RecipeChoice base = choiceParser().parse(baseId);
@@ -30,10 +25,6 @@ public enum SmithingTransformRecipeParser implements VanillaRecipeParser<Smithin
             String templateId = recipeConfig.getString("template");
             RecipeChoice template = choiceParser().parse(templateId);
             return new SmithingTransformRecipe(recipeKey, result, template, base, addition);
-        } catch (RecipeLoadException e) {
-            throw e;
-        } catch (Throwable throwable) {
-            throw new RecipeLoadException(throwable);
-        }
+        });
     }
 }

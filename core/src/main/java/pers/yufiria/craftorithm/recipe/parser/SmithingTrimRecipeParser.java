@@ -19,7 +19,7 @@ public enum SmithingTrimRecipeParser implements VanillaRecipeParser<SmithingReci
     @Override
     @SuppressWarnings({"removal", "deprecation"})
     public @NotNull SmithingRecipe parse(String recipeName, ConfigurationSection recipeConfig) {
-        try {
+        return parseSafely(() -> {
             NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeName);
             String baseId = recipeConfig.getString("base");
             RecipeChoice base = choiceParser().parse(baseId);
@@ -44,11 +44,7 @@ public enum SmithingTrimRecipeParser implements VanillaRecipeParser<SmithingReci
             } else {
                 return new SmithingTrimRecipe(recipeKey, template, base, addition);
             }
-        } catch (RecipeLoadException e) {
-            throw e;
-        } catch (Throwable throwable) {
-            throw new RecipeLoadException(throwable);
-        }
+        });
     }
 
 }

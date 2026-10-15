@@ -9,7 +9,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.potion.PotionBrewer;
 import pers.yufiria.craftorithm.recipe.BrewingRecipe;
-import pers.yufiria.craftorithm.recipe.CraftorithmRecipeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 
 import java.util.Map;
@@ -78,12 +77,12 @@ public enum BrewingRecipeRegister implements RecipeRegister {
 
         @Override
         public boolean registerRecipe(Recipe recipe, boolean updateRecipes) {
-            return CraftorithmRecipeRegistry.findImpl().registerRecipe(recipe, updateRecipes) == CraftorithmRecipeRegistry.RegisterResult.SUCCESS;
+            return BukkitRecipeRegister.INSTANCE.registerRecipe(recipe, updateRecipes);
         }
 
         @Override
         public boolean unregisterRecipe(NamespacedKey recipeKey, boolean updateRecipes) {
-            return CraftorithmRecipeRegistry.findImpl().unregisterRecipe(recipeKey, updateRecipes);
+            return BukkitRecipeRegister.INSTANCE.unregisterRecipe(recipeKey, updateRecipes);
         }
 
     }

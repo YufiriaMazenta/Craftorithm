@@ -32,18 +32,7 @@ public enum CrafterListener implements Listener {
         if (ItemHelper.isAir(result))
             return;
         //重新从物品源获取物品, 刷新结果的组件
-        ItemManager.INSTANCE.matchItemId(result, true)
-            .flatMap(itemIdStack -> {
-                if (itemIdStack.itemId().isVanillaItem()) {
-                    return Optional.empty();
-                }
-                return ItemManager.INSTANCE.matchItem(itemIdStack);
-            })
-            .ifPresent(refreshItem -> {
-                if (!result.isSimilar(refreshItem)) {
-                    result.setItemMeta(refreshItem.getItemMeta());
-                }
-            });
+        ItemManager.INSTANCE.refreshItem(result, null);
 
         // 运行结果处理器（Crafter没有sourceItem）
         Recipe recipe = event.getRecipe();

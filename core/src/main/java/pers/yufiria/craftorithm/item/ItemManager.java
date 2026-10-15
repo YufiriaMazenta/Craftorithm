@@ -140,6 +140,27 @@ public enum ItemManager implements LifecycleTask {
     }
 
     /**
+     * 刷新物品
+     * 仅对存在动态数据的物品生效
+     * @param result 待刷新的物品, 会被就地修改
+     * @param player 解析物品时用于替换玩家变量的玩家, 可为null
+     */
+    public void refreshItem(ItemStack result, @Nullable OfflinePlayer player) {
+        matchItemId(result, true)
+            .flatMap(itemIdStack -> {
+                if (itemIdStack.itemId().isVanillaItem()) {
+                    return Optional.empty();
+                }
+                return matchItem(itemIdStack, player);
+            })
+            .ifPresent(refreshItem -> {
+                if (!result.isSimilar(refreshItem)) {
+                    result.setItemMeta(refreshItem.getItemMeta());
+                }
+            });
+    }
+
+    /**
      * 获取一个物品的完整id,包含命名空间和id
      * 如果该物品完全没有数据值, 那么将会返回原版物品id
      * @param item 传入的物品

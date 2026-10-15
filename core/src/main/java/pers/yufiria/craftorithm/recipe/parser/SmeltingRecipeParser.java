@@ -3,18 +3,12 @@ package pers.yufiria.craftorithm.recipe.parser;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.*;
-import org.bukkit.inventory.recipe.CookingBookCategory;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.Craftorithm;
-import pers.yufiria.craftorithm.item.ItemManager;
-import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
-import pers.yufiria.craftorithm.item.exception.ItemNotFoundException;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
-
-import java.util.Objects;
 
 public enum SmeltingRecipeParser implements VanillaRecipeParser<CookingRecipe<?>> {
 
@@ -27,14 +21,13 @@ public enum SmeltingRecipeParser implements VanillaRecipeParser<CookingRecipe<?>
 
     @Override
     public @NotNull CookingRecipe<?> parse(String recipeName, ConfigurationSection recipeConfig) {
-        try {
+        return parseSafely(() -> {
             String recipeTypeId = recipeConfig.getString("type");
             RecipeType recipeType = RecipeManager.INSTANCE.getRecipeTypeByKey(recipeTypeId);
             if (recipeType == null) {
                 throw new RecipeLoadException(recipeTypeId + " is not a smelting recipe type.");
             }
-            String resultId = recipeConfig.getString("result");
-            ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId)).orElseThrow(() -> new ItemNotFoundException("Item not found: " + resultId));
+            ItemStack result = requireResult(recipeConfig);
             String ingredientId = recipeConfig.getString("ingredient");
             RecipeChoice ingredient = choiceParser().parse(ingredientId);
             NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeName);
@@ -60,21 +53,9 @@ public enum SmeltingRecipeParser implements VanillaRecipeParser<CookingRecipe<?>
                 }
                 default -> throw new RecipeLoadException(recipeTypeId + " is not a smelting recipe.");
             }
-            String group = recipeConfig.getString("group");
-            if (group != null) {
-                recipe.setGroup(group);
-            }
-            if (recipeConfig.contains("recipe_book_category")) {
-                String categoryStr = Objects.requireNonNull(recipeConfig.getString("recipe_book_category")).toUpperCase();
-                CookingBookCategory category = CookingBookCategory.valueOf(categoryStr);
-                recipe.setCategory(category);
-            }
+            RecipeMetaUtils.applyCookingMeta(recipe, recipeConfig);
             return recipe;
-        } catch (RecipeLoadException e) {
-            throw e;
-        } catch (Throwable throwable) {
-            throw new RecipeLoadException(throwable);
-        }
+        });
     }
 
 }

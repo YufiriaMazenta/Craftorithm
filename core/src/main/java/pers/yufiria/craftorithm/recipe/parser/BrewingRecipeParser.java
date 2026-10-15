@@ -6,9 +6,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.Craftorithm;
-import pers.yufiria.craftorithm.item.ItemManager;
-import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
-import pers.yufiria.craftorithm.item.exception.ItemNotFoundException;
 import pers.yufiria.craftorithm.recipe.BrewingRecipe;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.choice.ItemIdRecipeChoiceParser;
@@ -29,9 +26,8 @@ public enum BrewingRecipeParser implements RecipeParser<BrewingRecipe> {
         if (!RecipeManager.INSTANCE.supportBrewingRecipe()) {
             throw new RecipeLoadException("&cThe server does not support brewing recipes");
         }
-        try {
-            String resultId = recipeConfig.getString("result");
-            ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId)).orElseThrow(() -> new ItemNotFoundException("Item not found: " + resultId));
+        return parseSafely(() -> {
+            ItemStack result = requireResult(recipeConfig);
             NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeName);
             String inputId = recipeConfig.getString("input");
             RecipeChoice input = choiceParser().parse(inputId);
@@ -43,10 +39,6 @@ public enum BrewingRecipeParser implements RecipeParser<BrewingRecipe> {
                 ingredient,
                 result
             );
-        } catch (RecipeLoadException e) {
-            throw e;
-        } catch (Throwable throwable) {
-            throw new RecipeLoadException(throwable);
-        }
+        });
     }
 }

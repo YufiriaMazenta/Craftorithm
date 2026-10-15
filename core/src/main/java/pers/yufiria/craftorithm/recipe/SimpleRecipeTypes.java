@@ -39,12 +39,12 @@ public enum SimpleRecipeTypes implements RecipeType {
         new RecipeRegister() {
             @Override
             public boolean registerRecipe(Recipe recipe, boolean updateRecipes) {
-                return CraftorithmRecipeRegistry.findImpl().registerRecipe(recipe, updateRecipes) == CraftorithmRecipeRegistry.RegisterResult.SUCCESS;
+                return BukkitRecipeRegister.INSTANCE.registerRecipe(recipe, updateRecipes);
             }
 
             @Override
             public boolean unregisterRecipe(NamespacedKey recipeKey, boolean updateRecipes) {
-                return CraftorithmRecipeRegistry.findImpl().unregisterRecipe(recipeKey, updateRecipes);
+                return BukkitRecipeRegister.INSTANCE.unregisterRecipe(recipeKey, updateRecipes);
             }
         },
         recipe -> false,

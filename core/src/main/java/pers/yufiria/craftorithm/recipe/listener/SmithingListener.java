@@ -45,19 +45,7 @@ public enum SmithingListener implements Listener {
             return;
         }
 
-        ItemManager.INSTANCE.matchItemId(result.get(), true)
-            .flatMap(itemIdStack -> {
-                if (itemIdStack.itemId().isVanillaItem()) {
-                    return Optional.empty();
-                }
-                Optional<Player> playerOpt = EventUtils.getViewer(event);
-                return ItemManager.INSTANCE.matchItem(itemIdStack, playerOpt.orElse(null));
-            })
-            .ifPresent(refreshItem -> {
-                if (!result.get().isSimilar(refreshItem)) {
-                    result.get().setItemMeta(refreshItem.getItemMeta());
-                }
-            });
+        ItemManager.INSTANCE.refreshItem(result.get(), EventUtils.getViewer(event).orElse(null));
 
         // 运行结果处理器
         Optional<ResultProcessors> recipeProcessors = ResultProcessorManager.INSTANCE.getRecipeProcessors(recipeKey);

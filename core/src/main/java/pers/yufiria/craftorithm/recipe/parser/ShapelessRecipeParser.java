@@ -4,15 +4,10 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapelessRecipe;
-import org.bukkit.inventory.recipe.CraftingBookCategory;
 import pers.yufiria.craftorithm.Craftorithm;
-import pers.yufiria.craftorithm.item.ItemManager;
-import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
-import pers.yufiria.craftorithm.item.exception.ItemNotFoundException;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 
 import java.util.List;
-import java.util.Objects;
 
 public enum ShapelessRecipeParser implements VanillaRecipeParser<ShapelessRecipe> {
 
@@ -20,9 +15,8 @@ public enum ShapelessRecipeParser implements VanillaRecipeParser<ShapelessRecipe
 
     @Override
     public ShapelessRecipe parse(String recipeName, ConfigurationSection recipeConfig) {
-        try {
-            String resultId = recipeConfig.getString("result");
-            ItemStack result = ItemManager.INSTANCE.matchItem(NamespacedItemIdStack.fromString(resultId)).orElseThrow(() -> new ItemNotFoundException("Item not found: " + resultId));
+        return parseSafely(() -> {
+            ItemStack result = requireResult(recipeConfig);
             NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeName);
             ShapelessRecipe recipe = new ShapelessRecipe(recipeKey, result);
             List<String> ingredientKeys = recipeConfig.getStringList("ingredients");
@@ -32,20 +26,8 @@ public enum ShapelessRecipeParser implements VanillaRecipeParser<ShapelessRecipe
             for (String ingredientKey : ingredientKeys) {
                 recipe.addIngredient(choiceParser().parse(ingredientKey));
             }
-            String group = recipeConfig.getString("group");
-            if (group != null) {
-                recipe.setGroup(group);
-            }
-            if (recipeConfig.contains("recipe_book_category")) {
-                String categoryStr = Objects.requireNonNull(recipeConfig.getString("recipe_book_category")).toUpperCase();
-                CraftingBookCategory category = CraftingBookCategory.valueOf(categoryStr);
-                recipe.setCategory(category);
-            }
+            RecipeMetaUtils.applyCraftingMeta(recipe, recipeConfig);
             return recipe;
-        } catch (RecipeLoadException e) {
-            throw e;
-        } catch (Throwable e) {
-            throw new RecipeLoadException(e);
-        }
+        });
     }
 }

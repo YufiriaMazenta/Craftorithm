@@ -123,14 +123,7 @@ public enum AnvilRecipeHandler implements Listener {
         AtomicReference<ItemStack> result = new AtomicReference<>(anvilRecipe.getResult());
 
         //刷新结果
-        ItemManager.INSTANCE.matchItemId(result.get(), false)
-            .flatMap(itemIdStack -> {
-                if (itemIdStack.itemId().isVanillaItem()) {
-                    return Optional.empty();
-                }
-                return ItemManager.INSTANCE.matchItem(itemIdStack, player);
-            })
-            .ifPresent(refreshItem -> result.get().setItemMeta(refreshItem.getItemMeta()));
+        ItemManager.INSTANCE.refreshItem(result.get(), player);
 
         //处理结果处理器
         Optional<ResultProcessors> recipeProcessors = ResultProcessorManager.INSTANCE.getRecipeProcessors(anvilRecipe.getKey());
