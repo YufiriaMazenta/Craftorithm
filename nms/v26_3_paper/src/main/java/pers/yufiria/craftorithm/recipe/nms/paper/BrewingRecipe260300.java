@@ -79,22 +79,42 @@ public class BrewingRecipe260300 extends BrewingRecipe implements NmsBrewingReci
         return PlacementInfo.NOT_PLACEABLE;
     }
 
-    public static RecipeHolder<BrewingRecipe> fromBukkit(NamespacedKey recipeKey, pers.yufiria.craftorithm.recipe.BrewingRecipe bukkitRecipe) {
-        ItemStack nmsResult = CraftItemStack.asNMSCopy(bukkitRecipe.getResult());
+    public static RecipeHolder<BrewingRecipe> fromCraftorithm(NamespacedKey recipeKey, pers.yufiria.craftorithm.recipe.BrewingRecipe brewingRecipe) {
+        ItemStack nmsResult = CraftItemStack.asNMSCopy(brewingRecipe.getResult());
         ItemStackTemplate resultTemplate = ItemStackTemplate.fromNonEmptyStack(nmsResult);
         return new RecipeHolder<>(CraftNamespacedKey.toResourceKey(Registries.RECIPE, recipeKey), new BrewingRecipe260300(
             recipeKey,
             new PotionIngredient(
-                CraftRecipe.toIngredient(IngredientUtils.getBukkitChoice(bukkitRecipe.input()), false),
+                CraftRecipe.toIngredient(IngredientUtils.getBukkitChoice(brewingRecipe.input()), false),
                 Optional.empty()
             ),
-            bukkitRecipe.input(),
+            brewingRecipe.input(),
             new PotionIngredient(
-                CraftRecipe.toIngredient(IngredientUtils.getBukkitChoice(bukkitRecipe.ingredient()), false),
+                CraftRecipe.toIngredient(IngredientUtils.getBukkitChoice(brewingRecipe.ingredient()), false),
                 Optional.empty()
             ),
-            bukkitRecipe.ingredient(),
-            resultTemplate));
+            brewingRecipe.ingredient(),
+            resultTemplate
+        ));
+    }
+
+    public static RecipeHolder<BrewingRecipe> fromBukkit(NamespacedKey recipeKey, org.bukkit.inventory.BrewingRecipe brewingRecipe) {
+        ItemStack nmsResult = CraftItemStack.asNMSCopy(brewingRecipe.getResult());
+        ItemStackTemplate resultTemplate = ItemStackTemplate.fromNonEmptyStack(nmsResult);
+        return new RecipeHolder<>(CraftNamespacedKey.toResourceKey(Registries.RECIPE, recipeKey), new BrewingRecipe260300(
+            recipeKey,
+            new PotionIngredient(
+                CraftRecipe.toIngredient(IngredientUtils.getBukkitChoice(brewingRecipe.getInput()), false),
+                Optional.empty()
+            ),
+            brewingRecipe.getInput(),
+            new PotionIngredient(
+                CraftRecipe.toIngredient(IngredientUtils.getBukkitChoice(brewingRecipe.getIngredient()), false),
+                Optional.empty()
+            ),
+            brewingRecipe.getIngredient(),
+            resultTemplate
+        ));
     }
 
 }

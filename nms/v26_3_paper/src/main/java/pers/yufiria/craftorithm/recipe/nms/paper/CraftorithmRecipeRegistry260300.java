@@ -62,6 +62,9 @@ public enum CraftorithmRecipeRegistry260300 implements CraftorithmRecipeRegistry
                 recipeHolder = SmithingTrimRecipe260300.fromBukkit(recipeKey, smithingTrimRecipe);
             }
             case BrewingRecipe brewingRecipe -> {
+                recipeHolder = BrewingRecipe260300.fromCraftorithm(recipeKey, brewingRecipe);
+            }
+            case org.bukkit.inventory.BrewingRecipe brewingRecipe -> {
                 recipeHolder = BrewingRecipe260300.fromBukkit(recipeKey, brewingRecipe);
             }
             case StonecuttingRecipe stonecuttingRecipe -> {

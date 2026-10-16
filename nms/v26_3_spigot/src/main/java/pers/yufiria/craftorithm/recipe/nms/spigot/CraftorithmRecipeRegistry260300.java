@@ -26,20 +26,25 @@ public enum CraftorithmRecipeRegistry260300 implements CraftorithmRecipeRegistry
 
     @Override
     public RegisterResult registerRecipe(Recipe bukkitRecipe, boolean updateRecipes) {
-        if (bukkitRecipe instanceof BrewingRecipe brewingRecipe) {
-            NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(bukkitRecipe);
-            RecipeHolder<?> recipeHolder;
-            recipeHolder = BrewingRecipe260300.fromBukkit(recipeKey, brewingRecipe);
-            if (updateRecipes) {
-                MinecraftServer.getServer().getRecipeManager().addRecipe(recipeHolder);
-            } else {
-                AsyncCatcher.catchOp("Recipe Add");
-                MinecraftServer.getServer().getRecipeManager().recipes.addRecipe(recipeHolder);
+        switch (bukkitRecipe) {
+            case BrewingRecipe brewingRecipe -> {
+                NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(bukkitRecipe);
+                RecipeHolder<?> recipeHolder;
+                recipeHolder = BrewingRecipe260300.fromBukkit(recipeKey, brewingRecipe);
+                if (updateRecipes) {
+                    MinecraftServer.getServer().getRecipeManager().addRecipe(recipeHolder);
+                } else {
+                    AsyncCatcher.catchOp("Recipe Add");
+                    MinecraftServer.getServer().getRecipeManager().recipes.addRecipe(recipeHolder);
+                }
             }
-        } else {
-            return CraftorithmRecipeRegistry260100.INSTANCE.registerRecipe(bukkitRecipe, updateRecipes);
+            case org.bukkit.inventory.BrewingRecipe ignored -> {
+                return RegisterResult.UNSUPPORTED_RECIPE_TYPE;
+            }
+            default -> {
+                return CraftorithmRecipeRegistry260100.INSTANCE.registerRecipe(bukkitRecipe, updateRecipes);
+            }
         }
-
         return RegisterResult.SUCCESS;
     }
 
