@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.api.event.RecipeLoadFromConfigEvent;
+import pers.yufiria.craftorithm.config.DisabledRecipesConfig;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.database.dao.DiscoveredRecipeDao;
@@ -48,7 +49,6 @@ public enum RecipeManager implements LifecycleTask {
     INSTANCE;
     public final File RECIPE_FILE_FOLDER = new File(Craftorithm.instance().getDataFolder().getPath(), "recipes");
     public final String PLUGIN_RECIPE_NAMESPACE = "craftorithm";
-    private final BukkitConfigWrapper disabledRecipesConfigWrapper = new BukkitConfigWrapper(Craftorithm.instance(), "disabled_recipes.yml");
     private final Map<String, RecipeType> recipeTypes = new ConcurrentHashMap<>();
     private final Map<NamespacedKey, ParsedRecipe> craftorithmRecipes = new ConcurrentHashMap<>();
     private final Map<String, NamespacedKey> recipeFileNameToKeyMap = new ConcurrentHashMap<>();
@@ -145,12 +145,26 @@ public enum RecipeManager implements LifecycleTask {
         //重置所有配方的结果处理器
         ResultProcessorManager.INSTANCE.resetRecipeProcessors();
 
-        //还原被禁用的配方
-        for (Recipe recipe : disabledRecipes.values()) {
-            RecipeType recipeType = getRecipeType(recipe);
-            recipeType.recipeRegister().registerRecipe(recipe, false);
-        }
-        disabledRecipes.clear();
+        //还原被禁用的配方里本次重载后不再被禁用的配方
+        Set<String> disabledRecipeKeyStrSet = new HashSet<>(DisabledRecipesConfig.RECIPES.value());
+        disabledRecipes.entrySet().removeIf(entry -> {
+            NamespacedKey recipeKey = entry.getKey();
+            Recipe recipe = entry.getValue();
+            try {
+                boolean restore = !disabledRecipeKeyStrSet.contains(recipeKey.toString());
+                if (restore) {
+                    RecipeType recipeType = getRecipeType(recipe);
+                    recipeType.recipeRegister().registerRecipe(recipe, false);
+                }
+                return restore;
+            } catch (Throwable throwable) {
+                CrypticLib.error(
+                    "Failed to restore recipe: " + recipeKey.toString(),
+                    throwable
+                );
+                return false;
+            }
+        });
     }
 
     private void loadRecipesFromConfig(Runnable callback) {
@@ -299,8 +313,7 @@ public enum RecipeManager implements LifecycleTask {
     }
 
     private void reloadDisabledRecipes() {
-        disabledRecipesConfigWrapper.reloadConfig();
-        List<String> disabledRecipes = disabledRecipesConfigWrapper.config().getStringList("recipes");
+        List<String> disabledRecipes = new ArrayList<>(DisabledRecipesConfig.RECIPES.value());
         if (PluginConfigs.REMOVE_ALL_VANILLA_RECIPE.value()) {
             for (NamespacedKey recipeKey : serverRecipeKeys) {
                 if (recipeKey.getNamespace().equals("minecraft")) {
@@ -370,11 +383,11 @@ public enum RecipeManager implements LifecycleTask {
         boolean result = getRecipeType(recipe).recipeRegister().registerRecipe(recipe, true);
         disabledRecipes.remove(recipeKey);
         CrypticLibBukkit.scheduler().async(() -> {
-            List<String> disabledRecipesConfig = disabledRecipesConfigWrapper.config().getStringList("recipes");
+            List<String> disabledRecipes = new ArrayList<>(DisabledRecipesConfig.RECIPES.value());
             String keyStr = recipeKey.toString();
-            disabledRecipesConfig.remove(keyStr);
-            disabledRecipesConfigWrapper.set("recipes", disabledRecipesConfig);
-            disabledRecipesConfigWrapper.saveConfig();
+            disabledRecipes.remove(keyStr);
+            DisabledRecipesConfig.RECIPES.setValue(disabledRecipes);
+            DisabledRecipesConfig.RECIPES.saveConfig();
         });
         return result;
     }
@@ -387,12 +400,12 @@ public enum RecipeManager implements LifecycleTask {
         if (recipeKey.getNamespace().equals(NamespacedKey.MINECRAFT) && PluginConfigs.REMOVE_ALL_VANILLA_RECIPE.value())
             return;
         CrypticLibBukkit.scheduler().async(() -> {
-            List<String> disabledRecipes = disabledRecipesConfigWrapper.config().getStringList("recipes");
+            List<String> disabledRecipes = new ArrayList<>(DisabledRecipesConfig.RECIPES.value());
             String keyStr = recipeKey.toString();
             if (!disabledRecipes.contains(keyStr))
                 disabledRecipes.add(keyStr);
-            disabledRecipesConfigWrapper.set("recipes", disabledRecipes);
-            disabledRecipesConfigWrapper.saveConfig();
+            DisabledRecipesConfig.RECIPES.setValue(disabledRecipes);
+            DisabledRecipesConfig.RECIPES.saveConfig();
         });
     }
 
