@@ -14,6 +14,7 @@ include(
     "nms:v1_20_5",
     "nms:v1_21",
     "nms:v1_21_3",
+    "nms:v1_21_4",
     "nms:v1_21_5",
     "nms:v1_21_7",
     "nms:v1_21_10_spigot",

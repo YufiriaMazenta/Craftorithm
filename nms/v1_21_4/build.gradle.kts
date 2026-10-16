@@ -1,0 +1,13 @@
+repositories {
+    maven("https://repo.tabooproject.org/repository/releases/")
+}
+
+dependencies {
+    compileOnly(project(":core"))
+    compileOnly(project(":nms:common"))
+    compileOnly("ink.ptms.core:v12104:12104:universal")
+    compileOnly("com.google.guava:guava:33.2.0-jre")
+    compileOnly("com.crypticlib:bukkit:${rootProject.findProperty("crypticlibVer")}")
+    compileOnly("com.crypticlib:bukkit-util:${rootProject.findProperty("crypticlibVer")}")
+    compileOnly("com.crypticlib:common-compat:${rootProject.findProperty("crypticlibVer")}")
+}
