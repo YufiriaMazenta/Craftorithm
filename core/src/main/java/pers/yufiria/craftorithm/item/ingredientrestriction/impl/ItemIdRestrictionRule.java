@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.item.ingredientrestriction.impl;
 
+import crypticlib.CrypticLib;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
@@ -12,7 +13,6 @@ import pers.yufiria.craftorithm.item.ingredientrestriction.RecipeKeyMatcher;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * 基于物品 ID 的合成限制规则
@@ -38,12 +38,22 @@ public final class ItemIdRestrictionRule implements IngredientRestrictionRule {
     private final List<RecipeKeyMatcher> recipeMatchers;
 
     public ItemIdRestrictionRule(String itemId, List<RecipeKeyMatcher> recipeMatchers) {
-        this.itemIds = List.of(Objects.requireNonNull(NamespacedItemId.fromString(itemId)));
+        NamespacedItemId namespacedItemId = NamespacedItemId.fromString(itemId);
+        if (namespacedItemId == null) {
+            //配置里的物品id无法解析时不能让整次配置重载失败, 记录一条警告并让该条规则永不命中
+            CrypticLib.warn("Unknown item id '" + itemId + "' in config.yml ingredient_restriction_rules, this rule will be ignored");
+            this.itemIds = List.of();
+        } else {
+            this.itemIds = List.of(namespacedItemId);
+        }
         this.recipeMatchers = recipeMatchers;
     }
 
     @Override
     public boolean isBlocked(@NotNull ItemStack item, @NotNull NamespacedKey recipeKey) {
+        if (itemIds.isEmpty()) {
+            return false;
+        }
         if (!ItemManager.INSTANCE.containsItem(itemIds, item)) {
             return false;
         }
