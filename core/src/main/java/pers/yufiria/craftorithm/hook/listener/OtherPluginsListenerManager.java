@@ -106,7 +106,7 @@ public enum OtherPluginsListenerManager implements LifecycleTask {
                     handlerList
                 ));
 
-                CrypticLib.verbose("Converted listener: " + listenerClassName);
+                CrypticLib.info("Converted listener: " + listenerClassName);
             }
         }
         allowReregisterListenerNumMap.putAll(listenerConvertedCountMap);
