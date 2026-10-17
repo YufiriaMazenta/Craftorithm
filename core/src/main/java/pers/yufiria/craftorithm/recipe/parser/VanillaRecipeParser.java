@@ -11,10 +11,6 @@ public interface VanillaRecipeParser<R extends Recipe> extends RecipeParser<R> {
 
     @Override
     default @NotNull RecipeChoiceParser choiceParser() {
-        if (PluginConfigs.USE_EXPERIMENTAL_RECIPE_INGREDIENTS.value()) {
-            return ItemIdRecipeChoiceParser.INSTANCE;
-        } else {
-            return BukkitRecipeChoiceParser.INSTANCE;
-        }
+        return ItemIdRecipeChoiceParser.INSTANCE;
     }
 }

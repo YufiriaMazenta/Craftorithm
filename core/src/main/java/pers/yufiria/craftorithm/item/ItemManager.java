@@ -201,6 +201,40 @@ public enum ItemManager implements LifecycleTask {
     }
 
     /**
+     * 识别一个物品可能的所有id
+     * 无meta物品直接返回原版物品id; 有meta物品收集所有物品提供源的匹配id, 无人认领时回退原版物品id
+     * @param item 传入的物品
+     * @return 所有可能的物品id, 按物品提供源优先级顺序, 未找到返回空列表
+     */
+    public List<NamespacedItemId> matchAllItemIds(ItemStack item) {
+        if (ItemHelper.isAir(item)) {
+            return List.of();
+        }
+
+        if (!item.hasItemMeta()) {
+            return List.of(NamespacedItemId.fromMaterial(item.getType()));
+        }
+
+        Set<NamespacedItemId> itemIds = new LinkedHashSet<>();
+        for (Map.Entry<String, ItemProvider> itemProviderEntry : itemProviderMap.entrySet()) {
+            NamespacedItemId namespacedItemId;
+            try {
+                namespacedItemId = itemProviderEntry.getValue().matchItemId(item);
+            } catch (Throwable t) {
+                logProviderError(itemProviderEntry.getKey(), t);
+                continue;
+            }
+            if (namespacedItemId != null) {
+                itemIds.add(namespacedItemId);
+            }
+        }
+        if (itemIds.isEmpty()) {
+            return List.of(NamespacedItemId.fromMaterial(item.getType()));
+        }
+        return List.copyOf(itemIds);
+    }
+
+    /**
      * 遍历所有物品提供源尝试匹配物品id
      */
     private Optional<NamespacedItemId> matchItemIdFromProviders(ItemStack item) {

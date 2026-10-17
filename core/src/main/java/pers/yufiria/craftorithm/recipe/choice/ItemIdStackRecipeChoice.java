@@ -5,6 +5,7 @@ import org.bukkit.inventory.RecipeChoice;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.PluginConfigs;
+import pers.yufiria.craftorithm.recipe.IngredientMatchMode;
 import pers.yufiria.craftorithm.item.ItemGroup;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
@@ -79,6 +80,11 @@ public class ItemIdStackRecipeChoice implements RecipeChoice {
 
     @Override
     public boolean test(@NotNull ItemStack itemStack) {
+        if (PluginConfigs.INGREDIENT_MATCH_MODE.value() == IngredientMatchMode.ALL) {
+            boolean matched = ItemManager.INSTANCE.matchAllItemIds(itemStack).stream()
+                .anyMatch(itemIds::contains);
+            return matched && itemStack.getAmount() >= amount;
+        }
         Optional<NamespacedItemIdStack> inputItemIdStackOpt = ItemManager.INSTANCE.matchItemIdOrVanilla(itemStack, false);
         if (inputItemIdStackOpt.isEmpty()) {
             return false;
