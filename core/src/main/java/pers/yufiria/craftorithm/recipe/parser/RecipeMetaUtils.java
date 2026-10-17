@@ -20,8 +20,6 @@ public final class RecipeMetaUtils {
     private static final String GROUP_KEY = "group";
     private static final String RECIPE_BOOK_CATEGORY_KEY = "recipe_book_category";
 
-    private RecipeMetaUtils() {}
-
     /**
      * 应用合成类配方(有序/无序)的元数据
      */

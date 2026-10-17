@@ -5,7 +5,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.item.ItemManager;
 
-public class ItemUtils {
+public class ScriptUtils {
 
     public static ScriptValue resolveItemId(@Nullable ItemStack item) {
         if (item == null) return ScriptValue.nil();

@@ -201,37 +201,46 @@ public enum ItemManager implements LifecycleTask {
     }
 
     /**
-     * 识别一个物品可能的所有id
-     * 无meta物品直接返回原版物品id; 有meta物品收集所有物品提供源的匹配id, 无人认领时回退原版物品id
-     * @param item 传入的物品
-     * @return 所有可能的物品id, 按物品提供源优先级顺序, 未找到返回空列表
+     * 判断一个物品id列表是否包含一个物品
+     * 匹配逻辑会受{@link PluginConfigs#ITEM_ID_MATCH_MODE}配置项影响
+     * @param itemIds 物品id列表
+     * @param item 要判断的物品
      */
-    public List<NamespacedItemId> matchAllItemIds(ItemStack item) {
+    public boolean containsItem(Collection<NamespacedItemId> itemIds, ItemStack item) {
         if (ItemHelper.isAir(item)) {
-            return List.of();
+            return false;
         }
-
-        if (!item.hasItemMeta()) {
-            return List.of(NamespacedItemId.fromMaterial(item.getType()));
-        }
-
-        Set<NamespacedItemId> itemIds = new LinkedHashSet<>();
-        for (Map.Entry<String, ItemProvider> itemProviderEntry : itemProviderMap.entrySet()) {
-            NamespacedItemId namespacedItemId;
-            try {
-                namespacedItemId = itemProviderEntry.getValue().matchItemId(item);
-            } catch (Throwable t) {
-                logProviderError(itemProviderEntry.getKey(), t);
-                continue;
+        if (PluginConfigs.ITEM_ID_MATCH_MODE.value() == ItemIdMatchMode.ALL) {
+            if (!item.hasItemMeta()) {
+                NamespacedItemId itemId = NamespacedItemId.fromMaterial(item.getType());
+                return itemIds.contains(itemId);
             }
-            if (namespacedItemId != null) {
-                itemIds.add(namespacedItemId);
+            for (Map.Entry<String, ItemProvider> itemProviderEntry : itemProviderMap.entrySet()) {
+                NamespacedItemId itemId;
+                try {
+                    itemId = itemProviderEntry.getValue().matchItemId(item);
+                } catch (Throwable t) {
+                    logProviderError(itemProviderEntry.getKey(), t);
+                    continue;
+                }
+                if (itemId == null) {
+                    continue;
+                }
+                if (itemIds.contains(itemId)) {
+                    return true;
+                }
             }
+            //如果所有物品源都不认识这个物品, 把他当作一个原版物品进行匹配
+            NamespacedItemId itemId = NamespacedItemId.fromMaterial(item.getType());
+            return itemIds.contains(itemId);
+        } else {
+            Optional<NamespacedItemIdStack> inputItemIdStackOpt = ItemManager.INSTANCE.matchItemIdOrVanilla(item, true);
+            if (inputItemIdStackOpt.isEmpty()) {
+                return false;
+            }
+            NamespacedItemIdStack itemIdStack = inputItemIdStackOpt.get();
+            return itemIds.contains(itemIdStack.itemId());
         }
-        if (itemIds.isEmpty()) {
-            return List.of(NamespacedItemId.fromMaterial(item.getType()));
-        }
-        return List.copyOf(itemIds);
     }
 
     /**
@@ -333,9 +342,9 @@ public enum ItemManager implements LifecycleTask {
     public Integer matchCustomFuelBurnTime(ItemStack item) {
         if (customCookingFuelMap.isEmpty())
             return null;
-        NamespacedItemId itemId = matchItemId(item, true)
+        NamespacedItemId itemId = matchItemIdOrVanilla(item, true)
             .map(NamespacedItemIdStack::itemId)
-            .orElseGet(() -> NamespacedItemId.fromMaterial(item.getType()));
+            .orElseThrow();
         return customCookingFuelMap.get(itemId);
     }
 

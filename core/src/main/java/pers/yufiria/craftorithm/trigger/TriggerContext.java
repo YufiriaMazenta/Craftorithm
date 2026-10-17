@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.script.RootScriptContext;
-import pers.yufiria.craftorithm.util.ItemUtils;
+import pers.yufiria.craftorithm.util.ScriptUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -79,8 +79,8 @@ public class TriggerContext {
      */
     public void putItem(@NotNull String name, @Nullable ItemStack item) {
         if (item == null || item.isEmpty()) return;
-        variables.put(name, ItemUtils.resolveItemId(item));
-        variables.put(name + "_amount", ItemUtils.resolveItemAmount(item));
+        variables.put(name, ScriptUtils.resolveItemId(item));
+        variables.put(name + "_amount", ScriptUtils.resolveItemAmount(item));
     }
 
     /**

@@ -20,7 +20,7 @@ import pers.yufiria.craftorithm.api.event.RecipeLoadFromConfigEvent;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.trigger.TriggerContext;
 import pers.yufiria.craftorithm.trigger.TriggerManager;
-import pers.yufiria.craftorithm.util.ItemUtils;
+import pers.yufiria.craftorithm.util.ScriptUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -92,8 +92,8 @@ public enum EventTriggerTypes {
         );
         register("player_item_consume", PlayerItemConsumeEvent.class, PlayerExtractor.PLAYER,
             Map.of(
-                "item", event -> ItemUtils.resolveItemId(((PlayerItemConsumeEvent) event).getItem()),
-                "amount", event -> ItemUtils.resolveItemAmount(((PlayerItemConsumeEvent) event).getItem())
+                "item", event -> ScriptUtils.resolveItemId(((PlayerItemConsumeEvent) event).getItem()),
+                "amount", event -> ScriptUtils.resolveItemAmount(((PlayerItemConsumeEvent) event).getItem())
             )
         );
         register("player_item_held", PlayerItemHeldEvent.class, PlayerExtractor.PLAYER,
@@ -138,14 +138,14 @@ public enum EventTriggerTypes {
         register("player_swap_hand_items", PlayerSwapHandItemsEvent.class, PlayerExtractor.PLAYER, Map.of());
         register("player_drop_item", PlayerDropItemEvent.class, PlayerExtractor.PLAYER,
             Map.of(
-                "item", event -> ItemUtils.resolveItemId(((PlayerDropItemEvent) event).getItemDrop().getItemStack()),
-                "amount", event -> ItemUtils.resolveItemAmount(((PlayerDropItemEvent) event).getItemDrop().getItemStack())
+                "item", event -> ScriptUtils.resolveItemId(((PlayerDropItemEvent) event).getItemDrop().getItemStack()),
+                "amount", event -> ScriptUtils.resolveItemAmount(((PlayerDropItemEvent) event).getItemDrop().getItemStack())
             )
         );
         register("player_pickup_item", PlayerPickupItemEvent.class, PlayerExtractor.PLAYER,
             Map.of(
-                "item", event -> ItemUtils.resolveItemId(((PlayerPickupItemEvent) event).getItem().getItemStack()),
-                "amount", event -> ItemUtils.resolveItemAmount(((PlayerPickupItemEvent) event).getItem().getItemStack())
+                "item", event -> ScriptUtils.resolveItemId(((PlayerPickupItemEvent) event).getItem().getItemStack()),
+                "amount", event -> ScriptUtils.resolveItemAmount(((PlayerPickupItemEvent) event).getItem().getItemStack())
             )
         );
         register("player_velocity", PlayerVelocityEvent.class, PlayerExtractor.PLAYER, Map.of());
@@ -161,15 +161,15 @@ public enum EventTriggerTypes {
         );
         register("player_item_damage", PlayerItemDamageEvent.class, PlayerExtractor.PLAYER,
             Map.of(
-                "item", event -> ItemUtils.resolveItemId(((PlayerItemDamageEvent) event).getItem()),
-                "amount", event -> ItemUtils.resolveItemAmount(((PlayerItemDamageEvent) event).getItem()),
+                "item", event -> ScriptUtils.resolveItemId(((PlayerItemDamageEvent) event).getItem()),
+                "amount", event -> ScriptUtils.resolveItemAmount(((PlayerItemDamageEvent) event).getItem()),
                 "damage", event -> ScriptValue.of(((PlayerItemDamageEvent) event).getDamage())
             )
         );
         register("player_item_mend", PlayerItemMendEvent.class, PlayerExtractor.PLAYER,
             Map.of(
-                "item", event -> ItemUtils.resolveItemId(((PlayerItemMendEvent) event).getItem()),
-                "amount", event -> ItemUtils.resolveItemAmount(((PlayerItemMendEvent) event).getItem()),
+                "item", event -> ScriptUtils.resolveItemId(((PlayerItemMendEvent) event).getItem()),
+                "amount", event -> ScriptUtils.resolveItemAmount(((PlayerItemMendEvent) event).getItem()),
                 "repair_amount", event -> ScriptValue.of(((PlayerItemMendEvent) event).getRepairAmount())
             )
         );

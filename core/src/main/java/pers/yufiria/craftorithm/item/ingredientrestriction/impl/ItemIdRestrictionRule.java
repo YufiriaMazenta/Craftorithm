@@ -4,15 +4,15 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import pers.yufiria.craftorithm.config.PluginConfigs;
-import pers.yufiria.craftorithm.recipe.IngredientMatchMode;
+import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.ItemManager;
-import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.item.ingredientrestriction.IngredientRestrictionRule;
 import pers.yufiria.craftorithm.item.ingredientrestriction.IngredientRestrictionRuleFactory;
 import pers.yufiria.craftorithm.item.ingredientrestriction.RecipeKeyMatcher;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 基于物品 ID 的合成限制规则
@@ -34,25 +34,17 @@ public final class ItemIdRestrictionRule implements IngredientRestrictionRule {
         }
     };
 
-    private final String itemId;
+    private final Collection<NamespacedItemId> itemIds;
     private final List<RecipeKeyMatcher> recipeMatchers;
 
     public ItemIdRestrictionRule(String itemId, List<RecipeKeyMatcher> recipeMatchers) {
-        this.itemId = itemId;
+        this.itemIds = List.of(Objects.requireNonNull(NamespacedItemId.fromString(itemId)));
         this.recipeMatchers = recipeMatchers;
     }
 
     @Override
     public boolean isBlocked(@NotNull ItemStack item, @NotNull NamespacedKey recipeKey) {
-        boolean matched;
-        if (PluginConfigs.INGREDIENT_MATCH_MODE.value() == IngredientMatchMode.ALL) {
-            matched = ItemManager.INSTANCE.matchAllItemIds(item).stream()
-                .anyMatch(id -> itemId.equals(id.toString()));
-        } else {
-            NamespacedItemIdStack itemIdStack = ItemManager.INSTANCE.matchItemIdOrVanilla(item, true).orElse(null);
-            matched = itemIdStack != null && itemId.equals(itemIdStack.itemId().toString());
-        }
-        if (!matched) {
+        if (!ItemManager.INSTANCE.containsItem(itemIds, item)) {
             return false;
         }
         String recipeKeyStr = recipeKey.toString();
@@ -64,8 +56,8 @@ public final class ItemIdRestrictionRule implements IngredientRestrictionRule {
         return false;
     }
 
-    public String itemId() {
-        return itemId;
+    public Collection<NamespacedItemId> itemIds() {
+        return itemIds;
     }
 
     public List<RecipeKeyMatcher> recipeMatchers() {
