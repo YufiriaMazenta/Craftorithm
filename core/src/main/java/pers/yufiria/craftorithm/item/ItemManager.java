@@ -215,6 +215,8 @@ public enum ItemManager implements LifecycleTask {
                 NamespacedItemId itemId = NamespacedItemId.fromMaterial(item.getType());
                 return itemIds.contains(itemId);
             }
+            //是否已有物品源认领了这个物品, 只有全部物品源都不认领时才允许回退为原版物品
+            boolean claimed = false;
             for (Map.Entry<String, ItemProvider> itemProviderEntry : itemProviderMap.entrySet()) {
                 NamespacedItemId itemId;
                 try {
@@ -226,15 +228,19 @@ public enum ItemManager implements LifecycleTask {
                 if (itemId == null) {
                     continue;
                 }
+                claimed = true;
                 if (itemIds.contains(itemId)) {
                     return true;
                 }
             }
-            //如果所有物品源都不认识这个物品, 把他当作一个原版物品进行匹配
+            //物品已被物品源认领时不能回退为原版物品, 否则自定义物品会顶替其基础材质参与原版材料匹配
+            if (claimed) {
+                return false;
+            }
             NamespacedItemId itemId = NamespacedItemId.fromMaterial(item.getType());
             return itemIds.contains(itemId);
         } else {
-            Optional<NamespacedItemIdStack> inputItemIdStackOpt = ItemManager.INSTANCE.matchItemIdOrVanilla(item, true);
+            Optional<NamespacedItemIdStack> inputItemIdStackOpt = matchItemIdOrVanilla(item, true);
             if (inputItemIdStackOpt.isEmpty()) {
                 return false;
             }
