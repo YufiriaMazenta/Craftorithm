@@ -12,9 +12,9 @@ import java.util.Locale;
  * 材料匹配模式的配置节点, 在配置加载时将字符串解析为{@link ItemIdMatchMode}
  * 非法的值会走配置节点的类型不匹配警告并回退默认值
  */
-public class IngredientMatchModeConfig extends BukkitConfigNode<ItemIdMatchMode> {
+public class ItemIdMatchModeConfig extends BukkitConfigNode<ItemIdMatchMode> {
 
-    public IngredientMatchModeConfig(@NotNull String key, @NotNull ItemIdMatchMode def, @NotNull List<String> defComments) {
+    public ItemIdMatchModeConfig(@NotNull String key, @NotNull ItemIdMatchMode def, @NotNull List<String> defComments) {
         super(key, def, defComments);
     }
 

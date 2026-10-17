@@ -9,7 +9,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.item.ItemIdMatchMode;
-import pers.yufiria.craftorithm.config.node.IngredientMatchModeConfig;
+import pers.yufiria.craftorithm.config.node.ItemIdMatchModeConfig;
 
 import java.util.*;
 
@@ -83,7 +83,7 @@ public class PluginConfigs {
         "配方材料数量超过此阈值时使用 Set 替代 List 进行匹配，提升大量材料时的查找性能"
     );
 
-    public final static IngredientMatchModeConfig ITEM_ID_MATCH_MODE = new IngredientMatchModeConfig(
+    public final static ItemIdMatchModeConfig ITEM_ID_MATCH_MODE = new ItemIdMatchModeConfig(
         "item_id_match_mode",
         ItemIdMatchMode.FIRST,
         List.of(
