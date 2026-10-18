@@ -75,7 +75,7 @@ public class ItemIdRecipeChoice implements CustomRecipeChoice {
 
     @Override
     public boolean test(@NotNull ItemStack itemStack) {
-        return ItemManager.INSTANCE.containsItem(ingredients, itemStack);
+        return PluginConfigs.INGREDIENT_MATCH_MODE.value().containsItem(ingredients, itemStack);
     }
 
 }

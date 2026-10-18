@@ -5,8 +5,8 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
-import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.ingredientrestriction.IngredientRestrictionRule;
 import pers.yufiria.craftorithm.item.ingredientrestriction.IngredientRestrictionRuleFactory;
 import pers.yufiria.craftorithm.item.ingredientrestriction.RecipeKeyMatcher;
@@ -54,7 +54,7 @@ public final class ItemIdRestrictionRule implements IngredientRestrictionRule {
         if (itemIds.isEmpty()) {
             return false;
         }
-        if (!ItemManager.INSTANCE.containsItem(itemIds, item)) {
+        if (!PluginConfigs.INGREDIENT_MATCH_MODE.value().containsItem(itemIds, item)) {
             return false;
         }
         String recipeKeyStr = recipeKey.toString();

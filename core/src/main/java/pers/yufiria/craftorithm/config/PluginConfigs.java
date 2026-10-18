@@ -8,8 +8,8 @@ import crypticlib.util.BukkitConfigHelper;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import pers.yufiria.craftorithm.Craftorithm;
-import pers.yufiria.craftorithm.item.ItemIdMatchMode;
-import pers.yufiria.craftorithm.config.node.ItemIdMatchModeConfig;
+import pers.yufiria.craftorithm.recipe.IngredientMatchMode;
+import pers.yufiria.craftorithm.config.node.IngredientMatchModeConfig;
 
 import java.util.*;
 
@@ -83,11 +83,11 @@ public class PluginConfigs {
         "配方材料数量超过此阈值时使用 Set 替代 List 进行匹配，提升大量材料时的查找性能"
     );
 
-    public final static ItemIdMatchModeConfig ITEM_ID_MATCH_MODE = new ItemIdMatchModeConfig(
-        "item_id_match_mode",
-        ItemIdMatchMode.FIRST,
+    public final static IngredientMatchModeConfig INGREDIENT_MATCH_MODE = new IngredientMatchModeConfig(
+        "ingredient_match_mode",
+        IngredientMatchMode.FIRST,
         List.of(
-            "物品id匹配模式, 可选 first/all",
+            "材料匹配模式, 可选 first/all",
             "first: 使用第一个识别到的物品id（默认方式）",
             "all: 收集物品所有可能的物品id，使用该模式将会消耗较多性能"
         )

@@ -79,7 +79,7 @@ public class ItemIdStackRecipeChoice implements RecipeChoice {
 
     @Override
     public boolean test(@NotNull ItemStack itemStack) {
-        boolean itemIdMatched = ItemManager.INSTANCE.containsItem(itemIds, itemStack);
+        boolean itemIdMatched = PluginConfigs.INGREDIENT_MATCH_MODE.value().containsItem(itemIds, itemStack);
         return itemIdMatched && itemStack.getAmount() >= amount;
     }
 

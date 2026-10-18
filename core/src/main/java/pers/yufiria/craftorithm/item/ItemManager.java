@@ -17,6 +17,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.yufiria.craftorithm.Craftorithm;
@@ -86,6 +87,13 @@ public enum ItemManager implements LifecycleTask {
     }
 
     /**
+     * 已注册的物品提供源, 按挂钩优先级顺序
+     */
+    public Map<String, ItemProvider> itemProviders() {
+        return Collections.unmodifiableMap(itemProviderMap);
+    }
+
+    /**
      * 根据名字获取一个物品
      * @return 获取到的物品，不存在返回 Optional.empty()
      */
@@ -133,7 +141,8 @@ public enum ItemManager implements LifecycleTask {
         return Optional.of(item);
     }
 
-    private void logProviderError(String providerNamespace, Throwable throwable) {
+    @ApiStatus.Internal
+    public void logProviderError(String providerNamespace, Throwable throwable) {
         if (erroredProviders.add(providerNamespace)) {
             CrypticLib.error("Item provider '" + providerNamespace + "' threw an exception, it may be incompatible with the installed plugin version", throwable);
         }
@@ -198,55 +207,6 @@ public enum ItemManager implements LifecycleTask {
         return matchItemIdFromProviders(item)
             .map(itemId -> stackOf(itemId, item, ignoreAmount))
             .or(() -> Optional.of(stackOf(NamespacedItemId.fromMaterial(item.getType()), item, ignoreAmount)));
-    }
-
-    /**
-     * 判断一个物品id列表是否包含一个物品
-     * 匹配逻辑会受{@link PluginConfigs#ITEM_ID_MATCH_MODE}配置项影响
-     * @param itemIds 物品id列表
-     * @param item 要判断的物品
-     */
-    public boolean containsItem(Collection<NamespacedItemId> itemIds, ItemStack item) {
-        if (ItemHelper.isAir(item)) {
-            return false;
-        }
-        if (PluginConfigs.ITEM_ID_MATCH_MODE.value() == ItemIdMatchMode.ALL) {
-            if (!item.hasItemMeta()) {
-                NamespacedItemId itemId = NamespacedItemId.fromMaterial(item.getType());
-                return itemIds.contains(itemId);
-            }
-            //是否已有物品源认领了这个物品, 只有全部物品源都不认领时才允许回退为原版物品
-            boolean claimed = false;
-            for (Map.Entry<String, ItemProvider> itemProviderEntry : itemProviderMap.entrySet()) {
-                NamespacedItemId itemId;
-                try {
-                    itemId = itemProviderEntry.getValue().matchItemId(item);
-                } catch (Throwable t) {
-                    logProviderError(itemProviderEntry.getKey(), t);
-                    continue;
-                }
-                if (itemId == null) {
-                    continue;
-                }
-                claimed = true;
-                if (itemIds.contains(itemId)) {
-                    return true;
-                }
-            }
-            //物品已被物品源认领时不能回退为原版物品, 否则自定义物品会顶替其基础材质参与原版材料匹配
-            if (claimed) {
-                return false;
-            }
-            NamespacedItemId itemId = NamespacedItemId.fromMaterial(item.getType());
-            return itemIds.contains(itemId);
-        } else {
-            Optional<NamespacedItemIdStack> inputItemIdStackOpt = matchItemIdOrVanilla(item, true);
-            if (inputItemIdStackOpt.isEmpty()) {
-                return false;
-            }
-            NamespacedItemIdStack itemIdStack = inputItemIdStackOpt.get();
-            return itemIds.contains(itemIdStack.itemId());
-        }
     }
 
     /**
