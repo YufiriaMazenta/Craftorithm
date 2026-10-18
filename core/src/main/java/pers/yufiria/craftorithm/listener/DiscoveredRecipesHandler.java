@@ -20,20 +20,19 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @EventListener
-public enum PlayerDiscoverySyncListener implements Listener {
+public enum DiscoveredRecipesHandler implements Listener {
 
     INSTANCE;
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
+    public void discoverRecipesOnJoin(PlayerJoinEvent event) {
         if (!PluginConfigs.SAVE_DISCOVERED_RECIPES_ENABLE.value()) return;
 
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
         int delayTicks = PluginConfigs.SAVE_DISCOVERED_RECIPES_JOIN_DISCOVER_DELAY_TICKS.value();
 
-        CrypticLibBukkit.scheduler().syncLater(() -> {
-            CrypticLibBukkit.scheduler().runOnEntity(player, () -> {
+        CrypticLibBukkit.scheduler().runOnEntityLater(player, () -> {
                 try {
                     Set<String> localDiscoveredRecipes = player.getDiscoveredRecipes().stream()
                         .map(NamespacedKey::toString)
@@ -70,13 +69,15 @@ public enum PlayerDiscoverySyncListener implements Listener {
                 } catch (Exception e) {
                     CrypticLib.error("Failed to read local recipes on join for " + player.getName() + ": " + e.getMessage());
                 }
-            }, () -> {
-            });
-        }, delayTicks);
+            },
+            () -> {
+            },
+            delayTicks
+        );
     }
 
     @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event) {
+    public void saveDiscoveredRecipesOnQuit(PlayerQuitEvent event) {
         if (!PluginConfigs.SAVE_DISCOVERED_RECIPES_ENABLE.value()) return;
 
         Player player = event.getPlayer();
