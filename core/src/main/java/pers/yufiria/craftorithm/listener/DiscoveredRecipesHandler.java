@@ -42,7 +42,9 @@ public enum DiscoveredRecipesHandler implements Listener {
                         try {
                             Set<String> dbRecipes = DiscoveredRecipeDao.INSTANCE.getDiscoveredRecipes(uuid);
 
-                            Set<String> serverRecipeKeys = RecipeManager.INSTANCE.serverRecipeKeyStrings();
+                            Set<String> serverRecipeKeys = RecipeManager.INSTANCE.serverRecipeKeys().stream()
+                                .map(Objects::toString)
+                                .collect(Collectors.toSet());
 
                             dbRecipes.retainAll(serverRecipeKeys);
 
@@ -87,7 +89,9 @@ public enum DiscoveredRecipesHandler implements Listener {
             .map(NamespacedKey::toString)
             .collect(Collectors.toSet());
 
-        Set<String> serverRecipeKeys = RecipeManager.INSTANCE.serverRecipeKeyStrings();
+        Set<String> serverRecipeKeys = RecipeManager.INSTANCE.serverRecipeKeys().stream()
+            .map(Objects::toString)
+            .collect(Collectors.toSet());
 
         localRecipes.retainAll(serverRecipeKeys);
 

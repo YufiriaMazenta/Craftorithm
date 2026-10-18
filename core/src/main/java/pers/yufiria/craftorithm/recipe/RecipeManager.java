@@ -37,7 +37,6 @@ import java.io.File;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 @LifecycleTaskConfig(
     schedules = {
@@ -63,10 +62,6 @@ public enum RecipeManager implements LifecycleTask {
     private final Lazy<Map<NamespacedKey, ParsedRecipe>> lazyCraftorithmRecipesView = Lazy.of(() -> Collections.unmodifiableMap(craftorithmRecipes));
     private final Lazy<Set<NamespacedKey>> lazyServerRecipeKeysView = Lazy.of(() -> Collections.unmodifiableSet(serverRecipeKeys));
     private final Lazy<Set<NamespacedKey>> lazyDisableRecipeKeysView = Lazy.of(() -> Collections.unmodifiableSet(disabledRecipes.keySet()));
-    //serverRecipeKeys的字符串集合缓存, 供进度发现同步与数据库过滤使用; 底层set发生变更时必须invalidate
-    private final Lazy<Set<String>> lazyServerRecipeKeyStrings = Lazy.of(
-        () -> serverRecipeKeys.stream().map(Objects::toString).collect(Collectors.toUnmodifiableSet())
-    );
     //酿造配方的支持性只取决于服务器版本, 计算一次后永不失效
     private final Lazy<Boolean> lazySupportPotionMix = Lazy.of(() -> {
         if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V26_3)) {
@@ -161,7 +156,6 @@ public enum RecipeManager implements LifecycleTask {
         });
         craftorithmRecipes.clear();
         serverRecipeKeys.clear();
-        lazyServerRecipeKeyStrings.invalidate();
         recipeFileNameToKeyMap.clear();
         recipeGroupMap.clear();
 
@@ -286,7 +280,6 @@ public enum RecipeManager implements LifecycleTask {
         if (result) {
             craftorithmRecipes.put(recipeKey, parsed);
             serverRecipeKeys.add(recipeKey);
-            lazyServerRecipeKeyStrings.invalidate();
             recipeFileNameToKeyMap.put(recipeFileName, recipeKey);
             if (recipeConfig.contains("group")) {
                 String groupId = recipeConfig.getString("group");
@@ -334,7 +327,6 @@ public enum RecipeManager implements LifecycleTask {
                 CrypticLib.error("Error when load server recipe keys: <message>", Map.of("<message>", throwable.getMessage()));
             }
         }
-        lazyServerRecipeKeyStrings.invalidate();
     }
 
     private void reloadDisabledRecipes() {
@@ -393,7 +385,6 @@ public enum RecipeManager implements LifecycleTask {
         if (result) {
             disabledRecipes.put(recipeKey, recipe);
             serverRecipeKeys.remove(recipeKey);
-            lazyServerRecipeKeyStrings.invalidate();
         }
         return result;
     }
@@ -409,7 +400,6 @@ public enum RecipeManager implements LifecycleTask {
         boolean result = getRecipeType(recipe).recipeRegister().registerRecipe(recipe, true);
         disabledRecipes.remove(recipeKey);
         serverRecipeKeys.add(recipeKey);
-        lazyServerRecipeKeyStrings.invalidate();
         CrypticLibBukkit.scheduler().async(() -> {
             List<String> disabledRecipes = new ArrayList<>(DisabledRecipesConfig.RECIPES.value());
             String keyStr = recipeKey.toString();
@@ -452,7 +442,6 @@ public enum RecipeManager implements LifecycleTask {
         if (result) {
             ParsedRecipe removed = craftorithmRecipes.remove(recipeKey);
             serverRecipeKeys.remove(recipeKey);
-            lazyServerRecipeKeyStrings.invalidate();
             if (removed != null) {
                 recipeFileNameToKeyMap.remove(removed.recipeFileName());
                 if (deleteFile) {
@@ -546,14 +535,6 @@ public enum RecipeManager implements LifecycleTask {
 
     public @Unmodifiable Set<NamespacedKey> serverRecipeKeys() {
         return lazyServerRecipeKeysView.get();
-    }
-
-    /**
-     * 获取服务器配方Key的字符串集合缓存
-     * 底层集合发生变更后缓存会失效, 读取时自动重建
-     */
-    public @Unmodifiable Set<String> serverRecipeKeyStrings() {
-        return lazyServerRecipeKeyStrings.get();
     }
 
     public @Unmodifiable Set<NamespacedKey> disableRecipeKeys() {
