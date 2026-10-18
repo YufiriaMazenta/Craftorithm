@@ -3,6 +3,7 @@ package pers.yufiria.craftorithm.hook.item;
 import com.nexomc.nexo.api.NexoItems;
 import com.nexomc.nexo.items.ItemBuilder;
 import org.bukkit.inventory.ItemStack;
+import org.jspecify.annotations.NonNull;
 import pers.yufiria.craftorithm.item.ItemProvider;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
 
@@ -11,7 +12,7 @@ public enum NexoItemProvider implements ItemProvider {
     INSTANCE;
 
     @Override
-    public String namespace() {
+    public @NonNull String namespace() {
         return "nexo";
     }
 

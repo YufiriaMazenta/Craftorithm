@@ -17,7 +17,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.yufiria.craftorithm.Craftorithm;
@@ -48,8 +47,6 @@ public enum ItemManager implements LifecycleTask {
     private static final String PLUGIN_CREATED_NAMESPACE = "plugin_created";
 
     private final Map<String, ItemProvider> itemProviderMap = new LinkedHashMap<>();
-    //记录已抛出过异常的物品提供源, 避免每次匹配都重复打印堆栈
-    private final Set<String> erroredProviders = ConcurrentHashMap.newKeySet();
     private final Map<NamespacedItemId, Integer> customCookingFuelMap = new ConcurrentHashMap<>();
     private BukkitConfigWrapper customFuelConfig;
     private BukkitConfigWrapper itemPacksConfig;
@@ -128,7 +125,7 @@ public enum ItemManager implements LifecycleTask {
             else
                 item = provider.matchItem(itemId.itemId());
         } catch (Throwable t) {
-            logProviderError(itemId.namespace(), t);
+            provider.logError(t);
             return Optional.empty();
         }
         if (item == null)
@@ -139,13 +136,6 @@ public enum ItemManager implements LifecycleTask {
             item.setAmount(amount);
         }
         return Optional.of(item);
-    }
-
-    @ApiStatus.Internal
-    public void logProviderError(String providerNamespace, Throwable throwable) {
-        if (erroredProviders.add(providerNamespace)) {
-            CrypticLib.error("Item provider '" + providerNamespace + "' threw an exception, it may be incompatible with the installed plugin version", throwable);
-        }
     }
 
     /**
@@ -218,7 +208,7 @@ public enum ItemManager implements LifecycleTask {
             try {
                 namespacedItemId = itemProviderEntry.getValue().matchItemId(item);
             } catch (Throwable t) {
-                logProviderError(itemProviderEntry.getKey(), t);
+                itemProviderEntry.getValue().logError(t);
                 continue;
             }
             if (namespacedItemId != null) {
@@ -353,20 +343,17 @@ public enum ItemManager implements LifecycleTask {
             case ACTIVE -> {
                 customFuelConfig = new BukkitConfigWrapper(Craftorithm.instance(), "custom_fuels.yml");
                 itemPacksConfig = new BukkitConfigWrapper(Craftorithm.instance(), "item_packs.yml");
-                erroredProviders.clear();
                 reloadCustomCookingFuel();
                 reloadItemPacks();
                 reloadIngredientRestrictionRules();
             }
             case RELOAD -> {
-                erroredProviders.clear();
                 reloadCustomCookingFuel();
                 reloadItemPacks();
                 reloadIngredientRestrictionRules();
             }
             case DISABLE -> {
                 itemProviderMap.clear();
-                erroredProviders.clear();
                 customCookingFuelMap.clear();
                 itemPacks.clear();
             }

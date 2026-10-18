@@ -44,7 +44,7 @@ public enum IngredientMatchMode {
                 try {
                     itemId = itemProviderEntry.getValue().matchItemId(item);
                 } catch (Throwable t) {
-                    ItemManager.INSTANCE.logProviderError(itemProviderEntry.getKey(), t);
+                    itemProviderEntry.getValue().logError(t);
                     continue;
                 }
                 if (itemId == null) {
