@@ -408,6 +408,8 @@ public enum RecipeManager implements LifecycleTask {
         Recipe recipe = disabledRecipes.get(recipeKey);
         boolean result = getRecipeType(recipe).recipeRegister().registerRecipe(recipe, true);
         disabledRecipes.remove(recipeKey);
+        serverRecipeKeys.add(recipeKey);
+        lazyServerRecipeKeyStrings.invalidate();
         CrypticLibBukkit.scheduler().async(() -> {
             List<String> disabledRecipes = new ArrayList<>(DisabledRecipesConfig.RECIPES.value());
             String keyStr = recipeKey.toString();
