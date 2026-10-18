@@ -10,6 +10,7 @@ import crypticlib.lifecycle.LifecycleTaskConfig;
 import crypticlib.ui.menu.Menu;
 import crypticlib.ui.util.MenuHelper;
 import crypticlib.util.IOHelper;
+import crypticlib.util.Lazy;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -36,6 +37,8 @@ public enum CustomMenuManager implements LifecycleTask {
     INSTANCE;
 
     private final Map<String, Function<Player, Menu>> menuCreators = new ConcurrentHashMap<>();
+    //menuCreators为final字段且reload时只做clear/重填, 引用从不替换, 视图恒有效, 无需失效
+    private final Lazy<Map<String, Function<Player, Menu>>> lazyMenuCreatorsView = Lazy.of(() -> Collections.unmodifiableMap(menuCreators));
     private File customMenuFolder;
 
     /**
@@ -76,7 +79,7 @@ public enum CustomMenuManager implements LifecycleTask {
     }
 
     public @Unmodifiable Map<String, Function<Player, Menu>> menuCreators() {
-        return Collections.unmodifiableMap(menuCreators);
+        return lazyMenuCreatorsView.get();
     }
 
     @Override

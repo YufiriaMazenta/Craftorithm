@@ -11,6 +11,7 @@ import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskConfig;
 import crypticlib.scheduler.CrypticLibRunnable;
 import crypticlib.util.IOHelper;
+import crypticlib.util.Lazy;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
@@ -36,6 +37,7 @@ import java.io.File;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @LifecycleTaskConfig(
     schedules = {
@@ -55,8 +57,28 @@ public enum RecipeManager implements LifecycleTask {
     private final Map<NamespacedKey, Recipe> disabledRecipes = new ConcurrentHashMap<>();
     private final Set<NamespacedKey> serverRecipeKeys = ConcurrentHashMap.newKeySet();
     private final Map<String, RecipeGroup> recipeGroupMap = new ConcurrentHashMap<>();
-    private Boolean supportPotionMix;
     private volatile CompletableFuture<Void> reloadCompletion = null;
+
+    //以下视图缓存针对的底层集合均为final字段且只做clear/重填与单条增删, 引用从不替换, 视图恒有效, 无需失效
+    private final Lazy<Map<NamespacedKey, ParsedRecipe>> lazyCraftorithmRecipesView = Lazy.of(() -> Collections.unmodifiableMap(craftorithmRecipes));
+    private final Lazy<Set<NamespacedKey>> lazyServerRecipeKeysView = Lazy.of(() -> Collections.unmodifiableSet(serverRecipeKeys));
+    private final Lazy<Set<NamespacedKey>> lazyDisableRecipeKeysView = Lazy.of(() -> Collections.unmodifiableSet(disabledRecipes.keySet()));
+    //serverRecipeKeys的字符串集合缓存, 供进度发现同步与数据库过滤使用; 底层set发生变更时必须invalidate
+    private final Lazy<Set<String>> lazyServerRecipeKeyStrings = Lazy.of(
+        () -> serverRecipeKeys.stream().map(Objects::toString).collect(Collectors.toUnmodifiableSet())
+    );
+    //酿造配方的支持性只取决于服务器版本, 计算一次后永不失效
+    private final Lazy<Boolean> lazySupportPotionMix = Lazy.of(() -> {
+        if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V26_3)) {
+            return true;
+        }
+        try {
+            Class.forName("io.papermc.paper.potion.PotionMix");
+            return true;
+        } catch (Throwable throwable) {
+            return false;
+        }
+    });
 
     //配方类型相关
 
@@ -139,6 +161,7 @@ public enum RecipeManager implements LifecycleTask {
         });
         craftorithmRecipes.clear();
         serverRecipeKeys.clear();
+        lazyServerRecipeKeyStrings.invalidate();
         recipeFileNameToKeyMap.clear();
         recipeGroupMap.clear();
 
@@ -263,6 +286,7 @@ public enum RecipeManager implements LifecycleTask {
         if (result) {
             craftorithmRecipes.put(recipeKey, parsed);
             serverRecipeKeys.add(recipeKey);
+            lazyServerRecipeKeyStrings.invalidate();
             recipeFileNameToKeyMap.put(recipeFileName, recipeKey);
             if (recipeConfig.contains("group")) {
                 String groupId = recipeConfig.getString("group");
@@ -310,6 +334,7 @@ public enum RecipeManager implements LifecycleTask {
                 CrypticLib.error("Error when load server recipe keys: <message>", Map.of("<message>", throwable.getMessage()));
             }
         }
+        lazyServerRecipeKeyStrings.invalidate();
     }
 
     private void reloadDisabledRecipes() {
@@ -368,6 +393,7 @@ public enum RecipeManager implements LifecycleTask {
         if (result) {
             disabledRecipes.put(recipeKey, recipe);
             serverRecipeKeys.remove(recipeKey);
+            lazyServerRecipeKeyStrings.invalidate();
         }
         return result;
     }
@@ -424,6 +450,7 @@ public enum RecipeManager implements LifecycleTask {
         if (result) {
             ParsedRecipe removed = craftorithmRecipes.remove(recipeKey);
             serverRecipeKeys.remove(recipeKey);
+            lazyServerRecipeKeyStrings.invalidate();
             if (removed != null) {
                 recipeFileNameToKeyMap.remove(removed.recipeFileName());
                 if (deleteFile) {
@@ -483,7 +510,7 @@ public enum RecipeManager implements LifecycleTask {
     }
 
     public @Unmodifiable Map<NamespacedKey, ParsedRecipe> craftorithmRecipes() {
-        return Collections.unmodifiableMap(craftorithmRecipes);
+        return lazyCraftorithmRecipesView.get();
     }
 
     public @Nullable RecipeType getRecipeTypeByKey(String typeId) {
@@ -516,27 +543,23 @@ public enum RecipeManager implements LifecycleTask {
     }
 
     public @Unmodifiable Set<NamespacedKey> serverRecipeKeys() {
-        return Collections.unmodifiableSet(serverRecipeKeys);
+        return lazyServerRecipeKeysView.get();
+    }
+
+    /**
+     * 获取服务器配方Key的字符串集合缓存
+     * 底层集合发生变更后缓存会失效, 读取时自动重建
+     */
+    public @Unmodifiable Set<String> serverRecipeKeyStrings() {
+        return lazyServerRecipeKeyStrings.get();
     }
 
     public @Unmodifiable Set<NamespacedKey> disableRecipeKeys() {
-        return Collections.unmodifiableSet(disabledRecipes.keySet());
+        return lazyDisableRecipeKeysView.get();
     }
 
     public boolean supportBrewingRecipe() {
-        if (supportPotionMix == null) {
-            if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V26_3)) {
-                supportPotionMix = true;
-            } else {
-                try {
-                    Class.forName("io.papermc.paper.potion.PotionMix");
-                    supportPotionMix = true;
-                } catch (Throwable throwable) {
-                    supportPotionMix = false;
-                }
-            }
-        }
-        return supportPotionMix;
+        return lazySupportPotionMix.get();
     }
 
     public CompletableFuture<Void> getReloadCompletion() {

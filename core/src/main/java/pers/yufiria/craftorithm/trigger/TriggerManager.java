@@ -10,6 +10,7 @@ import org.bukkit.NamespacedKey;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.trigger.event.EventTriggerTypes;
+import crypticlib.util.Lazy;
 
 import java.io.File;
 import java.util.*;
@@ -37,6 +38,8 @@ public enum TriggerManager implements LifecycleTask {
 
     // typeKey -> TriggerType
     private final Map<String, TriggerType> triggerTypes = new ConcurrentHashMap<>();
+    //triggerTypes为final字段且只做单条put/remove, 引用从不替换, 视图恒有效, 无需失效
+    private final Lazy<Map<String, TriggerType>> lazyTriggerTypesView = Lazy.of(() -> Collections.unmodifiableMap(triggerTypes));
     // 冷却管理
     private final TriggerCooldown cooldownManager = TriggerCooldown.INSTANCE;
 
@@ -89,7 +92,7 @@ public enum TriggerManager implements LifecycleTask {
      * 获取所有已注册的触发器类型
      */
     public Map<String, TriggerType> triggerTypes() {
-        return Collections.unmodifiableMap(triggerTypes);
+        return lazyTriggerTypesView.get();
     }
 
     // ---- 触发器加载 ----

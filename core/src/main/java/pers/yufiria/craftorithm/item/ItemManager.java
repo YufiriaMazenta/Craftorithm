@@ -10,6 +10,7 @@ import crypticlib.lifecycle.LifecycleSchedule;
 import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskConfig;
 import crypticlib.util.ItemHelper;
+import crypticlib.util.Lazy;
 import crypticlib.util.MaterialHelper;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -54,6 +55,10 @@ public enum ItemManager implements LifecycleTask {
     private final SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
     //重载在异步线程进行,而该列表会被主线程的合成事件读取,因此使用不可变快照整体替换
     private volatile List<IngredientRestrictionRule> ingredientRestrictionRules = List.of();
+    private final Lazy<Map<String, ItemProvider>> lazyItemProviderView = Lazy.of(() -> Collections.unmodifiableMap(itemProviderMap));
+    //以下视图缓存针对的底层集合均为final字段且只做clear/重填与单条增删, 引用从不替换, 视图恒有效, 无需失效
+    private final Lazy<Map<NamespacedItemId, Integer>> lazyCustomCookingFuelView = Lazy.of(() -> Collections.unmodifiableMap(customCookingFuelMap));
+    private final Lazy<Set<String>> lazyItemPackIdsView = Lazy.of(() -> Collections.unmodifiableSet(itemPacks.keySet()));
 
     /**
      * 注册一个物品提供源
@@ -87,7 +92,7 @@ public enum ItemManager implements LifecycleTask {
      * 已注册的物品提供源, 按挂钩优先级顺序
      */
     public Map<String, ItemProvider> itemProviders() {
-        return Collections.unmodifiableMap(itemProviderMap);
+        return lazyItemProviderView.get();
     }
 
     /**
@@ -334,7 +339,7 @@ public enum ItemManager implements LifecycleTask {
     }
 
     public @Unmodifiable Map<NamespacedItemId, Integer> customCookingFuelMap() {
-        return Collections.unmodifiableMap(customCookingFuelMap);
+        return lazyCustomCookingFuelView.get();
     }
 
     @Override
@@ -351,6 +356,7 @@ public enum ItemManager implements LifecycleTask {
                 reloadCustomCookingFuel();
                 reloadItemPacks();
                 reloadIngredientRestrictionRules();
+                lazyItemProviderView.invalidate();
             }
             case DISABLE -> {
                 itemProviderMap.clear();
@@ -379,7 +385,7 @@ public enum ItemManager implements LifecycleTask {
     }
 
     public @Unmodifiable Set<String> itemPackIds() {
-        return Collections.unmodifiableSet(itemPacks.keySet());
+        return lazyItemPackIdsView.get();
     }
 
     //合成限制规则相关

@@ -101,9 +101,7 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
         if (onlinePlayers.isEmpty()) {
             return;
         }
-        Set<String> serverRecipeKeys = RecipeManager.INSTANCE.serverRecipeKeys().stream()
-            .map(Objects::toString)
-            .collect(Collectors.toSet());
+        Set<String> serverRecipeKeys = RecipeManager.INSTANCE.serverRecipeKeyStrings();
         for (Player player : onlinePlayers) {
             UUID uuid = player.getUniqueId();
             Set<String> localRecipes = player.getDiscoveredRecipes().stream()
@@ -160,9 +158,7 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
      */
     public void loadOnlinePlayersDiscoveredRecipes() {
         if (!PluginConfigs.SAVE_DISCOVERED_RECIPES_ENABLE.value()) return;
-        Set<String> serverRecipeKeys = RecipeManager.INSTANCE.serverRecipeKeys().stream()
-            .map(Objects::toString)
-            .collect(Collectors.toSet());
+        Set<String> serverRecipeKeys = RecipeManager.INSTANCE.serverRecipeKeyStrings();
         for (Player player : Bukkit.getOnlinePlayers()) {
             try {
                 Set<String> dbRecipes = getDiscoveredRecipes(player.getUniqueId());

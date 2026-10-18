@@ -43,9 +43,7 @@ public enum PlayerDiscoverySyncListener implements Listener {
                         try {
                             Set<String> dbRecipes = DiscoveredRecipeDao.INSTANCE.getDiscoveredRecipes(uuid);
 
-                            Set<String> serverRecipeKeys = RecipeManager.INSTANCE.serverRecipeKeys().stream()
-                                .map(Objects::toString)
-                                .collect(Collectors.toSet());
+                            Set<String> serverRecipeKeys = RecipeManager.INSTANCE.serverRecipeKeyStrings();
 
                             dbRecipes.retainAll(serverRecipeKeys);
 
@@ -88,9 +86,7 @@ public enum PlayerDiscoverySyncListener implements Listener {
             .map(NamespacedKey::toString)
             .collect(Collectors.toSet());
 
-        Set<String> serverRecipeKeys = RecipeManager.INSTANCE.serverRecipeKeys().stream()
-            .map(Objects::toString)
-            .collect(Collectors.toSet());
+        Set<String> serverRecipeKeys = RecipeManager.INSTANCE.serverRecipeKeyStrings();
 
         localRecipes.retainAll(serverRecipeKeys);
 
