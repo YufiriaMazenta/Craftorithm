@@ -29,6 +29,7 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -45,7 +46,7 @@ public final class Craftorithm extends BukkitPlugin implements LifecycleTask {
     private static Craftorithm INSTANCE;
     private volatile @Nullable UUID reloadSenderUuid;
     private final AtomicBoolean reloading = new AtomicBoolean(false);
-    private CrypticLibRunnable reloadTimeoutCallback = null;
+    private volatile CrypticLibRunnable reloadTimeoutCallback = null;
     //重载队列, 入队与消费均只发生在主线程
     private final Deque<CommandSender> pendingReloads = new ArrayDeque<>();
     //代际锁与计数: 每轮重载递增, 供超时回调与收尾任务判定自己是否仍属当前轮
@@ -142,17 +143,23 @@ public final class Craftorithm extends BukkitPlugin implements LifecycleTask {
                 }
                 //带超时等待配方重载完成, 防止配方重载链路异常中断导致收尾永久阻塞
                 boolean recipeReloadDone = true;
-                try {
-                    RecipeManager.INSTANCE.getReloadCompletion().get(30, TimeUnit.SECONDS);
-                } catch (TimeoutException e) {
+                CompletableFuture<Void> reloadCompletion = RecipeManager.INSTANCE.getReloadCompletion();
+                if (reloadCompletion == null) {
+                    CrypticLib.warn("Recipe reload completion is null, skip reload success message");
                     recipeReloadDone = false;
-                    CrypticLib.error("Timed out waiting for recipe reload completion, skip reload success message");
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    recipeReloadDone = false;
-                } catch (ExecutionException e) {
-                    recipeReloadDone = false;
-                    CrypticLib.error("Recipe reload completion ended exceptionally", e.getCause());
+                } else {
+                    try {
+                        reloadCompletion.get(30, TimeUnit.SECONDS);
+                    } catch (TimeoutException e) {
+                        recipeReloadDone = false;
+                        CrypticLib.error("Timed out waiting for recipe reload completion, skip reload success message");
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        recipeReloadDone = false;
+                    } catch (ExecutionException e) {
+                        recipeReloadDone = false;
+                        CrypticLib.error("Recipe reload completion ended exceptionally", e.getCause());
+                    }
                 }
                 CommandSender sender = getReloader();
                 //锁内判定代际并执行清理: 已有新轮启动时本轮对状态无处置权, 不触碰新轮的状态与回调
