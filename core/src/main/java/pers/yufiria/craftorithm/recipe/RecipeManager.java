@@ -126,7 +126,7 @@ public enum RecipeManager implements LifecycleTask {
     }
 
     //配方加载相关
-    public void reloadRecipeManager() {
+    public void reloadRecipeManager(CompletableFuture<Void> completion) {
         resetRecipes();
         loadRecipesFromConfig(() -> {
             loadServerRecipeKeys();
@@ -136,9 +136,8 @@ public enum RecipeManager implements LifecycleTask {
                 CraftorithmRecipeRegistry.findImpl().updateRecipes();
                 //从数据库恢复玩家已解锁配方（异步，避免阻塞主线程）
                 CrypticLibBukkit.scheduler().async(DiscoveredRecipeDao.INSTANCE::loadOnlinePlayersDiscoveredRecipes);
-                if (reloadCompletion != null) {
-                    reloadCompletion.complete(null);
-                }
+                //complete本轮启动时捕获的future而非读字段, 防止旧轮链路超时残留晚到时误触发下一轮已重建的future
+                completion.complete(null);
             }, 2L);
         });
     }
@@ -561,8 +560,9 @@ public enum RecipeManager implements LifecycleTask {
                 regDefaultRecipeTypes();
             }
             case RELOAD -> {
-                reloadCompletion = new CompletableFuture<>();
-                CrypticLibBukkit.scheduler().sync(this::reloadRecipeManager);
+                CompletableFuture<Void> completion = new CompletableFuture<>();
+                reloadCompletion = completion;
+                CrypticLibBukkit.scheduler().sync(() -> reloadRecipeManager(completion));
             }
             case DISABLE -> {
                 resetRecipes();
