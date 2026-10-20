@@ -20,7 +20,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @LifecycleTaskConfig(
     schedules = {
-        @LifecycleSchedule(phase = LifecyclePhase.ACTIVE),
         @LifecycleSchedule(phase = LifecyclePhase.RELOAD),
         @LifecycleSchedule(phase = LifecyclePhase.DISABLE)
     }
@@ -33,7 +32,7 @@ public enum ItemPluginHookManager implements LifecycleTask {
     @Override
     public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase lifeCycle) {
         switch (lifeCycle) {
-            case ACTIVE, RELOAD -> {
+            case RELOAD -> {
                 for (ItemPluginHook itemPluginHook : itemPluginHookMap.values()) {
                     itemPluginHook.unhook();
                 }

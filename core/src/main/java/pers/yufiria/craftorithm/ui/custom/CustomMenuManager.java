@@ -87,7 +87,6 @@ public enum CustomMenuManager implements LifecycleTask {
         switch (lifecycle) {
             case ENABLE -> {
                 customMenuFolder = new File(((Plugin) plugin).getDataFolder(), "menus/custom");
-                reloadMenus();
             }
             case RELOAD -> {
                 reloadMenus();

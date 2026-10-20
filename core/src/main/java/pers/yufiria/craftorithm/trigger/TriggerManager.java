@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @LifecycleTaskConfig(
     schedules = {
-        @LifecycleSchedule(phase = LifecyclePhase.ACTIVE, priority = 3),
+        @LifecycleSchedule(phase = LifecyclePhase.ENABLE),
         @LifecycleSchedule(phase = LifecyclePhase.RELOAD, isAsync = true),
         @LifecycleSchedule(phase = LifecyclePhase.DISABLE)
     }
@@ -249,14 +249,13 @@ public enum TriggerManager implements LifecycleTask {
     @Override
     public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase phase) {
         switch (phase) {
-            case ACTIVE -> {
+            case ENABLE -> {
                 TRIGGER_FOLDER.mkdirs();
                 // 初始化动态事件注册器
                 EventTriggerTypes.INSTANCE.init();
                 for (CraftTriggerTypes type : CraftTriggerTypes.values()) {
                     regTriggerType(type);
                 }
-                reloadTriggers();
             }
             case RELOAD -> {
                 reloadTriggers();

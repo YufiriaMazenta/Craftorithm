@@ -180,8 +180,6 @@ public enum CraftorithmItemProvider implements ItemPluginHook, ItemProvider, Lif
             case ENABLE -> {
                 ItemPluginHookManager.INSTANCE.addItemPluginHook(this);
                 checkCraftorithmProvider();
-                loadItemFiles();
-                loadItems();
             }
             case RELOAD -> {
                 checkCraftorithmProvider();

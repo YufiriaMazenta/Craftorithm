@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 
 @LifecycleTaskConfig(
     schedules = {
-        @LifecycleSchedule(phase = LifecyclePhase.ACTIVE, isAsync = true),
         @LifecycleSchedule(phase = LifecyclePhase.RELOAD, isAsync = true),
         @LifecycleSchedule(phase = LifecyclePhase.DISABLE)
     }
@@ -118,7 +117,7 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
     @Override
     public void onLifecycle(CrypticLibPlugin crypticLibPlugin, LifecyclePhase lifecyclePhase) {
         switch (lifecyclePhase) {
-            case ACTIVE, RELOAD -> {
+            case RELOAD -> {
                 if (PluginConfigs.SAVE_DISCOVERED_RECIPES_ENABLE.value()) {
                     initTable();
                     startPeriodicSaveTask();

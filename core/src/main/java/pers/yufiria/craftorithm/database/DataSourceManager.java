@@ -20,7 +20,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @LifecycleTaskConfig(
     schedules = {
-        @LifecycleSchedule(phase = LifecyclePhase.ACTIVE, isAsync = true, priority = -1),
         @LifecycleSchedule(phase = LifecyclePhase.RELOAD, isAsync = true, priority = -1),
         @LifecycleSchedule(phase = LifecyclePhase.DISABLE, priority = Integer.MAX_VALUE)
     }
@@ -40,9 +39,6 @@ public enum DataSourceManager implements LifecycleTask {
     @Override
     public void onLifecycle(CrypticLibPlugin crypticLibPlugin, LifecyclePhase lifecyclePhase) {
         switch (lifecyclePhase) {
-            case ACTIVE -> {
-                databaseConnection = loadDatabaseConnection();
-            }
             case RELOAD -> {
                 if (databaseConnection != null) {
                     databaseConnection.close();

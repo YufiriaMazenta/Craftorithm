@@ -32,7 +32,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @SuppressWarnings("removal")
 @LifecycleTaskConfig(
     schedules = {
-        @LifecycleSchedule(phase = LifecyclePhase.ACTIVE),
         @LifecycleSchedule(phase = LifecyclePhase.RELOAD),
         @LifecycleSchedule(phase = LifecyclePhase.DISABLE)
     }
@@ -199,9 +198,6 @@ public enum OtherPluginsListenerManager implements LifecycleTask {
     @Override
     public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase lifeCycle) {
         switch (lifeCycle) {
-            case ACTIVE -> {
-                convertOtherPluginsListeners();
-            }
             case RELOAD -> {
                 resetRegisteredListeners();
                 convertOtherPluginsListeners();

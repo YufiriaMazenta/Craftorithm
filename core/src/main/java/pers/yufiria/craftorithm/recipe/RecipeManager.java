@@ -188,8 +188,12 @@ public enum RecipeManager implements LifecycleTask {
         CrypticLibBukkit.scheduler().async(() -> {
             if (!RECIPE_FILE_FOLDER.exists()) {
                 boolean mkdirResult = RECIPE_FILE_FOLDER.mkdir();
-                if (!mkdirResult)
+                if (!mkdirResult) {
+                    CrypticLib.error("Cannot create recipes folder: " + RECIPE_FILE_FOLDER.getPath() + ", skip loading recipes");
+                    //提前返回也要执行callback, 且与正常结束一致调度到主线程运行
+                    CrypticLibBukkit.scheduler().sync(callback);
                     return;
+                }
             }
             long parseStart = System.currentTimeMillis();
             List<ParsedRecipe> parsedRecipes = IOHelper.allYamlFiles(RECIPE_FILE_FOLDER)
