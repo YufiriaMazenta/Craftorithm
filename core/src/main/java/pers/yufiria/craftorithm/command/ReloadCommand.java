@@ -6,9 +6,9 @@ import crypticlib.command.CommandContext;
 import crypticlib.command.CommandInfo;
 import crypticlib.perm.PermInfo;
 import org.jetbrains.annotations.NotNull;
-import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.permission.Permissions;
+import pers.yufiria.craftorithm.ReloadManager;
 import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
 
@@ -25,7 +25,7 @@ public final class ReloadCommand extends AbstractSubcommand {
     public void execute(@NotNull CommandContext context) {
         Invoker invoker = context.invoker();
         try {
-            Craftorithm.instance().reloadPlugin(CommandUtils.invoker2Sender(invoker));
+            ReloadManager.INSTANCE.reloadPlugin(CommandUtils.invoker2Sender(invoker));
             LangUtils.sendLang(invoker, Languages.COMMAND_RELOAD_RELOADING);
         } catch (Exception e) {
             CrypticLib.error("Failed to reload Craftorithm", e);

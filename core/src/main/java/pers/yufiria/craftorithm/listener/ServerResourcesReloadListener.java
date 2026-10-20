@@ -7,7 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import pers.yufiria.craftorithm.Craftorithm;
+import pers.yufiria.craftorithm.ReloadManager;
 
 /**
  * 用于处理数据包重载后导致插件配方失效的问题
@@ -20,7 +20,7 @@ public enum ServerResourcesReloadListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onServerResourceReload(ServerResourcesReloadedEvent event) {
-        boolean started = Craftorithm.instance().reloadPlugin(Bukkit.getConsoleSender());
+        boolean started = ReloadManager.INSTANCE.reloadPlugin(Bukkit.getConsoleSender());
         if (started) {
             CrypticLib.info("Plugin reloaded automatically upon server resources reload");
         } else {
