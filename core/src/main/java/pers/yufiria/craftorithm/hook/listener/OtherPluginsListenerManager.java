@@ -55,7 +55,7 @@ public enum OtherPluginsListenerManager implements LifecycleTask {
 
                 Listener listener = originRegisteredListener.getListener();
                 String listenerClassName = listener.getClass().getName();
-                if (PluginConfigs.NOT_CONVERT_LISTENER_CLASSES.value().contains(listenerClassName)) {
+                if (isNotConvertListener(listenerClassName)) {
                     //如果该监听器被配置为不转化,则直接跳过
                     continue;
                 }
@@ -109,6 +109,23 @@ public enum OtherPluginsListenerManager implements LifecycleTask {
             }
         }
         allowReregisterListenerNumMap.putAll(listenerConvertedCountMap);
+    }
+
+    /**
+     * 判断监听器类是否被配置为不转化
+     * 以 * 结尾的条目按前缀匹配, 其余条目按完整类名精确匹配
+     */
+    private static boolean isNotConvertListener(String listenerClassName) {
+        for (String entry : PluginConfigs.NOT_CONVERT_LISTENER_CLASSES.value()) {
+            if (entry.endsWith("*")) {
+                if (listenerClassName.startsWith(entry.substring(0, entry.length() - 1))) {
+                    return true;
+                }
+            } else if (listenerClassName.equals(entry)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void resetRegisteredListeners() {

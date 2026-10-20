@@ -141,9 +141,27 @@ public class PluginConfigs {
             "fr.moribus.imageonmap.image.MapInitEvent",
             "com.badbones69.crazycrates.paper.listeners.crates.types.WarCrateListener",
             "com.ryderbelserion.fusion.paper.api.builders.gui.listeners.GuiListener",
-            "club.kid7.bannermaker.pluginutilities.gui.CustomGUIInventoryListener"
+            "club.kid7.bannermaker.pluginutilities.gui.CustomGUIInventoryListener",
+            // Quests (LMBishop)
+            "com.leonardobishop.quests.bukkit.tasktype.type.*",
+            // BetonQuest
+            "org.betonquest.betonquest.lib.bukkit.event.*",
+            // NotQuests
+            "com.notquests.paper.events.*",
+            // BeautyQuests
+            "fr.skytasul.quests.QuestsListener",
+            "fr.skytasul.quests.stages.StageCraft",
+            "fr.skytasul.quests.stages.StageMelt",
+            // ODailyQuests
+            "com.ordwen.odailyquests.events.listeners.item.*",
+            // TypeWriter
+            "com.typewritermc.engine.paper.entry.*"
         ),
-        "不进行隔离的监听器类，在此列表里的监听器类可以检测到Craftorithm的配方"
+        List.of(
+            "不进行隔离的监听器类，在此列表里的监听器类可以检测到Craftorithm的配方",
+            "以 * 结尾的条目按前缀匹配类名，如 net.momirealms.customfishing.*",
+            "不以 * 结尾的条目按完整类名精确匹配"
+        )
     );
 
     public static final StringConfig ITEM_GROUP_ITEM_NAME = new StringConfig("item_group_item.name", "&r<group_type>:<group_id>(<group_item_count>):");
