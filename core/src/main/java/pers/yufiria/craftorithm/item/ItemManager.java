@@ -18,6 +18,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.yufiria.craftorithm.Craftorithm;
@@ -84,6 +85,7 @@ public enum ItemManager implements LifecycleTask {
     /**
      * 重置物品提供源列表
      */
+    @ApiStatus.Internal
     public void resetItemProviders() {
         itemProviderMap.clear();
     }
@@ -277,7 +279,7 @@ public enum ItemManager implements LifecycleTask {
         return Optional.of(new ItemStack(material, amount));
     }
 
-    public void reloadCustomCookingFuel() {
+    private void reloadCustomCookingFuel() {
         customFuelConfig.reloadConfig();
         customCookingFuelMap.clear();
         YamlConfiguration config = customFuelConfig.config();

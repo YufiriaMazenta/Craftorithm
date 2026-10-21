@@ -40,7 +40,7 @@ public class CustomShapedRecipePattern {
         return new CustomShapedRecipePattern(shape.width(), shape.height(), shape.ingredients());
     }
 
-    public static <T> boolean isSymmetrical(int width, int height, List<T> list) {
+    private static <T> boolean isSymmetrical(int width, int height, List<T> list) {
         if (width != 1) {
             int var3 = width / 2;
 

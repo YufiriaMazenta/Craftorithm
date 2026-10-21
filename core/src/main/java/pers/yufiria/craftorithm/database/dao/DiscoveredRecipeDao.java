@@ -37,7 +37,7 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
     private Dao<DiscoveredRecipe> dao;
     private CrypticLibRunnable periodSaveTask;
 
-    public void initTable() {
+    private void initTable() {
         try {
             ConnectionSource connectionSource = DataSourceManager.INSTANCE.databaseConnection();
             dao = DaoManager.createDao(connectionSource, DiscoveredRecipe.class);

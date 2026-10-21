@@ -43,7 +43,7 @@ public enum ReloadManager {
      * <p>
      * reloading状态的置位放在此处而非重载入口, 避免reloadConfig抛异常时状态被提前置位且无超时兜底导致永久拦截
      */
-    public void onReloadStart() {
+    void onReloadStart() {
         long gen;
         synchronized (reloadLock) {
             reloadGeneration++;
@@ -78,7 +78,7 @@ public enum ReloadManager {
      * 每轮重载结束时由主类的RELOAD生命周期分支触发(异步批收尾任务):
      * 带超时等待配方重载完成, 代际判定后清理本轮状态, 发送成功消息, 最后消费重载队列
      */
-    public void onReloadFinish() {
+    void onReloadFinish() {
         long myGen;
         synchronized (reloadLock) {
             myGen = reloadGeneration;

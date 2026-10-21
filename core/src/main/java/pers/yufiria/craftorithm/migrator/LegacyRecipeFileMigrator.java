@@ -43,7 +43,7 @@ public enum LegacyRecipeFileMigrator implements LifecycleTask {
      *
      * @return 是否执行了迁移（true 表示有旧版文件被处理）
      */
-    public boolean migrateIfNeeded() {
+    private boolean migrateIfNeeded() {
         this.recipeFolder = RecipeManager.INSTANCE.RECIPE_FILE_FOLDER;
         this.logger = Craftorithm.instance().getLogger();
 

@@ -66,7 +66,7 @@ public class UpdateChecker implements Listener {
         });
     }
 
-    public static String removeSuffixAfterDash(String version) {
+    private static String removeSuffixAfterDash(String version) {
         if (version == null || version.isEmpty()) {
             return version;
         }
@@ -77,7 +77,7 @@ public class UpdateChecker implements Listener {
         return version.substring(0, index);
     }
 
-    public static boolean checkVersion(String newVersion, String version) {
+    private static boolean checkVersion(String newVersion, String version) {
         if (newVersion.equals(version))
             return false;
         String[] newVersionNum = newVersion.split("\\.");

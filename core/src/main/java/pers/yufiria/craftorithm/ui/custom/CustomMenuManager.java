@@ -97,7 +97,7 @@ public enum CustomMenuManager implements LifecycleTask {
         }
     }
 
-    public void reloadMenus() {
+    private void reloadMenus() {
         long startTime = System.currentTimeMillis();
         int loadedMenuNum = 0;
         //重载所有自定义页面

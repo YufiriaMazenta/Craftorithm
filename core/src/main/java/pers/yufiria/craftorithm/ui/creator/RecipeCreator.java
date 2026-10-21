@@ -115,7 +115,7 @@ public abstract class RecipeCreator extends StoredMenu {
      * @param resultId
      * @return
      */
-    public String resolveRecipeFileName(@NotNull NamespacedItemId resultId) {
+    protected String resolveRecipeFileName(@NotNull NamespacedItemId resultId) {
         if (this.recipeFileName != null) {
             return this.recipeFileName;
         }

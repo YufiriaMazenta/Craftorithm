@@ -126,7 +126,7 @@ public enum RecipeManager implements LifecycleTask {
     }
 
     //配方加载相关
-    public void reloadRecipeManager(CompletableFuture<Void> completion) {
+    private void reloadRecipeManager(CompletableFuture<Void> completion) {
         resetRecipes();
         loadRecipesFromConfig(() -> {
             loadServerRecipeKeys();
@@ -147,7 +147,7 @@ public enum RecipeManager implements LifecycleTask {
      * 将会删除所有由本插件及使用本插件提供的API添加的配方
      * 同时还原被删除的其他配方
      */
-    public void resetRecipes() {
+    private void resetRecipes() {
         //删除所有由插件添加的配方
         craftorithmRecipes.forEach((recipeKey, parsed) -> {
             RecipeType recipeType = parsed.recipeType();
@@ -571,15 +571,15 @@ public enum RecipeManager implements LifecycleTask {
         }
     }
 
-    public class RecipeRegisterTask extends CrypticLibRunnable {
+    private class RecipeRegisterTask extends CrypticLibRunnable {
 
-        private List<ParsedRecipe> parsedRecipes;
-        private int useTick = 0;
+        List<ParsedRecipe> parsedRecipes;
+        int useTick = 0;
         //配方加载完毕后执行的代码
-        private final Runnable callback;
-        private long useMilliseconds = 0;
+        final Runnable callback;
+        long useMilliseconds = 0;
 
-        public RecipeRegisterTask(File folder, Runnable doneActions, List<ParsedRecipe> parsedRecipes) {
+        RecipeRegisterTask(File folder, Runnable doneActions, List<ParsedRecipe> parsedRecipes) {
             this.callback = doneActions;
             if (!folder.isDirectory()) {
                 throw new IllegalArgumentException(folder.getAbsolutePath() + " is not a directory");
@@ -587,11 +587,11 @@ public enum RecipeManager implements LifecycleTask {
             this.parsedRecipes = parsedRecipes;
         }
 
-        public void start() {
+        void start() {
             this.syncTimer(1L, 1L);
         }
 
-        public void end() {
+        void end() {
             this.cancel();
             CrypticLib.info("Loaded " + craftorithmRecipes.size() + " recipes in " + useTick + " ticks(" + useMilliseconds + "ms)");
             if (callback != null) {
@@ -620,7 +620,7 @@ public enum RecipeManager implements LifecycleTask {
             }
         }
 
-        public void registerRecipes(List<ParsedRecipe> batch) {
+        void registerRecipes(List<ParsedRecipe> batch) {
             long startTime = System.currentTimeMillis();
             int recipeNum = 0;
             for (ParsedRecipe parsed : batch) {

@@ -75,7 +75,7 @@ public class VanillaSmeltingDisplayMenu extends RecipeDisplayMenu<CookingRecipe<
         ));
     }
 
-    public String replaceExpAndTime(String origin) {
+    protected String replaceExpAndTime(String origin) {
         return origin.replace("<reward_exp>", recipe.getExperience() + "").replace("<time>", recipe.getCookingTime() + "");
     }
 
