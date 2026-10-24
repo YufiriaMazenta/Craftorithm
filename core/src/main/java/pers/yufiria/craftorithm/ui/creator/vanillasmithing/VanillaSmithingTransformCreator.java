@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.menu.creator.VanillaSmithingTransformCreatorConfig;
-import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
@@ -93,7 +92,7 @@ public class VanillaSmithingTransformCreator extends RecipeCreator {
             }
 
             // 3. 解析结果物品ID
-            NamespacedItemIdStack resultId = ItemManager.INSTANCE.matchItemIdOrCreate(result, false);
+            NamespacedItemIdStack resultId = resolveResultId(result);
             if (resultId == null) {
                 LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_RESULT);
                 return;

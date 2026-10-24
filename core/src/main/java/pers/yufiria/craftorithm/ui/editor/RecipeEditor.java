@@ -9,7 +9,6 @@ import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.menu.Menu;
 import crypticlib.ui.menu.StoredMenu;
-import crypticlib.util.ItemHelper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -20,12 +19,14 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.Languages;
-import pers.yufiria.craftorithm.item.ItemGroup;
-import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.permission.Permissions;
 import pers.yufiria.craftorithm.recipe.ParsedRecipe;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.ui.IngredientIdResolver;
+import pers.yufiria.craftorithm.ui.ResultIdResolver;
+import pers.yufiria.craftorithm.ui.SimpleIngredientIdResolver;
+import pers.yufiria.craftorithm.ui.SimpleResultIdResolver;
 import pers.yufiria.craftorithm.ui.BackableMenu;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIconParser;
@@ -33,7 +34,6 @@ import pers.yufiria.craftorithm.ui.recipebook.BackIcon;
 import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
@@ -46,6 +46,8 @@ public abstract class RecipeEditor extends StoredMenu implements BackableMenu {
     protected Menu parentMenu;
     protected final NamespacedKey recipeKey;
     protected final String recipeId;
+    private final IngredientIdResolver ingredientIdResolver;
+    private final ResultIdResolver resultIdResolver;
     /**
      * 标记该编辑页面是否初始化,用于首次打开时填充配方内容
      */
@@ -56,9 +58,21 @@ public abstract class RecipeEditor extends StoredMenu implements BackableMenu {
         @NotNull NamespacedKey recipeKey,
         @NotNull String recipeId
     ) {
+        this(player, recipeKey, recipeId, SimpleIngredientIdResolver.INSTANCE, SimpleResultIdResolver.INSTANCE);
+    }
+
+    public RecipeEditor(
+        @NotNull Player player,
+        @NotNull NamespacedKey recipeKey,
+        @NotNull String recipeId,
+        @NotNull IngredientIdResolver ingredientIdResolver,
+        @NotNull ResultIdResolver resultIdResolver
+    ) {
         super(player);
         this.recipeKey = recipeKey;
         this.recipeId = recipeId;
+        this.ingredientIdResolver = ingredientIdResolver;
+        this.resultIdResolver = resultIdResolver;
     }
 
     @Override
@@ -131,18 +145,16 @@ public abstract class RecipeEditor extends StoredMenu implements BackableMenu {
 
     /**
      * 解析材料物品的ID字符串
-     * 若为物品组占位符物品, 解析为tag:xxx或item_pack:xxx
      */
-    protected @Nullable String resolveIngredientId(@Nullable ItemStack item) {
-        if (ItemHelper.isAir(item)) {
-            return null;
-        }
-        Optional<ItemGroup> itemGroupOpt = ItemGroup.fromItemStack(item);
-        if (itemGroupOpt.isPresent()) {
-            return itemGroupOpt.get().toIngredientId();
-        }
-        NamespacedItemIdStack itemId = ItemManager.INSTANCE.matchItemIdOrCreate(item, true);
-        return itemId != null ? itemId.toString() : null;
+    protected final @Nullable String resolveIngredientId(@Nullable ItemStack item) {
+        return ingredientIdResolver.resolve(item);
+    }
+
+    /**
+     * 解析结果物品的ID
+     */
+    protected final @Nullable NamespacedItemIdStack resolveResultId(@NotNull ItemStack item) {
+        return resultIdResolver.resolve(item);
     }
 
     /**

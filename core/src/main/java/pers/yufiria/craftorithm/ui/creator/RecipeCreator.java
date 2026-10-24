@@ -14,25 +14,28 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.config.Languages;
-import pers.yufiria.craftorithm.item.ItemGroup;
-import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.ParsedRecipe;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
+import pers.yufiria.craftorithm.ui.IngredientIdResolver;
+import pers.yufiria.craftorithm.ui.ResultIdResolver;
+import pers.yufiria.craftorithm.ui.SimpleIngredientIdResolver;
+import pers.yufiria.craftorithm.ui.SimpleResultIdResolver;
 import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 public abstract class RecipeCreator extends StoredMenu {
 
     private @Nullable String recipeId;
     private @Nullable String recipeFileName;
+    private final IngredientIdResolver ingredientIdResolver;
+    private final ResultIdResolver resultIdResolver;
     private final SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
 
     public RecipeCreator(
@@ -40,9 +43,21 @@ public abstract class RecipeCreator extends StoredMenu {
         @Nullable String recipeId,
         @Nullable String recipeFileName
     ) {
+        this(player, recipeId, recipeFileName, SimpleIngredientIdResolver.INSTANCE, SimpleResultIdResolver.INSTANCE);
+    }
+
+    public RecipeCreator(
+        @NotNull Player player,
+        @Nullable String recipeId,
+        @Nullable String recipeFileName,
+        @NotNull IngredientIdResolver ingredientIdResolver,
+        @NotNull ResultIdResolver resultIdResolver
+    ) {
         super(player);
         this.recipeId = recipeId;
         this.recipeFileName = recipeFileName;
+        this.ingredientIdResolver = ingredientIdResolver;
+        this.resultIdResolver = resultIdResolver;
     }
 
     protected abstract RecipeType recipeType();
@@ -172,16 +187,17 @@ public abstract class RecipeCreator extends StoredMenu {
     }
 
     /**
-     * 解析材料物品的ID字符串。
-     * 若为物品组占位符物品, 解析为tag:xxx或item_pack:xxx
+     * 解析材料物品的ID字符串
      */
-    protected String resolveIngredientId(ItemStack item) {
-        Optional<ItemGroup> itemGroupOpt = ItemGroup.fromItemStack(item);
-        if (itemGroupOpt.isPresent()) {
-            return itemGroupOpt.get().toIngredientId();
-        }
-        NamespacedItemIdStack itemId = ItemManager.INSTANCE.matchItemIdOrCreate(item, true);
-        return itemId != null ? itemId.toString() : null;
+    protected final @Nullable String resolveIngredientId(@Nullable ItemStack item) {
+        return ingredientIdResolver.resolve(item);
+    }
+
+    /**
+     * 解析结果物品的ID
+     */
+    protected final @Nullable NamespacedItemIdStack resolveResultId(@NotNull ItemStack item) {
+        return resultIdResolver.resolve(item);
     }
 
 }

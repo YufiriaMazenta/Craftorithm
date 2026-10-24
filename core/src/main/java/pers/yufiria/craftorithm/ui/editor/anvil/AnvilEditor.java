@@ -13,12 +13,13 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.menu.editor.AnvilEditorConfig;
-import pers.yufiria.craftorithm.item.ItemGroup;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.item.exception.ItemNotFoundException;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.recipe.anvil.AnvilRecipe;
+import pers.yufiria.craftorithm.ui.SimpleResultIdResolver;
+import pers.yufiria.craftorithm.ui.StackedIngredientIdResolver;
 import pers.yufiria.craftorithm.ui.ConversationUtils;
 import pers.yufiria.craftorithm.ui.StoredMenuUtils;
 import pers.yufiria.craftorithm.ui.editor.RecipeEditor;
@@ -47,7 +48,13 @@ public final class AnvilEditor extends RecipeEditor {
     private int costLevel;
 
     public AnvilEditor(@NotNull Player player, @NotNull NamespacedKey recipeKey, @NotNull AnvilRecipe recipe) {
-        super(player, recipeKey, recipeKey.toString());
+        super(
+            player,
+            recipeKey,
+            recipeKey.toString(),
+            StackedIngredientIdResolver.INSTANCE,
+            SimpleResultIdResolver.INSTANCE
+        );
         this.anvilRecipe = recipe;
         this.costLevel = recipe.costLevel();
         this.display = new MenuDisplay(
@@ -137,7 +144,7 @@ public final class AnvilEditor extends RecipeEditor {
 
             String baseId = resolveIngredientId(storedItems.get(BASE_SLOT));
             String additionId = resolveIngredientId(storedItems.get(ADDITION_SLOT));
-            NamespacedItemIdStack resultId = ItemManager.INSTANCE.matchItemIdOrCreate(result, false);
+            NamespacedItemIdStack resultId = resolveResultId(result);
             if (resultId == null) {
                 LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_RESULT);
                 return;
@@ -154,15 +161,4 @@ public final class AnvilEditor extends RecipeEditor {
         return icon;
     }
 
-    @Override
-    protected String resolveIngredientId(ItemStack item) {
-        Optional<ItemGroup> itemGroupOpt = ItemGroup.fromItemStack(item);
-        if (itemGroupOpt.isPresent()) {
-            //铁砧配方支持数量后缀
-            String ingredientId = itemGroupOpt.get().toIngredientId();
-            return item.getAmount() <= 1 ? ingredientId : ingredientId + " " + item.getAmount();
-        }
-        NamespacedItemIdStack itemId = ItemManager.INSTANCE.matchItemIdOrCreate(item, false);
-        return itemId != null ? itemId.toString() : null;
-    }
 }

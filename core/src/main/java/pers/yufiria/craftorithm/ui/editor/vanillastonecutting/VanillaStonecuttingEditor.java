@@ -13,7 +13,6 @@ import org.bukkit.inventory.StonecuttingRecipe;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.menu.editor.VanillaStonecuttingEditorConfig;
-import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.ui.StoredMenuUtils;
@@ -99,7 +98,7 @@ public final class VanillaStonecuttingEditor extends RecipeEditor {
             }
 
             String ingredientId = resolveIngredientId(storedItems.get(INGREDIENT_SLOT));
-            NamespacedItemIdStack resultId = ItemManager.INSTANCE.matchItemIdOrCreate(result, false);
+            NamespacedItemIdStack resultId = resolveResultId(result);
             if (resultId == null) {
                 LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_RESULT);
                 return;

@@ -13,11 +13,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.menu.creator.AnvilCreatorConfig;
-import pers.yufiria.craftorithm.item.ItemGroup;
-import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
+import pers.yufiria.craftorithm.ui.SimpleResultIdResolver;
+import pers.yufiria.craftorithm.ui.StackedIngredientIdResolver;
 import pers.yufiria.craftorithm.ui.ConversationUtils;
 import pers.yufiria.craftorithm.ui.StoredMenuUtils;
 import pers.yufiria.craftorithm.ui.creator.RecipeCreator;
@@ -37,7 +37,13 @@ public class AnvilCreator extends RecipeCreator {
     private int costLevel;
 
     public AnvilCreator(@NotNull Player player, @Nullable String recipeId, @Nullable String recipeFileName) {
-        super(player, recipeId, recipeFileName);
+        super(
+            player,
+            recipeId,
+            recipeFileName,
+            StackedIngredientIdResolver.INSTANCE,
+            SimpleResultIdResolver.INSTANCE
+        );
         this.costLevel = AnvilCreatorConfig.DEFAULT_COST_LEVEL.value();
         this.display = new MenuDisplay(
             AnvilCreatorConfig.TITLE.value(),
@@ -126,7 +132,7 @@ public class AnvilCreator extends RecipeCreator {
             }
 
             // 3. 解析结果物品ID
-            NamespacedItemIdStack resultId = ItemManager.INSTANCE.matchItemIdOrCreate(result, false);
+            NamespacedItemIdStack resultId = resolveResultId(result);
             if (resultId == null) {
                 LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_RESULT);
                 return;
@@ -150,15 +156,4 @@ public class AnvilCreator extends RecipeCreator {
         return icon;
     }
 
-    @Override
-    protected String resolveIngredientId(ItemStack item) {
-        Optional<ItemGroup> itemGroupOpt = ItemGroup.fromItemStack(item);
-        if (itemGroupOpt.isPresent()) {
-            //铁砧配方支持数量后缀
-            String ingredientId = itemGroupOpt.get().toIngredientId();
-            return item.getAmount() <= 1 ? ingredientId : ingredientId + " " + item.getAmount();
-        }
-        NamespacedItemIdStack itemId = ItemManager.INSTANCE.matchItemIdOrCreate(item, false);
-        return itemId != null ? itemId.toString() : null;
-    }
 }

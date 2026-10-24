@@ -14,7 +14,6 @@ import org.bukkit.inventory.SmithingTransformRecipe;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.menu.editor.VanillaSmithingTransformEditorConfig;
-import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.ui.StoredMenuUtils;
@@ -110,7 +109,7 @@ public final class VanillaSmithingTransformEditor extends RecipeEditor {
             String baseId = resolveIngredientId(storedItems.get(BASE_SLOT));
             String additionId = resolveIngredientId(storedItems.get(ADDITION_SLOT));
             String templateId = resolveIngredientId(storedItems.get(TEMPLATE_SLOT));
-            NamespacedItemIdStack resultId = ItemManager.INSTANCE.matchItemIdOrCreate(result, false);
+            NamespacedItemIdStack resultId = resolveResultId(result);
             if (resultId == null) {
                 LangUtils.sendLang(event.getWhoClicked(), Languages.MENU_RECIPE_CREATOR_NULL_RESULT);
                 return;
