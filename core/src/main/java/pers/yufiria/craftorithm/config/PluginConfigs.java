@@ -66,7 +66,7 @@ public class PluginConfigs {
         "每tick注册的配方数量，调低此数值可以减少服务器卡顿"
     );
     public final static ConfigSectionListConfig INGREDIENT_RESTRICTION_RULES = new ConfigSectionListConfig(
-        "ingredient_restriction_rules",
+        "ingredient.restriction_rules",
         migrateLegacyIngredientRestriction(),
         List.of(
             "设定材料的合成限制规则",
@@ -76,8 +76,8 @@ public class PluginConfigs {
     );
 
     public final static IntConfig INGREDIENT_USE_SET_THRESHOLD = new IntConfig(
-        "ingredient_use_set_threshold",
-        8,
+        "ingredient.use_set_threshold",
+        migrateLegacyIntValue("ingredient_use_set_threshold", 8),
         "配方材料数量超过此阈值时使用 Set 替代 List 进行匹配，提升大量材料时的查找性能"
     );
 
@@ -180,78 +180,94 @@ public class PluginConfigs {
     private static List<ConfigurationSection> migrateLegacyIngredientRestriction() {
         String oldKeyCannotCraft = "cannot_craft_items";
         String oldKeyLoreRules = "blocked_crafting_lore_rules";
-        String newKey = "ingredient_restriction_rules";
+        String oldKeyRestrictionRules = "ingredient_restriction_rules";
+        String newKey = "ingredient.restriction_rules";
         BukkitConfigWrapper configWrapper = Craftorithm.instance().getConfigWrapperOrCreate("config.yml");
         YamlConfiguration config = configWrapper.config();
 
         boolean hasCannotCraft = config.contains(oldKeyCannotCraft);
         boolean hasLoreRules = config.contains(oldKeyLoreRules);
+        boolean hasRestrictionRules = config.contains(oldKeyRestrictionRules);
 
-        if (!hasCannotCraft && !hasLoreRules) {
+        if (!hasCannotCraft && !hasLoreRules && !hasRestrictionRules) {
             return Collections.emptyList();
         }
 
-        List<Map<String, Object>> newRules = new ArrayList<>();
-
-        // 1. 迁移 cannot_craft_items
-        if (hasCannotCraft) {
-            List<String> items = config.getStringList(oldKeyCannotCraft);
-            for (String itemId : items) {
-                Map<String, Object> rule = new LinkedHashMap<>();
-                rule.put("type", "item_id");
-                rule.put("item_id", itemId);
-                rule.put("recipes", List.of(".*"));
-                newRules.add(rule);
+        boolean migrationCompleted = false;
+        try {
+            //新配置已存在时以新配置为准，仅清理旧配置
+            if (config.contains(newKey)) {
+                migrationCompleted = true;
+                return Collections.emptyList();
             }
-            CrypticLib.info("Migrating " + items.size() + " cannot_craft_items rule(s)...");
-        }
 
-        // 2. 迁移 blocked_crafting_lore_rules
-        if (hasLoreRules) {
-            List<Map<?, ?>> oldRules = config.getMapList(oldKeyLoreRules);
-            for (Map<?, ?> raw : oldRules) {
-                ConfigurationSection oldRule = BukkitConfigHelper.map2ConfigSection(raw);
-                String lore = oldRule.getString("lore", "");
-                if (lore.isEmpty()) {
-                    continue;
+            List<Map<?, ?>> newRules = new ArrayList<>();
+            Set<String> ruleSignatures = new HashSet<>();
+
+            // 1. 迁移 ingredient_restriction_rules
+            if (hasRestrictionRules) {
+                for (Map<?, ?> rule : config.getMapList(oldKeyRestrictionRules)) {
+                    addRuleIfAbsent(newRules, ruleSignatures, rule);
                 }
-                List<String> recipes = oldRule.getStringList("blocked_recipes");
-                if (recipes.isEmpty()) {
-                    continue;
+            }
+
+            // 2. 迁移 cannot_craft_items
+            if (hasCannotCraft) {
+                List<String> items = config.getStringList(oldKeyCannotCraft);
+                for (String itemId : items) {
+                    Map<String, Object> rule = new LinkedHashMap<>();
+                    rule.put("type", "item_id");
+                    rule.put("item_id", itemId);
+                    rule.put("recipes", List.of(".*"));
+                    addRuleIfAbsent(newRules, ruleSignatures, rule);
                 }
-                Map<String, Object> rule = new LinkedHashMap<>();
-                rule.put("type", "lore");
-                rule.put("lore", lore);
-                rule.put("recipes", recipes);
-                newRules.add(rule);
+                CrypticLib.info("Migrating " + items.size() + " cannot_craft_items rule(s)...");
             }
-            CrypticLib.info("Migrating " + oldRules.size() + " blocked_crafting_lore_rules rule(s)...");
-        }
 
-        // 3. 合并到已有的 block_crafting_rules（追加，不覆盖）
-        if (config.contains(newKey)) {
-            List<Map<?, ?>> existing = config.getMapList(newKey);
-            Set<String> existingSignatures = new HashSet<>();
-            for (Map<?, ?> r : existing) {
-                existingSignatures.add(ruleSignature(r));
+            // 3. 迁移 blocked_crafting_lore_rules
+            if (hasLoreRules) {
+                List<Map<?, ?>> oldRules = config.getMapList(oldKeyLoreRules);
+                for (Map<?, ?> raw : oldRules) {
+                    ConfigurationSection oldRule = BukkitConfigHelper.map2ConfigSection(raw);
+                    String lore = oldRule.getString("lore", "");
+                    if (lore.isEmpty()) {
+                        continue;
+                    }
+                    List<String> recipes = oldRule.getStringList("blocked_recipes");
+                    if (recipes.isEmpty()) {
+                        continue;
+                    }
+                    Map<String, Object> rule = new LinkedHashMap<>();
+                    rule.put("type", "lore");
+                    rule.put("lore", lore);
+                    rule.put("recipes", recipes);
+                    addRuleIfAbsent(newRules, ruleSignatures, rule);
+                }
+                CrypticLib.info("Migrating " + oldRules.size() + " blocked_crafting_lore_rules rule(s)...");
             }
-            int before = newRules.size();
-            newRules.removeIf(r -> existingSignatures.contains(ruleSignature(r)));
-            if (newRules.size() < before) {
-                CrypticLib.info("Skipped " + (before - newRules.size()) + " duplicate rule(s) already in ingredient restriction rules.");
+
+            if (newRules.isEmpty()) {
+                migrationCompleted = true;
+                return Collections.emptyList();
+            }
+
+            CrypticLib.info("Config migration complete: " + newRules.size() + " rule(s) migrated to " + newKey);
+            List<ConfigurationSection> migratedRules = newRules.stream().map(BukkitConfigHelper::map2ConfigSection).toList();
+            migrationCompleted = true;
+            return migratedRules;
+        } finally {
+            if (migrationCompleted) {
+                config.set(oldKeyCannotCraft, null);
+                config.set(oldKeyLoreRules, null);
+                config.set(oldKeyRestrictionRules, null);
             }
         }
+    }
 
-        if (newRules.isEmpty()) {
-            return Collections.emptyList();
+    private static void addRuleIfAbsent(List<Map<?, ?>> rules, Set<String> ruleSignatures, Map<?, ?> rule) {
+        if (ruleSignatures.add(ruleSignature(rule))) {
+            rules.add(rule);
         }
-
-        //清理原本的内容
-        config.set(oldKeyCannotCraft, null);
-        config.set(oldKeyLoreRules, null);
-
-        CrypticLib.info("Config migration complete: " + newRules.size() + " rule(s) added to " + newKey);
-        return newRules.stream().map(BukkitConfigHelper::map2ConfigSection).toList();
     }
 
     private static String ruleSignature(Map<?, ?> rule) {
