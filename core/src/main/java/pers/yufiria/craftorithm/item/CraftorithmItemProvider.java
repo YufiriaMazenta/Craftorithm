@@ -28,6 +28,7 @@ import pers.yufiria.craftorithm.util.LangUtils;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 @LifecycleTaskConfig(
     schedules = {
@@ -43,6 +44,23 @@ public enum CraftorithmItemProvider implements ItemPluginHook, ItemProvider, Lif
     private final Map<ItemBucketKey, Map<String, ItemStack>> itemBuckets;
     private final Map<String, ItemStack> idItemMap;
     private final Map<String, BukkitConfigWrapper> itemConfigFileMap;
+
+    /**
+     * 同一物品桶内存在多个相似物品时, 决定优先返回哪一个ID
+     * <p>
+     * 通过 {@code /craftorithm item save} 显式命名的物品优先于界面自动登记的 plugin_created 快照,
+     * 同类之间按ID字典序排列, 保证同一物品每次解析出的ID都是稳定的
+     */
+    private static final Comparator<String> ITEM_ID_ORDER = Comparator
+        .comparingInt((String itemId) -> itemId.startsWith(ItemManager.PLUGIN_CREATED_NAMESPACE + ":") ? 1 : 0)
+        .thenComparing(Comparator.naturalOrder());
+
+    /**
+     * 创建物品桶, 桶内条目按 {@link #ITEM_ID_ORDER} 有序, 依赖其迭代顺序做ID匹配
+     */
+    private static Map<String, ItemStack> newItemBucketMap() {
+        return new ConcurrentSkipListMap<>(ITEM_ID_ORDER);
+    }
 
     CraftorithmItemProvider() {
         idItemMap = new ConcurrentHashMap<>();
@@ -63,6 +81,7 @@ public enum CraftorithmItemProvider implements ItemPluginHook, ItemProvider, Lif
             return null;
         }
 
+        //桶内条目按 ITEM_ID_ORDER 有序, 命中即返回第一个即为优先级最高的ID
         for (Map.Entry<String, ItemStack> itemStackEntry : itemMap.entrySet()) {
             ItemStack item = itemStackEntry.getValue();
             if (item.isSimilar(itemStack)) {
@@ -114,7 +133,7 @@ public enum CraftorithmItemProvider implements ItemPluginHook, ItemProvider, Lif
                     idItemMap.put(namespacedItemId, item);
                     itemBuckets.computeIfAbsent(
                         ItemBucketKey.of(item),
-                        fp -> new ConcurrentHashMap<>()
+                        fp -> newItemBucketMap()
                     ).put(namespacedItemId, item);
             } catch (Exception e) {
                 LangUtils.info(Languages.ITEM_LOAD_EXCEPTION, CollectionsUtils.newStringHashMap("<item_name>", itemKey));
@@ -130,7 +149,7 @@ public enum CraftorithmItemProvider implements ItemPluginHook, ItemProvider, Lif
         idItemMap.put(namespaceItemId, item);
         itemBuckets.computeIfAbsent(
             ItemBucketKey.of(item),
-            fp -> new ConcurrentHashMap<>()
+            fp -> newItemBucketMap()
         ).put(namespaceItemId, item);
         CrypticLibBukkit.scheduler().async(() -> {
             BukkitConfigWrapper itemConfigWrapper = itemConfigFileMap.computeIfAbsent(namespace, ns -> {

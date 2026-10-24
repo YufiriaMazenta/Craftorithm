@@ -46,7 +46,7 @@ public enum ItemManager implements LifecycleTask {
     //自定义燃料未指定燃烧时间时的默认值, 单位tick
     private static final int DEFAULT_BURN_TIME = 200;
     //玩家通过界面创建物品时使用的物品命名空间
-    private static final String PLUGIN_CREATED_NAMESPACE = "plugin_created";
+    static final String PLUGIN_CREATED_NAMESPACE = "plugin_created";
 
     private final Map<String, ItemProvider> itemProviderMap = new LinkedHashMap<>();
     private final Map<NamespacedItemId, Integer> customCookingFuelMap = new ConcurrentHashMap<>();
