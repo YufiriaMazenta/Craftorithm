@@ -2,10 +2,8 @@ package pers.yufiria.craftorithm.recipe.parser;
 
 import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.NotNull;
-import pers.yufiria.craftorithm.config.PluginConfigs;
-import pers.yufiria.craftorithm.recipe.choice.BukkitRecipeChoiceParser;
-import pers.yufiria.craftorithm.recipe.choice.ItemIdRecipeChoiceParser;
-import pers.yufiria.craftorithm.recipe.choice.RecipeChoiceParser;
+import pers.yufiria.craftorithm.recipe.ingredient.ItemIdRecipeChoiceParser;
+import pers.yufiria.craftorithm.recipe.ingredient.RecipeChoiceParser;
 
 public interface VanillaRecipeParser<R extends Recipe> extends RecipeParser<R> {
 

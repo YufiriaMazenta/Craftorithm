@@ -22,7 +22,7 @@ import pers.yufiria.craftorithm.api.event.CraftorithmPrepareAnvilEvent;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
-import pers.yufiria.craftorithm.recipe.choice.ItemIdStackRecipeChoice;
+import pers.yufiria.craftorithm.recipe.ingredient.ItemIdStackRecipeChoice;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessorManager;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessors;
 import pers.yufiria.craftorithm.trigger.TriggerContext;

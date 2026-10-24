@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.recipe.choice;
+package pers.yufiria.craftorithm.recipe.ingredient;
 
 import crypticlib.util.MaterialHelper;
 import org.bukkit.Material;

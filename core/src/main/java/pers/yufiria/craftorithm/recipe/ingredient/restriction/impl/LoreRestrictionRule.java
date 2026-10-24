@@ -1,13 +1,13 @@
-package pers.yufiria.craftorithm.item.ingredientrestriction.impl;
+package pers.yufiria.craftorithm.recipe.ingredient.restriction.impl;
 
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import pers.yufiria.craftorithm.item.ingredientrestriction.IngredientRestrictionRule;
-import pers.yufiria.craftorithm.item.ingredientrestriction.IngredientRestrictionRuleFactory;
-import pers.yufiria.craftorithm.item.ingredientrestriction.RecipeKeyMatcher;
+import pers.yufiria.craftorithm.recipe.ingredient.restriction.IngredientRestrictionRule;
+import pers.yufiria.craftorithm.recipe.ingredient.restriction.IngredientRestrictionRuleFactory;
+import pers.yufiria.craftorithm.recipe.ingredient.restriction.RecipeKeyMatcher;
 
 import java.util.List;
 

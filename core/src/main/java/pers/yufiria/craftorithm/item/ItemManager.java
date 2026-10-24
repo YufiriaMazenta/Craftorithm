@@ -23,8 +23,8 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.config.PluginConfigs;
-import pers.yufiria.craftorithm.item.ingredientrestriction.IngredientRestrictionRegistry;
-import pers.yufiria.craftorithm.item.ingredientrestriction.IngredientRestrictionRule;
+import pers.yufiria.craftorithm.recipe.ingredient.restriction.IngredientRestrictionRegistry;
+import pers.yufiria.craftorithm.recipe.ingredient.restriction.IngredientRestrictionRule;
 
 import java.text.SimpleDateFormat;
 import java.util.*;

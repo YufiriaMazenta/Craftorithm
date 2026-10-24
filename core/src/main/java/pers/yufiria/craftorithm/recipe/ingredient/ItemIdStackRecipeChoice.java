@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.recipe.choice;
+package pers.yufiria.craftorithm.recipe.ingredient;
 
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
@@ -16,7 +16,7 @@ import java.util.*;
 /**
  * 支持物品堆叠的配方材料,目前只有铁砧配方使用
  */
-public class ItemIdStackRecipeChoice implements RecipeChoice {
+public class ItemIdStackRecipeChoice implements RecipeChoice, ItemIdIngredientMatcher {
 
     private final Collection<NamespacedItemId> itemIds;
     private final int amount;
@@ -79,8 +79,12 @@ public class ItemIdStackRecipeChoice implements RecipeChoice {
 
     @Override
     public boolean test(@NotNull ItemStack itemStack) {
-        boolean itemIdMatched = PluginConfigs.INGREDIENT_MATCH_MODE.value().containsItem(itemIds, itemStack);
+        boolean itemIdMatched = ItemIdIngredientMatcher.super.matches(itemStack);
         return itemIdMatched && itemStack.getAmount() >= amount;
     }
 
+    @Override
+    public Collection<NamespacedItemId> itemIds() {
+        return itemIds;
+    }
 }

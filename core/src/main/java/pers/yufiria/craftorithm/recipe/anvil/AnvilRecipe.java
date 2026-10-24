@@ -7,7 +7,7 @@ import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.item.exception.ItemNotFoundException;
 import pers.yufiria.craftorithm.recipe.CustomRecipe;
-import pers.yufiria.craftorithm.recipe.choice.ItemIdStackRecipeChoice;
+import pers.yufiria.craftorithm.recipe.ingredient.ItemIdStackRecipeChoice;
 
 public class AnvilRecipe implements CustomRecipe {
 

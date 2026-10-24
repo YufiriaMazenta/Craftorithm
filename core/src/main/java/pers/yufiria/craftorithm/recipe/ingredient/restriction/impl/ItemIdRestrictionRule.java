@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.item.ingredientrestriction.impl;
+package pers.yufiria.craftorithm.recipe.ingredient.restriction.impl;
 
 import crypticlib.CrypticLib;
 import org.bukkit.NamespacedKey;
@@ -7,9 +7,10 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
-import pers.yufiria.craftorithm.item.ingredientrestriction.IngredientRestrictionRule;
-import pers.yufiria.craftorithm.item.ingredientrestriction.IngredientRestrictionRuleFactory;
-import pers.yufiria.craftorithm.item.ingredientrestriction.RecipeKeyMatcher;
+import pers.yufiria.craftorithm.recipe.ingredient.restriction.IngredientRestrictionRule;
+import pers.yufiria.craftorithm.recipe.ingredient.restriction.IngredientRestrictionRuleFactory;
+import pers.yufiria.craftorithm.recipe.ingredient.restriction.RecipeKeyMatcher;
+import pers.yufiria.craftorithm.recipe.ingredient.ItemIdIngredientMatcher;
 
 import java.util.Collection;
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.List;
  * <p>
  * 匹配指定物品 ID 的物品，阻止其参与指定配方
  */
-public final class ItemIdRestrictionRule implements IngredientRestrictionRule {
+public final class ItemIdRestrictionRule implements IngredientRestrictionRule, ItemIdIngredientMatcher {
 
     public static final IngredientRestrictionRuleFactory FACTORY = new IngredientRestrictionRuleFactory() {
         @Override
@@ -54,7 +55,7 @@ public final class ItemIdRestrictionRule implements IngredientRestrictionRule {
         if (itemIds.isEmpty()) {
             return false;
         }
-        if (!PluginConfigs.INGREDIENT_MATCH_MODE.value().containsItem(itemIds, item)) {
+        if (!ItemIdIngredientMatcher.super.matches(item)) {
             return false;
         }
         String recipeKeyStr = recipeKey.toString();
@@ -66,6 +67,7 @@ public final class ItemIdRestrictionRule implements IngredientRestrictionRule {
         return false;
     }
 
+    @Override
     public Collection<NamespacedItemId> itemIds() {
         return itemIds;
     }

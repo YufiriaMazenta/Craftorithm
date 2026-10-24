@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.item.ingredientrestriction;
+package pers.yufiria.craftorithm.recipe.ingredient.restriction;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;

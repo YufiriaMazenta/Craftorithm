@@ -1,10 +1,10 @@
-package pers.yufiria.craftorithm.item.ingredientrestriction;
+package pers.yufiria.craftorithm.recipe.ingredient.restriction;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.yufiria.craftorithm.item.ingredientrestriction.impl.ItemIdRestrictionRule;
-import pers.yufiria.craftorithm.item.ingredientrestriction.impl.LoreRestrictionRule;
+import pers.yufiria.craftorithm.recipe.ingredient.restriction.impl.ItemIdRestrictionRule;
+import pers.yufiria.craftorithm.recipe.ingredient.restriction.impl.LoreRestrictionRule;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

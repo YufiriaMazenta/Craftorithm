@@ -8,8 +8,6 @@ import crypticlib.util.BukkitConfigHelper;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import pers.yufiria.craftorithm.Craftorithm;
-import pers.yufiria.craftorithm.recipe.IngredientMatchMode;
-import pers.yufiria.craftorithm.config.node.IngredientMatchModeConfig;
 
 import java.util.*;
 
@@ -83,15 +81,25 @@ public class PluginConfigs {
         "配方材料数量超过此阈值时使用 Set 替代 List 进行匹配，提升大量材料时的查找性能"
     );
 
-    public final static IngredientMatchModeConfig INGREDIENT_MATCH_MODE = new IngredientMatchModeConfig(
-        "ingredient_match_mode",
-        IngredientMatchMode.FIRST,
+    public final static BooleanConfig INGREDIENT_TRY_ALL_POSSIBLE_ITEM_ID = new BooleanConfig(
+        "ingredient.try_all_possible_item_id",
+        migrateIngredientMatchMode(),
         List.of(
-            "材料匹配模式, 可选 first/all",
-            "first: 使用第一个识别到的物品id（默认方式）",
-            "all: 收集物品所有可能的物品id，使用该模式将会消耗较多性能"
+            "材料匹配时是否使用所有可能的物品id",
+            "开启后，合成将会消耗更多性能"
         )
     );
+
+    private static boolean migrateIngredientMatchMode() {
+        BukkitConfigWrapper configWrapper = Craftorithm.instance().getConfigWrapperOrCreate("config.yml");
+        YamlConfiguration config = configWrapper.config();
+        if (!config.contains("ingredient_match_mode")) {
+            return false;
+        }
+        boolean tryAllPossibleItemId = "all".equalsIgnoreCase(config.getString("ingredient_match_mode", "first"));
+        config.set("ingredient_match_mode", null);
+        return tryAllPossibleItemId;
+    }
 
     public final static StringListConfig ITEM_PLUGIN_HOOK_PRIORITY = new StringListConfig(
         "item_plugin_hook_priority",
@@ -235,7 +243,6 @@ public class PluginConfigs {
         }
 
         if (newRules.isEmpty()) {
-            configWrapper.saveConfig();
             return Collections.emptyList();
         }
 

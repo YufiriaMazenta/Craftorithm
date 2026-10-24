@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.item.ingredientrestriction;
+package pers.yufiria.craftorithm.recipe.ingredient.restriction;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
