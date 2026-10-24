@@ -71,11 +71,11 @@ public enum ResultProcessorManager implements Listener {
 
     /**
      * 支持单个配置或列表配置:
-     *   enchantments: { type: add, data: ... }          # 单个
-     *   enchantments:                                    # 列表
-     *     - type: copy_from_source
-     *     - type: remove
-     *       data: { value: ["minecraft:sharpness"] }
+     * enchantments: { type: add, data: ... }          # 单个
+     * enchantments:                                    # 列表
+     * - type: copy_from_source
+     * - type: remove
+     * data: { value: ["minecraft:sharpness"] }
      */
     public void addRecipeProcessors(NamespacedKey recipeKey, ConfigurationSection processorsSection) {
         List<ResultProcessor> processors = new ArrayList<>();

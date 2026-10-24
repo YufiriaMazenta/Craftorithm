@@ -75,5 +75,5 @@ public class BlastingRecipe12107 extends RecipeBlasting implements NmsSingleItem
             )
         );
     }
-    
+
 }

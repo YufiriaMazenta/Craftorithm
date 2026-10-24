@@ -75,12 +75,12 @@ public final class TriggerLoader {
 
     /**
      * 解析单个触发器
-     *
+     * <p>
      * YAML 结构:
-     *   type: 'crafting'
-     *   recipes: [...]
-     *   conditions: [条件脚本]    ← 正向逻辑，成立=放行
-     *   actions: [动作脚本]
+     * type: 'crafting'
+     * recipes: [...]
+     * conditions: [条件脚本]    ← 正向逻辑，成立=放行
+     * actions: [动作脚本]
      */
     private static @Nullable Trigger parseTrigger(String fullId, ConfigurationSection section) {
         String typeKey = section.getString("type");
@@ -155,8 +155,8 @@ public final class TriggerLoader {
         String joined = "script".equals(mode)
             ? String.join("\n", condSources)
             : condSources.size() == 1
-              ? condSources.getFirst()
-              : condSources.stream().map(c -> "(" + c + ")").collect(Collectors.joining(" && "));
+            ? condSources.getFirst()
+            : condSources.stream().map(c -> "(" + c + ")").collect(Collectors.joining(" && "));
         return ScriptEngine.INSTANCE.compile(fullId + "_cond", joined);
     }
 

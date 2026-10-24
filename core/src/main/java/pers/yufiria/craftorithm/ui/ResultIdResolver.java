@@ -13,6 +13,7 @@ public interface ResultIdResolver {
 
     /**
      * 解析结果物品的ID
+     *
      * @param item 结果物品
      * @return 结果ID, 无法解析时返回null
      */

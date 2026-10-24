@@ -19,14 +19,13 @@ import java.util.function.Consumer;
  */
 public final class ConversationUtils {
 
-    private ConversationUtils() {}
-
     /**
      * 发起一次数字输入对话, 对话结束后刷新并重新打开菜单。
      * 输入合法数字时会回调 {@code onInput}, 非法输入由对话框架处理。
-     * @param player 进行输入的玩家
-     * @param menu 对话结束后需要重新打开的菜单
-     * @param hint 输入提示的语言节点
+     *
+     * @param player  进行输入的玩家
+     * @param menu    对话结束后需要重新打开的菜单
+     * @param hint    输入提示的语言节点
      * @param onInput 输入合法数字后的回调
      */
     public static void startNumberInput(

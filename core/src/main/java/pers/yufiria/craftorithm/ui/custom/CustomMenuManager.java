@@ -43,7 +43,8 @@ public enum CustomMenuManager implements LifecycleTask {
 
     /**
      * 为某玩家打开一个菜单
-     * @param player 要打开菜单的玩家
+     *
+     * @param player   要打开菜单的玩家
      * @param menuName 要打开的菜单ID
      * @param callback 如果打开失败了,要做什么
      */
@@ -110,7 +111,7 @@ public enum CustomMenuManager implements LifecycleTask {
         for (File menuFile : files) {
             boolean result = loadMenuCreatorFromConfigFile(menuFile);
             if (result) {
-                loadedMenuNum ++;
+                loadedMenuNum++;
             }
         }
         long elapsed = System.currentTimeMillis() - startTime;

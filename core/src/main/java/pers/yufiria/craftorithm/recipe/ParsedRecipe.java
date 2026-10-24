@@ -11,4 +11,5 @@ public record ParsedRecipe(
     RecipeType recipeType,
     BukkitConfigWrapper configWrapper,
     long createTime
-) {}
+) {
+}

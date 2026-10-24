@@ -135,10 +135,10 @@ public enum CraftorithmItemProvider implements ItemPluginHook, ItemProvider, Lif
                         ItemBucketKey.of(item),
                         fp -> newItemBucketMap()
                     ).put(namespacedItemId, item);
-            } catch (Exception e) {
-                LangUtils.info(Languages.ITEM_LOAD_EXCEPTION, CollectionsUtils.newStringHashMap("<item_name>", itemKey));
-                CrypticLib.error("Failed to load item " + itemKey, e);
-            }
+                } catch (Exception e) {
+                    LangUtils.info(Languages.ITEM_LOAD_EXCEPTION, CollectionsUtils.newStringHashMap("<item_name>", itemKey));
+                    CrypticLib.error("Failed to load item " + itemKey, e);
+                }
             }
         }
     }

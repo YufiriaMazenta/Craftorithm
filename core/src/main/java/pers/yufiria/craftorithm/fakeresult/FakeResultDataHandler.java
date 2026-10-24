@@ -223,6 +223,7 @@ public enum FakeResultDataHandler implements Listener, LifecycleTask {
     public record CacheRecipeData(
         @NotNull NamespacedKey recipeKey,
         int resultSlot
-    ) {}
+    ) {
+    }
 
 }

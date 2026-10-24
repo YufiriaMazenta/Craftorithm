@@ -8,16 +8,16 @@ import java.util.List;
 
 /**
  * 触发器数据模型
- *
+ * <p>
  * YAML 结构:
- *   type: 'crafting'
- *   recipes: [...]
- *   conditions: [条件脚本]    ← 正向逻辑，成立=放行
- *   actions: [动作脚本]
- *   priority: 0
- *   enabled: true
- *   cooldown: 0
- *   per-player: true
+ * type: 'crafting'
+ * recipes: [...]
+ * conditions: [条件脚本]    ← 正向逻辑，成立=放行
+ * actions: [动作脚本]
+ * priority: 0
+ * enabled: true
+ * cooldown: 0
+ * per-player: true
  */
 public class Trigger {
 
@@ -53,13 +53,33 @@ public class Trigger {
         this.perPlayer = perPlayer;
     }
 
-    public String id() { return id; }
-    public String typeKey() { return typeKey; }
-    public List<NamespacedKey> recipes() { return recipes; }
-    public int priority() { return priority; }
-    public boolean isEnabled() { return enabled; }
-    public long cooldownMillis() { return cooldownMillis; }
-    public boolean perPlayer() { return perPlayer; }
+    public String id() {
+        return id;
+    }
+
+    public String typeKey() {
+        return typeKey;
+    }
+
+    public List<NamespacedKey> recipes() {
+        return recipes;
+    }
+
+    public int priority() {
+        return priority;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public long cooldownMillis() {
+        return cooldownMillis;
+    }
+
+    public boolean perPlayer() {
+        return perPlayer;
+    }
 
     /**
      * 检查是否匹配

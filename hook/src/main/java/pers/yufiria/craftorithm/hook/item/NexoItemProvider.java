@@ -40,5 +40,4 @@ public enum NexoItemProvider implements ItemProvider {
     }
 
 
-
 }

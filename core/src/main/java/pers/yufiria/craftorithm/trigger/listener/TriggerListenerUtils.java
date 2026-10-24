@@ -10,11 +10,13 @@ import org.bukkit.inventory.ItemStack;
  */
 public final class TriggerListenerUtils {
 
-    private TriggerListenerUtils() {}
+    private TriggerListenerUtils() {
+    }
 
     /**
      * 判定本次点击是否真的产出了物品, 只有产出的点击才应该执行触发器 actions。
      * 鼠标上带着物品时, 只有 shift 点击才会把产物取出, 其余点击类型只是预览。
+     *
      * @param event 合成/锻造产物的点击事件
      * @return 是否真的产出了物品
      */

@@ -46,7 +46,9 @@
 
 ### 安装
 
-1. 从 [SpigotMC](https://www.spigotmc.org/resources/craftorithm-customized-crafting-management-plugin-1-13-1-20-folia-supported.108429/)、[Modrinth](https://modrinth.com/plugin/craftorithm) 或 [GitHub Releases](https://github.com/YufiriaMazenta/Craftorithm/releases) 下载插件
+1.
+从 [SpigotMC](https://www.spigotmc.org/resources/craftorithm-customized-crafting-management-plugin-1-13-1-20-folia-supported.108429/)、[Modrinth](https://modrinth.com/plugin/craftorithm)
+或 [GitHub Releases](https://github.com/YufiriaMazenta/Craftorithm/releases) 下载插件
 2. 将 JAR 文件放入 `plugins/` 目录
 3. 重启服务器
 
@@ -89,15 +91,15 @@ result_processors:
 
 **[完整文档](https://yufiriamazenta.github.io/Craftorithm-Docs/)**
 
-| 模块 | 说明 |
-|------|------|
-| [快速开始](https://yufiriamazenta.github.io/Craftorithm-Docs/guide/) | 安装、命令、权限 |
-| [配方系统](https://yufiriamazenta.github.io/Craftorithm-Docs/recipe/) | 多种配方类型详解 |
-| [触发器系统](https://yufiriamazenta.github.io/Craftorithm-Docs/trigger/) | 事件监听与条件动作 |
-| [脚本引擎](https://yufiriamazenta.github.io/Craftorithm-Docs/script/) | 语法与内置函数 |
-| [物品系统](https://yufiriamazenta.github.io/Craftorithm-Docs/item/) | 自定义物品与外部插件集成 |
-| [配置文件](https://yufiriamazenta.github.io/Craftorithm-Docs/config/) | 配置项说明 |
-| [UI 系统](https://yufiriamazenta.github.io/Craftorithm-Docs/ui/) | GUI 与自定义菜单 |
+| 模块                                                                     | 说明                     |
+|--------------------------------------------------------------------------|--------------------------|
+| [快速开始](https://yufiriamazenta.github.io/Craftorithm-Docs/guide/)     | 安装、命令、权限         |
+| [配方系统](https://yufiriamazenta.github.io/Craftorithm-Docs/recipe/)    | 多种配方类型详解         |
+| [触发器系统](https://yufiriamazenta.github.io/Craftorithm-Docs/trigger/) | 事件监听与条件动作       |
+| [脚本引擎](https://yufiriamazenta.github.io/Craftorithm-Docs/script/)    | 语法与内置函数           |
+| [物品系统](https://yufiriamazenta.github.io/Craftorithm-Docs/item/)      | 自定义物品与外部插件集成 |
+| [配置文件](https://yufiriamazenta.github.io/Craftorithm-Docs/config/)    | 配置项说明               |
+| [UI 系统](https://yufiriamazenta.github.io/Craftorithm-Docs/ui/)         | GUI 与自定义菜单         |
 
 ## bStats
 

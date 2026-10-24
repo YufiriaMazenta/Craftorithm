@@ -20,7 +20,8 @@ public class CollectionsUtils {
 
     /**
      * 移除二维列表首尾的全空白行（保留中间的空行）
-     * @param grid 二维列表
+     *
+     * @param grid    二维列表
      * @param isEmpty 判断元素是否为空的谓词
      */
     public static <T> void trimEmptyRows(List<List<T>> grid, Predicate<T> isEmpty) {
@@ -34,7 +35,8 @@ public class CollectionsUtils {
 
     /**
      * 移除二维列表首尾的全空白列（保留中间的空列）
-     * @param grid 二维列表
+     *
+     * @param grid    二维列表
      * @param isEmpty 判断元素是否为空的谓词
      */
     public static <T> void trimEmptyColumns(List<List<T>> grid, Predicate<T> isEmpty) {
@@ -76,7 +78,8 @@ public class CollectionsUtils {
 
     /**
      * 移除二维列表首尾的全空白行和列（保留中间的空白行/列）
-     * @param grid 二维列表
+     *
+     * @param grid    二维列表
      * @param isEmpty 判断元素是否为空的谓词
      */
     public static <T> void trimEmptyBorders(List<List<T>> grid, Predicate<T> isEmpty) {

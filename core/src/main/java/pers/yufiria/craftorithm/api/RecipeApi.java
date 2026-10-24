@@ -15,9 +15,9 @@ public enum RecipeApi {
     INSTANCE;
 
 
-
     /**
      * 根据配方Key获取配方，会从服务器里查找所有配方
+     *
      * @param recipeKey 配方Key
      * @return 配方，不存在返回null
      */
@@ -27,6 +27,7 @@ public enum RecipeApi {
 
     /**
      * 检查配方是否存在
+     *
      * @param recipeName 配方名称
      * @return 是否存在
      */
@@ -36,6 +37,7 @@ public enum RecipeApi {
 
     /**
      * 检查配方是否存在
+     *
      * @param recipeKey 配方Key
      * @return 是否存在
      */
@@ -45,6 +47,7 @@ public enum RecipeApi {
 
     /**
      * 获取所有Craftorithm配方
+     *
      * @return 配方映射副本
      */
     public @NotNull Map<NamespacedKey, Recipe> getCraftorithmRecipes() {
@@ -55,6 +58,7 @@ public enum RecipeApi {
 
     /**
      * 获取服务器配方Key缓存
+     *
      * @return 配方Key集合副本
      */
     public @NotNull Set<NamespacedKey> getServerRecipeKeys() {
@@ -63,6 +67,7 @@ public enum RecipeApi {
 
     /**
      * 获取配方类型
+     *
      * @param recipe 配方
      * @return 配方类型
      */
@@ -72,6 +77,7 @@ public enum RecipeApi {
 
     /**
      * 获取配方类型
+     *
      * @param typeId 类型ID
      * @return 配方类型，不存在返回null
      */
@@ -81,6 +87,7 @@ public enum RecipeApi {
 
     /**
      * 注册配方类型
+     *
      * @param type 配方类型
      * @return 是否成功
      */
@@ -90,6 +97,7 @@ public enum RecipeApi {
 
     /**
      * 获取配方组列表
+     *
      * @return 配方组ID列表
      */
     public @NotNull Collection<String> getRecipeGroups() {
@@ -98,6 +106,7 @@ public enum RecipeApi {
 
     /**
      * 获取配方组
+     *
      * @param groupId 配方组ID
      * @return 配方组，不存在返回null
      */
@@ -107,8 +116,9 @@ public enum RecipeApi {
 
     /**
      * 禁用配方
+     *
      * @param recipeKey 配方Key
-     * @param save 是否保存到配置
+     * @param save      是否保存到配置
      * @return 是否成功
      */
     public boolean disableRecipe(@NotNull NamespacedKey recipeKey, boolean save) {
@@ -117,8 +127,9 @@ public enum RecipeApi {
 
     /**
      * 禁用配方
-     * @param recipeKey 配方Key
-     * @param save 是否保存到配置
+     *
+     * @param recipeKey     配方Key
+     * @param save          是否保存到配置
      * @param updateRecipes 是否给玩家更新配方列表
      * @return 是否成功
      */
@@ -128,7 +139,8 @@ public enum RecipeApi {
 
     /**
      * 删除Craftorithm配方
-     * @param recipeId 配方ID
+     *
+     * @param recipeId   配方ID
      * @param deleteFile 是否删除配置文件
      * @return 是否成功
      */
@@ -138,7 +150,8 @@ public enum RecipeApi {
 
     /**
      * 删除Craftorithm配方
-     * @param recipeId 配方ID
+     *
+     * @param recipeId   配方ID
      * @param deleteFile 是否删除配置文件
      * @return 是否成功
      */
@@ -148,6 +161,7 @@ public enum RecipeApi {
 
     /**
      * 通过配方Key查找配方文件名
+     *
      * @param recipeKey 配方Key
      * @return 配方文件名，不存在返回null
      */
@@ -157,6 +171,7 @@ public enum RecipeApi {
 
     /**
      * 通过配方文件名查找配方Key
+     *
      * @param recipeFileName 配方文件名
      * @return 配方Key，不存在返回null
      */

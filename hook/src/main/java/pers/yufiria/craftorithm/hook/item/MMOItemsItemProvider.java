@@ -50,5 +50,4 @@ public enum MMOItemsItemProvider implements ItemProvider {
     }
 
 
-
 }

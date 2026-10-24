@@ -33,14 +33,14 @@ import java.util.Optional;
 
 /**
  * 内置动作函数模块
- *
+ * <p>
  * 使用示例:
- *   command "give %player% diamond 1"
- *   console "say hello"
- *   tell "&aHello!"
- *   take_money 100
- *   give_exp 50
- *   take_level 5
+ * command "give %player% diamond 1"
+ * console "say hello"
+ * tell "&aHello!"
+ * take_money 100
+ * give_exp 50
+ * take_level 5
  */
 public enum ActionModule implements ScriptModule {
 
@@ -102,7 +102,8 @@ public enum ActionModule implements ScriptModule {
                 //对应位置已经有物品了,那我们就尝试放入,如果不能放入就丢在地上
                 InventoryHelper.addItemOrDrop(topInventory, itemStackOpt.get());
             }
-        }, () -> {});
+        }, () -> {
+        });
         return ScriptValue.of(true);
     }
 
@@ -140,7 +141,8 @@ public enum ActionModule implements ScriptModule {
         }
         Player player = playerOpt.get();
         String menuName = args[0].asString();
-        CustomMenuManager.INSTANCE.openMenu(player, menuName, result -> {});
+        CustomMenuManager.INSTANCE.openMenu(player, menuName, result -> {
+        });
         return ScriptValue.nil();
     }
 
@@ -301,7 +303,6 @@ public enum ActionModule implements ScriptModule {
     }
 
 
-
     private ScriptValue close(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         Optional<Player> playerOpt = PlayerUtils.getPlayerOpt(PlayerUtils.getPlayerIdFromInvoker(ctx.invoker()));
         if (playerOpt.isEmpty()) {
@@ -359,8 +360,8 @@ public enum ActionModule implements ScriptModule {
     /**
      * sound <sound> [volume] [pitch] → 向玩家播放音频
      * 示例:
-     *   sound "entity.experience_orb.pickup"
-     *   sound "entity.experience_orb.pickup" 1.0 1.0
+     * sound "entity.experience_orb.pickup"
+     * sound "entity.experience_orb.pickup" 1.0 1.0
      */
     private ScriptValue sound(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {
         if (args.length < 1) return ScriptValue.nil();

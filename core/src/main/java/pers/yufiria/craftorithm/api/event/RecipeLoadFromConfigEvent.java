@@ -21,8 +21,10 @@ public class RecipeLoadFromConfigEvent extends Event implements EventCaller, Can
 
     private boolean cancel = false;
     private @NotNull Recipe recipe;
-    private @NotNull final NamespacedKey recipeKey;
-    private @NotNull final YamlConfiguration recipeConfig;
+    private @NotNull
+    final NamespacedKey recipeKey;
+    private @NotNull
+    final YamlConfiguration recipeConfig;
     private @NotNull RecipeRegister recipeRegister;
 
     public RecipeLoadFromConfigEvent(

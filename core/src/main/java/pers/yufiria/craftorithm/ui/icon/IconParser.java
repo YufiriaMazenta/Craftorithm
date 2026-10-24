@@ -23,7 +23,8 @@ public interface IconParser {
 
     /**
      * 解析 icon_type 在 iconTypes 内的物品显示图标, 其余类型按普通图标解析
-     * @param config 图标配置
+     *
+     * @param config    图标配置
      * @param iconTypes 需要解析为物品显示图标的 icon_type 集合
      */
     default Supplier<Icon> parseItemDisplayIcon(ConfigurationSection config, Set<String> iconTypes) {
@@ -32,8 +33,9 @@ public interface IconParser {
 
     /**
      * 解析 icon_type 在 iconTypes 内的物品显示图标, 其余类型按普通图标解析
-     * @param config 图标配置
-     * @param iconTypes 需要解析为物品显示图标的 icon_type 集合
+     *
+     * @param config       图标配置
+     * @param iconTypes    需要解析为物品显示图标的 icon_type 集合
      * @param slotIconType 若不为null, 则该 icon_type 会额外读取 ingredient_slot 写入图标数据
      */
     default Supplier<Icon> parseItemDisplayIcon(ConfigurationSection config, Set<String> iconTypes, @Nullable String slotIconType) {

@@ -29,7 +29,7 @@ import java.util.function.Supplier;
 /**
  * 有序合成配方编辑器
  * 布局与VanillaShapedCreator一致，预填充现有配方数据。
- *
+ * <p>
  * 材料槽位: 10,11,12 / 19,20,21 / 28,29,30 (3x3网格)
  * 结果槽位: 24
  * 返回按钮: 0

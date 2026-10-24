@@ -19,6 +19,7 @@ public enum ItemApi {
 
     /**
      * 获取一个Craftorithm物品
+     *
      * @param itemName 物品名称（格式: namespace:id 或 纯id）
      * @return 物品栈，不存在返回null
      */
@@ -28,6 +29,7 @@ public enum ItemApi {
 
     /**
      * 根据NamespacedItemIdStack获取物品
+     *
      * @param itemIdStack 物品ID栈
      * @return 物品栈，不存在返回 Optional.empty()
      */
@@ -37,8 +39,9 @@ public enum ItemApi {
 
     /**
      * 根据NamespacedItemIdStack获取物品（带玩家变量解析）
+     *
      * @param itemIdStack 物品ID栈
-     * @param player 玩家
+     * @param player      玩家
      * @return 物品栈，不存在返回 Optional.empty()
      */
     public Optional<ItemStack> getItem(@NotNull NamespacedItemIdStack itemIdStack, @Nullable Player player) {
@@ -47,7 +50,8 @@ public enum ItemApi {
 
     /**
      * 获取物品的NamespacedItemId
-     * @param item 物品栈
+     *
+     * @param item         物品栈
      * @param ignoreAmount 是否忽略数量
      * @return 物品ID，无法识别返回 Optional.empty()
      */
@@ -58,6 +62,7 @@ public enum ItemApi {
     /**
      * 注册一个物品插件挂钩
      * 通过此方式注册的挂钩会在重载时自动重新注册，不会丢失
+     *
      * @param hook 物品插件挂钩
      */
     public void registerItemPluginHook(@NotNull ItemPluginHook hook) {
@@ -66,6 +71,7 @@ public enum ItemApi {
 
     /**
      * 获取所有Craftorithm物品
+     *
      * @return 物品映射副本
      */
     public @NotNull Map<String, ItemStack> getCraftorithmItems() {

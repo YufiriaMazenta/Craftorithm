@@ -23,11 +23,7 @@ import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.permission.Permissions;
 import pers.yufiria.craftorithm.recipe.ParsedRecipe;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
-import pers.yufiria.craftorithm.ui.IngredientIdResolver;
-import pers.yufiria.craftorithm.ui.ResultIdResolver;
-import pers.yufiria.craftorithm.ui.SimpleIngredientIdResolver;
-import pers.yufiria.craftorithm.ui.SimpleResultIdResolver;
-import pers.yufiria.craftorithm.ui.BackableMenu;
+import pers.yufiria.craftorithm.ui.*;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIconParser;
 import pers.yufiria.craftorithm.ui.recipebook.BackIcon;
@@ -109,6 +105,7 @@ public abstract class RecipeEditor extends StoredMenu implements BackableMenu {
     /**
      * 创建返回按钮图标，从配置中读取外观
      * 子类调用此方法并传入自己的配置来创建返回按钮
+     *
      * @param config 返回按钮的配置节
      */
     protected Icon createBackIcon(ConfigurationSection config) {
@@ -120,6 +117,7 @@ public abstract class RecipeEditor extends StoredMenu implements BackableMenu {
      * 创建删除按钮图标，从配置中读取外观
      * 子类调用此方法并传入自己的配置来创建删除按钮
      * 点击后删除当前编辑的配方及其配置文件
+     *
      * @param config 删除按钮的配置节
      */
     protected Icon createDeleteIcon(ConfigurationSection config) {
@@ -159,8 +157,9 @@ public abstract class RecipeEditor extends StoredMenu implements BackableMenu {
 
     /**
      * 保存配方配置到文件并重新加载
+     *
      * @param configWrapper 配方配置
-     * @param callback 配方加载完成后的回调
+     * @param callback      配方加载完成后的回调
      */
     protected void saveRecipeEdit(BukkitConfigWrapper configWrapper, Runnable callback) {
         CrypticLibBukkit.scheduler().async(() -> {
@@ -186,7 +185,8 @@ public abstract class RecipeEditor extends StoredMenu implements BackableMenu {
     /**
      * 保存编辑后的配方。
      * 统一处理「取出配方配置 → 写入字段 → 落盘重载并重新注册 → 关闭菜单 → 发送成功提示」。
-     * @param player 操作玩家
+     *
+     * @param player      操作玩家
      * @param writeFields 写入该配方类型字段的回调
      */
     protected void saveEdit(@NotNull Player player, @NotNull Consumer<BukkitConfigWrapper> writeFields) {

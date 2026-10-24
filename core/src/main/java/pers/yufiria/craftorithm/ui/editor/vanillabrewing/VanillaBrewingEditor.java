@@ -29,18 +29,18 @@ import java.util.function.Supplier;
 /**
  * 酿造台配方编辑器
  * 布局与VanillaBrewingCreator一致。
- *
+ * <p>
  * 槽位（与Creator一致）:
- *   INPUT(被修改的药水): 11
- *   INGREDIENT(修改材料): 29
- *   RESULT(结果): 24
- *
+ * INPUT(被修改的药水): 11
+ * INGREDIENT(修改材料): 29
+ * RESULT(结果): 24
+ * <p>
  * 布局:
- *   #########
- *   ##I##FFF#
- *   ####AFRF#
- *   ##G##FFF#
- *   #########
+ * #########
+ * ##I##FFF#
+ * ####AFRF#
+ * ##G##FFF#
+ * #########
  */
 public final class VanillaBrewingEditor extends RecipeEditor {
 

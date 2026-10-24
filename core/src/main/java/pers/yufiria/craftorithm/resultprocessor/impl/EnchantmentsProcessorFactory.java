@@ -127,7 +127,8 @@ public enum EnchantmentsProcessorFactory implements ComponentProcessorFactory {
         });
     }
 
-    private record EnchantmentEntry(Enchantment enchantment, int level) {}
+    private record EnchantmentEntry(Enchantment enchantment, int level) {
+    }
 
     private List<EnchantmentEntry> parseEnchantments(@Nullable ConfigurationSection data) {
         if (data == null) return List.of();

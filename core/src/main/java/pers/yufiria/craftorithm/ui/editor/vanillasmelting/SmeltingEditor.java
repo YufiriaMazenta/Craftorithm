@@ -33,7 +33,7 @@ import java.util.function.Supplier;
  * 熔炉/高炉/烟熏炉/营火共用此类, 差异部分由SmeltingMenuType提供
  * 布局与SmeltingCreator一致，预填充现有配方数据。
  * 使用Conversation修改exp/time，与Creator一致。
- *
+ * <p>
  * 材料槽位: 20
  * 结果槽位: 24
  * exp/time通过图标点击触发Conversation修改

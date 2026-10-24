@@ -65,7 +65,8 @@ public class RecipeListMenu extends Menu implements BackableMenu, Multipage {
 
         switch (mode) {
             case NAME_ASC -> recipes.sort(Comparator.comparing(e -> e.getKey().getKey()));
-            case NAME_DESC -> recipes.sort(Comparator.comparing((Map.Entry<NamespacedKey, Recipe> e) -> e.getKey().getKey()).reversed());
+            case NAME_DESC ->
+                recipes.sort(Comparator.comparing((Map.Entry<NamespacedKey, Recipe> e) -> e.getKey().getKey()).reversed());
             case TIME_ASC -> recipes.sort(Comparator.comparingLong(e -> {
                 Long time = RecipeManager.INSTANCE.getRecipeCreateTime(e.getKey());
                 return time != null ? time : 0L;
@@ -157,7 +158,7 @@ public class RecipeListMenu extends Menu implements BackableMenu, Multipage {
     @Override
     public void preprocessIconWhenDraw(Integer slot, @NotNull Icon icon) {
         if (icon instanceof RecipeDisplayIcon recipeDisplayIcon) {
-            int index =  recipeSlotIndex++;
+            int index = recipeSlotIndex++;
             if (index < currentPageRecipes.size()) {
                 recipeDisplayIcon.setRecipeKey(currentPageRecipes.get(index));
             } else {

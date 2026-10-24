@@ -1,6 +1,3 @@
-import org.gradle.api.attributes.java.TargetJvmVersion
-import org.gradle.jvm.toolchain.JavaLanguageVersion
-
 plugins {
     `java-library`
     `maven-publish`

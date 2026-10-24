@@ -22,13 +22,13 @@ import java.util.Optional;
 
 /**
  * 内置条件函数模块
- *
+ * <p>
  * 使用示例:
- *   perm "craftorithm.special"
- *   papi "%player_level%" >= "10"
- *   level >= 10
- *   money >= 1000
- *   points >= 50
+ * perm "craftorithm.special"
+ * papi "%player_level%" >= "10"
+ * level >= 10
+ * money >= 1000
+ * points >= 50
  */
 public enum ConditionModule implements ScriptModule {
 
@@ -76,6 +76,7 @@ public enum ConditionModule implements ScriptModule {
     /**
      * 获取物品的id，物品对象需要在args中
      * 如果一个物品它不是已经定义的物品，那么将返回原版的id
+     *
      * @return
      */
     private ScriptValue matchItemId(ScriptContext ctx, ScriptVM vm, ScriptValue... args) {

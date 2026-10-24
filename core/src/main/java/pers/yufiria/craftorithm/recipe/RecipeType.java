@@ -18,7 +18,8 @@ public interface RecipeType {
 
     @NotNull String typeKey();
 
-    @Range(from = 0, to = 256) int typeId();
+    @Range(from = 0, to = 256)
+    int typeId();
 
     @NotNull RecipeParser<?> recipeParser();
 

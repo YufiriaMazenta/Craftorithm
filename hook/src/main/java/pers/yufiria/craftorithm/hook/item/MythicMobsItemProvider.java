@@ -46,5 +46,4 @@ public enum MythicMobsItemProvider implements ItemProvider {
     }
 
 
-
 }

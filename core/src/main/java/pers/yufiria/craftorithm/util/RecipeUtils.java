@@ -18,13 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.SmithingInventory;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -89,6 +83,7 @@ public class RecipeUtils {
     /**
      * 由3x3的材料id网格构建配方形状与材料映射。
      * 相同材料id会被分配同一个字符(a, b, c...), 并移除形状首尾的全空行与全空列。
+     *
      * @param ingredientIds 按行优先排列的9个材料id, 空槽位为null
      * @return 形状与材料映射; 若网格全空, 形状为空列表
      */
@@ -125,14 +120,17 @@ public class RecipeUtils {
 
     /**
      * 3x3合成网格的解析结果
-     * @param shape 配方形状行列表, 已移除首尾的全空行与全空列
+     *
+     * @param shape           配方形状行列表, 已移除首尾的全空行与全空列
      * @param ingredientIdMap 形状字符 -> 材料id
      */
-    public record ShapedGrid(List<String> shape, Map<Character, String> ingredientIdMap) {}
+    public record ShapedGrid(List<String> shape, Map<Character, String> ingredientIdMap) {
+    }
 
     /**
      * 计算本次合成的次数
      * 会考虑玩家背包容量
+     *
      * @param event 合成事件
      * @return 本次合成进行的次数
      */
@@ -149,6 +147,7 @@ public class RecipeUtils {
     /**
      * 计算本次锻造的次数
      * 会考虑玩家背包容量
+     *
      * @param event 锻造事件
      * @return 本次锻造进行的次数
      */
@@ -156,7 +155,7 @@ public class RecipeUtils {
         SmithingInventory inventory = event.getInventory();
         return calculateVanillaCraftNum(
             event.getClick(),
-            new ItemStack[] {
+            new ItemStack[]{
                 inventory.getItem(0),
                 inventory.getItem(1),
                 inventory.getItem(2)
@@ -169,7 +168,8 @@ public class RecipeUtils {
     /**
      * 计算在指定点击方式下,实际合成的次数
      * 会计算玩家背包容量
-     * @param click 点击方式
+     *
+     * @param click  点击方式
      * @param matrix 本次合成所用的所有物品
      * @param result 结果物品
      * @param player 进行合成的玩家
@@ -221,6 +221,7 @@ public class RecipeUtils {
 
     /**
      * 为在线的所有玩家解锁配方（支持正则表达式）
+     *
      * @param recipeKeyPattern 配方key的正则表达式,如果不是正则则解析为{@link NamespacedKey}
      */
     public static void discoverRecipeForOnlinePlayers(String recipeKeyPattern) {
@@ -236,36 +237,41 @@ public class RecipeUtils {
 
     /**
      * 为玩家解锁配方(支持正则表达式)
-     * @param target 要解锁的玩家
+     *
+     * @param target           要解锁的玩家
      * @param recipeKeyPattern 配方key的正则表达式,如果不是正则则解析为{@link NamespacedKey}
-     * @param callback 解锁完毕后的回调
-    **/
+     * @param callback         解锁完毕后的回调
+     **/
     public static void discoverRecipe(Player target, String recipeKeyPattern, Consumer<Integer> callback) {
         CrypticLibBukkit.scheduler().async(() -> {
             List<NamespacedKey> discoverRecipes = matchRecipeKeys(recipeKeyPattern);
             CrypticLibBukkit.scheduler().runOnEntity(target, () -> {
                 callback.accept(target.discoverRecipes(discoverRecipes));
-            }, () -> {});
+            }, () -> {
+            });
         });
     }
 
     /**
      * 为玩家取消解锁配方(支持正则表达式)
-     * @param target 要解锁的玩家
+     *
+     * @param target           要解锁的玩家
      * @param recipeKeyPattern 配方key的正则表达式,如果不是正则则解析为{@link NamespacedKey}
-     * @param callback 取消解锁完毕后的回调
+     * @param callback         取消解锁完毕后的回调
      **/
     public static void undiscoverRecipe(Player target, String recipeKeyPattern, Consumer<Integer> callback) {
         CrypticLibBukkit.scheduler().async(() -> {
             List<NamespacedKey> undiscoverRecipes = matchRecipeKeys(recipeKeyPattern);
             CrypticLibBukkit.scheduler().runOnEntity(target, () -> {
                 callback.accept(target.undiscoverRecipes(undiscoverRecipes));
-            }, () -> {});
+            }, () -> {
+            });
         });
     }
 
     /**
      * 为在线的所有玩家取消解锁配方（支持正则表达式）
+     *
      * @param recipeKeyPattern 配方key的正则表达式,如果不是正则则解析为{@link NamespacedKey}
      */
     public static void undiscoverRecipeForOnlinePlayers(String recipeKeyPattern) {

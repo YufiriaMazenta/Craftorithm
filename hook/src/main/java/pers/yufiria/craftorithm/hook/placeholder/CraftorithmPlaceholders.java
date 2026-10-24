@@ -12,8 +12,9 @@ public class CraftorithmPlaceholders extends PlaceholderExpansion {
 
     public static final CraftorithmPlaceholders INSTANCE = new CraftorithmPlaceholders();
 
-    private CraftorithmPlaceholders() {}
-    
+    private CraftorithmPlaceholders() {
+    }
+
     @Override
     public @NotNull String getIdentifier() {
         return "craftorithm";

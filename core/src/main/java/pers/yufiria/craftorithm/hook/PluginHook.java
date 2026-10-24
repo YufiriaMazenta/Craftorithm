@@ -8,13 +8,15 @@ public interface PluginHook {
 
     /**
      * 尝试挂钩插件,返回挂钩结果
+     *
      * @return 插件挂钩结果
      */
     default boolean hook() {
         return isPluginEnabled();
     }
 
-    default void unhook() {}
+    default void unhook() {
+    }
 
     default boolean isPluginEnabled() {
         return Bukkit.getPluginManager().isPluginEnabled(pluginName());

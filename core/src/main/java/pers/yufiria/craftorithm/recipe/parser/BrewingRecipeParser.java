@@ -8,9 +8,9 @@ import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.recipe.BrewingRecipe;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 import pers.yufiria.craftorithm.recipe.ingredient.ItemIdRecipeChoiceParser;
 import pers.yufiria.craftorithm.recipe.ingredient.RecipeChoiceParser;
-import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 
 public enum BrewingRecipeParser implements RecipeParser<BrewingRecipe> {
 

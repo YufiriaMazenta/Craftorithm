@@ -32,6 +32,7 @@ public interface ItemProvider {
 
     /**
      * 输出该物品提供源抛出的异常, 同一物品提供源在时间窗口内不重复输出
+     *
      * @param throwable 物品提供源抛出的异常
      */
     default void logError(Throwable throwable) {

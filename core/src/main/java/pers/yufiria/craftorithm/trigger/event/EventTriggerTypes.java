@@ -371,7 +371,8 @@ public enum EventTriggerTypes {
         };
         Bukkit.getPluginManager().registerEvent(
             type.eventClass(),
-            new Listener() {},
+            new Listener() {
+            },
             EventPriority.HIGHEST,
             executor,
             Craftorithm.instance(),

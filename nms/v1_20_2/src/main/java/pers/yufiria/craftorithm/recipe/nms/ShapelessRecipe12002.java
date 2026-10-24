@@ -75,7 +75,7 @@ public class ShapelessRecipe12002 extends ShapelessRecipes implements NmsShapele
             recipe.setGroup(this.c());
             recipe.setCategory(CraftRecipe.getCategory(this.d()));
 
-            for(RecipeChoice choice : this.customIngredients) {
+            for (RecipeChoice choice : this.customIngredients) {
                 recipe.addIngredient(choice);
             }
 

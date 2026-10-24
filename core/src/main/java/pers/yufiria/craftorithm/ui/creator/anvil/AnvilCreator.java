@@ -16,16 +16,18 @@ import pers.yufiria.craftorithm.config.menu.creator.AnvilCreatorConfig;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
+import pers.yufiria.craftorithm.ui.ConversationUtils;
 import pers.yufiria.craftorithm.ui.SimpleResultIdResolver;
 import pers.yufiria.craftorithm.ui.StackedIngredientIdResolver;
-import pers.yufiria.craftorithm.ui.ConversationUtils;
 import pers.yufiria.craftorithm.ui.StoredMenuUtils;
 import pers.yufiria.craftorithm.ui.creator.RecipeCreator;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIconParser;
 import pers.yufiria.craftorithm.util.LangUtils;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class AnvilCreator extends RecipeCreator {

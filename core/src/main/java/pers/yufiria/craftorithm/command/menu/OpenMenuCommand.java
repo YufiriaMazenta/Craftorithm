@@ -2,7 +2,6 @@ package pers.yufiria.craftorithm.command.menu;
 
 import crypticlib.Invoker;
 import crypticlib.command.CommandContext;
-import pers.yufiria.craftorithm.command.AbstractSubcommand;
 import crypticlib.command.CommandInfo;
 import crypticlib.perm.PermInfo;
 import crypticlib.ui.menu.Menu;
@@ -10,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.yufiria.craftorithm.command.AbstractSubcommand;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.permission.Permissions;
 import pers.yufiria.craftorithm.ui.custom.CustomMenuManager;

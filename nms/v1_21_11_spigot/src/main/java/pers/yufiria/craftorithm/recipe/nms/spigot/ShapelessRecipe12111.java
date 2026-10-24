@@ -9,9 +9,9 @@ import org.bukkit.craftbukkit.v1_21_R7.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.v1_21_R7.inventory.CraftShapelessRecipe;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapelessRecipe;
-import pers.yufiria.craftorithm.recipe.nms.input.BukkitCraftingInput;
 import pers.yufiria.craftorithm.recipe.nms.CachedBukkitRecipe;
 import pers.yufiria.craftorithm.recipe.nms.NmsShapelessRecipe;
+import pers.yufiria.craftorithm.recipe.nms.input.BukkitCraftingInput;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.ArrayList;

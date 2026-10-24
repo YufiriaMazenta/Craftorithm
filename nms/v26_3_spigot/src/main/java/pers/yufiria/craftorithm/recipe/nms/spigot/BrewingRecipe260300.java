@@ -24,9 +24,13 @@ public class BrewingRecipe260300 extends BrewingRecipe implements NmsBrewingReci
     private final CachedBukkitRecipe cachedBukkitRecipe = new CachedBukkitRecipe();
     static CraftRecipe toolCraftRecipe = new CraftRecipe() {
         @Override
-        public org.bukkit.inventory.@NotNull ItemStack getResult() {return null;}
+        public org.bukkit.inventory.@NotNull ItemStack getResult() {
+            return null;
+        }
+
         @Override
-        public void addToCraftingManager() {}
+        public void addToCraftingManager() {
+        }
     };
 
     public BrewingRecipe260300(

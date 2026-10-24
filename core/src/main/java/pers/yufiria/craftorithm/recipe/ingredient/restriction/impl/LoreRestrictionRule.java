@@ -23,6 +23,7 @@ public final class LoreRestrictionRule implements IngredientRestrictionRule {
         public @NotNull String type() {
             return "lore";
         }
+
         @Override
         public @NotNull IngredientRestrictionRule load(@NotNull ConfigurationSection section) {
             String lore = section.getString("lore", "");

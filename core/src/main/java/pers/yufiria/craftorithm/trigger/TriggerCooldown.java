@@ -16,7 +16,8 @@ public enum TriggerCooldown {
     /**
      * 冷却记录key：triggerId + 玩家（perPlayer）或仅 triggerId（global）
      */
-    private record CooldownKey(String triggerId, @Nullable UUID player) {}
+    private record CooldownKey(String triggerId, @Nullable UUID player) {
+    }
 
     private final Map<CooldownKey, Long> cooldownMap = new ConcurrentHashMap<>();
 

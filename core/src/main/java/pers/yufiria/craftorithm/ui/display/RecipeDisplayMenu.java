@@ -51,7 +51,8 @@ public abstract class RecipeDisplayMenu<T extends Recipe> extends TranslatableMe
      * 按图标的 icon_type 设置其显示物品。
      * icon_type 为 {@link RecipeDisplayManager#ICON_TYPE_RESULT} 时统一显示配方结果,
      * 其余类型交由 {@code iconTypeHandlers} 处理, 未注册的类型不做处理。
-     * @param icon 待处理的图标, 非物品显示图标会被忽略
+     *
+     * @param icon             待处理的图标, 非物品显示图标会被忽略
      * @param iconTypeHandlers icon_type -> 显示逻辑
      */
     protected void applyIconType(@NotNull Icon icon, @NotNull Map<String, Consumer<ItemDisplayIcon>> iconTypeHandlers) {

@@ -13,9 +13,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.StonecutterInventory;
 import org.bukkit.inventory.StonecuttingRecipe;
 import pers.yufiria.craftorithm.item.ItemManager;
+import pers.yufiria.craftorithm.recipe.worldisolation.WorldIsolationDataHandler;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessorManager;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessors;
-import pers.yufiria.craftorithm.recipe.worldisolation.WorldIsolationDataHandler;
 
 import java.util.Optional;
 

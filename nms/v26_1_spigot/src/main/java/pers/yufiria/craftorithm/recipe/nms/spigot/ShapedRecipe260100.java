@@ -10,10 +10,10 @@ import org.bukkit.craftbukkit.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.inventory.CraftShapedRecipe;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
-import pers.yufiria.craftorithm.recipe.nms.input.BukkitCraftingInput;
 import pers.yufiria.craftorithm.recipe.nms.CachedBukkitRecipe;
 import pers.yufiria.craftorithm.recipe.nms.CustomShapedRecipePattern;
 import pers.yufiria.craftorithm.recipe.nms.NmsShapedRecipe;
+import pers.yufiria.craftorithm.recipe.nms.input.BukkitCraftingInput;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.ArrayList;

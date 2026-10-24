@@ -2,11 +2,11 @@ package pers.yufiria.craftorithm.command.recipe;
 
 import crypticlib.Invoker;
 import crypticlib.command.CommandContext;
-import pers.yufiria.craftorithm.command.AbstractSubcommand;
 import crypticlib.command.CommandInfo;
 import crypticlib.perm.PermInfo;
 import org.bukkit.NamespacedKey;
 import org.jetbrains.annotations.NotNull;
+import pers.yufiria.craftorithm.command.AbstractSubcommand;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.permission.Permissions;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
@@ -42,8 +42,7 @@ public final class RemoveCommand extends AbstractSubcommand {
 
         if (RecipeManager.INSTANCE.removeCraftorithmRecipe(args.getFirst(), true, true)) {
             LangUtils.sendLang(invoker, Languages.COMMAND_REMOVE_SUCCESS);
-        }
-        else
+        } else
             LangUtils.sendLang(invoker, Languages.COMMAND_REMOVE_NOT_EXIST);
     }
 
@@ -56,7 +55,6 @@ public final class RemoveCommand extends AbstractSubcommand {
         }
         return Collections.emptyList();
     }
-
 
 
 }

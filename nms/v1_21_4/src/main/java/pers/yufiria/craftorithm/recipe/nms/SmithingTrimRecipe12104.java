@@ -69,6 +69,7 @@ public class SmithingTrimRecipe12104 extends SmithingTrimRecipe implements NmsSm
         }
         return placementInfo;
     }
+
     @Override
     public Recipe toBukkitRecipe(NamespacedKey id) {
         return cachedBukkitRecipe.get(() -> new CraftSmithingTrimRecipe(id, template.orElse(null), base.orElse(null), addition.orElse(null)));

@@ -51,7 +51,8 @@ public interface CraftorithmRecipeRegistry {
 
     /**
      * 往服务器里注册一个配方
-     * @param bukkitRecipe 要注册的bukkit配方
+     *
+     * @param bukkitRecipe  要注册的bukkit配方
      * @param updateRecipes 是否在注册后向玩家广播配方更新，这个字段只在1.21.3以上有用，因为旧版本本来就不在此阶段更新
      * @return
      */
@@ -61,7 +62,7 @@ public interface CraftorithmRecipeRegistry {
      * 从服务器里删除一个配方
      * 这个方法需要在1.21.3以上的服务端重写，以实现更好的性能表现
      *
-     * @param recipeKey   要删除配方的key
+     * @param recipeKey     要删除配方的key
      * @param updateRecipes 是否在删除后向玩家广播配方更新，这个字段只在1.21.3以上有用，因为旧版本本来就不在此阶段更新
      */
     default boolean unregisterRecipe(NamespacedKey recipeKey, boolean updateRecipes) {

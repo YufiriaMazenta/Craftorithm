@@ -73,6 +73,7 @@ public record ItemGroup(
 
     /**
      * 将物品组类型与裸id解析为物品组
+     *
      * @return 解析出的物品组, 类型不支持或解析失败返回Optional.empty()
      */
     public static Optional<ItemGroup> of(@Nullable String groupType, @Nullable String groupId) {
@@ -85,6 +86,7 @@ public record ItemGroup(
 
     /**
      * 判断一个配方材料ID是否为物品组引用
+     *
      * @param ingredientId 配方材料ID
      * @return 是物品组引用时返回其类型与裸id, 否则返回Optional.empty()
      */
@@ -103,6 +105,7 @@ public record ItemGroup(
 
     /**
      * 从占位符物品识别出物品组
+     *
      * @return 识别出的物品组, 该物品不是占位符或解析失败返回Optional.empty()
      */
     public static Optional<ItemGroup> fromItemStack(ItemStack itemStack) {
@@ -126,6 +129,7 @@ public record ItemGroup(
     /**
      * 构建该物品组的占位符物品
      * 展示物品取组内第一个能解析出物品的条目, 在其原有lore之后追加物品组名称与物品列表lore
+     *
      * @return 构建出的占位符物品, 构建失败返回Optional.empty()
      */
     public Optional<ItemStack> toPlaceholderItem() {
@@ -150,6 +154,7 @@ public record ItemGroup(
 
     /**
      * 取组内第一个能解析为物品的条目
+     *
      * @return 该物品的克隆, 组内没有任何可解析的条目时返回null
      */
     private @Nullable ItemStack matchFirstItem() {

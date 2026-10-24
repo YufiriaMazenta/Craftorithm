@@ -25,8 +25,10 @@
 
 ## Why Craftorithm
 
-- Matches items by other plugin-provided item ID — renaming, adding enchantments, or even changing item types won't affect crafting
-- Implements functionality by injecting into the vanilla crafting system — performance far surpasses plugins that rely on event listeners, with full support for all vanilla features
+- Matches items by other plugin-provided item ID — renaming, adding enchantments, or even changing item types won't
+  affect crafting
+- Implements functionality by injecting into the vanilla crafting system — performance far surpasses plugins that rely
+  on event listeners, with full support for all vanilla features
 - Disable recipes from vanilla or other plugins
 - Result processors, triggers, custom chest menus, and other powerful customization features
 
@@ -46,7 +48,9 @@
 
 ### Installation
 
-1. Download from [SpigotMC](https://www.spigotmc.org/resources/craftorithm-customized-crafting-management-plugin-1-13-1-20-folia-supported.108429/), [Modrinth](https://modrinth.com/plugin/craftorithm), or [GitHub Releases](https://github.com/YufiriaMazenta/Craftorithm/releases)
+1. Download
+   from [SpigotMC](https://www.spigotmc.org/resources/craftorithm-customized-crafting-management-plugin-1-13-1-20-folia-supported.108429/), [Modrinth](https://modrinth.com/plugin/craftorithm),
+   or [GitHub Releases](https://github.com/YufiriaMazenta/Craftorithm/releases)
 2. Place the JAR file in the `plugins/` directory
 3. Restart the server
 
@@ -56,7 +60,8 @@
 /cra create vanilla_shaped
 ```
 
-Place ingredients and result items in the GUI, then click confirm. Recipes are automatically saved to `plugins/Craftorithm/recipes/`.
+Place ingredients and result items in the GUI, then click confirm. Recipes are automatically saved to
+`plugins/Craftorithm/recipes/`.
 
 ## Powerful Configuration
 
@@ -83,21 +88,22 @@ result_processors:
     type: merge_source
 ```
 
-Supports `copy_from_source` / `add` / `merge_source` / `remove` strategies for various component types including enchantments, attributes, lore, item flags, and more.
+Supports `copy_from_source` / `add` / `merge_source` / `remove` strategies for various component types including
+enchantments, attributes, lore, item flags, and more.
 
 ## Documentation
 
 **[Full Documentation](https://yufiriamazenta.github.io/Craftorithm-Docs/en/)**
 
-| Module | Description |
-|--------|-------------|
-| [Quick Start](https://yufiriamazenta.github.io/Craftorithm-Docs/en/guide/) | Installation, commands, permissions |
-| [Recipe System](https://yufiriamazenta.github.io/Craftorithm-Docs/en/recipe/) | Multiple recipe types explained |
-| [Trigger System](https://yufiriamazenta.github.io/Craftorithm-Docs/en/trigger/) | Event listeners and conditions |
-| [Script Engine](https://yufiriamazenta.github.io/Craftorithm-Docs/en/script/) | Syntax and built-in functions |
-| [Item System](https://yufiriamazenta.github.io/Craftorithm-Docs/en/item/) | Custom items and external plugins |
-| [Configuration](https://yufiriamazenta.github.io/Craftorithm-Docs/en/config/) | Configuration reference |
-| [UI System](https://yufiriamazenta.github.io/Craftorithm-Docs/en/ui/) | GUI and custom menus |
+| Module                                                                          | Description                         |
+|---------------------------------------------------------------------------------|-------------------------------------|
+| [Quick Start](https://yufiriamazenta.github.io/Craftorithm-Docs/en/guide/)      | Installation, commands, permissions |
+| [Recipe System](https://yufiriamazenta.github.io/Craftorithm-Docs/en/recipe/)   | Multiple recipe types explained     |
+| [Trigger System](https://yufiriamazenta.github.io/Craftorithm-Docs/en/trigger/) | Event listeners and conditions      |
+| [Script Engine](https://yufiriamazenta.github.io/Craftorithm-Docs/en/script/)   | Syntax and built-in functions       |
+| [Item System](https://yufiriamazenta.github.io/Craftorithm-Docs/en/item/)       | Custom items and external plugins   |
+| [Configuration](https://yufiriamazenta.github.io/Craftorithm-Docs/en/config/)   | Configuration reference             |
+| [UI System](https://yufiriamazenta.github.io/Craftorithm-Docs/en/ui/)           | GUI and custom menus                |
 
 ## bStats
 

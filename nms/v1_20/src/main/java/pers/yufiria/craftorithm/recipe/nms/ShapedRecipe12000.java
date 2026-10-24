@@ -85,10 +85,10 @@ public final class ShapedRecipe12000 extends ShapedRecipes implements NmsShapedR
 
         NonNullList<RecipeItemStack> nmsIngredients = NonNullList.a(shape.length * customPattern.width(), RecipeItemStack.a);
 
-        for(int i = 0; i < shape.length; ++i) {
+        for (int i = 0; i < shape.length; ++i) {
             String row = shape[i];
 
-            for(int j = 0; j < row.length(); ++j) {
+            for (int j = 0; j < row.length(); ++j) {
                 nmsIngredients.set(
                     i * customPattern.width() + j,
                     craftRecipe.toNMS(IngredientUtils.getBukkitChoice(bukkitIngredients.get(row.charAt(j))), false)

@@ -13,7 +13,10 @@ import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.util.LangUtils;
 import pers.yufiria.craftorithm.util.PlayerUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public final class AddCommand extends CommandNode {
 

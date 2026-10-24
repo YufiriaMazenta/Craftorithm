@@ -6,11 +6,11 @@ import crypticlib.lifecycle.LifecyclePhase;
 import crypticlib.lifecycle.LifecycleSchedule;
 import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskConfig;
+import crypticlib.util.Lazy;
 import org.bukkit.NamespacedKey;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.trigger.event.EventTriggerTypes;
-import crypticlib.util.Lazy;
 
 import java.io.File;
 import java.util.*;
@@ -187,7 +187,7 @@ public enum TriggerManager implements LifecycleTask {
         for (Trigger trigger : getTriggers(triggerType)) {
             if (!trigger.matches(context.recipeKey())) continue;
             if (cooldownManager.isOnCooldown(trigger, context.playerUniqueId())) {
-                denied ++;
+                denied++;
                 continue;
             }
             if (!trigger.evaluateConditions(context)) {
@@ -227,6 +227,7 @@ public enum TriggerManager implements LifecycleTask {
 
     /**
      * 获取一个触发器类型下的某个配方是否存在触发器
+     *
      * @param triggerType
      * @param recipeKey
      * @return

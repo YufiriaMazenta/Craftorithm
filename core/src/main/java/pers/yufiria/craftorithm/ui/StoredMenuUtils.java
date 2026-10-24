@@ -12,10 +12,12 @@ import java.util.Objects;
  */
 public final class StoredMenuUtils {
 
-    private StoredMenuUtils() {}
+    private StoredMenuUtils() {
+    }
 
     /**
      * 取出点击事件所属菜单当前存储的物品
+     *
      * @param event 菜单内的点击事件
      * @return 槽位 -> 物品的映射
      */

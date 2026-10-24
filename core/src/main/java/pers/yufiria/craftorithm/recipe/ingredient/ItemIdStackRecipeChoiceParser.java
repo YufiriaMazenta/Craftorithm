@@ -77,6 +77,7 @@ public enum ItemIdStackRecipeChoiceParser implements RecipeChoiceParser {
 
     /**
      * 解析「材料id [数量]」形式的原版材料, 例如 {@code stone} 或 {@code stone 8}
+     *
      * @param choiceStr 材料字符串
      * @return 材料与数量, 没有数量后缀时数量为1
      * @throws RecipeLoadException 材料id不合法时抛出
@@ -101,6 +102,7 @@ public enum ItemIdStackRecipeChoiceParser implements RecipeChoiceParser {
 
     /**
      * 剥离字符串尾部的数量后缀
+     *
      * @param keyStr 待剥离的字符串
      * @return 剥离数量后的字符串与数量, 没有数量后缀时数量为1
      */
@@ -119,7 +121,9 @@ public enum ItemIdStackRecipeChoiceParser implements RecipeChoiceParser {
         return new StringAmount(keyStr.substring(0, spaceIndex), amount);
     }
 
-    private record MaterialAmount(Material material, int amount) {}
+    private record MaterialAmount(Material material, int amount) {
+    }
 
-    private record StringAmount(String key, int amount) {}
+    private record StringAmount(String key, int amount) {
+    }
 }

@@ -6,9 +6,9 @@ import crypticlib.command.CommandContext;
 import crypticlib.command.CommandInfo;
 import crypticlib.perm.PermInfo;
 import org.jetbrains.annotations.NotNull;
+import pers.yufiria.craftorithm.ReloadManager;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.permission.Permissions;
-import pers.yufiria.craftorithm.ReloadManager;
 import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
 

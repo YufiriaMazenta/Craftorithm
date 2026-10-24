@@ -63,6 +63,7 @@ public enum ItemManager implements LifecycleTask {
 
     /**
      * 注册一个物品提供源
+     *
      * @param itemProvider
      */
     public void regItemProvider(ItemProvider itemProvider) {
@@ -75,6 +76,7 @@ public enum ItemManager implements LifecycleTask {
 
     /**
      * 删除一个物品提供源
+     *
      * @param providerNamespace
      * @return
      */
@@ -99,6 +101,7 @@ public enum ItemManager implements LifecycleTask {
 
     /**
      * 根据名字获取一个物品
+     *
      * @return 获取到的物品，不存在返回 Optional.empty()
      */
     public Optional<ItemStack> matchItem(NamespacedItemId itemId) {
@@ -107,6 +110,7 @@ public enum ItemManager implements LifecycleTask {
 
     /**
      * 根据名字获取一个物品
+     *
      * @return 获取到的物品，不存在返回 Optional.empty()
      */
     public Optional<ItemStack> matchItem(NamespacedItemIdStack stackedItemId) {
@@ -115,6 +119,7 @@ public enum ItemManager implements LifecycleTask {
 
     /**
      * 根据名字获取一个物品,并解析玩家变量
+     *
      * @return 获取到的物品，不存在返回 Optional.empty()
      */
     public Optional<ItemStack> matchItem(NamespacedItemIdStack stackedItemId, @Nullable OfflinePlayer player) {
@@ -148,6 +153,7 @@ public enum ItemManager implements LifecycleTask {
     /**
      * 刷新物品
      * 仅对存在动态数据的物品生效
+     *
      * @param result 待刷新的物品, 会被就地修改
      * @param player 解析物品时用于替换玩家变量的玩家, 可为null
      */
@@ -169,6 +175,7 @@ public enum ItemManager implements LifecycleTask {
     /**
      * 获取一个物品的完整id,包含命名空间和id
      * 如果该物品完全没有数据值, 那么将会返回原版物品id
+     *
      * @param item 传入的物品
      * @return 传入的物品id，未找到返回 Optional.empty()
      */
@@ -189,6 +196,7 @@ public enum ItemManager implements LifecycleTask {
      * 获取一个物品的完整id,包含命名空间和id
      * 如果无法在已经挂钩的其他插件里找到这个物品，但它又不为空气，那么将会返回原版物品id
      * 与{@link ItemManager#matchItemId(ItemStack, boolean)}不同, 无论物品是否有数据值, 在没有其他插件认领的情况下都会返回原版物品id
+     *
      * @param item 传入的物品
      * @return 传入的物品id
      */
@@ -227,8 +235,9 @@ public enum ItemManager implements LifecycleTask {
 
     /**
      * 将物品id与物品数量组合为物品id栈
-     * @param itemId 物品id
-     * @param item 取数量的物品
+     *
+     * @param itemId       物品id
+     * @param item         取数量的物品
      * @param ignoreAmount 是否忽略数量, 为true时数量恒为1
      */
     private NamespacedItemIdStack stackOf(NamespacedItemId itemId, ItemStack item, boolean ignoreAmount) {
@@ -237,6 +246,7 @@ public enum ItemManager implements LifecycleTask {
 
     /**
      * 获取一个物品的完整ID,包含命名空间与id,如果物品未找到,会将此物品保存
+     *
      * @param item 传入的物品
      * @return 传入的物品id
      */
@@ -266,6 +276,7 @@ public enum ItemManager implements LifecycleTask {
 
     /**
      * 获取原版物品
+     *
      * @param itemId 物品的ID
      * @param amount 物品数量
      * @return 物品，不存在返回 Optional.empty()
@@ -405,7 +416,8 @@ public enum ItemManager implements LifecycleTask {
 
     /**
      * 检查物品是否允许参与指定配方
-     * @param items 物品数组
+     *
+     * @param items     物品数组
      * @param recipeKey 配方的NamespacedKey
      * @return 允许合成返回true，被规则阻止返回false
      */
@@ -427,7 +439,8 @@ public enum ItemManager implements LifecycleTask {
 
     /**
      * 检查物品是否允许参与指定配方
-     * @param items 物品数组
+     *
+     * @param items     物品数组
      * @param recipeKey 配方的NamespacedKey
      * @return 允许合成返回true，被规则阻止返回false
      */

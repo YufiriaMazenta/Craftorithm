@@ -23,13 +23,13 @@ import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.recipe.ingredient.ItemIdStackRecipeChoice;
+import pers.yufiria.craftorithm.recipe.worldisolation.WorldIsolationDataHandler;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessorManager;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessors;
 import pers.yufiria.craftorithm.trigger.TriggerContext;
 import pers.yufiria.craftorithm.trigger.listener.AnvilTriggerHandler;
 import pers.yufiria.craftorithm.util.EventUtils;
 import pers.yufiria.craftorithm.util.PlayerUtils;
-import pers.yufiria.craftorithm.recipe.worldisolation.WorldIsolationDataHandler;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

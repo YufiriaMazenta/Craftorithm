@@ -252,7 +252,9 @@ public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
 
     // ==================== 迭代器实现 ====================
 
-    /** 键迭代器：基于 keys 数组，返回原始键对象 */
+    /**
+     * 键迭代器：基于 keys 数组，返回原始键对象
+     */
     private class KeyIterator implements Iterator<K> {
         private int cursor = 0;      // 下一个要检查的位置
         private int nextIndex = -1;  // 找到的下一个有效索引
@@ -294,7 +296,9 @@ public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
         }
     }
 
-    /** 值迭代器：基于 table 数组，正确处理 NULL_VALUE */
+    /**
+     * 值迭代器：基于 table 数组，正确处理 NULL_VALUE
+     */
     private class ValuesIterator implements Iterator<V> {
         private int cursor = 0;
         private int nextIndex = -1;
@@ -338,7 +342,9 @@ public class RecipeTypeMap<K extends RecipeType, V> implements Map<K, V> {
         }
     }
 
-    /** 条目迭代器：基于 keys 和 table，返回原始键和对应值 */
+    /**
+     * 条目迭代器：基于 keys 和 table，返回原始键和对应值
+     */
     private class EntryIterator implements Iterator<Entry<K, V>> {
         private int cursor = 0;
         private int nextIndex = -1;

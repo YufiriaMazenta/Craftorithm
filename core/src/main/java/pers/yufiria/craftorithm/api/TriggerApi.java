@@ -11,6 +11,7 @@ public enum TriggerApi {
 
     /**
      * 获取触发器管理器
+     *
      * @return 触发器管理器实例
      */
     public @NotNull TriggerManager getTriggerManager() {
@@ -19,8 +20,9 @@ public enum TriggerApi {
 
     /**
      * 触发指定类型的触发器
+     *
      * @param triggerType 触发器类型
-     * @param context 触发上下文
+     * @param context     触发上下文
      * @return 是否有触发器被执行
      */
     public boolean fireTrigger(@NotNull TriggerType triggerType, @NotNull TriggerContext context) {

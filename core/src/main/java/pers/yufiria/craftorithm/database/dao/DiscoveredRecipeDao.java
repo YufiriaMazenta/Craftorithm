@@ -171,7 +171,8 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
                         .map(NamespacedKey::fromString)
                         .filter(Objects::nonNull)
                         .toList();
-                    CrypticLibBukkit.scheduler().runOnEntity(player, () -> player.discoverRecipes(keys), () -> {});
+                    CrypticLibBukkit.scheduler().runOnEntity(player, () -> player.discoverRecipes(keys), () -> {
+                    });
                 }
             } catch (Exception e) {
                 CrypticLib.error("Failed to load discovered recipes for " + player.getName() + ": " + e.getMessage());

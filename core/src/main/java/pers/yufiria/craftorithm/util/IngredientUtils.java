@@ -47,7 +47,8 @@ public class IngredientUtils {
             Field field = Tag.class.getField(upperTagKey);
             reflectTag = (Tag<Material>) field.get(null);
             return Optional.ofNullable(reflectTag);
-        } catch (NoSuchFieldException | IllegalAccessException ignored) {}
+        } catch (NoSuchFieldException | IllegalAccessException ignored) {
+        }
         NamespacedKey tagKey = NamespacedKey.fromString(tagKeyStr);
         return Optional.ofNullable(getTag(tagKey));
     }
@@ -82,6 +83,7 @@ public class IngredientUtils {
     /**
      * 回溯匹配
      * 用于无序配方判断材料是否足够
+     *
      * @param items
      * @param choices
      * @return

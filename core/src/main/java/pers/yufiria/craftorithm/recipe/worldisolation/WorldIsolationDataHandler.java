@@ -90,6 +90,7 @@ public enum WorldIsolationDataHandler implements Listener, LifecycleTask {
         return Bukkit.getWorld(worldName) != null;
     }
 
-    public record EnableWorlds(List<String> worlds) {}
+    public record EnableWorlds(List<String> worlds) {
+    }
 
 }

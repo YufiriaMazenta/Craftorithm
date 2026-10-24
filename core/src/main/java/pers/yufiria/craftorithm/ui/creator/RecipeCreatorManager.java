@@ -52,6 +52,7 @@ public enum RecipeCreatorManager implements LifecycleTask {
 
     /**
      * 已注册创建器的配方类型集合，用于命令补全
+     *
      * @return 配方类型集合
      */
     public Set<RecipeType> recipeTypes() {

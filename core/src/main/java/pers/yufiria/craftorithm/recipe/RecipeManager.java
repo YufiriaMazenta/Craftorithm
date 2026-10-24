@@ -305,7 +305,7 @@ public enum RecipeManager implements LifecycleTask {
      *
      * @param recipeFileName      配方文件的名字,当配方文件里不存在recipe_id这个配置时,会尝试使用文件名字作为配方id
      * @param recipeConfigWrapper 配方的配置文件
-     * @param updateRecipes 是否向玩家更新配方列表
+     * @param updateRecipes       是否向玩家更新配方列表
      * @return
      */
     public boolean loadRecipeFromConfig(String recipeFileName, BukkitConfigWrapper recipeConfigWrapper, boolean updateRecipes) {
@@ -376,6 +376,7 @@ public enum RecipeManager implements LifecycleTask {
     /**
      * 禁用某配方
      * 会将指定配方从服务器里卸载,并存入配方垃圾箱
+     *
      * @param recipeKey
      * @param save
      * @return
@@ -415,6 +416,7 @@ public enum RecipeManager implements LifecycleTask {
 
     /**
      * 保存一个被禁用的配方
+     *
      * @param recipeKey 被禁用的配方Key
      */
     private void addDisabledRecipes2Config(NamespacedKey recipeKey) {
@@ -458,6 +460,7 @@ public enum RecipeManager implements LifecycleTask {
 
     /**
      * 查看某名字的配方是否存在
+     *
      * @param recipeName 需要查询的配方名字
      * @return 是否存在
      */
@@ -468,6 +471,7 @@ public enum RecipeManager implements LifecycleTask {
 
     /**
      * 检查某配方是否存在
+     *
      * @param recipeKey
      * @return
      */
@@ -523,6 +527,7 @@ public enum RecipeManager implements LifecycleTask {
     /**
      * 获取配方相关的配置文件
      * 若不是由Craftorithm添加的配方,可能没有相关文件
+     *
      * @param recipeKey 配方key
      */
     public @Nullable YamlConfiguration getRecipeConfig(NamespacedKey recipeKey) {
@@ -627,7 +632,7 @@ public enum RecipeManager implements LifecycleTask {
                 try {
                     boolean result = registerParsedRecipe(parsed, false);
                     if (result) {
-                        recipeNum ++;
+                        recipeNum++;
                     }
                 } catch (Throwable throwable) {
                     LangUtils.info(Languages.RECIPE_LOAD_EXCEPTION, CollectionsUtils.newStringHashMap("<recipe_name>", parsed.recipeFileName()));
@@ -637,7 +642,7 @@ public enum RecipeManager implements LifecycleTask {
             long thisTickUseMs = System.currentTimeMillis() - startTime;
             CrypticLib.info("Registered " + recipeNum + " recipes in " + thisTickUseMs + "ms");
             useMilliseconds += thisTickUseMs;
-            useTick ++;
+            useTick++;
         }
 
     }

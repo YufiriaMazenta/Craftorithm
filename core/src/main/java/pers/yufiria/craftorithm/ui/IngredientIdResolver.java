@@ -11,6 +11,7 @@ public interface IngredientIdResolver {
 
     /**
      * 解析材料物品的ID
+     *
      * @param item 材料物品
      * @return 材料ID, 无法解析时返回null
      */

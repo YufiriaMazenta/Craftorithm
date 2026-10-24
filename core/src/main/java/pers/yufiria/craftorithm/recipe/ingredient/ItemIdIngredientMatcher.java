@@ -19,7 +19,7 @@ import java.util.Optional;
 public interface ItemIdIngredientMatcher {
 
     Collection<NamespacedItemId> itemIds();
-    
+
     default boolean matches(@NotNull ItemStack item) {
         if (PluginConfigs.INGREDIENT_TRY_ALL_POSSIBLE_ITEM_ID.value()) {
             if (!item.hasItemMeta()) {

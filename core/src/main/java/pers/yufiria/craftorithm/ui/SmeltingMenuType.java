@@ -172,7 +172,8 @@ public enum SmeltingMenuType {
         ConfigSectionConfig categoryIconMisc,
         IntConfig defaultExp,
         IntConfig defaultTime
-    ) {}
+    ) {
+    }
 
     public record EditorConfigs(
         StringConfig title,
@@ -186,6 +187,7 @@ public enum SmeltingMenuType {
         ConfigSectionConfig categoryIconFood,
         ConfigSectionConfig categoryIconBlocks,
         ConfigSectionConfig categoryIconMisc
-    ) {}
+    ) {
+    }
 
 }

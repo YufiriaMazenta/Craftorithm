@@ -18,25 +18,27 @@ import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.item.exception.ItemNotFoundException;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.recipe.anvil.AnvilRecipe;
+import pers.yufiria.craftorithm.ui.ConversationUtils;
 import pers.yufiria.craftorithm.ui.SimpleResultIdResolver;
 import pers.yufiria.craftorithm.ui.StackedIngredientIdResolver;
-import pers.yufiria.craftorithm.ui.ConversationUtils;
 import pers.yufiria.craftorithm.ui.StoredMenuUtils;
 import pers.yufiria.craftorithm.ui.editor.RecipeEditor;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIconParser;
 import pers.yufiria.craftorithm.util.LangUtils;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 /**
  * 铁砧配方编辑器
  * 布局与AnvilCreator一致。
- *
+ * <p>
  * 槽位（与Creator一致）:
- *   BASE: 10, ADDITION: 12, RESULT: 16
- *   costLevel通过Conversation修改
+ * BASE: 10, ADDITION: 12, RESULT: 16
+ * costLevel通过Conversation修改
  */
 public final class AnvilEditor extends RecipeEditor {
 

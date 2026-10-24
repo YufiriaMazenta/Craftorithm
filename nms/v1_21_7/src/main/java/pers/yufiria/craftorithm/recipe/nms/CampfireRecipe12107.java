@@ -12,7 +12,7 @@ import org.bukkit.inventory.RecipeChoice;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
 public class CampfireRecipe12107 extends RecipeCampfire implements NmsSingleItemRecipe {
-    
+
     private final NamespacedKey recipeKey;
     private final RecipeChoice ingredient;
     private final CachedBukkitRecipe cachedBukkitRecipe = new CachedBukkitRecipe();

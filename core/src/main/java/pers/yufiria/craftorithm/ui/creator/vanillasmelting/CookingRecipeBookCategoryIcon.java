@@ -10,10 +10,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.recipe.CookingBookCategory;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
+import pers.yufiria.craftorithm.ui.icon.TranslatableIconParser;
 
 import java.util.List;
 import java.util.Objects;
-import pers.yufiria.craftorithm.ui.icon.TranslatableIconParser;
 
 /**
  * 熔炼配方的配方书分类图标

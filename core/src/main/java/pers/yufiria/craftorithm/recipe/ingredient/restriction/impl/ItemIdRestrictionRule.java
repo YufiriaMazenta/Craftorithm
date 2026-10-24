@@ -5,12 +5,11 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
+import pers.yufiria.craftorithm.recipe.ingredient.ItemIdIngredientMatcher;
 import pers.yufiria.craftorithm.recipe.ingredient.restriction.IngredientRestrictionRule;
 import pers.yufiria.craftorithm.recipe.ingredient.restriction.IngredientRestrictionRuleFactory;
 import pers.yufiria.craftorithm.recipe.ingredient.restriction.RecipeKeyMatcher;
-import pers.yufiria.craftorithm.recipe.ingredient.ItemIdIngredientMatcher;
 
 import java.util.Collection;
 import java.util.List;
@@ -27,6 +26,7 @@ public final class ItemIdRestrictionRule implements IngredientRestrictionRule, I
         public @NotNull String type() {
             return "item_id";
         }
+
         @Override
         public @NotNull IngredientRestrictionRule load(@NotNull ConfigurationSection section) {
             String itemId = section.getString("item_id", "");

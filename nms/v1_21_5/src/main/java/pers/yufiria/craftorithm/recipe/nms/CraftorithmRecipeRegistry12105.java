@@ -57,7 +57,7 @@ public enum CraftorithmRecipeRegistry12105 implements CraftorithmRecipeRegistry,
             }
             case StonecuttingRecipe stonecuttingRecipe -> {
                 CraftStonecuttingRecipe craftStonecuttingRecipe = CraftStonecuttingRecipe.fromBukkitRecipe(stonecuttingRecipe);
-                recipeHolder =  new RecipeHolder<>(
+                recipeHolder = new RecipeHolder<>(
                     CraftRecipe.toMinecraft(craftStonecuttingRecipe.getKey()),
                     new RecipeStonecutting(
                         craftStonecuttingRecipe.getGroup(),
