@@ -90,17 +90,6 @@ public class PluginConfigs {
         )
     );
 
-    private static boolean migrateIngredientMatchMode() {
-        BukkitConfigWrapper configWrapper = Craftorithm.instance().getConfigWrapperOrCreate("config.yml");
-        YamlConfiguration config = configWrapper.config();
-        if (!config.contains("ingredient_match_mode")) {
-            return false;
-        }
-        boolean tryAllPossibleItemId = "all".equalsIgnoreCase(config.getString("ingredient_match_mode", "first"));
-        config.set("ingredient_match_mode", null);
-        return tryAllPossibleItemId;
-    }
-
     public final static StringListConfig ITEM_PLUGIN_HOOK_PRIORITY = new StringListConfig(
         "item_plugin_hook_priority",
         List.of(
@@ -176,6 +165,17 @@ public class PluginConfigs {
     public static final StringConfig ITEM_GROUP_ITEM_LORE_ELEMENT = new StringConfig("item_group_item.lore.element", "&7<item_id>");
     public static final StringConfig ITEM_GROUP_ITEM_LORE_END = new StringConfig("item_group_item.lore.end", "&7...");
     public static final IntConfig ITEM_GROUP_ITEM_LORE_MAX_SIZE = new IntConfig("item_group_item.lore.max_size", 5);
+
+    private static boolean migrateIngredientMatchMode() {
+        BukkitConfigWrapper configWrapper = Craftorithm.instance().getConfigWrapperOrCreate("config.yml");
+        YamlConfiguration config = configWrapper.config();
+        if (!config.contains("ingredient_match_mode")) {
+            return false;
+        }
+        boolean tryAllPossibleItemId = "all".equalsIgnoreCase(config.getString("ingredient_match_mode", "first"));
+        config.set("ingredient_match_mode", null);
+        return tryAllPossibleItemId;
+    }
 
     private static List<ConfigurationSection> migrateLegacyIngredientRestriction() {
         String oldKeyCannotCraft = "cannot_craft_items";
