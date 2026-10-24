@@ -67,7 +67,7 @@
   <img src="https://github.com/YufiriaMazenta/picx-images-hosting/raw/master/code-showcase-cn.1763rja27o.png" width="100%" alt="代码示例">
 </p>
 
-## 结果处理器
+### 结果处理器
 
 结果处理器是用于对合成结果进行额外修改的功能，例如：
 
@@ -86,6 +86,47 @@ result_processors:
 ```
 
 支持 `copy_from_source` / `add` / `merge_source` / `remove` 四种策略，可对附魔、属性、Lore、物品标志等多种组件进行操作。
+
+### 合成剩余材料
+
+`remainders` 用于控制工作台配方中每个输入槽在合成后留下的物品，支持扣除工具耐久、返回指定物品或原样保留：
+
+```yaml
+remainders:
+  - ingredient: minecraft:flint_and_steel
+    type: damage
+    damage: 1
+  - ingredient: my_items:magic_water_bucket
+    type: replace
+    item: minecraft:iron_ingot 2
+  - ingredient: my_items:reusable_catalyst
+    type: keep
+```
+
+- `damage`：保留被消耗的物品并扣除指定耐久，耐久耗尽时物品损坏。
+- `replace`：返回 `item` 指定的物品，可用 `count` 设置数量。
+- `keep`：原样保留被消耗的单件物品。
+- 材料写法与配方材料一致，支持原版物品 ID、自定义物品 ID、`tag:` 和 `item_pack:`。
+- 未配置规则的槽位继续使用原版剩余物；同一物品匹配多条规则时，第一条生效。
+
+### 世界隔离
+
+`enable_worlds` 用于限制配方只在指定世界中可用，未配置时该配方在所有世界都可用：
+
+```yaml
+# 限制在单个世界
+enable_worlds: world
+
+# 限制在多个世界
+enable_worlds:
+  - world
+  - world_nether
+```
+
+- 世界名使用 Bukkit 的世界名，不是命名空间 ID。
+- 世界不存在时会在加载时输出错误，无效的世界名会被忽略。
+- 未配置 `enable_worlds` 的配方不受世界限制。
+- 目前对铁砧、酿造与切石机配方生效。
 
 ## 文档
 

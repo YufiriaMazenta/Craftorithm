@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.recipe.nms.spigot;
 
 import com.google.common.collect.Maps;
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
@@ -68,6 +69,13 @@ public final class ShapedRecipe260100 extends ShapedRecipe implements NmsShapedR
     @Override
     public boolean matches(CraftingInput input, Level level) {
         return matches(toBukkitCraftingInput(input), level.getWorld());
+    }
+
+    @Override
+    public NonNullList<net.minecraft.world.item.ItemStack> getRemainingItems(CraftingInput input) {
+        NonNullList<net.minecraft.world.item.ItemStack> remaining = CraftingRecipe.defaultCraftingReminder(input);
+        applyRemainders(input, (slot, item) -> remaining.set(slot, CraftItemStack.asNMSCopy(item)));
+        return remaining;
     }
 
     public static RecipeHolder<ShapedRecipe> fromBukkit(NamespacedKey recipeKey, org.bukkit.inventory.ShapedRecipe shapedRecipe) {

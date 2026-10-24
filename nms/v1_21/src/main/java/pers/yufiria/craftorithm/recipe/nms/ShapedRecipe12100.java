@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.recipe.nms;
 
 import com.google.common.collect.Maps;
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.World;
@@ -48,6 +49,14 @@ public final class ShapedRecipe12100 extends ShapedRecipes implements NmsShapedR
     @Override
     public boolean a(CraftingInput input, World world) {
         return matches(toBukkitCraftingInput(input), world.getWorld());
+    }
+
+    @Override
+    public NonNullList<ItemStack> a(CraftingInput input) {
+        NonNullList<ItemStack> remaining = NonNullList.a(input.d().size(), ItemStack.l);
+        applyDefaultRemainders(input, (slot, item) -> remaining.set(slot, CraftItemStack.asNMSCopy(item)));
+        applyRemainders(input, (slot, item) -> remaining.set(slot, CraftItemStack.asNMSCopy(item)));
+        return remaining;
     }
 
     @Override

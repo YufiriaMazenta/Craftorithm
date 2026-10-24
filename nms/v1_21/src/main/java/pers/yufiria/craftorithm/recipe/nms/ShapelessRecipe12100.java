@@ -57,6 +57,14 @@ public class ShapelessRecipe12100 extends ShapelessRecipes implements NmsShapele
     }
 
     @Override
+    public NonNullList<ItemStack> a(CraftingInput craftinginput) {
+        NonNullList<ItemStack> remaining = NonNullList.a(craftinginput.d().size(), ItemStack.l);
+        applyDefaultRemainders(craftinginput, (slot, item) -> remaining.set(slot, CraftItemStack.asNMSCopy(item)));
+        applyRemainders(craftinginput, (slot, item) -> remaining.set(slot, CraftItemStack.asNMSCopy(item)));
+        return remaining;
+    }
+
+    @Override
     public ShapelessRecipe toBukkitRecipe(NamespacedKey id) {
         return (ShapelessRecipe) cachedBukkitRecipe.get(() -> {
             CraftItemStack result = CraftItemStack.asCraftMirror(this.result);

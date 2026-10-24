@@ -70,7 +70,7 @@ Place ingredients and result items in the GUI, then click confirm. Recipes are a
   <img src="https://github.com/YufiriaMazenta/picx-images-hosting/raw/master/code-showcase-en.1ow5g4bfsl.png" width="100%" alt="Code Examples">
 </p>
 
-## Result Processors
+### Result Processors
 
 Result processors allow you to apply additional modifications to crafting results, for example:
 
@@ -90,6 +90,48 @@ result_processors:
 
 Supports `copy_from_source` / `add` / `merge_source` / `remove` strategies for various component types including
 enchantments, attributes, lore, item flags, and more.
+
+### Crafting Remainders
+
+`remainders` controls what each crafting input slot leaves behind after a craft, including tool durability, replacement
+items, and reusable ingredients:
+
+```yaml
+remainders:
+  - ingredient: minecraft:flint_and_steel
+    type: damage
+    damage: 1
+  - ingredient: my_items:magic_water_bucket
+    type: replace
+    item: minecraft:iron_ingot 2
+  - ingredient: my_items:reusable_catalyst
+    type: keep
+```
+
+- `damage`: keeps the consumed item and applies the configured durability damage; it breaks when durability runs out.
+- `replace`: returns the configured `item`, with an optional `count`.
+- `keep`: returns one unchanged copy of the consumed item.
+- Ingredients use the same IDs as recipe ingredients, including vanilla IDs, custom IDs, `tag:`, and `item_pack:`.
+- Slots without a matching rule keep their vanilla remainder. When multiple rules match, the first one wins.
+
+### World Isolation
+
+`enable_worlds` restricts a recipe to specific worlds. When omitted, the recipe is available in every world:
+
+```yaml
+# Single world
+enable_worlds: world
+
+# Multiple worlds
+enable_worlds:
+  - world
+  - world_nether
+```
+
+- World names are Bukkit world names, not namespaced IDs.
+- Unknown worlds are reported as errors during loading and skipped.
+- Recipes without `enable_worlds` are not restricted.
+- Currently applies to anvil, brewing, and stonecutting recipes.
 
 ## Documentation
 

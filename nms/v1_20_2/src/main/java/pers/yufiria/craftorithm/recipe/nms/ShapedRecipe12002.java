@@ -65,6 +65,14 @@ public final class ShapedRecipe12002 extends ShapedRecipes implements NmsShapedR
     }
 
     @Override
+    public NonNullList<ItemStack> a(InventoryCrafting inventorycrafting) {
+        NonNullList<ItemStack> remaining = NonNullList.a(inventorycrafting.b(), ItemStack.b);
+        applyDefaultRemainders(inventorycrafting, (slot, item) -> remaining.set(slot, CraftItemStack.asNMSCopy(item)));
+        applyRemainders(inventorycrafting, (slot, item) -> remaining.set(slot, CraftItemStack.asNMSCopy(item)));
+        return remaining;
+    }
+
+    @Override
     public BukkitCraftingInput toBukkitCraftingInput(InventoryCrafting craftingInput) {
         int width = craftingInput.f();
         int height = craftingInput.g();

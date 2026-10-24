@@ -1,5 +1,7 @@
 package pers.yufiria.craftorithm.recipe.nms.spigot;
 
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
@@ -53,6 +55,13 @@ public class ShapelessRecipe260100 extends ShapelessRecipe implements NmsShapele
     @Override
     public boolean matches(CraftingInput craftinginput, Level level) {
         return matches(toBukkitCraftingInput(craftinginput), level.getWorld());
+    }
+
+    @Override
+    public NonNullList<ItemStack> getRemainingItems(CraftingInput craftinginput) {
+        NonNullList<ItemStack> remaining = CraftingRecipe.defaultCraftingReminder(craftinginput);
+        applyRemainders(craftinginput, (slot, item) -> remaining.set(slot, CraftItemStack.asNMSCopy(item)));
+        return remaining;
     }
 
     @Override
