@@ -35,8 +35,28 @@ public interface NmsCraftingRecipe<NmsInput> extends NmsRecipe<BukkitCraftingInp
         NmsInput nmsInput,
         BiConsumer<Integer, org.bukkit.inventory.ItemStack> setter
     ) {
-        calculateRemainder(recipeKey(), toBukkitCraftingInput(nmsInput))
-            .forEach(setter);
+        BukkitCraftingInput bukkitCraftingInput = toBukkitCraftingInput(nmsInput);
+        List<RemainderRule> rules = RemainderManager.INSTANCE.getRules(recipeKey());
+        if (rules.isEmpty()) {
+            return;
+        }
+
+        List<ItemStack> items = bukkitCraftingInput.items();
+        Map<Integer, ItemStack> remainders = new LinkedHashMap<>();
+        for (int slot = 0; slot < items.size(); slot++) {
+            ItemStack item = items.get(slot);
+            if (ItemHelper.isAir(item)) {
+                continue;
+            }
+            for (RemainderRule rule : rules) {
+                if (!rule.matches(item)) {
+                    continue;
+                }
+                remainders.put(slot, rule.processor().createRemainder(item));
+                break;
+            }
+        }
+        remainders.forEach(setter);
     }
 
     /**
@@ -58,33 +78,6 @@ public interface NmsCraftingRecipe<NmsInput> extends NmsRecipe<BukkitCraftingInp
             }
             setter.accept(slot, new ItemStack(remainderMaterial));
         }
-    }
-
-    private @NotNull Map<Integer, ItemStack> calculateRemainder(
-        @NotNull NamespacedKey recipeKey,
-        @NotNull BukkitCraftingInput craftingInput
-    ) {
-        List<RemainderRule> rules = RemainderManager.INSTANCE.getRules(recipeKey);
-        if (rules.isEmpty()) {
-            return Map.of();
-        }
-
-        List<ItemStack> items = craftingInput.items();
-        Map<Integer, ItemStack> remainders = new LinkedHashMap<>();
-        for (int slot = 0; slot < items.size(); slot++) {
-            ItemStack item = items.get(slot);
-            if (ItemHelper.isAir(item)) {
-                continue;
-            }
-            for (RemainderRule rule : rules) {
-                if (!rule.matches(item)) {
-                    continue;
-                }
-                remainders.put(slot, rule.processor().createRemainder(item));
-                break;
-            }
-        }
-        return remainders;
     }
 
 }
