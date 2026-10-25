@@ -48,6 +48,7 @@ public final class Craftorithm extends BukkitPlugin implements LifecycleTask {
         ScriptEngine.INSTANCE.registerModule(ActionModule.INSTANCE);
         ScriptEngine.INSTANCE.registerModule(ConditionModule.INSTANCE);
         UpdateChecker.pullUpdateCheckRequest(Bukkit.getConsoleSender());
+        LangUtils.info(Languages.LOAD_FINISH);
     }
 
     @Override
@@ -87,7 +88,6 @@ public final class Craftorithm extends BukkitPlugin implements LifecycleTask {
                 CrypticLibBukkit.scheduler().sync(() -> {
                     ReloadManager.INSTANCE.reloadPlugin(Bukkit.getConsoleSender());
                     loadBStat();
-                    LangUtils.info(Languages.LOAD_FINISH);
                 });
             }
             //RELOAD异步批收尾: 等待配方完成、清理重载状态、消费重载队列, 统一由重载管理器负责

@@ -25,11 +25,11 @@ public final class ReloadCommand extends AbstractSubcommand {
     public void execute(@NotNull CommandContext context) {
         Invoker invoker = context.invoker();
         try {
-            ReloadManager.INSTANCE.reloadPlugin(CommandUtils.invoker2Sender(invoker));
             LangUtils.sendLang(invoker, Languages.COMMAND_RELOAD_RELOADING);
+            ReloadManager.INSTANCE.reloadPlugin(CommandUtils.invoker2Sender(invoker));
         } catch (Exception e) {
-            CrypticLib.error("Failed to reload Craftorithm", e);
             LangUtils.sendLang(invoker, Languages.COMMAND_RELOAD_EXCEPTION);
+            CrypticLib.error("Failed to reload Craftorithm", e);
         }
     }
 

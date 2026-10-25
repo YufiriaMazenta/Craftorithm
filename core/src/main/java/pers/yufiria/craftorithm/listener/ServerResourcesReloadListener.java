@@ -20,13 +20,8 @@ public enum ServerResourcesReloadListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onServerResourceReload(ServerResourcesReloadedEvent event) {
-        boolean started = ReloadManager.INSTANCE.reloadPlugin(Bukkit.getConsoleSender());
-        if (started) {
-            CrypticLib.info("Plugin reloaded automatically upon server resources reload");
-        } else {
-            //重载中时请求进入队列, 输出提交日志便于追踪调试
-            CrypticLib.info("Reload task submitted upon server resources reload, queued until current reload finished");
-        }
+        CrypticLib.info("Reload task submitted upon server resources reload");
+        ReloadManager.INSTANCE.reloadPlugin(Bukkit.getConsoleSender());
     }
 
 }
