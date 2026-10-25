@@ -93,19 +93,19 @@ enchantments, attributes, lore, item flags, and more.
 
 ### Crafting Remainders
 
-`remainders` controls what each crafting input slot leaves behind after a craft, including tool durability, replacement
-items, and reusable ingredients:
+`remainders` controls what each crafting input slot leaves behind after a craft. Each rule uses `action` to select
+durability damage, item replacement, or keeping the original item:
 
 ```yaml
 remainders:
   - ingredient: minecraft:flint_and_steel
-    type: damage
+    action: damage
     damage: 1
   - ingredient: my_items:magic_water_bucket
-    type: replace
+    action: replace
     item: minecraft:iron_ingot 2
   - ingredient: my_items:reusable_catalyst
-    type: keep
+    action: keep
 ```
 
 - `damage`: keeps the consumed item and applies the configured durability damage; it breaks when durability runs out.

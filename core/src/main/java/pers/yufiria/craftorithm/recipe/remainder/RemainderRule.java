@@ -16,7 +16,7 @@ import pers.yufiria.craftorithm.recipe.ingredient.ItemIdRecipeChoiceParser;
 public record RemainderRule(
     @NotNull String ingredientId,
     @NotNull ItemIdIngredientMatcher matcher,
-    @NotNull RemainderProcessor processor
+    @NotNull RemainderAction action
 ) {
 
     /**
@@ -49,11 +49,11 @@ public record RemainderRule(
             return null;
         }
 
-        RemainderProcessor processor = RemainderProcessorRegistry.INSTANCE.create(section, recipeKey);
-        if (processor == null) {
+        RemainderAction action = RemainderActionRegistry.INSTANCE.create(section, recipeKey);
+        if (action == null) {
             return null;
         }
-        return new RemainderRule(ingredientId, matcher, processor);
+        return new RemainderRule(ingredientId, matcher, action);
     }
 
     public boolean matches(@NotNull ItemStack itemStack) {

@@ -52,7 +52,7 @@ public interface NmsCraftingRecipe<NmsInput> extends NmsRecipe<BukkitCraftingInp
                 if (!rule.matches(item)) {
                     continue;
                 }
-                remainders.put(slot, rule.processor().createRemainder(item));
+                remainders.put(slot, rule.action().createRemainder(item));
                 break;
             }
         }

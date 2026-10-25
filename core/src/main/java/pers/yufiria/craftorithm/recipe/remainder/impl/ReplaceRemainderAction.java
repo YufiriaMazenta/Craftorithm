@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
-import pers.yufiria.craftorithm.recipe.remainder.RemainderProcessor;
+import pers.yufiria.craftorithm.recipe.remainder.RemainderAction;
 
 import java.util.Optional;
 
@@ -18,13 +18,15 @@ import java.util.Optional;
  * <p>
  * 持有解析后的{@link NamespacedItemIdStack}, 每次合成时重新向{@link ItemManager}取物品, 不持有物品快照
  */
-public record ReplaceRemainderProcessor(NamespacedItemIdStack itemIdStack) implements RemainderProcessor {
+public record ReplaceRemainderAction(NamespacedItemIdStack itemIdStack) implements RemainderAction {
 
-    public ReplaceRemainderProcessor(@NotNull NamespacedItemIdStack itemIdStack) {
+    public static final String KEY = "replace";
+
+    public ReplaceRemainderAction(@NotNull NamespacedItemIdStack itemIdStack) {
         this.itemIdStack = copyOf(itemIdStack);
     }
 
-    public static @Nullable ReplaceRemainderProcessor fromConfig(
+    public static @Nullable ReplaceRemainderAction fromConfig(
         @NotNull ConfigurationSection section,
         @NotNull NamespacedKey recipeKey
     ) {
@@ -49,7 +51,7 @@ public record ReplaceRemainderProcessor(NamespacedItemIdStack itemIdStack) imple
             CrypticLib.warn("Invalid replacement count " + itemIdStack.amount() + " for " + itemIdStack + " in recipe: " + recipeKey);
             return null;
         }
-        return new ReplaceRemainderProcessor(itemIdStack);
+        return new ReplaceRemainderAction(itemIdStack);
     }
 
     @Override

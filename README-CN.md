@@ -89,18 +89,18 @@ result_processors:
 
 ### 合成剩余材料
 
-`remainders` 用于控制工作台配方中每个输入槽在合成后留下的物品，支持扣除工具耐久、返回指定物品或原样保留：
+`remainders` 用于控制工作台配方中每个输入槽在合成后留下的物品。每条规则通过 `action` 指定扣除工具耐久、替换为指定物品或保留原物品：
 
 ```yaml
 remainders:
   - ingredient: minecraft:flint_and_steel
-    type: damage
+    action: damage
     damage: 1
   - ingredient: my_items:magic_water_bucket
-    type: replace
+    action: replace
     item: minecraft:iron_ingot 2
   - ingredient: my_items:reusable_catalyst
-    type: keep
+    action: keep
 ```
 
 - `damage`：保留被消耗的物品并扣除指定耐久，耐久耗尽时物品损坏。
