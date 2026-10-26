@@ -1,6 +1,6 @@
 name: Craftorithm
 version: '${version}'
-description: Craft recipes management system
+description: Advanced crafting management system
 main: pers.yufiria.craftorithm.Craftorithm
 api-version: '1.20'
 load: POSTWORLD
