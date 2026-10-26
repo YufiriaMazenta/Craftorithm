@@ -109,7 +109,7 @@ remainders:
 ```
 
 - `damage`: keeps the consumed item and applies the configured durability damage; it breaks when durability runs out.
-- `replace`: returns the configured `item`, with an optional `count`.
+- `replace`: returns the configured `item`; the amount follows the item ID (for example `minecraft:iron_ingot 2`) and defaults to 1.
 - `keep`: returns one unchanged copy of the consumed item.
 - Ingredients use the same IDs as recipe ingredients, including vanilla IDs, custom IDs, `tag:`, and `item_pack:`.
 - Slots without a matching rule keep their vanilla remainder. When multiple rules match, the first one wins.
