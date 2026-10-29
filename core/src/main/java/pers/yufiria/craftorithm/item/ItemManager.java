@@ -26,7 +26,6 @@ import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.recipe.ingredient.restriction.IngredientRestrictionRegistry;
 import pers.yufiria.craftorithm.recipe.ingredient.restriction.IngredientRestrictionRule;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -45,15 +44,12 @@ public enum ItemManager implements LifecycleTask {
     private static final String BURN_TIME_KEY = "burn_time";
     //自定义燃料未指定燃烧时间时的默认值, 单位tick
     private static final int DEFAULT_BURN_TIME = 200;
-    //玩家通过界面创建物品时使用的物品命名空间
-    static final String PLUGIN_CREATED_NAMESPACE = "plugin_created";
 
     private final Map<String, ItemProvider> itemProviderMap = new LinkedHashMap<>();
     private final Map<NamespacedItemId, Integer> customCookingFuelMap = new ConcurrentHashMap<>();
     private BukkitConfigWrapper customFuelConfig;
     private BukkitConfigWrapper itemPacksConfig;
     private final Map<String, ItemPack> itemPacks = new ConcurrentHashMap<>();
-    private final SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
     //重载在异步线程进行,而该列表会被主线程的合成事件读取,因此使用不可变快照整体替换
     private volatile List<IngredientRestrictionRule> ingredientRestrictionRules = List.of();
     private final Lazy<Map<String, ItemProvider>> lazyItemProviderView = Lazy.of(() -> Collections.unmodifiableMap(itemProviderMap));
@@ -258,15 +254,8 @@ public enum ItemManager implements LifecycleTask {
         if (item.hasItemMeta()) {
             itemId = matchItemId(item, ignoreAmount).orElse(null);
             if (itemId == null) {
-                String id = item.getType().getKey().getKey();
-                if (CraftorithmItemProvider.INSTANCE.matchItem(PLUGIN_CREATED_NAMESPACE + ":" + id) != null) {
-                    id += "_" + timeFormat.format(System.currentTimeMillis());
-                }
-                itemId = stackOf(
-                    CraftorithmItemProvider.INSTANCE.regCraftorithmItem(PLUGIN_CREATED_NAMESPACE, id, item),
-                    item,
-                    ignoreAmount
-                );
+                //未能被任何物品源识别时, 保存到内置物品源
+                itemId = CraftorithmItemProvider.INSTANCE.saveItem(item, ignoreAmount);
             }
         } else {
             itemId = stackOf(NamespacedItemId.fromMaterial(item.getType()), item, ignoreAmount);

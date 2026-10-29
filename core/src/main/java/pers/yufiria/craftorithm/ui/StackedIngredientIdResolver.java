@@ -12,15 +12,12 @@ import java.util.Optional;
 /**
  * 堆叠材料ID解析器, 将物品数量计入材料ID
  */
-public final class StackedIngredientIdResolver implements IngredientIdResolver {
+public enum StackedIngredientIdResolver implements IngredientIdResolver {
 
-    public static final StackedIngredientIdResolver INSTANCE = new StackedIngredientIdResolver();
-
-    private StackedIngredientIdResolver() {
-    }
+    INSTANCE;
 
     @Override
-    public @Nullable String resolve(@Nullable ItemStack item) {
+    public @Nullable String resolveIngredientId(@Nullable ItemStack item) {
         if (ItemHelper.isAir(item)) {
             return null;
         }

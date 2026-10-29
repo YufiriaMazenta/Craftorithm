@@ -108,6 +108,11 @@ menu:
     delete_lore: '&7Bu tarifi kalıcı olarak silmek için tıkla'
     category_prefix: '&aKategori:'
     category_lore: '&7Kategori değiştirmek için tıkla'
+    result_save_all_components:
+      name: '&aTüm Sonuç Bileşenlerini Kaydet: &e<state>'
+      lore: '&7Değiştirmek için tıklayın. Etkinleştirildiğinde değişiklikler kaydedilirken sonuç eşyasının tüm bileşenleri yerleşik eşya kaynağına kaydedilir'
+      enabled: '&aAçık'
+      disabled: '&cKapalı'
     smelting:
       time: '&aEritme süresi: &e<time> &7(tick)'
       time_lore: '&7Süre girmek için tıkla'
@@ -125,6 +130,11 @@ menu:
     result_frame: '&aSonuç'
     category_prefix: '&aKategori:'
     category_lore: '&7Kategori değiştirmek için tıkla'
+    result_save_all_components:
+      name: '&aTüm Sonuç Bileşenlerini Kaydet: &e<state>'
+      lore: '&7Değiştirmek için tıklayın. Etkinleştirildiğinde tarif oluşturulurken sonuç eşyasının tüm bileşenleri yerleşik eşya kaynağına kaydedilir'
+      enabled: '&aAçık'
+      disabled: '&cKapalı'
     smelting:
       time: '&aEritme süresi: &e<time> &7(tick)'
       time_lore: '&7Süre girmek için tıkla'

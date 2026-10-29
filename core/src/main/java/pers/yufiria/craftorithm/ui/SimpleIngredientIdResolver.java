@@ -12,15 +12,12 @@ import java.util.Optional;
 /**
  * 基础材料ID解析器, 不将物品数量计入材料ID
  */
-public final class SimpleIngredientIdResolver implements IngredientIdResolver {
+public enum SimpleIngredientIdResolver implements IngredientIdResolver {
 
-    public static final SimpleIngredientIdResolver INSTANCE = new SimpleIngredientIdResolver();
-
-    private SimpleIngredientIdResolver() {
-    }
+    INSTANCE;
 
     @Override
-    public @Nullable String resolve(@Nullable ItemStack item) {
+    public @Nullable String resolveIngredientId(@Nullable ItemStack item) {
         if (ItemHelper.isAir(item)) {
             return null;
         }

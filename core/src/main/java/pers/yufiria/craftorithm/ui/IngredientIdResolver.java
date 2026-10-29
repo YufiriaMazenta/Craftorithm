@@ -16,6 +16,6 @@ public interface IngredientIdResolver {
      * @return 材料ID, 无法解析时返回null
      */
     @Nullable
-    String resolve(@Nullable ItemStack item);
+    String resolveIngredientId(@Nullable ItemStack item);
 
 }

@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.ui.creator.vanillacrafting;
 
+import crypticlib.config.node.impl.bukkit.ConfigSectionConfig;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.display.MenuDisplay;
@@ -43,12 +44,13 @@ public final class VanillaShapedCreator extends RecipeCreator {
             new MenuLayout(Arrays.asList(
                 "#########",
                 "#123#***#",
-                "#456A* *#",
+                "#456A* K#",
                 "#789#***#",
                 "####C####"
             ), () -> {
                 Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
+                layoutMap.put('K', this::getResultSaveAllComponentsIcon);
                 layoutMap.put('*', this::getResultFrameIcon);
                 layoutMap.put('A', this::getConfirmIcon);
                 layoutMap.put('C', () -> new RecipeBookCategoryIcon(
@@ -77,6 +79,10 @@ public final class VanillaShapedCreator extends RecipeCreator {
         return TranslatableIconParser.INSTANCE.parse(VanillaShapedCreatorConfig.RESULT_FRAME_ICON.value()).get();
     }
 
+    @Override
+    protected ConfigSectionConfig getResultSaveAllComponentsIconConfig() {
+        return VanillaShapedCreatorConfig.RESULT_SAVE_ALL_COMPONENTS_ICON;
+    }
 
     /**
      * 确认创建配方按钮

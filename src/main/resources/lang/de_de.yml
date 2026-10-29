@@ -108,6 +108,11 @@ menu:
     delete_lore: '&7Klicke, um dieses Rezept dauerhaft zu löschen'
     category_prefix: '&aKategorie:'
     category_lore: '&7Klicke zum Wechseln'
+    result_save_all_components:
+      name: '&aAlle Ergebnis-Komponenten speichern: &e<state>'
+      lore: '&7Klicken zum Umschalten. Wenn aktiviert, werden beim Speichern der Änderungen alle Komponenten des Ergebnisitems in der integrierten Item-Quelle gespeichert'
+      enabled: '&aAn'
+      disabled: '&cAus'
     smelting:
       time: '&aSchmelzzeit: &e<time> &7(tick)'
       time_lore: '&7Klicke zum Eingeben'
@@ -125,6 +130,11 @@ menu:
     result_frame: '&aErgebnis'
     category_prefix: '&aKategorie:'
     category_lore: '&7Klicke zum Wechseln'
+    result_save_all_components:
+      name: '&aAlle Ergebnis-Komponenten speichern: &e<state>'
+      lore: '&7Klicken zum Umschalten. Wenn aktiviert, werden beim Erstellen des Rezepts alle Komponenten des Ergebnisitems in der integrierten Item-Quelle gespeichert'
+      enabled: '&aAn'
+      disabled: '&cAus'
     smelting:
       time: '&aSchmelzzeit: &e<time> &7(tick)'
       time_lore: '&7Klicke zum Eingeben'

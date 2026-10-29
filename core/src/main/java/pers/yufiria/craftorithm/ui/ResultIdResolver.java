@@ -18,6 +18,6 @@ public interface ResultIdResolver {
      * @return 结果ID, 无法解析时返回null
      */
     @Nullable
-    NamespacedItemIdStack resolve(@NotNull ItemStack item);
+    NamespacedItemIdStack resolveResultId(@NotNull ItemStack item);
 
 }

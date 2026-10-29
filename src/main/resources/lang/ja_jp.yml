@@ -108,6 +108,11 @@ menu:
     delete_lore: '&7クリックでこのレシピを完全に削除'
     category_prefix: '&aカテゴリ:'
     category_lore: '&7クリックでカテゴリを切り替え'
+    result_save_all_components:
+      name: '&a結果アイテムの全コンポーネントを保存: &e<state>'
+      lore: '&7クリックで切り替え。有効にすると変更の保存時に結果アイテムの全コンポーネントがプラグイン内蔵のアイテムソースに保存されます'
+      enabled: '&a有効'
+      disabled: '&c無効'
     smelting:
       time: '&a精錬時間: &e<time> &7(tick)'
       time_lore: '&7クリックで精錬時間を入力'
@@ -125,6 +130,11 @@ menu:
     result_frame: '&a結果アイテム'
     category_prefix: '&aカテゴリ:'
     category_lore: '&7クリックでカテゴリを切り替え'
+    result_save_all_components:
+      name: '&a結果アイテムの全コンポーネントを保存: &e<state>'
+      lore: '&7クリックで切り替え。有効にするとレシピ作成時に結果アイテムの全コンポーネントがプラグイン内蔵のアイテムソースに保存されます'
+      enabled: '&a有効'
+      disabled: '&c無効'
     smelting:
       time: '&a精錬時間: &e<time> &7(tick)'
       time_lore: '&7クリックで精錬時間を入力'

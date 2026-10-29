@@ -110,6 +110,11 @@ menu:
     delete_lore: '&7点击永久删除该配方'
     category_prefix: '&a配方类型:'
     category_lore: '&7点击切换分类'
+    result_save_all_components:
+      name: '&a保存结果物品全部组件: &e<state>'
+      lore: '&7点击切换。开启后保存修改时结果物品的全部组件会完整保存到插件内置物品源'
+      enabled: '&a开启'
+      disabled: '&c关闭'
     smelting:
       time: '&a熔炼时间: &e<time> &7(tick)'
       time_lore: '&7点击输入熔炼时间'
@@ -127,6 +132,11 @@ menu:
     result_frame: '&a结果物品'
     category_prefix: '&a配方类型:'
     category_lore: '&7点击切换分类'
+    result_save_all_components:
+      name: '&a保存结果物品全部组件: &e<state>'
+      lore: '&7点击切换。开启后创建配方时结果物品的全部组件会完整保存到插件内置物品源'
+      enabled: '&a开启'
+      disabled: '&c关闭'
     smelting:
       time: '&a熔炼时间: &e<time> &7(tick)'
       time_lore: '&7点击输入熔炼时间'

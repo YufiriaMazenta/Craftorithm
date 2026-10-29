@@ -108,6 +108,11 @@ menu:
     delete_lore: '&7Cliquez pour supprimer définitivement cette recette'
     category_prefix: '&aCatégorie:'
     category_lore: '&7Cliquez pour changer de catégorie'
+    result_save_all_components:
+      name: '&aEnregistrer tous les composants du résultat : &e<state>'
+      lore: '&7Cliquez pour basculer. Une fois activé, tous les composants du résultat sont enregistrés dans la source d''objets intégrée lors de l''enregistrement des modifications'
+      enabled: '&aActivé'
+      disabled: '&cDésactivé'
     smelting:
       time: '&aTemps de cuisson: &e<time> &7(tick)'
       time_lore: '&7Cliquez pour entrer le temps'
@@ -125,6 +130,11 @@ menu:
     result_frame: '&aRésultat'
     category_prefix: '&aCatégorie:'
     category_lore: '&7Cliquez pour changer de catégorie'
+    result_save_all_components:
+      name: '&aEnregistrer tous les composants du résultat : &e<state>'
+      lore: '&7Cliquez pour basculer. Une fois activé, tous les composants du résultat sont enregistrés dans la source d''objets intégrée lors de la création de la recette'
+      enabled: '&aActivé'
+      disabled: '&cDésactivé'
     smelting:
       time: '&aTemps de cuisson: &e<time> &7(tick)'
       time_lore: '&7Cliquez pour entrer le temps'

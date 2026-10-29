@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.ui.creator.anvil;
 
+import crypticlib.config.node.impl.bukkit.ConfigSectionConfig;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.display.MenuDisplay;
@@ -42,22 +43,21 @@ public class AnvilCreator extends RecipeCreator {
         super(
             player,
             recipeId,
-            recipeFileName,
-            StackedIngredientIdResolver.INSTANCE,
-            SimpleResultIdResolver.INSTANCE
+            recipeFileName
         );
         this.costLevel = AnvilCreatorConfig.DEFAULT_COST_LEVEL.value();
         this.display = new MenuDisplay(
             AnvilCreatorConfig.TITLE.value(),
             new MenuLayout(Arrays.asList(
                 "#########",
-                "##B#A#R##",
+                "##B#A#RK#",
                 "#########",
                 "####C####",
                 "####L####"
             ), () -> {
                 Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
+                layoutMap.put('K', this::getResultSaveAllComponentsIcon);
                 layoutMap.put('C', this::getConfirmIcon);
                 layoutMap.put('L', this::getCostLevelIcon);
                 return layoutMap;
@@ -78,6 +78,11 @@ public class AnvilCreator extends RecipeCreator {
     @Override
     protected Icon getResultFrameIcon() {
         return new Icon(new ItemStack(Material.AIR));
+    }
+
+    @Override
+    protected ConfigSectionConfig getResultSaveAllComponentsIconConfig() {
+        return AnvilCreatorConfig.RESULT_SAVE_ALL_COMPONENTS_ICON;
     }
 
     private Icon getCostLevelIcon() {
@@ -156,6 +161,11 @@ public class AnvilCreator extends RecipeCreator {
             });
         });
         return icon;
+    }
+
+    @Override
+    public @Nullable String resolveIngredientId(@Nullable ItemStack item) {
+        return StackedIngredientIdResolver.INSTANCE.resolveIngredientId(item);
     }
 
 }

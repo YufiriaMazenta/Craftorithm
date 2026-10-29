@@ -11,6 +11,7 @@ public class VanillaSmeltingFurnaceEditorConfig {
     public static final ConfigSectionConfig FRAME_ICON = new ConfigSectionConfig("frame_icon", MenuIconConfigUtils.editorFrameIcon("vanilla_smelting_furnace"));
     public static final ConfigSectionConfig RESULT_FRAME_ICON = new ConfigSectionConfig("result_frame_icon", MenuIconConfigUtils.editorResultFrameIcon());
     public static final ConfigSectionConfig CONFIRM_ICON = new ConfigSectionConfig("confirm_icon", MenuIconConfigUtils.editorConfirmIcon("minecraft:furnace"));
+    public static final ConfigSectionConfig RESULT_SAVE_ALL_COMPONENTS_ICON = new ConfigSectionConfig("result_save_all_components_icon", MenuIconConfigUtils.editorResultSaveAllComponentsIcon());
     public static final ConfigSectionConfig EXP_ICON = new ConfigSectionConfig("exp_icon", MenuIconConfigUtils.editorExpIcon());
     public static final ConfigSectionConfig TIME_ICON = new ConfigSectionConfig("time_icon", MenuIconConfigUtils.editorTimeIcon());
     public static final ConfigSectionConfig BACK_ICON = new ConfigSectionConfig("back_icon", MenuIconConfigUtils.editorBackIcon());

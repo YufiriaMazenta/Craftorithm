@@ -54,7 +54,7 @@ public final class SaveCommand extends CommandNode {
             return;
         }
 
-        CraftorithmItemProvider.INSTANCE.regCraftorithmItem(args.get(0), args.get(1), item.clone());
+        CraftorithmItemProvider.INSTANCE.saveItem(args.get(0), args.get(1), item.clone());
         LangUtils.sendLang(invoker, Languages.COMMAND_ITEM_SAVE_SUCCESS);
     }
 

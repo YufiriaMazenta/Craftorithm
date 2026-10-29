@@ -152,6 +152,30 @@ public class MenuIconConfigUtils {
     }
 
     /**
+     * 构建配方创建器界面的「保存结果物品全部组件」开关图标
+     */
+    public static ConfigurationSection creatorResultSaveAllComponentsIcon() {
+        return icon(
+            "minecraft:book",
+            "<translate:lang:menu.recipe_creator.result_save_all_components.name>",
+            "",
+            "<translate:lang:menu.recipe_creator.result_save_all_components.lore>"
+        );
+    }
+
+    /**
+     * 构建配方编辑器界面的「保存结果物品全部组件」开关图标
+     */
+    public static ConfigurationSection editorResultSaveAllComponentsIcon() {
+        return icon(
+            "minecraft:book",
+            "<translate:lang:menu.recipe_editor.result_save_all_components.name>",
+            "",
+            "<translate:lang:menu.recipe_editor.result_save_all_components.lore>"
+        );
+    }
+
+    /**
      * 构建配方创建器界面的经验图标
      */
     public static ConfigurationSection creatorExpIcon() {

@@ -5,11 +5,17 @@ import crypticlib.CrypticLibBukkit;
 import crypticlib.Key;
 import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.config.BukkitConfigWrapper;
+import crypticlib.config.node.impl.bukkit.ConfigSectionConfig;
 import crypticlib.lang.LangManager;
 import crypticlib.ui.display.Icon;
+import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.menu.StoredMenu;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
@@ -21,8 +27,11 @@ import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.ui.IngredientIdResolver;
 import pers.yufiria.craftorithm.ui.ResultIdResolver;
+import pers.yufiria.craftorithm.ui.SaveItemResultIdResolver;
 import pers.yufiria.craftorithm.ui.SimpleIngredientIdResolver;
 import pers.yufiria.craftorithm.ui.SimpleResultIdResolver;
+import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
+import pers.yufiria.craftorithm.ui.icon.TranslatableIconParser;
 import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.text.SimpleDateFormat;
@@ -30,34 +39,22 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public abstract class RecipeCreator extends StoredMenu {
+public abstract class RecipeCreator extends StoredMenu implements IngredientIdResolver, ResultIdResolver {
 
     private @Nullable String recipeId;
     private @Nullable String recipeFileName;
-    private final IngredientIdResolver ingredientIdResolver;
-    private final ResultIdResolver resultIdResolver;
     private final SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
+    //是否保存结果物品的全部组件, 开启时结果物品会被完整保存到内置物品源, 默认关闭
+    private boolean resultSaveAllComponents = false;
 
     public RecipeCreator(
         @NotNull Player player,
         @Nullable String recipeId,
         @Nullable String recipeFileName
     ) {
-        this(player, recipeId, recipeFileName, SimpleIngredientIdResolver.INSTANCE, SimpleResultIdResolver.INSTANCE);
-    }
-
-    public RecipeCreator(
-        @NotNull Player player,
-        @Nullable String recipeId,
-        @Nullable String recipeFileName,
-        @NotNull IngredientIdResolver ingredientIdResolver,
-        @NotNull ResultIdResolver resultIdResolver
-    ) {
         super(player);
         this.recipeId = recipeId;
         this.recipeFileName = recipeFileName;
-        this.ingredientIdResolver = ingredientIdResolver;
-        this.resultIdResolver = resultIdResolver;
     }
 
     protected abstract RecipeType recipeType();
@@ -65,6 +62,47 @@ public abstract class RecipeCreator extends StoredMenu {
     protected abstract Icon getFrameIcon();
 
     protected abstract Icon getResultFrameIcon();
+
+    /**
+     * 获取「保存结果物品全部组件」开关图标的配置
+     */
+    protected abstract ConfigSectionConfig getResultSaveAllComponentsIconConfig();
+
+    /**
+     * 「保存结果物品全部组件」开关按钮
+     * 点击切换开关状态, 开启后保存配方时会把结果物品的全部组件写入内置物品源
+     */
+    protected final Icon getResultSaveAllComponentsIcon() {
+        IconDisplay iconDisplay = TranslatableIconParser.INSTANCE.parseIconDisplay(getResultSaveAllComponentsIconConfig().value());
+        return new TranslatableIcon(iconDisplay) {
+            @Override
+            public ItemStack display() {
+                setTextReplaceMap(Map.of(
+                    "<state>",
+                    resultSaveAllComponents
+                        ? Languages.MENU_RECIPE_CREATOR_RESULT_SAVE_ALL_COMPONENTS_ENABLED.value()
+                        : Languages.MENU_RECIPE_CREATOR_RESULT_SAVE_ALL_COMPONENTS_DISABLED.value()
+                ));
+                ItemStack display = super.display();
+                if (!resultSaveAllComponents) {
+                    return display;
+                }
+                //开启时加上附魔光效, 不用悬停也能看出当前状态
+                ItemMeta itemMeta = display.getItemMeta();
+                itemMeta.addEnchant(Enchantment.LURE, 1, true);
+                itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                display.setItemMeta(itemMeta);
+                return display;
+            }
+
+            @Override
+            public Icon onClick(InventoryClickEvent event) {
+                resultSaveAllComponents = !resultSaveAllComponents;
+                updateMenuIcons();
+                return this;
+            }
+        };
+    }
 
     protected void createRecipeConfig(String recipeFileName, Consumer<BukkitConfigWrapper> callback) {
         CrypticLibBukkit.scheduler().async(() -> {
@@ -189,18 +227,18 @@ public abstract class RecipeCreator extends StoredMenu {
         return BukkitTextProcessor.color(BukkitTextProcessor.placeholder(player, title));
     }
 
-    /**
-     * 解析材料物品的ID字符串
-     */
-    protected final @Nullable String resolveIngredientId(@Nullable ItemStack item) {
-        return ingredientIdResolver.resolve(item);
+    @Override
+    public @Nullable String resolveIngredientId(@Nullable ItemStack item) {
+        return SimpleIngredientIdResolver.INSTANCE.resolveIngredientId(item);
     }
 
-    /**
-     * 解析结果物品的ID
-     */
-    protected final @Nullable NamespacedItemIdStack resolveResultId(@NotNull ItemStack item) {
-        return resultIdResolver.resolve(item);
+    @Override
+    public @Nullable NamespacedItemIdStack resolveResultId(@NotNull ItemStack item) {
+        if (resultSaveAllComponents) {
+            return SaveItemResultIdResolver.INSTANCE.resolveResultId(item);
+        } else {
+            return SimpleResultIdResolver.INSTANCE.resolveResultId(item);
+        }
     }
 
 }

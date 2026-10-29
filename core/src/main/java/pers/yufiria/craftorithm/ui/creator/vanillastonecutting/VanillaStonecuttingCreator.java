@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.ui.creator.vanillastonecutting;
 
+import crypticlib.config.node.impl.bukkit.ConfigSectionConfig;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.display.MenuDisplay;
@@ -36,11 +37,12 @@ public class VanillaStonecuttingCreator extends RecipeCreator {
             VanillaStonecuttingCreatorConfig.TITLE.value(),
             new MenuLayout(Arrays.asList(
                 "#########",
-                "##I#AFRF#",
+                "##I#AFRK#",
                 "#########"
             ), () -> {
                 Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
+                layoutMap.put('K', this::getResultSaveAllComponentsIcon);
                 layoutMap.put('A', this::getConfirmIcon);
                 layoutMap.put('F', this::getResultFrameIcon);
                 return layoutMap;
@@ -61,6 +63,11 @@ public class VanillaStonecuttingCreator extends RecipeCreator {
     @Override
     protected Icon getResultFrameIcon() {
         return TranslatableIconParser.INSTANCE.parse(VanillaStonecuttingCreatorConfig.RESULT_FRAME_ICON.value()).get();
+    }
+
+    @Override
+    protected ConfigSectionConfig getResultSaveAllComponentsIconConfig() {
+        return VanillaStonecuttingCreatorConfig.RESULT_SAVE_ALL_COMPONENTS_ICON;
     }
 
     private Icon getConfirmIcon() {

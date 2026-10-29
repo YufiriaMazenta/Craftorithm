@@ -11,6 +11,7 @@ import crypticlib.lifecycle.LifecycleSchedule;
 import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskConfig;
 import crypticlib.util.IOHelper;
+import crypticlib.util.ItemHelper;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -26,6 +27,7 @@ import pers.yufiria.craftorithm.util.CollectionsUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -41,9 +43,12 @@ public enum CraftorithmItemProvider implements ItemPluginHook, ItemProvider, Lif
 
     INSTANCE;
     public final File ITEM_FILE_FOLDER = new File(Craftorithm.instance().getDataFolder(), "items");
+    //玩家通过界面创建物品时使用的物品命名空间
+    public static final String PLUGIN_CREATED_NAMESPACE = "plugin_created";
     private final Map<ItemBucketKey, Map<String, ItemStack>> itemBuckets;
     private final Map<String, ItemStack> idItemMap;
     private final Map<String, BukkitConfigWrapper> itemConfigFileMap;
+    private final SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
 
     /**
      * 同一物品桶内存在多个相似物品时, 决定优先返回哪一个ID
@@ -52,7 +57,7 @@ public enum CraftorithmItemProvider implements ItemPluginHook, ItemProvider, Lif
      * 同类之间按ID字典序排列, 保证同一物品每次解析出的ID都是稳定的
      */
     private static final Comparator<String> ITEM_ID_ORDER = Comparator
-        .comparingInt((String itemId) -> itemId.startsWith(ItemManager.PLUGIN_CREATED_NAMESPACE + ":") ? 1 : 0)
+        .comparingInt((String itemId) -> itemId.startsWith(PLUGIN_CREATED_NAMESPACE + ":") ? 1 : 0)
         .thenComparing(Comparator.naturalOrder());
 
     /**
@@ -143,8 +148,48 @@ public enum CraftorithmItemProvider implements ItemPluginHook, ItemProvider, Lif
         }
     }
 
+    /**
+     * 保存物品并返回其物品id, 用于「保存结果物品全部组件」等需要完整保留物品数据的场景
+     * <p>
+     * 存在数据值的物品会被完整写入内置物品源, 若已有完全相同的物品则复用已有id;
+     * 没有数据值的原版物品没有需要保留的组件, 直接返回原版物品id, 并且不会保存该物品
+     *
+     * @param item         待保存的物品
+     * @param ignoreAmount 是否忽略数量, 为true时id栈的数量恒为1
+     * @return 物品id栈, 物品为空气时返回null
+     */
+    public @Nullable NamespacedItemIdStack saveItem(ItemStack item, boolean ignoreAmount) {
+        if (ItemHelper.isAir(item)) {
+            return null;
+        }
+        int amount = ignoreAmount ? 1 : item.getAmount();
+        if (!item.hasItemMeta()) {
+            return new NamespacedItemIdStack(NamespacedItemId.fromMaterial(item.getType()), amount);
+        }
+        NamespacedItemId existedItemId = matchItemId(item);
+        if (existedItemId != null) {
+            return new NamespacedItemIdStack(existedItemId, amount);
+        }
+        String itemName = item.getType().getKey().getKey();
+        if (matchItem(PLUGIN_CREATED_NAMESPACE + ":" + itemName) != null) {
+            itemName += "_" + timeFormat.format(System.currentTimeMillis());
+        }
+        return new NamespacedItemIdStack(
+            saveItem(PLUGIN_CREATED_NAMESPACE, itemName, item),
+            amount
+        );
+    }
 
-    public NamespacedItemId regCraftorithmItem(String namespace, String itemName, ItemStack item) {
+    /**
+     * 强制以某个命名空间和物品id保存某个物品
+     * 就算已经有完全相同的物品,也会保存
+     * <p>
+     * @param namespace 物品命名空间,对应items文件夹里的文件名
+     * @param itemName 物品id
+     * @param item 要保存的物品
+     * @return 是否
+     */
+    public NamespacedItemId saveItem(String namespace, String itemName, ItemStack item) {
         String namespaceItemId = namespace + ":" + itemName;
         idItemMap.put(namespaceItemId, item);
         itemBuckets.computeIfAbsent(

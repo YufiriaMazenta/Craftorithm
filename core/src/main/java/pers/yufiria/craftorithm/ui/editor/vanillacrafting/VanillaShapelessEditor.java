@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.ui.editor.vanillacrafting;
 
+import crypticlib.config.node.impl.bukkit.ConfigSectionConfig;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.display.MenuDisplay;
@@ -52,12 +53,13 @@ public final class VanillaShapelessEditor extends RecipeEditor {
             new MenuLayout(Arrays.asList(
                 "B#######D",
                 "#123#***#",
-                "#456A* *#",
+                "#456A* K#",
                 "#789#***#",
                 "####C####"
             ), () -> {
                 Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
+                layoutMap.put('K', this::getResultSaveAllComponentsIcon);
                 layoutMap.put('*', this::getResultFrameIcon);
                 layoutMap.put('A', this::getConfirmIcon);
                 layoutMap.put('B', this::getBackIcon);
@@ -94,6 +96,11 @@ public final class VanillaShapelessEditor extends RecipeEditor {
 
     private Icon getDeleteIcon() {
         return createDeleteIcon(VanillaShapelessEditorConfig.DELETE_ICON.value());
+    }
+
+    @Override
+    protected ConfigSectionConfig getResultSaveAllComponentsIconConfig() {
+        return VanillaShapelessEditorConfig.RESULT_SAVE_ALL_COMPONENTS_ICON;
     }
 
     private Icon getConfirmIcon() {

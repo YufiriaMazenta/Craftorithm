@@ -108,6 +108,11 @@ menu:
     delete_lore: '&7Haz clic para eliminar esta receta permanentemente'
     category_prefix: '&aCategoría:'
     category_lore: '&7Haz clic para cambiar categoría'
+    result_save_all_components:
+      name: '&aGuardar todos los componentes del resultado: &e<state>'
+      lore: '&7Haz clic para alternar. Al activarlo, todos los componentes del resultado se guardan en la fuente de objetos integrada al guardar los cambios'
+      enabled: '&aActivado'
+      disabled: '&cDesactivado'
     smelting:
       time: '&aTiempo de fundición: &e<time> &7(tick)'
       time_lore: '&7Haz clic para introducir el tiempo'
@@ -125,6 +130,11 @@ menu:
     result_frame: '&aResultado'
     category_prefix: '&aCategoría:'
     category_lore: '&7Haz clic para cambiar categoría'
+    result_save_all_components:
+      name: '&aGuardar todos los componentes del resultado: &e<state>'
+      lore: '&7Haz clic para alternar. Al activarlo, todos los componentes del resultado se guardan en la fuente de objetos integrada al crear la receta'
+      enabled: '&aActivado'
+      disabled: '&cDesactivado'
     smelting:
       time: '&aTiempo de fundición: &e<time> &7(tick)'
       time_lore: '&7Haz clic para introducir el tiempo'

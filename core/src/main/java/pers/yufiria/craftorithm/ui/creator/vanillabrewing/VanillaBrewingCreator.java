@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.ui.creator.vanillabrewing;
 
+import crypticlib.config.node.impl.bukkit.ConfigSectionConfig;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.display.MenuDisplay;
@@ -38,12 +39,13 @@ public class VanillaBrewingCreator extends RecipeCreator {
             new MenuLayout(Arrays.asList(
                 "#########",
                 "##G##FFF#",
-                "####AFRF#",
+                "####AFRK#",
                 "##I##FFF#",
                 "#########"
             ), () -> {
                 Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
+                layoutMap.put('K', this::getResultSaveAllComponentsIcon);
                 layoutMap.put('A', this::getConfirmIcon);
                 layoutMap.put('F', this::getResultFrameIcon);
                 return layoutMap;
@@ -64,6 +66,11 @@ public class VanillaBrewingCreator extends RecipeCreator {
     @Override
     protected Icon getResultFrameIcon() {
         return TranslatableIconParser.INSTANCE.parse(VanillaBrewingCreatorConfig.RESULT_FRAME_ICON.value()).get();
+    }
+
+    @Override
+    protected ConfigSectionConfig getResultSaveAllComponentsIconConfig() {
+        return VanillaBrewingCreatorConfig.RESULT_SAVE_ALL_COMPONENTS_ICON;
     }
 
     private Icon getConfirmIcon() {

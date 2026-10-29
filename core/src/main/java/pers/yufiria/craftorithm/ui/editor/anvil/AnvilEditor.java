@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.ui.editor.anvil;
 
+import crypticlib.config.node.impl.bukkit.ConfigSectionConfig;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.display.MenuDisplay;
@@ -11,6 +12,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.menu.editor.AnvilEditorConfig;
 import pers.yufiria.craftorithm.item.ItemManager;
@@ -53,9 +55,7 @@ public final class AnvilEditor extends RecipeEditor {
         super(
             player,
             recipeKey,
-            recipeKey.toString(),
-            StackedIngredientIdResolver.INSTANCE,
-            SimpleResultIdResolver.INSTANCE
+            recipeKey.toString()
         );
         this.anvilRecipe = recipe;
         this.costLevel = recipe.costLevel();
@@ -63,12 +63,13 @@ public final class AnvilEditor extends RecipeEditor {
             AnvilEditorConfig.TITLE.value(),
             new MenuLayout(Arrays.asList(
                 "X#######D",
-                "#B#A###R#",
+                "#B#A###RK",
                 "##L###C##",
                 "#########"
             ), () -> {
                 Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
+                layoutMap.put('K', this::getResultSaveAllComponentsIcon);
                 layoutMap.put('C', this::getConfirmIcon);
                 layoutMap.put('L', this::getCostLevelIcon);
                 layoutMap.put('X', this::getBackIcon);
@@ -132,6 +133,11 @@ public final class AnvilEditor extends RecipeEditor {
         };
     }
 
+    @Override
+    protected ConfigSectionConfig getResultSaveAllComponentsIconConfig() {
+        return AnvilEditorConfig.RESULT_SAVE_ALL_COMPONENTS_ICON;
+    }
+
     private Icon getConfirmIcon() {
         IconDisplay iconDisplay = TranslatableIconParser.INSTANCE.parseIconDisplay(AnvilEditorConfig.CONFIRM_ICON.value());
         TranslatableIcon icon = new TranslatableIcon(iconDisplay);
@@ -161,6 +167,11 @@ public final class AnvilEditor extends RecipeEditor {
             });
         });
         return icon;
+    }
+
+    @Override
+    public @Nullable String resolveIngredientId(@Nullable ItemStack item) {
+        return StackedIngredientIdResolver.INSTANCE.resolveIngredientId(item);
     }
 
 }

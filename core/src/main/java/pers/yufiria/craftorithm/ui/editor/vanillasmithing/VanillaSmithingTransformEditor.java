@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.ui.editor.vanillasmithing;
 
+import crypticlib.config.node.impl.bukkit.ConfigSectionConfig;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.display.MenuDisplay;
@@ -48,12 +49,13 @@ public final class VanillaSmithingTransformEditor extends RecipeEditor {
             new MenuLayout(Arrays.asList(
                 "X#######D",
                 "######FFF",
-                "#T#BCAFRF",
+                "#T#BCAFRK",
                 "######FFF",
                 "#########"
             ), () -> {
                 Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
+                layoutMap.put('K', this::getResultSaveAllComponentsIcon);
                 layoutMap.put('F', this::getResultFrameIcon);
                 layoutMap.put('C', this::getConfirmIcon);
                 layoutMap.put('X', this::getBackIcon);
@@ -92,6 +94,11 @@ public final class VanillaSmithingTransformEditor extends RecipeEditor {
 
     private Icon getDeleteIcon() {
         return createDeleteIcon(VanillaSmithingTransformEditorConfig.DELETE_ICON.value());
+    }
+
+    @Override
+    protected ConfigSectionConfig getResultSaveAllComponentsIconConfig() {
+        return VanillaSmithingTransformEditorConfig.RESULT_SAVE_ALL_COMPONENTS_ICON;
     }
 
     private Icon getConfirmIcon() {

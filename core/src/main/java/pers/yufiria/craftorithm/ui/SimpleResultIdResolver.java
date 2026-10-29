@@ -9,15 +9,12 @@ import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 /**
  * 基础结果ID解析器
  */
-public final class SimpleResultIdResolver implements ResultIdResolver {
+public enum SimpleResultIdResolver implements ResultIdResolver {
 
-    public static final SimpleResultIdResolver INSTANCE = new SimpleResultIdResolver();
-
-    private SimpleResultIdResolver() {
-    }
+    INSTANCE;
 
     @Override
-    public @Nullable NamespacedItemIdStack resolve(@NotNull ItemStack item) {
+    public @Nullable NamespacedItemIdStack resolveResultId(@NotNull ItemStack item) {
         return ItemManager.INSTANCE.matchItemIdOrCreate(item, false);
     }
 

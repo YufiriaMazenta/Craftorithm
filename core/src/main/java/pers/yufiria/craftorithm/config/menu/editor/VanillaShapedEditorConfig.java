@@ -12,6 +12,7 @@ public class VanillaShapedEditorConfig {
     public static final ConfigSectionConfig FRAME_ICON = new ConfigSectionConfig("frame_icon", MenuIconConfigUtils.editorFrameIcon("vanilla_shaped"));
     public static final ConfigSectionConfig RESULT_FRAME_ICON = new ConfigSectionConfig("result_frame_icon", MenuIconConfigUtils.editorResultFrameIcon());
     public static final ConfigSectionConfig CONFIRM_ICON = new ConfigSectionConfig("confirm_icon", MenuIconConfigUtils.editorConfirmIcon("minecraft:crafting_table"));
+    public static final ConfigSectionConfig RESULT_SAVE_ALL_COMPONENTS_ICON = new ConfigSectionConfig("result_save_all_components_icon", MenuIconConfigUtils.editorResultSaveAllComponentsIcon());
     public static final ConfigSectionConfig BACK_ICON = new ConfigSectionConfig("back_icon", MenuIconConfigUtils.editorBackIcon());
     public static final ConfigSectionConfig DELETE_ICON = new ConfigSectionConfig("delete_icon", MenuIconConfigUtils.editorDeleteIcon());
 

@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.ui.editor.vanillastonecutting;
 
+import crypticlib.config.node.impl.bukkit.ConfigSectionConfig;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.display.MenuDisplay;
@@ -33,7 +34,7 @@ import java.util.function.Supplier;
 public final class VanillaStonecuttingEditor extends RecipeEditor {
 
     private static final int INGREDIENT_SLOT = 20;
-    private static final int RESULT_SLOT = 25;
+    private static final int RESULT_SLOT = 24;
 
     private final StonecuttingRecipe stonecuttingRecipe;
 
@@ -45,13 +46,14 @@ public final class VanillaStonecuttingEditor extends RecipeEditor {
             new MenuLayout(Arrays.asList(
                 "B#######D",
                 "#####FFF#",
-                "##I#AFRF#",
+                "##I#AFRK#",
                 "#####FFF#",
                 "#########",
                 "#########"
             ), () -> {
                 Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
+                layoutMap.put('K', this::getResultSaveAllComponentsIcon);
                 layoutMap.put('F', this::getResultFrameIcon);
                 layoutMap.put('A', this::getConfirmIcon);
                 layoutMap.put('B', this::getBackIcon);
@@ -83,6 +85,11 @@ public final class VanillaStonecuttingEditor extends RecipeEditor {
 
     private Icon getDeleteIcon() {
         return createDeleteIcon(VanillaStonecuttingEditorConfig.DELETE_ICON.value());
+    }
+
+    @Override
+    protected ConfigSectionConfig getResultSaveAllComponentsIconConfig() {
+        return VanillaStonecuttingEditorConfig.RESULT_SAVE_ALL_COMPONENTS_ICON;
     }
 
     private Icon getConfirmIcon() {

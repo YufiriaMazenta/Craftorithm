@@ -4,18 +4,22 @@ import crypticlib.CrypticLib;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.config.BukkitConfigWrapper;
+import crypticlib.config.node.impl.bukkit.ConfigSectionConfig;
 import crypticlib.lang.LangManager;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.menu.Menu;
 import crypticlib.ui.menu.StoredMenu;
 import org.bukkit.NamespacedKey;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.Languages;
@@ -37,13 +41,13 @@ import java.util.function.Consumer;
  * 继承StoredMenu，与RecipeCreator类似的模式，但用于编辑已有配方。
  * 子类在构造时调用fillRecipeData()将现有配方数据预填充到GUI槽位。
  */
-public abstract class RecipeEditor extends StoredMenu implements BackableMenu {
+public abstract class RecipeEditor extends StoredMenu implements BackableMenu, IngredientIdResolver, ResultIdResolver {
 
     protected Menu parentMenu;
     protected final NamespacedKey recipeKey;
     protected final String recipeId;
-    private final IngredientIdResolver ingredientIdResolver;
-    private final ResultIdResolver resultIdResolver;
+    //是否保存结果物品的全部组件, 开启时结果物品会被完整保存到内置物品源, 默认关闭
+    private boolean resultSaveAllComponents = false;
     /**
      * 标记该编辑页面是否初始化,用于首次打开时填充配方内容
      */
@@ -54,21 +58,9 @@ public abstract class RecipeEditor extends StoredMenu implements BackableMenu {
         @NotNull NamespacedKey recipeKey,
         @NotNull String recipeId
     ) {
-        this(player, recipeKey, recipeId, SimpleIngredientIdResolver.INSTANCE, SimpleResultIdResolver.INSTANCE);
-    }
-
-    public RecipeEditor(
-        @NotNull Player player,
-        @NotNull NamespacedKey recipeKey,
-        @NotNull String recipeId,
-        @NotNull IngredientIdResolver ingredientIdResolver,
-        @NotNull ResultIdResolver resultIdResolver
-    ) {
         super(player);
         this.recipeKey = recipeKey;
         this.recipeId = recipeId;
-        this.ingredientIdResolver = ingredientIdResolver;
-        this.resultIdResolver = resultIdResolver;
     }
 
     @Override
@@ -101,6 +93,47 @@ public abstract class RecipeEditor extends StoredMenu implements BackableMenu {
     }
 
     protected abstract void fillRecipeData(Inventory inventory);
+
+    /**
+     * 获取「保存结果物品全部组件」开关图标的配置
+     */
+    protected abstract ConfigSectionConfig getResultSaveAllComponentsIconConfig();
+
+    /**
+     * 「保存结果物品全部组件」开关按钮
+     * 点击切换开关状态, 开启后保存配方时会把结果物品的全部组件写入内置物品源
+     */
+    protected final Icon getResultSaveAllComponentsIcon() {
+        IconDisplay iconDisplay = TranslatableIconParser.INSTANCE.parseIconDisplay(getResultSaveAllComponentsIconConfig().value());
+        return new TranslatableIcon(iconDisplay) {
+            @Override
+            public ItemStack display() {
+                setTextReplaceMap(Map.of(
+                    "<state>",
+                    resultSaveAllComponents
+                        ? Languages.MENU_RECIPE_EDITOR_RESULT_SAVE_ALL_COMPONENTS_ENABLED.value()
+                        : Languages.MENU_RECIPE_EDITOR_RESULT_SAVE_ALL_COMPONENTS_DISABLED.value()
+                ));
+                ItemStack display = super.display();
+                if (!resultSaveAllComponents) {
+                    return display;
+                }
+                //开启时加上附魔光效, 不用悬停也能看出当前状态
+                ItemMeta itemMeta = display.getItemMeta();
+                itemMeta.addEnchant(Enchantment.LURE, 1, true);
+                itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                display.setItemMeta(itemMeta);
+                return display;
+            }
+
+            @Override
+            public Icon onClick(InventoryClickEvent event) {
+                resultSaveAllComponents = !resultSaveAllComponents;
+                updateMenuIcons();
+                return this;
+            }
+        };
+    }
 
     /**
      * 创建返回按钮图标，从配置中读取外观
@@ -141,19 +174,20 @@ public abstract class RecipeEditor extends StoredMenu implements BackableMenu {
         };
     }
 
-    /**
-     * 解析材料物品的ID字符串
-     */
-    protected final @Nullable String resolveIngredientId(@Nullable ItemStack item) {
-        return ingredientIdResolver.resolve(item);
+    @Override
+    public @Nullable String resolveIngredientId(@Nullable ItemStack item) {
+        return SimpleIngredientIdResolver.INSTANCE.resolveIngredientId(item);
     }
 
-    /**
-     * 解析结果物品的ID
-     */
-    protected final @Nullable NamespacedItemIdStack resolveResultId(@NotNull ItemStack item) {
-        return resultIdResolver.resolve(item);
+    @Override
+    public @Nullable NamespacedItemIdStack resolveResultId(@NotNull ItemStack item) {
+        if (resultSaveAllComponents) {
+            return SaveItemResultIdResolver.INSTANCE.resolveResultId(item);
+        } else {
+            return SimpleResultIdResolver.INSTANCE.resolveResultId(item);
+        }
     }
+
 
     /**
      * 保存配方配置到文件并重新加载

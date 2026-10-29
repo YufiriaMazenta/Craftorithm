@@ -131,6 +131,9 @@ public class Languages {
     public static final StringLang MENU_RECIPE_EDITOR_ANVIL_COST_LEVEL = new StringLang("menu.recipe_editor.anvil.cost_level");
     public static final StringLang MENU_RECIPE_EDITOR_ANVIL_COST_LEVEL_LORE = new StringLang("menu.recipe_editor.anvil.cost_level_lore");
 
+    public static final StringLang MENU_RECIPE_EDITOR_RESULT_SAVE_ALL_COMPONENTS_ENABLED = new StringLang("menu.recipe_editor.result_save_all_components.enabled");
+    public static final StringLang MENU_RECIPE_EDITOR_RESULT_SAVE_ALL_COMPONENTS_DISABLED = new StringLang("menu.recipe_editor.result_save_all_components.disabled");
+
     public static final StringLang MENU_RECIPE_CREATOR_RESULT_FRAME = new StringLang("menu.recipe_creator.result_frame");
     public static final StringLang MENU_RECIPE_CREATOR_CATEGORY_PREFIX = new StringLang("menu.recipe_creator.category_prefix");
     public static final StringLang MENU_RECIPE_CREATOR_CATEGORY_LORE = new StringLang("menu.recipe_creator.category_lore");
@@ -165,5 +168,7 @@ public class Languages {
     public static final StringLang MENU_RECIPE_CREATOR_CONFIRM_LORE_STONECUTTING = new StringLang("menu.recipe_creator.confirm_lore.stonecutting");
     public static final StringLang MENU_RECIPE_CREATOR_CONFIRM_LORE_BREWING = new StringLang("menu.recipe_creator.confirm_lore.brewing");
     public static final StringLang MENU_RECIPE_CREATOR_CONFIRM_LORE_ANVIL = new StringLang("menu.recipe_creator.confirm_lore.anvil");
+    public static final StringLang MENU_RECIPE_CREATOR_RESULT_SAVE_ALL_COMPONENTS_ENABLED = new StringLang("menu.recipe_creator.result_save_all_components.enabled");
+    public static final StringLang MENU_RECIPE_CREATOR_RESULT_SAVE_ALL_COMPONENTS_DISABLED = new StringLang("menu.recipe_creator.result_save_all_components.disabled");
 
 }

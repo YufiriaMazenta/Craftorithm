@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.ui.editor.vanillasmelting;
 
+import crypticlib.config.node.impl.bukkit.ConfigSectionConfig;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.display.MenuDisplay;
@@ -69,12 +70,13 @@ public class SmeltingEditor extends RecipeEditor {
             new MenuLayout(Arrays.asList(
                 "B#######D",
                 "#####FFF#",
-                "##I#AFRF#",
+                "##I#AFRK#",
                 "#####FFF#",
                 "##E#G#T##"
             ), () -> {
                 Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
+                layoutMap.put('K', this::getResultSaveAllComponentsIcon);
                 layoutMap.put('A', this::getConfirmIcon);
                 layoutMap.put('E', this::getExpIcon);
                 layoutMap.put('T', this::getTimeIcon);
@@ -165,6 +167,11 @@ public class SmeltingEditor extends RecipeEditor {
                 return this;
             }
         };
+    }
+
+    @Override
+    protected ConfigSectionConfig getResultSaveAllComponentsIconConfig() {
+        return smeltingType.editorConfigs().resultSaveAllComponentsIcon();
     }
 
     private Icon getConfirmIcon() {
