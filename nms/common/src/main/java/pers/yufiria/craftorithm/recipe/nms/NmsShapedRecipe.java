@@ -23,15 +23,12 @@ public interface NmsShapedRecipe<Input> extends NmsCraftingRecipe<Input> {
         if (!WorldIsolationDataHandler.INSTANCE.canRecipeUse(recipeKey(), world)) {
             return false;
         }
+        if (!ItemManager.INSTANCE.canCraft(craftingInput.items(), recipeKey())) {
+            return false;
+        }
         if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_21)) {
-            if (!WorldIsolationDataHandler.INSTANCE.canRecipeUse(recipeKey(), world)) {
-                return false;
-            }
             return customPattern().matchesSince1_21(craftingInput.items(), craftingInput.width(), craftingInput.height(), craftingInput.ingredientCount());
         } else {
-            if (!ItemManager.INSTANCE.canCraft(craftingInput.items(), recipeKey())) {
-                return false;
-            }
             return customPattern().matchesBefore1_21(craftingInput.items(), craftingInput.width(), craftingInput.height());
         }
     }
