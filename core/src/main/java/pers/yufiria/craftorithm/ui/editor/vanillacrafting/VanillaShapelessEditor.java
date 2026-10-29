@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.ui.editor.vanillacrafting;
 
-import crypticlib.config.node.impl.bukkit.ConfigSectionConfig;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.display.MenuDisplay;
@@ -59,12 +58,12 @@ public final class VanillaShapelessEditor extends RecipeEditor {
             ), () -> {
                 Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
-                layoutMap.put('K', this::getResultSaveAllComponentsIcon);
+                layoutMap.put('K', () -> getResultSaveAllComponentsIcon(VanillaShapelessEditorConfig.RESULT_SAVE_ALL_COMPONENTS_ICON.value()));
                 layoutMap.put('*', this::getResultFrameIcon);
                 layoutMap.put('A', this::getConfirmIcon);
-                layoutMap.put('B', this::getBackIcon);
+                layoutMap.put('B', () -> getBackIcon(VanillaShapelessEditorConfig.BACK_ICON.value()));
                 layoutMap.put('C', () -> categoryIcon);
-                layoutMap.put('D', this::getDeleteIcon);
+                layoutMap.put('D', () -> getDeleteIcon(VanillaShapelessEditorConfig.DELETE_ICON.value()));
                 return layoutMap;
             })
         );
@@ -88,19 +87,6 @@ public final class VanillaShapelessEditor extends RecipeEditor {
 
     private Icon getResultFrameIcon() {
         return TranslatableIconParser.INSTANCE.parse(VanillaShapelessEditorConfig.RESULT_FRAME_ICON.value()).get();
-    }
-
-    private Icon getBackIcon() {
-        return createBackIcon(VanillaShapelessEditorConfig.BACK_ICON.value());
-    }
-
-    private Icon getDeleteIcon() {
-        return createDeleteIcon(VanillaShapelessEditorConfig.DELETE_ICON.value());
-    }
-
-    @Override
-    protected ConfigSectionConfig getResultSaveAllComponentsIconConfig() {
-        return VanillaShapelessEditorConfig.RESULT_SAVE_ALL_COMPONENTS_ICON;
     }
 
     private Icon getConfirmIcon() {

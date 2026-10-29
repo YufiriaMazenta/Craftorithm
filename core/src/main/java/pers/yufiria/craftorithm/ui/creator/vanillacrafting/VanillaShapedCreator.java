@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.ui.creator.vanillacrafting;
 
-import crypticlib.config.node.impl.bukkit.ConfigSectionConfig;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.display.MenuDisplay;
@@ -50,7 +49,7 @@ public final class VanillaShapedCreator extends RecipeCreator {
             ), () -> {
                 Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
-                layoutMap.put('K', this::getResultSaveAllComponentsIcon);
+                layoutMap.put('K', () -> getResultSaveAllComponentsIcon(VanillaShapedCreatorConfig.RESULT_SAVE_ALL_COMPONENTS_ICON.value()));
                 layoutMap.put('*', this::getResultFrameIcon);
                 layoutMap.put('A', this::getConfirmIcon);
                 layoutMap.put('C', () -> new RecipeBookCategoryIcon(
@@ -69,19 +68,12 @@ public final class VanillaShapedCreator extends RecipeCreator {
         return SimpleRecipeTypes.VANILLA_SHAPED;
     }
 
-    @Override
-    protected Icon getFrameIcon() {
+    private Icon getFrameIcon() {
         return TranslatableIconParser.INSTANCE.parse(VanillaShapedCreatorConfig.FRAME_ICON.value()).get();
     }
 
-    @Override
-    protected Icon getResultFrameIcon() {
+    private Icon getResultFrameIcon() {
         return TranslatableIconParser.INSTANCE.parse(VanillaShapedCreatorConfig.RESULT_FRAME_ICON.value()).get();
-    }
-
-    @Override
-    protected ConfigSectionConfig getResultSaveAllComponentsIconConfig() {
-        return VanillaShapedCreatorConfig.RESULT_SAVE_ALL_COMPONENTS_ICON;
     }
 
     /**

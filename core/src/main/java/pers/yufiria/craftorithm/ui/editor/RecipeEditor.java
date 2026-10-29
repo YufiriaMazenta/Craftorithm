@@ -4,7 +4,6 @@ import crypticlib.CrypticLib;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.config.BukkitConfigWrapper;
-import crypticlib.config.node.impl.bukkit.ConfigSectionConfig;
 import crypticlib.lang.LangManager;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
@@ -95,16 +94,13 @@ public abstract class RecipeEditor extends StoredMenu implements BackableMenu, I
     protected abstract void fillRecipeData(Inventory inventory);
 
     /**
-     * 获取「保存结果物品全部组件」开关图标的配置
-     */
-    protected abstract ConfigSectionConfig getResultSaveAllComponentsIconConfig();
-
-    /**
      * 「保存结果物品全部组件」开关按钮
      * 点击切换开关状态, 开启后保存配方时会把结果物品的全部组件写入内置物品源
+     *
+     * @param config 开关图标的配置
      */
-    protected final Icon getResultSaveAllComponentsIcon() {
-        IconDisplay iconDisplay = TranslatableIconParser.INSTANCE.parseIconDisplay(getResultSaveAllComponentsIconConfig().value());
+    protected final Icon getResultSaveAllComponentsIcon(@NotNull ConfigurationSection config) {
+        IconDisplay iconDisplay = TranslatableIconParser.INSTANCE.parseIconDisplay(config);
         return new TranslatableIcon(iconDisplay) {
             @Override
             public ItemStack display() {
@@ -141,7 +137,7 @@ public abstract class RecipeEditor extends StoredMenu implements BackableMenu, I
      *
      * @param config 返回按钮的配置节
      */
-    protected Icon createBackIcon(ConfigurationSection config) {
+    protected Icon getBackIcon(ConfigurationSection config) {
         IconDisplay iconDisplay = TranslatableIconParser.INSTANCE.parseIconDisplay(config);
         return new BackIcon(iconDisplay);
     }
@@ -153,7 +149,7 @@ public abstract class RecipeEditor extends StoredMenu implements BackableMenu, I
      *
      * @param config 删除按钮的配置节
      */
-    protected Icon createDeleteIcon(ConfigurationSection config) {
+    protected Icon getDeleteIcon(ConfigurationSection config) {
         IconDisplay iconDisplay = TranslatableIconParser.INSTANCE.parseIconDisplay(config);
         return new TranslatableIcon(iconDisplay) {
             @Override
@@ -188,34 +184,6 @@ public abstract class RecipeEditor extends StoredMenu implements BackableMenu, I
         }
     }
 
-
-    /**
-     * 保存配方配置到文件并重新加载
-     *
-     * @param configWrapper 配方配置
-     * @param callback      配方加载完成后的回调
-     */
-    protected void saveRecipeEdit(BukkitConfigWrapper configWrapper, Runnable callback) {
-        CrypticLibBukkit.scheduler().async(() -> {
-            configWrapper.saveConfig();
-            configWrapper.reloadConfig();
-            String recipeId = recipeKey.getKey();
-            String recipeFileName = RecipeManager.INSTANCE.getRecipeFileNameByKey(recipeKey);
-            RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeId, false, false);
-            ParsedRecipe parsedRecipe = RecipeManager.INSTANCE.parseRecipeFromConfig(recipeFileName, configWrapper);
-            if (parsedRecipe == null) {
-                CrypticLib.error("Failed to load recipe " + recipeFileName);
-                return;
-            }
-            CrypticLibBukkit.scheduler().syncLater(() -> {
-                RecipeManager.INSTANCE.registerParsedRecipe(parsedRecipe, true);
-                if (callback != null) {
-                    callback.run();
-                }
-            }, 2L);
-        });
-    }
-
     /**
      * 保存编辑后的配方。
      * 统一处理「取出配方配置 → 写入字段 → 落盘重载并重新注册 → 关闭菜单 → 发送成功提示」。
@@ -227,12 +195,26 @@ public abstract class RecipeEditor extends StoredMenu implements BackableMenu, I
         BukkitConfigWrapper configWrapper = getRecipeConfigWrapper();
         if (configWrapper != null) {
             writeFields.accept(configWrapper);
-            saveRecipeEdit(configWrapper, () -> {
-                String fileName = RecipeManager.INSTANCE.getRecipeFileNameByKey(recipeKey);
-                LangUtils.sendLang(player, Languages.COMMAND_EDIT_SUCCESS, Map.of(
-                    "<recipe_id>", recipeId,
-                    "<recipe_file_name>", fileName != null ? fileName : recipeId
-                ));
+            CrypticLibBukkit.scheduler().async(() -> {
+                configWrapper.saveConfig();
+                configWrapper.reloadConfig();
+                String recipeId = recipeKey.getKey();
+                String recipeFileName = RecipeManager.INSTANCE.getRecipeFileNameByKey(recipeKey);
+                RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeId, false, false);
+                ParsedRecipe parsedRecipe = RecipeManager.INSTANCE.parseRecipeFromConfig(recipeFileName, configWrapper);
+                if (parsedRecipe == null) {
+                    CrypticLib.error("Failed to load recipe " + recipeFileName);
+                    return;
+                }
+
+                CrypticLibBukkit.scheduler().syncLater(() -> {
+                    RecipeManager.INSTANCE.registerParsedRecipe(parsedRecipe, true);
+                    String fileName = RecipeManager.INSTANCE.getRecipeFileNameByKey(recipeKey);
+                    LangUtils.sendLang(player, Languages.COMMAND_EDIT_SUCCESS, Map.of(
+                        "<recipe_id>", recipeId,
+                        "<recipe_file_name>", fileName != null ? fileName : recipeId
+                    ));
+                }, 2L);
             });
         }
         player.closeInventory();

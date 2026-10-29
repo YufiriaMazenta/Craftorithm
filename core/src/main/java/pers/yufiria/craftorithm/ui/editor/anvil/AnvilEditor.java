@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.ui.editor.anvil;
 
-import crypticlib.config.node.impl.bukkit.ConfigSectionConfig;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.display.MenuDisplay;
@@ -69,11 +68,11 @@ public final class AnvilEditor extends RecipeEditor {
             ), () -> {
                 Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
-                layoutMap.put('K', this::getResultSaveAllComponentsIcon);
+                layoutMap.put('K', () -> getResultSaveAllComponentsIcon(AnvilEditorConfig.RESULT_SAVE_ALL_COMPONENTS_ICON.value()));
                 layoutMap.put('C', this::getConfirmIcon);
                 layoutMap.put('L', this::getCostLevelIcon);
-                layoutMap.put('X', this::getBackIcon);
-                layoutMap.put('D', this::getDeleteIcon);
+                layoutMap.put('X', () -> getBackIcon(AnvilEditorConfig.BACK_ICON.value()));
+                layoutMap.put('D', () -> getDeleteIcon(AnvilEditorConfig.DELETE_ICON.value()));
                 return layoutMap;
             })
         );
@@ -95,14 +94,6 @@ public final class AnvilEditor extends RecipeEditor {
 
     private Icon getFrameIcon() {
         return TranslatableIconParser.INSTANCE.parse(AnvilEditorConfig.FRAME_ICON.value()).get();
-    }
-
-    private Icon getBackIcon() {
-        return createBackIcon(AnvilEditorConfig.BACK_ICON.value());
-    }
-
-    private Icon getDeleteIcon() {
-        return createDeleteIcon(AnvilEditorConfig.DELETE_ICON.value());
     }
 
     private Icon getCostLevelIcon() {
@@ -131,11 +122,6 @@ public final class AnvilEditor extends RecipeEditor {
                 return this;
             }
         };
-    }
-
-    @Override
-    protected ConfigSectionConfig getResultSaveAllComponentsIconConfig() {
-        return AnvilEditorConfig.RESULT_SAVE_ALL_COMPONENTS_ICON;
     }
 
     private Icon getConfirmIcon() {

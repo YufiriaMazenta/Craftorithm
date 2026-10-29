@@ -5,12 +5,12 @@ import crypticlib.CrypticLibBukkit;
 import crypticlib.Key;
 import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.config.BukkitConfigWrapper;
-import crypticlib.config.node.impl.bukkit.ConfigSectionConfig;
 import crypticlib.lang.LangManager;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.menu.StoredMenu;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
@@ -59,21 +59,14 @@ public abstract class RecipeCreator extends StoredMenu implements IngredientIdRe
 
     protected abstract RecipeType recipeType();
 
-    protected abstract Icon getFrameIcon();
-
-    protected abstract Icon getResultFrameIcon();
-
-    /**
-     * 获取「保存结果物品全部组件」开关图标的配置
-     */
-    protected abstract ConfigSectionConfig getResultSaveAllComponentsIconConfig();
-
     /**
      * 「保存结果物品全部组件」开关按钮
      * 点击切换开关状态, 开启后保存配方时会把结果物品的全部组件写入内置物品源
+     *
+     * @param config 开关图标的配置
      */
-    protected final Icon getResultSaveAllComponentsIcon() {
-        IconDisplay iconDisplay = TranslatableIconParser.INSTANCE.parseIconDisplay(getResultSaveAllComponentsIconConfig().value());
+    protected final Icon getResultSaveAllComponentsIcon(@NotNull ConfigurationSection config) {
+        IconDisplay iconDisplay = TranslatableIconParser.INSTANCE.parseIconDisplay(config);
         return new TranslatableIcon(iconDisplay) {
             @Override
             public ItemStack display() {

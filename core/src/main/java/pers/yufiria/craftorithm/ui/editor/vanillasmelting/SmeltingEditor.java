@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.ui.editor.vanillasmelting;
 
-import crypticlib.config.node.impl.bukkit.ConfigSectionConfig;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.display.MenuDisplay;
@@ -76,14 +75,14 @@ public class SmeltingEditor extends RecipeEditor {
             ), () -> {
                 Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
-                layoutMap.put('K', this::getResultSaveAllComponentsIcon);
+                layoutMap.put('K', () -> getResultSaveAllComponentsIcon(smeltingType.editorConfigs().resultSaveAllComponentsIcon().value()));
                 layoutMap.put('A', this::getConfirmIcon);
                 layoutMap.put('E', this::getExpIcon);
                 layoutMap.put('T', this::getTimeIcon);
                 layoutMap.put('F', this::getResultFrameIcon);
-                layoutMap.put('B', this::getBackIcon);
+                layoutMap.put('B', () -> getBackIcon(smeltingType.editorConfigs().backIcon().value()));
                 layoutMap.put('G', () -> categoryIcon);
-                layoutMap.put('D', this::getDeleteIcon);
+                layoutMap.put('D', () -> getDeleteIcon(smeltingType.editorConfigs().deleteIcon().value()));
                 return layoutMap;
             })
         );
@@ -107,14 +106,6 @@ public class SmeltingEditor extends RecipeEditor {
 
     private Icon getResultFrameIcon() {
         return TranslatableIconParser.INSTANCE.parse(smeltingType.editorConfigs().resultFrameIcon().value()).get();
-    }
-
-    private Icon getBackIcon() {
-        return createBackIcon(smeltingType.editorConfigs().backIcon().value());
-    }
-
-    private Icon getDeleteIcon() {
-        return createDeleteIcon(smeltingType.editorConfigs().deleteIcon().value());
     }
 
     private Icon getExpIcon() {
@@ -167,11 +158,6 @@ public class SmeltingEditor extends RecipeEditor {
                 return this;
             }
         };
-    }
-
-    @Override
-    protected ConfigSectionConfig getResultSaveAllComponentsIconConfig() {
-        return smeltingType.editorConfigs().resultSaveAllComponentsIcon();
     }
 
     private Icon getConfirmIcon() {

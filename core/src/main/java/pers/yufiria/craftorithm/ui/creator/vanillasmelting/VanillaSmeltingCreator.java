@@ -1,6 +1,5 @@
 package pers.yufiria.craftorithm.ui.creator.vanillasmelting;
 
-import crypticlib.config.node.impl.bukkit.ConfigSectionConfig;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.display.MenuDisplay;
@@ -66,7 +65,7 @@ public class VanillaSmeltingCreator extends RecipeCreator {
             ), () -> {
                 Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
-                layoutMap.put('K', this::getResultSaveAllComponentsIcon);
+                layoutMap.put('K', () -> getResultSaveAllComponentsIcon(smeltingType.creatorConfigs().resultSaveAllComponentsIcon().value()));
                 layoutMap.put('A', this::getConfirmIcon);
                 layoutMap.put('E', this::getExpIcon);
                 layoutMap.put('T', this::getTimeIcon);
@@ -82,19 +81,12 @@ public class VanillaSmeltingCreator extends RecipeCreator {
         return smeltingType.recipeType();
     }
 
-    @Override
-    protected Icon getFrameIcon() {
+    private Icon getFrameIcon() {
         return TranslatableIconParser.INSTANCE.parse(smeltingType.creatorConfigs().frameIcon().value()).get();
     }
 
-    @Override
-    protected Icon getResultFrameIcon() {
+    private Icon getResultFrameIcon() {
         return TranslatableIconParser.INSTANCE.parse(smeltingType.creatorConfigs().resultFrameIcon().value()).get();
-    }
-
-    @Override
-    protected ConfigSectionConfig getResultSaveAllComponentsIconConfig() {
-        return smeltingType.creatorConfigs().resultSaveAllComponentsIcon();
     }
 
     private Icon getExpIcon() {
