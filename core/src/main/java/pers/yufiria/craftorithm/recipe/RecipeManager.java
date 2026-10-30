@@ -166,20 +166,23 @@ public enum RecipeManager implements LifecycleTask {
         disabledRecipes.entrySet().removeIf(entry -> {
             NamespacedKey recipeKey = entry.getKey();
             Recipe recipe = entry.getValue();
+            boolean shouldRestore = !disabledRecipeKeyStrSet.contains(recipeKey.toString());
+            boolean result;
             try {
-                boolean restore = !disabledRecipeKeyStrSet.contains(recipeKey.toString());
-                if (restore) {
+                if (shouldRestore) {
                     RecipeType recipeType = getRecipeType(recipe);
-                    recipeType.recipeRegister().registerRecipe(recipe, false);
+                    result = recipeType.recipeRegister().registerRecipe(recipe, false);
+                } else {
+                    result = false;
                 }
-                return restore;
             } catch (Throwable throwable) {
                 CrypticLib.error(
                     "Failed to restore recipe: " + recipeKey.toString(),
                     throwable
                 );
-                return false;
+                result = false;
             }
+            return shouldRestore && result;
         });
     }
 
@@ -402,6 +405,10 @@ public enum RecipeManager implements LifecycleTask {
         }
         Recipe recipe = disabledRecipes.get(recipeKey);
         boolean result = getRecipeType(recipe).recipeRegister().registerRecipe(recipe, true);
+        if (!result) {
+            CrypticLib.warn("Restore disabled recipe <recipe_key> failed!", Map.of("<recipe_key>", recipeKey.asString()));
+            return false;
+        }
         disabledRecipes.remove(recipeKey);
         serverRecipeKeys.add(recipeKey);
         CrypticLibBukkit.scheduler().async(() -> {
@@ -411,7 +418,7 @@ public enum RecipeManager implements LifecycleTask {
             DisabledRecipesConfig.RECIPES.setValue(disabledRecipes);
             DisabledRecipesConfig.RECIPES.saveConfig();
         });
-        return result;
+        return true;
     }
 
     /**
