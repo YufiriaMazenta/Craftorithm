@@ -348,7 +348,13 @@ public enum RecipeManager implements LifecycleTask {
         }
         for (String recipeKeyStr : disabledRecipes) {
             NamespacedKey recipeKey = NamespacedKey.fromString(recipeKeyStr);
-            disableRecipe(recipeKey, false, false);
+            boolean result = disableRecipe(recipeKey, false, false);
+            if (!result) {
+                CrypticLib.warn(
+                    "Disable recipe <recipe_key> failed, please check is a valid recipe key!"
+                    , Map.of("<recipe_key>", recipeKeyStr)
+                );
+            }
         }
     }
 
