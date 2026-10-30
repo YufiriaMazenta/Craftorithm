@@ -177,7 +177,10 @@ public enum RecipeManager implements LifecycleTask {
                 }
             } catch (Throwable throwable) {
                 CrypticLib.error(
-                    "Failed to restore recipe: " + recipeKey.toString(),
+                    "Failed to restore recipe <recipe_key>",
+                    Map.of(
+                        "<recipe_key>", recipeKey.asString()
+                    ),
                     throwable
                 );
                 result = false;
