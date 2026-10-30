@@ -2,6 +2,7 @@ package pers.yufiria.craftorithm.resultprocessor.impl;
 
 import crypticlib.chat.BukkitTextProcessor;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.resultprocessor.ComponentProcessorFactory;
@@ -24,6 +25,7 @@ public enum LoreProcessorFactory implements ComponentProcessorFactory {
     LoreProcessorFactory() {
         handlers.put("copy_from_source", data -> copyFromSource());
         handlers.put("add", this::add);
+        handlers.put("set", this::set);
         handlers.put("merge_source", data -> mergeSource());
         handlers.put("remove", this::remove);
     }
@@ -78,19 +80,46 @@ public enum LoreProcessorFactory implements ComponentProcessorFactory {
         });
     }
 
+    /**
+     * 追加到结果物品已有的 lore 之后
+     */
     private ResultProcessor add(@Nullable ConfigurationSection data) {
         List<String> rawLines = data != null ? data.getStringList("value") : List.of();
         return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
+            if (rawLines.isEmpty()) {
+                return;
+            }
             ItemMeta resultMeta = resultItem.getItemMeta();
-            List<String> processed = rawLines.stream()
-                .map(line -> {
-                    String parsed = player != null ? BukkitTextProcessor.placeholder(player, line) : line;
-                    return BukkitTextProcessor.color(parsed);
-                })
-                .toList();
-            resultMeta.setLore(processed);
+            List<String> merged = new ArrayList<>();
+            if (resultMeta.hasLore()) {
+                merged.addAll(resultMeta.getLore());
+            }
+            merged.addAll(parseLines(rawLines, player));
+            resultMeta.setLore(merged);
             resultItem.setItemMeta(resultMeta);
         });
+    }
+
+    /**
+     * 整体替换结果物品的 lore
+     */
+    private ResultProcessor set(@Nullable ConfigurationSection data) {
+        List<String> rawLines = data != null ? data.getStringList("value") : List.of();
+        return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
+            ItemMeta resultMeta = resultItem.getItemMeta();
+            List<String> lines = parseLines(rawLines, player);
+            resultMeta.setLore(lines.isEmpty() ? null : lines);
+            resultItem.setItemMeta(resultMeta);
+        });
+    }
+
+    private List<String> parseLines(List<String> rawLines, @Nullable Player player) {
+        return rawLines.stream()
+            .map(line -> {
+                String parsed = player != null ? BukkitTextProcessor.placeholder(player, line) : line;
+                return BukkitTextProcessor.color(parsed);
+            })
+            .toList();
     }
 
     private ResultProcessor remove(@Nullable ConfigurationSection data) {

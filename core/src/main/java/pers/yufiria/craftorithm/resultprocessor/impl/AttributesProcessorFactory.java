@@ -27,6 +27,7 @@ public enum AttributesProcessorFactory implements ComponentProcessorFactory {
     AttributesProcessorFactory() {
         handlers.put("copy_from_source", data -> copyFromSource());
         handlers.put("add", this::add);
+        handlers.put("set", this::set);
         handlers.put("merge_source", data -> mergeSource());
         handlers.put("remove", this::remove);
     }
@@ -77,6 +78,19 @@ public enum AttributesProcessorFactory implements ComponentProcessorFactory {
         List<Map<?, ?>> attrList = data != null ? data.getMapList("value") : List.of();
         return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
+            applyAttributeModifiers(resultMeta, attrList);
+            resultItem.setItemMeta(resultMeta);
+        });
+    }
+
+    /**
+     * 清空结果物品的属性修饰器后写入
+     */
+    private ResultProcessor set(@Nullable ConfigurationSection data) {
+        List<Map<?, ?>> attrList = data != null ? data.getMapList("value") : List.of();
+        return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
+            ItemMeta resultMeta = resultItem.getItemMeta();
+            resultMeta.setAttributeModifiers(null);
             applyAttributeModifiers(resultMeta, attrList);
             resultItem.setItemMeta(resultMeta);
         });

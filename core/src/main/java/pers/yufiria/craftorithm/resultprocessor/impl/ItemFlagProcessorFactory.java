@@ -24,6 +24,7 @@ public enum ItemFlagProcessorFactory implements ComponentProcessorFactory {
     ItemFlagProcessorFactory() {
         handlers.put("copy_from_source", data -> copyFromSource());
         handlers.put("add", this::add);
+        handlers.put("set", this::set);
         handlers.put("merge_source", data -> mergeSource());
         handlers.put("remove", this::remove);
     }
@@ -75,6 +76,24 @@ public enum ItemFlagProcessorFactory implements ComponentProcessorFactory {
         List<String> flagNames = data != null ? data.getStringList("value") : List.of();
         return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
+            for (String flagName : flagNames) {
+                ItemFlag flag = parseItemFlag(flagName);
+                if (flag != null) {
+                    resultMeta.addItemFlags(flag);
+                }
+            }
+            resultItem.setItemMeta(resultMeta);
+        });
+    }
+
+    /**
+     * 清空结果物品的标志后写入
+     */
+    private ResultProcessor set(@Nullable ConfigurationSection data) {
+        List<String> flagNames = data != null ? data.getStringList("value") : List.of();
+        return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
+            ItemMeta resultMeta = resultItem.getItemMeta();
+            resultMeta.removeItemFlags(ItemFlag.values());
             for (String flagName : flagNames) {
                 ItemFlag flag = parseItemFlag(flagName);
                 if (flag != null) {

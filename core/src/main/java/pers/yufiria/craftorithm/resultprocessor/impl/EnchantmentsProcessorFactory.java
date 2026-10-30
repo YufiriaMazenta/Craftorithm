@@ -26,6 +26,7 @@ public enum EnchantmentsProcessorFactory implements ComponentProcessorFactory {
     EnchantmentsProcessorFactory() {
         handlers.put("copy_from_source", data -> copyFromSource());
         handlers.put("add", this::add);
+        handlers.put("set", this::set);
         handlers.put("merge_source", data -> mergeSource());
         handlers.put("remove", this::remove);
     }
@@ -96,6 +97,21 @@ public enum EnchantmentsProcessorFactory implements ComponentProcessorFactory {
         List<EnchantmentEntry> enchants = parseEnchantments(data);
         return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
+            enchants.forEach(e -> resultMeta.addEnchant(e.enchantment(), e.level(), true));
+            resultItem.setItemMeta(resultMeta);
+        });
+    }
+
+    /**
+     * 清空结果物品的全部附魔后写入
+     */
+    private ResultProcessor set(@Nullable ConfigurationSection data) {
+        List<EnchantmentEntry> enchants = parseEnchantments(data);
+        return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
+            ItemMeta resultMeta = resultItem.getItemMeta();
+            for (Enchantment enchantment : new ArrayList<>(resultMeta.getEnchants().keySet())) {
+                resultMeta.removeEnchant(enchantment);
+            }
             enchants.forEach(e -> resultMeta.addEnchant(e.enchantment(), e.level(), true));
             resultItem.setItemMeta(resultMeta);
         });

@@ -31,6 +31,7 @@ public enum CustomPersistentDataProcessorFactory implements ComponentProcessorFa
     CustomPersistentDataProcessorFactory() {
         handlers.put("copy_from_source", this::createCopyFromSource);
         handlers.put("add", this::createAdd);
+        handlers.put("set", this::createSet);
         handlers.put("merge_source", this::createMergeSource);
         handlers.put("remove", this::createRemove);
     }
@@ -85,41 +86,53 @@ public enum CustomPersistentDataProcessorFactory implements ComponentProcessorFa
         if (data == null || data.getKeys(false).isEmpty()) {
             throw new IllegalArgumentException("custom_persistent_data add requires data with entries");
         }
-        return new ResultProcessor() {
-            @Override
-            public String processorName() {
-                return COMPONENT_NAME;
-            }
+        return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
+            ItemMeta resultMeta = resultItem.getItemMeta();
+            writeEntries(resultMeta.getPersistentDataContainer(), data);
+            resultItem.setItemMeta(resultMeta);
+        });
+    }
 
-            @Override
-            public void processItem(@Nullable ItemStack sourceItem, @NotNull ItemStack resultItem, @Nullable Player player) {
-                ItemMeta resultMeta = resultItem.getItemMeta();
-                PersistentDataContainer resultPdc = resultMeta.getPersistentDataContainer();
-                for (String keyStr : data.getKeys(false)) {
-                    NamespacedKey entryKey = NamespacedKey.fromString(keyStr);
-                    if (entryKey == null) continue;
-                    Object value = data.get(keyStr);
-                    if (value instanceof String s) {
-                        resultPdc.set(entryKey, PersistentDataType.STRING, s);
-                    } else if (value instanceof Integer i) {
-                        resultPdc.set(entryKey, PersistentDataType.INTEGER, i);
-                    } else if (value instanceof Long l) {
-                        resultPdc.set(entryKey, PersistentDataType.LONG, l);
-                    } else if (value instanceof Double d) {
-                        resultPdc.set(entryKey, PersistentDataType.DOUBLE, d);
-                    } else if (value instanceof Float f) {
-                        resultPdc.set(entryKey, PersistentDataType.FLOAT, f);
-                    } else if (value instanceof Byte b) {
-                        resultPdc.set(entryKey, PersistentDataType.BYTE, b);
-                    } else if (value instanceof Boolean b) {
-                        resultPdc.set(entryKey, PersistentDataType.BOOLEAN, b);
-                    } else {
-                        resultPdc.set(entryKey, PersistentDataType.STRING, String.valueOf(value));
-                    }
-                }
-                resultItem.setItemMeta(resultMeta);
+    /**
+     * 清空结果物品的全部持久数据后写入
+     */
+    private ResultProcessor createSet(@Nullable ConfigurationSection data) {
+        return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
+            ItemMeta resultMeta = resultItem.getItemMeta();
+            PersistentDataContainer resultPdc = resultMeta.getPersistentDataContainer();
+            for (NamespacedKey key : List.copyOf(resultPdc.getKeys())) {
+                resultPdc.remove(key);
             }
-        };
+            if (data != null) {
+                writeEntries(resultPdc, data);
+            }
+            resultItem.setItemMeta(resultMeta);
+        });
+    }
+
+    private void writeEntries(PersistentDataContainer pdc, ConfigurationSection data) {
+        for (String keyStr : data.getKeys(false)) {
+            NamespacedKey entryKey = NamespacedKey.fromString(keyStr);
+            if (entryKey == null) continue;
+            Object value = data.get(keyStr);
+            if (value instanceof String s) {
+                pdc.set(entryKey, PersistentDataType.STRING, s);
+            } else if (value instanceof Integer i) {
+                pdc.set(entryKey, PersistentDataType.INTEGER, i);
+            } else if (value instanceof Long l) {
+                pdc.set(entryKey, PersistentDataType.LONG, l);
+            } else if (value instanceof Double d) {
+                pdc.set(entryKey, PersistentDataType.DOUBLE, d);
+            } else if (value instanceof Float f) {
+                pdc.set(entryKey, PersistentDataType.FLOAT, f);
+            } else if (value instanceof Byte b) {
+                pdc.set(entryKey, PersistentDataType.BYTE, b);
+            } else if (value instanceof Boolean b) {
+                pdc.set(entryKey, PersistentDataType.BOOLEAN, b);
+            } else {
+                pdc.set(entryKey, PersistentDataType.STRING, String.valueOf(value));
+            }
+        }
     }
 
     private ResultProcessor createMergeSource(@Nullable ConfigurationSection data) {
@@ -172,7 +185,11 @@ public enum CustomPersistentDataProcessorFactory implements ComponentProcessorFa
                 }
             };
         }
-        List<String> keyNames = data.getStringList("keys");
+        // value 为统一写法, keys 与 key 为兼容旧配置保留
+        List<String> keyNames = data.getStringList("value");
+        if (keyNames.isEmpty()) {
+            keyNames = data.getStringList("keys");
+        }
         if (keyNames.isEmpty()) {
             // 单个 key
             String singleKey = data.getString("key");
