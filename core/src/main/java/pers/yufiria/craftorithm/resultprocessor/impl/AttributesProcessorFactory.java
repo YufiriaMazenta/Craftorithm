@@ -16,9 +16,6 @@ import pers.yufiria.craftorithm.resultprocessor.ResultProcessor;
 import java.util.*;
 import java.util.function.Function;
 
-import static pers.yufiria.craftorithm.resultprocessor.impl.ProcessorUtils.processor;
-import static pers.yufiria.craftorithm.resultprocessor.impl.ProcessorUtils.processorRequireSource;
-
 public enum AttributesProcessorFactory implements ComponentProcessorFactory {
 
     INSTANCE;
@@ -53,7 +50,7 @@ public enum AttributesProcessorFactory implements ComponentProcessorFactory {
     }
 
     private ResultProcessor copyFromSource() {
-        return processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
+        return ProcessorUtils.processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta sourceMeta = sourceItem.getItemMeta();
             ItemMeta resultMeta = resultItem.getItemMeta();
             if (sourceMeta.hasAttributeModifiers()) {
@@ -64,7 +61,7 @@ public enum AttributesProcessorFactory implements ComponentProcessorFactory {
     }
 
     private ResultProcessor mergeSource() {
-        return processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
+        return ProcessorUtils.processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta sourceMeta = sourceItem.getItemMeta();
             ItemMeta resultMeta = resultItem.getItemMeta();
             if (sourceMeta.hasAttributeModifiers()) {
@@ -78,7 +75,7 @@ public enum AttributesProcessorFactory implements ComponentProcessorFactory {
 
     private ResultProcessor add(@Nullable ConfigurationSection data) {
         List<Map<?, ?>> attrList = data != null ? data.getMapList("value") : List.of();
-        return processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
+        return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
             applyAttributeModifiers(resultMeta, attrList);
             resultItem.setItemMeta(resultMeta);
@@ -86,7 +83,7 @@ public enum AttributesProcessorFactory implements ComponentProcessorFactory {
     }
 
     private ResultProcessor remove(@Nullable ConfigurationSection data) {
-        return processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
+        return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
             if (data == null || data.getKeys(false).isEmpty()) {
                 resultMeta.setAttributeModifiers(null);

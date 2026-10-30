@@ -15,9 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import static pers.yufiria.craftorithm.resultprocessor.impl.ProcessorUtils.processor;
-import static pers.yufiria.craftorithm.resultprocessor.impl.ProcessorUtils.processorRequireSource;
-
 public enum EnchantmentsProcessorFactory implements ComponentProcessorFactory {
 
     INSTANCE;
@@ -55,7 +52,7 @@ public enum EnchantmentsProcessorFactory implements ComponentProcessorFactory {
      * 复制时源等级不低于结果等级就覆盖（结果等级更高才保留）
      */
     private ResultProcessor copyFromSource() {
-        return processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
+        return ProcessorUtils.processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta sourceMeta = sourceItem.getItemMeta();
             ItemMeta resultMeta = resultItem.getItemMeta();
             if (sourceMeta.hasEnchants()) {
@@ -77,7 +74,7 @@ public enum EnchantmentsProcessorFactory implements ComponentProcessorFactory {
      * 合并时仅源等级严格更高才覆盖（等级相同保留结果）
      */
     private ResultProcessor mergeSource() {
-        return processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
+        return ProcessorUtils.processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta sourceMeta = sourceItem.getItemMeta();
             ItemMeta resultMeta = resultItem.getItemMeta();
             if (sourceMeta.hasEnchants()) {
@@ -97,7 +94,7 @@ public enum EnchantmentsProcessorFactory implements ComponentProcessorFactory {
 
     private ResultProcessor add(@Nullable ConfigurationSection data) {
         List<EnchantmentEntry> enchants = parseEnchantments(data);
-        return processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
+        return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
             enchants.forEach(e -> resultMeta.addEnchant(e.enchantment(), e.level(), true));
             resultItem.setItemMeta(resultMeta);
@@ -105,7 +102,7 @@ public enum EnchantmentsProcessorFactory implements ComponentProcessorFactory {
     }
 
     private ResultProcessor remove(@Nullable ConfigurationSection data) {
-        return processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
+        return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
             if (data == null || data.getKeys(false).isEmpty()) {
                 for (Enchantment ench : new ArrayList<>(resultMeta.getEnchants().keySet())) {

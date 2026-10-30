@@ -13,9 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import static pers.yufiria.craftorithm.resultprocessor.impl.ProcessorUtils.processor;
-import static pers.yufiria.craftorithm.resultprocessor.impl.ProcessorUtils.processorRequireSource;
-
 public enum LoreProcessorFactory implements ComponentProcessorFactory {
 
     INSTANCE;
@@ -50,7 +47,7 @@ public enum LoreProcessorFactory implements ComponentProcessorFactory {
     }
 
     private ResultProcessor copyFromSource() {
-        return processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
+        return ProcessorUtils.processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta sourceMeta = sourceItem.getItemMeta();
             ItemMeta resultMeta = resultItem.getItemMeta();
             if (sourceMeta.hasLore()) {
@@ -64,7 +61,7 @@ public enum LoreProcessorFactory implements ComponentProcessorFactory {
      * 合并为结果 lore 在前，源 lore 追加在后
      */
     private ResultProcessor mergeSource() {
-        return processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
+        return ProcessorUtils.processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta sourceMeta = sourceItem.getItemMeta();
             ItemMeta resultMeta = resultItem.getItemMeta();
             if (sourceMeta.hasLore()) {
@@ -83,7 +80,7 @@ public enum LoreProcessorFactory implements ComponentProcessorFactory {
 
     private ResultProcessor add(@Nullable ConfigurationSection data) {
         List<String> rawLines = data != null ? data.getStringList("value") : List.of();
-        return processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
+        return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
             List<String> processed = rawLines.stream()
                 .map(line -> {
@@ -97,7 +94,7 @@ public enum LoreProcessorFactory implements ComponentProcessorFactory {
     }
 
     private ResultProcessor remove(@Nullable ConfigurationSection data) {
-        return processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
+        return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
             if (data == null || data.getKeys(false).isEmpty()) {
                 resultMeta.setLore(null);

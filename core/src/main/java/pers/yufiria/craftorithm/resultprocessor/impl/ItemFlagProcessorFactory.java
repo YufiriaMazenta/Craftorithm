@@ -13,9 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import static pers.yufiria.craftorithm.resultprocessor.impl.ProcessorUtils.processor;
-import static pers.yufiria.craftorithm.resultprocessor.impl.ProcessorUtils.processorRequireSource;
-
 public enum ItemFlagProcessorFactory implements ComponentProcessorFactory {
 
     INSTANCE;
@@ -53,7 +50,7 @@ public enum ItemFlagProcessorFactory implements ComponentProcessorFactory {
      * 复制为完全覆盖，先清空结果已有的 flag
      */
     private ResultProcessor copyFromSource() {
-        return processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
+        return ProcessorUtils.processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta sourceMeta = sourceItem.getItemMeta();
             ItemMeta resultMeta = resultItem.getItemMeta();
             resultMeta.removeItemFlags(ItemFlag.values());
@@ -66,7 +63,7 @@ public enum ItemFlagProcessorFactory implements ComponentProcessorFactory {
      * 合并保留结果已有的 flag，仅追加源的 flag
      */
     private ResultProcessor mergeSource() {
-        return processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
+        return ProcessorUtils.processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta sourceMeta = sourceItem.getItemMeta();
             ItemMeta resultMeta = resultItem.getItemMeta();
             sourceMeta.getItemFlags().forEach(resultMeta::addItemFlags);
@@ -76,7 +73,7 @@ public enum ItemFlagProcessorFactory implements ComponentProcessorFactory {
 
     private ResultProcessor add(@Nullable ConfigurationSection data) {
         List<String> flagNames = data != null ? data.getStringList("value") : List.of();
-        return processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
+        return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
             for (String flagName : flagNames) {
                 ItemFlag flag = parseItemFlag(flagName);
@@ -89,7 +86,7 @@ public enum ItemFlagProcessorFactory implements ComponentProcessorFactory {
     }
 
     private ResultProcessor remove(@Nullable ConfigurationSection data) {
-        return processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
+        return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
             if (data == null || data.getKeys(false).isEmpty()) {
                 resultMeta.removeItemFlags(ItemFlag.values());
