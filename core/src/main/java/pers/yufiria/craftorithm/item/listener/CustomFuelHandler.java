@@ -61,9 +61,9 @@ public enum CustomFuelHandler implements Listener {
             case SHIFT_RIGHT:
                 if (furnaceInventory.equals(clickInv))
                     return;
-                if (!ItemManager.INSTANCE.isCustomFuel(current))
-                    return;
                 if (ItemHelper.isAir(current))
+                    return;
+                if (!ItemManager.INSTANCE.isCustomFuel(current))
                     return;
                 if (!ItemHelper.isAir(furnaceInventory.getFuel())) {
                     ItemStack fuel = furnaceInventory.getFuel();
