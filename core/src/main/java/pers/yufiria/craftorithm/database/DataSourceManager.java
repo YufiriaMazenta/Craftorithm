@@ -28,7 +28,7 @@ public enum DataSourceManager implements LifecycleTask {
 
     INSTANCE;
     private final Map<String, DataSourceLoader> databaseLoaderMap = new ConcurrentHashMap<>();
-    private ConnectionSource databaseConnection;
+    private volatile ConnectionSource databaseConnection;
 
     DataSourceManager() {
         registerDatabaseLoader("mysql", MysqlDataSourceLoader.INSTANCE);
