@@ -33,11 +33,6 @@ public enum ResultProcessorManager implements Listener {
     );
 
     ResultProcessorManager() {
-        for (SimpleComponentProcessorFactory factory : SimpleComponentProcessorFactory.values()) {
-            if (factory.supportedByCurrentVersion()) {
-                registerFactory(factory);
-            }
-        }
         registerFactory(CustomPersistentDataProcessorFactory.INSTANCE);
         registerFactory(EnchantmentsProcessorFactory.INSTANCE);
         registerFactory(AttributesProcessorFactory.INSTANCE);
