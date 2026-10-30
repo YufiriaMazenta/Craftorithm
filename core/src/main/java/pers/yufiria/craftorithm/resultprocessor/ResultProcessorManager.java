@@ -99,6 +99,10 @@ public enum ResultProcessorManager implements Listener {
                 }
                 parseAndAddProcessor(processors, factory, componentName, entry);
             }
+            CrypticLib.debug(
+                "Registered result processor '<processor_type>' for recipe: <recipe_key>",
+                Map.of("<recipe_key>", recipeKey.asString(), "<processor_type>", componentName)
+            );
         }
         recipeProcessors.put(recipeKey, new ResultProcessors(processors));
     }
