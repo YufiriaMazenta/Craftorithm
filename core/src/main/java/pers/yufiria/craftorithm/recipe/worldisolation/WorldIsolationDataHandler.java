@@ -55,7 +55,6 @@ public enum WorldIsolationDataHandler implements Listener, LifecycleTask {
             String worldName = recipeConfig.getString(ENABLE_WORLDS_CONFIG_KEY);
             if (!isWorldValid(worldName)) {
                 CrypticLib.error(worldName + " is a invalid world in recipe: " + event.recipeKey());
-                return;
             }
             enableWorlds = new EnableWorlds(Collections.singletonList(worldName));
         } else if (recipeConfig.isList(ENABLE_WORLDS_CONFIG_KEY)) {
