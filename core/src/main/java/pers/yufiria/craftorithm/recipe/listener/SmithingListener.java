@@ -35,7 +35,7 @@ public enum SmithingListener implements Listener {
         if (recipe == null)
             return;
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
-        if (!recipeKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
+        if (recipeKey != null && !recipeKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
             return;
         }
 

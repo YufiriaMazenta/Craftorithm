@@ -38,7 +38,7 @@ public enum SmeltingListener implements Listener {
         }
         CookingRecipe<?> recipe = event.getRecipe();
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
-        if (!recipeKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
+        if (recipeKey != null && !recipeKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
             return;
         }
         putRecipeCache(event.getBlock(), recipe);
@@ -78,7 +78,7 @@ public enum SmeltingListener implements Listener {
         }
         CampfireRecipe recipe = event.getRecipe();
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
-        if (!recipeKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
+        if (recipeKey != null && !recipeKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
             return;
         }
         putRecipeCache(event.getBlock(), recipe);
