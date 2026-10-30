@@ -81,6 +81,12 @@ public enum AnvilRecipeHandler implements Listener {
             if (!WorldIsolationDataHandler.INSTANCE.canRecipeUse(anvilRecipe.getKey(), world)) {
                 continue;
             }
+
+            // 检查物品能否用于该配方的合成
+            if (!ItemManager.INSTANCE.canCraft(new ItemStack[]{base, addition}, anvilRecipe.getKey())) {
+                continue;
+            }
+
             ItemIdStackRecipeChoice recipeBaseId = anvilRecipe.base();
             ItemIdStackRecipeChoice recipeAdditionId = anvilRecipe.addition();
             if (!recipeBaseId.test(base))
@@ -113,11 +119,6 @@ public enum AnvilRecipeHandler implements Listener {
             return;
 
         if (AnvilTriggerHandler.INSTANCE.denyPrepare(event, player, base, addition, anvilRecipe)) {
-            return;
-        }
-
-        // 检查 blocked_crafting_lore_rules
-        if (!ItemManager.INSTANCE.canCraft(new ItemStack[]{base, addition}, anvilRecipe.getKey())) {
             return;
         }
 
@@ -183,11 +184,6 @@ public enum AnvilRecipeHandler implements Listener {
         Player player = (Player) event.getWhoClicked();
         TriggerContext ctx = AnvilTriggerHandler.INSTANCE.context(event, player, base, addition, anvilRecipe);
         if (ctx != null && AnvilTriggerHandler.INSTANCE.deny(ctx)) {
-            return;
-        }
-
-        // 检查能否合成
-        if (!ItemManager.INSTANCE.canCraft(new ItemStack[]{base, addition}, anvilRecipe.getKey())) {
             return;
         }
 
