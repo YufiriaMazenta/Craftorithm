@@ -22,6 +22,7 @@ import pers.yufiria.craftorithm.api.event.CraftorithmPrepareAnvilEvent;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
+import pers.yufiria.craftorithm.item.exception.ItemNotFoundException;
 import pers.yufiria.craftorithm.recipe.ingredient.ItemIdStackRecipeChoice;
 import pers.yufiria.craftorithm.recipe.worldisolation.WorldIsolationDataHandler;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessorManager;
@@ -190,8 +191,12 @@ public enum AnvilRecipeHandler implements Listener {
             return;
         }
 
-        NamespacedItemIdStack baseId = ItemManager.INSTANCE.matchItemIdOrVanilla(base, false).orElseThrow();
-        NamespacedItemIdStack additionId = ItemManager.INSTANCE.matchItemIdOrVanilla(addition, false).orElseThrow();
+        NamespacedItemIdStack baseId = ItemManager.INSTANCE.matchItemIdOrVanilla(base, false).orElseThrow(
+            () -> new IllegalStateException("Can not match base item id for anvil recipe!")
+        );
+        NamespacedItemIdStack additionId = ItemManager.INSTANCE.matchItemIdOrVanilla(addition, false).orElseThrow(
+            () -> new IllegalStateException("Can not match adddition item id for anvil recipe!")
+        );
         int baseNum = baseId.amount(), additionNum = additionId.amount();
         int needBaseNum = anvilRecipe.base().getUseAmount(), needAdditionNum = anvilRecipe.addition().getUseAmount();
         int costLevel = anvilRecipe.costLevel();
