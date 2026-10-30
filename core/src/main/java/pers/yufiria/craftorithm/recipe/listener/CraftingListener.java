@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
+import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import pers.yufiria.craftorithm.item.ItemManager;
@@ -22,14 +23,28 @@ public enum CraftingListener implements Listener {
 
     INSTANCE;
 
+    /**
+     * 材料限制对所有命名空间生效。
+     * 原版配方不经过本插件的 NMS 配方类，只在这里拦。
+     */
     @EventHandler(priority = EventPriority.LOWEST)
     public void processResult(PrepareItemCraftEvent event) {
         Recipe recipe = event.getRecipe();
-        if (recipe != null) {
-            NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
-            if (recipeKey != null && recipeKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
-                processResultItem(event, recipe.getResult(), recipeKey);
-            }
+        if (recipe == null) {
+            return;
+        }
+        NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
+        if (recipeKey == null) {
+            return;
+        }
+        CraftingInventory inventory = event.getInventory();
+        // 拦截指定材料用于合成，这里主要是拦截其他插件和原版的配方
+        if (!ItemManager.INSTANCE.canCraft(inventory.getMatrix(), recipeKey)) {
+            inventory.setResult(null);
+            return;
+        }
+        if (recipeKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
+            processResultItem(event, recipe.getResult(), recipeKey);
         }
     }
 

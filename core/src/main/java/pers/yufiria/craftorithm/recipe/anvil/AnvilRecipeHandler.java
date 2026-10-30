@@ -115,8 +115,15 @@ public enum AnvilRecipeHandler implements Listener {
         }
         Player player = playerOpt.get();
         AnvilRecipe anvilRecipe = AnvilRecipeHandler.INSTANCE.matchAnvilRecipe(base, addition, player.getWorld());
-        if (anvilRecipe == null)
+        if (anvilRecipe == null) {
+            // 检查物品能否用于该配方的合成，这个地方其实主要是拦截其他插件和原版的逻辑，拦截本插件的逻辑在matchAnvilRecipe里
+            if (!ItemManager.INSTANCE.canCraft(new ItemStack[]{base, addition}, null)) {
+                event.setResult(null);
+                event.getInventory().setItem(2, null);
+                player.updateInventory();
+            }
             return;
+        }
 
         if (AnvilTriggerHandler.INSTANCE.denyPrepare(event, player, base, addition, anvilRecipe)) {
             return;

@@ -3,6 +3,7 @@ package pers.yufiria.craftorithm.recipe.ingredient.restriction;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * 合成限制规则接口
@@ -18,5 +19,5 @@ public interface IngredientRestrictionRule {
      * @param recipeKey 配方的 NamespacedKey
      * @return true 表示阻止
      */
-    boolean isBlocked(@NotNull ItemStack item, @NotNull NamespacedKey recipeKey);
+    boolean isBlocked(@NotNull ItemStack item, @Nullable NamespacedKey recipeKey);
 }

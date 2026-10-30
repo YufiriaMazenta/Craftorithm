@@ -5,6 +5,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.recipe.ingredient.restriction.IngredientRestrictionRule;
 import pers.yufiria.craftorithm.recipe.ingredient.restriction.IngredientRestrictionRuleFactory;
 import pers.yufiria.craftorithm.recipe.ingredient.restriction.RecipeKeyMatcher;
@@ -41,18 +42,20 @@ public final class LoreRestrictionRule implements IngredientRestrictionRule {
     }
 
     @Override
-    public boolean isBlocked(@NotNull ItemStack item, @NotNull NamespacedKey recipeKey) {
+    public boolean isBlocked(@NotNull ItemStack item, @Nullable NamespacedKey recipeKey) {
         if (!item.hasItemMeta() || item.getItemMeta().getLore() == null) {
             return false;
         }
-        String recipeKeyStr = recipeKey.toString();
+        boolean unknownRecipe = recipeKey == null;
+        //拿不到配方key（原版或其它插件的部分配方），只有匹配所有配方的规则才生效
+        String recipeKeyStr = unknownRecipe ? null : recipeKey.toString();
         for (String loreLine : item.getItemMeta().getLore()) {
             String stripped = ChatColor.stripColor(loreLine);
             if (!lore.equals(stripped)) {
                 continue;
             }
             for (RecipeKeyMatcher matcher : matchers) {
-                if (matcher.matches(recipeKeyStr)) {
+                if (unknownRecipe ? matcher.matchesAny() : matcher.matches(recipeKeyStr)) {
                     return true;
                 }
             }

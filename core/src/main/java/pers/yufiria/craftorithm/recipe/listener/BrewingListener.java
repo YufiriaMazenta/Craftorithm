@@ -25,16 +25,16 @@ import java.util.Optional;
 public enum BrewingListener implements Listener {
 
     INSTANCE;
-    final boolean versionInV26_1andV26_3;
+    final boolean shouldRebuildResult;
 
     BrewingListener() {
         MinecraftVersion currentVersion = MinecraftVersion.current();
-        versionInV26_1andV26_3 = currentVersion.afterOrEquals(MinecraftVersion.V26_1) && currentVersion.before(MinecraftVersion.V26_3);
+        shouldRebuildResult = currentVersion.afterOrEquals(MinecraftVersion.V26_1) && currentVersion.before(MinecraftVersion.V26_3);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void rebuildBrewResult(BrewEvent event) {
-        if (versionInV26_1andV26_3) {
+        if (shouldRebuildResult) {
             List<ItemStack> results = event.getResults();
             //因为paper在26.1开始, PotionBrewing.mix方法必须有原材料有药水组件才能使用,所以需要自行匹配
             BrewerInventory brewerInventory = event.getContents();
@@ -72,21 +72,22 @@ public enum BrewingListener implements Listener {
             ItemStack input = brewerInventory.getItem(i);
             if (input != null) {
                 Optional<NamespacedKey> recipeKeyOpt = BrewingRecipeRegister.INSTANCE.matchKey(input, ingredient);
+                // 检查物品是否能用于酿造
+                // 由于spigot和paper都没有办法获取到原版的酿造配方key，只有匹配所有配方的拦截规则才能拦截原版配方
+                if (!ItemManager.INSTANCE.canCraft(new ItemStack[]{input, ingredient}, recipeKeyOpt.orElse(null))) {
+                    results.set(i, input);
+                    continue;
+                }
+
                 if (recipeKeyOpt.isPresent()) {
                     NamespacedKey recipeKey = recipeKeyOpt.get();
 
                     if (MinecraftVersion.current().before(MinecraftVersion.V26_3)) {
-                        //因为26.3开始，这两个拦截功能在nms层处理，所以只处理早期版本的相关逻辑
+                        //因为26.3开始，世界隔离在nms层处理，所以只处理早期版本的相关逻辑
                         if (!WorldIsolationDataHandler.INSTANCE.canRecipeUse(
                             recipeKey,
                             event.getBlock().getWorld()
                         )) {
-                            results.set(i, input);
-                            continue;
-                        }
-
-                        // 检查物品是否能用于合成
-                        if (!ItemManager.INSTANCE.canCraft(new ItemStack[]{input, ingredient}, recipeKey)) {
                             results.set(i, input);
                             continue;
                         }

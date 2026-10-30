@@ -29,7 +29,8 @@ public enum StonecuttingListener implements Listener {
     INSTANCE;
 
     /**
-     * 为配方结果运行结果处理器
+     * 世界隔离、材料限制与结果处理。
+     * 材料限制对所有命名空间、所有版本生效；1.21 起没有切石配方的 nms 实现，世界隔离只能在这里做。
      */
     @EventHandler
     public void processResult(PlayerStonecutterRecipeSelectEvent event) {
@@ -45,7 +46,7 @@ public enum StonecuttingListener implements Listener {
             ItemStack inputItem = stonecutterInventory.getInputItem();
 
             if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_21)) {
-                // 1.20.X版本这两个拦截功能由nms层进行，故只在1.21以上进行这两个判断
+                //1.21起没有切石配方的nms实现，世界隔离只能在这里做；1.20.X由nms层处理
                 if (!WorldIsolationDataHandler.INSTANCE.canRecipeUse(
                     recipeKey,
                     player.getWorld()
@@ -53,10 +54,12 @@ public enum StonecuttingListener implements Listener {
                     stonecutterInventory.setResult(null);
                     return;
                 }
-                if (!ItemHelper.isAir(inputItem) && !ItemManager.INSTANCE.canCraft(new ItemStack[]{inputItem}, recipeKey)) {
-                    stonecutterInventory.setResult(null);
-                    return;
-                }
+            }
+
+            // 拦截指定的材料用于切制，这里主要是拦截其他插件和原版的配方
+            if (!ItemHelper.isAir(inputItem) && !ItemManager.INSTANCE.canCraft(new ItemStack[]{inputItem}, recipeKey)) {
+                stonecutterInventory.setResult(null);
+                return;
             }
 
             // 物品检查通过后再刷新结果

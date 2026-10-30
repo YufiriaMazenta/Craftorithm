@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareSmithingEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.SmithingInventory;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessorManager;
@@ -25,17 +26,30 @@ public enum SmithingListener implements Listener {
     INSTANCE;
 
     /**
-     * 处理配方结果
+     * 材料限制与结果处理。
+     * 材料限制对所有命名空间生效（原版锻造配方不经过本插件的 NMS 配方类），结果处理仍只针对本插件配方。
      */
     @EventHandler(priority = EventPriority.MONITOR)
     public void processResult(PrepareSmithingEvent event) {
         if (event.getResult() == null)
             return;
-        Recipe recipe = event.getInventory().getRecipe();
+        SmithingInventory inventory = event.getInventory();
+        Recipe recipe = inventory.getRecipe();
         if (recipe == null)
             return;
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
-        if (recipeKey != null && !recipeKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
+        if (recipeKey == null)
+            return;
+
+        ItemStack[] ingredients = new ItemStack[]{inventory.getItem(0), inventory.getItem(1), inventory.getItem(2)};
+        // 拦截指定的材料用于锻造，这里主要是拦截其他插件和原版的配方
+        if (!ItemManager.INSTANCE.canCraft(ingredients, recipeKey)) {
+            event.setResult(null);
+            inventory.setResult(null);
+            return;
+        }
+
+        if (!recipeKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
             return;
         }
 
@@ -52,13 +66,13 @@ public enum SmithingListener implements Listener {
         Player processorPlayer = EventUtils.getViewer(event).orElse(null);
         recipeProcessors.ifPresent(
             rules -> {
-                ItemStack base = event.getInventory().getItem(1);
+                ItemStack base = inventory.getItem(1);
                 rules.processItem(base, result.get(), processorPlayer);
             }
         );
 
         event.setResult(result.get());
-        event.getInventory().setResult(result.get());
+        inventory.setResult(result.get());
     }
 
 }

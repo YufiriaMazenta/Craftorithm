@@ -5,6 +5,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.recipe.ingredient.ItemIdIngredientMatcher;
 import pers.yufiria.craftorithm.recipe.ingredient.restriction.IngredientRestrictionRule;
@@ -51,12 +52,16 @@ public final class ItemIdRestrictionRule implements IngredientRestrictionRule, I
     }
 
     @Override
-    public boolean isBlocked(@NotNull ItemStack item, @NotNull NamespacedKey recipeKey) {
+    public boolean isBlocked(@NotNull ItemStack item, @Nullable NamespacedKey recipeKey) {
         if (itemIds.isEmpty()) {
             return false;
         }
         if (!ItemIdIngredientMatcher.super.matches(item)) {
             return false;
+        }
+        if (recipeKey == null) {
+            //拿不到配方key（原版或其它插件的部分配方），只有匹配所有配方的规则才生效
+            return recipeMatchers.stream().anyMatch(RecipeKeyMatcher::matchesAny);
         }
         String recipeKeyStr = recipeKey.toString();
         for (RecipeKeyMatcher matcher : recipeMatchers) {

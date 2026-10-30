@@ -32,12 +32,13 @@ public enum CrafterListener implements Listener {
         //重新从物品源获取物品, 刷新结果的组件
         ItemManager.INSTANCE.refreshItem(result, null);
 
-        // 运行结果处理器（Crafter没有sourceItem）
         Recipe recipe = event.getRecipe();
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
         if (recipeKey != null) {
+            // 运行结果处理器
             Optional<ResultProcessors> processors = ResultProcessorManager.INSTANCE.getRecipeProcessors(recipeKey);
             processors.ifPresent(p -> p.processItem(null, result, null));
+            // 因为合成器没有什么比较方便的方法获取材料物品，这里暂时不做拦截材料相关逻辑，所以只有Craftorithm的配方才能拦截被限制的配方
         }
         event.setResult(result);
     }
