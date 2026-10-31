@@ -192,7 +192,7 @@ public abstract class RecipeEditor extends StoredMenu implements BackableMenu, I
      * @param writeFields 写入该配方类型字段的回调
      */
     protected void saveEdit(@NotNull Player player, @NotNull Consumer<BukkitConfigWrapper> writeFields) {
-        BukkitConfigWrapper configWrapper = getRecipeConfigWrapper();
+        BukkitConfigWrapper configWrapper = RecipeManager.INSTANCE.getRecipeConfigWrapper(recipeKey);
         if (configWrapper != null) {
             writeFields.accept(configWrapper);
             CrypticLibBukkit.scheduler().async(() -> {
@@ -218,13 +218,6 @@ public abstract class RecipeEditor extends StoredMenu implements BackableMenu, I
             });
         }
         player.closeInventory();
-    }
-
-    /**
-     * 获取配方的BukkitConfigWrapper
-     */
-    protected @Nullable BukkitConfigWrapper getRecipeConfigWrapper() {
-        return RecipeManager.INSTANCE.getRecipeConfigWrapper(recipeKey);
     }
 
     @Override
