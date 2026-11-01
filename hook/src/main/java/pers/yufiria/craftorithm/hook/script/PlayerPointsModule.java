@@ -49,7 +49,7 @@ public enum PlayerPointsModule implements ScriptModule {
             if (playerId == null) {
                 return ScriptValue.of(false);
             } else {
-                api.take(playerId, amount);
+                return ScriptValue.of(api.take(playerId, amount));
             }
         }
         return ScriptValue.of(true);
@@ -66,7 +66,7 @@ public enum PlayerPointsModule implements ScriptModule {
             if (playerId == null) {
                 return ScriptValue.of(false);
             } else {
-                api.give(playerId, amount);
+                return ScriptValue.of(api.give(playerId, amount));
             }
         }
         return ScriptValue.of(true);

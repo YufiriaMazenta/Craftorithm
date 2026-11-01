@@ -65,11 +65,9 @@ public enum VaultUnlockedModule implements ScriptModule {
             if (player == null) {
                 return ScriptValue.of(false);
             }
-            economy.withdraw(Craftorithm.instance().pluginName(), playerId, player.getWorld().getName(), currency, amount);
-            return ScriptValue.of(true);
+            return ScriptValue.of(economy.withdraw(Craftorithm.instance().pluginName(), playerId, player.getWorld().getName(), currency, amount).transactionSuccess());
         } else {
-            economy.withdraw(Craftorithm.instance().pluginName(), playerId, amount);
-            return ScriptValue.of(true);
+            return ScriptValue.of(economy.withdraw(Craftorithm.instance().pluginName(), playerId, amount).transactionSuccess());
         }
     }
 
@@ -90,11 +88,9 @@ public enum VaultUnlockedModule implements ScriptModule {
             if (player == null) {
                 return ScriptValue.of(false);
             }
-            economy.deposit(Craftorithm.instance().pluginName(), playerId, player.getWorld().getName(), currency, amount);
-            return ScriptValue.of(true);
+            return ScriptValue.of(economy.deposit(Craftorithm.instance().pluginName(), playerId, player.getWorld().getName(), currency, amount).transactionSuccess());
         } else {
-            economy.deposit(Craftorithm.instance().pluginName(), playerId, amount);
-            return ScriptValue.of(true);
+            return ScriptValue.of(economy.deposit(Craftorithm.instance().pluginName(), playerId, amount).transactionSuccess());
         }
     }
 

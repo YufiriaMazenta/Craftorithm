@@ -49,7 +49,7 @@ public enum VaultModule implements ScriptModule {
         Economy economy = (Economy) VaultHook.INSTANCE.economy();
         double amount = args[0].asNumber();
         if (amount > 0) {
-            economy.withdrawPlayer(player, amount);
+            return ScriptValue.of(economy.withdrawPlayer(player, amount).transactionSuccess());
         }
         return ScriptValue.of(true);
     }
@@ -66,7 +66,7 @@ public enum VaultModule implements ScriptModule {
         Economy economy = (Economy) VaultHook.INSTANCE.economy();
         double amount = args[0].asNumber();
         if (amount > 0) {
-            economy.depositPlayer(player, amount);
+            return ScriptValue.of(economy.depositPlayer(player, amount).transactionSuccess());
         }
         return ScriptValue.of(true);
     }
