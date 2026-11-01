@@ -258,7 +258,7 @@ public enum AnvilRecipeHandler implements Listener {
                 craftResult = true;
                 break;
             case DROP:
-                if (player.getLevel() < costLevel)
+                if (!PlayerUtils.isCreativeOrSpectator(player) && player.getLevel() < costLevel)
                     break;
                 base.setAmount(baseNum - needBaseNum);
                 addition.setAmount(additionNum - needAdditionNum);
@@ -272,7 +272,7 @@ public enum AnvilRecipeHandler implements Listener {
                 int costAmount11 = needBaseNum * canCraftNum;
                 int costAmount22 = needAdditionNum * canCraftNum;
                 int finalCostLevel2 = costLevel * canCraftNum;
-                if (player.getLevel() < finalCostLevel2)
+                if (!PlayerUtils.isCreativeOrSpectator(player) && player.getLevel() < finalCostLevel2)
                     break;
                 base.setAmount(baseNum - costAmount11);
                 addition.setAmount(additionNum - costAmount22);
@@ -289,7 +289,10 @@ public enum AnvilRecipeHandler implements Listener {
 
         //合成成功后执行trigger的actions
         if (craftResult && ctx != null) {
-            int craftNum = (event.getClick() == ClickType.SHIFT_LEFT || event.getClick() == ClickType.SHIFT_RIGHT)
+            //CONTROL_DROP 与 SHIFT 一样是按 canCraftNum 批量合成的, 触发计数不能固定成1
+            int craftNum = (event.getClick() == ClickType.SHIFT_LEFT
+                || event.getClick() == ClickType.SHIFT_RIGHT
+                || event.getClick() == ClickType.CONTROL_DROP)
                 ? canCraftNum : 1;
             AnvilTriggerHandler.INSTANCE.fire(ctx, craftNum);
         }
@@ -300,7 +303,8 @@ public enum AnvilRecipeHandler implements Listener {
         int afterRepairCost = 0;
         if (afterClickRecipe != null) {
             afterResult = afterClickRecipe.getResult();
-            afterRepairCost = anvilRecipe.costLevel();
+            //刷新界面用的是点击后重新匹配到的配方, 花费必须取它自己的
+            afterRepairCost = afterClickRecipe.costLevel();
         }
 
         PrepareAnvilEvent prepareAnvilEvent;
