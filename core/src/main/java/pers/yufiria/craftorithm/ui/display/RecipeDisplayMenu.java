@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.ui.display;
 
+import java.util.Locale;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.menu.Menu;
 import org.bukkit.NamespacedKey;
@@ -63,7 +64,7 @@ public abstract class RecipeDisplayMenu<T extends Recipe> extends TranslatableMe
         if (iconTypeOpt.isEmpty()) {
             return;
         }
-        String iconType = iconTypeOpt.get().toString().toLowerCase();
+        String iconType = iconTypeOpt.get().toString().toLowerCase(Locale.ROOT);
         if (RecipeDisplayManager.ICON_TYPE_RESULT.equals(iconType)) {
             itemDisplayIcon.setDisplayItem(recipe.getResult());
             return;

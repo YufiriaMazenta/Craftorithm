@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.command.recipe;
 
+import java.util.Locale;
 import crypticlib.Invoker;
 import crypticlib.command.CommandContext;
 import crypticlib.command.CommandInfo;
@@ -90,7 +91,7 @@ public final class RecipeBookCommand extends AbstractSubcommand {
         }
 
         String lastArg = args.get(args.size() - 2);
-        switch (lastArg.toLowerCase()) {
+        switch (lastArg.toLowerCase(Locale.ROOT)) {
             case FLAG_PLAYER:
                 return PlayerUtils.onlinePlayerNames();
             case FLAG_TYPE:

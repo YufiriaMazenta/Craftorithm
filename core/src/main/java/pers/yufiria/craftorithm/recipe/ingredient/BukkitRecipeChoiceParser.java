@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.recipe.ingredient;
 
+import java.util.Locale;
 import crypticlib.util.MaterialHelper;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -31,7 +32,7 @@ public enum BukkitRecipeChoiceParser implements RecipeChoiceParser {
         } else {
             int index = choiceStr.indexOf(":");
             String namespace = choiceStr.substring(0, index);
-            namespace = namespace.toLowerCase();
+            namespace = namespace.toLowerCase(Locale.ROOT);
             switch (namespace) {
                 case "minecraft":
                     Material material = MaterialHelper.matchMaterial(choiceStr);

@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.recipe.parser;
 
+import java.util.Locale;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.CookingRecipe;
 import org.bukkit.inventory.CraftingRecipe;
@@ -58,7 +59,7 @@ public final class RecipeMetaUtils {
         if (!recipeConfig.contains(RECIPE_BOOK_CATEGORY_KEY)) {
             return;
         }
-        String categoryStr = Objects.requireNonNull(recipeConfig.getString(RECIPE_BOOK_CATEGORY_KEY)).toUpperCase();
+        String categoryStr = Objects.requireNonNull(recipeConfig.getString(RECIPE_BOOK_CATEGORY_KEY)).toUpperCase(Locale.ROOT);
         categorySetter.accept(categoryParser.apply(categoryStr));
     }
 

@@ -594,7 +594,7 @@ public enum LegacyRecipeFileMigrator implements LifecycleTask {
      * 将旧版的 cooking block 类型映射为新版的 type 值
      */
     private String mapCookingType(String block) {
-        return switch (block.toLowerCase()) {
+        return switch (block.toLowerCase(Locale.ROOT)) {
             case "blast_furnace", "blast" -> "vanilla_smelting_blast";
             case "smoker" -> "vanilla_smelting_smoker";
             case "campfire" -> "vanilla_smelting_campfire";

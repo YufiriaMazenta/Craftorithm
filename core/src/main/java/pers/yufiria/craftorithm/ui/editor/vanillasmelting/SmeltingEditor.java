@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.ui.editor.vanillasmelting;
 
+import java.util.Locale;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.display.MenuDisplay;
@@ -196,7 +197,7 @@ public class SmeltingEditor extends RecipeEditor {
                 configWrapper.set("ingredient", ingredientId);
                 configWrapper.set("exp", exp);
                 configWrapper.set("time", time);
-                configWrapper.set("recipe_book_category", categoryIcon.category().name().toLowerCase());
+                configWrapper.set("recipe_book_category", categoryIcon.category().name().toLowerCase(Locale.ROOT));
             });
         });
         return icon;

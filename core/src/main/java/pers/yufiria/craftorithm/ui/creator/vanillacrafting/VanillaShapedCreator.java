@@ -132,7 +132,7 @@ public final class VanillaShapedCreator extends RecipeCreator {
             saveAndRegister((Player) event.getWhoClicked(), resultId, recipeConfig -> {
                 recipeConfig.set("shape", shapedGrid.shape());
                 recipeConfig.set("ingredients", shapedGrid.ingredientIdMap());
-                recipeConfig.set("recipe_book_category", category.name().toLowerCase());
+                recipeConfig.set("recipe_book_category", category.name().toLowerCase(Locale.ROOT));
             });
         });
         return icon;

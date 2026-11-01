@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.recipe;
 
+import java.util.Locale;
 import crypticlib.CrypticLib;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.MinecraftVersion;
@@ -17,8 +18,8 @@ public interface CraftorithmRecipeRegistry {
     Compat<CraftorithmRecipeRegistry> REGISTRY_COMPAT = new Compat<>(
         CraftorithmRecipeRegistry.class,
         (ver1, ver2) -> {
-            MinecraftVersion ver1Obj = MinecraftVersion.valueOf(ver1.toUpperCase());
-            MinecraftVersion ver2Obj = MinecraftVersion.valueOf(ver2.toUpperCase());
+            MinecraftVersion ver1Obj = MinecraftVersion.valueOf(ver1.toUpperCase(Locale.ROOT));
+            MinecraftVersion ver2Obj = MinecraftVersion.valueOf(ver2.toUpperCase(Locale.ROOT));
             if (ver1Obj.after(ver2Obj)) {
                 return 1;
             } else if (ver1Obj.equals(ver2Obj)) {

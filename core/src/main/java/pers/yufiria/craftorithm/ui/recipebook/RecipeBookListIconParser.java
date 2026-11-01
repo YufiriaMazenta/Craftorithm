@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.ui.recipebook;
 
+import java.util.Locale;
 import crypticlib.script.compile.CompiledScript;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
@@ -18,7 +19,7 @@ public enum RecipeBookListIconParser implements IconParser {
 
     @Override
     public Supplier<Icon> parse(ConfigurationSection config) {
-        String iconType = config.getString("icon_type", "common").toLowerCase();
+        String iconType = config.getString("icon_type", "common").toLowerCase(Locale.ROOT);
         return switch (iconType) {
             case "recipe_display" -> parseRecipeDisplayIcon(config);
             case "prev_page" -> parsePrevPageIcon(config);
@@ -30,8 +31,8 @@ public enum RecipeBookListIconParser implements IconParser {
     }
 
     private Supplier<Icon> parseRecipeDisplayIcon(ConfigurationSection config) {
-        ClickType viewClick = ClickType.valueOf(config.getString("view_click", "LEFT").toUpperCase());
-        ClickType editClick = ClickType.valueOf(config.getString("edit_click", "RIGHT").toUpperCase());
+        ClickType viewClick = ClickType.valueOf(config.getString("view_click", "LEFT").toUpperCase(Locale.ROOT));
+        ClickType editClick = ClickType.valueOf(config.getString("edit_click", "RIGHT").toUpperCase(Locale.ROOT));
         List<String> extraLore = config.getStringList("extra_lore");
         Map<ClickType, CompiledScript> actions = parseActions(config.getConfigurationSection("actions"));
 

@@ -153,7 +153,7 @@ public final class VanillaShapedEditor extends RecipeEditor {
                 configWrapper.set("result", resultId.toString());
                 configWrapper.set("shape", shapedGrid.shape());
                 configWrapper.set("ingredients", shapedGrid.ingredientIdMap());
-                configWrapper.set("recipe_book_category", categoryIcon.category().name().toLowerCase());
+                configWrapper.set("recipe_book_category", categoryIcon.category().name().toLowerCase(Locale.ROOT));
             });
         });
         return icon;

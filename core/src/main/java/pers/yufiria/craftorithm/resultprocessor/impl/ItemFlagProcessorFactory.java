@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.resultprocessor.impl;
 
+import java.util.Locale;
 import crypticlib.CrypticLib;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemFlag;
@@ -125,7 +126,7 @@ public enum ItemFlagProcessorFactory implements ComponentProcessorFactory {
     @Nullable
     private ItemFlag parseItemFlag(String flagName) {
         try {
-            return ItemFlag.valueOf(flagName.toUpperCase());
+            return ItemFlag.valueOf(flagName.toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException e) {
             CrypticLib.warn("Unknown ItemFlag: " + flagName);
             return null;

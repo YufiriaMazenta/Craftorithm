@@ -39,7 +39,7 @@ public interface IconParser {
      * @param slotIconType 若不为null, 则该 icon_type 会额外读取 ingredient_slot 写入图标数据
      */
     default Supplier<Icon> parseItemDisplayIcon(ConfigurationSection config, Set<String> iconTypes, @Nullable String slotIconType) {
-        String iconType = config.getString("icon_type", "common").toLowerCase();
+        String iconType = config.getString("icon_type", "common").toLowerCase(Locale.ROOT);
         if (!iconTypes.contains(iconType)) {
             return parseCommonIcon(config);
         }
@@ -93,7 +93,7 @@ public interface IconParser {
         }
         Map<ClickType, CompiledScript> actions = new HashMap<>();
         for (String key : actionsConfig.getKeys(false)) {
-            ClickType clickType = ClickType.valueOf(key.toUpperCase());
+            ClickType clickType = ClickType.valueOf(key.toUpperCase(Locale.ROOT));
             List<String> actSources = actionsConfig.getStringList(key);
             if (actSources.isEmpty()) {
                 continue;

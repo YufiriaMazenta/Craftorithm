@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.ui.custom;
 
+import java.util.Locale;
 import crypticlib.script.compile.CompiledScript;
 import crypticlib.ui.display.Icon;
 import org.bukkit.NamespacedKey;
@@ -19,18 +20,18 @@ public enum CustomMenuIconParser implements IconParser {
 
     @Override
     public Supplier<Icon> parse(ConfigurationSection config) {
-        String iconType = config.getString("icon_type", "common").toLowerCase();
+        String iconType = config.getString("icon_type", "common").toLowerCase(Locale.ROOT);
         if (iconType.equals("recipe_display")) {
             String recipeId = config.getString("recipe_id");
             NamespacedKey recipeKey = NamespacedKey.fromString(Objects.requireNonNull(recipeId));
             ClickType viewClick, editClick;
             if (config.contains("view_click")) {
-                viewClick = ClickType.valueOf(config.getString("view_click").toUpperCase());
+                viewClick = ClickType.valueOf(config.getString("view_click").toUpperCase(Locale.ROOT));
             } else {
                 viewClick = null;
             }
             if (config.contains("edit_click")) {
-                editClick = ClickType.valueOf(config.getString("edit_click").toUpperCase());
+                editClick = ClickType.valueOf(config.getString("edit_click").toUpperCase(Locale.ROOT));
             } else {
                 editClick = null;
             }

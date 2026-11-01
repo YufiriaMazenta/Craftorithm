@@ -41,7 +41,7 @@ public class IngredientUtils {
             return Optional.ofNullable(getTag(tagKey));
         }
         //兼容旧版写法, 也就是直接在Tag里反射
-        String upperTagKey = tagKeyStr.toUpperCase();
+        String upperTagKey = tagKeyStr.toUpperCase(Locale.ROOT);
         Tag<Material> reflectTag;
         try {
             Field field = Tag.class.getField(upperTagKey);

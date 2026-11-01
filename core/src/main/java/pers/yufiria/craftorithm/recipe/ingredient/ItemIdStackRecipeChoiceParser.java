@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.recipe.ingredient;
 
+import java.util.Locale;
 import crypticlib.util.MaterialHelper;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -34,7 +35,7 @@ public enum ItemIdStackRecipeChoiceParser implements RecipeChoiceParser {
         List<NamespacedItemId> itemIds;
         int amount;
         int index = choiceStr.indexOf(":");
-        String namespace = choiceStr.substring(0, index).toLowerCase();
+        String namespace = choiceStr.substring(0, index).toLowerCase(Locale.ROOT);
         switch (namespace) {
             case "minecraft":
                 MaterialAmount material = parseMaterial(choiceStr);

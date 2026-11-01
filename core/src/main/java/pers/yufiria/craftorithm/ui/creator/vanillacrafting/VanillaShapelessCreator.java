@@ -125,7 +125,7 @@ public class VanillaShapelessCreator extends RecipeCreator {
             // 6. 创建并保存配方配置文件
             saveAndRegister((Player) event.getWhoClicked(), resultId, recipeConfig -> {
                 recipeConfig.set("ingredients", ingredientIds);
-                recipeConfig.set("recipe_book_category", category.name().toLowerCase());
+                recipeConfig.set("recipe_book_category", category.name().toLowerCase(Locale.ROOT));
             });
         });
         return icon;

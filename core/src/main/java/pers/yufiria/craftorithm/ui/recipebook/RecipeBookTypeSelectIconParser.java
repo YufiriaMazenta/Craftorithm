@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.ui.recipebook;
 
+import java.util.Locale;
 import crypticlib.script.compile.CompiledScript;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
@@ -19,7 +20,7 @@ public enum RecipeBookTypeSelectIconParser implements IconParser {
 
     @Override
     public Supplier<Icon> parse(ConfigurationSection config) {
-        String iconType = config.getString("icon_type", "common").toLowerCase();
+        String iconType = config.getString("icon_type", "common").toLowerCase(Locale.ROOT);
         switch (iconType) {
             case "recipe_list" -> {
                 String recipeTypeKey = config.getString("recipe_type");

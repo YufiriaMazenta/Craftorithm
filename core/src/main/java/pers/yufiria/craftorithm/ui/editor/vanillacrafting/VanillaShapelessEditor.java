@@ -124,7 +124,7 @@ public final class VanillaShapelessEditor extends RecipeEditor {
                 configWrapper.set("type", SimpleRecipeTypes.VANILLA_SHAPELESS.typeKey());
                 configWrapper.set("result", resultId.toString());
                 configWrapper.set("ingredients", ingredientIds);
-                configWrapper.set("recipe_book_category", categoryIcon.category().name().toLowerCase());
+                configWrapper.set("recipe_book_category", categoryIcon.category().name().toLowerCase(Locale.ROOT));
             });
         });
         return icon;
