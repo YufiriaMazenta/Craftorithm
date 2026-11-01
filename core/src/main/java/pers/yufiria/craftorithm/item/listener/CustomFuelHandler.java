@@ -12,7 +12,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.FurnaceInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import pers.yufiria.craftorithm.item.ItemManager;
+import pers.yufiria.craftorithm.item.fuel.CustomFuelManager;
 
 @EventListener
 public enum CustomFuelHandler implements Listener {
@@ -42,15 +42,20 @@ public enum CustomFuelHandler implements Listener {
                     return;
                 if (cursor.getType().isFuel())
                     return;
-                if (!ItemManager.INSTANCE.isCustomFuel(cursor))
+                if (!CustomFuelManager.INSTANCE.isCustomFuel(cursor))
                     return;
                 event.setCancelled(true);
                 if (cursor.isSimilar(current)) {
                     int canPlaceAmount = current.getMaxStackSize() - current.getAmount();
-                    current.setAmount(current.getAmount() + Math.min(cursor.getAmount(), canPlaceAmount));
-                    cursor.setAmount(cursor.getAmount() - canPlaceAmount);
+                    //先算出实际转移量, 加减都用它, 否则光标数量会减到负数
+                    int moved = Math.min(cursor.getAmount(), canPlaceAmount);
+                    if (moved <= 0) {
+                        return;
+                    }
+                    current.setAmount(current.getAmount() + moved);
+                    cursor.setAmount(cursor.getAmount() - moved);
                     event.setCurrentItem(current);
-                    event.setCursor(cursor);
+                    event.setCursor(cursor.getAmount() > 0 ? cursor : null);
                 } else {
                     event.setCursor(current);
                     event.setCurrentItem(cursor);
@@ -63,16 +68,21 @@ public enum CustomFuelHandler implements Listener {
                     return;
                 if (ItemHelper.isAir(current))
                     return;
-                if (!ItemManager.INSTANCE.isCustomFuel(current))
+                if (!CustomFuelManager.INSTANCE.isCustomFuel(current))
                     return;
                 if (!ItemHelper.isAir(furnaceInventory.getFuel())) {
                     ItemStack fuel = furnaceInventory.getFuel();
                     if (!current.isSimilar(fuel)) return;
                     int canPlaceAmount = fuel.getMaxStackSize() - fuel.getAmount();
-                    fuel.setAmount(fuel.getAmount() + Math.min(current.getAmount(), canPlaceAmount));
+                    //同上: 用实际转移量做扣减, 避免把背包格减成负数
+                    int moved = Math.min(current.getAmount(), canPlaceAmount);
+                    if (moved <= 0) {
+                        return;
+                    }
+                    fuel.setAmount(fuel.getAmount() + moved);
                     furnaceInventory.setFuel(fuel);
-                    current.setAmount(current.getAmount() - canPlaceAmount);
-                    event.setCurrentItem(current);
+                    current.setAmount(current.getAmount() - moved);
+                    event.setCurrentItem(current.getAmount() > 0 ? current : null);
                     return;
                 } else {
                     event.setCancelled(true);
@@ -89,7 +99,7 @@ public enum CustomFuelHandler implements Listener {
         if (event.isCancelled())
             return;
         ItemStack fuel = event.getFuel();
-        Integer time = ItemManager.INSTANCE.matchCustomFuelBurnTime(fuel);
+        Integer time = CustomFuelManager.INSTANCE.matchBurnTime(fuel);
         if (time == null || time <= 0)
             return;
         event.setBurnTime(time);

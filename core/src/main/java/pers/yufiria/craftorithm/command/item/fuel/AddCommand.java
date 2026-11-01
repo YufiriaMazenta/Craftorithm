@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.config.Languages;
-import pers.yufiria.craftorithm.item.ItemManager;
+import pers.yufiria.craftorithm.item.fuel.CustomFuelManager;
 import pers.yufiria.craftorithm.util.LangUtils;
 import pers.yufiria.craftorithm.util.PlayerUtils;
 
@@ -44,7 +44,19 @@ public final class AddCommand extends CommandNode {
             return;
         }
 
-        boolean result = ItemManager.INSTANCE.addCustomFuel(item, Integer.parseInt(args.getFirst()));
+        int burnTime;
+        try {
+            burnTime = Integer.parseInt(args.getFirst().trim());
+        } catch (NumberFormatException e) {
+            LangUtils.sendLang(invoker, Languages.COMMAND_ITEM_FUEL_ADD_INVALID_BURN_TIME);
+            return;
+        }
+        if (burnTime <= 0) {
+            LangUtils.sendLang(invoker, Languages.COMMAND_ITEM_FUEL_ADD_INVALID_BURN_TIME);
+            return;
+        }
+
+        boolean result = CustomFuelManager.INSTANCE.addFuel(item, burnTime);
         if (result) {
             LangUtils.sendLang(invoker, Languages.COMMAND_ITEM_FUEL_ADD_SUCCESS);
         } else {

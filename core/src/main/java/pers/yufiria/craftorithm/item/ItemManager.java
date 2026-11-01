@@ -2,7 +2,6 @@ package pers.yufiria.craftorithm.item;
 
 import com.google.common.base.Preconditions;
 import crypticlib.CrypticLib;
-import crypticlib.CrypticLibBukkit;
 import crypticlib.CrypticLibPlugin;
 import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.lifecycle.LifecyclePhase;
@@ -40,21 +39,14 @@ public enum ItemManager implements LifecycleTask {
 
     INSTANCE;
 
-    //自定义燃料配置里记录燃烧时间的键
-    private static final String BURN_TIME_KEY = "burn_time";
-    //自定义燃料未指定燃烧时间时的默认值, 单位tick
-    private static final int DEFAULT_BURN_TIME = 200;
 
     private final Map<String, ItemProvider> itemProviderMap = new LinkedHashMap<>();
-    private final Map<NamespacedItemId, Integer> customCookingFuelMap = new ConcurrentHashMap<>();
-    private BukkitConfigWrapper customFuelConfig;
     private BukkitConfigWrapper itemPacksConfig;
     private final Map<String, ItemPack> itemPacks = new ConcurrentHashMap<>();
     //重载在异步线程进行,而该列表会被主线程的合成事件读取,因此使用不可变快照整体替换
     private volatile List<IngredientRestrictionRule> ingredientRestrictionRules = List.of();
     private final Lazy<Map<String, ItemProvider>> lazyItemProviderView = Lazy.of(() -> Collections.unmodifiableMap(itemProviderMap));
     //以下视图缓存针对的底层集合均为final字段且只做clear/重填与单条增删, 引用从不替换, 视图恒有效, 无需失效
-    private final Lazy<Map<NamespacedItemId, Integer>> lazyCustomCookingFuelView = Lazy.of(() -> Collections.unmodifiableMap(customCookingFuelMap));
     private final Lazy<Set<String>> lazyItemPackIdsView = Lazy.of(() -> Collections.unmodifiableSet(itemPacks.keySet()));
 
     /**
@@ -283,87 +275,19 @@ public enum ItemManager implements LifecycleTask {
         return Optional.of(new ItemStack(material, amount));
     }
 
-    private void reloadCustomCookingFuel() {
-        customFuelConfig.reloadConfig();
-        customCookingFuelMap.clear();
-        YamlConfiguration config = customFuelConfig.config();
-        Set<String> keys = config.getKeys(false);
-        for (String fuelId : keys) {
-            ConfigurationSection fuelConfig = config.getConfigurationSection(fuelId);
-            if (fuelConfig == null)
-                continue;
-            int time = fuelConfig.getInt(BURN_TIME_KEY, DEFAULT_BURN_TIME);
-            NamespacedItemId itemId = NamespacedItemId.fromString(fuelId);
-            if (time != 0)
-                customCookingFuelMap.put(itemId, time);
-        }
-    }
-
-    public boolean isCustomFuel(ItemStack item) {
-        if (customCookingFuelMap.isEmpty())
-            return false;
-        Integer time = matchCustomFuelBurnTime(item);
-        return time != null && time > 0;
-    }
-
-    public Integer matchCustomFuelBurnTime(ItemStack item) {
-        if (customCookingFuelMap.isEmpty())
-            return null;
-        NamespacedItemId itemId = matchItemIdOrVanilla(item, true)
-            .map(NamespacedItemIdStack::itemId)
-            .orElseThrow();
-        return customCookingFuelMap.get(itemId);
-    }
-
-    public boolean addCustomFuel(ItemStack item, int burnTime) {
-        NamespacedItemIdStack stackedItemId = matchItemIdOrCreate(item, false);
-        if (stackedItemId == null)
-            throw new IllegalArgumentException("Cannot add null item as a fuel");
-        NamespacedItemId itemId = stackedItemId.itemId();
-        if (customCookingFuelMap.containsKey(itemId))
-            return false;
-        customCookingFuelMap.put(itemId, burnTime);
-        //配置键必须只使用物品id, 不能带上数量, 否则重载后会被解析成错误的物品id而永远匹配不上
-        CrypticLibBukkit.scheduler().async(() -> {
-            customFuelConfig.set(itemId + "." + BURN_TIME_KEY, burnTime);
-            customFuelConfig.saveConfig();
-            customFuelConfig.reloadConfig();
-        });
-        return true;
-    }
-
-    public boolean removeCustomFuel(@Nullable NamespacedItemId itemId) {
-        if (itemId == null || !customCookingFuelMap.containsKey(itemId))
-            return false;
-        customCookingFuelMap.remove(itemId);
-        CrypticLibBukkit.scheduler().async(() -> {
-            customFuelConfig.set(itemId.toString(), null);
-            customFuelConfig.saveConfig();
-            customFuelConfig.reloadConfig();
-        });
-        return true;
-    }
-
-    public @Unmodifiable Map<NamespacedItemId, Integer> customCookingFuelMap() {
-        return lazyCustomCookingFuelView.get();
-    }
-
     @Override
     public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase lifecycle) {
         switch (lifecycle) {
             case ACTIVE -> {
-                customFuelConfig = new BukkitConfigWrapper(Craftorithm.instance(), "custom_fuels.yml");
                 itemPacksConfig = new BukkitConfigWrapper(Craftorithm.instance(), "item_packs.yml");
             }
             case RELOAD -> {
-                reloadCustomCookingFuel();
                 reloadItemPacks();
                 reloadIngredientRestrictionRules();
                 lazyItemProviderView.invalidate();
             }
             case DISABLE -> {
                 itemProviderMap.clear();
-                customCookingFuelMap.clear();
                 itemPacks.clear();
             }
         }

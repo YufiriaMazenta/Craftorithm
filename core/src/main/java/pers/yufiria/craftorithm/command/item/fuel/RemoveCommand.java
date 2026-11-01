@@ -6,8 +6,8 @@ import crypticlib.command.CommandInfo;
 import crypticlib.command.CommandNode;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.config.Languages;
-import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
+import pers.yufiria.craftorithm.item.fuel.CustomFuelManager;
 import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
 
@@ -34,7 +34,7 @@ public final class RemoveCommand extends CommandNode {
         if (!CommandUtils.checkInvokerIsPlayer(invoker))
             return;
 
-        boolean result = ItemManager.INSTANCE.removeCustomFuel(NamespacedItemId.fromString(args.getFirst()));
+        boolean result = CustomFuelManager.INSTANCE.removeFuel(NamespacedItemId.fromString(args.getFirst()));
         if (result) {
             LangUtils.sendLang(invoker, Languages.COMMAND_ITEM_FUEL_REMOVE_SUCCESS);
         } else {
@@ -46,7 +46,7 @@ public final class RemoveCommand extends CommandNode {
     public List<String> tabComplete(@NotNull CommandContext context) {
         List<String> args = context.args();
         if (args.size() <= 1) {
-            return new ArrayList<>(ItemManager.INSTANCE.customCookingFuelMap().keySet().stream().map(NamespacedItemId::toString).toList());
+            return new ArrayList<>(CustomFuelManager.INSTANCE.fuels().keySet().stream().map(NamespacedItemId::toString).toList());
         }
         return Collections.singletonList("");
     }
