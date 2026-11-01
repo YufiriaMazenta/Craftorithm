@@ -7,6 +7,8 @@ repositories {
 
 }
 
+val mockitoAgent by configurations.creating
+
 dependencies {
     compileOnly("net.luckperms:api:${rootProject.findProperty("luckPermsApiVer")}")
     compileOnly("me.clip:placeholderapi:${rootProject.findProperty("placeholderApiVer")}")
@@ -27,6 +29,8 @@ dependencies {
     testImplementation("io.papermc.paper:paper-api:${rootProject.findProperty("paperApiVer")}")
     testImplementation("org.postgresql:postgresql:${rootProject.findProperty("postgresqlVer")}")
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
+    testImplementation("org.mockito:mockito-core:5.23.0")
+    mockitoAgent("org.mockito:mockito-core:5.23.0") { isTransitive = false }
     //内嵌PostgreSQL, 本地无需安装数据库服务
     testImplementation("io.zonky.test:embedded-postgres:2.0.7")
     testImplementation("io.zonky.test.postgres:embedded-postgres-binaries-windows-amd64:16.4.0")
@@ -35,4 +39,5 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+    jvmArgs("-javaagent:${mockitoAgent.asPath}")
 }

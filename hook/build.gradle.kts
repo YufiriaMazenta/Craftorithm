@@ -25,6 +25,8 @@ repositories {
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
 }
 
+val mockitoAgent by configurations.creating
+
 dependencies {
     compileOnly(project(":core"))
     compileOnly("emaki.jiuwu.craft:emaki-corelib-api:${rootProject.findProperty("emakiCoreLibApiVer")}")
@@ -75,4 +77,24 @@ dependencies {
     compileOnly("net.milkbowl.vault:VaultUnlockedAPI:${rootProject.findProperty("vaultUnlockedApiVer")}")
     compileOnly("net.advancedplugins:AdvancedEnchantments-API:${rootProject.findProperty("advancedEnchantmentsApiVer")}")
     compileOnly("me.clip:placeholderapi:${rootProject.findProperty("placeholderApiVer")}")
+
+    testImplementation(project(":core"))
+    testImplementation("com.crypticlib:bukkit:${rootProject.findProperty("crypticlibVer")}")
+    testImplementation("com.crypticlib:common-script:${rootProject.findProperty("crypticlibVer")}")
+    testImplementation("io.papermc.paper:paper-api:${rootProject.findProperty("paperApiVer")}")
+    testImplementation("com.github.MilkBowl:VaultAPI:${rootProject.findProperty("vaultApiVer")}") {
+        exclude("org.bukkit", "bukkit")
+    }
+    testImplementation("net.milkbowl.vault:VaultUnlockedAPI:${rootProject.findProperty("vaultUnlockedApiVer")}")
+    testImplementation("org.black_ixx:playerpoints:${rootProject.findProperty("playerpointsVer")}")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
+    testImplementation("org.mockito:mockito-core:5.23.0")
+    testImplementation("org.objenesis:objenesis:3.3")
+    mockitoAgent("org.mockito:mockito-core:5.23.0") { isTransitive = false }
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.10.2")
+}
+
+tasks.test {
+    useJUnitPlatform()
+    jvmArgs("-javaagent:${mockitoAgent.asPath}")
 }
