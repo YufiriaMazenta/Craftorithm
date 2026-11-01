@@ -193,30 +193,45 @@ public abstract class RecipeEditor extends StoredMenu implements BackableMenu, I
      */
     protected void saveEdit(@NotNull Player player, @NotNull Consumer<BukkitConfigWrapper> writeFields) {
         BukkitConfigWrapper configWrapper = RecipeManager.INSTANCE.getRecipeConfigWrapper(recipeKey);
-        if (configWrapper != null) {
-            writeFields.accept(configWrapper);
-            CrypticLibBukkit.scheduler().async(() -> {
-                configWrapper.saveConfig();
-                configWrapper.reloadConfig();
-                String recipeId = recipeKey.getKey();
-                String recipeFileName = RecipeManager.INSTANCE.getRecipeFileNameByKey(recipeKey);
-                RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeId, false, false);
-                ParsedRecipe parsedRecipe = RecipeManager.INSTANCE.parseRecipeFromConfig(recipeFileName, configWrapper);
-                if (parsedRecipe == null) {
-                    CrypticLib.error("Failed to load recipe " + recipeFileName);
-                    return;
-                }
+        if (configWrapper == null) {
+            player.closeInventory();
+            return;
+        }
+        writeFields.accept(configWrapper);
+        String recipeId = recipeKey.getKey();
+        //文件名要在注销之前取: 注销会把 recipeFileNameToKeyMap 里的映射一起清掉
+        String recipeFileName = RecipeManager.INSTANCE.getRecipeFileNameByKey(recipeKey);
+        //异步段只做文件落盘与解析, 配方注册表的注销/注册属于服务器状态, 必须回到主线程
+        CrypticLibBukkit.scheduler().async(() -> {
+            configWrapper.saveConfig();
+            configWrapper.reloadConfig();
+            if (recipeFileName == null) {
+                CrypticLib.error("Cannot resolve recipe file name for " + recipeId + ", skip saving");
+                return;
+            }
+            ParsedRecipe parsedRecipe = RecipeManager.INSTANCE.parseRecipeFromConfig(recipeFileName, configWrapper);
+            if (parsedRecipe == null) {
+                //解析失败时旧配方尚未注销, 仍然可用; 只记录错误, 避免把可用配方弄丢
+                CrypticLib.error("Failed to load recipe " + recipeFileName + ", the original recipe is kept");
+                return;
+            }
 
-                CrypticLibBukkit.scheduler().syncLater(() -> {
-                    RecipeManager.INSTANCE.registerParsedRecipe(parsedRecipe, true);
+            CrypticLibBukkit.scheduler().syncLater(() -> {
+                //先解析成功再替换注册, 注册结果要回给玩家, 不能无条件报成功
+                RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeId, false, false);
+                if (RecipeManager.INSTANCE.registerParsedRecipe(parsedRecipe, true)) {
                     String fileName = RecipeManager.INSTANCE.getRecipeFileNameByKey(recipeKey);
                     LangUtils.sendLang(player, Languages.COMMAND_EDIT_SUCCESS, Map.of(
                         "<recipe_id>", recipeId,
                         "<recipe_file_name>", fileName != null ? fileName : recipeId
                     ));
-                }, 2L);
-            });
-        }
+                } else {
+                    LangUtils.sendLang(player, Languages.RECIPE_LOAD_EXCEPTION, Map.of(
+                        "<recipe_name>", recipeFileName
+                    ));
+                }
+            }, 2L);
+        });
         player.closeInventory();
     }
 

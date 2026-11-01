@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.ui.editor.anvil;
 
+import crypticlib.CrypticLib;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.display.MenuDisplay;
@@ -87,8 +88,12 @@ public final class AnvilEditor extends RecipeEditor {
         inventory.setItem(ADDITION_SLOT, anvilRecipe.addition().getItemStack().clone());
 
         // result - NamespacedItemIdStack, 用ItemManager.matchItem获取ItemStack
-        ItemStack resultItem = ItemManager.INSTANCE.matchItem(anvilRecipe.result())
-            .orElseThrow(() -> new ItemNotFoundException("Anvil recipe result not found: " + anvilRecipe.result()));
+        ItemStack resultItem = ItemManager.INSTANCE.matchItem(anvilRecipe.result()).orElse(null);
+        if (resultItem == null) {
+            //结果物品解析不到时只跳过结果格: 绘制过程中抛异常会让菜单半初始化, 且每次重绘都会再抛一次
+            CrypticLib.warn("Anvil recipe result not found: " + anvilRecipe.result() + ", editor result slot left empty");
+            return;
+        }
         inventory.setItem(RESULT_SLOT, resultItem.clone());
     }
 
