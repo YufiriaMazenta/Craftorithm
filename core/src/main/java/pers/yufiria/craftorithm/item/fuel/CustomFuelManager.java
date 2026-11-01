@@ -205,7 +205,8 @@ public enum CustomFuelManager implements Listener, LifecycleTask {
                 CrypticLib.warn("Invalid custom fuel item id '" + itemIdStr + "', skipped");
                 continue;
             }
-            int burnTime = config.getInt(BURN_TIME_KEY, 0);
+            //未指定燃烧时间时使用默认值, 显式指定但不合法时告警跳过
+            int burnTime = config.contains(BURN_TIME_KEY) ? config.getInt(BURN_TIME_KEY, 0) : DEFAULT_BURN_TIME;
             if (burnTime <= 0) {
                 CrypticLib.warn("Invalid burn_time " + burnTime + " for custom fuel '" + itemIdStr + "', skipped");
                 continue;
@@ -232,7 +233,12 @@ public enum CustomFuelManager implements Listener, LifecycleTask {
         List<String> invalidKeys = new ArrayList<>();
         for (String legacyKey : legacyKeys) {
             ConfigurationSection section = yaml.getConfigurationSection(legacyKey);
-            int burnTime = section != null ? section.getInt(BURN_TIME_KEY, 0) : 0;
+            if (section == null) {
+                invalidKeys.add(legacyKey);
+                continue;
+            }
+            //未指定燃烧时间时使用默认值, 显式指定但不合法的条目仍视为无效
+            int burnTime = section.contains(BURN_TIME_KEY) ? section.getInt(BURN_TIME_KEY, 0) : DEFAULT_BURN_TIME;
             if (burnTime <= 0) {
                 invalidKeys.add(legacyKey);
                 continue;

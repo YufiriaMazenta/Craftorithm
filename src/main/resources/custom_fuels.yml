@@ -1,5 +1,6 @@
 #自定义燃料
-#物品id与燃烧时间(单位:tick, 必须大于0)
+#物品id与燃烧时间(单位:tick)
+#burn_time 可省略, 省略时默认 200; 填写时必须大于 0
 #物品id支持命名空间, 默认原版(id即Material名)
 fuels:
   - item: "minecraft:command_block"
