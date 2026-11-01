@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.database;
 
+import java.util.Locale;
 import crypticlib.CrypticLibPlugin;
 import crypticlib.database.connection.ConnectionSource;
 import crypticlib.database.dao.DaoManager;
@@ -56,7 +57,7 @@ public enum DataSourceManager implements LifecycleTask {
     }
 
     private ConnectionSource loadDatabaseConnection() {
-        String databaseType = DatabaseConfigs.TYPE.value().toLowerCase();
+        String databaseType = DatabaseConfigs.TYPE.value().toLowerCase(Locale.ROOT);
         DataSourceLoader dataSourceLoader = databaseLoaderMap.get(databaseType);
         if (dataSourceLoader == null) {
             throw new DatabaseLoadException("Unknown database type: " + databaseType);
@@ -73,17 +74,23 @@ public enum DataSourceManager implements LifecycleTask {
     }
 
     public ConnectionSource databaseConnection() {
-        if (databaseConnection == null) {
-            synchronized (this) {
-                if (databaseConnection == null || !databaseConnection.isOpen()) {
-                    if (databaseConnection != null) {
-                        databaseConnection.close();
-                    }
-                    databaseConnection = loadDatabaseConnection();
-                }
-            }
+        ConnectionSource current = databaseConnection;
+        //外层也要判 isOpen: 否则重建窗口内(旧连接已close、新连接未赋值)会直接把已关闭的连接返回给调用方
+        if (current != null && current.isOpen()) {
+            return current;
         }
-        return databaseConnection;
+        synchronized (this) {
+            current = databaseConnection;
+            if (current == null || !current.isOpen()) {
+                if (current != null) {
+                    current.close();
+                }
+                //先置空再重建: 重建失败时字段保持null, 下次调用可以重试, 不会一直返回已关闭的连接
+                databaseConnection = null;
+                databaseConnection = loadDatabaseConnection();
+            }
+            return databaseConnection;
+        }
     }
 
 }
