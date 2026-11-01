@@ -18,6 +18,7 @@ command:
         success: '<prefix> &aBenutzerdefinierter Brennstoff erfolgreich hinzugefügt.'
         failed_add_air: '<prefix> &cBenutzerdefinierter Brennstoff konnte nicht hinzugefügt werden. Grund: Ein nicht vorhandener Gegenstand kann nicht als Brennstoff hinzugefügt werden.'
         failed_exist: '<prefix> &cBenutzerdefinierter Brennstoff konnte nicht hinzugefügt werden. Grund: Dieser Brennstoff existiert bereits.'
+        invalid_burn_time: '<prefix> &cUngültige Brenndauer. Sie muss eine positive Ganzzahl sein (Einheit: Tick).'
       remove:
         success: '<prefix> &aBenutzerdefinierter Brennstoff erfolgreich entfernt.'
         failed_not_exist: '<prefix> &cBenutzerdefinierter Brennstoff konnte nicht entfernt werden. Grund: Dieser Brennstoff existiert nicht.'

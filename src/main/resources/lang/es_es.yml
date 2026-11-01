@@ -18,6 +18,7 @@ command:
         success: '<prefix> &aCombustible personalizado añadido con éxito.'
         failed_add_air: '<prefix> &cError al añadir combustible personalizado. Motivo: no se puede añadir un objeto inexistente como combustible.'
         failed_exist: '<prefix> &cError al añadir combustible personalizado. Motivo: este combustible ya existe.'
+        invalid_burn_time: '<prefix> &cDuración de combustión no válida. Debe ser un entero positivo (unidad: tick).'
       remove:
         success: '<prefix> &aCombustible personalizado eliminado con éxito.'
         failed_not_exist: '<prefix> &cError al eliminar combustible personalizado. Motivo: este combustible no existe.'

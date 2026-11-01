@@ -18,6 +18,7 @@ command:
         success: '<prefix> &a自訂燃料新增成功。'
         failed_add_air: '<prefix> &c自訂燃料新增失敗，原因：無法將唔存在嘅物品作為燃料。'
         failed_exist: '<prefix> &c自訂燃料新增失敗，原因：呢個燃料已經存在。'
+        invalid_burn_time: '<prefix> &c燃燒時間唔合法，必須係大於 0 嘅整數（單位：tick）。'
       remove:
         success: '<prefix> &a自訂燃料刪除成功。'
         failed_not_exist: '<prefix> &c自訂燃料刪除失敗，原因：呢個燃料唔存在。'

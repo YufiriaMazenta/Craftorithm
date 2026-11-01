@@ -18,6 +18,7 @@ command:
         success: '<prefix> &aÖzel yakıt başarıyla eklendi.'
         failed_add_air: '<prefix> &cÖzel yakıt eklenemedi. Neden: Var olmayan bir eşya yakıt olarak eklenemez.'
         failed_exist: '<prefix> &cÖzel yakıt eklenemedi. Neden: Bu yakıt zaten mevcut.'
+        invalid_burn_time: '<prefix> &cGeçersiz yanma süresi. Pozitif bir tam sayı olmalıdır (birim: tick).'
       remove:
         success: '<prefix> &aÖzel yakıt başarıyla kaldırıldı.'
         failed_not_exist: '<prefix> &cÖzel yakıt kaldırılamadı. Neden: Bu yakıt mevcut değil.'

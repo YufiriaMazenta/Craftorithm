@@ -20,6 +20,7 @@ public class Languages {
     public static final StringLang COMMAND_ITEM_FUEL_ADD_SUCCESS = new StringLang("command.item.fuel.add.success");
     public static final StringLang COMMAND_ITEM_FUEL_ADD_FAILED_ADD_AIR = new StringLang("command.item.fuel.add.failed_add_air");
     public static final StringLang COMMAND_ITEM_FUEL_ADD_FAILED_EXIST = new StringLang("command.item.fuel.add.failed_exist");
+    public static final StringLang COMMAND_ITEM_FUEL_ADD_INVALID_BURN_TIME = new StringLang("command.item.fuel.add.invalid_burn_time");
     public static final StringLang COMMAND_ITEM_FUEL_REMOVE_SUCCESS = new StringLang("command.item.fuel.remove.success");
     public static final StringLang COMMAND_ITEM_FUEL_REMOVE_FAILED_NOT_EXIST = new StringLang("command.item.fuel.remove.failed_not_exist");
     public static final StringLang COMMAND_ITEM_GET_ITEM_GROUP_TAG_UNKNOWN_TAG = new StringLang("command.item.get_item_group.tag.unknown_tag");
@@ -152,11 +153,11 @@ public class Languages {
     public static final StringLang MENU_RECIPE_CREATOR_FRAME_LORE_ANVIL = new StringLang("menu.recipe_creator.frame_lore.anvil");
     public static final StringLang MENU_RECIPE_CREATOR_FRAME_LORE_RESULT_RIGHT = new StringLang("menu.recipe_creator.frame_lore.result_right");
     public static final StringLang MENU_RECIPE_CREATOR_FRAME_LORE_CONFIRM_BUTTON = new StringLang("menu.recipe_creator.frame_lore.confirm_button");
-    public static final StringLang MENU_RECIPE_CREATOR_RESULT_LORE_SHAPED = new StringLang("menu.recipe_creator.result_lore_shaped");
-    public static final StringLang MENU_RECIPE_CREATOR_RESULT_LORE_SMELTING = new StringLang("menu.recipe_creator.result_lore_smelting");
-    public static final StringLang MENU_RECIPE_CREATOR_RESULT_LORE_BREWING = new StringLang("menu.recipe_creator.result_lore_brewing");
-    public static final StringLang MENU_RECIPE_CREATOR_RESULT_LORE_STONECUTTING = new StringLang("menu.recipe_creator.result_lore_stonecutting");
-    public static final StringLang MENU_RECIPE_CREATOR_RESULT_LORE_SMITHING = new StringLang("menu.recipe_creator.result_lore_smithing");
+    public static final StringLang MENU_RECIPE_CREATOR_RESULT_LORE_SHAPED = new StringLang("menu.recipe_creator.result_lore.shaped");
+    public static final StringLang MENU_RECIPE_CREATOR_RESULT_LORE_SMELTING = new StringLang("menu.recipe_creator.result_lore.smelting");
+    public static final StringLang MENU_RECIPE_CREATOR_RESULT_LORE_BREWING = new StringLang("menu.recipe_creator.result_lore.brewing");
+    public static final StringLang MENU_RECIPE_CREATOR_RESULT_LORE_STONECUTTING = new StringLang("menu.recipe_creator.result_lore.stonecutting");
+    public static final StringLang MENU_RECIPE_CREATOR_RESULT_LORE_SMITHING = new StringLang("menu.recipe_creator.result_lore.smithing");
 
     public static final StringLang MENU_RECIPE_CREATOR_CONFIRM_LORE_SHAPED = new StringLang("menu.recipe_creator.confirm_lore.shaped");
     public static final StringLang MENU_RECIPE_CREATOR_CONFIRM_LORE_SHAPELESS = new StringLang("menu.recipe_creator.confirm_lore.shapeless");
