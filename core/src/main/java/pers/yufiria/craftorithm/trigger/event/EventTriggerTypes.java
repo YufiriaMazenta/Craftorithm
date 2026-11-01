@@ -44,7 +44,7 @@ public enum EventTriggerTypes {
         // PlayerEvent 子类
         register("player_join", PlayerJoinEvent.class, PlayerExtractor.PLAYER, Map.of());
         register("player_quit", PlayerQuitEvent.class, PlayerExtractor.PLAYER, Map.of());
-        register("player_death", PlayerDeathEvent.class, PlayerExtractor.DAMAGER_OR_KILLER,
+        register("player_death", PlayerDeathEvent.class, PlayerExtractor.ENTITY,
             Map.of(
                 "killer_name", event -> {
                     Player killer = ((PlayerDeathEvent) event).getEntity().getKiller();
@@ -249,12 +249,12 @@ public enum EventTriggerTypes {
         );
 
         // BlockEvent 子类（涉及玩家）
-        register("block_break", BlockBreakEvent.class, PlayerExtractor.PLAYER,
+        register("block_break", BlockBreakEvent.class, event -> ((BlockBreakEvent) event).getPlayer(),
             Map.of(
                 "block_type", event -> ScriptValue.of(((BlockBreakEvent) event).getBlock().getType().name())
             )
         );
-        register("block_place", BlockPlaceEvent.class, PlayerExtractor.PLAYER,
+        register("block_place", BlockPlaceEvent.class, event -> ((BlockPlaceEvent) event).getPlayer(),
             Map.of(
                 "block_type", event -> ScriptValue.of(((BlockPlaceEvent) event).getBlock().getType().name())
             )
