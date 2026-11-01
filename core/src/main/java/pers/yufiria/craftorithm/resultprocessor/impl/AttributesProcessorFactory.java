@@ -2,6 +2,7 @@ package pers.yufiria.craftorithm.resultprocessor.impl;
 
 import crypticlib.CrypticLib;
 import crypticlib.MinecraftVersion;
+import crypticlib.util.BukkitConfigHelper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.attribute.Attribute;
@@ -123,7 +124,8 @@ public enum AttributesProcessorFactory implements ComponentProcessorFactory {
         List<Map<?, ?>> attrList = data != null ? data.getMapList("value") : List.of();
         List<ParsedAttribute> parsedAttributes = new ArrayList<>(attrList.size());
         for (Map<?, ?> attrEntry : attrList) {
-            ParsedAttribute parsedAttribute = parseAttribute(attrEntry);
+            ConfigurationSection attrConfig = BukkitConfigHelper.map2ConfigSection(attrEntry);
+            ParsedAttribute parsedAttribute = parseAttribute(attrConfig);
             if (parsedAttribute != null) {
                 parsedAttributes.add(parsedAttribute);
             }
@@ -132,10 +134,10 @@ public enum AttributesProcessorFactory implements ComponentProcessorFactory {
     }
 
     @SuppressWarnings("removal")
-    private @Nullable ParsedAttribute parseAttribute(Map<?, ?> attrEntry) {
-        Object attrNameRaw = attrEntry.get("attribute");
-        if (!(attrNameRaw instanceof String attrName) || attrName.isBlank()) {
-            CrypticLib.warn(COMPONENT_NAME + " entry is missing 'attribute', skipped: " + attrEntry);
+    private @Nullable ParsedAttribute parseAttribute(ConfigurationSection attrConfig) {
+        String attrName = attrConfig.getString("attribute");
+        if (attrName == null || attrName.isBlank()) {
+            CrypticLib.warn(COMPONENT_NAME + " entry is missing 'attribute', skipped.");
             return null;
         }
         NamespacedKey attrKey = NamespacedKey.fromString(attrName);
@@ -144,20 +146,16 @@ public enum AttributesProcessorFactory implements ComponentProcessorFactory {
             CrypticLib.warn(COMPONENT_NAME + " has unknown attribute '" + attrName + "', skipped");
             return null;
         }
-        AttributeModifier.Operation operation = AttributeModifier.Operation.ADD_NUMBER;
-        Object opRaw = attrEntry.get("operation");
-        if (opRaw instanceof String opStr) {
-            try {
-                operation = AttributeModifier.Operation.valueOf(opStr.trim().toUpperCase(Locale.ROOT));
-            } catch (IllegalArgumentException e) {
-                CrypticLib.warn(COMPONENT_NAME + " has unknown operation '" + opStr + "' for attribute '" + attrName + "', skipped");
-                return null;
-            }
+        AttributeModifier.Operation operation;
+        String operationStr = attrConfig.getString("operation", "add_number");
+        try {
+            operation = AttributeModifier.Operation.valueOf(operationStr.trim().toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException e) {
+            CrypticLib.warn(COMPONENT_NAME + " has unknown operation '" + operationStr + "' for attribute '" + attrName + "', skipped");
+            return null;
         }
-        Object amountRaw = attrEntry.get("amount");
-        double amount = amountRaw instanceof Number number ? number.doubleValue() : 0.0;
-        Object slotRaw = attrEntry.get("slot");
-        String slotStr = slotRaw instanceof String str && !str.isBlank() ? str.trim() : null;
+        double amount = attrConfig.getDouble("amount", 0);
+        String slotStr = attrConfig.getString("slot");
         NamespacedKey modifierKey = new NamespacedKey(
             "craftorithm",
             attrName.toLowerCase(Locale.ROOT).replace(":", "_")
@@ -173,16 +171,17 @@ public enum AttributesProcessorFactory implements ComponentProcessorFactory {
                 }
             }
             return new ParsedAttribute(attr, operation, amount, slotGroup, null, modifierKey, attrName);
-        }
-        EquipmentSlot slot = null;
-        if (slotStr != null) {
-            try {
-                slot = EquipmentSlot.valueOf(slotStr.toUpperCase(Locale.ROOT));
-            } catch (IllegalArgumentException e) {
-                CrypticLib.warn(COMPONENT_NAME + " has unknown slot '" + slotStr + "' for attribute '" + attrName + "', using no slot");
+        } else {
+            EquipmentSlot slot = null;
+            if (slotStr != null) {
+                try {
+                    slot = EquipmentSlot.valueOf(slotStr.toUpperCase(Locale.ROOT));
+                } catch (IllegalArgumentException e) {
+                    CrypticLib.warn(COMPONENT_NAME + " has unknown slot '" + slotStr + "' for attribute '" + attrName + "', using no slot");
+                }
             }
+            return new ParsedAttribute(attr, operation, amount, null, slot, modifierKey, attrName);
         }
-        return new ParsedAttribute(attr, operation, amount, null, slot, modifierKey, attrName);
     }
 
     @SuppressWarnings("removal")

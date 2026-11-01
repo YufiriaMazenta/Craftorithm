@@ -8,6 +8,7 @@ import crypticlib.lifecycle.LifecyclePhase;
 import crypticlib.lifecycle.LifecycleSchedule;
 import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskConfig;
+import crypticlib.util.BukkitConfigHelper;
 import crypticlib.util.Lazy;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -169,8 +170,8 @@ public enum CustomFuelManager implements LifecycleTask {
         //先构造到局部表, 单条失败只跳过该条, 全部解析成功后再整体替换, 避免半加载状态
         Map<NamespacedItemId, Integer> loaded = new ConcurrentHashMap<>();
         for (Map<?, ?> entry : yaml.getMapList(FUELS_KEY)) {
-            Object itemRaw = entry.get(ITEM_KEY);
-            String itemIdStr = itemRaw instanceof String str ? str.trim() : null;
+            ConfigurationSection config = BukkitConfigHelper.map2ConfigSection(entry);
+            String itemIdStr = config.getString(ITEM_KEY);
             if (itemIdStr == null || itemIdStr.isEmpty()) {
                 CrypticLib.warn("Custom fuel entry has no valid item id, skipped: " + entry);
                 continue;
@@ -180,8 +181,7 @@ public enum CustomFuelManager implements LifecycleTask {
                 CrypticLib.warn("Invalid custom fuel item id '" + itemIdStr + "', skipped");
                 continue;
             }
-            Object burnTimeRaw = entry.get(BURN_TIME_KEY);
-            int burnTime = burnTimeRaw instanceof Number number ? number.intValue() : DEFAULT_BURN_TIME;
+            int burnTime = config.getInt(BURN_TIME_KEY, 0);
             if (burnTime <= 0) {
                 CrypticLib.warn("Invalid burn_time " + burnTime + " for custom fuel '" + itemIdStr + "', skipped");
                 continue;
