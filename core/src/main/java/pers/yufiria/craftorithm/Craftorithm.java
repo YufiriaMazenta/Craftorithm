@@ -21,6 +21,7 @@ import pers.yufiria.craftorithm.util.LangUtils;
 import pers.yufiria.craftorithm.util.UpdateChecker;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 @LifecycleTaskConfig(
@@ -39,8 +40,8 @@ public final class Craftorithm extends BukkitPlugin implements LifecycleTask {
 
     @Override
     public void whenLoad() {
-        CrypticLib.logger().setLevel(LogLevel.valueOf(PluginConfigs.LOG_LEVEL.value().toUpperCase()));
-        CrypticLib.info("Server Type: " + CrypticLibBukkit.serverAdapter().type().name().toLowerCase() + ", Version: " + MinecraftVersion.current().versionStr());
+        CrypticLib.logger().setLevel(parseLogLevel());
+        CrypticLib.info("Server Type: " + CrypticLibBukkit.serverAdapter().type().name().toLowerCase(Locale.ROOT) + ", Version: " + MinecraftVersion.current().versionStr());
     }
 
     @Override
@@ -53,9 +54,22 @@ public final class Craftorithm extends BukkitPlugin implements LifecycleTask {
 
     @Override
     public void whenReload() {
-        CrypticLib.logger().setLevel(LogLevel.valueOf(PluginConfigs.LOG_LEVEL.value().toUpperCase()));
+        CrypticLib.logger().setLevel(parseLogLevel());
         //重载状态置位与超时兜底统一由重载管理器负责
         ReloadManager.INSTANCE.onReloadStart();
+    }
+
+    /**
+     * 解析配置里的日志级别：配置写错时不能再抛异常（会直接让插件加载/重载失败），回退到 info 并告警一次
+     */
+    private static LogLevel parseLogLevel() {
+        String raw = PluginConfigs.LOG_LEVEL.value();
+        try {
+            return LogLevel.valueOf(raw.trim().toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException | NullPointerException e) {
+            CrypticLib.warn("Invalid log_level '" + raw + "', fallback to info. Valid values: debug/verbose/info/warn/error/off");
+            return LogLevel.INFO;
+        }
     }
 
     private void loadBStat() {
