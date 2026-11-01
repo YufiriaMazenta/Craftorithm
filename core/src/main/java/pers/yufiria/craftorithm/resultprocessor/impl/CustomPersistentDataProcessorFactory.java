@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.resultprocessor.impl;
 
+import java.util.Locale;
 import crypticlib.CrypticLib;
 import crypticlib.util.ReflectionHelper;
 import org.bukkit.NamespacedKey;
@@ -84,7 +85,9 @@ public enum CustomPersistentDataProcessorFactory implements ComponentProcessorFa
 
     private ResultProcessor createAdd(@Nullable ConfigurationSection data) {
         if (data == null || data.getKeys(false).isEmpty()) {
-            throw new IllegalArgumentException("custom_persistent_data add requires data with entries");
+            //配置缺 data 时只降级这一个组件并告警, 不影响同配方的其它组件
+            CrypticLib.warn(COMPONENT_NAME + " add requires data with entries, this processor will be skipped");
+            return ProcessorUtils.noop(COMPONENT_NAME);
         }
         return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
@@ -240,7 +243,7 @@ public enum CustomPersistentDataProcessorFactory implements ComponentProcessorFa
     }
 
     private PersistentDataType<?, ?> parseDataType(String typeStr) {
-        String upperTypeStr = typeStr.toUpperCase();
+        String upperTypeStr = typeStr.toUpperCase(Locale.ROOT);
         Class<PersistentDataType> dataTypeClass = PersistentDataType.class;
         try {
             Field field = ReflectionHelper.getField(dataTypeClass, upperTypeStr);
@@ -282,6 +285,14 @@ public enum CustomPersistentDataProcessorFactory implements ComponentProcessorFa
             to.set(key, PersistentDataType.BYTE, from.get(key, PersistentDataType.BYTE));
         } else if (from.has(key, PersistentDataType.BOOLEAN)) {
             to.set(key, PersistentDataType.BOOLEAN, from.get(key, PersistentDataType.BOOLEAN));
+        } else if (from.has(key, PersistentDataType.BYTE_ARRAY)) {
+            to.set(key, PersistentDataType.BYTE_ARRAY, from.get(key, PersistentDataType.BYTE_ARRAY));
+        } else if (from.has(key, PersistentDataType.INTEGER_ARRAY)) {
+            to.set(key, PersistentDataType.INTEGER_ARRAY, from.get(key, PersistentDataType.INTEGER_ARRAY));
+        } else if (from.has(key, PersistentDataType.LONG_ARRAY)) {
+            to.set(key, PersistentDataType.LONG_ARRAY, from.get(key, PersistentDataType.LONG_ARRAY));
+        } else if (from.has(key, PersistentDataType.TAG_CONTAINER)) {
+            to.set(key, PersistentDataType.TAG_CONTAINER, from.get(key, PersistentDataType.TAG_CONTAINER));
         }
     }
 

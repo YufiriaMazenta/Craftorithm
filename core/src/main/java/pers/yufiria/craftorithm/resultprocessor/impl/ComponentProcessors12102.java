@@ -59,10 +59,15 @@ public enum ComponentProcessors12102 implements ComponentProcessorFactory, Lifec
             resultItem.setItemMeta(resultMeta);
         }),
         "add", data -> {
-            int value = data.getInt("value");
+            //缺省/越界的数值会让 Bukkit 在合成期抛 IllegalArgumentException, 这里在加载期就修正
+            int value = data != null ? data.getInt("value", 1) : 1;
+            int enchantable = Math.max(1, value);
+            if (enchantable != value) {
+                CrypticLib.warn("enchantable value " + value + " must be >= 1, clamped to " + enchantable);
+            }
             return ProcessorUtils.processor("enchantable", (sourceItem, resultItem, player) -> {
                 ItemMeta resultMeta = resultItem.getItemMeta();
-                resultMeta.setEnchantable(value);
+                resultMeta.setEnchantable(enchantable);
                 resultItem.setItemMeta(resultMeta);
             });
         },

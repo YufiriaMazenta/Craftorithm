@@ -107,10 +107,15 @@ public enum ComponentProcessors12005 implements ComponentProcessorFactory, Lifec
             resultItem.setItemMeta(resultMeta);
         }),
         "add", data -> {
-            int value = data.getInt("value");
+            //缺省/越界的数值会让 Bukkit 在合成期抛 IllegalArgumentException, 这里在加载期就修正
+            int value = data != null ? data.getInt("value", 1) : 1;
+            int maxStackSize = Math.max(1, Math.min(99, value));
+            if (maxStackSize != value) {
+                CrypticLib.warn("max_stack_size value " + value + " is out of range 1..99, clamped to " + maxStackSize);
+            }
             return ProcessorUtils.processor("max_stack_size", (sourceItem, resultItem, player) -> {
                 ItemMeta resultMeta = resultItem.getItemMeta();
-                resultMeta.setMaxStackSize(value);
+                resultMeta.setMaxStackSize(maxStackSize);
                 resultItem.setItemMeta(resultMeta);
             });
         },

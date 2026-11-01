@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.resultprocessor.impl;
 
+import crypticlib.CrypticLib;
 import crypticlib.MinecraftVersion;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
@@ -75,10 +76,10 @@ public enum AttributesProcessorFactory implements ComponentProcessorFactory {
     }
 
     private ResultProcessor add(@Nullable ConfigurationSection data) {
-        List<Map<?, ?>> attrList = data != null ? data.getMapList("value") : List.of();
+        List<ParsedAttribute> parsedAttributes = parseAttributes(data);
         return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
-            applyAttributeModifiers(resultMeta, attrList);
+            applyAttributeModifiers(resultMeta, parsedAttributes);
             resultItem.setItemMeta(resultMeta);
         });
     }
@@ -87,11 +88,11 @@ public enum AttributesProcessorFactory implements ComponentProcessorFactory {
      * 清空结果物品的属性修饰器后写入
      */
     private ResultProcessor set(@Nullable ConfigurationSection data) {
-        List<Map<?, ?>> attrList = data != null ? data.getMapList("value") : List.of();
+        List<ParsedAttribute> parsedAttributes = parseAttributes(data);
         return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
             resultMeta.setAttributeModifiers(null);
-            applyAttributeModifiers(resultMeta, attrList);
+            applyAttributeModifiers(resultMeta, parsedAttributes);
             resultItem.setItemMeta(resultMeta);
         });
     }
@@ -114,37 +115,95 @@ public enum AttributesProcessorFactory implements ComponentProcessorFactory {
         });
     }
 
-    @SuppressWarnings("removal")
-    private void applyAttributeModifiers(ItemMeta meta, List<Map<?, ?>> attrList) {
+    /**
+     * 加载期把属性列表解析并校验完毕, 合成期只做套用:
+     * 让 valueOf/强转/requireNonNull 的失败落在加载期, 而不是每次合成都抛一次异常
+     */
+    private List<ParsedAttribute> parseAttributes(@Nullable ConfigurationSection data) {
+        List<Map<?, ?>> attrList = data != null ? data.getMapList("value") : List.of();
+        List<ParsedAttribute> parsedAttributes = new ArrayList<>(attrList.size());
         for (Map<?, ?> attrEntry : attrList) {
-            String attrName = (String) attrEntry.get("attribute");
-            if (attrName == null) continue;
-            Attribute attr = Registry.ATTRIBUTE.get(NamespacedKey.fromString(attrName));
-            if (attr == null) continue;
-            String opStr = (String) attrEntry.get("operation");
-            AttributeModifier.Operation op = opStr != null
-                ? AttributeModifier.Operation.valueOf(opStr.toUpperCase())
-                : AttributeModifier.Operation.ADD_NUMBER;
-            Object amountObj = attrEntry.get("amount");
-            double amount = amountObj instanceof Number n ? n.doubleValue() : 0.0;
-            if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_20_5)) {
-                String slotStr = (String) attrEntry.get("slot");
-                EquipmentSlotGroup slotGroup = slotStr != null
-                    ? EquipmentSlotGroup.getByName(slotStr.toLowerCase())
-                    : EquipmentSlotGroup.ANY;
-                NamespacedKey key = new NamespacedKey("craftorithm", attrName.toLowerCase().replace(":", "_"));
-                AttributeModifier modifier = new AttributeModifier(key, amount, op, Objects.requireNonNull(slotGroup));
-                meta.addAttributeModifier(attr, modifier);
-            } else {
-                String slotStr = (String) attrEntry.get("slot");
-                EquipmentSlot slot = slotStr != null
-                    ? EquipmentSlot.valueOf(slotStr.toUpperCase())
-                    : null;
-                AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), attrName, amount, op, slot);
-                meta.addAttributeModifier(attr, modifier);
+            ParsedAttribute parsedAttribute = parseAttribute(attrEntry);
+            if (parsedAttribute != null) {
+                parsedAttributes.add(parsedAttribute);
             }
-
         }
+        return parsedAttributes;
+    }
+
+    @SuppressWarnings("removal")
+    private @Nullable ParsedAttribute parseAttribute(Map<?, ?> attrEntry) {
+        Object attrNameRaw = attrEntry.get("attribute");
+        if (!(attrNameRaw instanceof String attrName) || attrName.isBlank()) {
+            CrypticLib.warn(COMPONENT_NAME + " entry is missing 'attribute', skipped: " + attrEntry);
+            return null;
+        }
+        NamespacedKey attrKey = NamespacedKey.fromString(attrName);
+        Attribute attr = attrKey != null ? Registry.ATTRIBUTE.get(attrKey) : null;
+        if (attr == null) {
+            CrypticLib.warn(COMPONENT_NAME + " has unknown attribute '" + attrName + "', skipped");
+            return null;
+        }
+        AttributeModifier.Operation operation = AttributeModifier.Operation.ADD_NUMBER;
+        Object opRaw = attrEntry.get("operation");
+        if (opRaw instanceof String opStr) {
+            try {
+                operation = AttributeModifier.Operation.valueOf(opStr.trim().toUpperCase(Locale.ROOT));
+            } catch (IllegalArgumentException e) {
+                CrypticLib.warn(COMPONENT_NAME + " has unknown operation '" + opStr + "' for attribute '" + attrName + "', skipped");
+                return null;
+            }
+        }
+        Object amountRaw = attrEntry.get("amount");
+        double amount = amountRaw instanceof Number number ? number.doubleValue() : 0.0;
+        Object slotRaw = attrEntry.get("slot");
+        String slotStr = slotRaw instanceof String str && !str.isBlank() ? str.trim() : null;
+        NamespacedKey modifierKey = new NamespacedKey(
+            "craftorithm",
+            attrName.toLowerCase(Locale.ROOT).replace(":", "_")
+        );
+        if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_20_5)) {
+            EquipmentSlotGroup slotGroup = EquipmentSlotGroup.ANY;
+            if (slotStr != null) {
+                EquipmentSlotGroup parsedGroup = EquipmentSlotGroup.getByName(slotStr.toLowerCase(Locale.ROOT));
+                if (parsedGroup == null) {
+                    CrypticLib.warn(COMPONENT_NAME + " has unknown slot '" + slotStr + "' for attribute '" + attrName + "', using ANY");
+                } else {
+                    slotGroup = parsedGroup;
+                }
+            }
+            return new ParsedAttribute(attr, operation, amount, slotGroup, null, modifierKey, attrName);
+        }
+        EquipmentSlot slot = null;
+        if (slotStr != null) {
+            try {
+                slot = EquipmentSlot.valueOf(slotStr.toUpperCase(Locale.ROOT));
+            } catch (IllegalArgumentException e) {
+                CrypticLib.warn(COMPONENT_NAME + " has unknown slot '" + slotStr + "' for attribute '" + attrName + "', using no slot");
+            }
+        }
+        return new ParsedAttribute(attr, operation, amount, null, slot, modifierKey, attrName);
+    }
+
+    @SuppressWarnings("removal")
+    private void applyAttributeModifiers(ItemMeta meta, List<ParsedAttribute> parsedAttributes) {
+        for (ParsedAttribute parsed : parsedAttributes) {
+            AttributeModifier modifier = parsed.slotGroup() != null
+                ? new AttributeModifier(parsed.modifierKey(), parsed.amount(), parsed.operation(), parsed.slotGroup())
+                : new AttributeModifier(UUID.randomUUID(), parsed.name(), parsed.amount(), parsed.operation(), parsed.slot());
+            meta.addAttributeModifier(parsed.attribute(), modifier);
+        }
+    }
+
+    private record ParsedAttribute(
+        Attribute attribute,
+        AttributeModifier.Operation operation,
+        double amount,
+        @Nullable EquipmentSlotGroup slotGroup,
+        @Nullable EquipmentSlot slot,
+        NamespacedKey modifierKey,
+        String name
+    ) {
     }
 
 }
