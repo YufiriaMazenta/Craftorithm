@@ -68,14 +68,16 @@ public enum BrewingListener implements Listener {
         BrewerInventory brewerInventory = event.getContents();
         ItemStack ingredient = brewerInventory.getIngredient();
         for (int i = 0; i < resultsClone.size(); i++) {
-            ItemStack result = resultsClone.get(i);
+            // 事件列表可能由其他插件（或服务端）填入同一引用；处理器必须逐槽独立运行。
+            ItemStack originalResult = resultsClone.get(i);
+            ItemStack result = originalResult == null ? null : originalResult.clone();
             ItemStack input = brewerInventory.getItem(i);
             if (input != null) {
                 Optional<NamespacedKey> recipeKeyOpt = BrewingRecipeRegister.INSTANCE.matchKey(input, ingredient);
                 // 检查物品是否能用于酿造
                 // 由于spigot和paper都没有办法获取到原版的酿造配方key，只有匹配所有配方的拦截规则才能拦截原版配方
                 if (!ItemManager.INSTANCE.canCraft(new ItemStack[]{input, ingredient}, recipeKeyOpt.orElse(null))) {
-                    results.set(i, input);
+                    results.set(i, input.clone());
                     continue;
                 }
 
@@ -88,7 +90,7 @@ public enum BrewingListener implements Listener {
                             recipeKey,
                             event.getBlock().getWorld()
                         )) {
-                            results.set(i, input);
+                            results.set(i, input.clone());
                             continue;
                         }
                     }

@@ -20,7 +20,8 @@ public class BrewingRecipe implements CustomRecipe {
         this.recipeKey = recipeKey;
         this.input = input;
         this.ingredient = ingredient;
-        this.result = result;
+        // 配方持有自己的模板，不能被调用方或结果处理器反向修改。
+        this.result = result.clone();
     }
 
     public Object toPotionMix() {
@@ -28,7 +29,7 @@ public class BrewingRecipe implements CustomRecipe {
             //支持predicate
             return new PotionMix(
                 recipeKey,
-                result,
+                getResult(),
                 PotionMix.createPredicateChoice(input),
                 PotionMix.createPredicateChoice(ingredient)
             );
@@ -36,7 +37,7 @@ public class BrewingRecipe implements CustomRecipe {
             //版本太低了，不支持predicate
             return new PotionMix(
                 recipeKey,
-                result,
+                getResult(),
                 IngredientUtils.getBukkitChoice(input),
                 IngredientUtils.getBukkitChoice(ingredient)
             );
@@ -50,7 +51,7 @@ public class BrewingRecipe implements CustomRecipe {
 
     @Override
     public @NotNull ItemStack getResult() {
-        return result;
+        return result.clone();
     }
 
     public @NotNull RecipeChoice input() {
