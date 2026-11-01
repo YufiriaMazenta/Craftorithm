@@ -37,6 +37,11 @@ public final class DisableCommand extends AbstractSubcommand {
             return;
         }
         NamespacedKey recipeKey = NamespacedKey.fromString(args.get(0));
+        if (recipeKey == null) {
+            //fromString 对非法输入返回 null, 直接交给 ConcurrentHashMap 支撑的集合做 contains 会抛 NPE
+            LangUtils.sendLang(invoker, Languages.COMMAND_DISABLE_NOT_EXIST);
+            return;
+        }
         if (!RecipeManager.INSTANCE.serverRecipeKeys().contains(recipeKey)) {
             LangUtils.sendLang(invoker, Languages.COMMAND_DISABLE_NOT_EXIST);
             return;
@@ -52,11 +57,13 @@ public final class DisableCommand extends AbstractSubcommand {
     public List<String> tabComplete(@NotNull CommandContext context) {
         List<String> args = context.args();
         if (args.size() <= 1) {
+            //补全时可能还没有任何参数, 直接取 args.get(0) 会越界
+            String prefix = args.isEmpty() ? "" : args.get(0);
             List<String> tabList = new ArrayList<>();
             for (NamespacedKey recipeKey : RecipeManager.INSTANCE.serverRecipeKeys()) {
                 String str = recipeKey.toString();
-                if (str.contains(args.get(0)))
-                    tabList.add(recipeKey.toString());
+                if (str.contains(prefix))
+                    tabList.add(str);
             }
             return tabList;
         }
