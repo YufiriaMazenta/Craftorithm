@@ -21,8 +21,8 @@ public class ItemPack {
     }
 
     /**
-     * @param packResolver 解析「物品组引用」的解析器。重载时传入本轮正在构造的表, 保证同轮内的引用可见,
-     *                     同时避免为了可见性而提前污染全局表导致半加载状态
+     * @param packResolver 解析「物品组引用」的解析器。重载时递归解析本轮全部定义,
+     *                     支持前向引用, 同时避免提前污染全局表导致半加载状态
      */
     public ItemPack(String packId, List<String> itemIdStrList, @NotNull Function<String, ItemPack> packResolver) {
         this.packId = packId;
@@ -52,7 +52,7 @@ public class ItemPack {
                     //是另一个物品组,将他的所有物品加入
                     ItemPack otherItemPack = packResolver.apply(itemId.itemId());
                     if (otherItemPack == null) {
-                        continue;
+                        throw new ItemNotFoundException("Unknown item pack reference " + itemId.itemId() + " in " + packId);
                     }
                     this.itemIds.addAll(otherItemPack.itemIds);
                 }

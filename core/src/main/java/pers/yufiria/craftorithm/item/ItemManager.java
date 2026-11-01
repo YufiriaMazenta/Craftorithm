@@ -296,19 +296,18 @@ public enum ItemManager implements LifecycleTask {
     private void reloadItemPacks() {
         itemPacksConfig.reloadConfig();
         YamlConfiguration config = itemPacksConfig.config();
-        //先构造到局部表: 单条失败只跳过该条, 全部完成后再整体替换, 避免一处笔误把整份物品组清空
-        Map<String, ItemPack> loaded = new ConcurrentHashMap<>();
+        //先收集全部定义, 再递归解析本轮依赖, 不依赖YAML顺序或上一轮的全局表
+        Map<String, List<String>> definitions = new LinkedHashMap<>();
         for (String key : config.getKeys(false)) {
             List<String> itemIdStrList = config.getStringList(key);
-            if (itemIdStrList.isEmpty()) {
-                continue;
-            }
-            try {
-                loaded.put(key, new ItemPack(key, itemIdStrList, loaded::get));
-            } catch (Throwable throwable) {
-                CrypticLib.error("Failed to load item pack " + key, throwable);
+            if (!itemIdStrList.isEmpty()) {
+                definitions.put(key, itemIdStrList);
             }
         }
+        Map<String, ItemPack> loaded = ItemPackLoader.loadAll(
+            definitions,
+            (packId, throwable) -> CrypticLib.error("Failed to load item pack " + packId, throwable)
+        );
         itemPacks.clear();
         itemPacks.putAll(loaded);
     }
