@@ -178,7 +178,8 @@ public enum EventTriggerTypes {
                 "recipe", event -> ScriptValue.of(((PlayerRecipeDiscoverEvent) event).getRecipe().toString())
             )
         );
-        register("player_take_campfire", PlayerTakeLecternBookEvent.class, PlayerExtractor.PLAYER, Map.of());
+        //绑定的是 PlayerTakeLecternBookEvent(从讲台取书), 键名与之一致
+        register("player_take_lectern_book", PlayerTakeLecternBookEvent.class, PlayerExtractor.PLAYER, Map.of());
 
         // EntityEvent 子类（涉及玩家）
         register("damage_entity", EntityDamageByEntityEvent.class, PlayerExtractor.DAMAGER_OR_KILLER,

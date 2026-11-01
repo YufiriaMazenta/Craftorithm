@@ -42,8 +42,9 @@ public enum SmithingTriggerHandler implements Listener {
 
     /**
      * 实际阶段：执行 actions
+     * 放在 HIGHEST 并忽略已取消事件: 其它插件取消锻造时不应提前发奖
      */
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onSmithing(SmithItemEvent event) {
         if (!TriggerManager.INSTANCE.hasTrigger(
             CraftTriggerTypes.SMITHING,

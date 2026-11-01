@@ -19,7 +19,10 @@ public enum CrafterTriggerHandler implements Listener {
 
     INSTANCE;
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    /**
+     * 放在 HIGHEST 并忽略已取消事件: 发射器合成被其它插件取消时不应改发奖, 也不应再写冷却
+     */
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onCraft(CrafterCraftEvent event) {
         CraftingRecipe recipe = event.getRecipe();
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(event.getRecipe());

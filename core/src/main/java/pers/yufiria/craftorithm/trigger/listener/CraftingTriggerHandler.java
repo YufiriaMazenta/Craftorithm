@@ -41,12 +41,10 @@ public enum CraftingTriggerHandler implements Listener {
 
     /**
      * 实际阶段：执行 actions
+     * 放在 HIGHEST 并忽略已取消事件: 这样其它插件(区域保护/反作弊)取消合成时我们不会提前发奖
      */
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onCraft(CraftItemEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         if (!TriggerManager.INSTANCE.hasTrigger(
             CraftTriggerTypes.CRAFTING,
             RecipeManager.INSTANCE.getRecipeKey(event.getRecipe())
