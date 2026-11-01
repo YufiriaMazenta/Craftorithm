@@ -27,7 +27,6 @@ import pers.yufiria.craftorithm.util.CollectionsUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -48,7 +47,6 @@ public enum CraftorithmItemProvider implements ItemPluginHook, ItemProvider, Lif
     private final Map<ItemBucketKey, Map<String, ItemStack>> itemBuckets;
     private final Map<String, ItemStack> idItemMap;
     private final Map<String, BukkitConfigWrapper> itemConfigFileMap;
-    private final SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
 
     /**
      * 同一物品桶内存在多个相似物品时, 决定优先返回哪一个ID
@@ -170,9 +168,12 @@ public enum CraftorithmItemProvider implements ItemPluginHook, ItemProvider, Lif
         if (existedItemId != null) {
             return new NamespacedItemIdStack(existedItemId, amount);
         }
-        String itemName = item.getType().getKey().getKey();
-        if (matchItem(PLUGIN_CREATED_NAMESPACE + ":" + itemName) != null) {
-            itemName += "_" + timeFormat.format(System.currentTimeMillis());
+        String baseName = item.getType().getKey().getKey();
+        String itemName = baseName;
+        int suffix = 0;
+        //按序号递增直到id唯一: 同一材质不同数据的物品必须各占一个id, 否则会互相覆盖
+        while (matchItem(PLUGIN_CREATED_NAMESPACE + ":" + itemName) != null) {
+            itemName = baseName + "_" + (++suffix);
         }
         return new NamespacedItemIdStack(
             saveItem(PLUGIN_CREATED_NAMESPACE, itemName, item),
@@ -190,12 +191,16 @@ public enum CraftorithmItemProvider implements ItemPluginHook, ItemProvider, Lif
      * @return 是否
      */
     public NamespacedItemId saveItem(String namespace, String itemName, ItemStack item) {
+        //存快照: 调用方可能传入手上的活实例(SaveCommand已clone, AddCommand没有), 直接持有会让物品定义随玩家后续操作漂移,
+        //并且随后在异步线程序列化活实例也不安全
+        ItemStack snapshot = item.clone();
+        snapshot.setAmount(1);
         String namespaceItemId = namespace + ":" + itemName;
-        idItemMap.put(namespaceItemId, item);
+        idItemMap.put(namespaceItemId, snapshot);
         itemBuckets.computeIfAbsent(
-            ItemBucketKey.of(item),
+            ItemBucketKey.of(snapshot),
             fp -> newItemBucketMap()
-        ).put(namespaceItemId, item);
+        ).put(namespaceItemId, snapshot);
         CrypticLibBukkit.scheduler().async(() -> {
             BukkitConfigWrapper itemConfigWrapper = itemConfigFileMap.computeIfAbsent(namespace, ns -> {
                 File itemFile = new File(ITEM_FILE_FOLDER, ns + ".yml");
@@ -204,7 +209,7 @@ public enum CraftorithmItemProvider implements ItemPluginHook, ItemProvider, Lif
                 }
                 return new BukkitConfigWrapper(itemFile);
             });
-            itemConfigWrapper.set(itemName, item);
+            itemConfigWrapper.set(itemName, snapshot);
             itemConfigWrapper.saveConfig();
         });
         return NamespacedItemId.of(

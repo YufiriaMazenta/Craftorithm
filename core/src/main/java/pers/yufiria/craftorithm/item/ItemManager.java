@@ -119,6 +119,10 @@ public enum ItemManager implements LifecycleTask {
      * @return 获取到的物品，不存在返回 Optional.empty()
      */
     public Optional<ItemStack> matchItem(NamespacedItemIdStack stackedItemId, @Nullable OfflinePlayer player) {
+        if (stackedItemId == null) {
+            //fromString 是 @Nullable: 配置漏写或写错时直接返回空, 由上层给出可读的错误提示
+            return Optional.empty();
+        }
         ItemStack item;
         NamespacedItemId itemId = stackedItemId.itemId();
         int amount = stackedItemId.amount();
@@ -367,16 +371,22 @@ public enum ItemManager implements LifecycleTask {
 
     private void reloadItemPacks() {
         itemPacksConfig.reloadConfig();
-        itemPacks.clear();
         YamlConfiguration config = itemPacksConfig.config();
+        //先构造到局部表: 单条失败只跳过该条, 全部完成后再整体替换, 避免一处笔误把整份物品组清空
+        Map<String, ItemPack> loaded = new ConcurrentHashMap<>();
         for (String key : config.getKeys(false)) {
             List<String> itemIdStrList = config.getStringList(key);
             if (itemIdStrList.isEmpty()) {
                 continue;
             }
-            ItemPack itemPack = new ItemPack(key, itemIdStrList);
-            itemPacks.put(key, itemPack);
+            try {
+                loaded.put(key, new ItemPack(key, itemIdStrList, loaded::get));
+            } catch (Throwable throwable) {
+                CrypticLib.error("Failed to load item pack " + key, throwable);
+            }
         }
+        itemPacks.clear();
+        itemPacks.putAll(loaded);
     }
 
     public @Nullable ItemPack getItemPack(String itemPackId) {

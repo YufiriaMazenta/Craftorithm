@@ -3,10 +3,12 @@ package pers.yufiria.craftorithm.item;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.item.exception.ItemNotFoundException;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.*;
+import java.util.function.Function;
 
 public class ItemPack {
 
@@ -15,6 +17,14 @@ public class ItemPack {
     private final List<NamespacedItemId> itemIds;
 
     public ItemPack(String packId, List<String> itemIdStrList) {
+        this(packId, itemIdStrList, ItemManager.INSTANCE::getItemPack);
+    }
+
+    /**
+     * @param packResolver 解析「物品组引用」的解析器。重载时传入本轮正在构造的表, 保证同轮内的引用可见,
+     *                     同时避免为了可见性而提前污染全局表导致半加载状态
+     */
+    public ItemPack(String packId, List<String> itemIdStrList, @NotNull Function<String, ItemPack> packResolver) {
         this.packId = packId;
         itemIds = new ArrayList<>();
         for (String itemIdStr : itemIdStrList) {
@@ -40,7 +50,7 @@ public class ItemPack {
                 }
                 case ItemGroup.GROUP_TYPE_ITEM_PACK -> {
                     //是另一个物品组,将他的所有物品加入
-                    ItemPack otherItemPack = ItemManager.INSTANCE.getItemPack(itemId.itemId());
+                    ItemPack otherItemPack = packResolver.apply(itemId.itemId());
                     if (otherItemPack == null) {
                         continue;
                     }
