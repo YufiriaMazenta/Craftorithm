@@ -129,16 +129,27 @@ public enum RecipeManager implements LifecycleTask {
     private void reloadRecipeManager(CompletableFuture<Void> completion) {
         resetRecipes();
         loadRecipesFromConfig(() -> {
-            loadServerRecipeKeys();
-            reloadDisabledRecipes();
-            CrypticLibBukkit.scheduler().syncLater(() -> {
-                //所有操作进行完毕后，为玩家更新配方信息
-                CraftorithmRecipeRegistry.findImpl().updateRecipes();
-                //从数据库恢复玩家已解锁配方（异步，避免阻塞主线程）
-                CrypticLibBukkit.scheduler().async(DiscoveredRecipeDao.INSTANCE::loadOnlinePlayersDiscoveredRecipes);
-                //complete本轮启动时捕获的future而非读字段, 防止旧轮链路超时残留晚到时误触发下一轮已重建的future
-                completion.complete(null);
-            }, 2L);
+            //无论中间哪一步抛异常都要走到收尾: 否则重载 future 永不完成, 只能等30秒超时兜底, 期间玩家配方不更新
+            try {
+                loadServerRecipeKeys();
+                reloadDisabledRecipes();
+            } catch (Throwable throwable) {
+                CrypticLib.error("Unexpected error while preparing reloaded recipes", throwable);
+            } finally {
+                CrypticLibBukkit.scheduler().syncLater(() -> {
+                    try {
+                        //所有操作进行完毕后，为玩家更新配方信息
+                        CraftorithmRecipeRegistry.findImpl().updateRecipes();
+                        //从数据库恢复玩家已解锁配方（异步，避免阻塞主线程）
+                        CrypticLibBukkit.scheduler().async(DiscoveredRecipeDao.INSTANCE::loadOnlinePlayersDiscoveredRecipes);
+                    } catch (Throwable throwable) {
+                        CrypticLib.error("Unexpected error while finishing recipe reload", throwable);
+                    } finally {
+                        //complete本轮启动时捕获的future而非读字段, 防止旧轮链路超时残留晚到时误触发下一轮已重建的future
+                        completion.complete(null);
+                    }
+                }, 2L);
+            }
         });
     }
 
@@ -231,7 +242,7 @@ public enum RecipeManager implements LifecycleTask {
         recipeName = recipeName.replace("\\", "/");
         recipeName = recipeName.replace('-', '_');
         int lastDotIndex = recipeName.lastIndexOf(".");
-        return recipeName.substring(0, lastDotIndex).toLowerCase();
+        return recipeName.substring(0, lastDotIndex).toLowerCase(Locale.ROOT);
     }
 
     public @Nullable ParsedRecipe parseRecipeFromConfig(String recipeFileName, BukkitConfigWrapper configWrapper) {
@@ -351,16 +362,25 @@ public enum RecipeManager implements LifecycleTask {
         }
         for (String recipeKeyStr : disabledRecipes) {
             NamespacedKey recipeKey = NamespacedKey.fromString(recipeKeyStr);
+            if (recipeKey == null) {
+                //非法键不能让整轮重载半途中断, 逐条告警后跳过
+                CrypticLib.warn("Invalid recipe key in disabled recipes: " + recipeKeyStr + ", skipped");
+                continue;
+            }
             if (this.disabledRecipes.containsKey(recipeKey)) {
                 //如果已经在这里面，就说明已经禁用了，不再重复禁用
                 continue;
             }
-            boolean result = disableRecipe(recipeKey, false, false);
-            if (!result) {
-                CrypticLib.warn(
-                    "Disable recipe <recipe_key> failed, please check is a valid recipe key!"
-                    , Map.of("<recipe_key>", recipeKeyStr)
-                );
+            try {
+                boolean result = disableRecipe(recipeKey, false, false);
+                if (!result) {
+                    CrypticLib.warn(
+                        "Disable recipe <recipe_key> failed, please check is a valid recipe key!"
+                        , Map.of("<recipe_key>", recipeKeyStr)
+                    );
+                }
+            } catch (Throwable throwable) {
+                CrypticLib.error("Failed to disable recipe " + recipeKeyStr, throwable);
             }
         }
     }
@@ -405,8 +425,31 @@ public enum RecipeManager implements LifecycleTask {
         if (result) {
             disabledRecipes.put(recipeKey, recipe);
             serverRecipeKeys.remove(recipeKey);
+            removeFromRecipeGroup(recipe);
         }
         return result;
+    }
+
+    /**
+     * 把配方从所属配方组里摘掉, 组为空时一并移除。
+     * 配方组只在重载时整体重建, 单条移除/禁用必须同步清理, 否则 RecipeApi 会返回已失效的配方
+     */
+    private void removeFromRecipeGroup(@Nullable Recipe recipe) {
+        if (recipe == null) {
+            return;
+        }
+        NamespacedKey recipeKey = getRecipeKey(recipe);
+        if (recipeKey == null) {
+            return;
+        }
+        recipeGroupMap.entrySet().removeIf(entry -> {
+            RecipeGroup recipeGroup = entry.getValue();
+            if (!recipeGroup.contains(recipeKey)) {
+                return false;
+            }
+            recipeGroup.removeRecipe(recipe);
+            return recipeGroup.isEmpty();
+        });
     }
 
     /**
@@ -469,6 +512,7 @@ public enum RecipeManager implements LifecycleTask {
             serverRecipeKeys.remove(recipeKey);
             if (removed != null) {
                 recipeFileNameToKeyMap.remove(removed.recipeFileName());
+                removeFromRecipeGroup(removed.recipe());
                 if (deleteFile) {
                     BukkitConfigWrapper configWrapper = removed.configWrapper();
                     CrypticLibBukkit.scheduler().async(configWrapper::deleteConfigFile);
@@ -603,6 +647,8 @@ public enum RecipeManager implements LifecycleTask {
         //配方加载完毕后执行的代码
         final Runnable callback;
         long useMilliseconds = 0;
+        //收尾是否已执行: end() 既可能在 try 内调用, 也可能在 catch 里再次调用
+        boolean ended = false;
 
         RecipeRegisterTask(File folder, Runnable doneActions, List<ParsedRecipe> parsedRecipes) {
             this.callback = doneActions;
@@ -617,10 +663,19 @@ public enum RecipeManager implements LifecycleTask {
         }
 
         void end() {
+            //回调只允许执行一次, 否则异常路径会让收尾逻辑(日志、更新配方、完成future)重复执行
+            if (ended) {
+                return;
+            }
+            ended = true;
             this.cancel();
             CrypticLib.info("Loaded " + craftorithmRecipes.size() + " recipes in " + useTick + " ticks(" + useMilliseconds + "ms)");
             if (callback != null) {
-                callback.run();
+                try {
+                    callback.run();
+                } catch (Throwable throwable) {
+                    CrypticLib.error("Unexpected error during recipe loading callback", throwable);
+                }
             }
         }
 
@@ -630,7 +685,8 @@ public enum RecipeManager implements LifecycleTask {
                 return;
             }
             try {
-                int maxRegRecipePerTick = PluginConfigs.MAX_REG_RECIPE_PER_TICK.value();
+                //配置为0或负数时批次为空且剩余列表不变, 任务会每tick空转且配方永不加载完成, 兜底为1
+                int maxRegRecipePerTick = Math.max(1, PluginConfigs.MAX_REG_RECIPE_PER_TICK.value());
                 if (parsedRecipes.size() <= maxRegRecipePerTick) {
                     registerRecipes(parsedRecipes);
                     end();
