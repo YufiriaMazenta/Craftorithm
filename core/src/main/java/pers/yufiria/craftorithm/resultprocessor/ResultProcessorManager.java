@@ -118,6 +118,9 @@ public enum ResultProcessorManager implements Listener {
             processors.add(factory.createProcessor(type, data));
         } catch (UnsupportedOperationException e) {
             CrypticLib.warn(e.getMessage());
+        } catch (Throwable throwable) {
+            //解析期还可能抛 IllegalArgumentException/ClassCastException/NPE: 逐条隔离, 不能让一个坏组件丢掉整条配方的处理器
+            CrypticLib.error("Invalid result_processor '" + componentName + "' (type: " + type + ")", throwable);
         }
     }
 
@@ -156,6 +159,8 @@ public enum ResultProcessorManager implements Listener {
                 processors.add(factory.createProcessor("copy_from_source", data));
             } catch (UnsupportedOperationException e) {
                 CrypticLib.warn(e.getMessage());
+            } catch (Throwable throwable) {
+                CrypticLib.error("Invalid copy_components_rules entry '" + ruleStr + "'", throwable);
             }
         }
         recipeProcessors.put(recipeKey, new ResultProcessors(processors));
