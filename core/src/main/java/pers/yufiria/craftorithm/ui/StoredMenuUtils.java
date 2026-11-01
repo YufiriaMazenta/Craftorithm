@@ -12,9 +12,6 @@ import java.util.Objects;
  */
 public final class StoredMenuUtils {
 
-    private StoredMenuUtils() {
-    }
-
     /**
      * 取出点击事件所属菜单当前存储的物品
      *

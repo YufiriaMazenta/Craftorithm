@@ -27,9 +27,6 @@ final class ProcessorUtils {
      */
     static final ConfigurationSection EMPTY_DATA = new MemoryConfiguration();
 
-    private ProcessorUtils() {
-    }
-
     /**
      * 创建普通 processor，不要求 sourceItem 存在
      */
