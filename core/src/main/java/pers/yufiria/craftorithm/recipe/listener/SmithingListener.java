@@ -38,18 +38,17 @@ public enum SmithingListener implements Listener {
         if (recipe == null)
             return;
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
-        if (recipeKey == null)
-            return;
 
         ItemStack[] ingredients = new ItemStack[]{inventory.getItem(0), inventory.getItem(1), inventory.getItem(2)};
         // 拦截指定的材料用于锻造，这里主要是拦截其他插件和原版的配方
+        // 拿不到key(非Keyed配方)时传null: 规则层把null当作"未知配方", 只应用匹配所有配方的规则
         if (!ItemManager.INSTANCE.canCraft(ingredients, recipeKey)) {
             event.setResult(null);
             inventory.setResult(null);
             return;
         }
 
-        if (!recipeKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
+        if (recipeKey == null || !recipeKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
             return;
         }
 

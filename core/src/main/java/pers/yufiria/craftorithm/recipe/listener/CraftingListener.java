@@ -34,13 +34,14 @@ public enum CraftingListener implements Listener {
             return;
         }
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(recipe);
-        if (recipeKey == null) {
-            return;
-        }
         CraftingInventory inventory = event.getInventory();
         // 拦截指定材料用于合成，这里主要是拦截其他插件和原版的配方
+        // 拿不到key(非Keyed配方)时传null: 规则层把null当作"未知配方", 只应用匹配所有配方的规则
         if (!ItemManager.INSTANCE.canCraft(inventory.getMatrix(), recipeKey)) {
             inventory.setResult(null);
+            return;
+        }
+        if (recipeKey == null) {
             return;
         }
         if (recipeKey.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
