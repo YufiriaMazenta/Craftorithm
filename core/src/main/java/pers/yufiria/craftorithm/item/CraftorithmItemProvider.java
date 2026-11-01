@@ -196,11 +196,23 @@ public enum CraftorithmItemProvider implements ItemPluginHook, ItemProvider, Lif
         ItemStack snapshot = item.clone();
         snapshot.setAmount(1);
         String namespaceItemId = namespace + ":" + itemName;
-        idItemMap.put(namespaceItemId, snapshot);
-        itemBuckets.computeIfAbsent(
-            ItemBucketKey.of(snapshot),
-            fp -> newItemBucketMap()
-        ).put(namespaceItemId, snapshot);
+        idItemMap.compute(namespaceItemId, (id, previous) -> {
+            if (previous != null) {
+                //材质/模型变化时新旧物品分属不同桶, 必须注销旧样本, 否则旧物品仍能认领此ID
+                itemBuckets.computeIfPresent(ItemBucketKey.of(previous), (key, bucket) -> {
+                    bucket.remove(id);
+                    return bucket.isEmpty() ? null : bucket;
+                });
+            }
+            itemBuckets.compute(ItemBucketKey.of(snapshot), (key, bucket) -> {
+                if (bucket == null) {
+                    bucket = newItemBucketMap();
+                }
+                bucket.put(id, snapshot);
+                return bucket;
+            });
+            return snapshot;
+        });
         CrypticLibBukkit.scheduler().async(() -> {
             BukkitConfigWrapper itemConfigWrapper = itemConfigFileMap.computeIfAbsent(namespace, ns -> {
                 File itemFile = new File(ITEM_FILE_FOLDER, ns + ".yml");
