@@ -16,6 +16,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import pers.yufiria.craftorithm.config.PluginConfigs;
+import pers.yufiria.craftorithm.ReloadManager;
 import pers.yufiria.craftorithm.database.DataSourceManager;
 import pers.yufiria.craftorithm.database.entity.DiscoveredRecipe;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
@@ -64,6 +65,16 @@ public enum DiscoveredRecipeDao implements LifecycleTask {
     }
 
     public void saveDiscoveredRecipes(UUID playerUuid, Set<String> recipeKeys) {
+        //重载期间配方键快照不完整: 按快照过滤会把"本轮还没加载到"误判成"配方已删除", 直接跳过本轮保存
+        if (ReloadManager.INSTANCE.isReloading()) {
+            CrypticLib.verbose("Skip saving discovered recipes for " + playerUuid + ": plugin is reloading");
+            return;
+        }
+        //快照为空说明配方表尚未建立(重载刚开始或关闭阶段已清空), 同样不能拿它做删除判断
+        if (RecipeManager.INSTANCE.serverRecipeKeys().isEmpty()) {
+            CrypticLib.verbose("Skip saving discovered recipes for " + playerUuid + ": server recipe keys not ready");
+            return;
+        }
         try {
             Set<String> currentKeys = getDiscoveredRecipes(playerUuid);
 
