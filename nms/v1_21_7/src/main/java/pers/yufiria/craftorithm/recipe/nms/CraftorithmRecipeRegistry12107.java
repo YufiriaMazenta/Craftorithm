@@ -98,11 +98,11 @@ public enum CraftorithmRecipeRegistry12107 implements CraftorithmRecipeRegistry,
 
     @Override
     public boolean unregisterRecipe(NamespacedKey recipeKey, boolean updateRecipes) {
-        if (updateRecipes) {
-            return CraftorithmRecipeRegistry.super.unregisterRecipe(recipeKey, true);
-        } else {
-            return MinecraftServer.getServer().aI().e.removeRecipe(CraftRecipe.toMinecraft(recipeKey));
+        boolean removed = MinecraftServer.getServer().aI().e.removeRecipe(CraftRecipe.toMinecraft(recipeKey));
+        if (removed && updateRecipes) {
+            this.updateRecipes();
         }
+        return removed;
     }
 
     @Override

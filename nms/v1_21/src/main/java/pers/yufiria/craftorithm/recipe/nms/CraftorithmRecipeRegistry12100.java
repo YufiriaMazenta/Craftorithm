@@ -6,7 +6,9 @@ import crypticlib.lifecycle.LifecyclePhase;
 import crypticlib.lifecycle.LifecycleSchedule;
 import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskConfig;
+import net.minecraft.network.protocol.game.PacketPlayOutRecipeUpdate;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.item.crafting.IRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeStonecutting;
@@ -80,8 +82,23 @@ public enum CraftorithmRecipeRegistry12100 implements CraftorithmRecipeRegistry,
     }
 
     @Override
+    public boolean unregisterRecipe(NamespacedKey recipeKey, boolean updateRecipes) {
+        boolean removed = MinecraftServer.getServer().aJ().removeRecipe(CraftNamespacedKey.toMinecraft(recipeKey));
+        if (removed && updateRecipes) {
+            this.updateRecipes();
+        }
+        return removed;
+    }
+
+    @Override
     public void updateRecipes() {
-        MinecraftServer.getServer().ah().u();
+        //只重发配方, 不连带成就与标签
+        MinecraftServer server = MinecraftServer.getServer();
+        PacketPlayOutRecipeUpdate packet = new PacketPlayOutRecipeUpdate(server.aJ().b());
+        for (EntityPlayer player : server.ah().l) {
+            player.c.b(packet);
+            player.J().a(player);
+        }
     }
 
     @Override

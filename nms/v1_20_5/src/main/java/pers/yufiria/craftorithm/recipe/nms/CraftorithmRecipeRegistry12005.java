@@ -6,11 +6,14 @@ import crypticlib.lifecycle.LifecyclePhase;
 import crypticlib.lifecycle.LifecycleSchedule;
 import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskConfig;
+import net.minecraft.network.protocol.game.PacketPlayOutRecipeUpdate;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.item.crafting.IRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.v1_20_R4.inventory.CraftRecipe;
+import org.bukkit.craftbukkit.v1_20_R4.util.CraftNamespacedKey;
 import org.bukkit.inventory.*;
 import pers.yufiria.craftorithm.recipe.CraftorithmRecipeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
@@ -65,8 +68,23 @@ public enum CraftorithmRecipeRegistry12005 implements CraftorithmRecipeRegistry,
     }
 
     @Override
+    public boolean unregisterRecipe(NamespacedKey recipeKey, boolean updateRecipes) {
+        boolean removed = MinecraftServer.getServer().aJ().removeRecipe(CraftNamespacedKey.toMinecraft(recipeKey));
+        if (removed && updateRecipes) {
+            this.updateRecipes();
+        }
+        return removed;
+    }
+
+    @Override
     public void updateRecipes() {
-        MinecraftServer.getServer().ah().u();
+        //只重发配方, 不连带成就与标签
+        MinecraftServer server = MinecraftServer.getServer();
+        PacketPlayOutRecipeUpdate packet = new PacketPlayOutRecipeUpdate(server.aJ().b());
+        for (EntityPlayer player : server.ah().l) {
+            player.c.b(packet);
+            player.I().a(player);
+        }
     }
 
     @Override

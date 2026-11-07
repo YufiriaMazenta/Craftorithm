@@ -48,11 +48,10 @@ public enum CraftorithmRecipeRegistry260200 implements CraftorithmRecipeRegistry
                 false
             )
         );
+        AsyncCatcher.catchOp("Recipe Add");
+        MinecraftServer.getServer().getRecipeManager().recipes.addRecipe(recipeHolder);
         if (updateRecipes) {
-            MinecraftServer.getServer().getRecipeManager().addRecipe(recipeHolder);
-        } else {
-            AsyncCatcher.catchOp("Recipe Add");
-            MinecraftServer.getServer().getRecipeManager().recipes.addRecipe(recipeHolder);
+            this.updateRecipes();
         }
         return RegisterResult.SUCCESS;
     }

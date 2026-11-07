@@ -94,34 +94,36 @@ public enum CraftorithmRecipeRegistry12110 implements CraftorithmRecipeRegistry,
                 return RegisterResult.UNSUPPORTED_RECIPE_TYPE;
             }
         }
+        AsyncCatcher.catchOp("Recipe Add");
+        MinecraftServer.getServer().getRecipeManager().recipes.addRecipe(recipeHolder);
         if (updateRecipes) {
-            MinecraftServer.getServer().getRecipeManager().addRecipe(recipeHolder);
-        } else {
-            AsyncCatcher.catchOp("Recipe Add");
-            MinecraftServer.getServer().getRecipeManager().recipes.addRecipe(recipeHolder);
+            this.updateRecipes();
         }
         return RegisterResult.SUCCESS;
     }
 
     @Override
     public boolean unregisterRecipe(NamespacedKey recipeKey, boolean updateRecipes) {
-        if (updateRecipes) {
-            return CraftorithmRecipeRegistry.super.unregisterRecipe(recipeKey, true);
-        } else {
-            ResourceKey<net.minecraft.world.item.crafting.Recipe<?>> minecraftKey = CraftRecipe.toMinecraft(recipeKey);
-            RecipeMap recipeMap = MinecraftServer.getServer().getRecipeManager().recipes;
-            RecipeHolder<?> removed = recipeMap.byKey.remove(minecraftKey);
-            if (removed == null) {
-                return false;
-            }
-            Collection<? extends RecipeHolder<? extends net.minecraft.world.item.crafting.Recipe<?>>> recipes = recipeMap.byType(removed.value().getType());
-            return recipes.remove(removed);
+        ResourceKey<net.minecraft.world.item.crafting.Recipe<?>> minecraftKey = CraftRecipe.toMinecraft(recipeKey);
+        RecipeMap recipeMap = MinecraftServer.getServer().getRecipeManager().recipes;
+        RecipeHolder<?> removed = recipeMap.byKey.remove(minecraftKey);
+        if (removed == null) {
+            return false;
         }
+        Collection<? extends RecipeHolder<? extends net.minecraft.world.item.crafting.Recipe<?>>> recipes = recipeMap.byType(removed.value().getType());
+        boolean result = recipes.remove(removed);
+        if (result && updateRecipes) {
+            this.updateRecipes();
+        }
+        return result;
     }
 
     @Override
     public void updateRecipes() {
-        MinecraftServer.getServer().getRecipeManager().finalizeRecipeLoading();
+        MinecraftServer server = MinecraftServer.getServer();
+        //只重发配方, 不触发 reloadResources
+        server.getRecipeManager().finalizeRecipeLoading(server.getWorldData().enabledFeatures());
+        server.getPlayerList().reloadRecipes();
     }
 
     @Override
