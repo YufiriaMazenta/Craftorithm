@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
 
 public final class NamespacedItemId {
 
@@ -18,7 +17,10 @@ public final class NamespacedItemId {
     private final boolean vanillaItem;
     private final int hashCode;
 
-    private static final ConcurrentHashMap<String, NamespacedItemId> INSTANCE_CACHE = new ConcurrentHashMap<>();
+    /**
+     * 原版材料到物品id的映射, 以 Material 的序号作为索引
+     */
+    private static final NamespacedItemId[] VANILLA_CACHE = new NamespacedItemId[Material.values().length];
 
     @ApiStatus.Internal
     public NamespacedItemId(@NotNull String namespace, @NotNull String itemId) {
@@ -60,27 +62,28 @@ public final class NamespacedItemId {
     }
 
     public static @NotNull NamespacedItemId of(@NotNull String namespace, @NotNull String itemId) {
-        String key = namespace + ":" + itemId;
-        return INSTANCE_CACHE.computeIfAbsent(key, k -> new NamespacedItemId(namespace, itemId));
+        return new NamespacedItemId(namespace, itemId);
     }
 
     public static @Nullable NamespacedItemId fromString(String string) {
         if (string == null) return null;
-        NamespacedItemId cached = INSTANCE_CACHE.get(string);
-        if (cached != null) return cached;
         int splitIndex = string.indexOf(':');
         if (splitIndex == -1) {
             Material material = MaterialHelper.matchMaterial(string);
             return material != null ? fromMaterial(material) : null;
         }
-        String namespace = string.substring(0, splitIndex);
-        String itemId = string.substring(splitIndex + 1);
-        return INSTANCE_CACHE.computeIfAbsent(string, k -> new NamespacedItemId(namespace, itemId));
+        return new NamespacedItemId(string.substring(0, splitIndex), string.substring(splitIndex + 1));
     }
 
     public static @NotNull NamespacedItemId fromMaterial(@NotNull Material material) {
-        String key = material.getKey().getNamespace() + ":" + material.getKey().getKey();
-        return INSTANCE_CACHE.computeIfAbsent(key, k -> new NamespacedItemId(material.getKey().getNamespace(), material.getKey().getKey()));
+        NamespacedItemId cached = VANILLA_CACHE[material.ordinal()];
+        if (cached != null) {
+            return cached;
+        }
+        NamespacedKey key = material.getKey();
+        NamespacedItemId created = new NamespacedItemId(key.getNamespace(), key.getKey());
+        VANILLA_CACHE[material.ordinal()] = created;
+        return created;
     }
 
 }
