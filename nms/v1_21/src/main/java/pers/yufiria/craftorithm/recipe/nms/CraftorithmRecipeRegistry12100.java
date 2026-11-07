@@ -13,6 +13,8 @@ import net.minecraft.world.item.crafting.IRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeStonecutting;
 import org.bukkit.NamespacedKey;
+import org.bukkit.craftbukkit.v1_21_R1.entity.CraftPlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftStonecuttingRecipe;
@@ -20,6 +22,7 @@ import org.bukkit.craftbukkit.v1_21_R1.util.CraftNamespacedKey;
 import org.bukkit.inventory.*;
 import pers.yufiria.craftorithm.recipe.CraftorithmRecipeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.recipe.RecipeSyncManager;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.Objects;
@@ -30,7 +33,7 @@ public enum CraftorithmRecipeRegistry12100 implements CraftorithmRecipeRegistry,
     INSTANCE;
 
     @Override
-    public RegisterResult registerRecipe(Recipe bukkitRecipe, boolean updateRecipes) {
+    public RegisterResult registerRecipe(Recipe bukkitRecipe, boolean sync2Client) {
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(bukkitRecipe);
         RecipeHolder<? extends IRecipe<?>> recipeHolder;
         switch (bukkitRecipe) {
@@ -82,23 +85,30 @@ public enum CraftorithmRecipeRegistry12100 implements CraftorithmRecipeRegistry,
     }
 
     @Override
-    public boolean unregisterRecipe(NamespacedKey recipeKey, boolean updateRecipes) {
+    public boolean unregisterRecipe(NamespacedKey recipeKey, boolean sync2Client) {
         boolean removed = MinecraftServer.getServer().aJ().removeRecipe(CraftNamespacedKey.toMinecraft(recipeKey));
-        if (removed && updateRecipes) {
-            this.updateRecipes();
+        if (removed && sync2Client) {
+            RecipeSyncManager.INSTANCE.onRecipesChanged();
         }
         return removed;
     }
 
     @Override
-    public void updateRecipes() {
-        //只重发配方, 不连带成就与标签
+    public void buildRecipePacket() {
         MinecraftServer server = MinecraftServer.getServer();
-        PacketPlayOutRecipeUpdate packet = new PacketPlayOutRecipeUpdate(server.aJ().b());
-        for (EntityPlayer player : server.ah().l) {
-            player.c.b(packet);
-            player.J().a(player);
+        RecipeSyncManager.INSTANCE.setRecipePacket(new PacketPlayOutRecipeUpdate(server.aJ().b()));
+    }
+
+    @Override
+    public boolean syncRecipes(Player player) {
+        Object packet = RecipeSyncManager.INSTANCE.recipePacket();
+        if (!(packet instanceof PacketPlayOutRecipeUpdate recipePacket) || !(player instanceof CraftPlayer craftPlayer)) {
+            return false;
         }
+        EntityPlayer entityPlayer = craftPlayer.getHandle();
+        entityPlayer.c.b(recipePacket);
+        entityPlayer.J().a(entityPlayer);
+        return true;
     }
 
     @Override

@@ -128,13 +128,13 @@ public enum RecipeApi {
     /**
      * 禁用配方
      *
-     * @param recipeKey     配方Key
-     * @param save          是否保存到配置
-     * @param updateRecipes 是否给玩家更新配方列表
+     * @param recipeKey    配方Key
+     * @param save         是否保存到配置
+     * @param sync2Client  是否在禁用后同步给客户端
      * @return 是否成功
      */
-    public boolean disableRecipe(@NotNull NamespacedKey recipeKey, boolean save, boolean updateRecipes) {
-        return RecipeManager.INSTANCE.disableRecipe(recipeKey, save, updateRecipes);
+    public boolean disableRecipe(@NotNull NamespacedKey recipeKey, boolean save, boolean sync2Client) {
+        return RecipeManager.INSTANCE.disableRecipe(recipeKey, save, sync2Client);
     }
 
     /**
@@ -151,12 +151,13 @@ public enum RecipeApi {
     /**
      * 删除Craftorithm配方
      *
-     * @param recipeId   配方ID
-     * @param deleteFile 是否删除配置文件
+     * @param recipeId    配方ID
+     * @param deleteFile  是否删除配置文件
+     * @param sync2Client 是否在删除后同步给客户端
      * @return 是否成功
      */
-    public boolean removeCraftorithmRecipe(@NotNull String recipeId, boolean deleteFile, boolean updateRecipes) {
-        return RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeId, deleteFile, updateRecipes);
+    public boolean removeCraftorithmRecipe(@NotNull String recipeId, boolean deleteFile, boolean sync2Client) {
+        return RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeId, deleteFile, sync2Client);
     }
 
     /**

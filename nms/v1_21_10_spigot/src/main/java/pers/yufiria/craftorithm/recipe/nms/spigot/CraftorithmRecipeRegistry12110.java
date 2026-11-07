@@ -7,11 +7,15 @@ import crypticlib.lifecycle.LifecyclePhase;
 import crypticlib.lifecycle.LifecycleSchedule;
 import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskConfig;
+import net.minecraft.network.protocol.game.PacketPlayOutRecipeUpdate;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.item.crafting.IRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeStonecutting;
 import org.bukkit.NamespacedKey;
+import org.bukkit.craftbukkit.v1_21_R6.entity.CraftPlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.craftbukkit.v1_21_R6.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_21_R6.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.v1_21_R6.inventory.CraftStonecuttingRecipe;
@@ -20,6 +24,7 @@ import org.bukkit.inventory.*;
 import org.spigotmc.AsyncCatcher;
 import pers.yufiria.craftorithm.recipe.CraftorithmRecipeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.recipe.RecipeSyncManager;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
 @LifecycleTaskConfig(schedules = @LifecycleSchedule(phase = LifecyclePhase.LOAD))
@@ -28,7 +33,7 @@ public enum CraftorithmRecipeRegistry12110 implements CraftorithmRecipeRegistry,
     INSTANCE;
 
     @Override
-    public RegisterResult registerRecipe(Recipe bukkitRecipe, boolean updateRecipes) {
+    public RegisterResult registerRecipe(Recipe bukkitRecipe, boolean sync2Client) {
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(bukkitRecipe);
         RecipeHolder<? extends IRecipe<?>> recipeHolder;
         switch (bukkitRecipe) {
@@ -88,27 +93,45 @@ public enum CraftorithmRecipeRegistry12110 implements CraftorithmRecipeRegistry,
                 return RegisterResult.UNSUPPORTED_RECIPE_TYPE;
             }
         }
-        if (updateRecipes) {
-            MinecraftServer.getServer().aN().addRecipe(recipeHolder);
-        } else {
-            AsyncCatcher.catchOp("Recipe Add");
-            MinecraftServer.getServer().aN().e.addRecipe(recipeHolder);
+        AsyncCatcher.catchOp("Recipe Add");
+        MinecraftServer.getServer().aN().e.addRecipe(recipeHolder);
+        if (sync2Client) {
+            RecipeSyncManager.INSTANCE.onRecipesChanged();
         }
         return RegisterResult.SUCCESS;
     }
 
     @Override
-    public boolean unregisterRecipe(NamespacedKey recipeKey, boolean updateRecipes) {
+    public boolean unregisterRecipe(NamespacedKey recipeKey, boolean sync2Client) {
         boolean removed = MinecraftServer.getServer().aN().e.removeRecipe(CraftRecipe.toMinecraft(recipeKey));
-        if (removed && updateRecipes) {
-            this.updateRecipes();
+        if (removed && sync2Client) {
+            RecipeSyncManager.INSTANCE.onRecipesChanged();
         }
         return removed;
     }
 
     @Override
-    public void updateRecipes() {
-        MinecraftServer.getServer().aN().finalizeRecipeLoading();
+    public void rebuildRecipes() {
+        MinecraftServer server = MinecraftServer.getServer();
+        server.aN().a(server.bf().J());
+    }
+
+    @Override
+    public void buildRecipePacket() {
+        MinecraftServer server = MinecraftServer.getServer();
+        RecipeSyncManager.INSTANCE.setRecipePacket(new PacketPlayOutRecipeUpdate(server.aN().b(), server.aN().c()));
+    }
+
+    @Override
+    public boolean syncRecipes(Player player) {
+        Object packet = RecipeSyncManager.INSTANCE.recipePacket();
+        if (!(packet instanceof PacketPlayOutRecipeUpdate recipePacket) || !(player instanceof CraftPlayer craftPlayer)) {
+            return false;
+        }
+        EntityPlayer entityPlayer = craftPlayer.getHandle();
+        entityPlayer.g.b(recipePacket);
+        entityPlayer.L().a(entityPlayer);
+        return true;
     }
 
     @Override

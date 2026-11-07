@@ -2,11 +2,11 @@ package pers.yufiria.craftorithm.recipe;
 
 import java.util.Locale;
 import crypticlib.CrypticLib;
-import crypticlib.CrypticLibBukkit;
 import crypticlib.MinecraftVersion;
 import crypticlib.compat.Compat;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Recipe;
 
 import java.util.Optional;
@@ -53,29 +53,53 @@ public interface CraftorithmRecipeRegistry {
     /**
      * 往服务器里注册一个配方
      *
-     * @param bukkitRecipe  要注册的bukkit配方
-     * @param updateRecipes 是否在注册后向玩家广播配方更新，这个字段只在1.21.3以上有用，因为旧版本本来就不在此阶段更新
+     * @param bukkitRecipe 要注册的bukkit配方
+     * @param sync2Client 是否在注册后同步给客户端
      * @return
      */
-    RegisterResult registerRecipe(Recipe bukkitRecipe, boolean updateRecipes);
+    RegisterResult registerRecipe(Recipe bukkitRecipe, boolean sync2Client);
 
     /**
      * 从服务器里删除一个配方
      * 这个方法需要在1.21.3以上的服务端重写，以实现更好的性能表现
      *
-     * @param recipeKey     要删除配方的key
-     * @param updateRecipes 是否在删除后向玩家广播配方更新，这个字段只在1.21.3以上有用，因为旧版本本来就不在此阶段更新
+     * @param recipeKey   要删除配方的key
+     * @param sync2Client 是否在删除后同步给客户端
      */
-    default boolean unregisterRecipe(NamespacedKey recipeKey, boolean updateRecipes) {
+    default boolean unregisterRecipe(NamespacedKey recipeKey, boolean sync2Client) {
         return Bukkit.removeRecipe(recipeKey);
     }
 
     /**
-     * 用于给玩家更新配方列表
+     * 静默重建客户端侧需要的配方数据(属性集/展示列表)
+     * 1.20 ~ 1.21.1 的客户端直接接收全量配方列表, 没有派生数据, 默认留空
      */
-    default void updateRecipes() {
-        if (CrypticLibBukkit.isPaper()) {
-            Bukkit.updateRecipes();
+    default void rebuildRecipes() {
+    }
+
+    /**
+     * 构建当前最新的配方包, 需在 rebuildRecipes 之后调用
+     */
+    default void buildRecipePacket() {
+    }
+
+    /**
+     * 向单个玩家下发配方数据
+     *
+     * @return false表示当前版本不支持逐玩家下发
+     */
+    default boolean syncRecipes(Player player) {
+        return false;
+    }
+
+    /**
+     * 立即向所有在线玩家下发配方数据
+     */
+    default void syncRecipes() {
+        rebuildRecipes();
+        buildRecipePacket();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            syncRecipes(player);
         }
     }
 

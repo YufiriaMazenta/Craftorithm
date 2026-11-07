@@ -23,8 +23,8 @@ public enum BrewingRecipeRegister implements RecipeRegister {
     private final RecipeRegister actualRegister = initActualRegister();
 
     @Override
-    public boolean registerRecipe(Recipe recipe, boolean updateRecipes) {
-        boolean result = actualRegister.registerRecipe(recipe, updateRecipes);
+    public boolean registerRecipe(Recipe recipe, boolean sync2Client) {
+        boolean result = actualRegister.registerRecipe(recipe, sync2Client);
         if (result) {
             brewingRecipeMap.put(RecipeManager.INSTANCE.getRecipeKey(recipe), (BrewingRecipe) recipe);
         }
@@ -33,8 +33,8 @@ public enum BrewingRecipeRegister implements RecipeRegister {
     }
 
     @Override
-    public boolean unregisterRecipe(NamespacedKey recipeKey, boolean updateRecipes) {
-        boolean result = actualRegister.unregisterRecipe(recipeKey, updateRecipes);
+    public boolean unregisterRecipe(NamespacedKey recipeKey, boolean sync2Client) {
+        boolean result = actualRegister.unregisterRecipe(recipeKey, sync2Client);
         if (result) {
             brewingRecipeMap.remove(recipeKey);
         }
@@ -76,13 +76,13 @@ public enum BrewingRecipeRegister implements RecipeRegister {
         INSTANCE;
 
         @Override
-        public boolean registerRecipe(Recipe recipe, boolean updateRecipes) {
-            return BukkitRecipeRegister.INSTANCE.registerRecipe(recipe, updateRecipes);
+        public boolean registerRecipe(Recipe recipe, boolean sync2Client) {
+            return BukkitRecipeRegister.INSTANCE.registerRecipe(recipe, sync2Client);
         }
 
         @Override
-        public boolean unregisterRecipe(NamespacedKey recipeKey, boolean updateRecipes) {
-            return BukkitRecipeRegister.INSTANCE.unregisterRecipe(recipeKey, updateRecipes);
+        public boolean unregisterRecipe(NamespacedKey recipeKey, boolean sync2Client) {
+            return BukkitRecipeRegister.INSTANCE.unregisterRecipe(recipeKey, sync2Client);
         }
 
     }
@@ -92,7 +92,7 @@ public enum BrewingRecipeRegister implements RecipeRegister {
         INSTANCE;
 
         @Override
-        public boolean registerRecipe(Recipe recipe, boolean updateRecipes) {
+        public boolean registerRecipe(Recipe recipe, boolean sync2Client) {
             if (!RecipeManager.INSTANCE.supportBrewingRecipe()) {
                 CrypticLib.error("The server does not support brewing recipes");
                 return false;
@@ -107,7 +107,7 @@ public enum BrewingRecipeRegister implements RecipeRegister {
         }
 
         @Override
-        public boolean unregisterRecipe(NamespacedKey recipeKey, boolean updateRecipes) {
+        public boolean unregisterRecipe(NamespacedKey recipeKey, boolean sync2Client) {
             if (!RecipeManager.INSTANCE.supportBrewingRecipe()) {
                 CrypticLib.error("The server does not support brewing recipes");
                 return false;

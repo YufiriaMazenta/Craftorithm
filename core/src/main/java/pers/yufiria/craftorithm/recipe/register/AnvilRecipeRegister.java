@@ -10,7 +10,7 @@ public enum AnvilRecipeRegister implements RecipeRegister {
     INSTANCE;
 
     @Override
-    public boolean registerRecipe(Recipe recipe, boolean updateRecipes) {
+    public boolean registerRecipe(Recipe recipe, boolean sync2Client) {
         if (recipe instanceof AnvilRecipe anvilRecipe) {
             return AnvilRecipeHandler.INSTANCE.registerAnvilRecipe(anvilRecipe);
         }
@@ -18,7 +18,7 @@ public enum AnvilRecipeRegister implements RecipeRegister {
     }
 
     @Override
-    public boolean unregisterRecipe(NamespacedKey recipeKey, boolean updateRecipes) {
+    public boolean unregisterRecipe(NamespacedKey recipeKey, boolean sync2Client) {
         return AnvilRecipeHandler.INSTANCE.unregisterAnvilRecipe(recipeKey);
     }
 

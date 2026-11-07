@@ -10,4 +10,6 @@ dependencies {
     compileOnly("com.crypticlib:bukkit:${rootProject.findProperty("crypticlibVer")}")
     compileOnly("com.crypticlib:bukkit-util:${rootProject.findProperty("crypticlibVer")}")
     compileOnly("com.crypticlib:common-compat:${rootProject.findProperty("crypticlibVer")}")
+    compileOnly("org.jspecify:jspecify:1.0.0")
+    compileOnly("it.unimi.dsi:fastutil:8.5.18")
 }

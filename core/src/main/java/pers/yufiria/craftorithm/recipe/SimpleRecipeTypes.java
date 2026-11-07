@@ -38,13 +38,13 @@ public enum SimpleRecipeTypes implements RecipeType {
         },
         new RecipeRegister() {
             @Override
-            public boolean registerRecipe(Recipe recipe, boolean updateRecipes) {
-                return BukkitRecipeRegister.INSTANCE.registerRecipe(recipe, updateRecipes);
+            public boolean registerRecipe(Recipe recipe, boolean sync2Client) {
+                return BukkitRecipeRegister.INSTANCE.registerRecipe(recipe, sync2Client);
             }
 
             @Override
-            public boolean unregisterRecipe(NamespacedKey recipeKey, boolean updateRecipes) {
-                return BukkitRecipeRegister.INSTANCE.unregisterRecipe(recipeKey, updateRecipes);
+            public boolean unregisterRecipe(NamespacedKey recipeKey, boolean sync2Client) {
+                return BukkitRecipeRegister.INSTANCE.unregisterRecipe(recipeKey, sync2Client);
             }
         },
         recipe -> false,

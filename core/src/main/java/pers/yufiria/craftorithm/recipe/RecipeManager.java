@@ -138,8 +138,8 @@ public enum RecipeManager implements LifecycleTask {
             } finally {
                 CrypticLibBukkit.scheduler().syncLater(() -> {
                     try {
-                        //所有操作进行完毕后，为玩家更新配方信息
-                        CraftorithmRecipeRegistry.findImpl().updateRecipes();
+                        //配方加载完毕后同步给玩家
+                        RecipeSyncManager.INSTANCE.onRecipesChanged();
                         //从数据库恢复玩家已解锁配方（异步，避免阻塞主线程）
                         CrypticLibBukkit.scheduler().async(DiscoveredRecipeDao.INSTANCE::loadOnlinePlayersDiscoveredRecipes);
                     } catch (Throwable throwable) {
@@ -277,7 +277,7 @@ public enum RecipeManager implements LifecycleTask {
         return new ParsedRecipe(recipeFileName, recipeKey, recipe, recipeType, configWrapper, createTime);
     }
 
-    public boolean registerParsedRecipe(ParsedRecipe parsed, boolean updateRecipes) {
+    public boolean registerParsedRecipe(ParsedRecipe parsed, boolean sync2Client) {
         Recipe recipe = parsed.recipe();
         RecipeType recipeType = parsed.recipeType();
         BukkitConfigWrapper configWrapper = parsed.configWrapper();
@@ -296,7 +296,7 @@ public enum RecipeManager implements LifecycleTask {
         if (recipeLoadFromConfigEvent.isCancelled()) {
             return false;
         }
-        boolean result = recipeLoadFromConfigEvent.recipeRegister().registerRecipe(recipeLoadFromConfigEvent.recipe(), updateRecipes, recipeConfig);
+        boolean result = recipeLoadFromConfigEvent.recipeRegister().registerRecipe(recipeLoadFromConfigEvent.recipe(), sync2Client, recipeConfig);
         if (result) {
             craftorithmRecipes.put(recipeKey, parsed);
             serverRecipeKeys.add(recipeKey);
@@ -322,15 +322,15 @@ public enum RecipeManager implements LifecycleTask {
      *
      * @param recipeFileName      配方文件的名字,当配方文件里不存在recipe_id这个配置时,会尝试使用文件名字作为配方id
      * @param recipeConfigWrapper 配方的配置文件
-     * @param updateRecipes       是否向玩家更新配方列表
+     * @param sync2Client       是否在注册后同步给客户端
      * @return
      */
-    public boolean loadRecipeFromConfig(String recipeFileName, BukkitConfigWrapper recipeConfigWrapper, boolean updateRecipes) {
+    public boolean loadRecipeFromConfig(String recipeFileName, BukkitConfigWrapper recipeConfigWrapper, boolean sync2Client) {
         ParsedRecipe parsed = parseRecipeFromConfig(recipeFileName, recipeConfigWrapper);
         if (parsed == null) {
             return false;
         }
-        return registerParsedRecipe(parsed, updateRecipes);
+        return registerParsedRecipe(parsed, sync2Client);
     }
 
     private void loadServerRecipeKeys() {
@@ -417,11 +417,11 @@ public enum RecipeManager implements LifecycleTask {
      * @param save
      * @return
      */
-    public boolean disableRecipe(NamespacedKey recipeKey, boolean save, boolean updateRecipes) {
+    public boolean disableRecipe(NamespacedKey recipeKey, boolean save, boolean sync2Client) {
         if (save)
             addDisabledRecipes2Config(recipeKey);
         Recipe recipe = getRecipe(recipeKey);
-        boolean result = removeRecipe(recipeKey, updateRecipes);
+        boolean result = removeRecipe(recipeKey, sync2Client);
         if (result) {
             disabledRecipes.put(recipeKey, recipe);
             serverRecipeKeys.remove(recipeKey);
@@ -498,15 +498,15 @@ public enum RecipeManager implements LifecycleTask {
     /**
      * 删除一个配方,并通知玩家
      */
-    public boolean removeRecipe(NamespacedKey recipeKey, boolean updateRecipes) {
+    public boolean removeRecipe(NamespacedKey recipeKey, boolean sync2Client) {
         Recipe recipe = getRecipe(recipeKey);
         RecipeType recipeType = getRecipeType(recipe);
-        return recipeType.recipeRegister().unregisterRecipe(recipeKey, updateRecipes);
+        return recipeType.recipeRegister().unregisterRecipe(recipeKey, sync2Client);
     }
 
-    public boolean removeCraftorithmRecipe(String recipeId, boolean deleteFile, boolean updateRecipes) {
+    public boolean removeCraftorithmRecipe(String recipeId, boolean deleteFile, boolean sync2Client) {
         NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeId);
-        boolean result = removeRecipe(recipeKey, updateRecipes);
+        boolean result = removeRecipe(recipeKey, sync2Client);
         if (result) {
             ParsedRecipe removed = craftorithmRecipes.remove(recipeKey);
             serverRecipeKeys.remove(recipeKey);

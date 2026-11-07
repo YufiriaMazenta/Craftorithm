@@ -65,6 +65,15 @@ public class PluginConfigs {
         100,
         "每tick注册的配方数量，调低此数值可以减少服务器卡顿"
     );
+    public final static BooleanConfig LAZY_RECIPE_SYNC = new BooleanConfig(
+        "lazy_recipe_sync",
+        false,
+        List.of(
+            "是否将配方同步方式更换为懒同步",
+            "false: 配方变更后立即同步给所有在线玩家（默认）",
+            "true: 先标记，玩家打开工作台、熔炉或配方书时再同步"
+        )
+    );
     public final static ConfigSectionListConfig INGREDIENT_RESTRICTION_RULES = new ConfigSectionListConfig(
         "ingredient.restriction_rules",
         migrateLegacyIngredientRestriction(),

@@ -7,11 +7,15 @@ import crypticlib.lifecycle.LifecyclePhase;
 import crypticlib.lifecycle.LifecycleSchedule;
 import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskConfig;
+import net.minecraft.network.protocol.game.ClientboundUpdateRecipesPacket;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.StonecutterRecipe;
 import org.bukkit.NamespacedKey;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.inventory.CraftStonecuttingRecipe;
@@ -20,6 +24,7 @@ import org.bukkit.inventory.*;
 import org.spigotmc.AsyncCatcher;
 import pers.yufiria.craftorithm.recipe.CraftorithmRecipeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.recipe.RecipeSyncManager;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
 @LifecycleTaskConfig(schedules = @LifecycleSchedule(phase = LifecyclePhase.LOAD))
@@ -28,7 +33,7 @@ public enum CraftorithmRecipeRegistry260100 implements CraftorithmRecipeRegistry
     INSTANCE;
 
     @Override
-    public RegisterResult registerRecipe(Recipe bukkitRecipe, boolean updateRecipes) {
+    public RegisterResult registerRecipe(Recipe bukkitRecipe, boolean sync2Client) {
         NamespacedKey recipeKey = RecipeManager.INSTANCE.getRecipeKey(bukkitRecipe);
         RecipeHolder<?> recipeHolder;
         switch (bukkitRecipe) {
@@ -93,27 +98,48 @@ public enum CraftorithmRecipeRegistry260100 implements CraftorithmRecipeRegistry
                 return RegisterResult.UNSUPPORTED_RECIPE_TYPE;
             }
         }
-        if (updateRecipes) {
-            MinecraftServer.getServer().getRecipeManager().addRecipe(recipeHolder);
-        } else {
-            AsyncCatcher.catchOp("Recipe Add");
-            MinecraftServer.getServer().getRecipeManager().recipes.addRecipe(recipeHolder);
+        AsyncCatcher.catchOp("Recipe Add");
+        MinecraftServer.getServer().getRecipeManager().recipes.addRecipe(recipeHolder);
+        if (sync2Client) {
+            RecipeSyncManager.INSTANCE.onRecipesChanged();
         }
         return RegisterResult.SUCCESS;
     }
 
     @Override
-    public boolean unregisterRecipe(NamespacedKey recipeKey, boolean updateRecipes) {
+    public boolean unregisterRecipe(NamespacedKey recipeKey, boolean sync2Client) {
         boolean removed = MinecraftServer.getServer().getRecipeManager().recipes.removeRecipe(CraftRecipe.toMinecraft(recipeKey));
-        if (removed && updateRecipes) {
-            this.updateRecipes();
+        if (removed && sync2Client) {
+            RecipeSyncManager.INSTANCE.onRecipesChanged();
         }
         return removed;
     }
 
     @Override
-    public void updateRecipes() {
-        MinecraftServer.getServer().getRecipeManager().finalizeRecipeLoading();
+    public void rebuildRecipes() {
+        MinecraftServer server = MinecraftServer.getServer();
+        server.getRecipeManager().finalizeRecipeLoading(server.getWorldData().enabledFeatures());
+    }
+
+    @Override
+    public void buildRecipePacket() {
+        MinecraftServer server = MinecraftServer.getServer();
+        RecipeSyncManager.INSTANCE.setRecipePacket(new ClientboundUpdateRecipesPacket(
+            server.getRecipeManager().getSynchronizedItemProperties(),
+            server.getRecipeManager().getSynchronizedStonecutterRecipes()
+        ));
+    }
+
+    @Override
+    public boolean syncRecipes(Player player) {
+        Object packet = RecipeSyncManager.INSTANCE.recipePacket();
+        if (!(packet instanceof ClientboundUpdateRecipesPacket recipePacket) || !(player instanceof CraftPlayer craftPlayer)) {
+            return false;
+        }
+        ServerPlayer serverPlayer = craftPlayer.getHandle();
+        serverPlayer.connection.send(recipePacket);
+        serverPlayer.getRecipeBook().sendInitialRecipeBook(serverPlayer);
+        return true;
     }
 
     @Override
