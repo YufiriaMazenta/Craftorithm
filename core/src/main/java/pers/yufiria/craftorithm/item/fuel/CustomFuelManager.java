@@ -136,9 +136,12 @@ public enum CustomFuelManager implements Listener, LifecycleTask {
         if (fuels.isEmpty()) {
             return null;
         }
+        if (ItemHelper.isAir(item)) {
+            return null;
+        }
         NamespacedItemId itemId = ItemManager.INSTANCE.matchItemIdOrVanilla(item, true)
             .map(NamespacedItemIdStack::itemId)
-            .orElseThrow();
+            .orElse(null);
         return fuels.get(itemId);
     }
 
