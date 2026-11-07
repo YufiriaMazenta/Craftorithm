@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.recipe;
 
 import crypticlib.CrypticLib;
+import crypticlib.CrypticLibBukkit;
 import crypticlib.CrypticLibPlugin;
 import crypticlib.lifecycle.LifecyclePhase;
 import crypticlib.lifecycle.LifecycleSchedule;
@@ -105,13 +106,20 @@ public enum RecipeSyncManager implements LifecycleTask, Listener {
 
     /**
      * 背包内的配方书不会触发 InventoryOpenEvent
+     * <p>
+     * 客户端在打开或切换配方书设置时还在重排页面, 这时替换配方书内容会让页面停在工作区的空白状态,
+     * 所以延后几tick, 等客户端排完版再下发
      */
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onRecipeBookToggle(PlayerRecipeBookSettingsChangeEvent event) {
         if (!event.isOpen()) {
             return;
         }
-        syncIfPending(event.getPlayer());
+        Player player = event.getPlayer();
+        if (!pendingPlayers.contains(player.getUniqueId())) {
+            return;
+        }
+        CrypticLibBukkit.scheduler().runOnEntityLater(player, () -> syncIfPending(player), 2);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
