@@ -19,7 +19,7 @@ import org.bukkit.craftbukkit.v1_20_R3.util.CraftNamespacedKey;
 import org.bukkit.inventory.*;
 import pers.yufiria.craftorithm.recipe.CraftorithmRecipeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
-import pers.yufiria.craftorithm.recipe.RecipeSyncManager;
+import pers.yufiria.craftorithm.recipe.sync.RecipeSyncManager;
 
 @LifecycleTaskConfig(schedules = @LifecycleSchedule(phase = LifecyclePhase.LOAD))
 public enum CraftorithmRecipeRegistry12003 implements CraftorithmRecipeRegistry, LifecycleTask {

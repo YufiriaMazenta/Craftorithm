@@ -24,7 +24,7 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.TransmuteRecipe;
 import org.spigotmc.AsyncCatcher;
 import pers.yufiria.craftorithm.recipe.CraftorithmRecipeRegistry;
-import pers.yufiria.craftorithm.recipe.RecipeSyncManager;
+import pers.yufiria.craftorithm.recipe.sync.RecipeSyncManager;
 
 @LifecycleTaskConfig(schedules = @LifecycleSchedule(phase = LifecyclePhase.LOAD))
 public enum CraftorithmRecipeRegistry260200 implements CraftorithmRecipeRegistry, LifecycleTask {

@@ -29,6 +29,7 @@ import pers.yufiria.craftorithm.database.dao.DiscoveredRecipeDao;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 import pers.yufiria.craftorithm.recipe.parser.RecipeParser;
 import pers.yufiria.craftorithm.recipe.register.RecipeRegister;
+import pers.yufiria.craftorithm.recipe.sync.RecipeSyncManager;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessorManager;
 import pers.yufiria.craftorithm.util.CollectionsUtils;
 import pers.yufiria.craftorithm.util.LangUtils;

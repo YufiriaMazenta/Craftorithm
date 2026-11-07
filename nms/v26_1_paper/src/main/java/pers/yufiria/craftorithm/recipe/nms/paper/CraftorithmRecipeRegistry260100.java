@@ -27,7 +27,7 @@ import org.bukkit.inventory.*;
 import org.spigotmc.AsyncCatcher;
 import pers.yufiria.craftorithm.recipe.CraftorithmRecipeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
-import pers.yufiria.craftorithm.recipe.RecipeSyncManager;
+import pers.yufiria.craftorithm.recipe.sync.RecipeSyncManager;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
 @LifecycleTaskConfig(schedules = @LifecycleSchedule(phase = LifecyclePhase.LOAD))

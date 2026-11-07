@@ -22,7 +22,7 @@ import org.bukkit.craftbukkit.v1_21_R1.util.CraftNamespacedKey;
 import org.bukkit.inventory.*;
 import pers.yufiria.craftorithm.recipe.CraftorithmRecipeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
-import pers.yufiria.craftorithm.recipe.RecipeSyncManager;
+import pers.yufiria.craftorithm.recipe.sync.RecipeSyncManager;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.Objects;

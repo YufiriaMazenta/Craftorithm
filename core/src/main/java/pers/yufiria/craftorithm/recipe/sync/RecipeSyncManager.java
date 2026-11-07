@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.recipe;
+package pers.yufiria.craftorithm.recipe.sync;
 
 import crypticlib.CrypticLib;
 import crypticlib.CrypticLibBukkit;
@@ -18,8 +18,8 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerRecipeBookSettingsChangeEvent;
 import pers.yufiria.craftorithm.config.PluginConfigs;
+import pers.yufiria.craftorithm.recipe.CraftorithmRecipeRegistry;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -105,17 +105,11 @@ public enum RecipeSyncManager implements LifecycleTask, Listener {
     }
 
     /**
-     * 背包内的配方书不会触发 InventoryOpenEvent
+     * 玩家打开配方书后补发
      * <p>
-     * 客户端在打开或切换配方书设置时还在重排页面, 这时替换配方书内容会让页面停在工作区的空白状态,
-     * 所以延后几tick, 等客户端排完版再下发
+     * 客户端此时还在重排配方书页面, 立刻整包替换会让页面停在空白状态, 所以延后几tick
      */
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onRecipeBookToggle(PlayerRecipeBookSettingsChangeEvent event) {
-        if (!event.isOpen()) {
-            return;
-        }
-        Player player = event.getPlayer();
+    public void syncAfterRecipeBookOpen(Player player) {
         if (!pendingPlayers.contains(player.getUniqueId())) {
             return;
         }

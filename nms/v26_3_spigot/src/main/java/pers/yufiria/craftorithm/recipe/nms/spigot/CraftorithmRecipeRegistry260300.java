@@ -19,7 +19,7 @@ import org.spigotmc.AsyncCatcher;
 import pers.yufiria.craftorithm.recipe.BrewingRecipe;
 import pers.yufiria.craftorithm.recipe.CraftorithmRecipeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
-import pers.yufiria.craftorithm.recipe.RecipeSyncManager;
+import pers.yufiria.craftorithm.recipe.sync.RecipeSyncManager;
 
 /**
  * 对26.3的酿造配方进行的额外适配
