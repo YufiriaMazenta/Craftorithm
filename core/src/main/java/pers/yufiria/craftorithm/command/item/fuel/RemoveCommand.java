@@ -11,7 +11,6 @@ import pers.yufiria.craftorithm.item.fuel.CustomFuelManager;
 import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -46,7 +45,7 @@ public final class RemoveCommand extends CommandNode {
     public List<String> tabComplete(@NotNull CommandContext context) {
         List<String> args = context.args();
         if (args.size() <= 1) {
-            return new ArrayList<>(CustomFuelManager.INSTANCE.fuels().keySet().stream().map(NamespacedItemId::toString).toList());
+            return CustomFuelManager.INSTANCE.fuels().keySet().stream().map(NamespacedItemId::toString).toList();
         }
         return Collections.singletonList("");
     }

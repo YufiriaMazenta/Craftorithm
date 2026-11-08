@@ -20,7 +20,6 @@ import pers.yufiria.craftorithm.ui.editor.RecipeEditorManager;
 import pers.yufiria.craftorithm.util.CommandUtils;
 import pers.yufiria.craftorithm.util.LangUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -84,9 +83,9 @@ public final class EditCommand extends AbstractSubcommand {
     public @NotNull List<String> tabComplete(@NotNull CommandContext context) {
         List<String> args = context.args();
         if (args.size() <= 1) {
-            return new ArrayList<>(RecipeManager.INSTANCE.craftorithmRecipes().keySet().stream()
+            return RecipeManager.INSTANCE.craftorithmRecipes().keySet().stream()
                 .map(NamespacedKey::toString)
-                .toList());
+                .toList();
         }
         return List.of("");
     }
