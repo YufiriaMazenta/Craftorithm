@@ -27,8 +27,20 @@ public class ItemIdRecipeChoice implements CustomRecipeChoice, ItemIdIngredientM
     }
 
     public ItemIdRecipeChoice(RecipeChoice bukkitChoice, @Nullable String itemGroupId) {
+        this(bukkitChoice, itemGroupId, resolveIngredients(bukkitChoice));
+    }
+
+    /**
+     * 复用已解析材料集合的构造, 供 {@link #clone()} 使用。
+     * ingredients 是不可修改副本且元素不可变, 可以直接共享
+     */
+    private ItemIdRecipeChoice(RecipeChoice bukkitChoice, @Nullable String itemGroupId, Collection<NamespacedItemId> ingredients) {
         this.bukkitChoice = bukkitChoice;
         this.itemGroupId = itemGroupId;
+        this.ingredients = ingredients;
+    }
+
+    private static Collection<NamespacedItemId> resolveIngredients(RecipeChoice bukkitChoice) {
         Collection<NamespacedItemId> ingredients;
         if (bukkitChoice instanceof MaterialChoice materialChoice) {
             ingredients = materialChoice.getChoices().stream().map(NamespacedItemId::fromMaterial).collect(Collectors.toList());
@@ -41,10 +53,9 @@ public class ItemIdRecipeChoice implements CustomRecipeChoice, ItemIdIngredientM
             throw new IllegalArgumentException("Cannot use " + bukkitChoice.getClass().getName() + " as a bukkit recipe choice");
         }
         if (ingredients.size() > PluginConfigs.INGREDIENT_USE_SET_THRESHOLD.value()) {
-            this.ingredients = Set.copyOf(ingredients);
-        } else {
-            this.ingredients = List.copyOf(ingredients);
+            return Set.copyOf(ingredients);
         }
+        return List.copyOf(ingredients);
     }
 
     @Override
@@ -69,7 +80,8 @@ public class ItemIdRecipeChoice implements CustomRecipeChoice, ItemIdIngredientM
     public @NotNull RecipeChoice clone() {
         return new ItemIdRecipeChoice(
             bukkitChoice.clone(),
-            itemGroupId
+            itemGroupId,
+            ingredients
         );
     }
 
