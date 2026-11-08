@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.CrafterCraftEvent;
 import org.bukkit.inventory.CraftingRecipe;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.recipe.RecipeTypeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.trigger.CraftTriggerTypes;
 import pers.yufiria.craftorithm.trigger.TriggerContext;
@@ -33,7 +34,7 @@ public enum CrafterTriggerHandler implements Listener {
             //如果没有配方对应的触发器，直接返回
             return;
         }
-        RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipe);
+        RecipeType recipeType = RecipeTypeRegistry.INSTANCE.typeOf(recipe);
         TriggerContext ctx = new TriggerContext(recipeKey, recipeType);
         ctx.setVariable("is_crafter", ScriptValue.of(true));
         ctx.putEvent(event);

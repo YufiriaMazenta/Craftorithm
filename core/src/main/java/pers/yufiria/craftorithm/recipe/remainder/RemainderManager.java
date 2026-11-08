@@ -16,7 +16,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 import pers.yufiria.craftorithm.api.event.RecipeLoadFromConfigEvent;
-import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.recipe.RecipeTypeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 
@@ -74,7 +74,7 @@ public enum RemainderManager implements Listener, LifecycleTask {
             return;
         }
 
-        RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(event.recipe());
+        RecipeType recipeType = RecipeTypeRegistry.INSTANCE.typeOf(event.recipe());
         if (!supportsRemainders(recipeType)) {
             CrypticLib.warn(
                 "Recipe " + event.recipeKey() + " (" + recipeType.typeKey() + ") has a '" + REMAINDERS_CONFIG_KEY + "' section, " +

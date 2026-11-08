@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.recipe.RecipeGroup;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
+import pers.yufiria.craftorithm.recipe.RecipeTypeRegistry;
 
 import java.util.*;
 
@@ -72,7 +73,7 @@ public enum RecipeApi {
      * @return 配方类型
      */
     public @NotNull RecipeType getRecipeType(@NotNull Recipe recipe) {
-        return RecipeManager.INSTANCE.getRecipeType(recipe);
+        return RecipeTypeRegistry.INSTANCE.typeOf(recipe);
     }
 
     /**
@@ -82,7 +83,7 @@ public enum RecipeApi {
      * @return 配方类型，不存在返回null
      */
     public @Nullable RecipeType getRecipeType(@NotNull String typeId) {
-        return RecipeManager.INSTANCE.getRecipeTypeByKey(typeId);
+        return RecipeTypeRegistry.INSTANCE.getByKey(typeId);
     }
 
     /**
@@ -92,7 +93,7 @@ public enum RecipeApi {
      * @return 是否成功
      */
     public boolean registerRecipeType(@NotNull RecipeType type) {
-        return RecipeManager.INSTANCE.regRecipeType(type);
+        return RecipeTypeRegistry.INSTANCE.register(type);
     }
 
     /**

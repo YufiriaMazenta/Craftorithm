@@ -17,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.menu.recipobook.RecipeListConfig;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.recipe.RecipeTypeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.ui.BackableMenu;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayManager;
@@ -58,7 +59,7 @@ public class RecipeListMenu extends Menu implements BackableMenu, Multipage {
             // type为null时加载所有Craftorithm配方
             recipes = new ArrayList<>();
             RecipeManager.INSTANCE.craftorithmRecipes().forEach((key, parsed) -> recipes.add(Map.entry(key, parsed.recipe())));
-            recipes.removeIf(recipeHolder -> RecipeDisplayManager.INSTANCE.getRecipeDisplayFactory(RecipeManager.INSTANCE.getRecipeType(recipeHolder.getValue())).isEmpty());
+            recipes.removeIf(recipeHolder -> RecipeDisplayManager.INSTANCE.getRecipeDisplayFactory(RecipeTypeRegistry.INSTANCE.typeOf(recipeHolder.getValue())).isEmpty());
         } else {
             recipes = new ArrayList<>(RecipeManager.INSTANCE.getRecipesByType(type));
         }

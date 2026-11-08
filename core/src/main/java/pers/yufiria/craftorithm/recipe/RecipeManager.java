@@ -3,7 +3,6 @@ package pers.yufiria.craftorithm.recipe;
 import crypticlib.CrypticLib;
 import crypticlib.CrypticLibBukkit;
 import crypticlib.CrypticLibPlugin;
-import crypticlib.MinecraftVersion;
 import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.lifecycle.LifecyclePhase;
 import crypticlib.lifecycle.LifecycleSchedule;
@@ -51,7 +50,6 @@ public enum RecipeManager implements LifecycleTask {
     INSTANCE;
     public final File RECIPE_FILE_FOLDER = new File(Craftorithm.instance().getDataFolder().getPath(), "recipes");
     public final String PLUGIN_RECIPE_NAMESPACE = "craftorithm";
-    private final Map<String, RecipeType> recipeTypes = new ConcurrentHashMap<>();
     private final Map<NamespacedKey, ParsedRecipe> craftorithmRecipes = new ConcurrentHashMap<>();
     private final Map<String, NamespacedKey> recipeFileNameToKeyMap = new ConcurrentHashMap<>();
     private final Map<NamespacedKey, Recipe> disabledRecipes = new ConcurrentHashMap<>();
@@ -63,68 +61,6 @@ public enum RecipeManager implements LifecycleTask {
     private final Lazy<Map<NamespacedKey, ParsedRecipe>> lazyCraftorithmRecipesView = Lazy.of(() -> Collections.unmodifiableMap(craftorithmRecipes));
     private final Lazy<Set<NamespacedKey>> lazyServerRecipeKeysView = Lazy.of(() -> Collections.unmodifiableSet(serverRecipeKeys));
     private final Lazy<Set<NamespacedKey>> lazyDisableRecipeKeysView = Lazy.of(() -> Collections.unmodifiableSet(disabledRecipes.keySet()));
-    //酿造配方的支持性只取决于服务器版本, 计算一次后永不失效
-    private final Lazy<Boolean> lazySupportPotionMix = Lazy.of(() -> {
-        if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V26_3)) {
-            return true;
-        }
-        try {
-            Class.forName("io.papermc.paper.potion.PotionMix");
-            return true;
-        } catch (Throwable throwable) {
-            return false;
-        }
-    });
-
-    //配方类型相关
-
-    public boolean regRecipeType(RecipeType type) {
-        return regRecipeType(type, false);
-    }
-
-    public boolean regRecipeType(RecipeType type, boolean force) {
-        if (type == null) {
-            return false;
-        }
-        if (recipeTypes.containsKey(type.typeKey())) {
-            if (force) {
-                recipeTypes.put(type.typeKey(), type);
-                return true;
-            } else {
-                return false;
-            }
-        }
-        recipeTypes.put(type.typeKey(), type);
-        return true;
-    }
-
-    private void regDefaultRecipeTypes() {
-        regRecipeType(SimpleRecipeTypes.UNKNOWN);
-        regRecipeType(SimpleRecipeTypes.VANILLA_SHAPED);
-        regRecipeType(SimpleRecipeTypes.VANILLA_SHAPELESS);
-        regRecipeType(SimpleRecipeTypes.VANILLA_SMELTING_FURNACE);
-        regRecipeType(SimpleRecipeTypes.VANILLA_SMELTING_BLAST);
-        regRecipeType(SimpleRecipeTypes.VANILLA_SMELTING_SMOKER);
-        regRecipeType(SimpleRecipeTypes.VANILLA_SMELTING_CAMPFIRE);
-        regRecipeType(SimpleRecipeTypes.VANILLA_SMITHING_TRANSFORM);
-        regRecipeType(SimpleRecipeTypes.VANILLA_SMITHING_TRIM);
-        regRecipeType(SimpleRecipeTypes.VANILLA_STONECUTTING);
-        if (PluginConfigs.ENABLE_ANVIL_RECIPE.value()) {
-            regRecipeType(SimpleRecipeTypes.ANVIL);
-        }
-        if (supportBrewingRecipe()) {
-            regRecipeType(SimpleRecipeTypes.VANILLA_BREWING);
-        }
-    }
-
-    public RecipeType getRecipeType(Recipe recipe) {
-        for (RecipeType recipeType : recipeTypes.values()) {
-            if (recipeType.isThisType(recipe)) {
-                return recipeType;
-            }
-        }
-        return SimpleRecipeTypes.UNKNOWN;
-    }
 
     //配方加载相关
     private void reloadRecipeManager(CompletableFuture<Void> completion) {
@@ -257,7 +193,7 @@ public enum RecipeManager implements LifecycleTask {
         if (typeId == null) {
             throw new RecipeLoadException("Unknown recipe type of " + recipeFileName + "(" + recipeId + "): " + null);
         }
-        RecipeType recipeType = recipeTypes.get(typeId);
+        RecipeType recipeType = RecipeTypeRegistry.INSTANCE.getByKey(typeId);
         if (recipeType == null) {
             throw new RecipeLoadException("Unknown recipe type of " + recipeFileName + "(" + recipeId + "): " + typeId);
         }
@@ -506,7 +442,7 @@ public enum RecipeManager implements LifecycleTask {
      * @return 是否注册成功
      */
     private boolean registerRecipe(Recipe recipe, boolean sync2Client) {
-        RecipeType recipeType = getRecipeType(recipe);
+        RecipeType recipeType = RecipeTypeRegistry.INSTANCE.typeOf(recipe);
         return recipeType.recipeRegister().registerRecipe(recipe, sync2Client);
     }
 
@@ -518,7 +454,7 @@ public enum RecipeManager implements LifecycleTask {
      */
     private boolean unregisterRecipe(NamespacedKey recipeKey, boolean sync2Client) {
         Recipe recipe = getRecipe(recipeKey);
-        RecipeType recipeType = getRecipeType(recipe);
+        RecipeType recipeType = RecipeTypeRegistry.INSTANCE.typeOf(recipe);
         return recipeType.recipeRegister().unregisterRecipe(recipeKey, sync2Client);
     }
 
@@ -594,11 +530,11 @@ public enum RecipeManager implements LifecycleTask {
     }
 
     public @Nullable RecipeType getRecipeTypeByKey(String typeId) {
-        return recipeTypes.get(typeId);
+        return RecipeTypeRegistry.INSTANCE.getByKey(typeId);
     }
 
     public List<RecipeType> getRecipeTypes() {
-        return new ArrayList<>(recipeTypes.values());
+        return RecipeTypeRegistry.INSTANCE.all();
     }
 
     public @Nullable BukkitConfigWrapper getRecipeConfigWrapper(NamespacedKey recipeKey) {
@@ -632,7 +568,7 @@ public enum RecipeManager implements LifecycleTask {
     }
 
     public boolean supportBrewingRecipe() {
-        return lazySupportPotionMix.get();
+        return RecipeTypeRegistry.INSTANCE.supportBrewingRecipe();
     }
 
     public CompletableFuture<Void> getReloadCompletion() {
@@ -643,8 +579,8 @@ public enum RecipeManager implements LifecycleTask {
     public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase lifeCycle) {
         switch (lifeCycle) {
             case ENABLE -> {
-                //注册各内置配方类型
-                regDefaultRecipeTypes();
+                //注册各内置配方类型, 必须在读取任何配方配置之前完成
+                RecipeTypeRegistry.INSTANCE.registerDefaults();
             }
             case RELOAD -> {
                 CompletableFuture<Void> completion = new CompletableFuture<>();
@@ -652,8 +588,9 @@ public enum RecipeManager implements LifecycleTask {
                 CrypticLibBukkit.scheduler().sync(() -> reloadRecipeManager(completion));
             }
             case DISABLE -> {
+                //顺序不能颠倒: 还原禁用配方时依赖类型表, 必须先重置配方再清空类型目录
                 resetRecipes();
-                recipeTypes.clear();
+                RecipeTypeRegistry.INSTANCE.clear();
             }
         }
     }

@@ -15,6 +15,7 @@ import pers.yufiria.craftorithm.command.AbstractSubcommand;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.permission.Permissions;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.recipe.RecipeTypeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayManager;
 import pers.yufiria.craftorithm.util.LangUtils;
@@ -64,7 +65,7 @@ public final class DisplayCommand extends AbstractSubcommand {
         if (recipe == null) {
             return;
         }
-        RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipe);
+        RecipeType recipeType = RecipeTypeRegistry.INSTANCE.typeOf(recipe);
         Optional<BiFunction<Player, Recipe, Menu>> displayFactoryOpt = RecipeDisplayManager.INSTANCE.getRecipeDisplayFactory(recipeType);
         displayFactoryOpt.ifPresentOrElse(displayFactory -> {
             displayFactory.apply(target, recipe);

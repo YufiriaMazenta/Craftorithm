@@ -17,6 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.permission.Permissions;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.recipe.RecipeTypeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.ui.BackableMenu;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayManager;
@@ -119,7 +120,7 @@ public class RecipeDisplayIcon extends ActionIcon {
         if (recipeKey != null) {
             Recipe recipe = RecipeManager.INSTANCE.getRecipe(recipeKey);
             this.recipe = recipe;
-            this.recipeType = RecipeManager.INSTANCE.getRecipeType(recipe);
+            this.recipeType = RecipeTypeRegistry.INSTANCE.typeOf(recipe);
         } else {
             this.recipe = null;
             this.recipeType = null;

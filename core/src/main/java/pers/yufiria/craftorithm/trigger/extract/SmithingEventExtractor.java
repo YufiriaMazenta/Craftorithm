@@ -9,6 +9,7 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.SmithingInventory;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.recipe.RecipeTypeRegistry;
 import pers.yufiria.craftorithm.trigger.TriggerContext;
 import pers.yufiria.craftorithm.util.RecipeUtils;
 
@@ -49,7 +50,7 @@ public class SmithingEventExtractor implements CraftEventExtractor {
         TriggerContext ctx = new TriggerContext(
             player,
             recipe != null ? RecipeManager.INSTANCE.getRecipeKey(recipe) : null,
-            recipe != null ? RecipeManager.INSTANCE.getRecipeType(recipe) : null
+            recipe != null ? RecipeTypeRegistry.INSTANCE.typeOf(recipe) : null
         );
         ctx.putItem("template", inventory.getItem(0));
         ctx.putItem("base", inventory.getItem(1));

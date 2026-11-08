@@ -11,7 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.api.event.RecipeLoadFromConfigEvent;
-import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.recipe.RecipeTypeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.resultprocessor.impl.*;
@@ -56,7 +56,7 @@ public enum ResultProcessorManager implements Listener {
             ConfigurationSection section = recipeConfig.getConfigurationSection("result_processors");
             addRecipeProcessors(recipeKey, section);
         } else if (recipeConfig.isList("copy_components_rules")) {
-            RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(event.recipe());
+            RecipeType recipeType = RecipeTypeRegistry.INSTANCE.typeOf(event.recipe());
             if (SUPPORT_LEGACY_RECIPE_TYPES.contains(recipeType)) {
                 //只允许原本支持的配方加载copy_components_rules
                 addRecipeProcessorsLegacy(recipeKey, recipeConfig.getStringList("copy_components_rules"));

@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.recipe.RecipeTypeRegistry;
 import pers.yufiria.craftorithm.trigger.TriggerContext;
 import pers.yufiria.craftorithm.util.CollectionsUtils;
 import pers.yufiria.craftorithm.util.EventUtils;
@@ -62,7 +63,7 @@ public class CraftingEventExtractor implements CraftEventExtractor {
         TriggerContext ctx = new TriggerContext(
             player,
             RecipeManager.INSTANCE.getRecipeKey(recipe),
-            RecipeManager.INSTANCE.getRecipeType(recipe)
+            RecipeTypeRegistry.INSTANCE.typeOf(recipe)
         );
         if (matrix.length > 0) {
             addIngredientsFromMatrix(ctx, matrix);

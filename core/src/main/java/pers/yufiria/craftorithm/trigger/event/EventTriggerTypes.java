@@ -17,7 +17,7 @@ import org.bukkit.event.player.*;
 import org.bukkit.plugin.EventExecutor;
 import pers.yufiria.craftorithm.Craftorithm;
 import pers.yufiria.craftorithm.api.event.RecipeLoadFromConfigEvent;
-import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.recipe.RecipeTypeRegistry;
 import pers.yufiria.craftorithm.trigger.TriggerContext;
 import pers.yufiria.craftorithm.trigger.TriggerManager;
 import pers.yufiria.craftorithm.util.ScriptUtils;
@@ -292,7 +292,7 @@ public enum EventTriggerTypes {
                 vars.put("recipe_key", ScriptValue.of((recipeLoadEvent.recipeKey().asString())));
                 return new TriggerContext(
                     recipeLoadEvent.recipeKey(),
-                    RecipeManager.INSTANCE.getRecipeType(recipeLoadEvent.recipe()),
+                    RecipeTypeRegistry.INSTANCE.typeOf(recipeLoadEvent.recipe()),
                     vars
                 );
             }

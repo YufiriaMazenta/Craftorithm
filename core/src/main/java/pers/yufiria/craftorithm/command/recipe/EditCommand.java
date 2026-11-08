@@ -15,6 +15,7 @@ import pers.yufiria.craftorithm.command.AbstractSubcommand;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.permission.Permissions;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
+import pers.yufiria.craftorithm.recipe.RecipeTypeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.ui.editor.RecipeEditorManager;
 import pers.yufiria.craftorithm.util.CommandUtils;
@@ -64,7 +65,7 @@ public final class EditCommand extends AbstractSubcommand {
             return;
         }
 
-        RecipeType recipeType = RecipeManager.INSTANCE.getRecipeType(recipe);
+        RecipeType recipeType = RecipeTypeRegistry.INSTANCE.typeOf(recipe);
         Optional<TriFunction<Player, NamespacedKey, Recipe, Menu>> editorFactoryOpt = RecipeEditorManager.INSTANCE.getEditorFactory(recipeType);
         if (editorFactoryOpt.isEmpty()) {
             LangUtils.sendLang(invoker, Languages.COMMAND_DISPLAY_UNSUPPORTED_RECIPE_TYPE);
