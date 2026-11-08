@@ -9,7 +9,7 @@
   <img src="https://img.shields.io/badge/Java-21+-blue?style=flat-square&logo=openjdk">
   <img src="https://img.shields.io/badge/MC-1.20+-green?style=flat-square">
   <img src="https://img.shields.io/badge/Folia-Supported-9b59b6?style=flat-square">
-  <img src="https://img.shields.io/badge/License-GPL--3.0-red?style=flat-square">
+  <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square">
 </p>
 
 <p align="center">
