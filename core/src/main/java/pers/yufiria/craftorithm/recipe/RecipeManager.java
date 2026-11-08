@@ -353,11 +353,15 @@ public enum RecipeManager implements LifecycleTask {
     private void reloadDisabledRecipes() {
         List<String> disabledRecipes = new ArrayList<>(DisabledRecipesConfig.RECIPES.value());
         if (PluginConfigs.REMOVE_ALL_VANILLA_RECIPE.value()) {
+            //已收录的key用集合判定, 避免在不断增长的列表上做线性查找
+            Set<String> knownRecipeKeys = new HashSet<>(disabledRecipes);
             for (NamespacedKey recipeKey : serverRecipeKeys) {
-                if (recipeKey.getNamespace().equals("minecraft")) {
-                    if (disabledRecipes.contains(recipeKey.toString()))
-                        continue;
-                    disabledRecipes.add(recipeKey.toString());
+                if (!recipeKey.getNamespace().equals(NamespacedKey.MINECRAFT)) {
+                    continue;
+                }
+                String recipeKeyStr = recipeKey.toString();
+                if (knownRecipeKeys.add(recipeKeyStr)) {
+                    disabledRecipes.add(recipeKeyStr);
                 }
             }
         }
