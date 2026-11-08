@@ -182,8 +182,7 @@ public enum RecipeManager implements LifecycleTask {
             boolean result;
             try {
                 if (shouldRestore) {
-                    RecipeType recipeType = getRecipeType(recipe);
-                    result = recipeType.recipeRegister().registerRecipe(recipe, false);
+                    result = registerRecipe(recipe, false);
                 } else {
                     result = false;
                 }
@@ -297,7 +296,7 @@ public enum RecipeManager implements LifecycleTask {
         if (recipeLoadFromConfigEvent.isCancelled()) {
             return false;
         }
-        boolean result = recipeLoadFromConfigEvent.recipeRegister().registerRecipe(recipeLoadFromConfigEvent.recipe(), sync2Client, recipeConfig);
+        boolean result = recipeLoadFromConfigEvent.recipeRegister().registerRecipe(recipe, sync2Client);
         if (result) {
             craftorithmRecipes.put(recipeKey, parsed);
             serverRecipeKeys.add(recipeKey);
@@ -426,7 +425,7 @@ public enum RecipeManager implements LifecycleTask {
         if (save)
             addDisabledRecipes2Config(recipeKey);
         Recipe recipe = getRecipe(recipeKey);
-        boolean result = removeRecipe(recipeKey, sync2Client);
+        boolean result = unregisterRecipe(recipeKey, sync2Client);
         if (result) {
             disabledRecipes.put(recipeKey, recipe);
             serverRecipeKeys.remove(recipeKey);
@@ -465,7 +464,7 @@ public enum RecipeManager implements LifecycleTask {
             return false;
         }
         Recipe recipe = disabledRecipes.get(recipeKey);
-        boolean result = getRecipeType(recipe).recipeRegister().registerRecipe(recipe, true);
+        boolean result = registerRecipe(recipe, true);
         if (!result) {
             CrypticLib.warn("Restore disabled recipe <recipe_key> failed!", Map.of("<recipe_key>", recipeKey.asString()));
             return false;
@@ -501,9 +500,23 @@ public enum RecipeManager implements LifecycleTask {
     }
 
     /**
-     * 删除一个配方,并通知玩家
+     * 注册一个配方到服务器里
+     * @param recipe 要注册的配方
+     * @param sync2Client 是否同步到客户端
+     * @return 是否注册成功
      */
-    public boolean removeRecipe(NamespacedKey recipeKey, boolean sync2Client) {
+    private boolean registerRecipe(Recipe recipe, boolean sync2Client) {
+        RecipeType recipeType = getRecipeType(recipe);
+        return recipeType.recipeRegister().registerRecipe(recipe, sync2Client);
+    }
+
+    /**
+     * 从服务器里卸载一个配方
+     * @param recipeKey 要删除的配方key
+     * @param sync2Client 是否同步到客户端
+     * @return 是否卸载成功
+     */
+    private boolean unregisterRecipe(NamespacedKey recipeKey, boolean sync2Client) {
         Recipe recipe = getRecipe(recipeKey);
         RecipeType recipeType = getRecipeType(recipe);
         return recipeType.recipeRegister().unregisterRecipe(recipeKey, sync2Client);
@@ -511,7 +524,7 @@ public enum RecipeManager implements LifecycleTask {
 
     public boolean removeCraftorithmRecipe(String recipeId, boolean deleteFile, boolean sync2Client) {
         NamespacedKey recipeKey = new NamespacedKey(Craftorithm.instance(), recipeId);
-        boolean result = removeRecipe(recipeKey, sync2Client);
+        boolean result = unregisterRecipe(recipeKey, sync2Client);
         if (result) {
             ParsedRecipe removed = craftorithmRecipes.remove(recipeKey);
             serverRecipeKeys.remove(recipeKey);
