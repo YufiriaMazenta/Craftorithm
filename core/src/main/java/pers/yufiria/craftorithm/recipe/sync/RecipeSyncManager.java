@@ -19,7 +19,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import pers.yufiria.craftorithm.config.PluginConfigs;
-import pers.yufiria.craftorithm.recipe.CraftorithmRecipeRegistry;
+import pers.yufiria.craftorithm.recipe.nms.NmsRecipeAccessor;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -50,7 +50,7 @@ public enum RecipeSyncManager implements LifecycleTask, Listener {
 
     private final Set<UUID> pendingPlayers = ConcurrentHashMap.newKeySet();
     private final AtomicBoolean unsupportedWarned = new AtomicBoolean(false);
-    //当前最新配方包, 具体类型由当前版本的 CraftorithmRecipeRegistry 决定
+    //当前最新配方包, 具体类型由当前版本的NmsRecipeAccessor决定
     private volatile Object recipePacket = null;
 
     /**
@@ -68,13 +68,13 @@ public enum RecipeSyncManager implements LifecycleTask, Listener {
      * 配方数据变更后的统一入口, 只能在主线程调用
      */
     public void onRecipesChanged() {
-        CraftorithmRecipeRegistry registry = CraftorithmRecipeRegistry.findImpl();
+        NmsRecipeAccessor nmsRecipeAccessor = NmsRecipeAccessor.findImpl();
         if (!PluginConfigs.LAZY_RECIPE_SYNC.value()) {
-            registry.syncRecipes();
+            nmsRecipeAccessor.syncRecipes();
             return;
         }
-        registry.rebuildRecipes();
-        registry.buildRecipePacket();
+        nmsRecipeAccessor.rebuildRecipes();
+        nmsRecipeAccessor.buildRecipePacket();
         markAllPending();
         //重建后展示id会整体位移, 正在使用配方面板的玩家必须立即刷新
         syncPlayersWithRecipeMenu();
@@ -85,13 +85,13 @@ public enum RecipeSyncManager implements LifecycleTask, Listener {
      */
     public void syncPlayer(Player player) {
         pendingPlayers.remove(player.getUniqueId());
-        if (CraftorithmRecipeRegistry.findImpl().syncRecipes(player)) {
+        if (NmsRecipeAccessor.findImpl().syncRecipes(player)) {
             return;
         }
         //不支持逐玩家下发时退化为全量推送
         if (unsupportedWarned.compareAndSet(false, true)) {
             CrypticLib.warn("Per-player recipe sync is not supported on this server, fallback to full update");
-            CraftorithmRecipeRegistry.findImpl().syncRecipes();
+            NmsRecipeAccessor.findImpl().syncRecipes();
         }
     }
 

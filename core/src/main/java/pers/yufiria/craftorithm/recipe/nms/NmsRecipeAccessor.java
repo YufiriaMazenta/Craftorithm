@@ -1,4 +1,4 @@
-package pers.yufiria.craftorithm.recipe;
+package pers.yufiria.craftorithm.recipe.nms;
 
 import java.util.Locale;
 import crypticlib.CrypticLib;
@@ -13,10 +13,10 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-public interface CraftorithmRecipeRegistry {
+public interface NmsRecipeAccessor {
 
-    Compat<CraftorithmRecipeRegistry> REGISTRY_COMPAT = new Compat<>(
-        CraftorithmRecipeRegistry.class,
+    Compat<NmsRecipeAccessor> COMPAT = new Compat<>(
+        NmsRecipeAccessor.class,
         (ver1, ver2) -> {
             MinecraftVersion ver1Obj = MinecraftVersion.valueOf(ver1.toUpperCase(Locale.ROOT));
             MinecraftVersion ver2Obj = MinecraftVersion.valueOf(ver2.toUpperCase(Locale.ROOT));
@@ -30,22 +30,22 @@ public interface CraftorithmRecipeRegistry {
         }
     );
 
-    AtomicReference<CraftorithmRecipeRegistry> IMPL_CACHE = new AtomicReference<>();
+    AtomicReference<NmsRecipeAccessor> IMPL_CACHE = new AtomicReference<>();
     AtomicBoolean UNSUPPORTED_VERSION_WARNED = new AtomicBoolean(false);
 
-    static CraftorithmRecipeRegistry findImpl() {
-        CraftorithmRecipeRegistry cachedImpl = IMPL_CACHE.get();
+    static NmsRecipeAccessor findImpl() {
+        NmsRecipeAccessor cachedImpl = IMPL_CACHE.get();
         if (cachedImpl != null) {
             return cachedImpl;
         }
         String currentVersionStr = MinecraftVersion.current().name();
-        Optional<CraftorithmRecipeRegistry> registryOpt = REGISTRY_COMPAT.findImplementation(currentVersionStr);
-        if (registryOpt.isPresent()) {
-            IMPL_CACHE.set(registryOpt.get());
-            return registryOpt.get();
+        Optional<NmsRecipeAccessor> implOpt = COMPAT.findImplementation(currentVersionStr);
+        if (implOpt.isPresent()) {
+            IMPL_CACHE.set(implOpt.get());
+            return implOpt.get();
         }
         if (UNSUPPORTED_VERSION_WARNED.compareAndSet(false, true)) {
-            CrypticLib.error("Can not find craftorithm recipe register impl for version " + MinecraftVersion.current().versionStr() + ", custom recipes will not be registered!");
+            CrypticLib.error("Can not find nms recipe accessor impl for version " + MinecraftVersion.current().versionStr() + ", custom recipes will not be registered!");
         }
         return (bukkitRecipe, send2Player) -> RegisterResult.UNSUPPORTED_VERSION;
     }

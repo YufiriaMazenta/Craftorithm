@@ -27,13 +27,13 @@ import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.inventory.*;
 import org.spigotmc.AsyncCatcher;
 import pers.yufiria.craftorithm.recipe.BrewingRecipe;
-import pers.yufiria.craftorithm.recipe.CraftorithmRecipeRegistry;
+import pers.yufiria.craftorithm.recipe.nms.NmsRecipeAccessor;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.sync.RecipeSyncManager;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
 @LifecycleTaskConfig(schedules = @LifecycleSchedule(phase = LifecyclePhase.LOAD))
-public enum CraftorithmRecipeRegistry260300 implements CraftorithmRecipeRegistry, LifecycleTask {
+public enum NmsRecipeAccessor260300 implements NmsRecipeAccessor, LifecycleTask {
 
     INSTANCE;
 
@@ -157,7 +157,7 @@ public enum CraftorithmRecipeRegistry260300 implements CraftorithmRecipeRegistry
     @Override
     public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase lifeCycle) {
         if (CrypticLibBukkit.isPaper()) {
-            REGISTRY_COMPAT.register(MinecraftVersion.V26_3.name(), () -> this);
+            COMPAT.register(MinecraftVersion.V26_3.name(), () -> this);
         }
     }
 }

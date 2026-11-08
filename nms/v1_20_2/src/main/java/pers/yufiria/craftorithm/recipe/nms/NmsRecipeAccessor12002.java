@@ -17,12 +17,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftRecipe;
 import org.bukkit.craftbukkit.v1_20_R2.util.CraftNamespacedKey;
 import org.bukkit.inventory.*;
-import pers.yufiria.craftorithm.recipe.CraftorithmRecipeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.sync.RecipeSyncManager;
 
 @LifecycleTaskConfig(schedules = @LifecycleSchedule(phase = LifecyclePhase.LOAD))
-public enum CraftorithmRecipeRegistry12002 implements CraftorithmRecipeRegistry, LifecycleTask {
+public enum NmsRecipeAccessor12002 implements NmsRecipeAccessor, LifecycleTask {
 
     INSTANCE;
 
@@ -99,6 +98,6 @@ public enum CraftorithmRecipeRegistry12002 implements CraftorithmRecipeRegistry,
 
     @Override
     public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase lifeCycle) {
-        REGISTRY_COMPAT.register(MinecraftVersion.V1_20_2.name(), () -> this);
+        COMPAT.register(MinecraftVersion.V1_20_2.name(), () -> this);
     }
 }

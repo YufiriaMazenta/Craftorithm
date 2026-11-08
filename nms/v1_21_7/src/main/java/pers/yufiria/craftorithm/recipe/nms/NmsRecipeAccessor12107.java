@@ -13,21 +13,20 @@ import net.minecraft.world.item.crafting.IRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeStonecutting;
 import org.bukkit.NamespacedKey;
-import org.bukkit.craftbukkit.v1_21_R4.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_21_R5.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.craftbukkit.v1_21_R4.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_21_R4.inventory.CraftRecipe;
-import org.bukkit.craftbukkit.v1_21_R4.inventory.CraftStonecuttingRecipe;
-import org.bukkit.craftbukkit.v1_21_R4.inventory.CraftTransmuteRecipe;
+import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftRecipe;
+import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftStonecuttingRecipe;
+import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftTransmuteRecipe;
 import org.bukkit.inventory.*;
 import org.spigotmc.AsyncCatcher;
-import pers.yufiria.craftorithm.recipe.CraftorithmRecipeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.sync.RecipeSyncManager;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
 @LifecycleTaskConfig(schedules = @LifecycleSchedule(phase = LifecyclePhase.LOAD))
-public enum CraftorithmRecipeRegistry12105 implements CraftorithmRecipeRegistry, LifecycleTask {
+public enum NmsRecipeAccessor12107 implements NmsRecipeAccessor, LifecycleTask {
 
     INSTANCE;
 
@@ -37,28 +36,28 @@ public enum CraftorithmRecipeRegistry12105 implements CraftorithmRecipeRegistry,
         RecipeHolder<? extends IRecipe<?>> recipeHolder;
         switch (bukkitRecipe) {
             case ShapedRecipe shapedRecipe -> {
-                recipeHolder = ShapedRecipe12105.fromBukkit(recipeKey, shapedRecipe);
+                recipeHolder = ShapedRecipe12107.fromBukkit(recipeKey, shapedRecipe);
             }
             case ShapelessRecipe shapelessRecipe -> {
-                recipeHolder = ShapelessRecipe12105.fromBukkit(recipeKey, shapelessRecipe);
+                recipeHolder = ShapelessRecipe12107.fromBukkit(recipeKey, shapelessRecipe);
             }
             case FurnaceRecipe furnaceRecipe -> {
-                recipeHolder = FurnaceRecipe12105.fromBukkit(recipeKey, furnaceRecipe);
+                recipeHolder = FurnaceRecipe12107.fromBukkit(recipeKey, furnaceRecipe);
             }
             case SmokingRecipe smokingRecipe -> {
-                recipeHolder = SmokingRecipe12105.fromBukkit(recipeKey, smokingRecipe);
+                recipeHolder = SmokingRecipe12107.fromBukkit(recipeKey, smokingRecipe);
             }
             case CampfireRecipe campfireRecipe -> {
-                recipeHolder = CampfireRecipe12105.fromBukkit(recipeKey, campfireRecipe);
+                recipeHolder = CampfireRecipe12107.fromBukkit(recipeKey, campfireRecipe);
             }
             case BlastingRecipe blastingRecipe -> {
-                recipeHolder = BlastingRecipe12105.fromBukkit(recipeKey, blastingRecipe);
+                recipeHolder = BlastingRecipe12107.fromBukkit(recipeKey, blastingRecipe);
             }
             case SmithingTransformRecipe smithingTransformRecipe -> {
-                recipeHolder = SmithingTransformRecipe12105.fromBukkit(recipeKey, smithingTransformRecipe);
+                recipeHolder = SmithingTransformRecipe12107.fromBukkit(recipeKey, smithingTransformRecipe);
             }
             case SmithingTrimRecipe smithingTrimRecipe -> {
-                recipeHolder = SmithingTrimRecipe12105.fromBukkit(recipeKey, smithingTrimRecipe);
+                recipeHolder = SmithingTrimRecipe12107.fromBukkit(recipeKey, smithingTrimRecipe);
             }
             case StonecuttingRecipe stonecuttingRecipe -> {
                 CraftStonecuttingRecipe craftStonecuttingRecipe = CraftStonecuttingRecipe.fromBukkitRecipe(stonecuttingRecipe);
@@ -128,14 +127,17 @@ public enum CraftorithmRecipeRegistry12105 implements CraftorithmRecipeRegistry,
             return false;
         }
         EntityPlayer entityPlayer = craftPlayer.getHandle();
-        entityPlayer.f.b(recipePacket);
-        entityPlayer.I().a(entityPlayer);
+        entityPlayer.g.b(recipePacket);
+        entityPlayer.J().a(entityPlayer);
         return true;
     }
 
     @Override
     public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase lifeCycle) {
-        REGISTRY_COMPAT.register(MinecraftVersion.V1_21_5.name(), () -> this);
+        COMPAT.register(
+            MinecraftVersion.V1_21_7.name(),
+            () -> this
+        );
     }
-}
 
+}

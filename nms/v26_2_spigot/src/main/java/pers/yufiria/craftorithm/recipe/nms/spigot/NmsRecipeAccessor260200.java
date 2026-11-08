@@ -21,11 +21,11 @@ import org.bukkit.craftbukkit.inventory.CraftTransmuteRecipe;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.TransmuteRecipe;
 import org.spigotmc.AsyncCatcher;
-import pers.yufiria.craftorithm.recipe.CraftorithmRecipeRegistry;
+import pers.yufiria.craftorithm.recipe.nms.NmsRecipeAccessor;
 import pers.yufiria.craftorithm.recipe.sync.RecipeSyncManager;
 
 @LifecycleTaskConfig(schedules = @LifecycleSchedule(phase = LifecyclePhase.LOAD))
-public enum CraftorithmRecipeRegistry260200 implements CraftorithmRecipeRegistry, LifecycleTask {
+public enum NmsRecipeAccessor260200 implements NmsRecipeAccessor, LifecycleTask {
 
     INSTANCE;
 
@@ -33,7 +33,7 @@ public enum CraftorithmRecipeRegistry260200 implements CraftorithmRecipeRegistry
     public RegisterResult registerRecipe(Recipe bukkitRecipe, boolean sync2Client) {
         RecipeHolder<?> recipeHolder;
         if (!(bukkitRecipe instanceof TransmuteRecipe transmuteRecipe)) {
-            return CraftorithmRecipeRegistry260100.INSTANCE.registerRecipe(bukkitRecipe, sync2Client);
+            return NmsRecipeAccessor260100.INSTANCE.registerRecipe(bukkitRecipe, sync2Client);
         }
         CraftTransmuteRecipe craftTransmuteRecipe = CraftTransmuteRecipe.fromBukkitRecipe(transmuteRecipe);
         recipeHolder = new RecipeHolder<>(
@@ -61,7 +61,7 @@ public enum CraftorithmRecipeRegistry260200 implements CraftorithmRecipeRegistry
 
     @Override
     public boolean unregisterRecipe(NamespacedKey recipeKey, boolean sync2Client) {
-        return CraftorithmRecipeRegistry260100.INSTANCE.unregisterRecipe(recipeKey, sync2Client);
+        return NmsRecipeAccessor260100.INSTANCE.unregisterRecipe(recipeKey, sync2Client);
     }
 
     @Override
@@ -94,7 +94,7 @@ public enum CraftorithmRecipeRegistry260200 implements CraftorithmRecipeRegistry
     @Override
     public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase lifeCycle) {
         if (!CrypticLibBukkit.isPaper()) {
-            REGISTRY_COMPAT.register(MinecraftVersion.V26_2.name(), () -> this);
+            COMPAT.register(MinecraftVersion.V26_2.name(), () -> this);
         }
     }
 }

@@ -1,6 +1,5 @@
-package pers.yufiria.craftorithm.recipe.nms.spigot;
+package pers.yufiria.craftorithm.recipe.nms;
 
-import crypticlib.CrypticLibBukkit;
 import crypticlib.CrypticLibPlugin;
 import crypticlib.MinecraftVersion;
 import crypticlib.lifecycle.LifecyclePhase;
@@ -14,21 +13,20 @@ import net.minecraft.world.item.crafting.IRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeStonecutting;
 import org.bukkit.NamespacedKey;
-import org.bukkit.craftbukkit.v1_21_R7.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_21_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.craftbukkit.v1_21_R7.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_21_R7.inventory.CraftRecipe;
-import org.bukkit.craftbukkit.v1_21_R7.inventory.CraftStonecuttingRecipe;
-import org.bukkit.craftbukkit.v1_21_R7.inventory.CraftTransmuteRecipe;
+import org.bukkit.craftbukkit.v1_21_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_21_R4.inventory.CraftRecipe;
+import org.bukkit.craftbukkit.v1_21_R4.inventory.CraftStonecuttingRecipe;
+import org.bukkit.craftbukkit.v1_21_R4.inventory.CraftTransmuteRecipe;
 import org.bukkit.inventory.*;
 import org.spigotmc.AsyncCatcher;
-import pers.yufiria.craftorithm.recipe.CraftorithmRecipeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.sync.RecipeSyncManager;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
 @LifecycleTaskConfig(schedules = @LifecycleSchedule(phase = LifecyclePhase.LOAD))
-public enum CraftorithmRecipeRegistry12111 implements CraftorithmRecipeRegistry, LifecycleTask {
+public enum NmsRecipeAccessor12105 implements NmsRecipeAccessor, LifecycleTask {
 
     INSTANCE;
 
@@ -38,28 +36,28 @@ public enum CraftorithmRecipeRegistry12111 implements CraftorithmRecipeRegistry,
         RecipeHolder<? extends IRecipe<?>> recipeHolder;
         switch (bukkitRecipe) {
             case ShapedRecipe shapedRecipe -> {
-                recipeHolder = ShapedRecipe12111.fromBukkit(recipeKey, shapedRecipe);
+                recipeHolder = ShapedRecipe12105.fromBukkit(recipeKey, shapedRecipe);
             }
             case ShapelessRecipe shapelessRecipe -> {
-                recipeHolder = ShapelessRecipe12111.fromBukkit(recipeKey, shapelessRecipe);
+                recipeHolder = ShapelessRecipe12105.fromBukkit(recipeKey, shapelessRecipe);
             }
             case FurnaceRecipe furnaceRecipe -> {
-                recipeHolder = FurnaceRecipe12111.fromBukkit(recipeKey, furnaceRecipe);
+                recipeHolder = FurnaceRecipe12105.fromBukkit(recipeKey, furnaceRecipe);
             }
             case SmokingRecipe smokingRecipe -> {
-                recipeHolder = SmokingRecipe12111.fromBukkit(recipeKey, smokingRecipe);
+                recipeHolder = SmokingRecipe12105.fromBukkit(recipeKey, smokingRecipe);
             }
             case CampfireRecipe campfireRecipe -> {
-                recipeHolder = CampfireRecipe12111.fromBukkit(recipeKey, campfireRecipe);
+                recipeHolder = CampfireRecipe12105.fromBukkit(recipeKey, campfireRecipe);
             }
             case BlastingRecipe blastingRecipe -> {
-                recipeHolder = BlastingRecipe12111.fromBukkit(recipeKey, blastingRecipe);
+                recipeHolder = BlastingRecipe12105.fromBukkit(recipeKey, blastingRecipe);
             }
             case SmithingTransformRecipe smithingTransformRecipe -> {
-                recipeHolder = SmithingTransformRecipe12111.fromBukkit(recipeKey, smithingTransformRecipe);
+                recipeHolder = SmithingTransformRecipe12105.fromBukkit(recipeKey, smithingTransformRecipe);
             }
             case SmithingTrimRecipe smithingTrimRecipe -> {
-                recipeHolder = SmithingTrimRecipe12111.fromBukkit(recipeKey, smithingTrimRecipe);
+                recipeHolder = SmithingTrimRecipe12105.fromBukkit(recipeKey, smithingTrimRecipe);
             }
             case StonecuttingRecipe stonecuttingRecipe -> {
                 CraftStonecuttingRecipe craftStonecuttingRecipe = CraftStonecuttingRecipe.fromBukkitRecipe(stonecuttingRecipe);
@@ -94,7 +92,7 @@ public enum CraftorithmRecipeRegistry12111 implements CraftorithmRecipeRegistry,
             }
         }
         AsyncCatcher.catchOp("Recipe Add");
-        MinecraftServer.getServer().aJ().e.addRecipe(recipeHolder);
+        MinecraftServer.getServer().aI().e.addRecipe(recipeHolder);
         if (sync2Client) {
             RecipeSyncManager.INSTANCE.onRecipesChanged();
         }
@@ -103,7 +101,7 @@ public enum CraftorithmRecipeRegistry12111 implements CraftorithmRecipeRegistry,
 
     @Override
     public boolean unregisterRecipe(NamespacedKey recipeKey, boolean sync2Client) {
-        boolean removed = MinecraftServer.getServer().aJ().e.removeRecipe(CraftRecipe.toMinecraft(recipeKey));
+        boolean removed = MinecraftServer.getServer().aI().e.removeRecipe(CraftRecipe.toMinecraft(recipeKey));
         if (removed && sync2Client) {
             RecipeSyncManager.INSTANCE.onRecipesChanged();
         }
@@ -113,13 +111,13 @@ public enum CraftorithmRecipeRegistry12111 implements CraftorithmRecipeRegistry,
     @Override
     public void rebuildRecipes() {
         MinecraftServer server = MinecraftServer.getServer();
-        server.aJ().a(server.bb().J());
+        server.aI().a(server.aZ().K());
     }
 
     @Override
     public void buildRecipePacket() {
         MinecraftServer server = MinecraftServer.getServer();
-        RecipeSyncManager.INSTANCE.setRecipePacket(new PacketPlayOutRecipeUpdate(server.aJ().b(), server.aJ().c()));
+        RecipeSyncManager.INSTANCE.setRecipePacket(new PacketPlayOutRecipeUpdate(server.aI().b(), server.aI().c()));
     }
 
     @Override
@@ -129,17 +127,14 @@ public enum CraftorithmRecipeRegistry12111 implements CraftorithmRecipeRegistry,
             return false;
         }
         EntityPlayer entityPlayer = craftPlayer.getHandle();
-        entityPlayer.g.b(recipePacket);
-        entityPlayer.L().a(entityPlayer);
+        entityPlayer.f.b(recipePacket);
+        entityPlayer.I().a(entityPlayer);
         return true;
     }
 
     @Override
     public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase lifeCycle) {
-        if (!CrypticLibBukkit.isPaper()) {
-            REGISTRY_COMPAT.register(MinecraftVersion.V1_21_11.name(), () -> this);
-        }
+        COMPAT.register(MinecraftVersion.V1_21_5.name(), () -> this);
     }
 }
-
 
