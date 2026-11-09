@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
+import pers.yufiria.craftorithm.recipe.RecipeManager;
 
 public class CraftorithmPlaceholders extends PlaceholderExpansion {
 
@@ -47,6 +48,16 @@ public class CraftorithmPlaceholders extends PlaceholderExpansion {
                 }
                 if (argument == null) {
                     return String.valueOf(player.getDiscoveredRecipes().size());
+                }
+                if (argument.equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)) {
+                    return String.valueOf(
+                        player.getDiscoveredRecipes()
+                            .stream()
+                            .filter(
+                                it -> it.getNamespace().equals(RecipeManager.INSTANCE.PLUGIN_RECIPE_NAMESPACE)
+                            )
+                            .count()
+                    );
                 }
                 Key key = Key.key(argument);
                 if (key == null) {
