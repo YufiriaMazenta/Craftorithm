@@ -86,11 +86,11 @@ public class RecipeDisplayIcon extends ActionIcon {
         }
         Player whoClicked = ((Player) event.getWhoClicked());
         ClickType click = event.getClick();
+        Optional<Menu> openingMenuOpt = MenuHelper.getOpeningMenu(whoClicked);
+        Menu openingMenu = openingMenuOpt.orElse(null);
         if (click == viewClick) {
             Optional<BiFunction<Player, Recipe, Menu>> displayFactoryOpt = RecipeDisplayManager.INSTANCE.getRecipeDisplayFactory(recipeType);
             displayFactoryOpt.ifPresentOrElse(displayFactory -> {
-                Optional<Menu> openingMenuOpt = MenuHelper.getOpeningMenu(whoClicked);
-                Menu openingMenu = openingMenuOpt.orElse(null);
                 Menu willOpenMenu = displayFactory.apply(whoClicked, recipe);
                 willOpenMenu.setParentMenu(openingMenu);
             }, () -> {
@@ -101,7 +101,8 @@ public class RecipeDisplayIcon extends ActionIcon {
                 return this;
             }
             RecipeEditorManager.INSTANCE.getEditorFactory(recipeType).ifPresent(editorFactory -> {
-                editorFactory.apply(whoClicked, recipeKey, recipe);
+                Menu editor = editorFactory.apply(whoClicked, recipeKey, recipe);
+                editor.setParentMenu(openingMenu);
             });
         }
         runActions(event, this.actions);
