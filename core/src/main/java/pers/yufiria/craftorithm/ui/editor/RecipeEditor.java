@@ -7,7 +7,6 @@ import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.lang.LangManager;
 import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
-import crypticlib.ui.menu.Menu;
 import crypticlib.ui.menu.StoredMenu;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
@@ -40,9 +39,8 @@ import java.util.function.Consumer;
  * 继承StoredMenu，与RecipeCreator类似的模式，但用于编辑已有配方。
  * 子类在构造时调用fillRecipeData()将现有配方数据预填充到GUI槽位。
  */
-public abstract class RecipeEditor extends StoredMenu implements BackableMenu, IngredientIdResolver, ResultIdResolver {
+public abstract class RecipeEditor extends StoredMenu implements IngredientIdResolver, ResultIdResolver {
 
-    protected Menu parentMenu;
     protected final NamespacedKey recipeKey;
     protected final String recipeId;
     //是否保存结果物品的全部组件, 开启时结果物品会被完整保存到内置物品源, 默认关闭
@@ -70,16 +68,6 @@ public abstract class RecipeEditor extends StoredMenu implements BackableMenu, I
         title = title.replace("<recipe_key>", recipeKey.getKey());
         title = title.replace("<recipe_id>", recipeId);
         return BukkitTextProcessor.color(BukkitTextProcessor.placeholder(player, title));
-    }
-
-    @Override
-    public @Nullable Menu parentMenu() {
-        return parentMenu;
-    }
-
-    @Override
-    public void setParentMenu(@Nullable Menu parentMenu) {
-        this.parentMenu = parentMenu;
     }
 
     @Override

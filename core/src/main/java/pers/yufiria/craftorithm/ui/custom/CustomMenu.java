@@ -3,19 +3,15 @@ package pers.yufiria.craftorithm.ui.custom;
 import crypticlib.BukkitPlayer;
 import crypticlib.script.ScriptContext;
 import crypticlib.script.compile.CompiledScript;
-import crypticlib.ui.menu.Menu;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.script.RootScriptContext;
-import pers.yufiria.craftorithm.ui.BackableMenu;
 import pers.yufiria.craftorithm.ui.TranslatableMenu;
 
-public class CustomMenu extends TranslatableMenu implements BackableMenu {
+public class CustomMenu extends TranslatableMenu {
 
-    private Menu parentMenu;
     private final CustomMenuInfo menuInfo;
 
     public CustomMenu(@NotNull Player player, @NotNull CustomMenuInfo menuInfo) {
@@ -50,16 +46,6 @@ public class CustomMenu extends TranslatableMenu implements BackableMenu {
                 closeAction.execute(new ScriptContext(BukkitPlayer.byPlayer(player), RootScriptContext.INSTANCE));
             }
         }
-    }
-
-    @Override
-    public @Nullable Menu parentMenu() {
-        return parentMenu;
-    }
-
-    @Override
-    public void setParentMenu(@Nullable Menu parentMenu) {
-        this.parentMenu = parentMenu;
     }
 
 }

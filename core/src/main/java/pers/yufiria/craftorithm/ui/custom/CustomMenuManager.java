@@ -16,7 +16,6 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.yufiria.craftorithm.Craftorithm;
-import pers.yufiria.craftorithm.ui.BackableMenu;
 
 import java.io.File;
 import java.util.Collections;
@@ -63,9 +62,7 @@ public enum CustomMenuManager implements LifecycleTask {
             Optional<Menu> openingMenuOpt = MenuHelper.getOpeningMenu(player);
             Menu openingMenu = openingMenuOpt.orElse(null);
             Menu willOpenMenu = menuOpener.apply(player);
-            if (willOpenMenu instanceof BackableMenu backableMenu) {
-                backableMenu.setParentMenu(openingMenu);
-            }
+            willOpenMenu.setParentMenu(openingMenu);
         } catch (Throwable throwable) {
             callback.accept(OpenMenuResult.EXCEPTION);
             CrypticLib.error("Failed to open menu for " + player.getName(), throwable);

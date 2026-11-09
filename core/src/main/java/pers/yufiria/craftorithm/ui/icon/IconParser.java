@@ -2,7 +2,7 @@ package pers.yufiria.craftorithm.ui.icon;
 
 import crypticlib.script.ScriptEngine;
 import crypticlib.script.compile.CompiledScript;
-import crypticlib.ui.display.Icon;
+import crypticlib.ui.display.IconCreator;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.util.MaterialHelper;
 import org.bukkit.Material;
@@ -13,11 +13,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.Supplier;
 
 public interface IconParser {
 
-    default Supplier<Icon> parse(ConfigurationSection config) {
+    default IconCreator parse(ConfigurationSection config) {
         return parseCommonIcon(config);
     }
 
@@ -27,7 +26,7 @@ public interface IconParser {
      * @param config    图标配置
      * @param iconTypes 需要解析为物品显示图标的 icon_type 集合
      */
-    default Supplier<Icon> parseItemDisplayIcon(ConfigurationSection config, Set<String> iconTypes) {
+    default IconCreator parseItemDisplayIcon(ConfigurationSection config, Set<String> iconTypes) {
         return parseItemDisplayIcon(config, iconTypes, null);
     }
 
@@ -38,7 +37,7 @@ public interface IconParser {
      * @param iconTypes    需要解析为物品显示图标的 icon_type 集合
      * @param slotIconType 若不为null, 则该 icon_type 会额外读取 ingredient_slot 写入图标数据
      */
-    default Supplier<Icon> parseItemDisplayIcon(ConfigurationSection config, Set<String> iconTypes, @Nullable String slotIconType) {
+    default IconCreator parseItemDisplayIcon(ConfigurationSection config, Set<String> iconTypes, @Nullable String slotIconType) {
         String iconType = config.getString("icon_type", "common").toLowerCase(Locale.ROOT);
         if (!iconTypes.contains(iconType)) {
             return parseCommonIcon(config);
@@ -60,7 +59,7 @@ public interface IconParser {
         };
     }
 
-    private Supplier<Icon> parseCommonIcon(ConfigurationSection config) {
+    private IconCreator parseCommonIcon(ConfigurationSection config) {
         Objects.requireNonNull(config);
         IconDisplay iconDisplay = parseIconDisplay(config);
         Map<ClickType, CompiledScript> actions = parseActions(config.getConfigurationSection("actions"));

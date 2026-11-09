@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.ui.creator.anvil;
 
 import crypticlib.ui.display.Icon;
+import crypticlib.ui.display.IconCreator;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.display.MenuLayout;
@@ -28,7 +29,6 @@ import pers.yufiria.craftorithm.util.LangUtils;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
 
 public class AnvilCreator extends RecipeCreator {
 
@@ -54,7 +54,7 @@ public class AnvilCreator extends RecipeCreator {
                 "####C####",
                 "####L####"
             ), () -> {
-                Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
+                Map<Character, IconCreator> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
                 layoutMap.put('K', () -> getResultSaveAllComponentsIcon(AnvilCreatorConfig.RESULT_SAVE_ALL_COMPONENTS_ICON.value()));
                 layoutMap.put('C', this::getConfirmIcon);
@@ -70,7 +70,7 @@ public class AnvilCreator extends RecipeCreator {
     }
 
     private Icon getFrameIcon() {
-        return TranslatableIconParser.INSTANCE.parse(AnvilCreatorConfig.FRAME_ICON.value()).get();
+        return TranslatableIconParser.INSTANCE.parse(AnvilCreatorConfig.FRAME_ICON.value()).createIcon();
     }
 
     private Icon getResultFrameIcon() {

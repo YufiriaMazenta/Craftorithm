@@ -3,6 +3,7 @@ package pers.yufiria.craftorithm.ui.recipebook;
 import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.lang.LangManager;
 import crypticlib.ui.display.Icon;
+import crypticlib.ui.display.IconCreator;
 import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.display.MenuLayout;
 import crypticlib.ui.menu.Menu;
@@ -13,22 +14,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.menu.recipobook.RecipeListConfig;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeTypeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeType;
-import pers.yufiria.craftorithm.ui.BackableMenu;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayManager;
 import pers.yufiria.craftorithm.ui.icon.RecipeDisplayIcon;
 
 import java.util.*;
-import java.util.function.Supplier;
 
-public class RecipeListMenu extends Menu implements BackableMenu, Multipage {
+public class RecipeListMenu extends Menu implements Multipage {
 
-    private Menu parentMenu;
     private final RecipeType recipeType;
     private int page;
     private SortMode sortMode;
@@ -46,7 +43,7 @@ public class RecipeListMenu extends Menu implements BackableMenu, Multipage {
         this.recipeType = recipeType;
         this.page = 0;
         this.sortMode = sortMode;
-        this.parentMenu = parentMenu;
+        setParentMenu(parentMenu);
         this.sortedRecipes = getSortedRecipes(recipeType, sortMode);
         this.currentPageRecipes = new ArrayList<>();
         this.recipeSlotIndex = 0;
@@ -85,7 +82,7 @@ public class RecipeListMenu extends Menu implements BackableMenu, Multipage {
         List<String> layoutStrings = RecipeListConfig.LAYOUT.value();
         ConfigurationSection iconsConfig = RecipeListConfig.ICONS.value();
 
-        Map<Character, Supplier<Icon>> iconMap = new HashMap<>();
+        Map<Character, IconCreator> iconMap = new HashMap<>();
         recipeSlotIndex = 0;
 
         for (String key : iconsConfig.getKeys(false)) {
@@ -94,8 +91,8 @@ public class RecipeListMenu extends Menu implements BackableMenu, Multipage {
             ConfigurationSection iconConfig = iconsConfig.getConfigurationSection(key);
             if (iconConfig == null) continue;
 
-            Supplier<Icon> iconSupplier = RecipeBookListIconParser.INSTANCE.parse(iconConfig);
-            iconMap.put(ch, iconSupplier);
+            IconCreator iconCreator = RecipeBookListIconParser.INSTANCE.parse(iconConfig);
+            iconMap.put(ch, iconCreator);
         }
         return new MenuDisplay(RecipeListConfig.TITLE.value(), new MenuLayout(layoutStrings, () -> iconMap));
     }
@@ -197,17 +194,7 @@ public class RecipeListMenu extends Menu implements BackableMenu, Multipage {
     }
 
     public Menu getParentMenu() {
-        return parentMenu;
-    }
-
-    @Override
-    public @Nullable Menu parentMenu() {
-        return parentMenu;
-    }
-
-    @Override
-    public void setParentMenu(@Nullable Menu parentMenu) {
-        this.parentMenu = parentMenu;
+        return parentMenu();
     }
 
     @Override
@@ -234,7 +221,7 @@ public class RecipeListMenu extends Menu implements BackableMenu, Multipage {
     }
 
     @Override
-    public void page(int i) {
+    public void setPage(int i) {
         int maxPage = maxPage();
         if (i >= 0 && i <= maxPage) {
             page = i;

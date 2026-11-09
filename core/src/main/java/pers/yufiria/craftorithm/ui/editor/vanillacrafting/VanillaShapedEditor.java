@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.ui.editor.vanillacrafting;
 
 import crypticlib.ui.display.Icon;
+import crypticlib.ui.display.IconCreator;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.display.MenuLayout;
@@ -24,7 +25,6 @@ import pers.yufiria.craftorithm.util.LangUtils;
 import pers.yufiria.craftorithm.util.RecipeUtils;
 
 import java.util.*;
-import java.util.function.Supplier;
 
 /**
  * 有序合成配方编辑器
@@ -61,7 +61,7 @@ public final class VanillaShapedEditor extends RecipeEditor {
                 "#789#***#",
                 "####C####"
             ), () -> {
-                Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
+                Map<Character, IconCreator> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
                 layoutMap.put('K', () -> getResultSaveAllComponentsIcon(VanillaShapedEditorConfig.RESULT_SAVE_ALL_COMPONENTS_ICON.value()));
                 layoutMap.put('*', this::getResultFrameIcon);
@@ -101,11 +101,11 @@ public final class VanillaShapedEditor extends RecipeEditor {
     }
 
     private Icon getFrameIcon() {
-        return TranslatableIconParser.INSTANCE.parse(VanillaShapedEditorConfig.FRAME_ICON.value()).get();
+        return TranslatableIconParser.INSTANCE.parse(VanillaShapedEditorConfig.FRAME_ICON.value()).createIcon();
     }
 
     private Icon getResultFrameIcon() {
-        return TranslatableIconParser.INSTANCE.parse(VanillaShapedEditorConfig.RESULT_FRAME_ICON.value()).get();
+        return TranslatableIconParser.INSTANCE.parse(VanillaShapedEditorConfig.RESULT_FRAME_ICON.value()).createIcon();
     }
 
     private Icon getConfirmIcon() {

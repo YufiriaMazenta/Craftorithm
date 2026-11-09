@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.ui.creator.vanillacrafting;
 
 import crypticlib.ui.display.Icon;
+import crypticlib.ui.display.IconCreator;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.display.MenuLayout;
@@ -22,7 +23,6 @@ import pers.yufiria.craftorithm.ui.icon.TranslatableIconParser;
 import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.util.*;
-import java.util.function.Supplier;
 
 public class VanillaShapelessCreator extends RecipeCreator {
 
@@ -46,7 +46,7 @@ public class VanillaShapelessCreator extends RecipeCreator {
                 "#789#***#",
                 "####C####"
             ), () -> {
-                Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
+                Map<Character, IconCreator> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
                 layoutMap.put('K', () -> getResultSaveAllComponentsIcon(VanillaShapelessCreatorConfig.RESULT_SAVE_ALL_COMPONENTS_ICON.value()));
                 layoutMap.put('*', this::getResultFrameIcon);
@@ -68,11 +68,11 @@ public class VanillaShapelessCreator extends RecipeCreator {
     }
 
     private Icon getFrameIcon() {
-        return TranslatableIconParser.INSTANCE.parse(VanillaShapelessCreatorConfig.FRAME_ICON.value()).get();
+        return TranslatableIconParser.INSTANCE.parse(VanillaShapelessCreatorConfig.FRAME_ICON.value()).createIcon();
     }
 
     private Icon getResultFrameIcon() {
-        return TranslatableIconParser.INSTANCE.parse(VanillaShapelessCreatorConfig.RESULT_FRAME_ICON.value()).get();
+        return TranslatableIconParser.INSTANCE.parse(VanillaShapelessCreatorConfig.RESULT_FRAME_ICON.value()).createIcon();
     }
 
     /**

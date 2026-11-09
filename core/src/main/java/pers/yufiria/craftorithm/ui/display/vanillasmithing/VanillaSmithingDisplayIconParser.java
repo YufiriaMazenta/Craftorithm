@@ -1,12 +1,11 @@
 package pers.yufiria.craftorithm.ui.display.vanillasmithing;
 
-import crypticlib.ui.display.Icon;
+import crypticlib.ui.display.IconCreator;
 import org.bukkit.configuration.ConfigurationSection;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayManager;
 import pers.yufiria.craftorithm.ui.icon.IconParser;
 
 import java.util.Set;
-import java.util.function.Supplier;
 
 public enum VanillaSmithingDisplayIconParser implements IconParser {
 
@@ -17,7 +16,7 @@ public enum VanillaSmithingDisplayIconParser implements IconParser {
         ICON_TYPE_TEMPLATE = "vanilla_smithing_template";
 
     @Override
-    public Supplier<Icon> parse(ConfigurationSection config) {
+    public IconCreator parse(ConfigurationSection config) {
         return parseItemDisplayIcon(
             config,
             Set.of(ICON_TYPE_BASE, ICON_TYPE_ADDITION, ICON_TYPE_TEMPLATE, RecipeDisplayManager.ICON_TYPE_RESULT)

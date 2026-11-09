@@ -2,7 +2,7 @@ package pers.yufiria.craftorithm.ui.custom;
 
 import java.util.Locale;
 import crypticlib.script.compile.CompiledScript;
-import crypticlib.ui.display.Icon;
+import crypticlib.ui.display.IconCreator;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.ClickType;
@@ -12,14 +12,13 @@ import pers.yufiria.craftorithm.ui.icon.RecipeDisplayIcon;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Supplier;
 
 public enum CustomMenuIconParser implements IconParser {
 
     INSTANCE;
 
     @Override
-    public Supplier<Icon> parse(ConfigurationSection config) {
+    public IconCreator parse(ConfigurationSection config) {
         String iconType = config.getString("icon_type", "common").toLowerCase(Locale.ROOT);
         if (iconType.equals("recipe_display")) {
             String recipeId = config.getString("recipe_id");

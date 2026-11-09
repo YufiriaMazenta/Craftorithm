@@ -19,7 +19,6 @@ import pers.yufiria.craftorithm.permission.Permissions;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeTypeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeType;
-import pers.yufiria.craftorithm.ui.BackableMenu;
 import pers.yufiria.craftorithm.ui.display.RecipeDisplayManager;
 import pers.yufiria.craftorithm.ui.editor.RecipeEditorManager;
 import pers.yufiria.craftorithm.util.LangUtils;
@@ -93,9 +92,7 @@ public class RecipeDisplayIcon extends ActionIcon {
                 Optional<Menu> openingMenuOpt = MenuHelper.getOpeningMenu(whoClicked);
                 Menu openingMenu = openingMenuOpt.orElse(null);
                 Menu willOpenMenu = displayFactory.apply(whoClicked, recipe);
-                if (willOpenMenu instanceof BackableMenu backableMenu) {
-                    backableMenu.setParentMenu(openingMenu);
-                }
+                willOpenMenu.setParentMenu(openingMenu);
             }, () -> {
                 LangUtils.sendLang(whoClicked, Languages.COMMAND_DISPLAY_UNSUPPORTED_RECIPE_TYPE);
             });

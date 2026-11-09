@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.ui.editor.vanillasmithing;
 
 import crypticlib.ui.display.Icon;
+import crypticlib.ui.display.IconCreator;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.display.MenuLayout;
@@ -25,7 +26,6 @@ import pers.yufiria.craftorithm.util.LangUtils;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
 
 /**
  * 锻造台配方编辑器
@@ -52,7 +52,7 @@ public final class VanillaSmithingTransformEditor extends RecipeEditor {
                 "######FFF",
                 "#########"
             ), () -> {
-                Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
+                Map<Character, IconCreator> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
                 layoutMap.put('K', () -> getResultSaveAllComponentsIcon(VanillaSmithingTransformEditorConfig.RESULT_SAVE_ALL_COMPONENTS_ICON.value()));
                 layoutMap.put('F', this::getResultFrameIcon);
@@ -80,11 +80,11 @@ public final class VanillaSmithingTransformEditor extends RecipeEditor {
     }
 
     private Icon getFrameIcon() {
-        return TranslatableIconParser.INSTANCE.parse(VanillaSmithingTransformEditorConfig.FRAME_ICON.value()).get();
+        return TranslatableIconParser.INSTANCE.parse(VanillaSmithingTransformEditorConfig.FRAME_ICON.value()).createIcon();
     }
 
     private Icon getResultFrameIcon() {
-        return TranslatableIconParser.INSTANCE.parse(VanillaSmithingTransformEditorConfig.RESULT_FRAME_ICON.value()).get();
+        return TranslatableIconParser.INSTANCE.parse(VanillaSmithingTransformEditorConfig.RESULT_FRAME_ICON.value()).createIcon();
     }
 
     private Icon getConfirmIcon() {

@@ -2,7 +2,7 @@ package pers.yufiria.craftorithm.ui.recipebook;
 
 import java.util.Locale;
 import crypticlib.script.compile.CompiledScript;
-import crypticlib.ui.display.Icon;
+import crypticlib.ui.display.IconCreator;
 import crypticlib.ui.display.IconDisplay;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.ClickType;
@@ -12,14 +12,13 @@ import pers.yufiria.craftorithm.ui.icon.IconParser;
 
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Supplier;
 
 public enum RecipeBookTypeSelectIconParser implements IconParser {
 
     INSTANCE;
 
     @Override
-    public Supplier<Icon> parse(ConfigurationSection config) {
+    public IconCreator parse(ConfigurationSection config) {
         String iconType = config.getString("icon_type", "common").toLowerCase(Locale.ROOT);
         switch (iconType) {
             case "recipe_list" -> {

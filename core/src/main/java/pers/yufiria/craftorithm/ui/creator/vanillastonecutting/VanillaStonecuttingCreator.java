@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.ui.creator.vanillastonecutting;
 
 import crypticlib.ui.display.Icon;
+import crypticlib.ui.display.IconCreator;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.display.MenuDisplay;
 import crypticlib.ui.display.MenuLayout;
@@ -23,7 +24,6 @@ import pers.yufiria.craftorithm.util.LangUtils;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
 
 public class VanillaStonecuttingCreator extends RecipeCreator {
 
@@ -39,7 +39,7 @@ public class VanillaStonecuttingCreator extends RecipeCreator {
                 "##I#AFRK#",
                 "#########"
             ), () -> {
-                Map<Character, Supplier<Icon>> layoutMap = new HashMap<>();
+                Map<Character, IconCreator> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
                 layoutMap.put('K', () -> getResultSaveAllComponentsIcon(VanillaStonecuttingCreatorConfig.RESULT_SAVE_ALL_COMPONENTS_ICON.value()));
                 layoutMap.put('A', this::getConfirmIcon);
@@ -55,11 +55,11 @@ public class VanillaStonecuttingCreator extends RecipeCreator {
     }
 
     private Icon getFrameIcon() {
-        return TranslatableIconParser.INSTANCE.parse(VanillaStonecuttingCreatorConfig.FRAME_ICON.value()).get();
+        return TranslatableIconParser.INSTANCE.parse(VanillaStonecuttingCreatorConfig.FRAME_ICON.value()).createIcon();
     }
 
     private Icon getResultFrameIcon() {
-        return TranslatableIconParser.INSTANCE.parse(VanillaStonecuttingCreatorConfig.RESULT_FRAME_ICON.value()).get();
+        return TranslatableIconParser.INSTANCE.parse(VanillaStonecuttingCreatorConfig.RESULT_FRAME_ICON.value()).createIcon();
     }
 
     private Icon getConfirmIcon() {

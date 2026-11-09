@@ -23,7 +23,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
-import pers.yufiria.craftorithm.ui.BackableMenu;
 import pers.yufiria.craftorithm.ui.custom.CustomMenuManager;
 import pers.yufiria.craftorithm.util.PlayerUtils;
 import pers.yufiria.craftorithm.util.RecipeUtils;
@@ -115,19 +114,11 @@ public enum ActionModule implements ScriptModule {
         Player player = playerOpt.get();
         Optional<Menu> openingMenuOpt = MenuHelper.getOpeningMenu(player);
         CrypticLib.debug("is opening menu: " + openingMenuOpt.isPresent());
-        if (openingMenuOpt.isPresent()) {
-            Menu menu = openingMenuOpt.get();
-            if (menu instanceof BackableMenu backableMenu) {
-                Menu parentMenu = backableMenu.parentMenu();
-                if (parentMenu != null) {
-                    parentMenu.openMenu();
-                } else {
-                    player.closeInventory();
-                }
-            } else {
+        openingMenuOpt.ifPresent(menu -> menu.openParentMenu(parentMenu -> {
+            if (parentMenu.isEmpty()) {
                 player.closeInventory();
             }
-        }
+        }));
         return ScriptValue.nil();
     }
 

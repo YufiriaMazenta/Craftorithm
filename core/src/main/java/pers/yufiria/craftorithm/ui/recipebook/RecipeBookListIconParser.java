@@ -2,7 +2,7 @@ package pers.yufiria.craftorithm.ui.recipebook;
 
 import java.util.Locale;
 import crypticlib.script.compile.CompiledScript;
-import crypticlib.ui.display.Icon;
+import crypticlib.ui.display.IconCreator;
 import crypticlib.ui.display.IconDisplay;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.ClickType;
@@ -11,14 +11,13 @@ import pers.yufiria.craftorithm.ui.icon.RecipeDisplayIcon;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 public enum RecipeBookListIconParser implements IconParser {
 
     INSTANCE;
 
     @Override
-    public Supplier<Icon> parse(ConfigurationSection config) {
+    public IconCreator parse(ConfigurationSection config) {
         String iconType = config.getString("icon_type", "common").toLowerCase(Locale.ROOT);
         return switch (iconType) {
             case "recipe_display" -> parseRecipeDisplayIcon(config);
@@ -30,7 +29,7 @@ public enum RecipeBookListIconParser implements IconParser {
         };
     }
 
-    private Supplier<Icon> parseRecipeDisplayIcon(ConfigurationSection config) {
+    private IconCreator parseRecipeDisplayIcon(ConfigurationSection config) {
         ClickType viewClick = ClickType.valueOf(config.getString("view_click", "LEFT").toUpperCase(Locale.ROOT));
         ClickType editClick = ClickType.valueOf(config.getString("edit_click", "RIGHT").toUpperCase(Locale.ROOT));
         List<String> extraLore = config.getStringList("extra_lore");
@@ -39,25 +38,25 @@ public enum RecipeBookListIconParser implements IconParser {
         return () -> new RecipeDisplayIcon(null, extraLore, viewClick, editClick, actions);
     }
 
-    private Supplier<Icon> parsePrevPageIcon(ConfigurationSection config) {
+    private IconCreator parsePrevPageIcon(ConfigurationSection config) {
         IconDisplay iconDisplay = parseIconDisplay(config);
         Map<ClickType, CompiledScript> actions = parseActions(config.getConfigurationSection("actions"));
         return () -> new PrevPageIcon(iconDisplay, actions);
     }
 
-    private Supplier<Icon> parseNextPageIcon(ConfigurationSection config) {
+    private IconCreator parseNextPageIcon(ConfigurationSection config) {
         IconDisplay iconDisplay = parseIconDisplay(config);
         Map<ClickType, CompiledScript> actions = parseActions(config.getConfigurationSection("actions"));
         return () -> new NextPageIcon(iconDisplay, actions);
     }
 
-    private Supplier<Icon> parseSortIcon(ConfigurationSection config) {
+    private IconCreator parseSortIcon(ConfigurationSection config) {
         IconDisplay iconDisplay = parseIconDisplay(config);
         Map<ClickType, CompiledScript> actions = parseActions(config.getConfigurationSection("actions"));
         return () -> new SortIcon(iconDisplay, actions);
     }
 
-    private Supplier<Icon> parseBackIcon(ConfigurationSection config) {
+    private IconCreator parseBackIcon(ConfigurationSection config) {
         IconDisplay iconDisplay = parseIconDisplay(config);
         Map<ClickType, CompiledScript> actions = parseActions(config.getConfigurationSection("actions"));
         return () -> new BackIcon(iconDisplay, actions);
