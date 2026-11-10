@@ -18,6 +18,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.inventory.meta.trim.ArmorTrim;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
 import org.bukkit.inventory.meta.trim.TrimPattern;
+import org.bukkit.profile.PlayerProfile;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.resultprocessor.ComponentProcessorFactory;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessor;
@@ -268,6 +269,30 @@ public enum BaseComponentProcessors implements ComponentProcessorFactory, Lifecy
             }
             resultItem.setItemMeta(resultMeta);
         }),
+        "add", data -> {
+            PlayerProfile profile = createPlayerProfile(data);
+            if (profile == null) {
+                return ProcessorUtils.noop("skull_profile");
+            }
+            return ProcessorUtils.processor("skull_profile", (sourceItem, resultItem, player) -> {
+                ItemMeta resultMeta = resultItem.getItemMeta();
+                if (!(resultMeta instanceof SkullMeta skullMeta)) {
+                    return;
+                }
+                try {
+                    //每次写入都克隆一份: 服务端解析皮肤时可能回写这个 profile, 避免多件产物共享同一实例
+                    skullMeta.setOwnerProfile(profile.clone());
+                } catch (IllegalArgumentException exception) {
+                    //只写 uuid 时资料可能既没有名字也没有纹理, 服务端会拒绝这种资料
+                    ProcessorUtils.warnOnce(
+                        "skull_profile:invalid_profile",
+                        "skull_profile: invalid profile (" + exception.getMessage() + "), add 'name' alongside 'uuid'"
+                    );
+                    return;
+                }
+                resultItem.setItemMeta(resultMeta);
+            });
+        },
         "remove", data -> ProcessorUtils.processor("skull_profile", (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
             if (resultMeta instanceof SkullMeta skullMeta) {
@@ -304,6 +329,47 @@ public enum BaseComponentProcessors implements ComponentProcessorFactory, Lifecy
             throw new UnsupportedOperationException(componentName + " does not support type: " + type);
         }
         return handler.apply(data == null ? ProcessorUtils.EMPTY_DATA : data);
+    }
+
+    /**
+     * 解析 skull_profile 的 add: name / uuid 至少写一个, 两个都写时按 uuid + name 创建
+     */
+    @SuppressWarnings("deprecation")
+    private static @Nullable PlayerProfile createPlayerProfile(@Nullable ConfigurationSection data) {
+        if (data == null) {
+            CrypticLib.warn("skull_profile: 'add' requires 'name' or 'uuid'");
+            return null;
+        }
+        String name = data.getString("name");
+        if (name != null) {
+            name = name.trim();
+            if (name.isEmpty()) {
+                name = null;
+            }
+        }
+        String uuidRaw = data.getString("uuid");
+        UUID uuid = ProcessorUtils.parseUuid(uuidRaw);
+        if (uuid == null && uuidRaw != null && !uuidRaw.isBlank()) {
+            CrypticLib.warn("skull_profile: invalid 'uuid' '" + uuidRaw + "'");
+            return null;
+        }
+        if (name == null && uuid == null) {
+            CrypticLib.warn("skull_profile: 'add' requires 'name' or 'uuid'");
+            return null;
+        }
+        try {
+            if (name != null && uuid != null) {
+                return Bukkit.getServer().createPlayerProfile(uuid, name);
+            }
+            if (uuid != null) {
+                return Bukkit.getServer().createPlayerProfile(uuid);
+            }
+            return Bukkit.getServer().createPlayerProfile(name);
+        } catch (IllegalArgumentException exception) {
+            CrypticLib.warn("skull_profile: cannot create profile for '"
+                + (name != null ? name : uuidRaw) + "': " + exception.getMessage());
+            return null;
+        }
     }
 
     /**
