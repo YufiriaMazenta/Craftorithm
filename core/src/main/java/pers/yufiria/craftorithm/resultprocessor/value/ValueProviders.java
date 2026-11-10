@@ -76,6 +76,32 @@ public final class ValueProviders {
         );
     }
 
+    public static ValueProvider<String> text(
+        @Nullable ConfigurationSection data,
+        String key,
+        String defaultValue,
+        String description
+    ) {
+        return textValue(rawValue(data, key, null), defaultValue, description);
+    }
+
+    /**
+     * 列表型文本(如 lore 的每一行)没有 key, 直接按原始值创建
+     */
+    public static ValueProvider<String> textValue(
+        @Nullable Object raw,
+        String defaultValue,
+        String description
+    ) {
+        return parse(
+            raw,
+            defaultValue,
+            ScriptConverter.STRING,
+            value -> value instanceof String text ? text : null,
+            description
+        );
+    }
+
     private static <T> ValueProvider<T> parse(
         @Nullable Object raw,
         T defaultValue,

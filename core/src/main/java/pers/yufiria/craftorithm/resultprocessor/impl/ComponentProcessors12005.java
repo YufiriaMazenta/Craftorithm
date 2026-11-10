@@ -84,14 +84,18 @@ public enum ComponentProcessors12005 implements ComponentProcessorFactory, Lifec
             resultItem.setItemMeta(resultMeta);
         }),
         "add", data -> {
-            String value = data.getString("value");
-            if (value == null) {
+            if (data.get("value") == null) {
                 CrypticLib.warn("item_name: missing 'value'");
                 return ProcessorUtils.noop("item_name");
             }
+            ValueProvider<String> value = ValueProviders.text(data, "value", "", "item_name/value");
             return ProcessorUtils.processor("item_name", (sourceItem, resultItem, player) -> {
+                String text = value.resolve(player, sourceItem, resultItem);
+                if (text == null || text.isEmpty()) {
+                    return;
+                }
                 ItemMeta resultMeta = resultItem.getItemMeta();
-                String parsed = player != null ? BukkitTextProcessor.placeholder(player, value) : value;
+                String parsed = player != null ? BukkitTextProcessor.placeholder(player, text) : text;
                 resultMeta.setItemName(BukkitTextProcessor.color(parsed));
                 resultItem.setItemMeta(resultMeta);
             });

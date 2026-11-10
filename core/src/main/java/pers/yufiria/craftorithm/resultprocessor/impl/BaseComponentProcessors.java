@@ -53,14 +53,18 @@ public enum BaseComponentProcessors implements ComponentProcessorFactory, Lifecy
             resultItem.setItemMeta(resultMeta);
         }),
         "add", data -> {
-            String value = data.getString("value");
-            if (value == null) {
+            if (data.get("value") == null) {
                 CrypticLib.warn("display_name: missing 'value'");
                 return ProcessorUtils.noop("display_name");
             }
+            ValueProvider<String> value = ValueProviders.text(data, "value", "", "display_name/value");
             return ProcessorUtils.processor("display_name", (sourceItem, resultItem, player) -> {
+                String text = value.resolve(player, sourceItem, resultItem);
+                if (text == null || text.isEmpty()) {
+                    return;
+                }
                 ItemMeta resultMeta = resultItem.getItemMeta();
-                String parsed = player != null ? BukkitTextProcessor.placeholder(player, value) : value;
+                String parsed = player != null ? BukkitTextProcessor.placeholder(player, text) : text;
                 resultMeta.setDisplayName(BukkitTextProcessor.color(parsed));
                 resultItem.setItemMeta(resultMeta);
             });
@@ -270,18 +274,25 @@ public enum BaseComponentProcessors implements ComponentProcessorFactory, Lifecy
             resultItem.setItemMeta(resultMeta);
         }),
         "add", data -> {
-            PlayerProfile profile = createPlayerProfile(data);
-            if (profile == null) {
-                return ProcessorUtils.noop("skull_profile");
-            }
+            ValueProvider<String> name = ValueProviders.text(data, "name", "", "skull_profile/name");
+            ValueProvider<String> uuid = ValueProviders.text(data, "uuid", "", "skull_profile/uuid");
             return ProcessorUtils.processor("skull_profile", (sourceItem, resultItem, player) -> {
+                String resolvedName = name.resolve(player, sourceItem, resultItem);
+                String resolvedUuid = uuid.resolve(player, sourceItem, resultItem);
+                if (resolvedName == null || resolvedUuid == null) {
+                    //脚本求值失败
+                    return;
+                }
+                PlayerProfile profile = createPlayerProfile(resolvedName, resolvedUuid);
+                if (profile == null) {
+                    return;
+                }
                 ItemMeta resultMeta = resultItem.getItemMeta();
                 if (!(resultMeta instanceof SkullMeta skullMeta)) {
                     return;
                 }
                 try {
-                    //每次写入都克隆一份: 服务端解析皮肤时可能回写这个 profile, 避免多件产物共享同一实例
-                    skullMeta.setOwnerProfile(profile.clone());
+                    skullMeta.setOwnerProfile(profile);
                 } catch (IllegalArgumentException exception) {
                     //只写 uuid 时资料可能既没有名字也没有纹理, 服务端会拒绝这种资料
                     ProcessorUtils.warnOnce(
@@ -332,29 +343,22 @@ public enum BaseComponentProcessors implements ComponentProcessorFactory, Lifecy
     }
 
     /**
-     * 解析 skull_profile 的 add: name / uuid 至少写一个, 两个都写时按 uuid + name 创建
+     * 根据解析后的 name / uuid 创建头颅资料, 至少要有其一
      */
     @SuppressWarnings("deprecation")
-    private static @Nullable PlayerProfile createPlayerProfile(@Nullable ConfigurationSection data) {
-        if (data == null) {
-            CrypticLib.warn("skull_profile: 'add' requires 'name' or 'uuid'");
-            return null;
+    private static @Nullable PlayerProfile createPlayerProfile(String nameRaw, String uuidRaw) {
+        String name = nameRaw.trim();
+        if (name.isEmpty()) {
+            name = null;
         }
-        String name = data.getString("name");
-        if (name != null) {
-            name = name.trim();
-            if (name.isEmpty()) {
-                name = null;
-            }
-        }
-        String uuidRaw = data.getString("uuid");
-        UUID uuid = ProcessorUtils.parseUuid(uuidRaw);
-        if (uuid == null && uuidRaw != null && !uuidRaw.isBlank()) {
-            CrypticLib.warn("skull_profile: invalid 'uuid' '" + uuidRaw + "'");
+        String uuidText = uuidRaw.trim();
+        UUID uuid = ProcessorUtils.parseUuid(uuidText);
+        if (uuid == null && !uuidText.isEmpty()) {
+            ProcessorUtils.warnOnce("skull_profile:uuid", "skull_profile: invalid 'uuid' '" + uuidText + "'");
             return null;
         }
         if (name == null && uuid == null) {
-            CrypticLib.warn("skull_profile: 'add' requires 'name' or 'uuid'");
+            ProcessorUtils.warnOnce("skull_profile:missing", "skull_profile: 'add' requires 'name' or 'uuid'");
             return null;
         }
         try {
@@ -366,8 +370,10 @@ public enum BaseComponentProcessors implements ComponentProcessorFactory, Lifecy
             }
             return Bukkit.getServer().createPlayerProfile(name);
         } catch (IllegalArgumentException exception) {
-            CrypticLib.warn("skull_profile: cannot create profile for '"
-                + (name != null ? name : uuidRaw) + "': " + exception.getMessage());
+            ProcessorUtils.warnOnce(
+                "skull_profile:create",
+                "skull_profile: cannot create profile: " + exception.getMessage()
+            );
             return null;
         }
     }

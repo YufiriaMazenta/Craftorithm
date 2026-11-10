@@ -3,10 +3,13 @@ package pers.yufiria.craftorithm.resultprocessor.impl;
 import crypticlib.chat.BukkitTextProcessor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.resultprocessor.ComponentProcessorFactory;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessor;
+import pers.yufiria.craftorithm.resultprocessor.value.ValueProvider;
+import pers.yufiria.craftorithm.resultprocessor.value.ValueProviders;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -84,9 +87,9 @@ public enum LoreProcessorFactory implements ComponentProcessorFactory {
      * 追加到结果物品已有的 lore 之后
      */
     private ResultProcessor add(@Nullable ConfigurationSection data) {
-        List<String> rawLines = data != null ? data.getStringList("value") : List.of();
+        List<ValueProvider<String>> lines = parseValueProviders(data);
         return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
-            if (rawLines.isEmpty()) {
+            if (lines.isEmpty()) {
                 return;
             }
             ItemMeta resultMeta = resultItem.getItemMeta();
@@ -94,7 +97,7 @@ public enum LoreProcessorFactory implements ComponentProcessorFactory {
             if (resultMeta.hasLore()) {
                 merged.addAll(resultMeta.getLore());
             }
-            merged.addAll(parseLines(rawLines, player));
+            merged.addAll(parseLines(lines, sourceItem, resultItem, player));
             resultMeta.setLore(merged);
             resultItem.setItemMeta(resultMeta);
         });
@@ -104,22 +107,48 @@ public enum LoreProcessorFactory implements ComponentProcessorFactory {
      * 整体替换结果物品的 lore
      */
     private ResultProcessor set(@Nullable ConfigurationSection data) {
-        List<String> rawLines = data != null ? data.getStringList("value") : List.of();
+        List<ValueProvider<String>> lines = parseValueProviders(data);
         return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
-            List<String> lines = parseLines(rawLines, player);
-            resultMeta.setLore(lines.isEmpty() ? null : lines);
+            List<String> parsed = parseLines(lines, sourceItem, resultItem, player);
+            if (parsed.isEmpty() && !lines.isEmpty()) {
+                //所有行都求值失败时不要把原有 lore 清空
+                return;
+            }
+            resultMeta.setLore(parsed.isEmpty() ? null : parsed);
             resultItem.setItemMeta(resultMeta);
         });
     }
 
-    private List<String> parseLines(List<String> rawLines, @Nullable Player player) {
-        return rawLines.stream()
-            .map(line -> {
-                String parsed = player != null ? BukkitTextProcessor.placeholder(player, line) : line;
-                return BukkitTextProcessor.color(parsed);
-            })
-            .toList();
+    private List<ValueProvider<String>> parseValueProviders(@Nullable ConfigurationSection data) {
+        if (data == null) {
+            return List.of();
+        }
+        List<String> rawLines = data.getStringList("value");
+        List<ValueProvider<String>> providers = new ArrayList<>(rawLines.size());
+        for (String line : rawLines) {
+            providers.add(ValueProviders.textValue(line, line, COMPONENT_NAME + "/value"));
+        }
+        return providers;
+    }
+
+    private List<String> parseLines(
+        List<ValueProvider<String>> lines,
+        @Nullable ItemStack sourceItem,
+        ItemStack resultItem,
+        @Nullable Player player
+    ) {
+        List<String> parsed = new ArrayList<>(lines.size());
+        for (ValueProvider<String> line : lines) {
+            String text = line.resolve(player, sourceItem, resultItem);
+            if (text == null) {
+                //脚本求值失败: 只跳过这一行
+                continue;
+            }
+            String withPlaceholders = player != null ? BukkitTextProcessor.placeholder(player, text) : text;
+            parsed.add(BukkitTextProcessor.color(withPlaceholders));
+        }
+        return parsed;
     }
 
     private ResultProcessor remove(@Nullable ConfigurationSection data) {

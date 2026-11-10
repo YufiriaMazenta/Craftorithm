@@ -185,6 +185,34 @@ class ValueProvidersTest {
         assertThrows(ScriptException.class, () -> scripted(provider).apply(context));
     }
 
+    @Test
+    void textLiteral() {
+        ValueProvider<String> provider = ValueProviders.text(section("Hello"), "value", "", "test/value");
+        assertInstanceOf(FixedValue.class, provider);
+        assertEquals("Hello", provider.resolve(null, null, resultItem()));
+    }
+
+    @Test
+    void textScript() {
+        ValueProvider<String> provider = ValueProviders.text(section("<\"a\" + \"b\">"), "value", "", "test/value");
+        assertInstanceOf(ScriptedValue.class, provider);
+        assertEquals("ab", evaluate(provider));
+    }
+
+    @Test
+    void textScriptReadsObject() {
+        ValueProvider<String> provider = ValueProviders.text(section("<player.get(\"name\")>"), "value", "", "test/value");
+        ScriptContext context = new ScriptContext(mock(Invoker.class));
+        context.setVariable("player", ScriptValue.of(new FakePlayer(), ReflectPropertyResolver.INSTANCE));
+        assertEquals("Steve", scripted(provider).apply(context));
+    }
+
+    @Test
+    void textValueFromRawLine() {
+        ValueProvider<String> provider = ValueProviders.textValue("<1 + 1>", "", "test/line");
+        assertEquals("2", evaluate(provider));
+    }
+
     private static final class SilentLogger implements Logger {
 
         private LogLevel level = LogLevel.OFF;
@@ -216,6 +244,14 @@ class ValueProvidersTest {
 
         public int getAmount() {
             return amount;
+        }
+
+    }
+
+    public static final class FakePlayer {
+
+        public String getName() {
+            return "Steve";
         }
 
     }

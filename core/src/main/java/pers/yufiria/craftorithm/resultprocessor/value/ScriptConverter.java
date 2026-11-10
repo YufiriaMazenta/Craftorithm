@@ -22,6 +22,11 @@ public interface ScriptConverter<T> {
     ScriptConverter<Float> FLOAT = value -> (float) value.asNumber();
 
     /**
+     * 文本: nil 会转成空串, 与脚本自身的字符串插值行为保持一致
+     */
+    ScriptConverter<String> STRING = ScriptValue::asString;
+
+    /**
      * 布尔转换刻意不用 {@link ScriptValue#asBoolean()}:
      * 它对任意字符串都返回 false, papi() 取到空值或写错变量名时会静默变成 false, 比报错更难排查
      */
