@@ -22,6 +22,8 @@ import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.resultprocessor.ComponentProcessorFactory;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessor;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessorManager;
+import pers.yufiria.craftorithm.resultprocessor.value.ValueProvider;
+import pers.yufiria.craftorithm.resultprocessor.value.ValueProviders;
 
 import java.util.*;
 import java.util.function.Function;
@@ -113,10 +115,14 @@ public enum BaseComponentProcessors implements ComponentProcessorFactory, Lifecy
             resultItem.setItemMeta(resultMeta);
         }),
         "add", data -> {
-            boolean value = data.getBoolean("value");
+            ValueProvider<Boolean> value = ValueProviders.bool(data, "value", false, "unbreakable/value");
             return ProcessorUtils.processor("unbreakable", (sourceItem, resultItem, player) -> {
+                Boolean unbreakable = value.resolve(player, sourceItem, resultItem);
+                if (unbreakable == null) {
+                    return;
+                }
                 ItemMeta resultMeta = resultItem.getItemMeta();
-                resultMeta.setUnbreakable(value);
+                resultMeta.setUnbreakable(unbreakable);
                 resultItem.setItemMeta(resultMeta);
             });
         },
@@ -137,10 +143,14 @@ public enum BaseComponentProcessors implements ComponentProcessorFactory, Lifecy
             resultItem.setItemMeta(resultMeta);
         }),
         "add", data -> {
-            int value = data.getInt("value");
+            ValueProvider<Integer> value = ValueProviders.integer(data, "value", 0, "custom_model_data/value");
             return ProcessorUtils.processor("custom_model_data", (sourceItem, resultItem, player) -> {
+                Integer customModelData = value.resolve(player, sourceItem, resultItem);
+                if (customModelData == null) {
+                    return;
+                }
                 ItemMeta resultMeta = resultItem.getItemMeta();
-                resultMeta.setCustomModelData(value);
+                resultMeta.setCustomModelData(customModelData);
                 resultItem.setItemMeta(resultMeta);
             });
         },
@@ -169,19 +179,26 @@ public enum BaseComponentProcessors implements ComponentProcessorFactory, Lifecy
             resultItem.setItemMeta(resultMeta);
         }),
         "add", data -> {
-            int configured = Math.max(0, data.getInt("value", data.getInt("damage", 0)));
+            ValueProvider<Integer> value = ValueProviders.integer(data, "value", "damage", 0, "damage/value");
             boolean allowExceed = data.getBoolean("allow_exceed_max", false);
             return ProcessorUtils.processor("damage", (sourceItem, resultItem, player) -> {
+                Integer resolved = value.resolve(player, sourceItem, resultItem);
+                if (resolved == null) {
+                    return;
+                }
                 ItemMeta resultMeta = resultItem.getItemMeta();
                 if (!(resultMeta instanceof Damageable damageable)) {
                     CrypticLib.warn("damage: " + resultItem.getType() + " has no durability, skipped");
                     return;
                 }
-                int damage = configured;
+                int damage = Math.max(0, resolved);
                 if (!allowExceed) {
                     int max = effectiveMaxDamage(damageable, resultItem.getType());
                     if (max > 0 && damage > max) {
-                        CrypticLib.warn("damage: " + damage + " exceeds max damage " + max + ", clamped (set allow_exceed_max to bypass)");
+                        ProcessorUtils.warnOnce(
+                            "damage/value:max",
+                            "damage: " + damage + " exceeds max damage " + max + ", clamped (set allow_exceed_max to bypass)"
+                        );
                         damage = max;
                     }
                 }

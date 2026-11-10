@@ -15,6 +15,8 @@ import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.resultprocessor.ComponentProcessorFactory;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessor;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessorManager;
+import pers.yufiria.craftorithm.resultprocessor.value.ValueProvider;
+import pers.yufiria.craftorithm.resultprocessor.value.ValueProviders;
 
 import java.util.*;
 import java.util.function.Function;
@@ -35,10 +37,14 @@ public enum ComponentProcessors12102 implements ComponentProcessorFactory, Lifec
             resultItem.setItemMeta(resultMeta);
         }),
         "add", data -> {
-            boolean value = data.getBoolean("value");
+            ValueProvider<Boolean> value = ValueProviders.bool(data, "value", false, "glider/value");
             return ProcessorUtils.processor("glider", (sourceItem, resultItem, player) -> {
+                Boolean glider = value.resolve(player, sourceItem, resultItem);
+                if (glider == null) {
+                    return;
+                }
                 ItemMeta resultMeta = resultItem.getItemMeta();
-                resultMeta.setGlider(value);
+                resultMeta.setGlider(glider);
                 resultItem.setItemMeta(resultMeta);
             });
         },
@@ -59,13 +65,14 @@ public enum ComponentProcessors12102 implements ComponentProcessorFactory, Lifec
             resultItem.setItemMeta(resultMeta);
         }),
         "add", data -> {
-            //缺省/越界的数值会让 Bukkit 在合成期抛 IllegalArgumentException, 这里在加载期就修正
-            int value = data != null ? data.getInt("value", 1) : 1;
-            int enchantable = Math.max(1, value);
-            if (enchantable != value) {
-                CrypticLib.warn("enchantable value " + value + " must be >= 1, clamped to " + enchantable);
-            }
+            ValueProvider<Integer> value = ValueProviders.integer(data, "value", 1, "enchantable/value");
             return ProcessorUtils.processor("enchantable", (sourceItem, resultItem, player) -> {
+                Integer resolved = value.resolve(player, sourceItem, resultItem);
+                if (resolved == null) {
+                    return;
+                }
+                //缺省/越界的数值会让 Bukkit 在合成期抛 IllegalArgumentException, 这里统一在运行期修正
+                int enchantable = ProcessorUtils.clampInt(resolved, 1, Integer.MAX_VALUE, "enchantable/value");
                 ItemMeta resultMeta = resultItem.getItemMeta();
                 resultMeta.setEnchantable(enchantable);
                 resultItem.setItemMeta(resultMeta);
@@ -121,12 +128,17 @@ public enum ComponentProcessors12102 implements ComponentProcessorFactory, Lifec
             resultItem.setItemMeta(resultMeta);
         }),
         "add", data -> {
-            float seconds = (float) Math.max(0, data.getDouble("seconds", 1.0));
+            ValueProvider<Double> seconds = ValueProviders.decimal(data, "seconds", 1.0D, "use_cooldown/seconds");
             NamespacedKey group = ProcessorUtils.parseKey(data.getString("group"));
             return ProcessorUtils.processor("use_cooldown", (sourceItem, resultItem, player) -> {
+                Double resolved = seconds.resolve(player, sourceItem, resultItem);
+                if (resolved == null) {
+                    return;
+                }
+                float cooldownSeconds = (float) Math.max(0, resolved);
                 ItemMeta resultMeta = resultItem.getItemMeta();
                 UseCooldownComponent component = resultMeta.getUseCooldown();
-                component.setCooldownSeconds(seconds);
+                component.setCooldownSeconds(cooldownSeconds);
                 component.setCooldownGroup(group);
                 resultMeta.setUseCooldown(component);
                 resultItem.setItemMeta(resultMeta);

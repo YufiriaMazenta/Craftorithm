@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.resultprocessor.impl;
 
+import crypticlib.CrypticLib;
 import crypticlib.util.TriConsumer;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -15,7 +16,9 @@ import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessor;
 
 import java.util.Locale;
+import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 结果处理器工厂的公共构建工具
@@ -26,6 +29,32 @@ final class ProcessorUtils {
      * 组件未配置 data 时使用的空节点
      */
     static final ConfigurationSection EMPTY_DATA = new MemoryConfiguration();
+
+    /**
+     * 已经告警过的运行期问题: 脚本值每次合成都可能越界/钳制, 不能每次都刷日志
+     */
+    private static final Set<String> WARNED_KEYS = ConcurrentHashMap.newKeySet();
+
+    static void warnOnce(String key, String message) {
+        if (WARNED_KEYS.add(key)) {
+            CrypticLib.warn(message);
+        }
+    }
+
+    /**
+     * 运行期钳制: 脚本算出的值同样不能越界, 否则 Bukkit 会在合成时抛异常
+     */
+    static int clampInt(int value, int min, int max, String description) {
+        if (value < min) {
+            warnOnce(description + ":min", description + " value " + value + " is below " + min + ", clamped to " + min);
+            return min;
+        }
+        if (value > max) {
+            warnOnce(description + ":max", description + " value " + value + " is above " + max + ", clamped to " + max);
+            return max;
+        }
+        return value;
+    }
 
     /**
      * 创建普通 processor，不要求 sourceItem 存在

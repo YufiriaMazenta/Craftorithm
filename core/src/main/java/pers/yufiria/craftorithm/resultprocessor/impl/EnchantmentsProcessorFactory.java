@@ -8,6 +8,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.resultprocessor.ComponentProcessorFactory;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessor;
+import pers.yufiria.craftorithm.resultprocessor.value.ValueProvider;
+import pers.yufiria.craftorithm.resultprocessor.value.ValueProviders;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -97,7 +99,14 @@ public enum EnchantmentsProcessorFactory implements ComponentProcessorFactory {
         List<EnchantmentEntry> enchants = parseEnchantments(data);
         return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
-            enchants.forEach(e -> resultMeta.addEnchant(e.enchantment(), e.level(), true));
+            for (EnchantmentEntry entry : enchants) {
+                Integer level = entry.level().resolve(player, sourceItem, resultItem);
+                if (level == null) {
+                    //脚本求值失败: 只跳过这一条附魔, 其余照常写入
+                    continue;
+                }
+                resultMeta.addEnchant(entry.enchantment(), level, true);
+            }
             resultItem.setItemMeta(resultMeta);
         });
     }
@@ -112,7 +121,13 @@ public enum EnchantmentsProcessorFactory implements ComponentProcessorFactory {
             for (Enchantment enchantment : new ArrayList<>(resultMeta.getEnchants().keySet())) {
                 resultMeta.removeEnchant(enchantment);
             }
-            enchants.forEach(e -> resultMeta.addEnchant(e.enchantment(), e.level(), true));
+            for (EnchantmentEntry entry : enchants) {
+                Integer level = entry.level().resolve(player, sourceItem, resultItem);
+                if (level == null) {
+                    continue;
+                }
+                resultMeta.addEnchant(entry.enchantment(), level, true);
+            }
             resultItem.setItemMeta(resultMeta);
         });
     }
@@ -140,7 +155,7 @@ public enum EnchantmentsProcessorFactory implements ComponentProcessorFactory {
         });
     }
 
-    private record EnchantmentEntry(Enchantment enchantment, int level) {
+    private record EnchantmentEntry(Enchantment enchantment, ValueProvider<Integer> level) {
     }
 
     private List<EnchantmentEntry> parseEnchantments(@Nullable ConfigurationSection data) {
@@ -149,7 +164,7 @@ public enum EnchantmentsProcessorFactory implements ComponentProcessorFactory {
         for (String key : data.getKeys(false)) {
             Enchantment ench = Registry.ENCHANTMENT.get(NamespacedKey.fromString(key));
             if (ench != null) {
-                int level = data.getInt(key);
+                ValueProvider<Integer> level = ValueProviders.integer(data, key, 0, COMPONENT_NAME + "/" + key);
                 result.add(new EnchantmentEntry(ench, level));
             }
         }

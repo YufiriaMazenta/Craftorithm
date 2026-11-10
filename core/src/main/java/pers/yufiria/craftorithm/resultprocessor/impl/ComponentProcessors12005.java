@@ -18,6 +18,8 @@ import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.resultprocessor.ComponentProcessorFactory;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessor;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessorManager;
+import pers.yufiria.craftorithm.resultprocessor.value.ValueProvider;
+import pers.yufiria.craftorithm.resultprocessor.value.ValueProviders;
 
 import java.util.*;
 import java.util.function.Function;
@@ -54,10 +56,14 @@ public enum ComponentProcessors12005 implements ComponentProcessorFactory, Lifec
             resultItem.setItemMeta(resultMeta);
         }),
         "add", data -> {
-            boolean value = data.getBoolean("value");
+            ValueProvider<Boolean> value = ValueProviders.bool(data, "value", false, "hide_tooltip/value");
             return ProcessorUtils.processor("hide_tooltip", (sourceItem, resultItem, player) -> {
+                Boolean hideTooltip = value.resolve(player, sourceItem, resultItem);
+                if (hideTooltip == null) {
+                    return;
+                }
                 ItemMeta resultMeta = resultItem.getItemMeta();
-                resultMeta.setHideTooltip(value);
+                resultMeta.setHideTooltip(hideTooltip);
                 resultItem.setItemMeta(resultMeta);
             });
         },
@@ -107,13 +113,14 @@ public enum ComponentProcessors12005 implements ComponentProcessorFactory, Lifec
             resultItem.setItemMeta(resultMeta);
         }),
         "add", data -> {
-            //缺省/越界的数值会让 Bukkit 在合成期抛 IllegalArgumentException, 这里在加载期就修正
-            int value = data != null ? data.getInt("value", 1) : 1;
-            int maxStackSize = Math.max(1, Math.min(99, value));
-            if (maxStackSize != value) {
-                CrypticLib.warn("max_stack_size value " + value + " is out of range 1..99, clamped to " + maxStackSize);
-            }
+            ValueProvider<Integer> value = ValueProviders.integer(data, "value", 1, "max_stack_size/value");
             return ProcessorUtils.processor("max_stack_size", (sourceItem, resultItem, player) -> {
+                Integer resolved = value.resolve(player, sourceItem, resultItem);
+                if (resolved == null) {
+                    return;
+                }
+                //缺省/越界的数值会让 Bukkit 在合成期抛 IllegalArgumentException, 这里统一在运行期修正
+                int maxStackSize = ProcessorUtils.clampInt(resolved, 1, 99, "max_stack_size/value");
                 ItemMeta resultMeta = resultItem.getItemMeta();
                 resultMeta.setMaxStackSize(maxStackSize);
                 resultItem.setItemMeta(resultMeta);
@@ -166,10 +173,14 @@ public enum ComponentProcessors12005 implements ComponentProcessorFactory, Lifec
             resultItem.setItemMeta(resultMeta);
         }),
         "add", data -> {
-            boolean value = data.getBoolean("value", true);
+            ValueProvider<Boolean> value = ValueProviders.bool(data, "value", true, "fire_resistance/value");
             return ProcessorUtils.processor("fire_resistance", (sourceItem, resultItem, player) -> {
+                Boolean fireResistant = value.resolve(player, sourceItem, resultItem);
+                if (fireResistant == null) {
+                    return;
+                }
                 ItemMeta resultMeta = resultItem.getItemMeta();
-                resultMeta.setFireResistant(value);
+                resultMeta.setFireResistant(fireResistant);
                 resultItem.setItemMeta(resultMeta);
             });
         },
@@ -198,14 +209,19 @@ public enum ComponentProcessors12005 implements ComponentProcessorFactory, Lifec
             resultItem.setItemMeta(resultMeta);
         }),
         "add", data -> {
-            int value = Math.max(1, data.getInt("value", 1));
+            ValueProvider<Integer> value = ValueProviders.integer(data, "value", 1, "max_damage/value");
             return ProcessorUtils.processor("max_damage", (sourceItem, resultItem, player) -> {
+                Integer resolved = value.resolve(player, sourceItem, resultItem);
+                if (resolved == null) {
+                    return;
+                }
+                int maxDamage = Math.max(1, resolved);
                 ItemMeta resultMeta = resultItem.getItemMeta();
                 if (!(resultMeta instanceof Damageable damageable)) {
                     CrypticLib.warn("max_damage: " + resultItem.getType() + " has no durability, skipped");
                     return;
                 }
-                damageable.setMaxDamage(value);
+                damageable.setMaxDamage(maxDamage);
                 resultItem.setItemMeta(resultMeta);
             });
         },
@@ -228,10 +244,14 @@ public enum ComponentProcessors12005 implements ComponentProcessorFactory, Lifec
             resultItem.setItemMeta(resultMeta);
         }),
         "add", data -> {
-            boolean value = data.getBoolean("value");
+            ValueProvider<Boolean> value = ValueProviders.bool(data, "value", false, "enchantment_glint_override/value");
             return ProcessorUtils.processor("enchantment_glint_override", (sourceItem, resultItem, player) -> {
+                Boolean glint = value.resolve(player, sourceItem, resultItem);
+                if (glint == null) {
+                    return;
+                }
                 ItemMeta resultMeta = resultItem.getItemMeta();
-                resultMeta.setEnchantmentGlintOverride(value);
+                resultMeta.setEnchantmentGlintOverride(glint);
                 resultItem.setItemMeta(resultMeta);
             });
         },

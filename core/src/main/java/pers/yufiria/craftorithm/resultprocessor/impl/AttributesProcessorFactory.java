@@ -8,12 +8,16 @@ import org.bukkit.Registry;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.EquipmentSlotGroup;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.resultprocessor.ComponentProcessorFactory;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessor;
+import pers.yufiria.craftorithm.resultprocessor.value.ValueProvider;
+import pers.yufiria.craftorithm.resultprocessor.value.ValueProviders;
 
 import java.util.*;
 import java.util.function.Function;
@@ -80,7 +84,7 @@ public enum AttributesProcessorFactory implements ComponentProcessorFactory {
         List<ParsedAttribute> parsedAttributes = parseAttributes(data);
         return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
-            applyAttributeModifiers(resultMeta, parsedAttributes);
+            applyAttributeModifiers(resultMeta, parsedAttributes, player, sourceItem, resultItem);
             resultItem.setItemMeta(resultMeta);
         });
     }
@@ -93,7 +97,7 @@ public enum AttributesProcessorFactory implements ComponentProcessorFactory {
         return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
             resultMeta.setAttributeModifiers(null);
-            applyAttributeModifiers(resultMeta, parsedAttributes);
+            applyAttributeModifiers(resultMeta, parsedAttributes, player, sourceItem, resultItem);
             resultItem.setItemMeta(resultMeta);
         });
     }
@@ -154,7 +158,12 @@ public enum AttributesProcessorFactory implements ComponentProcessorFactory {
             CrypticLib.warn(COMPONENT_NAME + " has unknown operation '" + operationStr + "' for attribute '" + attrName + "', skipped");
             return null;
         }
-        double amount = attrConfig.getDouble("amount", 0);
+        ValueProvider<Double> amountProvider = ValueProviders.decimal(
+            attrConfig,
+            "amount",
+            0D,
+            COMPONENT_NAME + "/" + attrName + "/amount"
+        );
         String slotStr = attrConfig.getString("slot");
         NamespacedKey modifierKey = new NamespacedKey(
             "craftorithm",
@@ -170,7 +179,7 @@ public enum AttributesProcessorFactory implements ComponentProcessorFactory {
                     slotGroup = parsedGroup;
                 }
             }
-            return new ParsedAttribute(attr, operation, amount, slotGroup, null, modifierKey, attrName);
+            return new ParsedAttribute(attr, operation, amountProvider, slotGroup, null, modifierKey, attrName);
         } else {
             EquipmentSlot slot = null;
             if (slotStr != null) {
@@ -180,16 +189,27 @@ public enum AttributesProcessorFactory implements ComponentProcessorFactory {
                     CrypticLib.warn(COMPONENT_NAME + " has unknown slot '" + slotStr + "' for attribute '" + attrName + "', using no slot");
                 }
             }
-            return new ParsedAttribute(attr, operation, amount, null, slot, modifierKey, attrName);
+            return new ParsedAttribute(attr, operation, amountProvider, null, slot, modifierKey, attrName);
         }
     }
 
     @SuppressWarnings("removal")
-    private void applyAttributeModifiers(ItemMeta meta, List<ParsedAttribute> parsedAttributes) {
+    private void applyAttributeModifiers(
+        ItemMeta meta,
+        List<ParsedAttribute> parsedAttributes,
+        @Nullable Player player,
+        @Nullable ItemStack sourceItem,
+        ItemStack resultItem
+    ) {
         for (ParsedAttribute parsed : parsedAttributes) {
+            Double amount = parsed.amount().resolve(player, sourceItem, resultItem);
+            if (amount == null) {
+                //脚本求值失败: 只跳过这一条属性, 其余照常写入
+                continue;
+            }
             AttributeModifier modifier = parsed.slotGroup() != null
-                ? new AttributeModifier(parsed.modifierKey(), parsed.amount(), parsed.operation(), parsed.slotGroup())
-                : new AttributeModifier(UUID.randomUUID(), parsed.name(), parsed.amount(), parsed.operation(), parsed.slot());
+                ? new AttributeModifier(parsed.modifierKey(), amount, parsed.operation(), parsed.slotGroup())
+                : new AttributeModifier(UUID.randomUUID(), parsed.name(), amount, parsed.operation(), parsed.slot());
             meta.addAttributeModifier(parsed.attribute(), modifier);
         }
     }
@@ -197,7 +217,7 @@ public enum AttributesProcessorFactory implements ComponentProcessorFactory {
     private record ParsedAttribute(
         Attribute attribute,
         AttributeModifier.Operation operation,
-        double amount,
+        ValueProvider<Double> amount,
         @Nullable EquipmentSlotGroup slotGroup,
         @Nullable EquipmentSlot slot,
         NamespacedKey modifierKey,
