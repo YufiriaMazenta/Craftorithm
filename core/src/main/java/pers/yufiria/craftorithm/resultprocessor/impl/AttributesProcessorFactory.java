@@ -9,8 +9,6 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
@@ -81,7 +79,7 @@ public enum AttributesProcessorFactory implements ComponentProcessorFactory {
     }
 
     private ResultProcessor add(@Nullable ConfigurationSection data) {
-        List<ParsedAttribute> parsedAttributes = parseAttributes(data);
+        List<AttributeEntry> parsedAttributes = parseAttributes(data);
         return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
             applyAttributeModifiers(resultMeta, parsedAttributes, player, sourceItem, resultItem);
@@ -93,7 +91,7 @@ public enum AttributesProcessorFactory implements ComponentProcessorFactory {
      * 清空结果物品的属性修饰器后写入
      */
     private ResultProcessor set(@Nullable ConfigurationSection data) {
-        List<ParsedAttribute> parsedAttributes = parseAttributes(data);
+        List<AttributeEntry> parsedAttributes = parseAttributes(data);
         return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
             ItemMeta resultMeta = resultItem.getItemMeta();
             resultMeta.setAttributeModifiers(null);
@@ -124,12 +122,12 @@ public enum AttributesProcessorFactory implements ComponentProcessorFactory {
      * 加载期把属性列表解析并校验完毕, 合成期只做套用:
      * 让 valueOf/强转/requireNonNull 的失败落在加载期, 而不是每次合成都抛一次异常
      */
-    private List<ParsedAttribute> parseAttributes(@Nullable ConfigurationSection data) {
+    private List<AttributeEntry> parseAttributes(@Nullable ConfigurationSection data) {
         List<Map<?, ?>> attrList = data != null ? data.getMapList("value") : List.of();
-        List<ParsedAttribute> parsedAttributes = new ArrayList<>(attrList.size());
+        List<AttributeEntry> parsedAttributes = new ArrayList<>(attrList.size());
         for (Map<?, ?> attrEntry : attrList) {
             ConfigurationSection attrConfig = BukkitConfigHelper.map2ConfigSection(attrEntry);
-            ParsedAttribute parsedAttribute = parseAttribute(attrConfig);
+            AttributeEntry parsedAttribute = parseAttribute(attrConfig);
             if (parsedAttribute != null) {
                 parsedAttributes.add(parsedAttribute);
             }
@@ -137,8 +135,7 @@ public enum AttributesProcessorFactory implements ComponentProcessorFactory {
         return parsedAttributes;
     }
 
-    @SuppressWarnings("removal")
-    private @Nullable ParsedAttribute parseAttribute(ConfigurationSection attrConfig) {
+    private @Nullable AttributeEntry parseAttribute(ConfigurationSection attrConfig) {
         String attrName = attrConfig.getString("attribute");
         if (attrName == null || attrName.isBlank()) {
             CrypticLib.warn(COMPONENT_NAME + " entry is missing 'attribute', skipped.");
@@ -165,64 +162,40 @@ public enum AttributesProcessorFactory implements ComponentProcessorFactory {
             COMPONENT_NAME + "/" + attrName + "/amount"
         );
         String slotStr = attrConfig.getString("slot");
-        NamespacedKey modifierKey = new NamespacedKey(
-            "craftorithm",
-            attrName.toLowerCase(Locale.ROOT).replace(":", "_")
-        );
         if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_20_5)) {
-            EquipmentSlotGroup slotGroup = EquipmentSlotGroup.ANY;
-            if (slotStr != null) {
-                EquipmentSlotGroup parsedGroup = EquipmentSlotGroup.getByName(slotStr.toLowerCase(Locale.ROOT));
-                if (parsedGroup == null) {
-                    CrypticLib.warn(COMPONENT_NAME + " has unknown slot '" + slotStr + "' for attribute '" + attrName + "', using ANY");
-                } else {
-                    slotGroup = parsedGroup;
-                }
-            }
-            return new ParsedAttribute(attr, operation, amountProvider, slotGroup, null, modifierKey, attrName);
-        } else {
-            EquipmentSlot slot = null;
-            if (slotStr != null) {
-                try {
-                    slot = EquipmentSlot.valueOf(slotStr.toUpperCase(Locale.ROOT));
-                } catch (IllegalArgumentException e) {
-                    CrypticLib.warn(COMPONENT_NAME + " has unknown slot '" + slotStr + "' for attribute '" + attrName + "', using no slot");
-                }
-            }
-            return new ParsedAttribute(attr, operation, amountProvider, null, slot, modifierKey, attrName);
+            return SlotGroupAttributeEntry.create(attr, operation, amountProvider, slotStr, attrName);
         }
+        return SlotAttributeEntry.create(attr, operation, amountProvider, slotStr, attrName);
     }
 
-    @SuppressWarnings("removal")
     private void applyAttributeModifiers(
         ItemMeta meta,
-        List<ParsedAttribute> parsedAttributes,
+        List<AttributeEntry> parsedAttributes,
         @Nullable Player player,
         @Nullable ItemStack sourceItem,
         ItemStack resultItem
     ) {
-        for (ParsedAttribute parsed : parsedAttributes) {
+        for (AttributeEntry parsed : parsedAttributes) {
             Double amount = parsed.amount().resolve(player, sourceItem, resultItem);
             if (amount == null) {
                 //脚本求值失败: 只跳过这一条属性, 其余照常写入
                 continue;
             }
-            AttributeModifier modifier = parsed.slotGroup() != null
-                ? new AttributeModifier(parsed.modifierKey(), amount, parsed.operation(), parsed.slotGroup())
-                : new AttributeModifier(UUID.randomUUID(), parsed.name(), amount, parsed.operation(), parsed.slot());
-            meta.addAttributeModifier(parsed.attribute(), modifier);
+            parsed.apply(meta, amount);
         }
     }
 
-    private record ParsedAttribute(
-        Attribute attribute,
-        AttributeModifier.Operation operation,
-        ValueProvider<Double> amount,
-        @Nullable EquipmentSlotGroup slotGroup,
-        @Nullable EquipmentSlot slot,
-        NamespacedKey modifierKey,
-        String name
-    ) {
-    }
+    /**
+     * 一条待写入的属性修饰器
+     * <p>
+     * 1.20.5 前后 AttributeModifier 的构造方式不同(EquipmentSlot / EquipmentSlotGroup),
+     * 所以拆成两个实现, 由工厂按服务端版本创建, 避免低版本触碰到不存在的 EquipmentSlotGroup
+     */
+    static interface AttributeEntry {
 
+        ValueProvider<Double> amount();
+
+        void apply(ItemMeta meta, double amount);
+
+    }
 }
