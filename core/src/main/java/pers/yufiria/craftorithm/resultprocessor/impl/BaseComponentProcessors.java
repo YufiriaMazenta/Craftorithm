@@ -201,8 +201,9 @@ public enum BaseComponentProcessors implements ComponentProcessorFactory, Lifecy
     },
 
     /**
-     * 头颅皮肤。copy_from_source 直接沿用源物品的皮肤，是最可靠的用法；
-     * add 只写入名字/UUID，皮肤纹理需服务端自行解析，不保证即时生效。
+     * 头颅皮肤。copy_from_source 直接沿用源物品的皮肤；
+     * add 优先取在线玩家当前的资料（自带登录时签发的纹理，即时生效），
+     * 玩家不在线时只写 name / uuid 中的一个，纹理由服务端补全。
      */
     SKULL_PROFILE("skull_profile") {
         @Override
@@ -216,10 +217,10 @@ public enum BaseComponentProcessors implements ComponentProcessorFactory, Lifecy
                     try {
                         skullMeta.setOwnerProfile(value);
                     } catch (IllegalArgumentException exception) {
-                        //只写 uuid 时资料可能既没有名字也没有纹理, 服务端会拒绝这种资料
+                        //资料缺少名字/纹理, 或名字含非法字符时服务端会拒绝
                         ProcessorUtils.warnOnce(
                             "skull_profile:invalid_profile",
-                            "skull_profile: invalid profile (" + exception.getMessage() + "), add 'name' alongside 'uuid'"
+                            "skull_profile: invalid profile (" + exception.getMessage() + ")"
                         );
                     }
                 })
@@ -267,7 +268,11 @@ public enum BaseComponentProcessors implements ComponentProcessorFactory, Lifecy
     }
 
     /**
-     * 根据解析后的 name / uuid 创建头颅资料, 至少要有其一
+     * 根据解析后的 name / uuid 取一份头颅资料, 至少要有其一
+     * <p>
+     * 优先获取在线玩家资料
+     * 玩家不在线时只写一个字段: 同时带 id 与 name 的资料会被服务端当成"已解析", 不再补纹理,
+     * 所以有 name 时丢掉 uuid, 让服务端按名字查 uuid 再拉纹理。
      */
     @SuppressWarnings("deprecation")
     private static @Nullable PlayerProfile createPlayerProfile(String nameRaw, String uuidRaw) {
@@ -286,13 +291,17 @@ public enum BaseComponentProcessors implements ComponentProcessorFactory, Lifecy
             return null;
         }
         try {
-            if (name != null && uuid != null) {
-                return Bukkit.getServer().createPlayerProfile(uuid, name);
+            Player player = findOnlinePlayer(name, uuid);
+            if (player != null) {
+                return player.getPlayerProfile();
             }
-            if (uuid != null) {
-                return Bukkit.getServer().createPlayerProfile(uuid);
+            if (uuid != null && name != null) {
+                CrypticLib.debug("skull_profile: '" + name + "' is offline, writing the name only and letting the server resolve the uuid");
             }
-            return Bukkit.getServer().createPlayerProfile(name);
+            //不在线的玩家只能用单字段资料: 同时带 id 与 name 会被当成"已解析", 服务端不再补纹理
+            return name != null
+                ? Bukkit.getServer().createPlayerProfile(name)
+                : Bukkit.getServer().createPlayerProfile(uuid);
         } catch (IllegalArgumentException exception) {
             ProcessorUtils.warnOnce(
                 "skull_profile:create",
@@ -300,6 +309,17 @@ public enum BaseComponentProcessors implements ComponentProcessorFactory, Lifecy
             );
             return null;
         }
+    }
+
+    /**
+     * 按 uuid 优先、名字其次找一个在线玩家
+     */
+    private static @Nullable Player findOnlinePlayer(@Nullable String name, @Nullable UUID uuid) {
+        Player online = uuid != null ? Bukkit.getPlayer(uuid) : null;
+        if (online == null && name != null) {
+            online = Bukkit.getPlayerExact(name);
+        }
+        return online;
     }
 
     /**
