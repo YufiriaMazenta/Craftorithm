@@ -7,16 +7,14 @@ import crypticlib.lifecycle.LifecyclePhase;
 import crypticlib.lifecycle.LifecycleSchedule;
 import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskConfig;
-import org.bukkit.*;
-import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.Nullable;
+import org.bukkit.inventory.meta.components.CustomModelDataComponent;
 import pers.yufiria.craftorithm.resultprocessor.ComponentProcessorFactory;
-import pers.yufiria.craftorithm.resultprocessor.ResultProcessor;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessorManager;
-
-import java.util.*;
-import java.util.function.Function;
+import pers.yufiria.craftorithm.resultprocessor.behavior.ComponentRegistrar;
+import pers.yufiria.craftorithm.resultprocessor.behavior.Behaviors;
+import pers.yufiria.craftorithm.resultprocessor.behavior.ScalarBehaviors;
 
 /**
  * 1.21.4 起可用的组件，低版本不注册。
@@ -26,54 +24,40 @@ import java.util.function.Function;
 @LifecycleTaskConfig(schedules = @LifecycleSchedule(phase = LifecyclePhase.LOAD))
 public enum ComponentProcessors12104 implements ComponentProcessorFactory, LifecycleTask {
 
-    CUSTOM_MODEL_DATA_COMPONENT("custom_model_data_component", Map.of(
-        "copy_from_source", data -> ProcessorUtils.processorRequireSource("custom_model_data_component", (sourceItem, resultItem, player) -> {
-            ItemMeta sourceMeta = sourceItem.getItemMeta();
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            resultMeta.setCustomModelDataComponent(sourceMeta.getCustomModelDataComponent());
-            resultItem.setItemMeta(resultMeta);
-        }),
-        "remove", data -> ProcessorUtils.processor("custom_model_data_component", (sourceItem, resultItem, player) -> {
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            resultMeta.setCustomModelDataComponent(null);
-            resultItem.setItemMeta(resultMeta);
-        })
-    )),
+    CUSTOM_MODEL_DATA_COMPONENT("custom_model_data_component") {
+        @Override
+        public void declareBehaviors(ComponentRegistrar registrar) {
+            registrar.valueType(CustomModelDataComponent.class)
+                .getter(ItemMeta::getCustomModelDataComponent)
+                .setter((meta, value) -> meta.setCustomModelDataComponent(value))
+                .behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource())
+                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove());
+        }
+    },
 
-    ITEM_MODEL("item_model", Map.of(
-        "copy_from_source", data -> ProcessorUtils.processorRequireSource("item_model", (sourceItem, resultItem, player) -> {
-            ItemMeta sourceMeta = sourceItem.getItemMeta();
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            if (sourceMeta.hasItemModel()) {
-                resultMeta.setItemModel(sourceMeta.getItemModel());
-            }
-            resultItem.setItemMeta(resultMeta);
-        }),
-        "add", data -> {
-            NamespacedKey value = ProcessorUtils.parseKey(data.getString("value"));
-            if (value == null) {
-                CrypticLib.warn("item_model: invalid 'value', expected e.g. mypack:custom_model");
-                return ProcessorUtils.noop("item_model");
-            }
-            return ProcessorUtils.processor("item_model", (sourceItem, resultItem, player) -> {
-                ItemMeta resultMeta = resultItem.getItemMeta();
-                resultMeta.setItemModel(value);
-                resultItem.setItemMeta(resultMeta);
-            });
-        },
-        "remove", data -> ProcessorUtils.processor("item_model", (sourceItem, resultItem, player) -> {
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            resultMeta.setItemModel(null);
-            resultItem.setItemMeta(resultMeta);
-        })
-    ));
+    ITEM_MODEL("item_model") {
+        @Override
+        public void declareBehaviors(ComponentRegistrar registrar) {
+            registrar.valueType(NamespacedKey.class)
+                .getter(meta -> meta.hasItemModel() ? meta.getItemModel() : null)
+                .setter((meta, value) -> meta.setItemModel(value))
+                .behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource())
+                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove())
+                .behavior(Behaviors.ADD, (context, field, data) -> {
+                    NamespacedKey model = ProcessorUtils.parseKey(data == null ? null : data.getString("value"));
+                    if (model == null) {
+                        CrypticLib.warn("item_model: invalid 'value', expected e.g. mypack:custom_model");
+                        return null;
+                    }
+                    return field.processor(context.qualifiedName(), (sourceItem, resultItem, player) -> model);
+                });
+        }
+    };
 
     private final String componentName;
-    private final Map<String, Function<ConfigurationSection, ResultProcessor>> types;
 
-    ComponentProcessors12104(String componentName, Map<String, Function<ConfigurationSection, ResultProcessor>> types) {
+    ComponentProcessors12104(String componentName) {
         this.componentName = componentName;
-        this.types = new HashMap<>(types);
     }
 
     @Override
@@ -89,15 +73,6 @@ public enum ComponentProcessors12104 implements ComponentProcessorFactory, Lifec
     @Override
     public String componentName() {
         return componentName;
-    }
-
-    @Override
-    public ResultProcessor createProcessor(String type, @Nullable ConfigurationSection data) {
-        Function<ConfigurationSection, ResultProcessor> handler = types.get(type);
-        if (handler == null) {
-            throw new UnsupportedOperationException(componentName + " does not support type: " + type);
-        }
-        return handler.apply(data == null ? ProcessorUtils.EMPTY_DATA : data);
     }
 
 }

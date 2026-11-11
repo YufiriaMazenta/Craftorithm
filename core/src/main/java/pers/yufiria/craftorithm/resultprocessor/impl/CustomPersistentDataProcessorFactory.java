@@ -6,20 +6,19 @@ import crypticlib.util.ReflectionHelper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.resultprocessor.ComponentProcessorFactory;
+import pers.yufiria.craftorithm.resultprocessor.behavior.ComponentRegistrar;
+import pers.yufiria.craftorithm.resultprocessor.behavior.Behaviors;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessor;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 
 public enum CustomPersistentDataProcessorFactory implements ComponentProcessorFactory {
 
@@ -27,60 +26,37 @@ public enum CustomPersistentDataProcessorFactory implements ComponentProcessorFa
 
     public static final String COMPONENT_NAME = "custom_persistent_data";
 
-    private final Map<String, Function<ConfigurationSection, ResultProcessor>> handlers = new HashMap<>();
-
-    CustomPersistentDataProcessorFactory() {
-        handlers.put("copy_from_source", this::createCopyFromSource);
-        handlers.put("add", this::createAdd);
-        handlers.put("set", this::createSet);
-        handlers.put("merge_source", this::createMergeSource);
-        handlers.put("remove", this::createRemove);
-    }
-
     @Override
     public String componentName() {
         return COMPONENT_NAME;
     }
 
     @Override
-    public ResultProcessor createProcessor(String type, @Nullable ConfigurationSection data) {
-        Function<ConfigurationSection, ResultProcessor> handler = handlers.get(type);
-        if (handler == null) {
-            throw new UnsupportedOperationException(COMPONENT_NAME + " does not support type: " + type);
-        }
-        return handler.apply(data);
-    }
-
-    public Map<String, Function<ConfigurationSection, ResultProcessor>> handlers() {
-        return handlers;
+    public void declareBehaviors(ComponentRegistrar registrar) {
+        registrar.behavior(Behaviors.COPY_FROM_SOURCE, (context, data) -> createCopyFromSource(data))
+            .behavior(Behaviors.ADD, (context, data) -> createAdd(data))
+            .behavior(Behaviors.SET, (context, data) -> createSet(data))
+            .behavior(Behaviors.MERGE_SOURCE, (context, data) -> createMergeSource(data))
+            .behavior(Behaviors.REMOVE, (context, data) -> createRemove(data));
     }
 
     private ResultProcessor createCopyFromSource(@Nullable ConfigurationSection data) {
         NamespacedKey key = parseKey(data);
         PersistentDataType<?, ?> type = parseType(data);
-        return new ResultProcessor() {
-            @Override
-            public String processorName() {
-                return COMPONENT_NAME;
-            }
-
-            @Override
-            public void processItem(@Nullable ItemStack sourceItem, @NotNull ItemStack resultItem, @Nullable Player player) {
-                if (sourceItem == null) return;
-                ItemMeta sourceMeta = sourceItem.getItemMeta();
-                ItemMeta resultMeta = resultItem.getItemMeta();
+        return ProcessorUtils.processorRequireSource(COMPONENT_NAME + "/copy_from_source", (sourceItem, resultItem, player) -> {
+            ItemMeta sourceMeta = sourceItem.meta();
+            resultItem.edit(resultMeta -> {
                 PersistentDataContainer sourcePdc = sourceMeta.getPersistentDataContainer();
                 PersistentDataContainer resultPdc = resultMeta.getPersistentDataContainer();
-                if (key != null && type != null) {
-                    if (sourcePdc.has(key, type)) {
-                        copyPdcValue(sourcePdc, resultPdc, key, type);
-                    }
-                } else {
+                if (key == null || type == null) {
                     sourcePdc.copyTo(resultPdc, true);
+                    return;
                 }
-                resultItem.setItemMeta(resultMeta);
-            }
-        };
+                if (sourcePdc.has(key, type)) {
+                    copyPdcValue(sourcePdc, resultPdc, key, type);
+                }
+            });
+        });
     }
 
     private ResultProcessor createAdd(@Nullable ConfigurationSection data) {
@@ -89,28 +65,26 @@ public enum CustomPersistentDataProcessorFactory implements ComponentProcessorFa
             CrypticLib.warn(COMPONENT_NAME + " add requires data with entries, this processor will be skipped");
             return ProcessorUtils.noop(COMPONENT_NAME);
         }
-        return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            writeEntries(resultMeta.getPersistentDataContainer(), data);
-            resultItem.setItemMeta(resultMeta);
-        });
+        return ProcessorUtils.processor(COMPONENT_NAME + "/add", (sourceItem, resultItem, player) ->
+            resultItem.edit(resultMeta -> writeEntries(resultMeta.getPersistentDataContainer(), data))
+        );
     }
 
     /**
      * 清空结果物品的全部持久数据后写入
      */
     private ResultProcessor createSet(@Nullable ConfigurationSection data) {
-        return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            PersistentDataContainer resultPdc = resultMeta.getPersistentDataContainer();
-            for (NamespacedKey key : List.copyOf(resultPdc.getKeys())) {
-                resultPdc.remove(key);
-            }
-            if (data != null) {
-                writeEntries(resultPdc, data);
-            }
-            resultItem.setItemMeta(resultMeta);
-        });
+        return ProcessorUtils.processor(COMPONENT_NAME + "/set", (sourceItem, resultItem, player) ->
+            resultItem.edit(resultMeta -> {
+                PersistentDataContainer resultPdc = resultMeta.getPersistentDataContainer();
+                for (NamespacedKey key : List.copyOf(resultPdc.getKeys())) {
+                    resultPdc.remove(key);
+                }
+                if (data != null) {
+                    writeEntries(resultPdc, data);
+                }
+            })
+        );
     }
 
     private void writeEntries(PersistentDataContainer pdc, ConfigurationSection data) {
@@ -141,85 +115,72 @@ public enum CustomPersistentDataProcessorFactory implements ComponentProcessorFa
     private ResultProcessor createMergeSource(@Nullable ConfigurationSection data) {
         NamespacedKey key = parseKey(data);
         PersistentDataType<?, ?> type = parseType(data);
-        return new ResultProcessor() {
-            @Override
-            public String processorName() {
-                return COMPONENT_NAME;
-            }
-
-            @Override
-            public void processItem(@Nullable ItemStack sourceItem, @NotNull ItemStack resultItem, @Nullable Player player) {
-                if (sourceItem == null) return;
-                ItemMeta sourceMeta = sourceItem.getItemMeta();
-                ItemMeta resultMeta = resultItem.getItemMeta();
+        return ProcessorUtils.processorRequireSource(COMPONENT_NAME + "/merge_source", (sourceItem, resultItem, player) -> {
+            ItemMeta sourceMeta = sourceItem.meta();
+            resultItem.edit(resultMeta -> {
                 PersistentDataContainer sourcePdc = sourceMeta.getPersistentDataContainer();
                 PersistentDataContainer resultPdc = resultMeta.getPersistentDataContainer();
                 if (key != null && type != null) {
                     if (!resultPdc.has(key, type) && sourcePdc.has(key, type)) {
                         copyPdcValue(sourcePdc, resultPdc, key, type);
                     }
-                } else {
-                    sourcePdc.getKeys().forEach(k -> {
-                        if (!resultPdc.has(k)) {
-                            copyKnownValue(sourcePdc, resultPdc, k);
-                        }
-                    });
+                    return;
                 }
-                resultItem.setItemMeta(resultMeta);
-            }
-        };
+                sourcePdc.getKeys().forEach(k -> {
+                    if (!resultPdc.has(k)) {
+                        copyKnownValue(sourcePdc, resultPdc, k);
+                    }
+                });
+            });
+        });
     }
 
     private ResultProcessor createRemove(@Nullable ConfigurationSection data) {
-        if (data == null || data.getKeys(false).isEmpty()) {
-            return new ResultProcessor() {
-                @Override
-                public String processorName() {
-                    return COMPONENT_NAME;
-                }
-
-                @Override
-                public void processItem(@Nullable ItemStack sourceItem, @NotNull ItemStack resultItem, @Nullable Player player) {
-                    ItemMeta resultMeta = resultItem.getItemMeta();
-                    resultMeta.getPersistentDataContainer().getKeys().forEach(
-                        key -> resultMeta.getPersistentDataContainer().remove(key)
-                    );
-                    resultItem.setItemMeta(resultMeta);
-                }
-            };
-        }
-        // value 为统一写法, keys 与 key 为兼容旧配置保留
-        List<String> keyNames = data.getStringList("value");
-        if (keyNames.isEmpty()) {
-            keyNames = data.getStringList("keys");
-        }
-        if (keyNames.isEmpty()) {
-            // 单个 key
-            String singleKey = data.getString("key");
-            if (singleKey != null) {
-                keyNames = List.of(singleKey);
-            }
-        }
-        List<String> finalKeyNames = keyNames;
-        return new ResultProcessor() {
-            @Override
-            public String processorName() {
-                return COMPONENT_NAME;
-            }
-
-            @Override
-            public void processItem(@Nullable ItemStack sourceItem, @NotNull ItemStack resultItem, @Nullable Player player) {
-                ItemMeta resultMeta = resultItem.getItemMeta();
+        List<NamespacedKey> targets = parseRemoveTargets(data);
+        return ProcessorUtils.processor(COMPONENT_NAME + "/remove", (sourceItem, resultItem, player) ->
+            resultItem.edit(resultMeta -> {
                 PersistentDataContainer resultPdc = resultMeta.getPersistentDataContainer();
-                for (String keyStr : finalKeyNames) {
-                    NamespacedKey key = NamespacedKey.fromString(keyStr);
-                    if (key != null) {
+                if (targets == null) {
+                    for (NamespacedKey key : List.copyOf(resultPdc.getKeys())) {
                         resultPdc.remove(key);
                     }
+                    return;
                 }
-                resultItem.setItemMeta(resultMeta);
+                for (NamespacedKey key : targets) {
+                    resultPdc.remove(key);
+                }
+            })
+        );
+    }
+
+    /**
+     * @return null 表示没有写 data, 即清空全部
+     */
+    private @Nullable List<NamespacedKey> parseRemoveTargets(@Nullable ConfigurationSection data) {
+        if (data == null || data.getKeys(false).isEmpty()) {
+            return null;
+        }
+        // value 为统一写法, keys 与 key 为旧写法保留
+        List<String> names = data.getStringList("value");
+        if (names.isEmpty()) {
+            names = data.getStringList("keys");
+        }
+        if (names.isEmpty()) {
+            String singleKey = data.getString("key");
+            if (singleKey != null) {
+                names = List.of(singleKey);
             }
-        };
+        }
+        List<NamespacedKey> targets = new ArrayList<>(names.size());
+        for (String name : names) {
+            NamespacedKey key = NamespacedKey.fromString(name);
+            if (key == null) {
+                CrypticLib.warn(COMPONENT_NAME + "/remove has invalid key '" + name + "', skipped");
+                continue;
+            }
+            targets.add(key);
+        }
+        return targets;
     }
 
     @Nullable

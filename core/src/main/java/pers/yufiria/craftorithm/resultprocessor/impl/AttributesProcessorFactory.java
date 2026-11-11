@@ -9,16 +9,17 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
+import pers.yufiria.craftorithm.resultprocessor.ItemWrapper;
 import pers.yufiria.craftorithm.resultprocessor.ComponentProcessorFactory;
+import pers.yufiria.craftorithm.resultprocessor.behavior.ComponentRegistrar;
+import pers.yufiria.craftorithm.resultprocessor.behavior.Behaviors;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessor;
 import pers.yufiria.craftorithm.resultprocessor.value.ValueProvider;
 import pers.yufiria.craftorithm.resultprocessor.value.ValueProviders;
 
 import java.util.*;
-import java.util.function.Function;
 
 public enum AttributesProcessorFactory implements ComponentProcessorFactory {
 
@@ -26,65 +27,47 @@ public enum AttributesProcessorFactory implements ComponentProcessorFactory {
 
     public static final String COMPONENT_NAME = "attributes";
 
-    private final Map<String, Function<ConfigurationSection, ResultProcessor>> handlers = new HashMap<>();
-
-    AttributesProcessorFactory() {
-        handlers.put("copy_from_source", data -> copyFromSource());
-        handlers.put("add", this::add);
-        handlers.put("set", this::set);
-        handlers.put("merge_source", data -> mergeSource());
-        handlers.put("remove", this::remove);
-    }
-
     @Override
     public String componentName() {
         return COMPONENT_NAME;
     }
 
     @Override
-    public ResultProcessor createProcessor(String type, @Nullable ConfigurationSection data) {
-        Function<ConfigurationSection, ResultProcessor> handler = handlers.get(type);
-        if (handler == null) {
-            throw new UnsupportedOperationException(COMPONENT_NAME + " does not support type: " + type);
-        }
-        return handler.apply(data);
-    }
-
-    public Map<String, Function<ConfigurationSection, ResultProcessor>> handlers() {
-        return handlers;
+    public void declareBehaviors(ComponentRegistrar registrar) {
+        registrar.behavior(Behaviors.COPY_FROM_SOURCE, (context, data) -> copyFromSource())
+            .behavior(Behaviors.ADD, (context, data) -> add(data))
+            .behavior(Behaviors.SET, (context, data) -> set(data))
+            .behavior(Behaviors.MERGE_SOURCE, (context, data) -> mergeSource())
+            .behavior(Behaviors.REMOVE, (context, data) -> remove(data));
     }
 
     private ResultProcessor copyFromSource() {
-        return ProcessorUtils.processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
-            ItemMeta sourceMeta = sourceItem.getItemMeta();
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            if (sourceMeta.hasAttributeModifiers()) {
-                resultMeta.setAttributeModifiers(sourceMeta.getAttributeModifiers());
+        return ProcessorUtils.processorRequireSource(COMPONENT_NAME + "/copy_from_source", (sourceItem, resultItem, player) -> {
+            ItemMeta sourceMeta = sourceItem.meta();
+            if (!sourceMeta.hasAttributeModifiers()) {
+                return;
             }
-            resultItem.setItemMeta(resultMeta);
+            resultItem.edit(resultMeta -> resultMeta.setAttributeModifiers(sourceMeta.getAttributeModifiers()));
         });
     }
 
     private ResultProcessor mergeSource() {
-        return ProcessorUtils.processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
-            ItemMeta sourceMeta = sourceItem.getItemMeta();
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            if (sourceMeta.hasAttributeModifiers()) {
-                sourceMeta.getAttributeModifiers().entries().forEach(entry -> {
-                    resultMeta.addAttributeModifier(entry.getKey(), entry.getValue());
-                });
+        return ProcessorUtils.processorRequireSource(COMPONENT_NAME + "/merge_source", (sourceItem, resultItem, player) -> {
+            ItemMeta sourceMeta = sourceItem.meta();
+            if (!sourceMeta.hasAttributeModifiers()) {
+                return;
             }
-            resultItem.setItemMeta(resultMeta);
+            resultItem.edit(resultMeta -> sourceMeta.getAttributeModifiers().entries().forEach(
+                entry -> resultMeta.addAttributeModifier(entry.getKey(), entry.getValue())
+            ));
         });
     }
 
     private ResultProcessor add(@Nullable ConfigurationSection data) {
         List<AttributeEntry> parsedAttributes = parseAttributes(data);
-        return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            applyAttributeModifiers(resultMeta, parsedAttributes, player, sourceItem, resultItem);
-            resultItem.setItemMeta(resultMeta);
-        });
+        return ProcessorUtils.processor(COMPONENT_NAME + "/add", (sourceItem, resultItem, player) ->
+            resultItem.edit(resultMeta -> applyAttributeModifiers(resultMeta, parsedAttributes, player, sourceItem, resultItem))
+        );
     }
 
     /**
@@ -92,30 +75,47 @@ public enum AttributesProcessorFactory implements ComponentProcessorFactory {
      */
     private ResultProcessor set(@Nullable ConfigurationSection data) {
         List<AttributeEntry> parsedAttributes = parseAttributes(data);
-        return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            resultMeta.setAttributeModifiers(null);
-            applyAttributeModifiers(resultMeta, parsedAttributes, player, sourceItem, resultItem);
-            resultItem.setItemMeta(resultMeta);
-        });
+        return ProcessorUtils.processor(COMPONENT_NAME + "/set", (sourceItem, resultItem, player) ->
+            resultItem.edit(resultMeta -> {
+                resultMeta.setAttributeModifiers(null);
+                applyAttributeModifiers(resultMeta, parsedAttributes, player, sourceItem, resultItem);
+            })
+        );
     }
 
     private ResultProcessor remove(@Nullable ConfigurationSection data) {
-        return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            if (data == null || data.getKeys(false).isEmpty()) {
-                resultMeta.setAttributeModifiers(null);
-            } else {
-                List<String> removeList = data.getStringList("value");
-                for (String attrName : removeList) {
-                    Attribute attr = Registry.ATTRIBUTE.get(NamespacedKey.fromString(attrName));
-                    if (attr != null) {
-                        resultMeta.removeAttributeModifier(attr);
-                    }
+        List<Attribute> targets = parseRemoveTargets(data);
+        return ProcessorUtils.processor(COMPONENT_NAME + "/remove", (sourceItem, resultItem, player) ->
+            resultItem.edit(resultMeta -> {
+                if (targets == null) {
+                    resultMeta.setAttributeModifiers(null);
+                    return;
                 }
+                for (Attribute attribute : targets) {
+                    resultMeta.removeAttributeModifier(attribute);
+                }
+            })
+        );
+    }
+
+    /**
+     * @return null 表示没有写 data, 即清空全部
+     */
+    private @Nullable List<Attribute> parseRemoveTargets(@Nullable ConfigurationSection data) {
+        if (data == null || data.getKeys(false).isEmpty()) {
+            return null;
+        }
+        List<String> names = data.getStringList("value");
+        List<Attribute> targets = new ArrayList<>(names.size());
+        for (String name : names) {
+            Attribute attribute = Registry.ATTRIBUTE.get(NamespacedKey.fromString(name));
+            if (attribute == null) {
+                CrypticLib.warn(COMPONENT_NAME + "/remove has unknown attribute '" + name + "', skipped");
+                continue;
             }
-            resultItem.setItemMeta(resultMeta);
-        });
+            targets.add(attribute);
+        }
+        return targets;
     }
 
     /**
@@ -172,8 +172,8 @@ public enum AttributesProcessorFactory implements ComponentProcessorFactory {
         ItemMeta meta,
         List<AttributeEntry> parsedAttributes,
         @Nullable Player player,
-        @Nullable ItemStack sourceItem,
-        ItemStack resultItem
+        @Nullable ItemWrapper sourceItem,
+        ItemWrapper resultItem
     ) {
         for (AttributeEntry parsed : parsedAttributes) {
             Double amount = parsed.amount().resolve(player, sourceItem, resultItem);

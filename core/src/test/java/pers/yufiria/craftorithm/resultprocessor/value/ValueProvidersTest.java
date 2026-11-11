@@ -16,6 +16,7 @@ import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import pers.yufiria.craftorithm.resultprocessor.ItemWrapper;
 
 import java.util.Map;
 
@@ -23,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class ValueProvidersTest {
 
@@ -40,8 +42,11 @@ class ValueProvidersTest {
         return config;
     }
 
-    private static ItemStack resultItem() {
-        return mock(ItemStack.class);
+    private static ItemWrapper resultItem() {
+        ItemStack item = mock(ItemStack.class);
+        //脚本取值会拿物品副本, mock 的 clone 默认返回 null
+        when(item.clone()).thenReturn(mock(ItemStack.class));
+        return ItemWrapper.of(item);
     }
 
     /**

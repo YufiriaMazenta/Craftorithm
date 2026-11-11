@@ -3,19 +3,18 @@ package pers.yufiria.craftorithm.resultprocessor.impl;
 import crypticlib.chat.BukkitTextProcessor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
+import pers.yufiria.craftorithm.resultprocessor.ItemWrapper;
 import pers.yufiria.craftorithm.resultprocessor.ComponentProcessorFactory;
+import pers.yufiria.craftorithm.resultprocessor.behavior.ComponentRegistrar;
+import pers.yufiria.craftorithm.resultprocessor.behavior.Behaviors;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessor;
 import pers.yufiria.craftorithm.resultprocessor.value.ValueProvider;
 import pers.yufiria.craftorithm.resultprocessor.value.ValueProviders;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 
 public enum LoreProcessorFactory implements ComponentProcessorFactory {
 
@@ -23,42 +22,28 @@ public enum LoreProcessorFactory implements ComponentProcessorFactory {
 
     public static final String COMPONENT_NAME = "lore";
 
-    private final Map<String, Function<ConfigurationSection, ResultProcessor>> handlers = new HashMap<>();
-
-    LoreProcessorFactory() {
-        handlers.put("copy_from_source", data -> copyFromSource());
-        handlers.put("add", this::add);
-        handlers.put("set", this::set);
-        handlers.put("merge_source", data -> mergeSource());
-        handlers.put("remove", this::remove);
-    }
-
     @Override
     public String componentName() {
         return COMPONENT_NAME;
     }
 
     @Override
-    public ResultProcessor createProcessor(String type, @Nullable ConfigurationSection data) {
-        Function<ConfigurationSection, ResultProcessor> handler = handlers.get(type);
-        if (handler == null) {
-            throw new UnsupportedOperationException(COMPONENT_NAME + " does not support type: " + type);
-        }
-        return handler.apply(data);
-    }
-
-    public Map<String, Function<ConfigurationSection, ResultProcessor>> handlers() {
-        return handlers;
+    public void declareBehaviors(ComponentRegistrar registrar) {
+        registrar.behavior(Behaviors.COPY_FROM_SOURCE, (context, data) -> copyFromSource())
+            .behavior(Behaviors.ADD, (context, data) -> add(data))
+            .behavior(Behaviors.SET, (context, data) -> set(data))
+            .behavior(Behaviors.MERGE_SOURCE, (context, data) -> mergeSource())
+            .behavior(Behaviors.REMOVE, (context, data) -> remove(data));
     }
 
     private ResultProcessor copyFromSource() {
-        return ProcessorUtils.processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
-            ItemMeta sourceMeta = sourceItem.getItemMeta();
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            if (sourceMeta.hasLore()) {
-                resultMeta.setLore(sourceMeta.getLore());
+        return ProcessorUtils.processorRequireSource(COMPONENT_NAME + "/copy_from_source", (sourceItem, resultItem, player) -> {
+            ItemMeta sourceMeta = sourceItem.meta();
+            if (!sourceMeta.hasLore()) {
+                return;
             }
-            resultItem.setItemMeta(resultMeta);
+            List<String> sourceLore = sourceMeta.getLore();
+            resultItem.edit(meta -> meta.setLore(sourceLore));
         });
     }
 
@@ -66,20 +51,21 @@ public enum LoreProcessorFactory implements ComponentProcessorFactory {
      * 合并为结果 lore 在前，源 lore 追加在后
      */
     private ResultProcessor mergeSource() {
-        return ProcessorUtils.processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
-            ItemMeta sourceMeta = sourceItem.getItemMeta();
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            if (sourceMeta.hasLore()) {
-                List<String> sourceLore = sourceMeta.getLore();
-                if (resultMeta.hasLore()) {
-                    List<String> merged = new ArrayList<>(resultMeta.getLore());
-                    merged.addAll(sourceLore);
-                    resultMeta.setLore(merged);
-                } else {
-                    resultMeta.setLore(sourceLore);
-                }
+        return ProcessorUtils.processorRequireSource(COMPONENT_NAME + "/merge_source", (sourceItem, resultItem, player) -> {
+            ItemMeta sourceMeta = sourceItem.meta();
+            if (!sourceMeta.hasLore()) {
+                return;
             }
-            resultItem.setItemMeta(resultMeta);
+            List<String> sourceLore = sourceMeta.getLore();
+            resultItem.edit(meta -> {
+                if (!meta.hasLore()) {
+                    meta.setLore(sourceLore);
+                    return;
+                }
+                List<String> merged = new ArrayList<>(meta.getLore());
+                merged.addAll(sourceLore);
+                meta.setLore(merged);
+            });
         });
     }
 
@@ -88,18 +74,19 @@ public enum LoreProcessorFactory implements ComponentProcessorFactory {
      */
     private ResultProcessor add(@Nullable ConfigurationSection data) {
         List<ValueProvider<String>> lines = parseValueProviders(data);
-        return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
+        return ProcessorUtils.processor(COMPONENT_NAME + "/add", (sourceItem, resultItem, player) -> {
             if (lines.isEmpty()) {
                 return;
             }
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            List<String> merged = new ArrayList<>();
-            if (resultMeta.hasLore()) {
-                merged.addAll(resultMeta.getLore());
-            }
-            merged.addAll(parseLines(lines, sourceItem, resultItem, player));
-            resultMeta.setLore(merged);
-            resultItem.setItemMeta(resultMeta);
+            List<String> parsed = parseLines(lines, sourceItem, resultItem, player);
+            resultItem.edit(meta -> {
+                List<String> merged = new ArrayList<>();
+                if (meta.hasLore()) {
+                    merged.addAll(meta.getLore());
+                }
+                merged.addAll(parsed);
+                meta.setLore(merged);
+            });
         });
     }
 
@@ -108,15 +95,13 @@ public enum LoreProcessorFactory implements ComponentProcessorFactory {
      */
     private ResultProcessor set(@Nullable ConfigurationSection data) {
         List<ValueProvider<String>> lines = parseValueProviders(data);
-        return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
-            ItemMeta resultMeta = resultItem.getItemMeta();
+        return ProcessorUtils.processor(COMPONENT_NAME + "/set", (sourceItem, resultItem, player) -> {
             List<String> parsed = parseLines(lines, sourceItem, resultItem, player);
             if (parsed.isEmpty() && !lines.isEmpty()) {
                 //所有行都求值失败时不要把原有 lore 清空
                 return;
             }
-            resultMeta.setLore(parsed.isEmpty() ? null : parsed);
-            resultItem.setItemMeta(resultMeta);
+            resultItem.edit(meta -> meta.setLore(parsed.isEmpty() ? null : parsed));
         });
     }
 
@@ -134,8 +119,8 @@ public enum LoreProcessorFactory implements ComponentProcessorFactory {
 
     private List<String> parseLines(
         List<ValueProvider<String>> lines,
-        @Nullable ItemStack sourceItem,
-        ItemStack resultItem,
+        @Nullable ItemWrapper sourceItem,
+        ItemWrapper resultItem,
         @Nullable Player player
     ) {
         List<String> parsed = new ArrayList<>(lines.size());
@@ -152,20 +137,31 @@ public enum LoreProcessorFactory implements ComponentProcessorFactory {
     }
 
     private ResultProcessor remove(@Nullable ConfigurationSection data) {
-        return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            if (data == null || data.getKeys(false).isEmpty()) {
-                resultMeta.setLore(null);
-            } else {
-                List<String> removeList = data.getStringList("value");
-                if (resultMeta.hasLore()) {
-                    List<String> current = new ArrayList<>(resultMeta.getLore());
-                    current.removeAll(removeList);
-                    resultMeta.setLore(current.isEmpty() ? null : current);
-                }
+        List<String> targets = parseRemoveTargets(data);
+        return ProcessorUtils.processor(COMPONENT_NAME + "/remove", (sourceItem, resultItem, player) -> {
+            if (targets == null) {
+                resultItem.edit(meta -> meta.setLore(null));
+                return;
             }
-            resultItem.setItemMeta(resultMeta);
+            resultItem.edit(meta -> {
+                if (!meta.hasLore()) {
+                    return;
+                }
+                List<String> current = new ArrayList<>(meta.getLore());
+                current.removeAll(targets);
+                meta.setLore(current.isEmpty() ? null : current);
+            });
         });
+    }
+
+    /**
+     * @return null 表示没有写 data, 即清空全部
+     */
+    private @Nullable List<String> parseRemoveTargets(@Nullable ConfigurationSection data) {
+        if (data == null || data.getKeys(false).isEmpty()) {
+            return null;
+        }
+        return List.copyOf(data.getStringList("value"));
     }
 
 }

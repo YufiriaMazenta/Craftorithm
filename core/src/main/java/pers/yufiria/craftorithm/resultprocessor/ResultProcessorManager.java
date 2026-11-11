@@ -14,6 +14,9 @@ import pers.yufiria.craftorithm.api.event.RecipeLoadFromConfigEvent;
 import pers.yufiria.craftorithm.recipe.RecipeTypeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
+import pers.yufiria.craftorithm.resultprocessor.behavior.BehaviorRegistrar;
+import pers.yufiria.craftorithm.resultprocessor.behavior.BehaviorRegistry;
+import pers.yufiria.craftorithm.resultprocessor.behavior.ProcessorBehavior;
 import pers.yufiria.craftorithm.resultprocessor.impl.*;
 
 import java.util.*;
@@ -26,6 +29,7 @@ public enum ResultProcessorManager implements Listener {
 
     private final Map<String, ComponentProcessorFactory> factoryMap = new ConcurrentHashMap<>();
     private final Map<NamespacedKey, ResultProcessors> recipeProcessors = new ConcurrentHashMap<>();
+    private final BehaviorRegistry behaviorRegistry = new BehaviorRegistry();
     private final Set<RecipeType> SUPPORT_LEGACY_RECIPE_TYPES = Set.of(
         SimpleRecipeTypes.ANVIL,
         SimpleRecipeTypes.VANILLA_SMITHING_TRANSFORM,
@@ -41,11 +45,45 @@ public enum ResultProcessorManager implements Listener {
     }
 
     public void registerFactory(ComponentProcessorFactory factory) {
-        factoryMap.put(factory.componentName(), factory);
+        String componentName = factory.componentName();
+        factoryMap.put(componentName, factory);
+        //重新声明时只丢弃自身旧声明, 已注册的外部行为保留
+        behaviorRegistry.clearDeclared(componentName);
+        try {
+            factory.declareBehaviors(behaviorRegistry.registrar(componentName));
+        } catch (Throwable throwable) {
+            //单个组件的声明写错不能阻断启动, 该组件不提供任何行为
+            CrypticLib.error("Failed to declare result processor behaviors for '" + componentName + "'", throwable);
+            behaviorRegistry.clearDeclared(componentName);
+        }
     }
 
     public void unregisterFactory(String componentName) {
         factoryMap.remove(componentName);
+        behaviorRegistry.clearAll(componentName);
+    }
+
+    public boolean isComponentRegistered(String componentName) {
+        return factoryMap.containsKey(componentName);
+    }
+
+    BehaviorRegistry behaviorRegistry() {
+        return behaviorRegistry;
+    }
+
+    /**
+     * 第三方插件给已有组件追加行为时使用的注册器
+     */
+    public BehaviorRegistrar externalRegistrar(String componentName) {
+        return behaviorRegistry.externalRegistrar(componentName);
+    }
+
+    public boolean unregisterBehavior(String componentName, String key) {
+        return behaviorRegistry.unregister(componentName, key);
+    }
+
+    public Set<String> behaviorsOf(String componentName) {
+        return behaviorRegistry.behaviorsOf(componentName);
     }
 
     @EventHandler
@@ -87,7 +125,7 @@ public enum ResultProcessorManager implements Listener {
                 for (Object item : rawList) {
                     ConfigurationSection entry = toConfigSection(item);
                     if (entry != null) {
-                        parseAndAddProcessor(processors, factory, componentName, entry);
+                        parseAndAddProcessor(processors, componentName, entry);
                     }
                 }
             } else {
@@ -97,7 +135,7 @@ public enum ResultProcessorManager implements Listener {
                     CrypticLib.warn("Invalid result_processor entry: " + componentName);
                     continue;
                 }
-                parseAndAddProcessor(processors, factory, componentName, entry);
+                parseAndAddProcessor(processors, componentName, entry);
             }
             CrypticLib.debug(
                 "Registered result processor '<processor_type>' for recipe: <recipe_key>",
@@ -107,7 +145,7 @@ public enum ResultProcessorManager implements Listener {
         recipeProcessors.put(recipeKey, new ResultProcessors(processors));
     }
 
-    private void parseAndAddProcessor(List<ResultProcessor> processors, ComponentProcessorFactory factory, String componentName, ConfigurationSection entry) {
+    private void parseAndAddProcessor(List<ResultProcessor> processors, String componentName, ConfigurationSection entry) {
         String type = entry.getString("type");
         if (type == null) {
             CrypticLib.warn("Missing 'type' for result_processor: " + componentName);
@@ -115,13 +153,34 @@ public enum ResultProcessorManager implements Listener {
         }
         ConfigurationSection data = entry.getConfigurationSection("data");
         try {
-            processors.add(factory.createProcessor(type, data));
-        } catch (UnsupportedOperationException e) {
-            CrypticLib.warn(e.getMessage());
+            ResultProcessor processor = createProcessor(componentName, type, data);
+            if (processor != null) {
+                processors.add(processor);
+            }
         } catch (Throwable throwable) {
             //解析期还可能抛 IllegalArgumentException/ClassCastException/NPE: 逐条隔离, 不能让一个坏组件丢掉整条配方的处理器
             CrypticLib.error("Invalid result_processor '" + componentName + "' (type: " + type + ")", throwable);
         }
+    }
+
+    /**
+     * 按组件的行为表创建处理器, 行为不存在或配置不可用时返回 null
+     */
+    @Nullable
+    private ResultProcessor createProcessor(String componentName, String type, @Nullable ConfigurationSection data) {
+        Optional<ProcessorBehavior> behavior = behaviorRegistry.find(componentName, type);
+        if (behavior.isEmpty()) {
+            CrypticLib.warn("Component '" + componentName + "' does not support type: " + type);
+            return null;
+        }
+        String behaviorName = type.trim();
+        ResultProcessor processor = behavior.get().create(
+            behaviorRegistry.context(componentName, behaviorName), data
+        );
+        if (processor == null) {
+            CrypticLib.warn("Result processor '" + componentName + "' skipped behavior '" + behaviorName + "' (invalid data)");
+        }
+        return processor;
     }
 
     private static ConfigurationSection toConfigSection(Object obj) {
@@ -149,16 +208,16 @@ public enum ResultProcessorManager implements Listener {
                 ruleName = ruleStr.substring(0, spaceIndex);
                 arg = ruleStr.substring(spaceIndex + 1);
             }
-            ComponentProcessorFactory factory = factoryMap.get(ruleName);
-            if (factory == null) {
+            if (!factoryMap.containsKey(ruleName)) {
                 CrypticLib.warn("Unknown rule: " + ruleName);
                 continue;
             }
             ConfigurationSection data = parseLegacyArg(arg);
             try {
-                processors.add(factory.createProcessor("copy_from_source", data));
-            } catch (UnsupportedOperationException e) {
-                CrypticLib.warn(e.getMessage());
+                ResultProcessor processor = createProcessor(ruleName, "copy_from_source", data);
+                if (processor != null) {
+                    processors.add(processor);
+                }
             } catch (Throwable throwable) {
                 CrypticLib.error("Invalid copy_components_rules entry '" + ruleStr + "'", throwable);
             }

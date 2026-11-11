@@ -7,12 +7,12 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.resultprocessor.ComponentProcessorFactory;
+import pers.yufiria.craftorithm.resultprocessor.behavior.ComponentRegistrar;
+import pers.yufiria.craftorithm.resultprocessor.behavior.Behaviors;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessor;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 
 public enum ItemFlagProcessorFactory implements ComponentProcessorFactory {
 
@@ -20,44 +20,30 @@ public enum ItemFlagProcessorFactory implements ComponentProcessorFactory {
 
     public static final String COMPONENT_NAME = "item_flag";
 
-    private final Map<String, Function<ConfigurationSection, ResultProcessor>> handlers = new HashMap<>();
-
-    ItemFlagProcessorFactory() {
-        handlers.put("copy_from_source", data -> copyFromSource());
-        handlers.put("add", this::add);
-        handlers.put("set", this::set);
-        handlers.put("merge_source", data -> mergeSource());
-        handlers.put("remove", this::remove);
-    }
-
     @Override
     public String componentName() {
         return COMPONENT_NAME;
     }
 
     @Override
-    public ResultProcessor createProcessor(String type, @Nullable ConfigurationSection data) {
-        Function<ConfigurationSection, ResultProcessor> handler = handlers.get(type);
-        if (handler == null) {
-            throw new UnsupportedOperationException(COMPONENT_NAME + " does not support type: " + type);
-        }
-        return handler.apply(data);
-    }
-
-    public Map<String, Function<ConfigurationSection, ResultProcessor>> handlers() {
-        return handlers;
+    public void declareBehaviors(ComponentRegistrar registrar) {
+        registrar.behavior(Behaviors.COPY_FROM_SOURCE, (context, data) -> copyFromSource())
+            .behavior(Behaviors.ADD, (context, data) -> add(data))
+            .behavior(Behaviors.SET, (context, data) -> set(data))
+            .behavior(Behaviors.MERGE_SOURCE, (context, data) -> mergeSource())
+            .behavior(Behaviors.REMOVE, (context, data) -> remove(data));
     }
 
     /**
      * 复制为完全覆盖，先清空结果已有的 flag
      */
     private ResultProcessor copyFromSource() {
-        return ProcessorUtils.processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
-            ItemMeta sourceMeta = sourceItem.getItemMeta();
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            resultMeta.removeItemFlags(ItemFlag.values());
-            sourceMeta.getItemFlags().forEach(resultMeta::addItemFlags);
-            resultItem.setItemMeta(resultMeta);
+        return ProcessorUtils.processorRequireSource(COMPONENT_NAME + "/copy_from_source", (sourceItem, resultItem, player) -> {
+            ItemMeta sourceMeta = sourceItem.meta();
+            resultItem.edit(resultMeta -> {
+                resultMeta.removeItemFlags(ItemFlag.values());
+                sourceMeta.getItemFlags().forEach(resultMeta::addItemFlags);
+            });
         });
     }
 
@@ -65,26 +51,24 @@ public enum ItemFlagProcessorFactory implements ComponentProcessorFactory {
      * 合并保留结果已有的 flag，仅追加源的 flag
      */
     private ResultProcessor mergeSource() {
-        return ProcessorUtils.processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
-            ItemMeta sourceMeta = sourceItem.getItemMeta();
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            sourceMeta.getItemFlags().forEach(resultMeta::addItemFlags);
-            resultItem.setItemMeta(resultMeta);
+        return ProcessorUtils.processorRequireSource(COMPONENT_NAME + "/merge_source", (sourceItem, resultItem, player) -> {
+            ItemMeta sourceMeta = sourceItem.meta();
+            resultItem.edit(resultMeta -> sourceMeta.getItemFlags().forEach(resultMeta::addItemFlags));
         });
     }
 
     private ResultProcessor add(@Nullable ConfigurationSection data) {
         List<String> flagNames = data != null ? data.getStringList("value") : List.of();
-        return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            for (String flagName : flagNames) {
-                ItemFlag flag = parseItemFlag(flagName);
-                if (flag != null) {
-                    resultMeta.addItemFlags(flag);
+        return ProcessorUtils.processor(COMPONENT_NAME + "/add", (sourceItem, resultItem, player) ->
+            resultItem.edit(resultMeta -> {
+                for (String flagName : flagNames) {
+                    ItemFlag flag = parseItemFlag(flagName);
+                    if (flag != null) {
+                        resultMeta.addItemFlags(flag);
+                    }
                 }
-            }
-            resultItem.setItemMeta(resultMeta);
-        });
+            })
+        );
     }
 
     /**
@@ -92,35 +76,48 @@ public enum ItemFlagProcessorFactory implements ComponentProcessorFactory {
      */
     private ResultProcessor set(@Nullable ConfigurationSection data) {
         List<String> flagNames = data != null ? data.getStringList("value") : List.of();
-        return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            resultMeta.removeItemFlags(ItemFlag.values());
-            for (String flagName : flagNames) {
-                ItemFlag flag = parseItemFlag(flagName);
-                if (flag != null) {
-                    resultMeta.addItemFlags(flag);
+        return ProcessorUtils.processor(COMPONENT_NAME + "/set", (sourceItem, resultItem, player) ->
+            resultItem.edit(resultMeta -> {
+                resultMeta.removeItemFlags(ItemFlag.values());
+                for (String flagName : flagNames) {
+                    ItemFlag flag = parseItemFlag(flagName);
+                    if (flag != null) {
+                        resultMeta.addItemFlags(flag);
+                    }
                 }
-            }
-            resultItem.setItemMeta(resultMeta);
-        });
+            })
+        );
     }
 
     private ResultProcessor remove(@Nullable ConfigurationSection data) {
-        return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            if (data == null || data.getKeys(false).isEmpty()) {
-                resultMeta.removeItemFlags(ItemFlag.values());
-            } else {
-                List<String> removeList = data.getStringList("value");
-                for (String flagName : removeList) {
-                    ItemFlag flag = parseItemFlag(flagName);
-                    if (flag != null) {
-                        resultMeta.removeItemFlags(flag);
-                    }
+        List<ItemFlag> targets = parseRemoveTargets(data);
+        return ProcessorUtils.processor(COMPONENT_NAME + "/remove", (sourceItem, resultItem, player) ->
+            resultItem.edit(resultMeta -> {
+                if (targets == null) {
+                    resultMeta.removeItemFlags(ItemFlag.values());
+                    return;
                 }
+                resultMeta.removeItemFlags(targets.toArray(ItemFlag[]::new));
+            })
+        );
+    }
+
+    /**
+     * @return null 表示没有写 data, 即清空全部
+     */
+    private @Nullable List<ItemFlag> parseRemoveTargets(@Nullable ConfigurationSection data) {
+        if (data == null || data.getKeys(false).isEmpty()) {
+            return null;
+        }
+        List<String> names = data.getStringList("value");
+        List<ItemFlag> targets = new ArrayList<>(names.size());
+        for (String name : names) {
+            ItemFlag flag = parseItemFlag(name);
+            if (flag != null) {
+                targets.add(flag);
             }
-            resultItem.setItemMeta(resultMeta);
-        });
+        }
+        return targets;
     }
 
     @Nullable

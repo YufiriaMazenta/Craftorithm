@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.resultprocessor.impl;
 
+import crypticlib.CrypticLib;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.configuration.ConfigurationSection;
@@ -7,15 +8,14 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.resultprocessor.ComponentProcessorFactory;
+import pers.yufiria.craftorithm.resultprocessor.behavior.ComponentRegistrar;
+import pers.yufiria.craftorithm.resultprocessor.behavior.Behaviors;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessor;
 import pers.yufiria.craftorithm.resultprocessor.value.ValueProvider;
 import pers.yufiria.craftorithm.resultprocessor.value.ValueProviders;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 
 public enum EnchantmentsProcessorFactory implements ComponentProcessorFactory {
 
@@ -23,53 +23,38 @@ public enum EnchantmentsProcessorFactory implements ComponentProcessorFactory {
 
     public static final String COMPONENT_NAME = "enchantments";
 
-    private final Map<String, Function<ConfigurationSection, ResultProcessor>> handlers = new HashMap<>();
-
-    EnchantmentsProcessorFactory() {
-        handlers.put("copy_from_source", data -> copyFromSource());
-        handlers.put("add", this::add);
-        handlers.put("set", this::set);
-        handlers.put("merge_source", data -> mergeSource());
-        handlers.put("remove", this::remove);
-    }
-
     @Override
     public String componentName() {
         return COMPONENT_NAME;
     }
 
     @Override
-    public ResultProcessor createProcessor(String type, @Nullable ConfigurationSection data) {
-        Function<ConfigurationSection, ResultProcessor> handler = handlers.get(type);
-        if (handler == null) {
-            throw new UnsupportedOperationException(COMPONENT_NAME + " does not support type: " + type);
-        }
-        return handler.apply(data);
-    }
-
-    public Map<String, Function<ConfigurationSection, ResultProcessor>> handlers() {
-        return handlers;
+    public void declareBehaviors(ComponentRegistrar registrar) {
+        registrar.behavior(Behaviors.COPY_FROM_SOURCE, (context, data) -> copyFromSource())
+            .behavior(Behaviors.ADD, (context, data) -> add(data))
+            .behavior(Behaviors.SET, (context, data) -> set(data))
+            .behavior(Behaviors.MERGE_SOURCE, (context, data) -> mergeSource())
+            .behavior(Behaviors.REMOVE, (context, data) -> remove(data));
     }
 
     /**
      * 复制时源等级不低于结果等级就覆盖（结果等级更高才保留）
      */
     private ResultProcessor copyFromSource() {
-        return ProcessorUtils.processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
-            ItemMeta sourceMeta = sourceItem.getItemMeta();
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            if (sourceMeta.hasEnchants()) {
-                sourceMeta.getEnchants().forEach((enchant, level) -> {
-                    if (resultMeta.hasEnchant(enchant)) {
-                        if (resultMeta.getEnchantLevel(enchant) > level) {
-                            return;
-                        }
-                        resultMeta.removeEnchant(enchant);
-                    }
-                    resultMeta.addEnchant(enchant, level, true);
-                });
+        return ProcessorUtils.processorRequireSource(COMPONENT_NAME + "/copy_from_source", (sourceItem, resultItem, player) -> {
+            ItemMeta sourceMeta = sourceItem.meta();
+            if (!sourceMeta.hasEnchants()) {
+                return;
             }
-            resultItem.setItemMeta(resultMeta);
+            resultItem.edit(resultMeta -> sourceMeta.getEnchants().forEach((enchant, level) -> {
+                if (resultMeta.hasEnchant(enchant)) {
+                    if (resultMeta.getEnchantLevel(enchant) > level) {
+                        return;
+                    }
+                    resultMeta.removeEnchant(enchant);
+                }
+                resultMeta.addEnchant(enchant, level, true);
+            }));
         });
     }
 
@@ -77,37 +62,36 @@ public enum EnchantmentsProcessorFactory implements ComponentProcessorFactory {
      * 合并时仅源等级严格更高才覆盖（等级相同保留结果）
      */
     private ResultProcessor mergeSource() {
-        return ProcessorUtils.processorRequireSource(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
-            ItemMeta sourceMeta = sourceItem.getItemMeta();
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            if (sourceMeta.hasEnchants()) {
-                sourceMeta.getEnchants().forEach((enchant, level) -> {
-                    if (resultMeta.hasEnchant(enchant)) {
-                        if (resultMeta.getEnchantLevel(enchant) >= level) {
-                            return;
-                        }
-                        resultMeta.removeEnchant(enchant);
-                    }
-                    resultMeta.addEnchant(enchant, level, true);
-                });
+        return ProcessorUtils.processorRequireSource(COMPONENT_NAME + "/merge_source", (sourceItem, resultItem, player) -> {
+            ItemMeta sourceMeta = sourceItem.meta();
+            if (!sourceMeta.hasEnchants()) {
+                return;
             }
-            resultItem.setItemMeta(resultMeta);
+            resultItem.edit(resultMeta -> sourceMeta.getEnchants().forEach((enchant, level) -> {
+                if (resultMeta.hasEnchant(enchant)) {
+                    if (resultMeta.getEnchantLevel(enchant) >= level) {
+                        return;
+                    }
+                    resultMeta.removeEnchant(enchant);
+                }
+                resultMeta.addEnchant(enchant, level, true);
+            }));
         });
     }
 
     private ResultProcessor add(@Nullable ConfigurationSection data) {
         List<EnchantmentEntry> enchants = parseEnchantments(data);
-        return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            for (EnchantmentEntry entry : enchants) {
-                Integer level = entry.level().resolve(player, sourceItem, resultItem);
-                if (level == null) {
-                    //脚本求值失败: 只跳过这一条附魔, 其余照常写入
-                    continue;
+        return ProcessorUtils.processor(COMPONENT_NAME + "/add", (sourceItem, resultItem, player) -> {
+            resultItem.edit(resultMeta -> {
+                for (EnchantmentEntry entry : enchants) {
+                    Integer level = entry.level().resolve(player, sourceItem, resultItem);
+                    if (level == null) {
+                        //脚本求值失败: 只跳过这一条附魔, 其余照常写入
+                        continue;
+                    }
+                    resultMeta.addEnchant(entry.enchantment(), level, true);
                 }
-                resultMeta.addEnchant(entry.enchantment(), level, true);
-            }
-            resultItem.setItemMeta(resultMeta);
+            });
         });
     }
 
@@ -116,43 +100,62 @@ public enum EnchantmentsProcessorFactory implements ComponentProcessorFactory {
      */
     private ResultProcessor set(@Nullable ConfigurationSection data) {
         List<EnchantmentEntry> enchants = parseEnchantments(data);
-        return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            for (Enchantment enchantment : new ArrayList<>(resultMeta.getEnchants().keySet())) {
-                resultMeta.removeEnchant(enchantment);
-            }
-            for (EnchantmentEntry entry : enchants) {
-                Integer level = entry.level().resolve(player, sourceItem, resultItem);
-                if (level == null) {
-                    continue;
+        return ProcessorUtils.processor(COMPONENT_NAME + "/set", (sourceItem, resultItem, player) -> {
+            resultItem.edit(resultMeta -> {
+                for (Enchantment enchantment : new ArrayList<>(resultMeta.getEnchants().keySet())) {
+                    resultMeta.removeEnchant(enchantment);
                 }
-                resultMeta.addEnchant(entry.enchantment(), level, true);
-            }
-            resultItem.setItemMeta(resultMeta);
+                for (EnchantmentEntry entry : enchants) {
+                    Integer level = entry.level().resolve(player, sourceItem, resultItem);
+                    if (level == null) {
+                        continue;
+                    }
+                    resultMeta.addEnchant(entry.enchantment(), level, true);
+                }
+            });
         });
     }
 
     private ResultProcessor remove(@Nullable ConfigurationSection data) {
-        return ProcessorUtils.processor(COMPONENT_NAME, (sourceItem, resultItem, player) -> {
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            if (data == null || data.getKeys(false).isEmpty()) {
-                for (Enchantment ench : new ArrayList<>(resultMeta.getEnchants().keySet())) {
-                    resultMeta.removeEnchant(ench);
+        List<Enchantment> targets = parseRemoveTargets(data);
+        return ProcessorUtils.processor(COMPONENT_NAME + "/remove", (sourceItem, resultItem, player) -> {
+            resultItem.edit(resultMeta -> {
+                if (targets == null) {
+                    for (Enchantment enchantment : new ArrayList<>(resultMeta.getEnchants().keySet())) {
+                        resultMeta.removeEnchant(enchantment);
+                    }
+                    return;
                 }
-            } else {
-                List<String> removeList = data.getStringList("value");
-                if (removeList.isEmpty()) {
-                    removeList = List.copyOf(data.getKeys(false));
-                }
-                for (String enchName : removeList) {
-                    Enchantment ench = Registry.ENCHANTMENT.get(NamespacedKey.fromString(enchName));
-                    if (ench != null && resultMeta.hasEnchant(ench)) {
-                        resultMeta.removeEnchant(ench);
+                for (Enchantment enchantment : targets) {
+                    if (resultMeta.hasEnchant(enchantment)) {
+                        resultMeta.removeEnchant(enchantment);
                     }
                 }
-            }
-            resultItem.setItemMeta(resultMeta);
+            });
         });
+    }
+
+    /**
+     * @return null 表示没有写 data, 即清空全部
+     */
+    private @Nullable List<Enchantment> parseRemoveTargets(@Nullable ConfigurationSection data) {
+        if (data == null || data.getKeys(false).isEmpty()) {
+            return null;
+        }
+        List<String> names = data.getStringList("value");
+        if (names.isEmpty()) {
+            names = List.copyOf(data.getKeys(false));
+        }
+        List<Enchantment> targets = new ArrayList<>(names.size());
+        for (String name : names) {
+            Enchantment enchantment = Registry.ENCHANTMENT.get(NamespacedKey.fromString(name));
+            if (enchantment == null) {
+                CrypticLib.warn(COMPONENT_NAME + "/remove has unknown enchantment '" + name + "', skipped");
+                continue;
+            }
+            targets.add(enchantment);
+        }
+        return targets;
     }
 
     private record EnchantmentEntry(Enchantment enchantment, ValueProvider<Integer> level) {

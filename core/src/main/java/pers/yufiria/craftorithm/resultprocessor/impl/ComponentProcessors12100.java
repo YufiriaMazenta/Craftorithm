@@ -6,16 +6,12 @@ import crypticlib.lifecycle.LifecyclePhase;
 import crypticlib.lifecycle.LifecycleSchedule;
 import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskConfig;
-import org.bukkit.*;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.Nullable;
+import org.bukkit.inventory.meta.components.ToolComponent;
 import pers.yufiria.craftorithm.resultprocessor.ComponentProcessorFactory;
-import pers.yufiria.craftorithm.resultprocessor.ResultProcessor;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessorManager;
-
-import java.util.*;
-import java.util.function.Function;
+import pers.yufiria.craftorithm.resultprocessor.behavior.ComponentRegistrar;
+import pers.yufiria.craftorithm.resultprocessor.behavior.Behaviors;
+import pers.yufiria.craftorithm.resultprocessor.behavior.ScalarBehaviors;
 
 /**
  * 1.21 起可用的组件，低版本不注册。
@@ -25,28 +21,21 @@ import java.util.function.Function;
 @LifecycleTaskConfig(schedules = @LifecycleSchedule(phase = LifecyclePhase.LOAD))
 public enum ComponentProcessors12100 implements ComponentProcessorFactory, LifecycleTask {
 
-    TOOL("tool", Map.of(
-        "copy_from_source", data -> ProcessorUtils.processorRequireSource("tool", (sourceItem, resultItem, player) -> {
-            ItemMeta sourceMeta = sourceItem.getItemMeta();
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            if (sourceMeta.hasTool()) {
-                resultMeta.setTool(sourceMeta.getTool());
-            }
-            resultItem.setItemMeta(resultMeta);
-        }),
-        "remove", data -> ProcessorUtils.processor("tool", (sourceItem, resultItem, player) -> {
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            resultMeta.setTool(null);
-            resultItem.setItemMeta(resultMeta);
-        })
-    ));
+    TOOL("tool") {
+        @Override
+        public void declareBehaviors(ComponentRegistrar registrar) {
+            registrar.valueType(ToolComponent.class)
+                .getter(meta -> meta.hasTool() ? meta.getTool() : null)
+                .setter((meta, value) -> meta.setTool(value))
+                .behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource())
+                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove());
+        }
+    };
 
     private final String componentName;
-    private final Map<String, Function<ConfigurationSection, ResultProcessor>> types;
 
-    ComponentProcessors12100(String componentName, Map<String, Function<ConfigurationSection, ResultProcessor>> types) {
+    ComponentProcessors12100(String componentName) {
         this.componentName = componentName;
-        this.types = new HashMap<>(types);
     }
 
     @Override
@@ -62,15 +51,6 @@ public enum ComponentProcessors12100 implements ComponentProcessorFactory, Lifec
     @Override
     public String componentName() {
         return componentName;
-    }
-
-    @Override
-    public ResultProcessor createProcessor(String type, @Nullable ConfigurationSection data) {
-        Function<ConfigurationSection, ResultProcessor> handler = types.get(type);
-        if (handler == null) {
-            throw new UnsupportedOperationException(componentName + " does not support type: " + type);
-        }
-        return handler.apply(data == null ? ProcessorUtils.EMPTY_DATA : data);
     }
 
 }

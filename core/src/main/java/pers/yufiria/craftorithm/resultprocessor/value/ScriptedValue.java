@@ -8,10 +8,10 @@ import crypticlib.script.ScriptValue;
 import crypticlib.script.compile.CompiledScript;
 import crypticlib.script.object.ReflectPropertyResolver;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
+import pers.yufiria.craftorithm.resultprocessor.ItemWrapper;
 import pers.yufiria.craftorithm.script.RootScriptContext;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -35,7 +35,7 @@ public final class ScriptedValue<T> implements ValueProvider<T> {
     }
 
     @Override
-    public @Nullable T resolve(@Nullable Player player, @Nullable ItemStack sourceItem, @NotNull ItemStack resultItem) {
+    public @Nullable T resolve(@Nullable Player player, @Nullable ItemWrapper sourceItem, @NotNull ItemWrapper resultItem) {
         try {
             return apply(createContext(player, sourceItem, resultItem));
         } catch (Throwable throwable) {
@@ -54,7 +54,7 @@ public final class ScriptedValue<T> implements ValueProvider<T> {
         return converter.convert(script.execute(context));
     }
 
-    private static ScriptContext createContext(@Nullable Player player, @Nullable ItemStack sourceItem, @NotNull ItemStack resultItem) {
+    private static ScriptContext createContext(@Nullable Player player, @Nullable ItemWrapper sourceItem, @NotNull ItemWrapper resultItem) {
         Invoker invoker = player != null
             ? BukkitPlayer.byPlayer(player)
             : Craftorithm.instance().getConsoleInvoker();
@@ -63,9 +63,11 @@ public final class ScriptedValue<T> implements ValueProvider<T> {
             context.setVariable("player", ScriptValue.of(player, ReflectPropertyResolver.INSTANCE));
         }
         if (sourceItem != null) {
-            context.setVariable("source_item", ScriptValue.of(sourceItem, ReflectPropertyResolver.INSTANCE));
+            //脚本看到的是复制品, 避免它直接拿到缓存里的物品
+            context.setVariable("source_item", ScriptValue.of(sourceItem.snapshot(), ReflectPropertyResolver.INSTANCE));
         }
-        context.setVariable("result_item", ScriptValue.of(resultItem, ReflectPropertyResolver.INSTANCE));
+        //脚本看到的是复制品(带上还没写回的改动), 避免它拿到的物品与缓存不一致
+        context.setVariable("result_item", ScriptValue.of(resultItem.snapshot(), ReflectPropertyResolver.INSTANCE));
         return context;
     }
 

@@ -8,21 +8,18 @@ import crypticlib.lifecycle.LifecyclePhase;
 import crypticlib.lifecycle.LifecycleSchedule;
 import crypticlib.lifecycle.LifecycleTask;
 import crypticlib.lifecycle.LifecycleTaskConfig;
-import org.bukkit.*;
-import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemRarity;
 import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionType;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.resultprocessor.ComponentProcessorFactory;
-import pers.yufiria.craftorithm.resultprocessor.ResultProcessor;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessorManager;
-import pers.yufiria.craftorithm.resultprocessor.value.ValueProvider;
+import pers.yufiria.craftorithm.resultprocessor.behavior.ComponentRegistrar;
+import pers.yufiria.craftorithm.resultprocessor.behavior.Behaviors;
+import pers.yufiria.craftorithm.resultprocessor.behavior.ScalarBehaviors;
 import pers.yufiria.craftorithm.resultprocessor.value.ValueProviders;
-
-import java.util.*;
-import java.util.function.Function;
 
 /**
  * 1.20.5 起可用的组件，低版本不注册。
@@ -32,269 +29,157 @@ import java.util.function.Function;
 @LifecycleTaskConfig(schedules = @LifecycleSchedule(phase = LifecyclePhase.LOAD))
 public enum ComponentProcessors12005 implements ComponentProcessorFactory, LifecycleTask {
 
-    FOOD("food", Map.of(
-        "copy_from_source", data -> ProcessorUtils.processorRequireSource("food", (sourceItem, resultItem, player) -> {
-            ItemMeta sourceMeta = sourceItem.getItemMeta();
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            if (sourceMeta.hasFood()) {
-                resultMeta.setFood(sourceMeta.getFood());
-            }
-            resultItem.setItemMeta(resultMeta);
-        }),
-        "remove", data -> ProcessorUtils.processor("food", (sourceItem, resultItem, player) -> {
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            resultMeta.setFood(null);
-            resultItem.setItemMeta(resultMeta);
-        })
-    )),
+    FOOD("food") {
+        @Override
+        public void declareBehaviors(ComponentRegistrar registrar) {
+            registrar.valueType(org.bukkit.inventory.meta.components.FoodComponent.class)
+                .getter(meta -> meta.hasFood() ? meta.getFood() : null)
+                .setter((meta, value) -> meta.setFood(value))
+                .behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource())
+                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove());
+        }
+    },
 
-    HIDE_TOOLTIP("hide_tooltip", Map.of(
-        "copy_from_source", data -> ProcessorUtils.processorRequireSource("hide_tooltip", (sourceItem, resultItem, player) -> {
-            ItemMeta sourceMeta = sourceItem.getItemMeta();
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            resultMeta.setHideTooltip(sourceMeta.isHideTooltip());
-            resultItem.setItemMeta(resultMeta);
-        }),
-        "add", data -> {
-            ValueProvider<Boolean> value = ValueProviders.bool(data, "value", false, "hide_tooltip/value");
-            return ProcessorUtils.processor("hide_tooltip", (sourceItem, resultItem, player) -> {
-                Boolean hideTooltip = value.resolve(player, sourceItem, resultItem);
-                if (hideTooltip == null) {
-                    return;
-                }
-                ItemMeta resultMeta = resultItem.getItemMeta();
-                resultMeta.setHideTooltip(hideTooltip);
-                resultItem.setItemMeta(resultMeta);
-            });
-        },
-        "remove", data -> ProcessorUtils.processor("hide_tooltip", (sourceItem, resultItem, player) -> {
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            resultMeta.setHideTooltip(false);
-            resultItem.setItemMeta(resultMeta);
-        })
-    )),
+    HIDE_TOOLTIP("hide_tooltip") {
+        @Override
+        public void declareBehaviors(ComponentRegistrar registrar) {
+            registrar.valueType(Boolean.class)
+                .getter(meta -> meta.isHideTooltip())
+                .setter((meta, value) -> meta.setHideTooltip(value != null && value))
+                .valueReader(data -> ValueProviders.bool(data, "value", false, "hide_tooltip/value"))
+                .behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource())
+                .behavior(Behaviors.ADD, ScalarBehaviors.add())
+                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove());
+        }
+    },
 
-    ITEM_NAME("item_name", Map.of(
-        "copy_from_source", data -> ProcessorUtils.processorRequireSource("item_name", (sourceItem, resultItem, player) -> {
-            ItemMeta sourceMeta = sourceItem.getItemMeta();
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            if (sourceMeta.hasItemName()) {
-                resultMeta.setItemName(sourceMeta.getItemName());
-            }
-            resultItem.setItemMeta(resultMeta);
-        }),
-        "add", data -> {
-            if (data.get("value") == null) {
-                CrypticLib.warn("item_name: missing 'value'");
-                return ProcessorUtils.noop("item_name");
-            }
-            ValueProvider<String> value = ValueProviders.text(data, "value", "", "item_name/value");
-            return ProcessorUtils.processor("item_name", (sourceItem, resultItem, player) -> {
-                String text = value.resolve(player, sourceItem, resultItem);
-                if (text == null || text.isEmpty()) {
-                    return;
-                }
-                ItemMeta resultMeta = resultItem.getItemMeta();
-                String parsed = player != null ? BukkitTextProcessor.placeholder(player, text) : text;
-                resultMeta.setItemName(BukkitTextProcessor.color(parsed));
-                resultItem.setItemMeta(resultMeta);
-            });
-        },
-        "remove", data -> ProcessorUtils.processor("item_name", (sourceItem, resultItem, player) -> {
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            resultMeta.setItemName(null);
-            resultItem.setItemMeta(resultMeta);
-        })
-    )),
+    ITEM_NAME("item_name") {
+        @Override
+        public void declareBehaviors(ComponentRegistrar registrar) {
+            registrar.valueType(String.class)
+                .getter(meta -> meta.hasItemName() ? meta.getItemName() : null)
+                .setter((meta, value) -> meta.setItemName(value))
+                .valueReader(data -> ValueProviders.text(data, "value", "", "item_name/value"))
+                .behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource())
+                .behavior(Behaviors.ADD, ScalarBehaviors.addRequired(
+                    (text, player) -> text.isEmpty() ? null : parseText(text, player)
+                ))
+                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove());
+        }
+    },
 
-    MAX_STACK_SIZE("max_stack_size", Map.of(
-        "copy_from_source", data -> ProcessorUtils.processorRequireSource("max_stack_size", (sourceItem, resultItem, player) -> {
-            ItemMeta sourceMeta = sourceItem.getItemMeta();
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            if (sourceMeta.hasMaxStackSize()) {
-                resultMeta.setMaxStackSize(sourceMeta.getMaxStackSize());
-            }
-            resultItem.setItemMeta(resultMeta);
-        }),
-        "add", data -> {
-            ValueProvider<Integer> value = ValueProviders.integer(data, "value", 1, "max_stack_size/value");
-            return ProcessorUtils.processor("max_stack_size", (sourceItem, resultItem, player) -> {
-                Integer resolved = value.resolve(player, sourceItem, resultItem);
-                if (resolved == null) {
-                    return;
-                }
-                //缺省/越界的数值会让 Bukkit 在合成期抛 IllegalArgumentException, 这里统一在运行期修正
-                int maxStackSize = ProcessorUtils.clampInt(resolved, 1, 99, "max_stack_size/value");
-                ItemMeta resultMeta = resultItem.getItemMeta();
-                resultMeta.setMaxStackSize(maxStackSize);
-                resultItem.setItemMeta(resultMeta);
-            });
-        },
-        "remove", data -> ProcessorUtils.processor("max_stack_size", (sourceItem, resultItem, player) -> {
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            resultMeta.setMaxStackSize(null);
-            resultItem.setItemMeta(resultMeta);
-        })
-    )),
+    MAX_STACK_SIZE("max_stack_size") {
+        @Override
+        public void declareBehaviors(ComponentRegistrar registrar) {
+            registrar.valueType(Integer.class)
+                .getter(meta -> meta.hasMaxStackSize() ? meta.getMaxStackSize() : null)
+                .setter((meta, value) -> meta.setMaxStackSize(value))
+                .valueReader(data -> ValueProviders.integer(data, "value", 1, "max_stack_size/value"))
+                .behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource())
+                //越界的数值会让 Bukkit 在合成期抛异常, 统一在运行期修正
+                .behavior(Behaviors.ADD, ScalarBehaviors.add(
+                    (value, player) -> ProcessorUtils.clampInt(value, 1, 99, "max_stack_size/value")
+                ))
+                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove());
+        }
+    },
 
-    RARITY("rarity", Map.of(
-        "copy_from_source", data -> ProcessorUtils.processorRequireSource("rarity", (sourceItem, resultItem, player) -> {
-            ItemMeta sourceMeta = sourceItem.getItemMeta();
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            if (sourceMeta.hasRarity()) {
-                resultMeta.setRarity(sourceMeta.getRarity());
-            }
-            resultItem.setItemMeta(resultMeta);
-        }),
-        "add", data -> {
-            ItemRarity rarity = ProcessorUtils.parseEnum(ItemRarity.class, data.getString("value"));
-            if (rarity == null) {
-                CrypticLib.warn("rarity: invalid 'value', expected COMMON/UNCOMMON/RARE/EPIC");
-                return ProcessorUtils.noop("rarity");
-            }
-            return ProcessorUtils.processor("rarity", (sourceItem, resultItem, player) -> {
-                ItemMeta resultMeta = resultItem.getItemMeta();
-                resultMeta.setRarity(rarity);
-                resultItem.setItemMeta(resultMeta);
-            });
-        },
-        "remove", data -> ProcessorUtils.processor("rarity", (sourceItem, resultItem, player) -> {
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            resultMeta.setRarity(null);
-            resultItem.setItemMeta(resultMeta);
-        })
-    )),
+    RARITY("rarity") {
+        @Override
+        public void declareBehaviors(ComponentRegistrar registrar) {
+            registrar.valueType(ItemRarity.class)
+                .getter(meta -> meta.hasRarity() ? meta.getRarity() : null)
+                .setter((meta, value) -> meta.setRarity(value))
+                .behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource())
+                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove())
+                .behavior(Behaviors.ADD, (context, field, data) -> {
+                    ItemRarity rarity = ProcessorUtils.parseEnum(
+                        ItemRarity.class, data == null ? null : data.getString("value")
+                    );
+                    if (rarity == null) {
+                        CrypticLib.warn("rarity: invalid 'value', expected COMMON/UNCOMMON/RARE/EPIC");
+                        return null;
+                    }
+                    return field.processor(context.qualifiedName(), (sourceItem, resultItem, player) -> rarity);
+                });
+        }
+    },
 
     /**
      * 防火。沿用 Bukkit 的 setFireResistant（已废弃，但 1.20.5 起到 26.x 都能用），
      * 更通用的抗伤害写法见 damage_resistant。
      */
-    FIRE_RESISTANCE("fire_resistance", Map.of(
-        "copy_from_source", data -> ProcessorUtils.processorRequireSource("fire_resistance", (sourceItem, resultItem, player) -> {
-            ItemMeta sourceMeta = sourceItem.getItemMeta();
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            resultMeta.setFireResistant(sourceMeta.isFireResistant());
-            resultItem.setItemMeta(resultMeta);
-        }),
-        "add", data -> {
-            ValueProvider<Boolean> value = ValueProviders.bool(data, "value", true, "fire_resistance/value");
-            return ProcessorUtils.processor("fire_resistance", (sourceItem, resultItem, player) -> {
-                Boolean fireResistant = value.resolve(player, sourceItem, resultItem);
-                if (fireResistant == null) {
-                    return;
-                }
-                ItemMeta resultMeta = resultItem.getItemMeta();
-                resultMeta.setFireResistant(fireResistant);
-                resultItem.setItemMeta(resultMeta);
-            });
-        },
-        "remove", data -> ProcessorUtils.processor("fire_resistance", (sourceItem, resultItem, player) -> {
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            resultMeta.setFireResistant(false);
-            resultItem.setItemMeta(resultMeta);
-        })
-    )),
+    FIRE_RESISTANCE("fire_resistance") {
+        @Override
+        public void declareBehaviors(ComponentRegistrar registrar) {
+            registrar.valueType(Boolean.class)
+                .getter(meta -> meta.isFireResistant())
+                .setter((meta, value) -> meta.setFireResistant(value != null && value))
+                .valueReader(data -> ValueProviders.bool(data, "value", true, "fire_resistance/value"))
+                .behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource())
+                .behavior(Behaviors.ADD, ScalarBehaviors.add())
+                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove());
+        }
+    },
 
     /**
      * 最大耐久上限，独立于 damage 组件。
      */
-    MAX_DAMAGE("max_damage", Map.of(
-        "copy_from_source", data -> ProcessorUtils.processorRequireSource("max_damage", (sourceItem, resultItem, player) -> {
-            ItemMeta sourceMeta = sourceItem.getItemMeta();
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            if (!(sourceMeta instanceof Damageable sourceDamageable)
-                || !(resultMeta instanceof Damageable resultDamageable)) {
-                return;
-            }
-            if (!sourceDamageable.hasMaxDamage()) {
-                return;
-            }
-            resultDamageable.setMaxDamage(sourceDamageable.getMaxDamage());
-            resultItem.setItemMeta(resultMeta);
-        }),
-        "add", data -> {
-            ValueProvider<Integer> value = ValueProviders.integer(data, "value", 1, "max_damage/value");
-            return ProcessorUtils.processor("max_damage", (sourceItem, resultItem, player) -> {
-                Integer resolved = value.resolve(player, sourceItem, resultItem);
-                if (resolved == null) {
-                    return;
-                }
-                int maxDamage = Math.max(1, resolved);
-                ItemMeta resultMeta = resultItem.getItemMeta();
-                if (!(resultMeta instanceof Damageable damageable)) {
-                    CrypticLib.warn("max_damage: " + resultItem.getType() + " has no durability, skipped");
-                    return;
-                }
-                damageable.setMaxDamage(maxDamage);
-                resultItem.setItemMeta(resultMeta);
-            });
-        },
-        "remove", data -> ProcessorUtils.processor("max_damage", (sourceItem, resultItem, player) -> {
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            if (resultMeta instanceof Damageable damageable) {
-                damageable.setMaxDamage(null);
-                resultItem.setItemMeta(resultMeta);
-            }
-        })
-    )),
+    MAX_DAMAGE("max_damage") {
+        @Override
+        public void declareBehaviors(ComponentRegistrar registrar) {
+            registrar.valueType(Integer.class)
+                .getter(meta -> meta instanceof Damageable damageable && damageable.hasMaxDamage() ? damageable.getMaxDamage() : null)
+                .setter((meta, value) -> {
+                    //清除时没有可写的值: setMaxDamage 不接受 null
+                    if (meta instanceof Damageable damageable && value != null) {
+                        damageable.setMaxDamage(value);
+                    }
+                })
+                .valueReader(data -> ValueProviders.integer(data, "value", 1, "max_damage/value"))
+                .accepts(meta -> meta instanceof Damageable)
+                .behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource())
+                .behavior(Behaviors.ADD, ScalarBehaviors.add((value, player) -> Math.max(1, value)))
+                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove());
+        }
+    },
 
-    ENCHANTMENT_GLINT_OVERRIDE("enchantment_glint_override", Map.of(
-        "copy_from_source", data -> ProcessorUtils.processorRequireSource("enchantment_glint_override", (sourceItem, resultItem, player) -> {
-            ItemMeta sourceMeta = sourceItem.getItemMeta();
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            if (sourceMeta.hasEnchantmentGlintOverride()) {
-                resultMeta.setEnchantmentGlintOverride(sourceMeta.getEnchantmentGlintOverride());
-            }
-            resultItem.setItemMeta(resultMeta);
-        }),
-        "add", data -> {
-            ValueProvider<Boolean> value = ValueProviders.bool(data, "value", false, "enchantment_glint_override/value");
-            return ProcessorUtils.processor("enchantment_glint_override", (sourceItem, resultItem, player) -> {
-                Boolean glint = value.resolve(player, sourceItem, resultItem);
-                if (glint == null) {
-                    return;
-                }
-                ItemMeta resultMeta = resultItem.getItemMeta();
-                resultMeta.setEnchantmentGlintOverride(glint);
-                resultItem.setItemMeta(resultMeta);
-            });
-        },
-        "remove", data -> ProcessorUtils.processor("enchantment_glint_override", (sourceItem, resultItem, player) -> {
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            resultMeta.setEnchantmentGlintOverride(null);
-            resultItem.setItemMeta(resultMeta);
-        })
-    )),
+    ENCHANTMENT_GLINT_OVERRIDE("enchantment_glint_override") {
+        @Override
+        public void declareBehaviors(ComponentRegistrar registrar) {
+            registrar.valueType(Boolean.class)
+                .getter(meta -> meta.hasEnchantmentGlintOverride() ? meta.getEnchantmentGlintOverride() : null)
+                .setter((meta, value) -> meta.setEnchantmentGlintOverride(value))
+                .valueReader(data -> ValueProviders.bool(data, "value", false, "enchantment_glint_override/value"))
+                .behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource())
+                .behavior(Behaviors.ADD, ScalarBehaviors.add())
+                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove());
+        }
+    },
 
     /**
      * 药水的基础类型
      */
-    POTION("potion", Map.of(
-        "copy_from_source", data -> ProcessorUtils.processorRequireSource("potion", (sourceItem, resultItem, player) -> {
-            ItemMeta sourceMeta = sourceItem.getItemMeta();
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            if (sourceMeta instanceof PotionMeta sourcePotion
-                && resultMeta instanceof PotionMeta resultPotion
-                && sourcePotion.hasBasePotionType()) {
-                resultPotion.setBasePotionType(sourcePotion.getBasePotionType());
-            }
-            resultItem.setItemMeta(resultMeta);
-        }),
-        "remove", data -> ProcessorUtils.processor("potion", (sourceItem, resultItem, player) -> {
-            ItemMeta resultMeta = resultItem.getItemMeta();
-            if (resultMeta instanceof PotionMeta potionMeta) {
-                potionMeta.setBasePotionType(null);
-                resultItem.setItemMeta(resultMeta);
-            }
-        })
-    ));
+    POTION("potion") {
+        @Override
+        public void declareBehaviors(ComponentRegistrar registrar) {
+            registrar.valueType(PotionType.class)
+                .getter(meta -> meta instanceof PotionMeta potionMeta && potionMeta.hasBasePotionType()
+                    ? potionMeta.getBasePotionType() : null)
+                .setter((meta, value) -> {
+                    if (meta instanceof PotionMeta potionMeta) {
+                        potionMeta.setBasePotionType(value);
+                    }
+                })
+                .behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource())
+                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove());
+        }
+    };
 
     private final String componentName;
-    private final Map<String, Function<ConfigurationSection, ResultProcessor>> types;
 
-    ComponentProcessors12005(String componentName, Map<String, Function<ConfigurationSection, ResultProcessor>> types) {
+    ComponentProcessors12005(String componentName) {
         this.componentName = componentName;
-        this.types = new HashMap<>(types);
     }
 
     @Override
@@ -312,13 +197,9 @@ public enum ComponentProcessors12005 implements ComponentProcessorFactory, Lifec
         return componentName;
     }
 
-    @Override
-    public ResultProcessor createProcessor(String type, @Nullable ConfigurationSection data) {
-        Function<ConfigurationSection, ResultProcessor> handler = types.get(type);
-        if (handler == null) {
-            throw new UnsupportedOperationException(componentName + " does not support type: " + type);
-        }
-        return handler.apply(data == null ? ProcessorUtils.EMPTY_DATA : data);
+    private static String parseText(String text, @Nullable Player player) {
+        String parsed = player != null ? BukkitTextProcessor.placeholder(player, text) : text;
+        return BukkitTextProcessor.color(parsed);
     }
 
 }

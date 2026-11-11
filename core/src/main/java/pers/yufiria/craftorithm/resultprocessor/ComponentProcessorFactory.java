@@ -1,19 +1,23 @@
 package pers.yufiria.craftorithm.resultprocessor;
 
-import org.bukkit.configuration.ConfigurationSection;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
+import pers.yufiria.craftorithm.resultprocessor.behavior.ComponentRegistrar;
 
 public interface ComponentProcessorFactory {
 
     String componentName();
 
     /**
-     * 根据类型和数据创建处理器
-     *
-     * @param type 处理器类型
-     * @param data 配置中的 data 节点，可以为null
-     * @return 处理器实例
+     * 声明该组件支持的行为。
+     * <pre>{@code
+     * registrar.valueType(String.class)
+     *          .getter(meta -> ...)
+     *          .setter((meta, value) -> ...)
+     *          .behavior(Behaviors.ADD, ScalarBehaviors.add());
+     * }</pre>
+     * 标准行为由框架统一实现, 组件只需声明字段和启用的行为;
+     * 第三方也可以用同样的 {@code behavior(key, 实现)} 往这个组件追加行为, 不需要修改组件实现。
      */
-    ResultProcessor createProcessor(String type, @Nullable ConfigurationSection data);
+    void declareBehaviors(@NotNull ComponentRegistrar registrar);
 
 }

@@ -1,9 +1,9 @@
 package pers.yufiria.craftorithm.resultprocessor.value;
 
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.yufiria.craftorithm.resultprocessor.ItemWrapper;
 
 /**
  * 结果处理器字段的取值来源: 固定值, 或者一段在合成期执行的脚本
@@ -15,6 +15,6 @@ import org.jetbrains.annotations.Nullable;
 public interface ValueProvider<T> {
 
     @Nullable
-    T resolve(@Nullable Player player, @Nullable ItemStack sourceItem, @NotNull ItemStack resultItem);
+    T resolve(@Nullable Player player, @Nullable ItemWrapper sourceItem, @NotNull ItemWrapper resultItem);
 
 }

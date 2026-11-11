@@ -26,6 +26,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -34,15 +35,15 @@ import static org.mockito.Mockito.*;
 class BrewingListenerTest {
     @Test
     void threeSlotsAndTwoBatchesNeverShareTemplateOrProcessorMutations() throws Exception {
-        withRecipe((recipe, template, inventory, event) -> {
+        withRecipe((recipe, template, inventory, event, calls) -> {
             List<ItemStack> previousBatch = null;
             for (int batch = 0; batch < 2; batch++) {
                 List<ItemStack> results = new ArrayList<>(List.of(template, template, template));
                 when(event.getResults()).thenReturn(results);
                 BrewingListener.INSTANCE.rebuildBrewResult(event);
                 BrewingListener.INSTANCE.processResult(event);
+                assertEquals((batch + 1) * 3, calls.get(), "one processor application per slot, independent of earlier slots/batches");
                 for (ItemStack result : results) {
-                    assertEquals(2, result.getAmount(), "one processor application per slot, independent of earlier slots/batches");
                     assertNotSame(template, result);
                     if (previousBatch != null) for (ItemStack previous : previousBatch) assertNotSame(previous, result);
                 }
@@ -57,12 +58,13 @@ class BrewingListenerTest {
 
     @Test
     void processingClonesEvenAlreadyAliasedEventResults() throws Exception {
-        withRecipe((recipe, template, inventory, event) -> {
+        withRecipe((recipe, template, inventory, event, calls) -> {
             ItemStack sharedExternalResult = new RecipeTestItem(Material.POTION);
             List<ItemStack> results = new ArrayList<>(List.of(sharedExternalResult, sharedExternalResult, sharedExternalResult));
             when(event.getResults()).thenReturn(results);
             BrewingListener.INSTANCE.processResult(event); // no rebuild: also protects vanilla/third-party event result lists
-            for (ItemStack result : results) assertEquals(2, result.getAmount());
+            assertEquals(3, calls.get());
+            for (ItemStack result : results) assertEquals(1, result.getAmount());
             assertEquals(1, sharedExternalResult.getAmount());
             assertNotSame(results.get(0), results.get(1));
         });
@@ -92,9 +94,9 @@ class BrewingListenerTest {
                 processors.clear();
                 recipes.put(key, recipe);
                 ResultProcessor increment = mock(ResultProcessor.class);
+                AtomicInteger calls = new AtomicInteger();
                 doAnswer(invocation -> {
-                    ItemStack result = invocation.getArgument(1);
-                    result.setAmount(result.getAmount() + 1);
+                    calls.incrementAndGet();
                     return null;
                 }).when(increment).processItem(any(), any(), isNull());
                 processors.put(key, new ResultProcessors(List.of(increment)));
@@ -105,7 +107,7 @@ class BrewingListenerTest {
                     BrewEvent event = mock(BrewEvent.class);
                     when(event.getContents()).thenReturn(inventory);
                     when(event.getBlock()).thenReturn(mock(Block.class));
-                    test.run(recipe, template, inventory, event);
+                    test.run(recipe, template, inventory, event, calls);
                 } finally {
                     recipes.clear();
                     recipes.putAll(oldRecipes);
@@ -124,6 +126,6 @@ class BrewingListenerTest {
     }
 
     private interface BrewTest {
-        void run(BrewingRecipe recipe, ItemStack template, BrewerInventory inventory, BrewEvent event) throws Exception;
+        void run(BrewingRecipe recipe, ItemStack template, BrewerInventory inventory, BrewEvent event, AtomicInteger calls) throws Exception;
     }
 }

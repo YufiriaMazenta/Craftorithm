@@ -20,4 +20,11 @@ public enum CraftorithmApi {
         return TriggerApi.INSTANCE;
     }
 
+    /**
+     * 结果处理器的组件/行为扩展入口
+     */
+    public ResultProcessorApi resultProcessor() {
+        return ResultProcessorApi.INSTANCE;
+    }
+
 }
