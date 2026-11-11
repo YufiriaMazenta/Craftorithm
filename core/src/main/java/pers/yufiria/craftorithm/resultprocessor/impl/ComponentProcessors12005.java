@@ -131,8 +131,8 @@ public enum ComponentProcessors12005 implements ComponentProcessorFactory, Lifec
             registrar.valueType(Integer.class)
                 .getter(meta -> meta instanceof Damageable damageable && damageable.hasMaxDamage() ? damageable.getMaxDamage() : null)
                 .setter((meta, value) -> {
-                    //清除时没有可写的值: setMaxDamage 不接受 null
-                    if (meta instanceof Damageable damageable && value != null) {
+                    //value 为 null 表示清除自定义上限, setMaxDamage 接受 null
+                    if (meta instanceof Damageable damageable) {
                         damageable.setMaxDamage(value);
                     }
                 })

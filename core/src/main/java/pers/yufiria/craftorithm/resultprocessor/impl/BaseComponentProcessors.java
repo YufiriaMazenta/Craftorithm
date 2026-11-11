@@ -45,9 +45,11 @@ public enum BaseComponentProcessors implements ComponentProcessorFactory, Lifecy
         public void declareBehaviors(ComponentRegistrar registrar) {
             registrar.behavior(
                 Behaviors.COPY_FROM_SOURCE,
-                (context, data) -> context.requireSource(
-                    (sourceItem, resultItem, player) -> resultItem.setMeta(sourceItem.meta())
-                )
+                (context, data) -> context.requireSource((sourceItem, resultItem, player) -> {
+                    ItemMeta sourceMeta = sourceItem.meta();
+                    //必须复制: 直接共用同一份 meta 会让后续组件改到源物品的缓存, 影响排在后面的 copy
+                    resultItem.setMeta(sourceMeta == null ? null : sourceMeta.clone());
+                })
             );
         }
     },

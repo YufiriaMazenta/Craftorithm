@@ -18,6 +18,7 @@ final class FieldProcessor<T> implements ResultProcessor {
     private final FieldBinding<T> field;
     private final String processorName;
     private final @Nullable FieldBinding.Action<T> action;
+    private boolean unsupportedWarned;
 
     FieldProcessor(FieldBinding<T> field, String processorName, @Nullable FieldBinding.Action<T> action) {
         this.field = field;
@@ -40,7 +41,11 @@ final class FieldProcessor<T> implements ResultProcessor {
             return;
         }
         if (!field.accepts(resultItem)) {
-            CrypticLib.warn(processorName + ": " + resultItem.type() + " does not support this component, skipped");
+            //一条配置在同一配方里反复触发: 只提示一次, 否则每次合成都刷日志
+            if (!unsupportedWarned) {
+                unsupportedWarned = true;
+                CrypticLib.warn(processorName + ": " + resultItem.type() + " does not support this component, skipped");
+            }
             return;
         }
         T value = action.resolve(sourceItem, resultItem, player);
