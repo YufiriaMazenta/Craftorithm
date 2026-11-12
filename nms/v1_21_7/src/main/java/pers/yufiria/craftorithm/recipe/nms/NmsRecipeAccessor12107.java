@@ -12,6 +12,7 @@ import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.item.crafting.IRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeStonecutting;
+import net.minecraft.world.item.crafting.TransmuteResult;
 import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.v1_21_R5.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -72,6 +73,8 @@ public enum NmsRecipeAccessor12107 implements NmsRecipeAccessor, LifecycleTask {
             }
             case TransmuteRecipe transmuteRecipe -> {
                 CraftTransmuteRecipe craftTransmuteRecipe = CraftTransmuteRecipe.fromBukkitRecipe(transmuteRecipe);
+                //paper的CraftTransmuteRecipe没有toNMS(ItemStack), 直接由nms物品构建结果
+                net.minecraft.world.item.ItemStack nmsResult = CraftItemStack.asNMSCopy(craftTransmuteRecipe.getResult());
                 recipeHolder = new RecipeHolder<>(
                     CraftRecipe.toMinecraft(craftTransmuteRecipe.getKey()),
                     new net.minecraft.world.item.crafting.TransmuteRecipe(
@@ -79,7 +82,7 @@ public enum NmsRecipeAccessor12107 implements NmsRecipeAccessor, LifecycleTask {
                         CraftRecipe.getCategory(craftTransmuteRecipe.getCategory()),
                         craftTransmuteRecipe.toNMS(craftTransmuteRecipe.getInput(), true),
                         craftTransmuteRecipe.toNMS(craftTransmuteRecipe.getMaterial(), true),
-                        craftTransmuteRecipe.toNMS(craftTransmuteRecipe.getResult())
+                        new TransmuteResult(nmsResult.i(), nmsResult.M(), nmsResult.d())
                     )
                 );
             }
