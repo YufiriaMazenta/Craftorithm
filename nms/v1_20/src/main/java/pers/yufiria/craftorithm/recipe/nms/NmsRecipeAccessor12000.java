@@ -97,6 +97,6 @@ public enum NmsRecipeAccessor12000 implements NmsRecipeAccessor, LifecycleTask {
 
     @Override
     public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase lifeCycle) {
-        COMPAT.register(MinecraftVersion.V1_20.name(), () -> this);
+        COMPAT.register(MinecraftVersion.V1_20_1.name(), () -> this);
     }
 }

@@ -7,7 +7,7 @@
   <a href="https://modrinth.com/plugin/craftorithm"><img src="https://img.shields.io/badge/Modrinth-Craftorithm-green?style=flat-square&logo=modrinth"></a>
   <a href="https://github.com/YufiriaMazenta/Craftorithm/releases"><img src="https://img.shields.io/github/v/release/YufiriaMazenta/Craftorithm?style=flat-square&logo=github"></a>
   <img src="https://img.shields.io/badge/Java-21+-blue?style=flat-square&logo=openjdk">
-  <img src="https://img.shields.io/badge/MC-1.20+-green?style=flat-square">
+  <img src="https://img.shields.io/badge/MC-1.20.1+-green?style=flat-square">
   <img src="https://img.shields.io/badge/Folia-Supported-9b59b6?style=flat-square">
   <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square">
 </p>
@@ -42,7 +42,7 @@
 ### 前置条件
 
 - **Java**: 21 或更高版本
-- **服务端**: Paper / Spigot 1.20+（支持 Folia）
+- **服务端**: Paper / Spigot 1.20.1+（支持 Folia）
 
 ### 安装
 
