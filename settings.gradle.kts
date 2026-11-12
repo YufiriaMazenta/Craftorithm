@@ -8,7 +8,7 @@ include("core")
 include("hook")
 include(
     "nms:common",
-    "nms:v1_20",
+    "nms:v1_20_1",
     "nms:v1_20_2",
     "nms:v1_20_3",
     "nms:v1_20_5",
@@ -16,9 +16,9 @@ include(
     "nms:v1_21_3",
     "nms:v1_21_4",
     "nms:v1_21_5",
-    "nms:v1_21_7",
-    "nms:v1_21_10_spigot",
-    "nms:v1_21_10_paper",
+    "nms:v1_21_6",
+    "nms:v1_21_9_spigot",
+    "nms:v1_21_9_paper",
     "nms:v1_21_11_spigot",
     "nms:v26_1_spigot",
     "nms:v26_1_paper",
