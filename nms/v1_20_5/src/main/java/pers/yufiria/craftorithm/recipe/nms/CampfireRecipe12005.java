@@ -47,7 +47,7 @@ public class CampfireRecipe12005 extends RecipeCampfire implements NmsSingleItem
     @Override
     public Recipe toBukkitRecipe(NamespacedKey recipeKey) {
         return cachedBukkitRecipe.get(() -> {
-            CraftItemStack result = CraftItemStack.asCraftMirror(this.g());
+            CraftItemStack result = CraftItemStack.asCraftMirror(this.e);
             CraftCampfireRecipe recipe = new CraftCampfireRecipe(recipeKey, result, ingredient, this.b(), this.d());
             recipe.setGroup(this.c());
             recipe.setCategory(CraftRecipe.getCategory(this.f()));
