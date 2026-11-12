@@ -11,15 +11,18 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
-import pers.yufiria.craftorithm.resultprocessor.ItemWrapper;
 import pers.yufiria.craftorithm.resultprocessor.ComponentProcessorFactory;
-import pers.yufiria.craftorithm.resultprocessor.behavior.ComponentRegistrar;
-import pers.yufiria.craftorithm.resultprocessor.behavior.Behaviors;
+import pers.yufiria.craftorithm.resultprocessor.ItemWrapper;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessor;
+import pers.yufiria.craftorithm.resultprocessor.behavior.BehaviorRegistrar;
+import pers.yufiria.craftorithm.resultprocessor.behavior.Behaviors;
 import pers.yufiria.craftorithm.resultprocessor.value.ValueProvider;
 import pers.yufiria.craftorithm.resultprocessor.value.ValueProviders;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public enum AttributesProcessorFactory implements ComponentProcessorFactory {
 
@@ -33,7 +36,7 @@ public enum AttributesProcessorFactory implements ComponentProcessorFactory {
     }
 
     @Override
-    public void declareBehaviors(ComponentRegistrar registrar) {
+    public void declareBehaviors(BehaviorRegistrar registrar) {
         registrar.behavior(Behaviors.COPY_FROM_SOURCE, (context, data) -> copyFromSource())
             .behavior(Behaviors.ADD, (context, data) -> add(data))
             .behavior(Behaviors.SET, (context, data) -> set(data))
@@ -191,7 +194,7 @@ public enum AttributesProcessorFactory implements ComponentProcessorFactory {
      * 1.20.5 前后 AttributeModifier 的构造方式不同(EquipmentSlot / EquipmentSlotGroup),
      * 所以拆成两个实现, 由工厂按服务端版本创建, 避免低版本触碰到不存在的 EquipmentSlotGroup
      */
-    static interface AttributeEntry {
+    interface AttributeEntry {
 
         ValueProvider<Double> amount();
 

@@ -12,11 +12,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.components.UseCooldownComponent;
 import pers.yufiria.craftorithm.resultprocessor.ComponentProcessorFactory;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessorManager;
-import pers.yufiria.craftorithm.resultprocessor.behavior.ComponentRegistrar;
+import pers.yufiria.craftorithm.resultprocessor.behavior.BehaviorRegistrar;
 import pers.yufiria.craftorithm.resultprocessor.behavior.Behaviors;
 import pers.yufiria.craftorithm.resultprocessor.behavior.ScalarBehaviors;
 import pers.yufiria.craftorithm.resultprocessor.value.ValueProvider;
 import pers.yufiria.craftorithm.resultprocessor.value.ValueProviders;
+
+import java.util.function.BiConsumer;
 
 /**
  * 1.21.2 起可用的组件，低版本不注册。
@@ -28,55 +30,52 @@ public enum ComponentProcessors12102 implements ComponentProcessorFactory, Lifec
 
     GLIDER("glider") {
         @Override
-        public void declareBehaviors(ComponentRegistrar registrar) {
-            registrar.valueType(Boolean.class)
-                .getter(meta -> meta.isGlider())
-                .setter((meta, value) -> meta.setGlider(value != null && value))
-                .valueReader(data -> ValueProviders.bool(data, "value", false, "glider/value"))
-                .behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource())
-                .behavior(Behaviors.ADD, ScalarBehaviors.add())
-                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove());
+        public void declareBehaviors(BehaviorRegistrar registrar) {
+            BiConsumer<ItemMeta, Boolean> setter = (meta, value) -> meta.setGlider(Boolean.TRUE.equals(value));
+            registrar.behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource(ItemMeta::isGlider, setter))
+                .behavior(Behaviors.ADD, ScalarBehaviors.add(
+                    setter, data -> ValueProviders.bool(data, "value", false, "glider/value")))
+                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove(setter));
         }
     },
 
     ENCHANTABLE("enchantable") {
         @Override
-        public void declareBehaviors(ComponentRegistrar registrar) {
-            registrar.valueType(Integer.class)
-                .getter(meta -> meta.hasEnchantable() ? meta.getEnchantable() : null)
-                .setter((meta, value) -> meta.setEnchantable(value))
-                .valueReader(data -> ValueProviders.integer(data, "value", 1, "enchantable/value"))
-                .behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource())
+        public void declareBehaviors(BehaviorRegistrar registrar) {
+            BiConsumer<ItemMeta, Integer> setter = ItemMeta::setEnchantable;
+            registrar.behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource(
+                    meta -> meta.hasEnchantable() ? meta.getEnchantable() : null, setter))
                 //越界的数值会让 Bukkit 在合成期抛异常, 统一在运行期修正
                 .behavior(Behaviors.ADD, ScalarBehaviors.add(
-                    (value, player) -> ProcessorUtils.clampInt(value, 1, Integer.MAX_VALUE, "enchantable/value")
-                ))
-                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove());
+                    setter,
+                    data -> ValueProviders.integer(data, "value", 1, "enchantable/value"),
+                    (value, player) -> ProcessorUtils.clampInt(value, 1, Integer.MAX_VALUE, "enchantable/value")))
+                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove(setter));
         }
     },
 
     TOOLTIP_STYLE("tooltip_style") {
         @Override
-        public void declareBehaviors(ComponentRegistrar registrar) {
-            registrar.valueType(NamespacedKey.class)
-                .getter(meta -> meta.hasTooltipStyle() ? meta.getTooltipStyle() : null)
-                .setter((meta, value) -> meta.setTooltipStyle(value))
-                .behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource())
-                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove())
-                .behavior(Behaviors.ADD, (context, field, data) -> {
+        public void declareBehaviors(BehaviorRegistrar registrar) {
+            BiConsumer<ItemMeta, NamespacedKey> setter = ItemMeta::setTooltipStyle;
+            registrar.behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource(
+                    meta -> meta.hasTooltipStyle() ? meta.getTooltipStyle() : null, setter))
+                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove(setter))
+                .behavior(Behaviors.ADD, (context, data) -> {
                     NamespacedKey style = ProcessorUtils.parseKey(data == null ? null : data.getString("value"));
                     if (style == null) {
                         CrypticLib.warn("tooltip_style: invalid 'value', expected e.g. mypack:custom_tooltip");
                         return null;
                     }
-                    return field.processor(context.qualifiedName(), (sourceItem, resultItem, player) -> style);
+                    return context.processor((sourceItem, resultItem, player) ->
+                        resultItem.edit(meta -> setter.accept(meta, style)));
                 });
         }
     },
 
     USE_COOLDOWN("use_cooldown") {
         @Override
-        public void declareBehaviors(ComponentRegistrar registrar) {
+        public void declareBehaviors(BehaviorRegistrar registrar) {
             registrar
                 .behavior(Behaviors.COPY_FROM_SOURCE, (context, data) -> context.requireSource((sourceItem, resultItem, player) -> {
                     ItemMeta sourceMeta = sourceItem.meta();
@@ -116,7 +115,7 @@ public enum ComponentProcessors12102 implements ComponentProcessorFactory, Lifec
 
     DAMAGE_RESISTANT("damage_resistant") {
         @Override
-        public void declareBehaviors(ComponentRegistrar registrar) {
+        public void declareBehaviors(BehaviorRegistrar registrar) {
             registrar
                 .behavior(Behaviors.COPY_FROM_SOURCE, (context, data) -> context.requireSource((sourceItem, resultItem, player) -> {
                     ItemMeta sourceMeta = sourceItem.meta();

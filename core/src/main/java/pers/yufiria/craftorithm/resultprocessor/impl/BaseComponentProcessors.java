@@ -11,26 +11,23 @@ import crypticlib.lifecycle.LifecycleTaskConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.meta.ArmorMeta;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.inventory.meta.*;
 import org.bukkit.inventory.meta.trim.ArmorTrim;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
 import org.bukkit.inventory.meta.trim.TrimPattern;
 import org.bukkit.profile.PlayerProfile;
 import org.jetbrains.annotations.Nullable;
-import pers.yufiria.craftorithm.resultprocessor.ItemWrapper;
 import pers.yufiria.craftorithm.resultprocessor.ComponentProcessorFactory;
+import pers.yufiria.craftorithm.resultprocessor.ItemWrapper;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessorManager;
-import pers.yufiria.craftorithm.resultprocessor.behavior.ComponentRegistrar;
+import pers.yufiria.craftorithm.resultprocessor.behavior.BehaviorRegistrar;
 import pers.yufiria.craftorithm.resultprocessor.behavior.Behaviors;
 import pers.yufiria.craftorithm.resultprocessor.behavior.ScalarBehaviors;
 import pers.yufiria.craftorithm.resultprocessor.value.ValueProvider;
 import pers.yufiria.craftorithm.resultprocessor.value.ValueProviders;
 
 import java.util.UUID;
+import java.util.function.BiConsumer;
 
 /**
  * 所有 1.20 起就存在的组件。
@@ -42,7 +39,7 @@ public enum BaseComponentProcessors implements ComponentProcessorFactory, Lifecy
 
     ALL("all") {
         @Override
-        public void declareBehaviors(ComponentRegistrar registrar) {
+        public void declareBehaviors(BehaviorRegistrar registrar) {
             registrar.behavior(
                 Behaviors.COPY_FROM_SOURCE,
                 (context, data) -> context.requireSource((sourceItem, resultItem, player) -> {
@@ -56,32 +53,30 @@ public enum BaseComponentProcessors implements ComponentProcessorFactory, Lifecy
 
     DISPLAY_NAME("display_name") {
         @Override
-        public void declareBehaviors(ComponentRegistrar registrar) {
-            registrar.valueType(String.class)
-                .getter(meta -> meta.hasDisplayName() ? meta.getDisplayName() : null)
-                .setter((meta, value) -> meta.setDisplayName(value))
-                .valueReader(data -> ValueProviders.text(data, "value", "", "display_name/value"))
-                .behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource())
+        public void declareBehaviors(BehaviorRegistrar registrar) {
+            BiConsumer<ItemMeta, String> setter = ItemMeta::setDisplayName;
+            registrar.behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource(
+                    meta -> meta.hasDisplayName() ? meta.getDisplayName() : null, setter))
                 .behavior(Behaviors.ADD, ScalarBehaviors.addRequired(
-                    (text, player) -> text.isEmpty() ? null : parseText(text, player)
-                ))
-                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove());
+                    setter,
+                    data -> ValueProviders.text(data, "value", "", "display_name/value"),
+                    (text, player) -> text.isEmpty() ? null : parseText(text, player)))
+                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove(setter));
         }
     },
 
     TRIM("trim") {
         @Override
-        public void declareBehaviors(ComponentRegistrar registrar) {
-            registrar.valueType(ArmorTrim.class)
-                .getter(meta -> meta instanceof ArmorMeta armorMeta && armorMeta.hasTrim() ? armorMeta.getTrim() : null)
-                .setter((meta, value) -> {
-                    if (meta instanceof ArmorMeta armorMeta) {
-                        armorMeta.setTrim(value);
-                    }
-                })
-                .behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource())
-                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove())
-                .behavior(Behaviors.ADD, (context, field, data) -> {
+        public void declareBehaviors(BehaviorRegistrar registrar) {
+            BiConsumer<ItemMeta, ArmorTrim> setter = (meta, value) -> {
+                if (meta instanceof ArmorMeta armorMeta) {
+                    armorMeta.setTrim(value);
+                }
+            };
+            registrar.behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource(
+                    meta -> meta instanceof ArmorMeta armorMeta && armorMeta.hasTrim() ? armorMeta.getTrim() : null, setter))
+                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove(setter))
+                .behavior(Behaviors.ADD, (context, data) -> {
                     TrimPattern pattern = ProcessorUtils.lookup(TrimPattern.class, data == null ? null : data.getString("pattern"));
                     TrimMaterial material = ProcessorUtils.lookup(TrimMaterial.class, data == null ? null : data.getString("material"));
                     if (pattern == null || material == null) {
@@ -89,38 +84,32 @@ public enum BaseComponentProcessors implements ComponentProcessorFactory, Lifecy
                         return null;
                     }
                     ArmorTrim trim = new ArmorTrim(material, pattern);
-                    return field.processor(
-                        context.qualifiedName(),
-                        (sourceItem, resultItem, player) ->
-                            resultItem.meta() instanceof ArmorMeta ? trim : null
-                    );
+                    return context.processor((sourceItem, resultItem, player) ->
+                        resultItem.edit(meta -> setter.accept(meta, trim)));
                 });
         }
     },
 
     UNBREAKABLE("unbreakable") {
         @Override
-        public void declareBehaviors(ComponentRegistrar registrar) {
-            registrar.valueType(Boolean.class)
-                .getter(ItemMeta::isUnbreakable)
-                .setter((meta, value) -> meta.setUnbreakable(value != null && value))
-                .valueReader(data -> ValueProviders.bool(data, "value", false, "unbreakable/value"))
-                .behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource())
-                .behavior(Behaviors.ADD, ScalarBehaviors.add())
-                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove());
+        public void declareBehaviors(BehaviorRegistrar registrar) {
+            BiConsumer<ItemMeta, Boolean> setter = (meta, value) -> meta.setUnbreakable(Boolean.TRUE.equals(value));
+            registrar.behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource(ItemMeta::isUnbreakable, setter))
+                .behavior(Behaviors.ADD, ScalarBehaviors.add(
+                    setter, data -> ValueProviders.bool(data, "value", false, "unbreakable/value")))
+                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove(setter));
         }
     },
 
     CUSTOM_MODEL_DATA("custom_model_data") {
         @Override
-        public void declareBehaviors(ComponentRegistrar registrar) {
-            registrar.valueType(Integer.class)
-                .getter(meta -> meta.hasCustomModelData() ? meta.getCustomModelData() : null)
-                .setter((meta, value) -> meta.setCustomModelData(value))
-                .valueReader(data -> ValueProviders.integer(data, "value", 0, "custom_model_data/value"))
-                .behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource())
-                .behavior(Behaviors.ADD, ScalarBehaviors.add())
-                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove());
+        public void declareBehaviors(BehaviorRegistrar registrar) {
+            BiConsumer<ItemMeta, Integer> setter = ItemMeta::setCustomModelData;
+            registrar.behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource(
+                    meta -> meta.hasCustomModelData() ? meta.getCustomModelData() : null, setter))
+                .behavior(Behaviors.ADD, ScalarBehaviors.add(
+                    setter, data -> ValueProviders.integer(data, "value", 0, "custom_model_data/value")))
+                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove(setter));
         }
     },
 
@@ -129,42 +118,36 @@ public enum BaseComponentProcessors implements ComponentProcessorFactory, Lifecy
      */
     DAMAGE("damage") {
         @Override
-        public void declareBehaviors(ComponentRegistrar registrar) {
-            registrar.valueType(Integer.class)
-                .getter(meta -> meta instanceof Damageable damageable && damageable.hasDamage() ? damageable.getDamage() : null)
-                .setter((meta, value) -> {
-                    if (meta instanceof Damageable damageable) {
-                        damageable.setDamage(value == null ? 0 : value);
-                    }
-                })
-                .valueReader(data -> ValueProviders.integer(data, "value", "damage", 0, "damage/value"))
-                .accepts(meta -> meta instanceof Damageable)
-                .behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource())
-                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove())
-                .behavior(Behaviors.ADD, (context, field, data) -> {
-                    ValueProvider<Integer> value = field.valueReader(data);
+        public void declareBehaviors(BehaviorRegistrar registrar) {
+            BiConsumer<ItemMeta, Integer> setter = (meta, value) -> {
+                if (meta instanceof Damageable damageable) {
+                    damageable.setDamage(value == null ? 0 : value);
+                }
+            };
+            registrar.behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource(
+                    meta -> meta instanceof Damageable damageable && damageable.hasDamage() ? damageable.getDamage() : null, setter))
+                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove(setter))
+                .behavior(Behaviors.ADD, (context, data) -> {
+                    ValueProvider<Integer> value = ValueProviders.integer(data, "value", "damage", 0, "damage/value");
                     boolean allowExceed = data != null && data.getBoolean("allow_exceed_max", false);
-                    return field.processor(context.qualifiedName(), (sourceItem, resultItem, player) -> {
-                        if (value == null) {
-                            return null;
-                        }
+                    return context.processor((sourceItem, resultItem, player) -> {
                         Integer resolved = value.resolve(player, sourceItem, resultItem);
                         if (resolved == null) {
-                            return null;
+                            return;
                         }
                         int damage = Math.max(0, resolved);
-                        if (allowExceed) {
-                            return damage;
+                        if (!allowExceed) {
+                            int max = effectiveMaxDamage(resultItem);
+                            if (max > 0 && damage > max) {
+                                ProcessorUtils.warnOnce(
+                                    "damage/value:max",
+                                    "damage: " + damage + " exceeds max damage " + max + ", clamped (set allow_exceed_max to bypass)"
+                                );
+                                damage = max;
+                            }
                         }
-                        int max = effectiveMaxDamage(resultItem);
-                        if (max > 0 && damage > max) {
-                            ProcessorUtils.warnOnce(
-                                "damage/value:max",
-                                "damage: " + damage + " exceeds max damage " + max + ", clamped (set allow_exceed_max to bypass)"
-                            );
-                            damage = max;
-                        }
-                        return damage;
+                        int clamped = damage;
+                        resultItem.edit(meta -> setter.accept(meta, clamped));
                     });
                 });
         }
@@ -175,27 +158,23 @@ public enum BaseComponentProcessors implements ComponentProcessorFactory, Lifecy
      */
     BASE_COLOR("base_color") {
         @Override
-        public void declareBehaviors(ComponentRegistrar registrar) {
-            registrar.valueType(Color.class)
-                .getter(meta -> meta instanceof LeatherArmorMeta leatherMeta ? leatherMeta.getColor() : null)
-                .setter((meta, value) -> {
-                    if (meta instanceof LeatherArmorMeta leatherMeta) {
-                        leatherMeta.setColor(value == null ? Bukkit.getItemFactory().getDefaultLeatherColor() : value);
-                    }
-                })
-                .behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource())
-                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove())
-                .behavior(Behaviors.ADD, (context, field, data) -> {
+        public void declareBehaviors(BehaviorRegistrar registrar) {
+            BiConsumer<ItemMeta, Color> setter = (meta, value) -> {
+                if (meta instanceof LeatherArmorMeta leatherMeta) {
+                    leatherMeta.setColor(value == null ? Bukkit.getItemFactory().getDefaultLeatherColor() : value);
+                }
+            };
+            registrar.behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource(
+                    meta -> meta instanceof LeatherArmorMeta leatherMeta ? leatherMeta.getColor() : null, setter))
+                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove(setter))
+                .behavior(Behaviors.ADD, (context, data) -> {
                     Color color = ProcessorUtils.parseColor(data == null ? null : data.getString("value"));
                     if (color == null) {
                         CrypticLib.warn("base_color: invalid 'value', expected '#RRGGBB' or 'r,g,b'");
                         return null;
                     }
-                    return field.processor(
-                        context.qualifiedName(),
-                        (sourceItem, resultItem, player) ->
-                            resultItem.meta() instanceof LeatherArmorMeta ? color : null
-                    );
+                    return context.processor((sourceItem, resultItem, player) ->
+                        resultItem.edit(meta -> setter.accept(meta, color)));
                 });
         }
     },
@@ -207,38 +186,40 @@ public enum BaseComponentProcessors implements ComponentProcessorFactory, Lifecy
      */
     SKULL_PROFILE("skull_profile") {
         @Override
-        public void declareBehaviors(ComponentRegistrar registrar) {
-            registrar.valueType(PlayerProfile.class)
-                .getter(meta -> meta instanceof SkullMeta skullMeta ? skullMeta.getOwnerProfile() : null)
-                .setter((meta, value) -> {
-                    if (!(meta instanceof SkullMeta skullMeta)) {
-                        return;
-                    }
-                    try {
-                        skullMeta.setOwnerProfile(value);
-                    } catch (IllegalArgumentException exception) {
-                        //资料缺少名字/纹理, 或名字含非法字符时服务端会拒绝
-                        ProcessorUtils.warnOnce(
-                            "skull_profile:invalid_profile",
-                            "skull_profile: invalid profile (" + exception.getMessage() + ")"
-                        );
-                    }
-                })
-                .behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource())
-                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove())
-                .behavior(Behaviors.ADD, (context, field, data) -> {
+        public void declareBehaviors(BehaviorRegistrar registrar) {
+            BiConsumer<ItemMeta, PlayerProfile> setter = (meta, value) -> {
+                if (!(meta instanceof SkullMeta skullMeta)) {
+                    return;
+                }
+                try {
+                    skullMeta.setOwnerProfile(value);
+                } catch (IllegalArgumentException exception) {
+                    //资料缺少名字/纹理, 或名字含非法字符时服务端会拒绝
+                    ProcessorUtils.warnOnce(
+                        "skull_profile:invalid_profile",
+                        "skull_profile: invalid profile (" + exception.getMessage() + ")"
+                    );
+                }
+            };
+            registrar.behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource(
+                    meta -> meta instanceof SkullMeta skullMeta ? skullMeta.getOwnerProfile() : null, setter))
+                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove(setter))
+                .behavior(Behaviors.ADD, (context, data) -> {
                     ValueProvider<String> name = ValueProviders.text(data, "name", "", "skull_profile/name");
                     ValueProvider<String> uuid = ValueProviders.text(data, "uuid", "", "skull_profile/uuid");
-                    return field.processor(context.qualifiedName(), (sourceItem, resultItem, player) -> {
+                    return context.processor((sourceItem, resultItem, player) -> {
                         if (!(resultItem.meta() instanceof SkullMeta)) {
-                            return null;
+                            return;
                         }
                         String resolvedName = name.resolve(player, sourceItem, resultItem);
                         String resolvedUuid = uuid.resolve(player, sourceItem, resultItem);
                         if (resolvedName == null || resolvedUuid == null) {
-                            return null;
+                            return;
                         }
-                        return createPlayerProfile(resolvedName, resolvedUuid);
+                        PlayerProfile profile = createPlayerProfile(resolvedName, resolvedUuid);
+                        if (profile != null) {
+                            resultItem.edit(meta -> setter.accept(meta, profile));
+                        }
                     });
                 });
         }

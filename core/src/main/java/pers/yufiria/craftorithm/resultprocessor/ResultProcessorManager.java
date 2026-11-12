@@ -11,8 +11,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.api.event.RecipeLoadFromConfigEvent;
-import pers.yufiria.craftorithm.recipe.RecipeTypeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeType;
+import pers.yufiria.craftorithm.recipe.RecipeTypeRegistry;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
 import pers.yufiria.craftorithm.resultprocessor.behavior.BehaviorRegistrar;
 import pers.yufiria.craftorithm.resultprocessor.behavior.BehaviorRegistry;
@@ -22,6 +22,12 @@ import pers.yufiria.craftorithm.resultprocessor.impl.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * 结果处理器的注册与解析入口。
+ * <p>
+ * 组件在启用时注册, 配方加载时把配置解析成 {@link ResultProcessors} 并缓存,
+ * 合成时由监听器按配方 key 取出执行。
+ */
 @EventListener
 public enum ResultProcessorManager implements Listener {
 
@@ -47,7 +53,7 @@ public enum ResultProcessorManager implements Listener {
     public void registerFactory(ComponentProcessorFactory factory) {
         String componentName = factory.componentName();
         factoryMap.put(componentName, factory);
-        //重新声明时只丢弃自身旧声明, 已注册的外部行为保留
+        //重新声明时只丢弃组件自身的行为, 外部注册的保留
         behaviorRegistry.clearDeclared(componentName);
         try {
             factory.declareBehaviors(behaviorRegistry.registrar(componentName));

@@ -6,7 +6,7 @@ import crypticlib.script.ScriptValue;
 import java.math.BigDecimal;
 
 /**
- * 把脚本返回值转换成字段需要的类型
+ * 把脚本返回值转换成目标类型
  * <p>
  * 转换失败一律抛 {@link ScriptException}, 由 {@link ScriptedValue} 统一告警并跳过该值
  */

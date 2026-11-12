@@ -5,12 +5,10 @@ import org.bukkit.entity.Player;
 import pers.yufiria.craftorithm.resultprocessor.ItemWrapper;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessor;
 
-import java.util.Optional;
-
 /**
  * 创建行为时的上下文。
  * <p>
- * 独立成接口, 后续增加字段(配方类型/物品/日志器等)时不破坏第三方实现。
+ * 独立成接口, 后续增加方法(配方类型/物品/日志器等)时不破坏第三方实现。
  */
 public interface BehaviorContext {
 
@@ -23,14 +21,6 @@ public interface BehaviorContext {
      * 当前行为的名字
      */
     String behaviorName();
-
-    /**
-     * 组件的字段绑定。
-     * <p>
-     * 标量组件会提供, 复杂组件(如 lore、enchantments)没有单一字段, 返回 empty,
-     * 行为应直接操作物品({@link ItemWrapper})。
-     */
-    Optional<FieldBinding<?>> field();
 
     /**
      * 处理器名, 形如 {@code damage/add}

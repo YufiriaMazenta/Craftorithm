@@ -3,11 +3,13 @@ package pers.yufiria.craftorithm.resultprocessor;
 import crypticlib.CrypticLib;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+/**
+ * 一个配方的处理器链: 按配置顺序执行, 单个处理器失败不影响其余。
+ */
 public class ResultProcessors {
 
     private final List<ResultProcessor> processors;

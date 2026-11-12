@@ -28,7 +28,7 @@ public final class ValueProviders {
     }
 
     /**
-     * value 缺失时回退读取 alternateKey, 用于 damage 这种存在 value/damage 两种写法的字段
+     * value 缺失时回退读取 alternateKey, 用于 damage 这种存在 value/damage 两种写法的配置项
      */
     public static ValueProvider<Integer> integer(
         @Nullable ConfigurationSection data,

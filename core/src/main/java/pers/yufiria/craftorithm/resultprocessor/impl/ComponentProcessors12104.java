@@ -12,9 +12,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.components.CustomModelDataComponent;
 import pers.yufiria.craftorithm.resultprocessor.ComponentProcessorFactory;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessorManager;
-import pers.yufiria.craftorithm.resultprocessor.behavior.ComponentRegistrar;
+import pers.yufiria.craftorithm.resultprocessor.behavior.BehaviorRegistrar;
 import pers.yufiria.craftorithm.resultprocessor.behavior.Behaviors;
 import pers.yufiria.craftorithm.resultprocessor.behavior.ScalarBehaviors;
+
+import java.util.function.BiConsumer;
 
 /**
  * 1.21.4 起可用的组件，低版本不注册。
@@ -26,30 +28,29 @@ public enum ComponentProcessors12104 implements ComponentProcessorFactory, Lifec
 
     CUSTOM_MODEL_DATA_COMPONENT("custom_model_data_component") {
         @Override
-        public void declareBehaviors(ComponentRegistrar registrar) {
-            registrar.valueType(CustomModelDataComponent.class)
-                .getter(ItemMeta::getCustomModelDataComponent)
-                .setter((meta, value) -> meta.setCustomModelDataComponent(value))
-                .behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource())
-                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove());
+        public void declareBehaviors(BehaviorRegistrar registrar) {
+            BiConsumer<ItemMeta, CustomModelDataComponent> setter = ItemMeta::setCustomModelDataComponent;
+            registrar.behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource(
+                    ItemMeta::getCustomModelDataComponent, setter))
+                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove(setter));
         }
     },
 
     ITEM_MODEL("item_model") {
         @Override
-        public void declareBehaviors(ComponentRegistrar registrar) {
-            registrar.valueType(NamespacedKey.class)
-                .getter(meta -> meta.hasItemModel() ? meta.getItemModel() : null)
-                .setter((meta, value) -> meta.setItemModel(value))
-                .behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource())
-                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove())
-                .behavior(Behaviors.ADD, (context, field, data) -> {
+        public void declareBehaviors(BehaviorRegistrar registrar) {
+            BiConsumer<ItemMeta, NamespacedKey> setter = ItemMeta::setItemModel;
+            registrar.behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource(
+                    meta -> meta.hasItemModel() ? meta.getItemModel() : null, setter))
+                .behavior(Behaviors.REMOVE, ScalarBehaviors.remove(setter))
+                .behavior(Behaviors.ADD, (context, data) -> {
                     NamespacedKey model = ProcessorUtils.parseKey(data == null ? null : data.getString("value"));
                     if (model == null) {
                         CrypticLib.warn("item_model: invalid 'value', expected e.g. mypack:custom_model");
                         return null;
                     }
-                    return field.processor(context.qualifiedName(), (sourceItem, resultItem, player) -> model);
+                    return context.processor((sourceItem, resultItem, player) ->
+                        resultItem.edit(meta -> setter.accept(meta, model)));
                 });
         }
     };

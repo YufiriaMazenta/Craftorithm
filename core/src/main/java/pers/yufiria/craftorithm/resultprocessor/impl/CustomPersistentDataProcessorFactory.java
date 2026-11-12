@@ -1,24 +1,22 @@
 package pers.yufiria.craftorithm.resultprocessor.impl;
 
-import java.util.Locale;
 import crypticlib.CrypticLib;
 import crypticlib.util.ReflectionHelper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.resultprocessor.ComponentProcessorFactory;
-import pers.yufiria.craftorithm.resultprocessor.behavior.ComponentRegistrar;
-import pers.yufiria.craftorithm.resultprocessor.behavior.Behaviors;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessor;
+import pers.yufiria.craftorithm.resultprocessor.behavior.BehaviorRegistrar;
+import pers.yufiria.craftorithm.resultprocessor.behavior.Behaviors;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public enum CustomPersistentDataProcessorFactory implements ComponentProcessorFactory {
 
@@ -32,7 +30,7 @@ public enum CustomPersistentDataProcessorFactory implements ComponentProcessorFa
     }
 
     @Override
-    public void declareBehaviors(ComponentRegistrar registrar) {
+    public void declareBehaviors(BehaviorRegistrar registrar) {
         registrar.behavior(Behaviors.COPY_FROM_SOURCE, (context, data) -> createCopyFromSource(data))
             .behavior(Behaviors.ADD, (context, data) -> createAdd(data))
             .behavior(Behaviors.SET, (context, data) -> createSet(data))

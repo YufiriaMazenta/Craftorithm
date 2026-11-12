@@ -1,18 +1,18 @@
 package pers.yufiria.craftorithm.resultprocessor.impl;
 
-import java.util.Locale;
 import crypticlib.CrypticLib;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.resultprocessor.ComponentProcessorFactory;
-import pers.yufiria.craftorithm.resultprocessor.behavior.ComponentRegistrar;
-import pers.yufiria.craftorithm.resultprocessor.behavior.Behaviors;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessor;
+import pers.yufiria.craftorithm.resultprocessor.behavior.BehaviorRegistrar;
+import pers.yufiria.craftorithm.resultprocessor.behavior.Behaviors;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public enum ItemFlagProcessorFactory implements ComponentProcessorFactory {
 
@@ -26,7 +26,7 @@ public enum ItemFlagProcessorFactory implements ComponentProcessorFactory {
     }
 
     @Override
-    public void declareBehaviors(ComponentRegistrar registrar) {
+    public void declareBehaviors(BehaviorRegistrar registrar) {
         registrar.behavior(Behaviors.COPY_FROM_SOURCE, (context, data) -> copyFromSource())
             .behavior(Behaviors.ADD, (context, data) -> add(data))
             .behavior(Behaviors.SET, (context, data) -> set(data))

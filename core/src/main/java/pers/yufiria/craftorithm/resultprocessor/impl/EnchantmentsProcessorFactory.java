@@ -8,9 +8,9 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.resultprocessor.ComponentProcessorFactory;
-import pers.yufiria.craftorithm.resultprocessor.behavior.ComponentRegistrar;
-import pers.yufiria.craftorithm.resultprocessor.behavior.Behaviors;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessor;
+import pers.yufiria.craftorithm.resultprocessor.behavior.BehaviorRegistrar;
+import pers.yufiria.craftorithm.resultprocessor.behavior.Behaviors;
 import pers.yufiria.craftorithm.resultprocessor.value.ValueProvider;
 import pers.yufiria.craftorithm.resultprocessor.value.ValueProviders;
 
@@ -29,7 +29,7 @@ public enum EnchantmentsProcessorFactory implements ComponentProcessorFactory {
     }
 
     @Override
-    public void declareBehaviors(ComponentRegistrar registrar) {
+    public void declareBehaviors(BehaviorRegistrar registrar) {
         registrar.behavior(Behaviors.COPY_FROM_SOURCE, (context, data) -> copyFromSource())
             .behavior(Behaviors.ADD, (context, data) -> add(data))
             .behavior(Behaviors.SET, (context, data) -> set(data))

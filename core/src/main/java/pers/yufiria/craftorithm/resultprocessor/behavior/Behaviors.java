@@ -8,12 +8,12 @@ package pers.yufiria.craftorithm.resultprocessor.behavior;
 public final class Behaviors {
 
     /**
-     * 从源物品复制该字段, 源物品没有该字段时跳过
+     * 从源物品复制该值, 源物品没有这个值时跳过
      */
     public static final String COPY_FROM_SOURCE = "copy_from_source";
 
     /**
-     * 合并源物品的字段, 保留结果物品已有内容
+     * 合并源物品的该值, 保留结果物品已有内容
      */
     public static final String MERGE_SOURCE = "merge_source";
 
@@ -28,7 +28,7 @@ public final class Behaviors {
     public static final String SET = "set";
 
     /**
-     * 清除该字段
+     * 清除该值
      */
     public static final String REMOVE = "remove";
 

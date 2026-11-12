@@ -14,13 +14,12 @@ import pers.yufiria.craftorithm.resultprocessor.value.ValueProviders;
 
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiConsumer;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -41,19 +40,18 @@ class BehaviorRegistryTest {
 
     private final AtomicReference<Integer> stored = new AtomicReference<>();
 
-    private FieldDeclaration<Integer> demoField(ComponentRegistrar registrar) {
-        return registrar.valueType(Integer.class)
-            .getter(meta -> stored.get())
-            .setter((meta, value) -> stored.set(value))
-            .valueReader(data -> ValueProviders.integer(data, "value", 0, "demo/value"));
+    private BiConsumer<ItemMeta, Integer> setter() {
+        return (meta, value) -> stored.set(value);
     }
 
     private BehaviorRegistry registryWithDemo() {
         BehaviorRegistry registry = new BehaviorRegistry();
-        demoField(registry.registrar("demo"))
-            .behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource())
-            .behavior(Behaviors.ADD, ScalarBehaviors.add())
-            .behavior(Behaviors.REMOVE, ScalarBehaviors.remove());
+        registry.registrar("demo")
+            .behavior(Behaviors.COPY_FROM_SOURCE, ScalarBehaviors.copyFromSource(
+                meta -> stored.get(), setter()))
+            .behavior(Behaviors.ADD, ScalarBehaviors.add(
+                setter(), data -> ValueProviders.integer(data, "value", 0, "demo/value")))
+            .behavior(Behaviors.REMOVE, ScalarBehaviors.remove(setter()));
         return registry;
     }
 
@@ -76,26 +74,6 @@ class BehaviorRegistryTest {
         assertTrue(registry.find("demo", Behaviors.SET).isEmpty());
         assertTrue(registry.find("unknown", Behaviors.ADD).isEmpty());
         assertTrue(registry.find("demo", "  ").isEmpty());
-    }
-
-    /**
-     * 行为依赖字段的读写, 缺任何一边都不能声明
-     */
-    @Test
-    void behaviorRequiresGetterAndSetter() {
-        BehaviorRegistry registry = new BehaviorRegistry();
-        FieldDeclaration<Integer> declaration = registry.registrar("demo").valueType(Integer.class);
-
-        assertThrows(
-            IllegalStateException.class,
-            () -> declaration.behavior(Behaviors.ADD, ScalarBehaviors.add())
-        );
-        assertTrue(registry.behaviorsOf("demo").isEmpty());
-
-        //补齐读写后, 同一个声明器可以接着用
-        declaration.getter(meta -> stored.get()).setter((meta, value) -> stored.set(value));
-        assertDoesNotThrow(() -> declaration.behavior(Behaviors.ADD, ScalarBehaviors.add()));
-        assertEquals(Set.of(Behaviors.ADD), registry.behaviorsOf("demo"));
     }
 
     @Test
@@ -166,16 +144,11 @@ class BehaviorRegistryTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     void thirdPartyBehaviorCanBeRegisteredOnExistingComponent() {
         BehaviorRegistry registry = registryWithDemo();
-        registry.externalRegistrar("demo").behavior("double", (context, data) -> {
-            FieldBinding<Integer> field = (FieldBinding<Integer>) context.field().orElseThrow();
-            return field.processor(context.qualifiedName(), (sourceItem, resultItem, player) -> {
-                Integer current = field.get(resultItem);
-                return current == null ? 1 : current * 2;
-            });
-        });
+        registry.externalRegistrar("demo").behavior("double", (context, data) ->
+            context.processor((sourceItem, resultItem, player) ->
+                stored.set(stored.get() == null ? 1 : stored.get() * 2)));
 
         ResultProcessor processor = registry.find("demo", "double").orElseThrow()
             .create(registry.context("demo", "double"), null);
@@ -197,8 +170,11 @@ class BehaviorRegistryTest {
     @Test
     void addRequiredSkipsWhenValueIsMissing() {
         BehaviorRegistry registry = new BehaviorRegistry();
-        demoField(registry.registrar("demo"))
-            .behavior(Behaviors.ADD, ScalarBehaviors.addRequired((value, player) -> value));
+        registry.registrar("demo")
+            .behavior(Behaviors.ADD, ScalarBehaviors.addRequired(
+                setter(),
+                data -> ValueProviders.integer(data, "value", 0, "demo/value"),
+                (value, player) -> value));
 
         ResultProcessor processor = registry.find("demo", Behaviors.ADD).orElseThrow()
             .create(registry.context("demo", Behaviors.ADD), new MemoryConfiguration());
@@ -212,8 +188,11 @@ class BehaviorRegistryTest {
     @Test
     void addRequiredWritesWhenValueIsPresent() {
         BehaviorRegistry registry = new BehaviorRegistry();
-        demoField(registry.registrar("demo"))
-            .behavior(Behaviors.ADD, ScalarBehaviors.addRequired((value, player) -> value));
+        registry.registrar("demo")
+            .behavior(Behaviors.ADD, ScalarBehaviors.addRequired(
+                setter(),
+                data -> ValueProviders.integer(data, "value", 0, "demo/value"),
+                (value, player) -> value));
 
         ConfigurationSection data = new MemoryConfiguration();
         data.set("value", 8);
@@ -226,60 +205,17 @@ class BehaviorRegistryTest {
     }
 
     @Test
-    void fieldAcceptanceSkipsUnacceptedItem() {
-        BehaviorRegistry registry = new BehaviorRegistry();
-        registry.registrar("demo")
-            .valueType(Integer.class)
-            .getter(meta -> stored.get())
-            .setter((meta, value) -> stored.set(value))
-            .valueReader(data -> ValueProviders.integer(data, "value", 0, "demo/value"))
-            .accepts(meta -> false)
-            .behavior(Behaviors.ADD, ScalarBehaviors.add());
-
-        ConfigurationSection data = new MemoryConfiguration();
-        data.set("value", 7);
-        ResultProcessor processor = registry.find("demo", Behaviors.ADD).orElseThrow()
-            .create(registry.context("demo", Behaviors.ADD), data);
-
-        stored.set(1);
-        processor.processItem(null, ItemWrapper.of(resultItem()), null);
-        assertEquals(1, stored.get().intValue());
-    }
-
-    @Test
-    void fieldAcceptanceAlsoSkipsRemoveSilently() {
-        BehaviorRegistry registry = new BehaviorRegistry();
-        registry.registrar("demo")
-            .valueType(Integer.class)
-            .getter(meta -> stored.get())
-            .setter((meta, value) -> stored.set(value))
-            .valueReader(data -> ValueProviders.integer(data, "value", 0, "demo/value"))
-            .accepts(meta -> false)
-            .behavior(Behaviors.REMOVE, ScalarBehaviors.remove());
-
-        ResultProcessor processor = registry.find("demo", Behaviors.REMOVE).orElseThrow()
-            .create(registry.context("demo", Behaviors.REMOVE), null);
-
-        stored.set(4);
-        processor.processItem(null, ItemWrapper.of(resultItem()), null);
-        assertEquals(4, stored.get().intValue());
-    }
-
-    @Test
     void externalBehaviorSurvivesComponentRedeclaration() {
         BehaviorRegistry registry = registryWithDemo();
-        registry.externalRegistrar("demo").behavior("double", (context, data) -> {
-            FieldBinding<Integer> field = (FieldBinding<Integer>) context.field().orElseThrow();
-            return field.processor(context.qualifiedName(), (sourceItem, resultItem, player) -> {
-                Integer current = field.get(resultItem);
-                return current == null ? 1 : current * 2;
-            });
-        });
+        registry.externalRegistrar("demo").behavior("double", (context, data) ->
+            context.processor((sourceItem, resultItem, player) ->
+                stored.set(stored.get() == null ? 1 : stored.get() * 2)));
 
         //组件重新注册: 只丢弃自身声明
         registry.clearDeclared("demo");
-        demoField(registry.registrar("demo"))
-            .behavior(Behaviors.ADD, ScalarBehaviors.add());
+        registry.registrar("demo")
+            .behavior(Behaviors.ADD, ScalarBehaviors.add(
+                setter(), data -> ValueProviders.integer(data, "value", 0, "demo/value")));
 
         ResultProcessor processor = registry.find("demo", "double").orElseThrow()
             .create(registry.context("demo", "double"), null);

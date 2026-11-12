@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.hook.AdvancedEnchantmentsHook;
 import pers.yufiria.craftorithm.resultprocessor.ItemWrapper;
 import pers.yufiria.craftorithm.resultprocessor.ComponentProcessorFactory;
-import pers.yufiria.craftorithm.resultprocessor.behavior.ComponentRegistrar;
+import pers.yufiria.craftorithm.resultprocessor.behavior.BehaviorRegistrar;
 import pers.yufiria.craftorithm.resultprocessor.behavior.Behaviors;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessor;
 
@@ -24,7 +24,7 @@ public enum AdvancedEnchantmentsFactory implements ComponentProcessorFactory {
     }
 
     @Override
-    public void declareBehaviors(ComponentRegistrar registrar) {
+    public void declareBehaviors(BehaviorRegistrar registrar) {
         registrar.behavior(Behaviors.COPY_FROM_SOURCE, (context, data) -> copyFromSource())
             .behavior(Behaviors.MERGE_SOURCE, (context, data) -> mergeSource())
             .behavior(Behaviors.REMOVE, (context, data) -> remove());

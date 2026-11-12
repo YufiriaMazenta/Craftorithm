@@ -13,8 +13,7 @@ import java.util.Set;
  * <p>
  * 两种扩展都是"拿到注册器, 再用 {@code behavior(key, 实现)} 声明行为", 写法没有区别:
  * <ul>
- *     <li>{@link #registerComponent(ComponentProcessorFactory)} 新增整个组件,
- *     组件的注册器额外提供 {@code valueType(...)} 声明字段</li>
+ *     <li>{@link #registerComponent(ComponentProcessorFactory)} 新增整个组件</li>
  *     <li>{@link #component(String)} 给已有组件追加行为</li>
  * </ul>
  * 注册时机: 配方加载时就会实例化处理器, 因此扩展内容要在配方加载前注册完成,

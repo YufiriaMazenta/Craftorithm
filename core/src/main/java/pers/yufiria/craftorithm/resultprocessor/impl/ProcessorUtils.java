@@ -2,11 +2,7 @@ package pers.yufiria.craftorithm.resultprocessor.impl;
 
 import crypticlib.CrypticLib;
 import crypticlib.util.TriConsumer;
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.Keyed;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Registry;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
