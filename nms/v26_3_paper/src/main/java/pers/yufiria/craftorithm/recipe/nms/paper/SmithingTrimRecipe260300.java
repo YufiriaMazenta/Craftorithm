@@ -97,7 +97,7 @@ public class SmithingTrimRecipe260300 extends SmithingTrimRecipe implements NmsS
                 bukkitRecipe.getBase(),
                 CraftRecipe.toIngredient(IngredientUtils.getBukkitChoice(craftRecipe.getAddition()), false),
                 bukkitRecipe.getAddition(),
-                CraftTrimPattern.bukkitToMinecraftHolder(org.bukkit.inventory.meta.trim.TrimPattern.BOLT)
+                CraftTrimPattern.bukkitToMinecraftHolder(bukkitRecipe.getTrimPattern())
             )
         );
     }
