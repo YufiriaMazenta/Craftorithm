@@ -126,7 +126,8 @@ public enum NmsRecipeAccessor12110 implements NmsRecipeAccessor, LifecycleTask {
     @Override
     public void rebuildRecipes() {
         MinecraftServer server = MinecraftServer.getServer();
-        server.getRecipeManager().finalizeRecipeLoading(server.getWorldData().enabledFeatures());
+        //不能用getWorldData(): Paper会把插件当作spigot映射重映射, WorldData会被错误地改成LevelData
+        server.getRecipeManager().finalizeRecipeLoading(server.overworld().enabledFeatures());
     }
 
     @Override
