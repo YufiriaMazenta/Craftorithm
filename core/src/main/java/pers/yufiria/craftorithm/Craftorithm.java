@@ -40,6 +40,10 @@ public final class Craftorithm extends BukkitPlugin implements LifecycleTask {
 
     @Override
     public void whenLoad() {
+        if (MinecraftVersion.current().before(MinecraftVersion.V1_20_1)) {
+            CrypticLib.error("Plugin only supports 1.20.1 and above.");
+            Bukkit.getPluginManager().disablePlugin(this);
+        }
         CrypticLib.logger().setLevel(parseLogLevel());
         CrypticLib.info("Server Type: " + CrypticLibBukkit.serverAdapter().type().name().toLowerCase(Locale.ROOT) + ", Version: " + MinecraftVersion.current().versionStr());
     }
