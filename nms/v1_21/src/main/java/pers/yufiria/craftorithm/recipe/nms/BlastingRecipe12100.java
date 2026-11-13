@@ -42,7 +42,7 @@ public class BlastingRecipe12100 extends RecipeBlasting implements NmsSingleItem
     @Override
     public Recipe toBukkitRecipe(NamespacedKey id) {
         return cachedBukkitRecipe.get(() -> {
-            CraftItemStack result = CraftItemStack.asCraftMirror(this.g());
+            CraftItemStack result = CraftItemStack.asCraftMirror(this.e);
             CraftBlastingRecipe recipe = new CraftBlastingRecipe(id, result, ingredient, this.b(), this.d());
             recipe.setGroup(this.c());
             recipe.setCategory(CraftRecipe.getCategory(this.f()));

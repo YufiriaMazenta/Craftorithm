@@ -42,7 +42,7 @@ public class SmokingRecipe12100 extends RecipeSmoking implements NmsSingleItemRe
     @Override
     public Recipe toBukkitRecipe(NamespacedKey id) {
         return cachedBukkitRecipe.get(() -> {
-            CraftItemStack result = CraftItemStack.asCraftMirror(this.g());
+            CraftItemStack result = CraftItemStack.asCraftMirror(this.e);
             CraftSmokingRecipe recipe = new CraftSmokingRecipe(id, result, ingredient, this.b(), this.d());
             recipe.setGroup(this.c());
             recipe.setCategory(CraftRecipe.getCategory(this.f()));
