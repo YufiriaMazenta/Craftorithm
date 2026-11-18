@@ -14,7 +14,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import pers.yufiria.craftorithm.api.event.RecipeLoadFromConfigEvent;
+import pers.yufiria.craftorithm.api.event.RecipeRegisterEvent;
 
 import java.util.Collections;
 import java.util.List;
@@ -41,7 +41,7 @@ public enum WorldIsolationDataHandler implements Listener, LifecycleTask {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onRecipeLoad(RecipeLoadFromConfigEvent event) {
+    public void onRecipeLoad(RecipeRegisterEvent event) {
         if (event.isCancelled()) {
             return;
         }

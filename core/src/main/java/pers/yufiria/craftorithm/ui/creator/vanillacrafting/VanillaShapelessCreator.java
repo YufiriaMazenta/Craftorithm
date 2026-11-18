@@ -40,7 +40,7 @@ public class VanillaShapelessCreator extends RecipeCreator {
         this.display = new MenuDisplay(
             VanillaShapelessCreatorConfig.TITLE.value(),
             new MenuLayout(Arrays.asList(
-                "#########",
+                "####O####",
                 "#123#***#",
                 "#456A* K#",
                 "#789#***#",
@@ -49,6 +49,7 @@ public class VanillaShapelessCreator extends RecipeCreator {
                 Map<Character, IconCreator> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
                 layoutMap.put('K', () -> getResultSaveAllComponentsIcon(VanillaShapelessCreatorConfig.RESULT_SAVE_ALL_COMPONENTS_ICON.value()));
+                layoutMap.put('O', () -> getAutoDiscoverIcon(VanillaShapelessCreatorConfig.AUTO_DISCOVER_ICON.value()));
                 layoutMap.put('*', this::getResultFrameIcon);
                 layoutMap.put('A', this::getConfirmIcon);
                 layoutMap.put('C', () -> new RecipeBookCategoryIcon(

@@ -20,7 +20,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @EventListener
-public enum DiscoveredRecipesHandler implements Listener {
+public enum DiscoveredRecipesDataHandler implements Listener {
 
     INSTANCE;
 

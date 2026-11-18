@@ -68,7 +68,7 @@ public class SmeltingEditor extends RecipeEditor {
         this.display = new MenuDisplay(
             configs.title().value(),
             new MenuLayout(Arrays.asList(
-                "B#######D",
+                "B###O###D",
                 "#####FFF#",
                 "##I#AFRK#",
                 "#####FFF#",
@@ -77,6 +77,7 @@ public class SmeltingEditor extends RecipeEditor {
                 Map<Character, IconCreator> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
                 layoutMap.put('K', () -> getResultSaveAllComponentsIcon(smeltingType.editorConfigs().resultSaveAllComponentsIcon().value()));
+                layoutMap.put('O', () -> getAutoDiscoverIcon(smeltingType.editorConfigs().autoDiscoverIcon().value()));
                 layoutMap.put('A', this::getConfirmIcon);
                 layoutMap.put('E', this::getExpIcon);
                 layoutMap.put('T', this::getTimeIcon);

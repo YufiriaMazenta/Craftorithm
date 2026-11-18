@@ -9,23 +9,23 @@ import crypticlib.ui.display.Icon;
 import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.menu.StoredMenu;
 import org.bukkit.NamespacedKey;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.yufiria.craftorithm.api.event.RecipeRegisterEvent;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.permission.Permissions;
+import pers.yufiria.craftorithm.recipe.AutoDiscoverHandler;
 import pers.yufiria.craftorithm.recipe.ParsedRecipe;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.ui.*;
+import pers.yufiria.craftorithm.ui.icon.StateToggleIcon;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
 import pers.yufiria.craftorithm.ui.icon.TranslatableIconParser;
 import pers.yufiria.craftorithm.ui.recipebook.BackIcon;
@@ -45,6 +45,8 @@ public abstract class RecipeEditor extends StoredMenu implements IngredientIdRes
     protected final String recipeId;
     //是否保存结果物品的全部组件, 开启时结果物品会被完整保存到内置物品源, 默认关闭
     private boolean resultSaveAllComponents = false;
+    //是否在配方书中自动解锁该配方, 初始值取自配方配置
+    private boolean autoDiscover;
     /**
      * 标记该编辑页面是否初始化,用于首次打开时填充配方内容
      */
@@ -58,6 +60,18 @@ public abstract class RecipeEditor extends StoredMenu implements IngredientIdRes
         super(player);
         this.recipeKey = recipeKey;
         this.recipeId = recipeId;
+        this.autoDiscover = readAutoDiscover(recipeKey);
+    }
+
+    /**
+     * 读取配方配置中的「自动解锁配方书」开关, 取不到配置时按关闭处理
+     */
+    private static boolean readAutoDiscover(@NotNull NamespacedKey recipeKey) {
+        BukkitConfigWrapper recipeConfig = RecipeManager.INSTANCE.getRecipeConfigWrapper(recipeKey);
+        if (recipeConfig == null) {
+            return false;
+        }
+        return recipeConfig.config().getBoolean(AutoDiscoverHandler.CONFIG_KEY, false);
     }
 
     @Override
@@ -88,35 +102,31 @@ public abstract class RecipeEditor extends StoredMenu implements IngredientIdRes
      * @param config 开关图标的配置
      */
     protected final Icon getResultSaveAllComponentsIcon(@NotNull ConfigurationSection config) {
-        IconDisplay iconDisplay = TranslatableIconParser.INSTANCE.parseIconDisplay(config);
-        return new TranslatableIcon(iconDisplay) {
-            @Override
-            public ItemStack display() {
-                setTextReplaceMap(Map.of(
-                    "<state>",
-                    resultSaveAllComponents
-                        ? Languages.MENU_RECIPE_EDITOR_RESULT_SAVE_ALL_COMPONENTS_ENABLED.value()
-                        : Languages.MENU_RECIPE_EDITOR_RESULT_SAVE_ALL_COMPONENTS_DISABLED.value()
-                ));
-                ItemStack display = super.display();
-                if (!resultSaveAllComponents) {
-                    return display;
-                }
-                //开启时加上附魔光效, 不用悬停也能看出当前状态
-                ItemMeta itemMeta = display.getItemMeta();
-                itemMeta.addEnchant(Enchantment.LURE, 1, true);
-                itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-                display.setItemMeta(itemMeta);
-                return display;
-            }
+        return StateToggleIcon.fromConfig(
+            config,
+            this,
+            () -> resultSaveAllComponents,
+            value -> resultSaveAllComponents = value,
+            Languages.MENU_RECIPE_EDITOR_RESULT_SAVE_ALL_COMPONENTS_ENABLED.value(),
+            Languages.MENU_RECIPE_EDITOR_RESULT_SAVE_ALL_COMPONENTS_DISABLED.value()
+        );
+    }
 
-            @Override
-            public Icon onClick(InventoryClickEvent event) {
-                resultSaveAllComponents = !resultSaveAllComponents;
-                updateMenuIcons();
-                return this;
-            }
-        };
+    /**
+     * 「自动解锁配方书」开关按钮
+     * 点击切换开关状态, 开启后该配方会在玩家的配方书中自动解锁
+     *
+     * @param config 开关图标的配置
+     */
+    protected final Icon getAutoDiscoverIcon(@NotNull ConfigurationSection config) {
+        return StateToggleIcon.fromConfig(
+            config,
+            this,
+            () -> autoDiscover,
+            value -> autoDiscover = value,
+            Languages.MENU_RECIPE_EDITOR_AUTO_DISCOVER_ENABLED.value(),
+            Languages.MENU_RECIPE_EDITOR_AUTO_DISCOVER_DISABLED.value()
+        );
     }
 
     /**
@@ -177,7 +187,7 @@ public abstract class RecipeEditor extends StoredMenu implements IngredientIdRes
      * 统一处理「取出配方配置 → 写入字段 → 落盘重载并重新注册 → 关闭菜单 → 发送成功提示」。
      *
      * @param player      操作玩家
-     * @param writeFields 写入该配方类型字段的回调
+     * @param writeFields 写入该配方类型字段的回调; auto_discover 由本方法统一写入
      */
     protected void saveEdit(@NotNull Player player, @NotNull Consumer<BukkitConfigWrapper> writeFields) {
         BukkitConfigWrapper configWrapper = RecipeManager.INSTANCE.getRecipeConfigWrapper(recipeKey);
@@ -186,6 +196,7 @@ public abstract class RecipeEditor extends StoredMenu implements IngredientIdRes
             return;
         }
         writeFields.accept(configWrapper);
+        configWrapper.set(AutoDiscoverHandler.CONFIG_KEY, autoDiscover);
         String recipeId = recipeKey.getKey();
         //文件名要在注销之前取: 注销会把 recipeFileNameToKeyMap 里的映射一起清掉
         String recipeFileName = RecipeManager.INSTANCE.getRecipeFileNameByKey(recipeKey);
@@ -207,7 +218,7 @@ public abstract class RecipeEditor extends StoredMenu implements IngredientIdRes
             CrypticLibBukkit.scheduler().syncLater(() -> {
                 //先解析成功再替换注册, 注册结果要回给玩家, 不能无条件报成功
                 RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeId, false, false);
-                if (RecipeManager.INSTANCE.registerParsedRecipe(parsedRecipe, true)) {
+                if (RecipeManager.INSTANCE.registerParsedRecipe(parsedRecipe, RecipeRegisterEvent.Reason.EDIT_RECIPE, true)) {
                     String fileName = RecipeManager.INSTANCE.getRecipeFileNameByKey(recipeKey);
                     LangUtils.sendLang(player, Languages.COMMAND_EDIT_SUCCESS, Map.of(
                         "<recipe_id>", recipeId,

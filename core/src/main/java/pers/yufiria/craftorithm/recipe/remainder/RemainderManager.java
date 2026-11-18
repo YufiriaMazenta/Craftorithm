@@ -15,7 +15,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
-import pers.yufiria.craftorithm.api.event.RecipeLoadFromConfigEvent;
+import pers.yufiria.craftorithm.api.event.RecipeRegisterEvent;
 import pers.yufiria.craftorithm.recipe.RecipeTypeRegistry;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
@@ -63,7 +63,7 @@ public enum RemainderManager implements Listener, LifecycleTask {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onRecipeLoad(RecipeLoadFromConfigEvent event) {
+    public void onRecipeLoad(RecipeRegisterEvent event) {
         if (event.isCancelled()) {
             return;
         }

@@ -43,7 +43,7 @@ public final class VanillaStonecuttingEditor extends RecipeEditor {
         this.display = new MenuDisplay(
             VanillaStonecuttingEditorConfig.TITLE.value(),
             new MenuLayout(Arrays.asList(
-                "B#######D",
+                "B###O###D",
                 "#####FFF#",
                 "##I#AFRK#",
                 "#####FFF#",
@@ -53,6 +53,7 @@ public final class VanillaStonecuttingEditor extends RecipeEditor {
                 Map<Character, IconCreator> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
                 layoutMap.put('K', () -> getResultSaveAllComponentsIcon(VanillaStonecuttingEditorConfig.RESULT_SAVE_ALL_COMPONENTS_ICON.value()));
+                layoutMap.put('O', () -> getAutoDiscoverIcon(VanillaStonecuttingEditorConfig.AUTO_DISCOVER_ICON.value()));
                 layoutMap.put('F', this::getResultFrameIcon);
                 layoutMap.put('A', this::getConfirmIcon);
                 layoutMap.put('B', () -> getBackIcon(VanillaStonecuttingEditorConfig.BACK_ICON.value()));

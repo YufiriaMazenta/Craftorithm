@@ -10,7 +10,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.Nullable;
-import pers.yufiria.craftorithm.api.event.RecipeLoadFromConfigEvent;
+import pers.yufiria.craftorithm.api.event.RecipeRegisterEvent;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.RecipeTypeRegistry;
 import pers.yufiria.craftorithm.recipe.SimpleRecipeTypes;
@@ -93,7 +93,7 @@ public enum ResultProcessorManager implements Listener {
     }
 
     @EventHandler
-    public void loadFromRecipeConfigWhenLoad(RecipeLoadFromConfigEvent event) {
+    public void loadFromRecipeConfigWhenLoad(RecipeRegisterEvent event) {
         NamespacedKey recipeKey = event.recipeKey();
         YamlConfiguration recipeConfig = event.recipeConfig();
         if (recipeConfig.isConfigurationSection("result_processors")) {

@@ -5,7 +5,7 @@ import org.bukkit.inventory.Recipe;
 import pers.yufiria.craftorithm.recipe.anvil.AnvilRecipe;
 import pers.yufiria.craftorithm.recipe.anvil.AnvilRecipeHandler;
 
-public enum AnvilRecipeRegister implements RecipeRegister {
+public enum AnvilRecipeRegistrar implements RecipeRegistrar {
 
     INSTANCE;
 

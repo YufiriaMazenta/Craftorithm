@@ -11,6 +11,7 @@ public class AnvilEditorConfig {
     public static final ConfigSectionConfig FRAME_ICON = new ConfigSectionConfig("frame_icon", MenuIconConfigUtils.editorFrameIcon("anvil"));
     public static final ConfigSectionConfig CONFIRM_ICON = new ConfigSectionConfig("confirm_icon", MenuIconConfigUtils.editorConfirmIcon("minecraft:anvil"));
     public static final ConfigSectionConfig RESULT_SAVE_ALL_COMPONENTS_ICON = new ConfigSectionConfig("result_save_all_components_icon", MenuIconConfigUtils.editorResultSaveAllComponentsIcon());
+    public static final ConfigSectionConfig AUTO_DISCOVER_ICON = new ConfigSectionConfig("auto_discover_icon", MenuIconConfigUtils.editorAutoDiscoverIcon());
     public static final ConfigSectionConfig COST_LEVEL_ICON = new ConfigSectionConfig("cost_level_icon", MenuIconConfigUtils.icon(
         "minecraft:experience_bottle",
         "<translate:lang:menu.recipe_editor.anvil.cost_level>",

@@ -58,7 +58,7 @@ public class VanillaSmeltingCreator extends RecipeCreator {
         this.display = new MenuDisplay(
             configs.title().value(),
             new MenuLayout(Arrays.asList(
-                "#########",
+                "####O####",
                 "#####FFF#",
                 "##I#AFRK#",
                 "#####FFF#",
@@ -67,6 +67,7 @@ public class VanillaSmeltingCreator extends RecipeCreator {
                 Map<Character, IconCreator> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
                 layoutMap.put('K', () -> getResultSaveAllComponentsIcon(smeltingType.creatorConfigs().resultSaveAllComponentsIcon().value()));
+                layoutMap.put('O', () -> getAutoDiscoverIcon(smeltingType.creatorConfigs().autoDiscoverIcon().value()));
                 layoutMap.put('A', this::getConfirmIcon);
                 layoutMap.put('E', this::getExpIcon);
                 layoutMap.put('T', this::getTimeIcon);

@@ -3,7 +3,7 @@ package pers.yufiria.craftorithm.recipe.register;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.Recipe;
 
-public interface RecipeRegister {
+public interface RecipeRegistrar {
 
     /**
      * 注册配方

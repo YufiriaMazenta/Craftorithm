@@ -7,21 +7,18 @@ import crypticlib.chat.BukkitTextProcessor;
 import crypticlib.config.BukkitConfigWrapper;
 import crypticlib.lang.LangManager;
 import crypticlib.ui.display.Icon;
-import crypticlib.ui.display.IconDisplay;
 import crypticlib.ui.menu.StoredMenu;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.yufiria.craftorithm.Craftorithm;
+import pers.yufiria.craftorithm.api.event.RecipeRegisterEvent;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.item.NamespacedItemId;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
+import pers.yufiria.craftorithm.recipe.AutoDiscoverHandler;
 import pers.yufiria.craftorithm.recipe.ParsedRecipe;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
@@ -30,8 +27,7 @@ import pers.yufiria.craftorithm.ui.ResultIdResolver;
 import pers.yufiria.craftorithm.ui.SaveItemResultIdResolver;
 import pers.yufiria.craftorithm.ui.SimpleIngredientIdResolver;
 import pers.yufiria.craftorithm.ui.SimpleResultIdResolver;
-import pers.yufiria.craftorithm.ui.icon.TranslatableIcon;
-import pers.yufiria.craftorithm.ui.icon.TranslatableIconParser;
+import pers.yufiria.craftorithm.ui.icon.StateToggleIcon;
 import pers.yufiria.craftorithm.util.LangUtils;
 
 import java.text.SimpleDateFormat;
@@ -46,6 +42,8 @@ public abstract class RecipeCreator extends StoredMenu implements IngredientIdRe
     private final SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
     //是否保存结果物品的全部组件, 开启时结果物品会被完整保存到内置物品源, 默认关闭
     private boolean resultSaveAllComponents = false;
+    //是否在配方书中自动解锁该配方, 默认关闭
+    private boolean autoDiscover = false;
 
     public RecipeCreator(
         @NotNull Player player,
@@ -66,35 +64,31 @@ public abstract class RecipeCreator extends StoredMenu implements IngredientIdRe
      * @param config 开关图标的配置
      */
     protected final Icon getResultSaveAllComponentsIcon(@NotNull ConfigurationSection config) {
-        IconDisplay iconDisplay = TranslatableIconParser.INSTANCE.parseIconDisplay(config);
-        return new TranslatableIcon(iconDisplay) {
-            @Override
-            public ItemStack display() {
-                setTextReplaceMap(Map.of(
-                    "<state>",
-                    resultSaveAllComponents
-                        ? Languages.MENU_RECIPE_CREATOR_RESULT_SAVE_ALL_COMPONENTS_ENABLED.value()
-                        : Languages.MENU_RECIPE_CREATOR_RESULT_SAVE_ALL_COMPONENTS_DISABLED.value()
-                ));
-                ItemStack display = super.display();
-                if (!resultSaveAllComponents) {
-                    return display;
-                }
-                //开启时加上附魔光效, 不用悬停也能看出当前状态
-                ItemMeta itemMeta = display.getItemMeta();
-                itemMeta.addEnchant(Enchantment.LURE, 1, true);
-                itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-                display.setItemMeta(itemMeta);
-                return display;
-            }
+        return StateToggleIcon.fromConfig(
+            config,
+            this,
+            () -> resultSaveAllComponents,
+            value -> resultSaveAllComponents = value,
+            Languages.MENU_RECIPE_CREATOR_RESULT_SAVE_ALL_COMPONENTS_ENABLED.value(),
+            Languages.MENU_RECIPE_CREATOR_RESULT_SAVE_ALL_COMPONENTS_DISABLED.value()
+        );
+    }
 
-            @Override
-            public Icon onClick(InventoryClickEvent event) {
-                resultSaveAllComponents = !resultSaveAllComponents;
-                updateMenuIcons();
-                return this;
-            }
-        };
+    /**
+     * 「自动解锁配方书」开关按钮
+     * 点击切换开关状态, 开启后该配方会在玩家的配方书中自动解锁
+     *
+     * @param config 开关图标的配置
+     */
+    protected final Icon getAutoDiscoverIcon(@NotNull ConfigurationSection config) {
+        return StateToggleIcon.fromConfig(
+            config,
+            this,
+            () -> autoDiscover,
+            value -> autoDiscover = value,
+            Languages.MENU_RECIPE_CREATOR_AUTO_DISCOVER_ENABLED.value(),
+            Languages.MENU_RECIPE_CREATOR_AUTO_DISCOVER_DISABLED.value()
+        );
     }
 
     protected void createRecipeConfig(String recipeFileName, Consumer<BukkitConfigWrapper> callback) {
@@ -112,7 +106,7 @@ public abstract class RecipeCreator extends StoredMenu implements IngredientIdRe
      *
      * @param player      操作玩家
      * @param resultId    结果物品id
-     * @param writeFields 写入该配方类型特有字段的回调; type / result / recipe_id 由本方法统一写入
+     * @param writeFields 写入该配方类型特有字段的回调; type / result / auto_discover / recipe_id 由本方法统一写入
      */
     protected void saveAndRegister(
         @NotNull Player player,
@@ -128,6 +122,7 @@ public abstract class RecipeCreator extends StoredMenu implements IngredientIdRe
             recipeConfig.set("type", typeKey);
             recipeConfig.set("result", resultId.toString());
             writeFields.accept(recipeConfig);
+            recipeConfig.set(AutoDiscoverHandler.CONFIG_KEY, autoDiscover);
             if (recipeId != null) {
                 recipeConfig.set("recipe_id", recipeId);
             }
@@ -141,7 +136,11 @@ public abstract class RecipeCreator extends StoredMenu implements IngredientIdRe
             }
 
             CrypticLibBukkit.scheduler().sync(() -> {
-                boolean loadResult = RecipeManager.INSTANCE.registerParsedRecipe(parsedRecipe, true);
+                boolean loadResult = RecipeManager.INSTANCE.registerParsedRecipe(
+                    parsedRecipe,
+                    RecipeRegisterEvent.Reason.NEW_RECIPE,
+                    true
+                );
                 if (loadResult) {
                     LangUtils.sendLang(player, Languages.COMMAND_CREATE_SUCCESS, Map.of(
                         "<recipe_type>", recipeType().getLocalizedName(player),

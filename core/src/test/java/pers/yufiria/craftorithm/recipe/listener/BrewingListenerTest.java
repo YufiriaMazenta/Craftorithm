@@ -17,7 +17,7 @@ import pers.yufiria.craftorithm.recipe.BrewingRecipe;
 
 import java.io.File;
 import pers.yufiria.craftorithm.recipe.RecipeTestItem;
-import pers.yufiria.craftorithm.recipe.register.BrewingRecipeRegister;
+import pers.yufiria.craftorithm.recipe.register.BrewingRecipeRegistrar;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessor;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessorManager;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessors;
@@ -86,7 +86,7 @@ class BrewingListenerTest {
                 NamespacedKey key = new NamespacedKey("test", "independent_brew");
                 ItemStack template = new RecipeTestItem(Material.POTION);
                 BrewingRecipe recipe = new BrewingRecipe(key, choice, choice, template);
-                Map<NamespacedKey, BrewingRecipe> recipes = map(BrewingRecipeRegister.INSTANCE, "brewingRecipeMap");
+                Map<NamespacedKey, BrewingRecipe> recipes = map(BrewingRecipeRegistrar.INSTANCE, "brewingRecipeMap");
                 Map<NamespacedKey, ResultProcessors> processors = map(ResultProcessorManager.INSTANCE, "recipeProcessors");
                 Map<NamespacedKey, BrewingRecipe> oldRecipes = Map.copyOf(recipes);
                 Map<NamespacedKey, ResultProcessors> oldProcessors = Map.copyOf(processors);

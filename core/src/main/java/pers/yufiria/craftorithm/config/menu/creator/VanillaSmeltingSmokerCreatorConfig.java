@@ -14,6 +14,7 @@ public class VanillaSmeltingSmokerCreatorConfig {
     public static final ConfigSectionConfig RESULT_FRAME_ICON = new ConfigSectionConfig("result_frame_icon", MenuIconConfigUtils.creatorResultFrameIcon("smelting"));
     public static final ConfigSectionConfig CONFIRM_ICON = new ConfigSectionConfig("confirm_icon", MenuIconConfigUtils.creatorConfirmIcon("minecraft:smoker", "smoking"));
     public static final ConfigSectionConfig RESULT_SAVE_ALL_COMPONENTS_ICON = new ConfigSectionConfig("result_save_all_components_icon", MenuIconConfigUtils.creatorResultSaveAllComponentsIcon());
+    public static final ConfigSectionConfig AUTO_DISCOVER_ICON = new ConfigSectionConfig("auto_discover_icon", MenuIconConfigUtils.creatorAutoDiscoverIcon());
     public static final ConfigSectionConfig EXP_ICON = new ConfigSectionConfig("exp_icon", MenuIconConfigUtils.creatorExpIcon());
     public static final ConfigSectionConfig TIME_ICON = new ConfigSectionConfig("time_icon", MenuIconConfigUtils.creatorTimeIcon());
     public static final IntConfig DEFAULT_EXP = new IntConfig("default_exp", 1);

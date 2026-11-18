@@ -13,5 +13,6 @@ public class VanillaBrewingCreatorConfig {
     public static final ConfigSectionConfig RESULT_FRAME_ICON = new ConfigSectionConfig("result_frame_icon", MenuIconConfigUtils.creatorResultFrameIcon("brewing"));
     public static final ConfigSectionConfig CONFIRM_ICON = new ConfigSectionConfig("confirm_icon", MenuIconConfigUtils.creatorConfirmIcon("minecraft:brewing_stand", "brewing"));
     public static final ConfigSectionConfig RESULT_SAVE_ALL_COMPONENTS_ICON = new ConfigSectionConfig("result_save_all_components_icon", MenuIconConfigUtils.creatorResultSaveAllComponentsIcon());
+    public static final ConfigSectionConfig AUTO_DISCOVER_ICON = new ConfigSectionConfig("auto_discover_icon", MenuIconConfigUtils.creatorAutoDiscoverIcon());
 
 }

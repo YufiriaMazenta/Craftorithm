@@ -4,7 +4,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.Recipe;
 import pers.yufiria.craftorithm.recipe.nms.NmsRecipeAccessor;
 
-public enum BukkitRecipeRegister implements RecipeRegister {
+public enum BukkitRecipeRegistrar implements RecipeRegistrar {
 
     INSTANCE;
 

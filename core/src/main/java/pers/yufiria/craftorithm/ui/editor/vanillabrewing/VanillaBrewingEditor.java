@@ -56,7 +56,7 @@ public final class VanillaBrewingEditor extends RecipeEditor {
         this.display = new MenuDisplay(
             VanillaBrewingEditorConfig.TITLE.value(),
             new MenuLayout(Arrays.asList(
-                "B#######D",
+                "B###O###D",
                 "##G##FFF#",
                 "####AFRK#",
                 "##I##FFF#",
@@ -65,6 +65,7 @@ public final class VanillaBrewingEditor extends RecipeEditor {
                 Map<Character, IconCreator> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
                 layoutMap.put('K', () -> getResultSaveAllComponentsIcon(VanillaBrewingEditorConfig.RESULT_SAVE_ALL_COMPONENTS_ICON.value()));
+                layoutMap.put('O', () -> getAutoDiscoverIcon(VanillaBrewingEditorConfig.AUTO_DISCOVER_ICON.value()));
                 layoutMap.put('A', this::getConfirmIcon);
                 layoutMap.put('F', this::getResultFrameIcon);
                 layoutMap.put('B', () -> getBackIcon(VanillaBrewingEditorConfig.BACK_ICON.value()));

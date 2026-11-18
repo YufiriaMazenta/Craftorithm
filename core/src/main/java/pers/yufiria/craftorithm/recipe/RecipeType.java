@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 import pers.yufiria.craftorithm.recipe.parser.RecipeParser;
-import pers.yufiria.craftorithm.recipe.register.RecipeRegister;
+import pers.yufiria.craftorithm.recipe.register.RecipeRegistrar;
 
 import java.util.Locale;
 
@@ -23,7 +23,7 @@ public interface RecipeType {
 
     @NotNull RecipeParser<?> recipeParser();
 
-    @NotNull RecipeRegister recipeRegister();
+    @NotNull RecipeRegistrar recipeRegistrar();
 
     boolean isThisType(Recipe recipe);
 

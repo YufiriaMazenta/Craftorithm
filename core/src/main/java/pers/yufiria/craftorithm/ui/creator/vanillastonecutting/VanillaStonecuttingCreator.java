@@ -35,13 +35,14 @@ public class VanillaStonecuttingCreator extends RecipeCreator {
         this.display = new MenuDisplay(
             VanillaStonecuttingCreatorConfig.TITLE.value(),
             new MenuLayout(Arrays.asList(
-                "#########",
+                "####O####",
                 "##I#AFRK#",
                 "#########"
             ), () -> {
                 Map<Character, IconCreator> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
                 layoutMap.put('K', () -> getResultSaveAllComponentsIcon(VanillaStonecuttingCreatorConfig.RESULT_SAVE_ALL_COMPONENTS_ICON.value()));
+                layoutMap.put('O', () -> getAutoDiscoverIcon(VanillaStonecuttingCreatorConfig.AUTO_DISCOVER_ICON.value()));
                 layoutMap.put('A', this::getConfirmIcon);
                 layoutMap.put('F', this::getResultFrameIcon);
                 return layoutMap;

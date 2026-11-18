@@ -114,6 +114,11 @@ menu:
       lore: '&7Haz clic para alternar. Al activarlo, todos los componentes del resultado se guardan en la fuente de objetos integrada al guardar los cambios'
       enabled: '&aActivado'
       disabled: '&cDesactivado'
+    auto_discover:
+      name: '&aDesbloquear en el libro de recetas: &e<state>'
+      lore: '&7Haz clic para alternar. Al activarlo, la receta se desbloquea automáticamente en el libro de recetas de los jugadores'
+      enabled: '&aActivado'
+      disabled: '&cDesactivado'
     smelting:
       time: '&aTiempo de fundición: &e<time> &7(tick)'
       time_lore: '&7Haz clic para introducir el tiempo'
@@ -134,6 +139,11 @@ menu:
     result_save_all_components:
       name: '&aGuardar todos los componentes del resultado: &e<state>'
       lore: '&7Haz clic para alternar. Al activarlo, todos los componentes del resultado se guardan en la fuente de objetos integrada al crear la receta'
+      enabled: '&aActivado'
+      disabled: '&cDesactivado'
+    auto_discover:
+      name: '&aDesbloquear en el libro de recetas: &e<state>'
+      lore: '&7Haz clic para alternar. Al activarlo, la receta se desbloquea automáticamente en el libro de recetas de los jugadores'
       enabled: '&aActivado'
       disabled: '&cDesactivado'
     smelting:

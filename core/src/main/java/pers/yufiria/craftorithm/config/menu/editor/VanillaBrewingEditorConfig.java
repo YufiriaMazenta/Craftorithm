@@ -12,6 +12,7 @@ public class VanillaBrewingEditorConfig {
     public static final ConfigSectionConfig RESULT_FRAME_ICON = new ConfigSectionConfig("result_frame_icon", MenuIconConfigUtils.editorResultFrameIcon());
     public static final ConfigSectionConfig CONFIRM_ICON = new ConfigSectionConfig("confirm_icon", MenuIconConfigUtils.editorConfirmIcon("minecraft:brewing_stand"));
     public static final ConfigSectionConfig RESULT_SAVE_ALL_COMPONENTS_ICON = new ConfigSectionConfig("result_save_all_components_icon", MenuIconConfigUtils.editorResultSaveAllComponentsIcon());
+    public static final ConfigSectionConfig AUTO_DISCOVER_ICON = new ConfigSectionConfig("auto_discover_icon", MenuIconConfigUtils.editorAutoDiscoverIcon());
     public static final ConfigSectionConfig BACK_ICON = new ConfigSectionConfig("back_icon", MenuIconConfigUtils.editorBackIcon());
     public static final ConfigSectionConfig DELETE_ICON = new ConfigSectionConfig("delete_icon", MenuIconConfigUtils.editorDeleteIcon());
 }

@@ -24,7 +24,7 @@ import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.NotNull;
-import pers.yufiria.craftorithm.api.event.RecipeLoadFromConfigEvent;
+import pers.yufiria.craftorithm.api.event.RecipeRegisterEvent;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.item.exception.ItemNotFoundException;
@@ -53,7 +53,7 @@ public enum FakeResultDataHandler implements Listener, LifecycleTask {
     private volatile boolean supportFakeResult = false;
 
     @EventHandler
-    public void loadFakeResultConfig(RecipeLoadFromConfigEvent event) {
+    public void loadFakeResultConfig(RecipeRegisterEvent event) {
         if (event.isCancelled()) {
             return;
         }

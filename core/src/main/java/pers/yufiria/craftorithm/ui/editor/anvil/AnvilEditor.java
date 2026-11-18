@@ -62,7 +62,7 @@ public final class AnvilEditor extends RecipeEditor {
         this.display = new MenuDisplay(
             AnvilEditorConfig.TITLE.value(),
             new MenuLayout(Arrays.asList(
-                "X#######D",
+                "X###O###D",
                 "#B#A###RK",
                 "##L###C##",
                 "#########"
@@ -70,6 +70,7 @@ public final class AnvilEditor extends RecipeEditor {
                 Map<Character, IconCreator> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
                 layoutMap.put('K', () -> getResultSaveAllComponentsIcon(AnvilEditorConfig.RESULT_SAVE_ALL_COMPONENTS_ICON.value()));
+                layoutMap.put('O', () -> getAutoDiscoverIcon(AnvilEditorConfig.AUTO_DISCOVER_ICON.value()));
                 layoutMap.put('C', this::getConfirmIcon);
                 layoutMap.put('L', this::getCostLevelIcon);
                 layoutMap.put('X', () -> getBackIcon(AnvilEditorConfig.BACK_ICON.value()));

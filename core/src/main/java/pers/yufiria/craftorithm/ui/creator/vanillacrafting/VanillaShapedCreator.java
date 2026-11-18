@@ -41,7 +41,7 @@ public final class VanillaShapedCreator extends RecipeCreator {
         this.display = new MenuDisplay(
             VanillaShapedCreatorConfig.TITLE.value(),
             new MenuLayout(Arrays.asList(
-                "#########",
+                "####O####",
                 "#123#***#",
                 "#456A* K#",
                 "#789#***#",
@@ -50,6 +50,7 @@ public final class VanillaShapedCreator extends RecipeCreator {
                 Map<Character, IconCreator> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
                 layoutMap.put('K', () -> getResultSaveAllComponentsIcon(VanillaShapedCreatorConfig.RESULT_SAVE_ALL_COMPONENTS_ICON.value()));
+                layoutMap.put('O', () -> getAutoDiscoverIcon(VanillaShapedCreatorConfig.AUTO_DISCOVER_ICON.value()));
                 layoutMap.put('*', this::getResultFrameIcon);
                 layoutMap.put('A', this::getConfirmIcon);
                 layoutMap.put('C', () -> new RecipeBookCategoryIcon(

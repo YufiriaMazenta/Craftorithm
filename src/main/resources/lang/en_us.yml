@@ -114,6 +114,11 @@ menu:
       lore: '&7Click to toggle. When enabled, all components of the result item are saved to the built-in item source when saving your changes'
       enabled: '&aEnabled'
       disabled: '&cDisabled'
+    auto_discover:
+      name: '&aAuto Unlock in Recipe Book: &e<state>'
+      lore: '&7Click to toggle. When enabled, the recipe is automatically unlocked in the players'' recipe book'
+      enabled: '&aEnabled'
+      disabled: '&cDisabled'
     smelting:
       time: '&aCooking Time: &e<time> &7(ticks)'
       time_lore: '&7Click to set cooking time'
@@ -134,6 +139,11 @@ menu:
     result_save_all_components:
       name: '&aSave All Result Components: &e<state>'
       lore: '&7Click to toggle. When enabled, all components of the result item are saved to the built-in item source when the recipe is created'
+      enabled: '&aEnabled'
+      disabled: '&cDisabled'
+    auto_discover:
+      name: '&aAuto Unlock in Recipe Book: &e<state>'
+      lore: '&7Click to toggle. When enabled, the recipe is automatically unlocked in the players'' recipe book'
       enabled: '&aEnabled'
       disabled: '&cDisabled'
     smelting:

@@ -48,7 +48,7 @@ public class AnvilCreator extends RecipeCreator {
         this.display = new MenuDisplay(
             AnvilCreatorConfig.TITLE.value(),
             new MenuLayout(Arrays.asList(
-                "#########",
+                "####O####",
                 "##B#A#RK#",
                 "#########",
                 "####C####",
@@ -57,6 +57,7 @@ public class AnvilCreator extends RecipeCreator {
                 Map<Character, IconCreator> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
                 layoutMap.put('K', () -> getResultSaveAllComponentsIcon(AnvilCreatorConfig.RESULT_SAVE_ALL_COMPONENTS_ICON.value()));
+                layoutMap.put('O', () -> getAutoDiscoverIcon(AnvilCreatorConfig.AUTO_DISCOVER_ICON.value()));
                 layoutMap.put('C', this::getConfirmIcon);
                 layoutMap.put('L', this::getCostLevelIcon);
                 return layoutMap;

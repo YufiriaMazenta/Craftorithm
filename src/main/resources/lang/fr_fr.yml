@@ -114,6 +114,11 @@ menu:
       lore: '&7Cliquez pour basculer. Une fois activé, tous les composants du résultat sont enregistrés dans la source d''objets intégrée lors de l''enregistrement des modifications'
       enabled: '&aActivé'
       disabled: '&cDésactivé'
+    auto_discover:
+      name: '&aDébloquer dans le livre de recettes : &e<state>'
+      lore: '&7Cliquez pour basculer. Une fois activé, la recette est débloquée automatiquement dans le livre de recettes des joueurs'
+      enabled: '&aActivé'
+      disabled: '&cDésactivé'
     smelting:
       time: '&aTemps de cuisson: &e<time> &7(tick)'
       time_lore: '&7Cliquez pour entrer le temps'
@@ -134,6 +139,11 @@ menu:
     result_save_all_components:
       name: '&aEnregistrer tous les composants du résultat : &e<state>'
       lore: '&7Cliquez pour basculer. Une fois activé, tous les composants du résultat sont enregistrés dans la source d''objets intégrée lors de la création de la recette'
+      enabled: '&aActivé'
+      disabled: '&cDésactivé'
+    auto_discover:
+      name: '&aDébloquer dans le livre de recettes : &e<state>'
+      lore: '&7Cliquez pour basculer. Une fois activé, la recette est débloquée automatiquement dans le livre de recettes des joueurs'
       enabled: '&aActivé'
       disabled: '&cDésactivé'
     smelting:

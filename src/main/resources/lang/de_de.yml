@@ -114,6 +114,11 @@ menu:
       lore: '&7Klicken zum Umschalten. Wenn aktiviert, werden beim Speichern der Änderungen alle Komponenten des Ergebnisitems in der integrierten Item-Quelle gespeichert'
       enabled: '&aAn'
       disabled: '&cAus'
+    auto_discover:
+      name: '&aIm Rezeptbuch automatisch freischalten: &e<state>'
+      lore: '&7Klicken zum Umschalten. Wenn aktiviert, wird das Rezept im Rezeptbuch der Spieler automatisch freigeschaltet'
+      enabled: '&aAn'
+      disabled: '&cAus'
     smelting:
       time: '&aSchmelzzeit: &e<time> &7(tick)'
       time_lore: '&7Klicke zum Eingeben'
@@ -134,6 +139,11 @@ menu:
     result_save_all_components:
       name: '&aAlle Ergebnis-Komponenten speichern: &e<state>'
       lore: '&7Klicken zum Umschalten. Wenn aktiviert, werden beim Erstellen des Rezepts alle Komponenten des Ergebnisitems in der integrierten Item-Quelle gespeichert'
+      enabled: '&aAn'
+      disabled: '&cAus'
+    auto_discover:
+      name: '&aIm Rezeptbuch automatisch freischalten: &e<state>'
+      lore: '&7Klicken zum Umschalten. Wenn aktiviert, wird das Rezept im Rezeptbuch der Spieler automatisch freigeschaltet'
       enabled: '&aAn'
       disabled: '&cAus'
     smelting:

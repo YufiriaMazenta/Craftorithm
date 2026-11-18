@@ -55,7 +55,7 @@ public final class VanillaShapedEditor extends RecipeEditor {
         this.display = new MenuDisplay(
             VanillaShapedEditorConfig.TITLE.value(),
             new MenuLayout(Arrays.asList(
-                "B#######D",
+                "B###O###D",
                 "#123#***#",
                 "#456A* K#",
                 "#789#***#",
@@ -64,6 +64,7 @@ public final class VanillaShapedEditor extends RecipeEditor {
                 Map<Character, IconCreator> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
                 layoutMap.put('K', () -> getResultSaveAllComponentsIcon(VanillaShapedEditorConfig.RESULT_SAVE_ALL_COMPONENTS_ICON.value()));
+                layoutMap.put('O', () -> getAutoDiscoverIcon(VanillaShapedEditorConfig.AUTO_DISCOVER_ICON.value()));
                 layoutMap.put('*', this::getResultFrameIcon);
                 layoutMap.put('A', this::getConfirmIcon);
                 layoutMap.put('B', () -> getBackIcon(VanillaShapedEditorConfig.BACK_ICON.value()));

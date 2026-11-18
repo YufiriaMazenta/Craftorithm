@@ -16,7 +16,7 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
 import org.bukkit.plugin.EventExecutor;
 import pers.yufiria.craftorithm.Craftorithm;
-import pers.yufiria.craftorithm.api.event.RecipeLoadFromConfigEvent;
+import pers.yufiria.craftorithm.api.event.RecipeRegisterEvent;
 import pers.yufiria.craftorithm.recipe.RecipeTypeRegistry;
 import pers.yufiria.craftorithm.trigger.TriggerContext;
 import pers.yufiria.craftorithm.trigger.TriggerManager;
@@ -283,9 +283,9 @@ public enum EventTriggerTypes {
         );
 
         // 一些玩家无关的事件
-        registerAsync("recipe_load", RecipeLoadFromConfigEvent.class,
+        registerAsync("recipe_load", RecipeRegisterEvent.class,
             event -> {
-                if (!(event instanceof RecipeLoadFromConfigEvent recipeLoadEvent)) {
+                if (!(event instanceof RecipeRegisterEvent recipeLoadEvent)) {
                     return null;
                 }
                 Map<String, ScriptValue> vars = new HashMap<>();

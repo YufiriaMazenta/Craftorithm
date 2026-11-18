@@ -176,6 +176,30 @@ public class MenuIconConfigUtils {
     }
 
     /**
+     * 构建配方创建器界面的「自动解锁配方书」开关图标
+     */
+    public static ConfigurationSection creatorAutoDiscoverIcon() {
+        return icon(
+            "minecraft:knowledge_book",
+            "<translate:lang:menu.recipe_creator.auto_discover.name>",
+            "",
+            "<translate:lang:menu.recipe_creator.auto_discover.lore>"
+        );
+    }
+
+    /**
+     * 构建配方编辑器界面的「自动解锁配方书」开关图标
+     */
+    public static ConfigurationSection editorAutoDiscoverIcon() {
+        return icon(
+            "minecraft:knowledge_book",
+            "<translate:lang:menu.recipe_editor.auto_discover.name>",
+            "",
+            "<translate:lang:menu.recipe_editor.auto_discover.lore>"
+        );
+    }
+
+    /**
      * 构建配方创建器界面的经验图标
      */
     public static ConfigurationSection creatorExpIcon() {

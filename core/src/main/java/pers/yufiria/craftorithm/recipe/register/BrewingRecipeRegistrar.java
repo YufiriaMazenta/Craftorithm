@@ -16,11 +16,11 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @SuppressWarnings({"removal"})
-public enum BrewingRecipeRegister implements RecipeRegister {
+public enum BrewingRecipeRegistrar implements RecipeRegistrar {
 
     INSTANCE;
     private final Map<NamespacedKey, BrewingRecipe> brewingRecipeMap = new ConcurrentHashMap<>();
-    private final RecipeRegister actualRegister = initActualRegister();
+    private final RecipeRegistrar actualRegister = initActualRegister();
 
     @Override
     public boolean registerRecipe(Recipe recipe, boolean sync2Client) {
@@ -60,7 +60,7 @@ public enum BrewingRecipeRegister implements RecipeRegister {
         return Optional.empty();
     }
 
-    private RecipeRegister initActualRegister() {
+    private RecipeRegistrar initActualRegister() {
         if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V26_3)) {
             return Since26_3.INSTANCE;
         } else {
@@ -71,23 +71,23 @@ public enum BrewingRecipeRegister implements RecipeRegister {
     /**
      * 用于26.3以上
      */
-    enum Since26_3 implements RecipeRegister {
+    enum Since26_3 implements RecipeRegistrar {
 
         INSTANCE;
 
         @Override
         public boolean registerRecipe(Recipe recipe, boolean sync2Client) {
-            return BukkitRecipeRegister.INSTANCE.registerRecipe(recipe, sync2Client);
+            return BukkitRecipeRegistrar.INSTANCE.registerRecipe(recipe, sync2Client);
         }
 
         @Override
         public boolean unregisterRecipe(NamespacedKey recipeKey, boolean sync2Client) {
-            return BukkitRecipeRegister.INSTANCE.unregisterRecipe(recipeKey, sync2Client);
+            return BukkitRecipeRegistrar.INSTANCE.unregisterRecipe(recipeKey, sync2Client);
         }
 
     }
 
-    enum Before26_3 implements RecipeRegister {
+    enum Before26_3 implements RecipeRegistrar {
 
         INSTANCE;
 

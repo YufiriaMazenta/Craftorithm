@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
+import pers.yufiria.craftorithm.api.event.CraftorithmReloadDoneEvent;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.util.LangUtils;
@@ -118,6 +119,7 @@ public enum ReloadManager {
                 reloading.set(false);
             }
         }
+        new CraftorithmReloadDoneEvent().call();
         if (recipeReloadDone && owned && sender != null) {
             LangUtils.sendLang(sender, Languages.COMMAND_RELOAD_SUCCESS);
         }

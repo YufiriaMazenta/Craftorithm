@@ -7,15 +7,15 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.NotNull;
-import pers.yufiria.craftorithm.recipe.register.RecipeRegister;
+import pers.yufiria.craftorithm.recipe.register.RecipeRegistrar;
 
 import java.util.Objects;
 
 /**
- * 当从Craftorithm/recipes文件夹读取配方文件并注册时触发
+ * 当从Craftorithm/recipes文件夹读取配方文件注册时触发
  * 如果被取消则该配方不会注册
  */
-public class RecipeLoadFromConfigEvent extends Event implements EventCaller, Cancellable {
+public class RecipeRegisterEvent extends Event implements EventCaller, Cancellable {
 
     private static final HandlerList HANDLER_LIST = new HandlerList();
 
@@ -25,18 +25,21 @@ public class RecipeLoadFromConfigEvent extends Event implements EventCaller, Can
     final NamespacedKey recipeKey;
     private @NotNull
     final YamlConfiguration recipeConfig;
-    private @NotNull RecipeRegister recipeRegister;
+    private @NotNull RecipeRegistrar recipeRegistrar;
+    private final Reason reason;
 
-    public RecipeLoadFromConfigEvent(
+    public RecipeRegisterEvent(
         @NotNull Recipe recipe,
         @NotNull NamespacedKey recipeKey,
         @NotNull YamlConfiguration recipeConfig,
-        @NotNull RecipeRegister recipeRegister
+        @NotNull RecipeRegistrar recipeRegistrar,
+        @NotNull Reason reason
     ) {
         this.recipe = Objects.requireNonNull(recipe);
         this.recipeKey = Objects.requireNonNull(recipeKey);
         this.recipeConfig = Objects.requireNonNull(recipeConfig);
-        this.recipeRegister = Objects.requireNonNull(recipeRegister);
+        this.recipeRegistrar = Objects.requireNonNull(recipeRegistrar);
+        this.reason = reason;
     }
 
     public void setRecipe(@NotNull Recipe recipe) {
@@ -55,12 +58,16 @@ public class RecipeLoadFromConfigEvent extends Event implements EventCaller, Can
         return recipeConfig;
     }
 
-    public void setRecipeRegister(@NotNull RecipeRegister recipeRegister) {
-        this.recipeRegister = Objects.requireNonNull(recipeRegister);
+    public void setRecipeRegister(@NotNull RecipeRegistrar recipeRegistrar) {
+        this.recipeRegistrar = Objects.requireNonNull(recipeRegistrar);
     }
 
-    public @NotNull RecipeRegister recipeRegister() {
-        return recipeRegister;
+    public @NotNull RecipeRegistrar recipeRegister() {
+        return recipeRegistrar;
+    }
+
+    public Reason reason() {
+        return reason;
     }
 
     public static @NotNull HandlerList getHandlerList() {
@@ -81,4 +88,11 @@ public class RecipeLoadFromConfigEvent extends Event implements EventCaller, Can
     public void setCancelled(boolean cancel) {
         this.cancel = cancel;
     }
+
+    public enum Reason {
+        RELOAD,
+        NEW_RECIPE,
+        EDIT_RECIPE
+    }
+
 }

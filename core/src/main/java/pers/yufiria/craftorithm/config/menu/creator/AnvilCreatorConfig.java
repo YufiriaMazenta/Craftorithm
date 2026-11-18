@@ -13,6 +13,7 @@ public class AnvilCreatorConfig {
     public static final ConfigSectionConfig FRAME_ICON = new ConfigSectionConfig("frame_icon", MenuIconConfigUtils.creatorFrameIcon("anvil", "anvil", "result_right", "confirm_button"));
     public static final ConfigSectionConfig CONFIRM_ICON = new ConfigSectionConfig("confirm_icon", MenuIconConfigUtils.creatorConfirmIcon("minecraft:anvil", "anvil"));
     public static final ConfigSectionConfig RESULT_SAVE_ALL_COMPONENTS_ICON = new ConfigSectionConfig("result_save_all_components_icon", MenuIconConfigUtils.creatorResultSaveAllComponentsIcon());
+    public static final ConfigSectionConfig AUTO_DISCOVER_ICON = new ConfigSectionConfig("auto_discover_icon", MenuIconConfigUtils.creatorAutoDiscoverIcon());
     public static final ConfigSectionConfig COST_LEVEL_ICON = new ConfigSectionConfig("cost_level_icon", MenuIconConfigUtils.icon(
         "minecraft:experience_bottle",
         "<translate:lang:menu.recipe_creator.anvil.cost_level>",

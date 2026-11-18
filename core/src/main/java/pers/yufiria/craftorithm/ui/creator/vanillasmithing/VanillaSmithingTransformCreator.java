@@ -37,7 +37,7 @@ public class VanillaSmithingTransformCreator extends RecipeCreator {
         this.display = new MenuDisplay(
             VanillaSmithingTransformCreatorConfig.TITLE.value(),
             new MenuLayout(Arrays.asList(
-                "#########",
+                "####O####",
                 "######FFF",
                 "#T#BCAFRK",
                 "######FFF",
@@ -46,6 +46,7 @@ public class VanillaSmithingTransformCreator extends RecipeCreator {
                 Map<Character, IconCreator> layoutMap = new HashMap<>();
                 layoutMap.put('#', this::getFrameIcon);
                 layoutMap.put('K', () -> getResultSaveAllComponentsIcon(VanillaSmithingTransformCreatorConfig.RESULT_SAVE_ALL_COMPONENTS_ICON.value()));
+                layoutMap.put('O', () -> getAutoDiscoverIcon(VanillaSmithingTransformCreatorConfig.AUTO_DISCOVER_ICON.value()));
                 layoutMap.put('C', this::getConfirmIcon);
                 layoutMap.put('F', this::getResultFrameIcon);
                 return layoutMap;

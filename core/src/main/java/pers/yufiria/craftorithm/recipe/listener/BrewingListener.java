@@ -12,7 +12,7 @@ import org.bukkit.inventory.BrewerInventory;
 import org.bukkit.inventory.ItemStack;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
-import pers.yufiria.craftorithm.recipe.register.BrewingRecipeRegister;
+import pers.yufiria.craftorithm.recipe.register.BrewingRecipeRegistrar;
 import pers.yufiria.craftorithm.recipe.worldisolation.WorldIsolationDataHandler;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessorManager;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessors;
@@ -45,7 +45,7 @@ public enum BrewingListener implements Listener {
                     continue;
                 }
                 int finalI = i;
-                BrewingRecipeRegister.INSTANCE.match(input, ingredient).ifPresent(
+                BrewingRecipeRegistrar.INSTANCE.match(input, ingredient).ifPresent(
                     brewingRecipe -> {
                         results.set(finalI, brewingRecipe.getResult());
                     }
@@ -73,7 +73,7 @@ public enum BrewingListener implements Listener {
             ItemStack result = originalResult == null ? null : originalResult.clone();
             ItemStack input = brewerInventory.getItem(i);
             if (input != null) {
-                Optional<NamespacedKey> recipeKeyOpt = BrewingRecipeRegister.INSTANCE.matchKey(input, ingredient);
+                Optional<NamespacedKey> recipeKeyOpt = BrewingRecipeRegistrar.INSTANCE.matchKey(input, ingredient);
                 // 检查物品是否能用于酿造
                 // 由于spigot和paper都没有办法获取到原版的酿造配方key，只有匹配所有配方的拦截规则才能拦截原版配方
                 if (!ItemManager.INSTANCE.canCraft(new ItemStack[]{input, ingredient}, recipeKeyOpt.orElse(null))) {

@@ -20,14 +20,14 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.yufiria.craftorithm.Craftorithm;
-import pers.yufiria.craftorithm.api.event.RecipeLoadFromConfigEvent;
+import pers.yufiria.craftorithm.api.event.RecipeRegisterEvent;
 import pers.yufiria.craftorithm.config.DisabledRecipesConfig;
 import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.config.PluginConfigs;
 import pers.yufiria.craftorithm.database.dao.DiscoveredRecipeDao;
 import pers.yufiria.craftorithm.recipe.exception.RecipeLoadException;
 import pers.yufiria.craftorithm.recipe.parser.RecipeParser;
-import pers.yufiria.craftorithm.recipe.register.RecipeRegister;
+import pers.yufiria.craftorithm.recipe.register.RecipeRegistrar;
 import pers.yufiria.craftorithm.recipe.sync.RecipeSyncManager;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessorManager;
 import pers.yufiria.craftorithm.util.CollectionsUtils;
@@ -99,7 +99,7 @@ public enum RecipeManager implements LifecycleTask {
         //删除所有由插件添加的配方
         craftorithmRecipes.forEach((recipeKey, parsed) -> {
             RecipeType recipeType = parsed.recipeType();
-            recipeType.recipeRegister().unregisterRecipe(recipeKey, false);
+            recipeType.recipeRegistrar().unregisterRecipe(recipeKey, false);
         });
         craftorithmRecipes.clear();
         serverRecipeKeys.clear();
@@ -213,26 +213,26 @@ public enum RecipeManager implements LifecycleTask {
         return new ParsedRecipe(recipeFileName, recipeKey, recipe, recipeType, configWrapper, createTime);
     }
 
-    public boolean registerParsedRecipe(ParsedRecipe parsed, boolean sync2Client) {
+    public boolean registerParsedRecipe(ParsedRecipe parsed, RecipeRegisterEvent.Reason reason, boolean sync2Client) {
         Recipe recipe = parsed.recipe();
         RecipeType recipeType = parsed.recipeType();
         BukkitConfigWrapper configWrapper = parsed.configWrapper();
         YamlConfiguration recipeConfig = configWrapper.config();
         String recipeFileName = parsed.recipeFileName();
         NamespacedKey recipeKey = parsed.recipeKey();
-
-        RecipeRegister recipeRegister = recipeType.recipeRegister();
-        RecipeLoadFromConfigEvent recipeLoadFromConfigEvent = new RecipeLoadFromConfigEvent(
+        RecipeRegistrar recipeRegistrar = recipeType.recipeRegistrar();
+        RecipeRegisterEvent recipeRegisterEvent = new RecipeRegisterEvent(
             recipe,
             recipeKey,
             recipeConfig,
-            recipeRegister
+            recipeRegistrar,
+            reason
         );
-        recipeLoadFromConfigEvent.call();
-        if (recipeLoadFromConfigEvent.isCancelled()) {
+        recipeRegisterEvent.call();
+        if (recipeRegisterEvent.isCancelled()) {
             return false;
         }
-        boolean result = recipeLoadFromConfigEvent.recipeRegister().registerRecipe(recipe, sync2Client);
+        boolean result = recipeRegisterEvent.recipeRegister().registerRecipe(recipe, sync2Client);
         if (result) {
             craftorithmRecipes.put(recipeKey, parsed);
             serverRecipeKeys.add(recipeKey);
@@ -251,22 +251,6 @@ public enum RecipeManager implements LifecycleTask {
             CrypticLib.warn("Register recipe " + recipeFileName + "(" + recipeKey + ") failed");
         }
         return result;
-    }
-
-    /**
-     * 从配置文件里加载并注册一个配方
-     *
-     * @param recipeFileName      配方文件的名字,当配方文件里不存在recipe_id这个配置时,会尝试使用文件名字作为配方id
-     * @param recipeConfigWrapper 配方的配置文件
-     * @param sync2Client       是否在注册后同步给客户端
-     * @return
-     */
-    public boolean loadRecipeFromConfig(String recipeFileName, BukkitConfigWrapper recipeConfigWrapper, boolean sync2Client) {
-        ParsedRecipe parsed = parseRecipeFromConfig(recipeFileName, recipeConfigWrapper);
-        if (parsed == null) {
-            return false;
-        }
-        return registerParsedRecipe(parsed, sync2Client);
     }
 
     private void loadServerRecipeKeys() {
@@ -443,7 +427,7 @@ public enum RecipeManager implements LifecycleTask {
      */
     private boolean registerRecipe(Recipe recipe, boolean sync2Client) {
         RecipeType recipeType = RecipeTypeRegistry.INSTANCE.typeOf(recipe);
-        return recipeType.recipeRegister().registerRecipe(recipe, sync2Client);
+        return recipeType.recipeRegistrar().registerRecipe(recipe, sync2Client);
     }
 
     /**
@@ -455,7 +439,7 @@ public enum RecipeManager implements LifecycleTask {
     private boolean unregisterRecipe(NamespacedKey recipeKey, boolean sync2Client) {
         Recipe recipe = getRecipe(recipeKey);
         RecipeType recipeType = RecipeTypeRegistry.INSTANCE.typeOf(recipe);
-        return recipeType.recipeRegister().unregisterRecipe(recipeKey, sync2Client);
+        return recipeType.recipeRegistrar().unregisterRecipe(recipeKey, sync2Client);
     }
 
     public boolean removeCraftorithmRecipe(String recipeId, boolean deleteFile, boolean sync2Client) {
@@ -661,7 +645,7 @@ public enum RecipeManager implements LifecycleTask {
             int recipeNum = 0;
             for (ParsedRecipe parsed : batch) {
                 try {
-                    boolean result = registerParsedRecipe(parsed, false);
+                    boolean result = registerParsedRecipe(parsed, RecipeRegisterEvent.Reason.RELOAD, false);
                     if (result) {
                         recipeNum++;
                     }

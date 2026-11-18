@@ -13,10 +13,10 @@ import pers.yufiria.craftorithm.config.Languages;
 import pers.yufiria.craftorithm.recipe.anvil.AnvilRecipe;
 import pers.yufiria.craftorithm.recipe.ingredient.RecipeChoiceParser;
 import pers.yufiria.craftorithm.recipe.parser.*;
-import pers.yufiria.craftorithm.recipe.register.AnvilRecipeRegister;
-import pers.yufiria.craftorithm.recipe.register.BrewingRecipeRegister;
-import pers.yufiria.craftorithm.recipe.register.BukkitRecipeRegister;
-import pers.yufiria.craftorithm.recipe.register.RecipeRegister;
+import pers.yufiria.craftorithm.recipe.register.AnvilRecipeRegistrar;
+import pers.yufiria.craftorithm.recipe.register.BrewingRecipeRegistrar;
+import pers.yufiria.craftorithm.recipe.register.BukkitRecipeRegistrar;
+import pers.yufiria.craftorithm.recipe.register.RecipeRegistrar;
 
 import java.util.Locale;
 import java.util.function.Function;
@@ -36,15 +36,15 @@ public enum SimpleRecipeTypes implements RecipeType {
                 return null;
             }
         },
-        new RecipeRegister() {
+        new RecipeRegistrar() {
             @Override
             public boolean registerRecipe(Recipe recipe, boolean sync2Client) {
-                return BukkitRecipeRegister.INSTANCE.registerRecipe(recipe, sync2Client);
+                return BukkitRecipeRegistrar.INSTANCE.registerRecipe(recipe, sync2Client);
             }
 
             @Override
             public boolean unregisterRecipe(NamespacedKey recipeKey, boolean sync2Client) {
-                return BukkitRecipeRegister.INSTANCE.unregisterRecipe(recipeKey, sync2Client);
+                return BukkitRecipeRegistrar.INSTANCE.unregisterRecipe(recipeKey, sync2Client);
             }
         },
         recipe -> false,
@@ -53,70 +53,70 @@ public enum SimpleRecipeTypes implements RecipeType {
     VANILLA_SHAPED(
         "vanilla_shaped",
         ShapedRecipeParser.INSTANCE,
-        BukkitRecipeRegister.INSTANCE,
+        BukkitRecipeRegistrar.INSTANCE,
         recipe -> recipe instanceof ShapedRecipe,
         Languages.RECIPE_TYPE_NAME_VANILLA_SHAPED,
         1),
     VANILLA_SHAPELESS(
         "vanilla_shapeless",
         ShapelessRecipeParser.INSTANCE,
-        BukkitRecipeRegister.INSTANCE,
+        BukkitRecipeRegistrar.INSTANCE,
         recipe -> recipe instanceof ShapelessRecipe,
         Languages.RECIPE_TYPE_NAME_VANILLA_SHAPELESS,
         2),
     VANILLA_SMELTING_FURNACE(
         "vanilla_smelting_furnace",
         SmeltingRecipeParser.INSTANCE,
-        BukkitRecipeRegister.INSTANCE,
+        BukkitRecipeRegistrar.INSTANCE,
         recipe -> recipe instanceof FurnaceRecipe,
         Languages.RECIPE_TYPE_NAME_VANILLA_SMELTING_FURNACE,
         3),
     VANILLA_SMELTING_BLAST(
         "vanilla_smelting_blast",
         SmeltingRecipeParser.INSTANCE,
-        BukkitRecipeRegister.INSTANCE,
+        BukkitRecipeRegistrar.INSTANCE,
         recipe -> recipe instanceof BlastingRecipe,
         Languages.RECIPE_TYPE_NAME_VANILLA_SMELTING_BLAST,
         4),
     VANILLA_SMELTING_SMOKER(
         "vanilla_smelting_smoker",
         SmeltingRecipeParser.INSTANCE,
-        BukkitRecipeRegister.INSTANCE,
+        BukkitRecipeRegistrar.INSTANCE,
         recipe -> recipe instanceof SmokingRecipe,
         Languages.RECIPE_TYPE_NAME_VANILLA_SMELTING_SMOKER,
         5),
     VANILLA_SMELTING_CAMPFIRE(
         "vanilla_smelting_campfire",
         SmeltingRecipeParser.INSTANCE,
-        BukkitRecipeRegister.INSTANCE,
+        BukkitRecipeRegistrar.INSTANCE,
         recipe -> recipe instanceof CampfireRecipe,
         Languages.RECIPE_TYPE_NAME_VANILLA_SMELTING_CAMPFIRE,
         6),
     VANILLA_SMITHING_TRANSFORM(
         "vanilla_smithing_transform",
         SmithingTransformRecipeParser.INSTANCE,
-        BukkitRecipeRegister.INSTANCE,
+        BukkitRecipeRegistrar.INSTANCE,
         recipe -> recipe instanceof SmithingTransformRecipe,
         Languages.RECIPE_TYPE_NAME_VANILLA_SMITHING_TRANSFORM,
         7),
     VANILLA_SMITHING_TRIM(
         "vanilla_smithing_trim",
         SmithingTrimRecipeParser.INSTANCE,
-        BukkitRecipeRegister.INSTANCE,
+        BukkitRecipeRegistrar.INSTANCE,
         recipe -> recipe instanceof SmithingTrimRecipe,
         Languages.RECIPE_TYPE_NAME_VANILLA_SMITHING_TRIM,
         8),
     VANILLA_STONECUTTING(
         "vanilla_stonecutting",
         StonecuttingRecipeParser.INSTANCE,
-        BukkitRecipeRegister.INSTANCE,
+        BukkitRecipeRegistrar.INSTANCE,
         recipe -> recipe instanceof StonecuttingRecipe,
         Languages.RECIPE_TYPE_NAME_VANILLA_STONECUTTING,
         9),
     VANILLA_BREWING(
         "vanilla_brewing",
         BrewingRecipeParser.INSTANCE,
-        BrewingRecipeRegister.INSTANCE,
+        BrewingRecipeRegistrar.INSTANCE,
         recipe -> {
             if (recipe instanceof BrewingRecipe) {
                 return true;
@@ -130,14 +130,14 @@ public enum SimpleRecipeTypes implements RecipeType {
     ANVIL(
         "anvil",
         AnvilRecipeParser.INSTANCE,
-        AnvilRecipeRegister.INSTANCE,
+        AnvilRecipeRegistrar.INSTANCE,
         recipe -> recipe instanceof AnvilRecipe,
         Languages.RECIPE_TYPE_NAME_ANVIL,
         11);
 
     private final String typeKey;
     private final RecipeParser<?> recipeParser;
-    private final RecipeRegister recipeRegister;
+    private final RecipeRegistrar recipeRegistrar;
     private final Function<Recipe, Boolean> isThisTypeFunction;
     private final StringLang recipeNameLang;
     private final @Range(from = 0, to = 256) Integer typeId;
@@ -145,14 +145,14 @@ public enum SimpleRecipeTypes implements RecipeType {
     SimpleRecipeTypes(
         String typeKey,
         RecipeParser<?> recipeParser,
-        RecipeRegister recipeRegister,
+        RecipeRegistrar recipeRegistrar,
         Function<Recipe, Boolean> isThisTypeFunction,
         StringLang recipeNameLang,
         @Range(from = 0, to = 256) Integer typeId
     ) {
         this.typeKey = typeKey;
         this.recipeParser = recipeParser;
-        this.recipeRegister = recipeRegister;
+        this.recipeRegistrar = recipeRegistrar;
         this.isThisTypeFunction = isThisTypeFunction;
         this.recipeNameLang = recipeNameLang;
         this.typeId = typeId;
@@ -174,8 +174,8 @@ public enum SimpleRecipeTypes implements RecipeType {
     }
 
     @Override
-    public @NotNull RecipeRegister recipeRegister() {
-        return recipeRegister;
+    public @NotNull RecipeRegistrar recipeRegistrar() {
+        return recipeRegistrar;
     }
 
     @Override
