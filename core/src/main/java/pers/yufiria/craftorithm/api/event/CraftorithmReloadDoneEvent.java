@@ -6,7 +6,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Craftorithm重载完毕时触发的事件, 在主线程触发
+ * Craftorithm重载完毕时触发的事件, 在异步线程触发
  */
 public class CraftorithmReloadDoneEvent extends Event implements EventCaller {
 
@@ -14,7 +14,7 @@ public class CraftorithmReloadDoneEvent extends Event implements EventCaller {
 
     @ApiStatus.Internal
     public CraftorithmReloadDoneEvent() {
-        super(false);
+        super(true);
     }
 
     public @NotNull HandlerList getHandlers() {

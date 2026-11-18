@@ -1,5 +1,6 @@
 package pers.yufiria.craftorithm.recipe;
 
+import crypticlib.CrypticLibBukkit;
 import crypticlib.CrypticLibPlugin;
 import crypticlib.lifecycle.LifecyclePhase;
 import crypticlib.lifecycle.LifecycleSchedule;
