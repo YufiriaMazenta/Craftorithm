@@ -131,7 +131,6 @@ enable_worlds:
 - World names are Bukkit world names, not namespaced IDs.
 - Unknown worlds are reported as errors during loading and skipped.
 - Recipes without `enable_worlds` are not restricted.
-- Currently applies to anvil, brewing, and stonecutting recipes.
 
 ## Documentation
 
