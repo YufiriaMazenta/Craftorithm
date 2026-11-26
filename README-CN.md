@@ -109,23 +109,24 @@ remainders:
 - 材料写法与配方材料一致，支持原版物品 ID、自定义物品 ID、`tag:` 和 `item_pack:`。
 - 未配置规则的槽位继续使用原版剩余物；同一物品匹配多条规则时，第一条生效。
 
-### 世界隔离
+### 世界条件
 
-`enable_worlds` 用于限制配方只在指定世界中可用，未配置时该配方在所有世界都可用：
+`world_conditions` 用于限制配方在什么世界状态下可用，未配置时该配方在所有世界、所有状态下都可用：
 
 ```yaml
-# 限制在单个世界
-enable_worlds: world
-
-# 限制在多个世界
-enable_worlds:
-  - world
-  - world_nether
+world_conditions:
+  name: [world, world_nether]   # 只在这些世界
+  time:                          # 并且是夜晚
+    min: 13000
+    max: 23000
+  difficulty: hard               # 并且难度为困难
 ```
 
+- 可用字段：`name`、`time`、`difficulty`、`weather`、`environment`、`moon_phase`。
+- 数字写单值表示等于，写 `min` / `max` 表示范围；同一字段写列表表示任意一项满足即可。
+- 不同字段之间需要同时满足。
 - 世界名使用 Bukkit 的世界名，不是命名空间 ID。
-- 世界不存在时会在加载时输出错误，无效的世界名会被忽略。
-- 未配置 `enable_worlds` 的配方不受世界限制。
+- 旧版的 `enable_worlds` 已移除，启动时会自动转换为 `world_conditions.name`（转换会重写配方文件，注释不会保留）。
 
 ## 文档
 

@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.api;
 
 import org.bukkit.NamespacedKey;
+import org.bukkit.World;
 import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -8,6 +9,7 @@ import pers.yufiria.craftorithm.recipe.RecipeGroup;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.RecipeType;
 import pers.yufiria.craftorithm.recipe.RecipeTypeRegistry;
+import pers.yufiria.craftorithm.recipe.worldcondition.WorldConditionHandler;
 
 import java.util.*;
 
@@ -179,6 +181,19 @@ public enum RecipeApi {
      */
     public @Nullable NamespacedKey getRecipeKeyByFileName(@NotNull String recipeFileName) {
         return RecipeManager.INSTANCE.getRecipeKeyByFileName(recipeFileName);
+    }
+
+    /**
+     * 判断配方在指定世界当前是否可用
+     * <p>
+     * 世界条件（时间、难度、天气等）会按世界当前状态实时判定，同一配方在不同时间点的结果可能不同
+     *
+     * @param recipeKey 配方Key
+     * @param world     世界
+     * @return 是否可用
+     */
+    public boolean canUseInWorld(@NotNull NamespacedKey recipeKey, @NotNull World world) {
+        return WorldConditionHandler.INSTANCE.canRecipeUse(recipeKey, world);
     }
 
 }

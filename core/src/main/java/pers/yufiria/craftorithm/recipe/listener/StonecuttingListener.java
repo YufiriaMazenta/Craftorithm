@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.StonecutterInventory;
 import org.bukkit.inventory.StonecuttingRecipe;
 import pers.yufiria.craftorithm.item.ItemManager;
-import pers.yufiria.craftorithm.recipe.worldisolation.WorldIsolationDataHandler;
+import pers.yufiria.craftorithm.recipe.worldcondition.WorldConditionHandler;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessorManager;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessors;
 
@@ -29,8 +29,8 @@ public enum StonecuttingListener implements Listener {
     INSTANCE;
 
     /**
-     * 世界隔离、材料限制与结果处理。
-     * 材料限制对所有命名空间、所有版本生效；1.21 起没有切石配方的 nms 实现，世界隔离只能在这里做。
+     * 世界条件、材料限制与结果处理。
+     * 材料限制对所有命名空间、所有版本生效；1.21 起没有切石配方的 nms 实现，世界条件只能在这里做。
      */
     @EventHandler
     public void processResult(PlayerStonecutterRecipeSelectEvent event) {
@@ -46,8 +46,8 @@ public enum StonecuttingListener implements Listener {
             ItemStack inputItem = stonecutterInventory.getInputItem();
 
             if (MinecraftVersion.current().afterOrEquals(MinecraftVersion.V1_21)) {
-                //1.21起没有切石配方的nms实现，世界隔离只能在这里做；1.20.X由nms层处理
-                if (!WorldIsolationDataHandler.INSTANCE.canRecipeUse(
+                //1.21起没有切石配方的nms实现，世界条件只能在这里做；1.20.X由nms层处理
+                if (!WorldConditionHandler.INSTANCE.canRecipeUse(
                     recipeKey,
                     player.getWorld()
                 )) {

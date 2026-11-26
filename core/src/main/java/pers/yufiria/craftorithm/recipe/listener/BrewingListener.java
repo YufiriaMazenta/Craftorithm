@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.recipe.RecipeManager;
 import pers.yufiria.craftorithm.recipe.register.BrewingRecipeRegistrar;
-import pers.yufiria.craftorithm.recipe.worldisolation.WorldIsolationDataHandler;
+import pers.yufiria.craftorithm.recipe.worldcondition.WorldConditionHandler;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessorManager;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessors;
 
@@ -85,8 +85,8 @@ public enum BrewingListener implements Listener {
                     NamespacedKey recipeKey = recipeKeyOpt.get();
 
                     if (MinecraftVersion.current().before(MinecraftVersion.V26_3)) {
-                        //因为26.3开始，世界隔离在nms层处理，所以只处理早期版本的相关逻辑
-                        if (!WorldIsolationDataHandler.INSTANCE.canRecipeUse(
+                        //因为26.3开始，世界条件在nms层处理，所以只处理早期版本的相关逻辑
+                        if (!WorldConditionHandler.INSTANCE.canRecipeUse(
                             recipeKey,
                             event.getBlock().getWorld()
                         )) {

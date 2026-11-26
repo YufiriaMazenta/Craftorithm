@@ -4,7 +4,7 @@ import crypticlib.MinecraftVersion;
 import org.bukkit.World;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.recipe.nms.input.BukkitCraftingInput;
-import pers.yufiria.craftorithm.recipe.worldisolation.WorldIsolationDataHandler;
+import pers.yufiria.craftorithm.recipe.worldcondition.WorldConditionHandler;
 
 /**
  * 有序配方的通用实现
@@ -20,7 +20,7 @@ public interface NmsShapedRecipe<Input> extends NmsCraftingRecipe<Input> {
 
     @Override
     default boolean matches(BukkitCraftingInput craftingInput, World world) {
-        if (!WorldIsolationDataHandler.INSTANCE.canRecipeUse(recipeKey(), world)) {
+        if (!WorldConditionHandler.INSTANCE.canRecipeUse(recipeKey(), world)) {
             return false;
         }
         if (!ItemManager.INSTANCE.canCraft(craftingInput.items(), recipeKey())) {

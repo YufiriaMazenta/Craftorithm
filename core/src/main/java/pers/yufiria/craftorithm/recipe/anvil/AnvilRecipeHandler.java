@@ -24,7 +24,7 @@ import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.item.NamespacedItemIdStack;
 import pers.yufiria.craftorithm.item.exception.ItemNotFoundException;
 import pers.yufiria.craftorithm.recipe.ingredient.ItemIdStackRecipeChoice;
-import pers.yufiria.craftorithm.recipe.worldisolation.WorldIsolationDataHandler;
+import pers.yufiria.craftorithm.recipe.worldcondition.WorldConditionHandler;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessorManager;
 import pers.yufiria.craftorithm.resultprocessor.ResultProcessors;
 import pers.yufiria.craftorithm.trigger.TriggerContext;
@@ -78,7 +78,7 @@ public enum AnvilRecipeHandler implements Listener {
         for (Map.Entry<NamespacedKey, AnvilRecipe> anvilRecipeEntry : anvilRecipes.entrySet()) {
             AnvilRecipe anvilRecipe = anvilRecipeEntry.getValue();
             //如果不在允许的世界，直接忽略
-            if (!WorldIsolationDataHandler.INSTANCE.canRecipeUse(anvilRecipe.getKey(), world)) {
+            if (!WorldConditionHandler.INSTANCE.canRecipeUse(anvilRecipe.getKey(), world)) {
                 continue;
             }
 

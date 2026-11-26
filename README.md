@@ -114,23 +114,24 @@ remainders:
 - Ingredients use the same IDs as recipe ingredients, including vanilla IDs, custom IDs, `tag:`, and `item_pack:`.
 - Slots without a matching rule keep their vanilla remainder. When multiple rules match, the first one wins.
 
-### World Isolation
+### World Conditions
 
-`enable_worlds` restricts a recipe to specific worlds. When omitted, the recipe is available in every world:
+`world_conditions` restricts a recipe to certain world states. When omitted, the recipe is available in every world and state:
 
 ```yaml
-# Single world
-enable_worlds: world
-
-# Multiple worlds
-enable_worlds:
-  - world
-  - world_nether
+world_conditions:
+  name: [world, world_nether]   # only these worlds
+  time:                          # and during the night
+    min: 13000
+    max: 23000
+  difficulty: hard               # and on hard difficulty
 ```
 
+- Available fields: `name`, `time`, `difficulty`, `weather`, `environment`, `moon_phase`.
+- A plain number means "equals"; `min` / `max` describe a range. A list within one field matches on any entry.
+- Different fields must all match.
 - World names are Bukkit world names, not namespaced IDs.
-- Unknown worlds are reported as errors during loading and skipped.
-- Recipes without `enable_worlds` are not restricted.
+- The old `enable_worlds` option has been removed and is converted to `world_conditions.name` on startup. The conversion rewrites the recipe file, so comments are not kept.
 
 ## Documentation
 

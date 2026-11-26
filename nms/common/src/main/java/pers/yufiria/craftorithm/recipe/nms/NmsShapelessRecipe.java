@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.recipe.nms.input.BukkitCraftingInput;
-import pers.yufiria.craftorithm.recipe.worldisolation.WorldIsolationDataHandler;
+import pers.yufiria.craftorithm.recipe.worldcondition.WorldConditionHandler;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public interface NmsShapelessRecipe<NmsInput> extends NmsCraftingRecipe<NmsInput
 
     @Override
     default boolean matches(BukkitCraftingInput craftingInput, World world) {
-        if (!WorldIsolationDataHandler.INSTANCE.canRecipeUse(recipeKey(), world)) {
+        if (!WorldConditionHandler.INSTANCE.canRecipeUse(recipeKey(), world)) {
             return false;
         }
         List<ItemStack> bukkitInputItems = craftingInput.items();

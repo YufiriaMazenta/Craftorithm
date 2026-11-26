@@ -5,7 +5,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.recipe.nms.input.BukkitSmithingInput;
-import pers.yufiria.craftorithm.recipe.worldisolation.WorldIsolationDataHandler;
+import pers.yufiria.craftorithm.recipe.worldcondition.WorldConditionHandler;
 import pers.yufiria.craftorithm.util.IngredientUtils;
 
 import java.util.Optional;
@@ -33,7 +33,7 @@ public interface NmsSmithingRecipe extends NmsRecipe<BukkitSmithingInput> {
     Optional<RecipeChoice> additionChoice();
 
     default boolean matches(BukkitSmithingInput smithingInput, World world) {
-        if (!WorldIsolationDataHandler.INSTANCE.canRecipeUse(recipeKey(), world)) {
+        if (!WorldConditionHandler.INSTANCE.canRecipeUse(recipeKey(), world)) {
             return false;
         }
         ItemStack template = smithingInput.template();

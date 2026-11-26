@@ -5,7 +5,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import pers.yufiria.craftorithm.item.ItemManager;
 import pers.yufiria.craftorithm.recipe.nms.input.BukkitBrewingInput;
-import pers.yufiria.craftorithm.recipe.worldisolation.WorldIsolationDataHandler;
+import pers.yufiria.craftorithm.recipe.worldcondition.WorldConditionHandler;
 
 /**
  * 酿造配方的通用实现：药水槽与材料槽都要匹配
@@ -26,7 +26,7 @@ public interface NmsBrewingRecipe extends NmsRecipe<BukkitBrewingInput> {
 
     @Override
     default boolean matches(BukkitBrewingInput brewingInput, World world) {
-        if (!WorldIsolationDataHandler.INSTANCE.canRecipeUse(recipeKey(), world)) {
+        if (!WorldConditionHandler.INSTANCE.canRecipeUse(recipeKey(), world)) {
             return false;
         }
         if (!ItemManager.INSTANCE.canCraft(new ItemStack[]{brewingInput.input(), brewingInput.reagent()}, recipeKey())) {
