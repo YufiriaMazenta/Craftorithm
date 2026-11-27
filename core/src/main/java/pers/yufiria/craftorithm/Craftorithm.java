@@ -46,6 +46,7 @@ public final class Craftorithm extends BukkitPlugin implements LifecycleTask {
         }
         CrypticLib.logger().setLevel(parseLogLevel());
         CrypticLib.info("Server Type: " + CrypticLibBukkit.serverAdapter().type().name().toLowerCase(Locale.ROOT) + ", Version: " + MinecraftVersion.current().versionStr());
+        CrypticLib.info("Use scheduler: " + CrypticLibBukkit.scheduler().getClass().getSimpleName());
     }
 
     @Override
