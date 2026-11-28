@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 /**
  * 自定义燃料管理。
@@ -93,6 +94,7 @@ public enum CustomFuelManager implements Listener, LifecycleTask {
     private final Map<NamespacedItemId, Integer> fuels = new ConcurrentHashMap<>();
     private final Lazy<Map<NamespacedItemId, Integer>> lazyFuelsView = Lazy.of(() -> Collections.unmodifiableMap(fuels));
     private volatile BukkitConfigWrapper config;
+    private final Object fuelConfigAccessLock = new Object();
 
     /**
      * 配置包装器。延迟创建, 保证任一生命周期阶段调用都不会拿到 null
@@ -157,20 +159,18 @@ public enum CustomFuelManager implements Listener, LifecycleTask {
             throw new IllegalArgumentException("Cannot add null item as a fuel");
         }
         NamespacedItemId itemId = stackedItemId.itemId();
-        if (fuels.containsKey(itemId)) {
+        //并发添加同一物品时只有一次能写进去
+        if (fuels.putIfAbsent(itemId, burnTime) != null) {
             return false;
         }
-        fuels.put(itemId, burnTime);
-        CrypticLibBukkit.scheduler().async().submit(() -> {
-            List<Map<String, Object>> entries = readFuelList();
+        CrypticLibBukkit.scheduler().async().submit(() -> updateFuelEntries(entries -> {
             entries.removeIf(entry -> itemId.toString().equals(entry.get(ITEM_KEY)));
             Map<String, Object> fuel = new LinkedHashMap<>();
             //列表里存纯字符串id, 不把id拼进YAML键, 避免id含点号时被拆成多级节点
             fuel.put(ITEM_KEY, itemId.toString());
             fuel.put(BURN_TIME_KEY, burnTime);
             entries.add(fuel);
-            writeFuelList(entries);
-        });
+        }));
         return true;
     }
 
@@ -178,19 +178,24 @@ public enum CustomFuelManager implements Listener, LifecycleTask {
      * 移除一个自定义燃料, 不存在时返回 false
      */
     public boolean removeFuel(@Nullable NamespacedItemId itemId) {
-        if (itemId == null || !fuels.containsKey(itemId)) {
+        //remove 的返回值即"是否移除成功", 避免 containsKey + remove 的非原子判断
+        if (itemId == null || fuels.remove(itemId) == null) {
             return false;
         }
-        fuels.remove(itemId);
-        CrypticLibBukkit.scheduler().async().submit(() -> {
-            List<Map<String, Object>> entries = readFuelList();
-            entries.removeIf(entry -> itemId.toString().equals(entry.get(ITEM_KEY)));
-            writeFuelList(entries);
-        });
+        CrypticLibBukkit.scheduler().async().submit(() -> updateFuelEntries(entries ->
+            entries.removeIf(entry -> itemId.toString().equals(entry.get(ITEM_KEY)))
+        ));
         return true;
     }
 
     private void reload() {
+        //重载会整表重写配置, 与并发的增删共用同一把锁, 避免互相覆盖
+        synchronized (fuelConfigAccessLock) {
+            reloadFuels();
+        }
+    }
+
+    private void reloadFuels() {
         config().reloadConfig();
         YamlConfiguration yaml = config().config();
         migrateLegacyFuels(yaml);
@@ -283,21 +288,25 @@ public enum CustomFuelManager implements Listener, LifecycleTask {
         }
     }
 
-    private List<Map<String, Object>> readFuelList() {
-        config().reloadConfig();
-        List<Map<String, Object>> entries = new ArrayList<>();
-        for (Map<?, ?> entry : config().config().getMapList(FUELS_KEY)) {
-            Map<String, Object> copy = new LinkedHashMap<>();
-            entry.forEach((key, value) -> copy.put(String.valueOf(key), value));
-            entries.add(copy);
+    /**
+     * 串行化 fuels 列表的读取-修改-写入。
+     * 配置包装器的方法级锁覆盖不到跨方法的读改写: 两个并发增删会各自读到同一份旧表, 后写的把前写的条目盖掉,
+     * 所以整段流程共用 {@link #fuelConfigAccessLock}, 并且每次都从文件重新读取, 不依赖内存里的上一份列表。
+     */
+    private void updateFuelEntries(Consumer<List<Map<String, Object>>> mutator) {
+        synchronized (fuelConfigAccessLock) {
+            config().reloadConfig();
+            List<Map<String, Object>> entries = new ArrayList<>();
+            for (Map<?, ?> entry : config().config().getMapList(FUELS_KEY)) {
+                Map<String, Object> copy = new LinkedHashMap<>();
+                entry.forEach((key, value) -> copy.put(String.valueOf(key), value));
+                entries.add(copy);
+            }
+            mutator.accept(entries);
+            config().set(FUELS_KEY, entries);
+            config().saveConfig();
+            config().reloadConfig();
         }
-        return entries;
-    }
-
-    private void writeFuelList(List<Map<String, Object>> entries) {
-        config().set(FUELS_KEY, entries);
-        config().saveConfig();
-        config().reloadConfig();
     }
 
     // ===== 燃料槽交互 =====

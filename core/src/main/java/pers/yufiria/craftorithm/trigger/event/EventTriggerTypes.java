@@ -1,6 +1,7 @@
 package pers.yufiria.craftorithm.trigger.event;
 
 import crypticlib.CrypticLibBukkit;
+import crypticlib.Invoker;
 import crypticlib.script.ScriptValue;
 import crypticlib.util.BukkitEventHelper;
 import org.bukkit.Bukkit;
@@ -364,8 +365,13 @@ public enum EventTriggerTypes {
             TriggerContext ctx = type.extractContext(event);
             if (ctx == null) return;
             if (eventIsAsync) {
+                Runnable eventCaller = () -> TriggerManager.INSTANCE.fire(type, ctx);
                 //事件可能在异步线程触发, 调度回主线程执行触发器
-                CrypticLibBukkit.scheduler().submit(() -> TriggerManager.INSTANCE.fire(type, ctx));
+                if (!ctx.invokerId().equals(Invoker.CONSOLE_UUID)) {
+                    CrypticLibBukkit.scheduler().entity(Bukkit.getPlayer(ctx.invokerId())).submit(eventCaller);
+                } else {
+                    CrypticLibBukkit.scheduler().submit(eventCaller);
+                }
             } else {
                 TriggerManager.INSTANCE.fire(type, ctx);
             }

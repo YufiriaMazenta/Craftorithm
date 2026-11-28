@@ -115,7 +115,7 @@ public class TriggerContext {
     /**
      * 触发者UUID，无玩家场景返回 {@link Invoker#CONSOLE_UUID}
      */
-    public @NotNull UUID playerUniqueId() {
+    public @NotNull UUID invokerId() {
         return invokerId;
     }
 

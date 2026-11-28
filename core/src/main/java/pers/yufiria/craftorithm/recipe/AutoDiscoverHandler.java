@@ -16,8 +16,9 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import pers.yufiria.craftorithm.api.event.CraftorithmReloadDoneEvent;
 import pers.yufiria.craftorithm.api.event.RecipeRegisterEvent;
 
-import java.util.HashSet;
+import java.util.Collection;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 @EventListener
 @LifecycleTaskConfig(
@@ -35,7 +36,8 @@ public enum AutoDiscoverHandler implements Listener, LifecycleTask {
      */
     public static final String CONFIG_KEY = "auto_discover";
 
-    private final Set<NamespacedKey> autoUnlockRecipes = new HashSet<>();
+    //注册在区域线程/异步线程都可能发生, 进服读取则在自己的区域线程, 因此用并发集合
+    private final Set<NamespacedKey> autoUnlockRecipes = ConcurrentHashMap.newKeySet();
 
     @EventHandler
     public void onRecipeLoad(RecipeRegisterEvent event) {
@@ -48,20 +50,36 @@ public enum AutoDiscoverHandler implements Listener, LifecycleTask {
         if (event.reason() == RecipeRegisterEvent.Reason.RELOAD) {
             return;
         }
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            player.discoverRecipe(event.recipeKey());
-        }
+        discoverForOnlinePlayers(Set.of(event.recipeKey()));
     }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        event.getPlayer().discoverRecipes(autoUnlockRecipes);
+        Player player = event.getPlayer();
+        Set<NamespacedKey> snapshot = Set.copyOf(autoUnlockRecipes);
+        if (snapshot.isEmpty()) {
+            return;
+        }
+        CrypticLibBukkit.scheduler().entity(player).submit(() -> player.discoverRecipes(snapshot));
     }
 
     @EventHandler
     public void onCraftorithmReloadDone(CraftorithmReloadDoneEvent event) {
+        discoverForOnlinePlayers(autoUnlockRecipes);
+    }
+
+    /**
+     * 逐玩家投递解锁。
+     * 配方注册与重载可能落在全局区域线程或异步线程, 而配方书只能由玩家自己的区域线程写入,
+     * 因此不能直接遍历在线玩家操作, 必须逐个投递到对应实体的调度器上。
+     */
+    private void discoverForOnlinePlayers(Collection<NamespacedKey> recipeKeys) {
+        Set<NamespacedKey> snapshot = Set.copyOf(recipeKeys);
+        if (snapshot.isEmpty()) {
+            return;
+        }
         for (Player player : Bukkit.getOnlinePlayers()) {
-            player.discoverRecipes(autoUnlockRecipes);
+            CrypticLibBukkit.scheduler().entity(player).submit(() -> player.discoverRecipes(snapshot));
         }
     }
 

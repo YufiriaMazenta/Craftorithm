@@ -186,7 +186,7 @@ public enum TriggerManager implements LifecycleTask {
         int denied = 0;
         for (Trigger trigger : getTriggers(triggerType)) {
             if (!trigger.matches(context.recipeKey())) continue;
-            if (cooldownManager.isOnCooldown(trigger, context.playerUniqueId())) {
+            if (cooldownManager.isOnCooldown(trigger, context.invokerId())) {
                 denied++;
                 continue;
             }
@@ -204,11 +204,11 @@ public enum TriggerManager implements LifecycleTask {
         boolean fired = false;
         for (Trigger trigger : getTriggers(triggerType)) {
             if (!trigger.matches(context.recipeKey())) continue;
-            if (cooldownManager.isOnCooldown(trigger, context.playerUniqueId())) continue;
+            if (cooldownManager.isOnCooldown(trigger, context.invokerId())) continue;
             if (!trigger.evaluateConditions(context)) continue;
 
             trigger.execute(context);
-            cooldownManager.setCooldown(trigger, context.playerUniqueId());
+            cooldownManager.setCooldown(trigger, context.invokerId());
             fired = true;
         }
         return fired;

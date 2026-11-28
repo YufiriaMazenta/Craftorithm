@@ -37,6 +37,7 @@ import java.io.File;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 @LifecycleTaskConfig(
     schedules = {
@@ -56,6 +57,8 @@ public enum RecipeManager implements LifecycleTask {
     private final Set<NamespacedKey> serverRecipeKeys = ConcurrentHashMap.newKeySet();
     private final Map<String, RecipeGroup> recipeGroupMap = new ConcurrentHashMap<>();
     private volatile CompletableFuture<Void> reloadCompletion = null;
+    //disabled_recipes.yml 的读改写锁: 配置节点持有进程内共享的同一份列表, 方法级锁覆盖不到跨方法的读改写
+    private static final Object DISABLED_RECIPES_CONFIG_LOCK = new Object();
 
     //以下视图缓存针对的底层集合均为final字段且只做clear/重填与单条增删, 引用从不替换, 视图恒有效, 无需失效
     private final Lazy<Map<NamespacedKey, ParsedRecipe>> lazyCraftorithmRecipesView = Lazy.of(() -> Collections.unmodifiableMap(craftorithmRecipes));
@@ -391,13 +394,9 @@ public enum RecipeManager implements LifecycleTask {
         }
         disabledRecipes.remove(recipeKey);
         serverRecipeKeys.add(recipeKey);
-        CrypticLibBukkit.scheduler().async().submit(() -> {
-            List<String> disabledRecipes = new ArrayList<>(DisabledRecipesConfig.RECIPES.value());
-            String keyStr = recipeKey.toString();
-            disabledRecipes.remove(keyStr);
-            DisabledRecipesConfig.RECIPES.setValue(disabledRecipes);
-            DisabledRecipesConfig.RECIPES.saveConfig();
-        });
+        CrypticLibBukkit.scheduler().async().submit(() ->
+            updateDisabledRecipes(keys -> keys.remove(recipeKey.toString()))
+        );
         return true;
     }
 
@@ -409,14 +408,24 @@ public enum RecipeManager implements LifecycleTask {
     private void addDisabledRecipes2Config(NamespacedKey recipeKey) {
         if (recipeKey.getNamespace().equals(NamespacedKey.MINECRAFT) && PluginConfigs.REMOVE_ALL_VANILLA_RECIPE.value())
             return;
-        CrypticLibBukkit.scheduler().async().submit(() -> {
-            List<String> disabledRecipes = new ArrayList<>(DisabledRecipesConfig.RECIPES.value());
+        CrypticLibBukkit.scheduler().async().submit(() -> updateDisabledRecipes(keys -> {
             String keyStr = recipeKey.toString();
-            if (!disabledRecipes.contains(keyStr))
-                disabledRecipes.add(keyStr);
+            if (!keys.contains(keyStr))
+                keys.add(keyStr);
+        }));
+    }
+
+    /**
+     * 串行化禁用配方列表的读取-修改-写入。
+     * 两个并发的禁用/启用操作各自读到同一份旧列表再写回时, 后写的会把前写的条目盖掉, 因此整段流程共用一把锁。
+     */
+    private void updateDisabledRecipes(Consumer<List<String>> mutator) {
+        synchronized (DISABLED_RECIPES_CONFIG_LOCK) {
+            List<String> disabledRecipes = new ArrayList<>(DisabledRecipesConfig.RECIPES.value());
+            mutator.accept(disabledRecipes);
             DisabledRecipesConfig.RECIPES.setValue(disabledRecipes);
             DisabledRecipesConfig.RECIPES.saveConfig();
-        });
+        }
     }
 
     /**

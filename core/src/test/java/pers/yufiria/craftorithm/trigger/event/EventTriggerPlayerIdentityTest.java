@@ -89,7 +89,7 @@ class EventTriggerPlayerIdentityTest {
         TriggerContext context = registeredType("player_death", PlayerDeathEvent.class).extractContext(event);
 
         assertNotNull(context);
-        assertEquals(VICTIM_ID, context.playerUniqueId());
+        assertEquals(VICTIM_ID, context.invokerId());
         assertEquals("Attacker", context.variables().get("killer_name").asString());
         assertTrue(context.variables().get("event").isObject());
     }
@@ -103,7 +103,7 @@ class EventTriggerPlayerIdentityTest {
         TriggerContext context = registeredType("player_death", PlayerDeathEvent.class).extractContext(event);
 
         assertNotNull(context);
-        assertEquals(VICTIM_ID, context.playerUniqueId());
+        assertEquals(VICTIM_ID, context.invokerId());
         assertTrue(context.variables().get("killer_name").isNull());
     }
 
@@ -117,7 +117,7 @@ class EventTriggerPlayerIdentityTest {
         TriggerContext context = registeredType("block_break", BlockBreakEvent.class).extractContext(event);
 
         assertNotNull(context);
-        assertEquals(VICTIM_ID, context.playerUniqueId());
+        assertEquals(VICTIM_ID, context.invokerId());
         assertEquals("STONE", context.variables().get("block_type").asString());
     }
 
@@ -133,7 +133,7 @@ class EventTriggerPlayerIdentityTest {
         TriggerContext context = registeredType("block_place", BlockPlaceEvent.class).extractContext(event);
 
         assertNotNull(context);
-        assertEquals(VICTIM_ID, context.playerUniqueId());
+        assertEquals(VICTIM_ID, context.invokerId());
         assertEquals("DIRT", context.variables().get("block_type").asString());
     }
 

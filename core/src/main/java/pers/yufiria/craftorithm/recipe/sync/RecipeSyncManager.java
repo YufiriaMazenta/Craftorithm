@@ -148,10 +148,12 @@ public enum RecipeSyncManager implements LifecycleTask, Listener {
 
     private void syncPlayersWithRecipeMenu() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            InventoryType type = InventoryViewHelper.getTopInventory(player).getType();
-            if (RECIPE_MENU_TYPES.contains(type)) {
-                syncIfPending(player);
-            }
+            CrypticLibBukkit.scheduler().entity(player).submit(() -> {
+                InventoryType type = InventoryViewHelper.getTopInventory(player).getType();
+                if (RECIPE_MENU_TYPES.contains(type)) {
+                    syncIfPending(player);
+                }
+            });
         }
     }
 

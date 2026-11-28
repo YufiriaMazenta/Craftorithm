@@ -52,7 +52,7 @@ public final class ConversationUtils {
             data -> {
                 // 对话结束后重新打开菜单
                 menu.updateMenu();
-                CrypticLibBukkit.scheduler().submit(() -> menu.openMenu());
+                CrypticLibBukkit.scheduler().entity(player).submit(menu::openMenu);
             }
         ).start();
     }

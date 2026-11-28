@@ -299,7 +299,7 @@ public enum ActionModule implements ScriptModule {
             return ScriptValue.nil();
         }
         Player player = playerOpt.get();
-        CrypticLibBukkit.scheduler().submit(player::closeInventory);
+        CrypticLibBukkit.scheduler().entity(player).submit(player::closeInventory);
         return ScriptValue.nil();
     }
 
