@@ -73,12 +73,12 @@ public enum RecipeManager implements LifecycleTask {
             } catch (Throwable throwable) {
                 CrypticLib.error("Unexpected error while preparing reloaded recipes", throwable);
             } finally {
-                CrypticLibBukkit.scheduler().syncLater(() -> {
+                CrypticLibBukkit.scheduler().submitLater(() -> {
                     try {
                         //配方加载完毕后同步给玩家
                         RecipeSyncManager.INSTANCE.onRecipesChanged();
                         //从数据库恢复玩家已解锁配方（异步，避免阻塞主线程）
-                        CrypticLibBukkit.scheduler().async(DiscoveredRecipeDao.INSTANCE::loadOnlinePlayersDiscoveredRecipes);
+                        CrypticLibBukkit.scheduler().async().submit(DiscoveredRecipeDao.INSTANCE::loadOnlinePlayersDiscoveredRecipes);
                     } catch (Throwable throwable) {
                         CrypticLib.error("Unexpected error while finishing recipe reload", throwable);
                     } finally {
@@ -137,13 +137,13 @@ public enum RecipeManager implements LifecycleTask {
     }
 
     private void loadRecipesFromConfig(Runnable callback) {
-        CrypticLibBukkit.scheduler().async(() -> {
+        CrypticLibBukkit.scheduler().async().submit(() -> {
             if (!RECIPE_FILE_FOLDER.exists()) {
                 boolean mkdirResult = RECIPE_FILE_FOLDER.mkdir();
                 if (!mkdirResult) {
                     CrypticLib.error("Cannot create recipes folder: " + RECIPE_FILE_FOLDER.getPath() + ", skip loading recipes");
                     //提前返回也要执行callback, 且与正常结束一致调度到主线程运行
-                    CrypticLibBukkit.scheduler().sync(callback);
+                    CrypticLibBukkit.scheduler().submit(callback);
                     return;
                 }
             }
@@ -391,7 +391,7 @@ public enum RecipeManager implements LifecycleTask {
         }
         disabledRecipes.remove(recipeKey);
         serverRecipeKeys.add(recipeKey);
-        CrypticLibBukkit.scheduler().async(() -> {
+        CrypticLibBukkit.scheduler().async().submit(() -> {
             List<String> disabledRecipes = new ArrayList<>(DisabledRecipesConfig.RECIPES.value());
             String keyStr = recipeKey.toString();
             disabledRecipes.remove(keyStr);
@@ -409,7 +409,7 @@ public enum RecipeManager implements LifecycleTask {
     private void addDisabledRecipes2Config(NamespacedKey recipeKey) {
         if (recipeKey.getNamespace().equals(NamespacedKey.MINECRAFT) && PluginConfigs.REMOVE_ALL_VANILLA_RECIPE.value())
             return;
-        CrypticLibBukkit.scheduler().async(() -> {
+        CrypticLibBukkit.scheduler().async().submit(() -> {
             List<String> disabledRecipes = new ArrayList<>(DisabledRecipesConfig.RECIPES.value());
             String keyStr = recipeKey.toString();
             if (!disabledRecipes.contains(keyStr))
@@ -453,7 +453,7 @@ public enum RecipeManager implements LifecycleTask {
                 removeFromRecipeGroup(removed.recipe());
                 if (deleteFile) {
                     BukkitConfigWrapper configWrapper = removed.configWrapper();
-                    CrypticLibBukkit.scheduler().async(configWrapper::deleteConfigFile);
+                    CrypticLibBukkit.scheduler().async().submit(configWrapper::deleteConfigFile);
                 }
             }
         }
@@ -569,7 +569,7 @@ public enum RecipeManager implements LifecycleTask {
             case RELOAD -> {
                 CompletableFuture<Void> completion = new CompletableFuture<>();
                 reloadCompletion = completion;
-                CrypticLibBukkit.scheduler().sync(() -> reloadRecipeManager(completion));
+                CrypticLibBukkit.scheduler().submit(() -> reloadRecipeManager(completion));
             }
             case DISABLE -> {
                 //顺序不能颠倒: 还原禁用配方时依赖类型表, 必须先重置配方再清空类型目录
@@ -598,7 +598,7 @@ public enum RecipeManager implements LifecycleTask {
         }
 
         void start() {
-            this.syncTimer(1L, 1L);
+            this.submitRepeating(1L, 1L);
         }
 
         void end() {

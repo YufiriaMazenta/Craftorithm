@@ -93,7 +93,7 @@ public enum ActionModule implements ScriptModule {
         if (itemStackOpt.isEmpty()) {
             return ScriptValue.of(false);
         }
-        CrypticLibBukkit.scheduler().runOnEntity(player, () -> {
+        CrypticLibBukkit.scheduler().entity(player).submit(() -> {
             ItemStack slotItem = topInventory.getItem(slot);
             if (ItemHelper.isAir(slotItem)) {
                 topInventory.setItem(slot, itemStackOpt.get());
@@ -101,7 +101,6 @@ public enum ActionModule implements ScriptModule {
                 //对应位置已经有物品了,那我们就尝试放入,如果不能放入就丢在地上
                 InventoryHelper.addItemOrDrop(topInventory, itemStackOpt.get());
             }
-        }, () -> {
         });
         return ScriptValue.of(true);
     }
@@ -160,9 +159,9 @@ public enum ActionModule implements ScriptModule {
             String finalCmd = cmd;
             Runnable task = () -> Bukkit.dispatchCommand(commandSender, finalCmd);
             if (commandSender instanceof Entity entity) {
-                CrypticLibBukkit.scheduler().runOnEntity(entity, task, task);
+                CrypticLibBukkit.scheduler().entity(entity).onRetired(task).submit(task);
             } else {
-                CrypticLibBukkit.scheduler().sync(task);
+                CrypticLibBukkit.scheduler().submit(task);
             }
             return ScriptValue.of(true);
         }
@@ -187,7 +186,7 @@ public enum ActionModule implements ScriptModule {
             return ScriptValue.of(Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd));
         } else {
             String finalCmd1 = cmd;
-            CrypticLibBukkit.scheduler().sync(() -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalCmd1));
+            CrypticLibBukkit.scheduler().submit(() -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalCmd1));
             return ScriptValue.of(true);
         }
     }
@@ -300,7 +299,7 @@ public enum ActionModule implements ScriptModule {
             return ScriptValue.nil();
         }
         Player player = playerOpt.get();
-        CrypticLibBukkit.scheduler().sync(player::closeInventory);
+        CrypticLibBukkit.scheduler().submit(player::closeInventory);
         return ScriptValue.nil();
     }
 

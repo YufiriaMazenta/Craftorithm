@@ -201,7 +201,7 @@ public abstract class RecipeEditor extends StoredMenu implements IngredientIdRes
         //文件名要在注销之前取: 注销会把 recipeFileNameToKeyMap 里的映射一起清掉
         String recipeFileName = RecipeManager.INSTANCE.getRecipeFileNameByKey(recipeKey);
         //异步段只做文件落盘与解析, 配方注册表的注销/注册属于服务器状态, 必须回到主线程
-        CrypticLibBukkit.scheduler().async(() -> {
+        CrypticLibBukkit.scheduler().async().submit(() -> {
             configWrapper.saveConfig();
             configWrapper.reloadConfig();
             if (recipeFileName == null) {
@@ -215,7 +215,7 @@ public abstract class RecipeEditor extends StoredMenu implements IngredientIdRes
                 return;
             }
 
-            CrypticLibBukkit.scheduler().syncLater(() -> {
+            CrypticLibBukkit.scheduler().submitLater(() -> {
                 //先解析成功再替换注册, 注册结果要回给玩家, 不能无条件报成功
                 RecipeManager.INSTANCE.removeCraftorithmRecipe(recipeId, false, false);
                 if (RecipeManager.INSTANCE.registerParsedRecipe(parsedRecipe, RecipeRegisterEvent.Reason.EDIT_RECIPE, true)) {

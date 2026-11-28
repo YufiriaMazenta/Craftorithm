@@ -365,7 +365,7 @@ public enum EventTriggerTypes {
             if (ctx == null) return;
             if (eventIsAsync) {
                 //事件可能在异步线程触发, 调度回主线程执行触发器
-                CrypticLibBukkit.scheduler().sync(() -> TriggerManager.INSTANCE.fire(type, ctx));
+                CrypticLibBukkit.scheduler().submit(() -> TriggerManager.INSTANCE.fire(type, ctx));
             } else {
                 TriggerManager.INSTANCE.fire(type, ctx);
             }

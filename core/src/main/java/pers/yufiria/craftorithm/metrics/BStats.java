@@ -78,7 +78,7 @@ public class BStats {
                 enabled,
                 this::appendPlatformData,
                 this::appendServiceData,
-                submitDataTask -> CrypticLibBukkit.scheduler().sync(submitDataTask),
+                submitDataTask -> CrypticLibBukkit.scheduler().submit(submitDataTask),
                 plugin::isEnabled,
                 (message, error) -> this.plugin.getLogger().log(Level.WARNING, message, error),
                 (message) -> this.plugin.getLogger().log(Level.INFO, message),

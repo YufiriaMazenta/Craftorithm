@@ -92,7 +92,7 @@ public abstract class RecipeCreator extends StoredMenu implements IngredientIdRe
     }
 
     protected void createRecipeConfig(String recipeFileName, Consumer<BukkitConfigWrapper> callback) {
-        CrypticLibBukkit.scheduler().async(() -> {
+        CrypticLibBukkit.scheduler().async().submit(() -> {
             BukkitConfigWrapper recipeConfigWrapper = new BukkitConfigWrapper(Craftorithm.instance(), "recipes/" + recipeFileName + ".yml");
             recipeConfigWrapper.saveDefaultConfigFile();
             callback.accept(recipeConfigWrapper);
@@ -135,7 +135,7 @@ public abstract class RecipeCreator extends StoredMenu implements IngredientIdRe
                 return;
             }
 
-            CrypticLibBukkit.scheduler().sync(() -> {
+            CrypticLibBukkit.scheduler().submit(() -> {
                 boolean loadResult = RecipeManager.INSTANCE.registerParsedRecipe(
                     parsedRecipe,
                     RecipeRegisterEvent.Reason.NEW_RECIPE,

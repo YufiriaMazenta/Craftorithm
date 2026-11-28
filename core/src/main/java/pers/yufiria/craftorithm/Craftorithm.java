@@ -104,7 +104,7 @@ public final class Craftorithm extends BukkitPlugin implements LifecycleTask {
     public void onLifecycle(CrypticLibPlugin plugin, LifecyclePhase lifeCycle) {
         switch (lifeCycle) {
             case ACTIVE -> {
-                CrypticLibBukkit.scheduler().sync(() -> {
+                CrypticLibBukkit.scheduler().submit(() -> {
                     ReloadManager.INSTANCE.reloadPlugin(Bukkit.getConsoleSender());
                     loadBStat();
                 });

@@ -81,7 +81,7 @@ public final class GiveCommand extends CommandNode {
                         player.getWorld().dropItem(player.getLocation(), stack);
                     }
                 };
-                CrypticLibBukkit.scheduler().runOnEntity(player, dropTask, dropTask);
+                CrypticLibBukkit.scheduler().entity(player).onRetired(dropTask).submit(dropTask);
             }
         }
         LangUtils.sendLang(invoker, Languages.COMMAND_ITEM_GIVE_SUCCESS);

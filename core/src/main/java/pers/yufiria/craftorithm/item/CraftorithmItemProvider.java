@@ -213,7 +213,7 @@ public enum CraftorithmItemProvider implements ItemPluginHook, ItemProvider, Lif
             });
             return snapshot;
         });
-        CrypticLibBukkit.scheduler().async(() -> {
+        CrypticLibBukkit.scheduler().async().submit(() -> {
             BukkitConfigWrapper itemConfigWrapper = itemConfigFileMap.computeIfAbsent(namespace, ns -> {
                 File itemFile = new File(ITEM_FILE_FOLDER, ns + ".yml");
                 if (!itemFile.exists()) {

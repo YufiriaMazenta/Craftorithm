@@ -72,7 +72,7 @@ public enum ReloadManager {
                 }
             }
         };
-        reloadTimeoutCallback.asyncLater(600);
+        reloadTimeoutCallback.submitAsyncLater(600);
     }
 
     /**
@@ -162,7 +162,7 @@ public enum ReloadManager {
         if (Bukkit.isPrimaryThread()) {
             drainOnMain();
         } else {
-            CrypticLibBukkit.scheduler().sync(this::drainOnMain);
+            CrypticLibBukkit.scheduler().submit(this::drainOnMain);
         }
     }
 

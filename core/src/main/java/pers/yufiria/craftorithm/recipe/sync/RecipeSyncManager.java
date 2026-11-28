@@ -113,7 +113,7 @@ public enum RecipeSyncManager implements LifecycleTask, Listener {
         if (!pendingPlayers.contains(player.getUniqueId())) {
             return;
         }
-        CrypticLibBukkit.scheduler().runOnEntityLater(player, () -> syncIfPending(player), 2);
+        CrypticLibBukkit.scheduler().entity(player).submitLater(() -> syncIfPending(player), 2);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

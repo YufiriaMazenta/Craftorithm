@@ -32,50 +32,45 @@ public enum DiscoveredRecipesDataHandler implements Listener {
         UUID uuid = player.getUniqueId();
         int delayTicks = PluginConfigs.SAVE_DISCOVERED_RECIPES_JOIN_DISCOVER_DELAY_TICKS.value();
 
-        CrypticLibBukkit.scheduler().runOnEntityLater(player, () -> {
-                try {
-                    Set<String> localDiscoveredRecipes = player.getDiscoveredRecipes().stream()
-                        .map(NamespacedKey::toString)
-                        .collect(Collectors.toSet());
+        CrypticLibBukkit.scheduler().entity(player).submitLater(() -> {
+            try {
+                Set<String> localDiscoveredRecipes = player.getDiscoveredRecipes().stream()
+                    .map(NamespacedKey::toString)
+                    .collect(Collectors.toSet());
 
-                    CrypticLibBukkit.scheduler().async(() -> {
-                        try {
-                            Set<String> dbRecipes = DiscoveredRecipeDao.INSTANCE.getDiscoveredRecipes(uuid);
+                CrypticLibBukkit.scheduler().async().submit(() -> {
+                    try {
+                        Set<String> dbRecipes = DiscoveredRecipeDao.INSTANCE.getDiscoveredRecipes(uuid);
 
-                            Set<String> serverRecipeKeys = RecipeManager.INSTANCE.serverRecipeKeys().stream()
-                                .map(Objects::toString)
-                                .collect(Collectors.toSet());
+                        Set<String> serverRecipeKeys = RecipeManager.INSTANCE.serverRecipeKeys().stream()
+                            .map(Objects::toString)
+                            .collect(Collectors.toSet());
 
-                            dbRecipes.retainAll(serverRecipeKeys);
+                        dbRecipes.retainAll(serverRecipeKeys);
 
-                            Set<String> merged = new HashSet<>(dbRecipes);
-                            merged.addAll(localDiscoveredRecipes);
-                            merged.retainAll(serverRecipeKeys);
+                        Set<String> merged = new HashSet<>(dbRecipes);
+                        merged.addAll(localDiscoveredRecipes);
+                        merged.retainAll(serverRecipeKeys);
 
-                            Set<String> toDiscover = new HashSet<>(merged);
-                            toDiscover.removeAll(localDiscoveredRecipes);
+                        Set<String> toDiscover = new HashSet<>(merged);
+                        toDiscover.removeAll(localDiscoveredRecipes);
 
-                            if (!toDiscover.isEmpty()) {
-                                CrypticLibBukkit.scheduler().runOnEntity(player, () -> {
-                                    player.discoverRecipes(toDiscover.stream()
-                                        .map(NamespacedKey::fromString)
-                                        .filter(Objects::nonNull)
-                                        .collect(Collectors.toList()));
-                                }, () -> {
-                                });
-                            }
-                        } catch (Exception e) {
-                            CrypticLib.error("Failed to sync discovered recipes on join for " + player.getName() + ": " + e.getMessage());
+                        if (!toDiscover.isEmpty()) {
+                            CrypticLibBukkit.scheduler().entity(player).submit(() -> {
+                                player.discoverRecipes(toDiscover.stream()
+                                    .map(NamespacedKey::fromString)
+                                    .filter(Objects::nonNull)
+                                    .collect(Collectors.toList()));
+                            });
                         }
-                    });
-                } catch (Exception e) {
-                    CrypticLib.error("Failed to read local recipes on join for " + player.getName() + ": " + e.getMessage());
-                }
-            },
-            () -> {
-            },
-            delayTicks
-        );
+                    } catch (Exception e) {
+                        CrypticLib.error("Failed to sync discovered recipes on join for " + player.getName() + ": " + e.getMessage());
+                    }
+                });
+            } catch (Exception e) {
+                CrypticLib.error("Failed to read local recipes on join for " + player.getName() + ": " + e.getMessage());
+            }
+        }, delayTicks);
     }
 
     @EventHandler
@@ -95,7 +90,7 @@ public enum DiscoveredRecipesDataHandler implements Listener {
 
         localRecipes.retainAll(serverRecipeKeys);
 
-        CrypticLibBukkit.scheduler().async(() -> {
+        CrypticLibBukkit.scheduler().async().submit(() -> {
             try {
                 DiscoveredRecipeDao.INSTANCE.saveDiscoveredRecipes(uuid, localRecipes);
             } catch (Exception e) {

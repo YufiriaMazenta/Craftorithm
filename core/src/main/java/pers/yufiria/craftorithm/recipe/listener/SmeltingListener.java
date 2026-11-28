@@ -178,7 +178,7 @@ public enum SmeltingListener implements Listener {
         }
         cleanupScheduled = true;
         // 这是有效性检查的间隔，不是配方 TTL；停火/熄灭时仍存在的输入不会被删除。
-        CrypticLibBukkit.scheduler().syncLater(() -> {
+        CrypticLibBukkit.scheduler().submitLater(() -> {
             cleanupScheduled = false;
             Iterator<Map.Entry<CookPosition, Map<Integer, CookInput>>> iterator = blockCookRecipeMap.entrySet().iterator();
             while (iterator.hasNext()) {

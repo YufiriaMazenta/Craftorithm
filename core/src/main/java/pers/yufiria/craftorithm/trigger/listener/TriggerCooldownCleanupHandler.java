@@ -43,7 +43,7 @@ public enum TriggerCooldownCleanupHandler implements Listener, LifecycleTask {
                         TriggerCooldown.INSTANCE.cleanup();
                     }
                 };
-                this.cooldownCleanupTask.asyncTimer(0, 20L);
+                this.cooldownCleanupTask.submitAsyncRepeating(0, 20L);
             }
             case DISABLE -> {
                 if (this.cooldownCleanupTask != null) {

@@ -36,7 +36,7 @@ public enum StonecuttingListener implements Listener {
     public void processResult(PlayerStonecutterRecipeSelectEvent event) {
         StonecutterInventory stonecutterInventory = event.getStonecutterInventory();
         Player player = event.getPlayer();
-        CrypticLibBukkit.scheduler().runOnEntity(player, () -> {
+        CrypticLibBukkit.scheduler().entity(player).submit(() -> {
             ItemStack result = stonecutterInventory.getResult();
             if (ItemHelper.isAir(result)) {
                 return;

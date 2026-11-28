@@ -225,10 +225,10 @@ public class RecipeUtils {
      * @param recipeKeyPattern 配方key的正则表达式,如果不是正则则解析为{@link NamespacedKey}
      */
     public static void discoverRecipeForOnlinePlayers(String recipeKeyPattern) {
-        CrypticLibBukkit.scheduler().async(() -> {
+        CrypticLibBukkit.scheduler().async().submit(() -> {
             List<NamespacedKey> discoverRecipes = matchRecipeKeys(recipeKeyPattern);
             for (Player player : Bukkit.getOnlinePlayers()) {
-                CrypticLibBukkit.scheduler().runOnEntity(player, () -> {
+                CrypticLibBukkit.scheduler().entity(player).submit(() -> {
                     player.discoverRecipes(discoverRecipes);
                 });
             }
@@ -243,11 +243,10 @@ public class RecipeUtils {
      * @param callback         解锁完毕后的回调
      **/
     public static void discoverRecipe(Player target, String recipeKeyPattern, Consumer<Integer> callback) {
-        CrypticLibBukkit.scheduler().async(() -> {
+        CrypticLibBukkit.scheduler().async().submit(() -> {
             List<NamespacedKey> discoverRecipes = matchRecipeKeys(recipeKeyPattern);
-            CrypticLibBukkit.scheduler().runOnEntity(target, () -> {
+            CrypticLibBukkit.scheduler().entity(target).submit(() -> {
                 callback.accept(target.discoverRecipes(discoverRecipes));
-            }, () -> {
             });
         });
     }
@@ -260,11 +259,10 @@ public class RecipeUtils {
      * @param callback         取消解锁完毕后的回调
      **/
     public static void undiscoverRecipe(Player target, String recipeKeyPattern, Consumer<Integer> callback) {
-        CrypticLibBukkit.scheduler().async(() -> {
+        CrypticLibBukkit.scheduler().async().submit(() -> {
             List<NamespacedKey> undiscoverRecipes = matchRecipeKeys(recipeKeyPattern);
-            CrypticLibBukkit.scheduler().runOnEntity(target, () -> {
+            CrypticLibBukkit.scheduler().entity(target).submit(() -> {
                 callback.accept(target.undiscoverRecipes(undiscoverRecipes));
-            }, () -> {
             });
         });
     }
@@ -275,10 +273,10 @@ public class RecipeUtils {
      * @param recipeKeyPattern 配方key的正则表达式,如果不是正则则解析为{@link NamespacedKey}
      */
     public static void undiscoverRecipeForOnlinePlayers(String recipeKeyPattern) {
-        CrypticLibBukkit.scheduler().async(() -> {
+        CrypticLibBukkit.scheduler().async().submit(() -> {
             List<NamespacedKey> undiscoverRecipes = matchRecipeKeys(recipeKeyPattern);
             for (Player player : Bukkit.getOnlinePlayers()) {
-                CrypticLibBukkit.scheduler().runOnEntity(player, () -> {
+                CrypticLibBukkit.scheduler().entity(player).submit(() -> {
                     player.undiscoverRecipes(undiscoverRecipes);
                 });
             }

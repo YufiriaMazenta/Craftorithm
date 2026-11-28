@@ -161,7 +161,7 @@ public enum CustomFuelManager implements Listener, LifecycleTask {
             return false;
         }
         fuels.put(itemId, burnTime);
-        CrypticLibBukkit.scheduler().async(() -> {
+        CrypticLibBukkit.scheduler().async().submit(() -> {
             List<Map<String, Object>> entries = readFuelList();
             entries.removeIf(entry -> itemId.toString().equals(entry.get(ITEM_KEY)));
             Map<String, Object> fuel = new LinkedHashMap<>();
@@ -182,7 +182,7 @@ public enum CustomFuelManager implements Listener, LifecycleTask {
             return false;
         }
         fuels.remove(itemId);
-        CrypticLibBukkit.scheduler().async(() -> {
+        CrypticLibBukkit.scheduler().async().submit(() -> {
             List<Map<String, Object>> entries = readFuelList();
             entries.removeIf(entry -> itemId.toString().equals(entry.get(ITEM_KEY)));
             writeFuelList(entries);

@@ -37,7 +37,7 @@ public class UpdateChecker implements Listener {
     public static void pullUpdateCheckRequest(CommandSender sender) {
         if (!PluginConfigs.CHECK_UPDATE.value())
             return;
-        CrypticLibBukkit.scheduler().async(() -> {
+        CrypticLibBukkit.scheduler().async().submit(() -> {
             try {
                 String mcVersion = MinecraftVersion.current().versionStr();
                 mcVersion = URLEncoder.encode("[\"" + mcVersion + "\"]", StandardCharsets.UTF_8);
@@ -56,7 +56,7 @@ public class UpdateChecker implements Listener {
                 }
                 String pluginVersion = removeSuffixAfterDash(Craftorithm.instance().getDescription().getVersion());
                 if (checkVersion(latestVersion, pluginVersion)) {
-                    CrypticLibBukkit.scheduler().sync(() -> {
+                    CrypticLibBukkit.scheduler().submit(() -> {
                         LangUtils.sendLang(sender, Languages.NEW_VERSION, CollectionsUtils.newStringHashMap("<new_version>", latestVersion));
                     });
                 }
