@@ -290,22 +290,23 @@ public enum CustomFuelManager implements Listener, LifecycleTask {
 
     /**
      * 串行化 fuels 列表的读取-修改-写入。
-     * 配置包装器的方法级锁覆盖不到跨方法的读改写: 两个并发增删会各自读到同一份旧表, 后写的把前写的条目盖掉,
-     * 所以整段流程共用 {@link #fuelConfigAccessLock}, 并且每次都从文件重新读取, 不依赖内存里的上一份列表。
+     * 配置包装器的 {@link BukkitConfigWrapper#update(java.util.function.Consumer)} 内部已用同一把锁包住
+     * "读 → 改 → 写", 这里再套一层类内锁是为了和 {@link #reloadFuels()} 互斥 —— 重载会整表重写配置。
+     * <p>
+     * 不使用配置文件里的最新内容: 手工改动的 {@code custom_fuels.yml} 需要执行重载命令才生效。
      */
     private void updateFuelEntries(Consumer<List<Map<String, Object>>> mutator) {
         synchronized (fuelConfigAccessLock) {
-            config().reloadConfig();
-            List<Map<String, Object>> entries = new ArrayList<>();
-            for (Map<?, ?> entry : config().config().getMapList(FUELS_KEY)) {
-                Map<String, Object> copy = new LinkedHashMap<>();
-                entry.forEach((key, value) -> copy.put(String.valueOf(key), value));
-                entries.add(copy);
-            }
-            mutator.accept(entries);
-            config().set(FUELS_KEY, entries);
-            config().saveConfig();
-            config().reloadConfig();
+            config().update(yaml -> {
+                List<Map<String, Object>> entries = new ArrayList<>();
+                for (Map<?, ?> entry : yaml.getMapList(FUELS_KEY)) {
+                    Map<String, Object> copy = new LinkedHashMap<>();
+                    entry.forEach((key, value) -> copy.put(String.valueOf(key), value));
+                    entries.add(copy);
+                }
+                mutator.accept(entries);
+                yaml.set(FUELS_KEY, entries);
+            });
         }
     }
 
